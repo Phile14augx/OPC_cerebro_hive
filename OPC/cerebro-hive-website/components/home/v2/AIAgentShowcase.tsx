@@ -10,18 +10,20 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+const FLOAT_Y = [0, -8, 0];
+
 // --- Data Models ---
 const agents = [
-  { id: "hr", name: "HR Agent", icon: Users, angle: -15, dist: 240, industry: ["cross"] },
-  { id: "finance", name: "Finance Agent", icon: DollarSign, angle: 25, dist: 300, industry: ["finance", "cross"] },
-  { id: "sales", name: "Sales Agent", icon: TrendingUp, angle: 65, dist: 270, industry: ["cross"] },
-  { id: "marketing", name: "Marketing Agent", icon: Megaphone, angle: 105, dist: 240, industry: ["cross"] },
-  { id: "support", name: "Support Agent", icon: Headset, angle: 145, dist: 310, industry: ["cross", "healthcare"] },
-  { id: "legal", name: "Legal Agent", icon: Scale, angle: 185, dist: 280, industry: ["cross", "finance"] },
-  { id: "erp", name: "ERP Agent", icon: Database, angle: 225, dist: 250, industry: ["cross", "manufacturing"] },
-  { id: "compliance", name: "Compliance Agent", icon: ShieldCheck, angle: 265, dist: 300, industry: ["cross", "finance", "healthcare"] },
-  { id: "analytics", name: "Analytics Agent", icon: BarChart, angle: 305, dist: 270, industry: ["cross", "finance", "manufacturing", "healthcare"] },
-  { id: "ops", name: "Ops Agent", icon: Settings, angle: 345, dist: 230, industry: ["cross", "manufacturing"] },
+  { id: "hr", name: "HR Agent", icon: Users, angle: 0, dist: 240, industry: ["cross"] },
+  { id: "finance", name: "Finance Agent", icon: DollarSign, angle: 36, dist: 300, industry: ["finance", "cross"] },
+  { id: "sales", name: "Sales Agent", icon: TrendingUp, angle: 72, dist: 270, industry: ["cross"] },
+  { id: "marketing", name: "Marketing Agent", icon: Megaphone, angle: 108, dist: 240, industry: ["cross"] },
+  { id: "support", name: "Support Agent", icon: Headset, angle: 144, dist: 310, industry: ["cross", "healthcare"] },
+  { id: "legal", name: "Legal Agent", icon: Scale, angle: 180, dist: 280, industry: ["cross", "finance"] },
+  { id: "erp", name: "ERP Agent", icon: Database, angle: 216, dist: 250, industry: ["cross", "manufacturing"] },
+  { id: "compliance", name: "Compliance Agent", icon: ShieldCheck, angle: 252, dist: 300, industry: ["cross", "finance", "healthcare"] },
+  { id: "analytics", name: "Analytics Agent", icon: BarChart, angle: 288, dist: 270, industry: ["cross", "finance", "manufacturing", "healthcare"] },
+  { id: "ops", name: "Ops Agent", icon: Settings, angle: 324, dist: 230, industry: ["cross", "manufacturing"] },
 ];
 
 const workflows = [
@@ -187,23 +189,25 @@ export default function AIAgentShowcase() {
 
           return (
             <motion.div
-              key={agent.id}
-              initial={{ x: x - 100, y: y - 30 }}
-              animate={{ 
-                x: x - 100 + (Math.cos(Date.now()/1000 + agent.angle) * 3), 
-                y: y - 30 + (Math.sin(Date.now()/1000 + agent.angle) * 3) 
-              }}
-              transition={{ repeat: Infinity, duration: 3, repeatType: "mirror" }}
-              onMouseEnter={() => setHoveredAgent(agent.id)}
-              onMouseLeave={() => setHoveredAgent(null)}
-              className={cn(
-                "absolute z-30 w-[200px] rounded-xl border p-3 flex flex-col gap-2 transition-all cursor-crosshair overflow-hidden backdrop-blur-xl shadow-2xl",
-                isActiveInPath ? "bg-primary-accent/10 border-primary-accent/50" : "bg-[#0A121E]/80 border-white/10",
-                isHovered ? "z-50 scale-110 w-[240px] border-primary-accent/70 bg-[#050A11]/95" : ""
-              )}
-              style={{ left: 0, top: 0 }}
+              key={`wrapper-${agent.id}`}
+              initial={{ opacity: 0, x: x - 100, y: y - 30 }}
+              animate={{ opacity: 1, x: x - 100, y: y - 30 }}
+              transition={{ duration: 0.5 }}
+              className="absolute"
+              style={{ left: 0, top: 0, zIndex: isHovered ? 50 : 30 }}
             >
-              {/* Agent Header */}
+              <motion.div
+                animate={{ y: FLOAT_Y }}
+                transition={{ y: { repeat: Infinity, duration: 4, ease: "easeInOut", delay: (agent.angle % 3) } }}
+                onMouseEnter={() => setHoveredAgent(agent.id)}
+                onMouseLeave={() => setHoveredAgent(null)}
+                className={cn(
+                  "w-[200px] rounded-xl border p-3 flex flex-col gap-2 transition-all duration-300 cursor-crosshair overflow-hidden backdrop-blur-xl shadow-2xl",
+                  isActiveInPath ? "bg-primary-accent/10 border-primary-accent/50" : "bg-[#0A121E]/80 border-white/10",
+                  isHovered ? "scale-110 w-[240px] border-primary-accent/70 bg-[#050A11]/95" : ""
+                )}
+              >
+                {/* Agent Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                    <div className={cn("p-1.5 rounded-lg", isActiveInPath ? "bg-primary-accent text-black" : "bg-white/5 text-gray-400")}>
@@ -253,6 +257,7 @@ export default function AIAgentShowcase() {
                   </motion.div>
                 )}
               </AnimatePresence>
+            </motion.div>
             </motion.div>
           );
         })}

@@ -298,22 +298,27 @@ export default function Industries() {
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                       transition={{ delay: 0.2, duration: 0.5 }}
-                      className="relative z-20 p-10 flex flex-col gap-12"
+                      className="relative z-20 p-8 md:p-12 lg:p-16 flex flex-col gap-10 md:gap-14 w-full box-border"
                     >
+                      {/* Close Button - Absolute Positioned */}
+                      <button onClick={(e) => { e.stopPropagation(); setFocusedId(null); }} className="absolute top-6 right-6 md:top-8 md:right-8 p-2 rounded-full bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors z-30">
+                         <X size={20} />
+                      </button>
+
                       {/* Top Header Row */}
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-6">
-                           <div className="p-4 rounded-2xl bg-primary-accent/10 text-primary-accent shrink-0 border border-primary-accent/20">
-                              <ind.icon size={32} />
+                      <div className="flex items-start">
+                        <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6 pr-12">
+                           <div className="p-3 md:p-4 rounded-2xl bg-primary-accent/10 text-primary-accent shrink-0 border border-primary-accent/20">
+                              <ind.icon size={28} className="md:w-8 md:h-8" />
                            </div>
-                           <div>
-                              <h3 className="text-3xl font-bold font-space text-white mb-2">{ind.name}</h3>
-                              <p className="text-gray-400 font-medium mb-4">{ind.desc}</p>
+                           <div className="min-w-0">
+                              <h3 className="text-2xl md:text-3xl font-bold font-space text-white mb-2 truncate">{ind.name}</h3>
+                              <p className="text-sm md:text-base text-gray-400 font-medium mb-4">{ind.desc}</p>
                               <div className="flex flex-wrap gap-2">
                                 {ind.capabilityBadges.map((badge, i) => (
                                   <motion.span 
                                     key={badge} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 + (i * 0.05) }}
-                                    className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] uppercase tracking-widest text-gray-300 font-bold"
+                                    className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] uppercase tracking-widest text-gray-300 font-bold whitespace-nowrap"
                                   >
                                     {badge}
                                   </motion.span>
@@ -321,16 +326,13 @@ export default function Industries() {
                               </div>
                            </div>
                         </div>
-                        <button onClick={(e) => { e.stopPropagation(); setFocusedId(null); }} className="p-2 rounded-full bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
-                           <X size={20} />
-                        </button>
                       </div>
 
                       {/* Main Grid Content */}
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 border-y border-white/10 py-12">
                         
                         {/* Left Context Column */}
-                        <div className="lg:col-span-8 flex flex-col gap-12">
+                        <div className="lg:col-span-8 flex flex-col gap-12 min-w-0">
                           
                           {/* Challenges & Solutions */}
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -346,12 +348,12 @@ export default function Industries() {
                               </div>
                             </div>
                             
-                            <div>
+                            <div className="min-w-0">
                               <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold mb-4 flex items-center gap-2"><CheckCircle2 size={14}/> AI Solutions</span>
                               <div className="grid grid-cols-2 gap-3">
                                 {ind.solutions.map((s, i) => (
-                                  <motion.div key={s.name} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 + (i*0.1) }} className="p-3 rounded-lg bg-[#0A131C] border border-primary-accent/20 flex flex-col justify-between group hover:bg-primary-accent/5 transition-colors">
-                                    <span className="text-[10px] font-bold text-gray-400 mb-3">{s.name}</span>
+                                  <motion.div key={s.name} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 + (i*0.1) }} className="p-3 rounded-lg bg-[#0A131C] border border-primary-accent/20 flex flex-col justify-between group hover:bg-primary-accent/5 transition-colors overflow-hidden">
+                                    <span className="text-[10px] font-bold text-gray-400 mb-3 truncate">{s.name}</span>
                                     <div className="flex items-baseline gap-1">
                                       <span className="text-lg font-mono font-bold text-white">{s.stat}</span>
                                       <span className="text-[9px] uppercase tracking-widest text-primary-accent">{s.label}</span>
@@ -373,7 +375,7 @@ export default function Industries() {
                         </div>
 
                         {/* Right Dashboard Column */}
-                        <div className="lg:col-span-4 flex flex-col gap-12">
+                        <div className="lg:col-span-4 flex flex-col gap-12 min-w-0">
                           
                           {/* Live Operational Metrics */}
                           <div>
