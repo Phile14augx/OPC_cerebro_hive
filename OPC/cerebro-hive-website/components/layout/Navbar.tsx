@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { Logo } from "@/components/ui/Logo";
 
 const navLinks = [
   { name: "Services", href: "/services" },
@@ -17,8 +18,8 @@ export default function Navbar() {
       <div className="container-wide h-full flex items-center justify-between">
         <div className="flex items-center gap-12">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-accent to-secondary-accent flex items-center justify-center shadow-[0_0_15px_rgba(0,245,122,0.3)] group-hover:shadow-[0_0_25px_rgba(0,245,122,0.5)] transition-shadow">
-              <div className="w-4 h-4 bg-primary rounded-sm" />
+            <div className="w-10 h-12 flex items-center justify-center text-white group-hover:text-primary-accent transition-colors">
+              <Logo className="w-full h-full" />
             </div>
             <span className="font-space font-bold text-xl tracking-tight text-white">
               Cerebro<span className="text-primary-accent">Hive</span>

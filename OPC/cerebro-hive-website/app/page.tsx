@@ -1,6 +1,5 @@
 import HeroSection from "@/components/home/v2/HeroSection";
 import TrustBar from "@/components/home/v2/TrustBar";
-import AICapabilityGrid from "@/components/home/v2/AICapabilityGrid";
 import WhyCerebroHive from "@/components/home/v2/WhyCerebroHive";
 import Services from "@/components/home/v2/Services";
 import Industries from "@/components/home/v2/Industries";
@@ -22,7 +21,6 @@ export default function HomePage() {
     <>
       <HeroSection />
       <TrustBar />
-      <AICapabilityGrid />
       <WhyCerebroHive />
       <Services />
       <Industries />

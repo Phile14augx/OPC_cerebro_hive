@@ -123,6 +123,28 @@ p { font-family: var(--font-inter), sans-serif; }
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
+@keyframes dash {
+  to {
+    stroke-dashoffset: -8;
+  }
+}
+@keyframes glowDim {
+  0%, 100% { opacity: 1; filter: brightness(1.5); }
+  50% { opacity: 0.2; filter: brightness(0.8); }
+}
+@keyframes dataFlow {
+  0% { left: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+.animate-data-flow {
+  animation: dataFlow 2s linear infinite;
+}
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
 
 /* ============================================================
    SECTION SPACING
