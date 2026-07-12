@@ -1,28 +1,33 @@
 import type { Metadata } from "next";
-import { Orbitron, Exo_2, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, IBM_Plex_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CerebroChat from "@/components/layout/CerebroChat";
 import { LanguageProvider } from "@/components/layout/LanguageContext";
 
-const orbitron = Orbitron({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-orbitron",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-space",
 });
 
-const exo2 = Exo_2({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-exo",
+  variable: "--font-inter",
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-plex",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
-  variable: "--font-mono",
+  variable: "--font-jetbrains",
 });
 
 export const metadata: Metadata = {
@@ -57,11 +62,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${orbitron.variable} ${exo2.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
-      <body>
+    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${plexMono.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <body className="bg-primary text-text-primary antialiased selection:bg-primary-accent selection:text-black">
         <LanguageProvider>
           <Navbar />
-          <main style={{ paddingTop: "72px" }}>{children}</main>
+          <main>{children}</main>
           <Footer />
           <CerebroChat />
         </LanguageProvider>

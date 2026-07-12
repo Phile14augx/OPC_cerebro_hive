@@ -1,38 +1,47 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #07090D;
+  --color-secondary: #0E131A;
+  --color-card: #141B24;
+  --color-primary-accent: #00F57A;
+  --color-secondary-accent: #00C8FF;
+  --color-warning: #FFC857;
+  --color-text-primary: #FFFFFF;
+  --color-text-muted: #8B97A8;
+
+  --font-space: var(--font-space), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
+  --font-plex: var(--font-plex), monospace;
+  --font-jetbrains: var(--font-jetbrains), monospace;
+}
+
 /* ============================================================
-   CEREBRO HIVE — DESIGN TOKENS
+   CEREBRO HIVE — DESIGN TOKENS (Engineering Elegance)
    ============================================================ */
 :root {
   /* Background */
-  --bg-primary: #080B14;
-  --bg-secondary: #0D1221;
-  --bg-card: #111827;
-  --bg-glass: rgba(255, 255, 255, 0.04);
+  --bg-primary: #07090D;
+  --bg-secondary: #0E131A;
+  --bg-card: #141B24;
+  --bg-glass: rgba(20, 27, 36, 0.4);
 
   /* Brand Colors */
-  --neural-blue: #00E5FF;
-  --violet: #7B61FF;
-  --hot-pink: #FF2ED1;
-  --amber: #FFBA00;
-  --gold: #FFD60A;
-  --hive-orange: #FF8A00;
+  --primary-accent: #00F57A;
+  --secondary-accent: #00C8FF;
+  --warning: #FFC857;
 
   /* Text */
-  --text-primary: #F5F7FA;
-  --text-muted: #8892A4;
-  --text-dim: #4B5563;
+  --text-primary: #FFFFFF;
+  --text-muted: #8B97A8;
 
   /* Borders */
   --border-glass: rgba(255, 255, 255, 0.08);
-  --border-blue: rgba(0, 229, 255, 0.2);
-  --border-violet: rgba(123, 97, 255, 0.2);
+  --border-accent: rgba(0, 245, 122, 0.2);
 
   /* Glows */
-  --glow-blue: 0 0 20px rgba(0, 229, 255, 0.35), 0 0 60px rgba(0, 229, 255, 0.1);
-  --glow-violet: 0 0 20px rgba(123, 97, 255, 0.35), 0 0 60px rgba(123, 97, 255, 0.1);
-  --glow-orange: 0 0 20px rgba(255, 138, 0, 0.35), 0 0 60px rgba(255, 138, 0, 0.1);
-  --glow-pink: 0 0 20px rgba(255, 46, 209, 0.35), 0 0 60px rgba(255, 46, 209, 0.1);
+  --glow-primary: 0 0 20px rgba(0, 245, 122, 0.35), 0 0 60px rgba(0, 245, 122, 0.1);
+  --glow-secondary: 0 0 20px rgba(0, 200, 255, 0.35), 0 0 60px rgba(0, 200, 255, 0.1);
 }
 
 /* ============================================================
@@ -53,13 +62,13 @@ html {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-exo), system-ui, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   overflow-x: hidden;
 }
 
-/* Offset fixed navbar (72px) so content never hides beneath it */
+/* Offset fixed navbar (72px) */
 main {
   min-height: calc(100vh - 72px);
 }
@@ -67,45 +76,23 @@ main {
 /* ============================================================
    TYPOGRAPHY
    ============================================================ */
-.font-orbitron { font-family: var(--font-orbitron), sans-serif; }
-.font-exo { font-family: var(--font-exo), sans-serif; }
-.font-mono { font-family: var(--font-mono), monospace; }
+.font-space { font-family: var(--font-space), sans-serif; }
+.font-inter { font-family: var(--font-inter), sans-serif; }
+.font-plex { font-family: var(--font-plex), monospace; }
+.font-jetbrains { font-family: var(--font-jetbrains), monospace; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-orbitron), sans-serif;
+  font-family: var(--font-space), sans-serif;
   font-weight: 700;
   line-height: 1.2;
   color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
-p { font-family: var(--font-exo), sans-serif; }
+p { font-family: var(--font-inter), sans-serif; }
 
 /* ============================================================
-   GRADIENT TEXT
-   ============================================================ */
-.gradient-text-blue-violet {
-  background: linear-gradient(135deg, var(--neural-blue), var(--violet));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-full {
-  background: linear-gradient(135deg, var(--neural-blue) 0%, var(--violet) 50%, var(--hive-orange) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-orange {
-  background: linear-gradient(135deg, var(--amber), var(--hive-orange));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ============================================================
-   GLASS MORPHISM
+   UTILITIES & COMPONENTS
    ============================================================ */
 .glass {
   background: var(--bg-glass);
@@ -114,212 +101,42 @@ p { font-family: var(--font-exo), sans-serif; }
   border: 1px solid var(--border-glass);
 }
 
-.glass-blue {
-  background: rgba(0, 229, 255, 0.04);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-blue);
-}
-
-.glass-violet {
-  background: rgba(123, 97, 255, 0.04);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-violet);
-}
-
-/* ============================================================
-   NEON GLOWS
-   ============================================================ */
-.glow-blue { box-shadow: var(--glow-blue); }
-.glow-violet { box-shadow: var(--glow-violet); }
-.glow-orange { box-shadow: var(--glow-orange); }
-.glow-pink { box-shadow: var(--glow-pink); }
-
-.text-glow-blue { text-shadow: 0 0 15px rgba(0, 229, 255, 0.6); }
-.text-glow-orange { text-shadow: 0 0 15px rgba(255, 138, 0, 0.6); }
-
-/* ============================================================
-   BUTTONS
-   ============================================================ */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 28px;
-  background: linear-gradient(135deg, var(--neural-blue), var(--violet));
-  color: #080B14;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 700;
-  font-size: 0.875rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
-  text-decoration: none;
-}
-
-.btn-primary:hover {
-  box-shadow: 0 0 35px rgba(0, 229, 255, 0.5), 0 0 70px rgba(0, 229, 255, 0.2);
-  transform: translateY(-2px);
-}
-
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 28px;
-  background: transparent;
-  color: var(--neural-blue);
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 600;
-  font-size: 0.875rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border-radius: 6px;
-  border: 1px solid var(--neural-blue);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.btn-ghost:hover {
-  background: rgba(0, 229, 255, 0.08);
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
-  transform: translateY(-2px);
-}
-
-.btn-orange {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 28px;
-  background: linear-gradient(135deg, var(--amber), var(--hive-orange));
-  color: #080B14;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 700;
-  font-size: 0.875rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 20px rgba(255, 186, 0, 0.3);
-  text-decoration: none;
-}
-
-.btn-orange:hover {
-  box-shadow: 0 0 35px rgba(255, 186, 0, 0.5);
-  transform: translateY(-2px);
-}
-
-/* ============================================================
-   CARDS
-   ============================================================ */
-.card-glass {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  backdrop-filter: blur(12px);
-  transition: all 0.35s ease;
-}
-
-.card-glass:hover {
-  background: rgba(255, 255, 255, 0.055);
-  border-color: rgba(0, 229, 255, 0.2);
-  transform: translateY(-4px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 229, 255, 0.1);
-}
-
-/* ============================================================
-   HEXAGON PATTERN
-   ============================================================ */
-.hex-pattern {
-  background-image:
-    radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.03) 0%, transparent 60%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V18L28 2l28 16v32L28 66z' fill='none' stroke='rgba(0,229,255,0.06)' stroke-width='1'/%3E%3C/svg%3E");
-  background-size: 56px 100px;
-}
-
-/* ============================================================
-   SECTION LABELS
-   ============================================================ */
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--neural-blue);
-  padding: 6px 14px;
-  background: rgba(0, 229, 255, 0.08);
-  border: 1px solid rgba(0, 229, 255, 0.2);
-  border-radius: 100px;
-  margin-bottom: 20px;
-}
-
-/* ============================================================
-   SCROLLBAR
-   ============================================================ */
+/* Custom Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 229, 255, 0.3);
+  background: rgba(139, 151, 168, 0.3);
   border-radius: 3px;
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(0, 229, 255, 0.5); }
+::-webkit-scrollbar-thumb:hover { background: rgba(139, 151, 168, 0.5); }
 
-/* ============================================================
-   DIVIDER
-   ============================================================ */
-.neon-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--neural-blue), var(--violet), transparent);
-  opacity: 0.4;
+/* Animations */
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 4rem)); } /* -50% minus half of the gap to perfectly seamlessly loop */
 }
-
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+@keyframes scrollRight {
+  0% { transform: translateX(calc(-50% - 4rem)); }
+  100% { transform: translateX(0); }
 }
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
-
-.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
-.animate-float { animation: float 6s ease-in-out infinite; }
 
 /* ============================================================
    SECTION SPACING
    ============================================================ */
-.section-pad { padding: 100px 0; }
-.section-pad-sm { padding: 60px 0; }
+.section-pad { padding: 120px 0; }
+.section-pad-sm { padding: 80px 0; }
 
 .container-wide {
-  max-width: 1280px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 32px;
 }
 
 @media (max-width: 768px) {
-  .section-pad { padding: 60px 0; }
-  .container-wide { padding: 0 16px; }
+  .section-pad { padding: 80px 0; }
+  .container-wide { padding: 0 24px; }
 }
