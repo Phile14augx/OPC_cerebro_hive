@@ -1,74 +1,196 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { engineeringCulture } from "@/lib/content/company/culture";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { engineeringFramework } from "@/lib/content/company/engineering";
+import { SectionMetadata } from "@/components/ui/SectionMetadata";
+import { MetricChip } from "@/components/ui/MetricChip";
+import { motionPresets } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 import { CheckCircle2 } from "lucide-react";
 
 export const EngineeringCulture = () => {
+  // Default to the first framework phase
+  const [activePhaseId, setActivePhaseId] = useState<string>(engineeringFramework.framework[0].id);
+
+  const activePhase = engineeringFramework.framework.find(p => p.id === activePhaseId) || engineeringFramework.framework[0];
+
   return (
-    <section className="section-pad bg-background">
-      <div className="container-wide">
+    <section className="section-pad relative overflow-hidden bg-[#020508] border-t border-white/5">
+      
+      {/* 1. Ambient Environment */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* Engineering Blueprint Grid */}
+        <div className="absolute inset-0 opacity-[0.06]" 
+             style={{ 
+               backgroundImage: `linear-gradient(rgba(0, 245, 122, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 245, 122, 0.4) 1px, transparent 1px)`, 
+               backgroundSize: '40px 40px',
+               maskImage: 'radial-gradient(circle at 70% 50%, black 40%, transparent 80%)',
+               WebkitMaskImage: 'radial-gradient(circle at 70% 50%, black 40%, transparent 80%)'
+             }} 
+        />
+        {/* Radial Lights */}
+        <div className="absolute top-1/2 left-0 w-[600px] h-[600px] bg-[#00E5FF]/5 rounded-full blur-[150px] mix-blend-screen -translate-y-1/2" />
+        <div className="absolute top-1/4 right-0 w-[800px] h-[800px] bg-primary-accent/5 rounded-full blur-[180px] mix-blend-screen" />
+      </div>
+
+      <div className="container-wide relative z-10">
         
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-12 items-center">
+        <motion.div 
+          variants={motionPresets.stagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="flex flex-col lg:flex-row gap-12 lg:gap-8 items-stretch"
+        >
           
-          <div className="md:w-1/2">
-            <h2 className="text-sm font-space font-bold tracking-widest uppercase text-text-muted mb-4">
-              Our Methodology
-            </h2>
-            <h3 className="text-3xl md:text-4xl font-space font-bold text-text-primary tracking-tight mb-6">
-              {engineeringCulture.tagline}
-            </h3>
-            <p className="text-text-secondary font-inter leading-relaxed mb-8">
-              We do not believe in proofs of concept that cannot scale. Every architecture we design is built with the assumption that it must survive the rigorous demands of a regulated enterprise environment.
-            </p>
+          {/* ==========================================
+              LEFT PANEL: Narrative & Framework (40%)
+             ========================================== */}
+          <div className="lg:w-[40%] flex flex-col pt-8">
+            <SectionMetadata 
+              sectionNumber={engineeringFramework.narrative.metadata.section} 
+              title={engineeringFramework.narrative.metadata.title} 
+              version={engineeringFramework.narrative.metadata.version} 
+            />
+
+            <motion.h3 variants={motionPresets.fadeUp} className="text-4xl md:text-5xl font-space font-bold text-white tracking-tight leading-[1.1] mb-6">
+              {engineeringFramework.narrative.headline}
+            </motion.div>
             
-            <ul className="space-y-4">
-              {engineeringCulture.principles.map((principle, index) => (
-                <motion.li 
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="flex items-center gap-3"
-                >
-                  <CheckCircle2 size={20} className="text-[#00F57A]" />
-                  <span className="font-space font-medium text-text-primary">{principle}</span>
-                </motion.li>
-              ))}
-            </ul>
+            <motion.p variants={motionPresets.fadeUp} className="text-lg text-text-secondary font-inter leading-relaxed mb-12 border-l-2 border-white/10 pl-6">
+              {engineeringFramework.narrative.description}
+            </motion.p>
+
+            {/* Interactive Engineering Framework Timeline */}
+            <motion.div variants={motionPresets.fadeUp} className="relative mb-16">
+              <div className="absolute left-[15px] top-6 bottom-6 w-[2px] bg-white/5" />
+              
+              <div className="flex flex-col gap-6">
+                {engineeringFramework.framework.map((phase) => {
+                  const isActive = activePhaseId === phase.id;
+                  // Color mappings for nodes
+                  const colors = {
+                    cyan: "bg-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.4)]",
+                    purple: "bg-[#9D00FF] shadow-[0_0_15px_rgba(157,0,255,0.4)]",
+                    amber: "bg-warning shadow-[0_0_15px_rgba(255,176,0,0.4)]",
+                    green: "bg-primary-accent shadow-[0_0_15px_rgba(0,245,122,0.4)]"
+                  };
+                  
+                  return (
+                    <div 
+                      key={phase.id}
+                      className="relative z-10 flex items-center gap-6 cursor-pointer group"
+                      onMouseEnter={() => setActivePhaseId(phase.id)}
+                    >
+                      {/* Node Indicator */}
+                      <div className={cn(
+                        "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300",
+                        isActive ? "border-white/40 bg-surface-elevated" : "border-white/10 bg-[#020508] group-hover:border-white/30"
+                      )}>
+                        <div className={cn(
+                          "w-2.5 h-2.5 rounded-full transition-all duration-300",
+                          isActive ? colors[phase.color as keyof typeof colors] : "bg-white/20 group-hover:bg-white/40"
+                        )} />
+                      </div>
+                      
+                      {/* Node Label */}
+                      <span className={cn(
+                        "text-sm font-space font-bold tracking-[0.15em] uppercase transition-colors duration-300",
+                        isActive ? "text-white" : "text-text-muted group-hover:text-text-secondary"
+                      )}>
+                        {phase.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+
+            {/* Engineering Proof (Built Around) */}
+            <motion.div variants={motionPresets.fadeUp} className="mt-auto bg-white/5 border border-white/5 rounded-2xl p-6 backdrop-blur-md">
+              <h4 className="text-[10px] font-space uppercase tracking-widest text-text-muted mb-4">
+                Built Around
+              </h4>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+                {engineeringFramework.narrative.proofs.map((proof, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <CheckCircle2 size={14} className="text-primary-accent opacity-70" />
+                    <span className="text-xs font-mono text-text-secondary">{proof}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
           </div>
 
-          <div className="md:w-1/2 w-full aspect-square md:aspect-auto md:h-[400px] bg-surface-elevated border border-border rounded-3xl p-8 relative overflow-hidden flex flex-col justify-end">
-             {/* Abstract representation of code/architecture */}
-             <div className="absolute inset-0 opacity-10 font-mono text-[8px] leading-tight text-primary-accent p-4 break-all overflow-hidden select-none">
-                {`function evaluateModelSafety(weights, thresholds) {
-  const complianceScore = weights.reduce((acc, w) => acc + validate(w), 0);
-  if (complianceScore < thresholds.MIN_SAFETY) throw new GovernanceError();
-  return processDeployment(weights, { secureEnclave: true });
-}
-// Continuous audit trail active
-export const SYSTEM_STATE = 'SECURE';`}
-             </div>
-             
-             <div className="relative z-10 bg-background border border-border p-6 rounded-2xl shadow-xl">
-               <div className="flex items-center gap-2 mb-4">
-                 <div className="w-3 h-3 rounded-full bg-error" />
-                 <div className="w-3 h-3 rounded-full bg-warning" />
-                 <div className="w-3 h-3 rounded-full bg-success" />
-               </div>
-               <div className="space-y-2">
-                 <div className="w-3/4 h-2 bg-surface rounded-full" />
-                 <div className="w-1/2 h-2 bg-surface rounded-full" />
-                 <div className="w-5/6 h-2 bg-primary-accent/50 rounded-full" />
-               </div>
-             </div>
-          </div>
+          {/* ==========================================
+              RIGHT PANEL: The Control Center (60%)
+             ========================================== */}
+          <motion.div variants={motionPresets.fadeUp} className="lg:w-[60%] flex flex-col">
+            <div className="relative w-full h-[600px] lg:h-full min-h-[600px] bg-[#070a0f] border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col group">
+              
+              {/* Glass Header */}
+              <div className="h-12 border-b border-white/10 bg-white/[0.02] backdrop-blur-md flex items-center px-6 justify-between shrink-0">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-error/80" />
+                  <div className="w-3 h-3 rounded-full bg-warning/80" />
+                  <div className="w-3 h-3 rounded-full bg-success/80" />
+                </div>
+                <div className="text-[10px] font-mono text-text-muted uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+                  Live Methodology
+                </div>
+              </div>
 
-        </div>
+              {/* Code Backdrop (Reacts to active phase) */}
+              <div className="flex-grow relative p-6 md:p-10 font-mono text-xs md:text-sm text-primary-accent/70 overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activePhase.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="whitespace-pre-wrap leading-relaxed"
+                  >
+                    {activePhase.codeSnippet}
+                  </motion.div>
+                </AnimatePresence>
+                
+                {/* Code Overlay Gradient to fade out bottom */}
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#070a0f] to-transparent pointer-events-none" />
+              </div>
+
+              {/* Floating Telemetry Dashboard */}
+              <div className="absolute bottom-6 right-6 left-6 grid grid-cols-2 gap-4">
+                <AnimatePresence mode="popLayout">
+                  {activePhase.telemetry.map((metric, i) => (
+                    <motion.div
+                      key={`${activePhase.id}-${i}`}
+                      initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                      transition={{ duration: 0.3, delay: i * 0.1 }}
+                    >
+                      <MetricChip 
+                        label={metric.label} 
+                        initialValue={metric.value} 
+                        status={metric.status as any} 
+                        simulateUpdates={true} 
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+
+            </div>
+          </motion.div>
+
+        </motion.div>
 
       </div>
     </section>
   );
 };
+
