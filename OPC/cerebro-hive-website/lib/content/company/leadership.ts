@@ -1,4 +1,4 @@
-﻿export const executiveProfile = {
+export const executiveProfile = {
   metadata: {
     section: "08",
     title: "Executive Leadership",
