@@ -20,6 +20,8 @@ eggs/
 .eggs/
 lib/
 lib64/
+# Allow Next.js app source lib/ directory
+!OPC/cerebro-hive-website/lib/
 parts/
 sdist/
 var/
