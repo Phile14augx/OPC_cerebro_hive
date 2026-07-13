@@ -194,6 +194,25 @@
       },
       "id": "ID-0A9A5SS",
       "createdAt": "2026-06-15T12:09:12.667Z"
+    },
+    {
+      "name": "Philemon V Nath",
+      "email": "Philemonvnath@gmail.com",
+      "company": "adi shiva",
+      "type": "solution-finder",
+      "inputs": {
+        "industry": "Technology & SaaS",
+        "teamSize": "201 - 1,000 employees",
+        "goals": [
+          "Knowledge Synthesis & Retrieval",
+          "Customer Support Automation",
+          "Sales Outbound & CRM Enrichment"
+        ],
+        "maturity": "Exploring",
+        "budget": "$5,000 - $20,000/mo"
+      },
+      "id": "ID-NVHSESV",
+      "createdAt": "2026-07-13T13:16:20.271Z"
     }
   ],
   "enrollments": [],

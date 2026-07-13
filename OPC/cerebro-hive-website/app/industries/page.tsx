@@ -4,7 +4,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IndustryExplorerProvider, useIndustryExplorer } from '@/components/industries/IndustryExplorerContext';
 import { InteractiveIndustryGlobe } from '@/components/industries/InteractiveIndustryGlobe';
-import { IndustryDetailView } from '@/components/industries/IndustryDetailView';
+
 import { AICapabilityMatrix } from '@/components/industries/AICapabilityMatrix';
 import { getIndustryBySlug } from '@/lib/data/industries';
 import { SectionHeading } from '@/components/ui/SectionHeading';
@@ -77,13 +77,6 @@ function IndustriesPageContent() {
       <section className="section-pad border-t border-border bg-surface-elevated relative z-10">
         <div className="container-wide">
           <AICapabilityMatrix />
-        </div>
-      </section>
-
-      {/* 3. Industry Explorer / Detail View */}
-      <section className="section-pad relative z-10" id="industry-detail">
-        <div className="container-wide">
-          <IndustryDetailView />
         </div>
       </section>
 

@@ -22,10 +22,10 @@ export const CEOMessage = () => {
                 <div className="absolute inset-0 flex items-center justify-center opacity-30">
                   <div className="w-full h-full opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--text-primary) 1px, transparent 0)', backgroundSize: '16px 16px' }} />
                 </div>
-                {/* <Image src="/images/placeholders/ceo.jpg" alt="Dr. Sarah Chen" fill className="object-cover grayscale" /> */}
+                {/* <Image src="/images/placeholders/ceo.jpg" alt="Philemon V Nath" fill className="object-cover grayscale" /> */}
               </div>
               <h3 className="text-2xl font-space font-bold text-text-primary mb-1">
-                Dr. Sarah Chen
+                Philemon V Nath
               </h3>
               <p className="text-sm font-space font-bold uppercase tracking-widest text-primary-accent mb-4">
                 Chief Executive Officer
@@ -75,7 +75,7 @@ export const CEOMessage = () => {
                         
                         <div className="pt-8 pb-4">
                           <p className="font-space font-bold text-text-primary text-xl">
-                            Sarah Chen
+                            Philemon V Nath
                           </p>
                           <p className="text-sm font-space uppercase tracking-widest text-text-muted mt-1">
                             CEO & Founder, CerebroHive

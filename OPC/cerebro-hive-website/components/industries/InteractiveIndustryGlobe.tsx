@@ -182,12 +182,8 @@ export function InteractiveIndustryGlobe() {
               onMouseEnter={() => setHoveredIndustry(node.slug)}
               onMouseLeave={() => setHoveredIndustry(null)}
               onClick={() => {
-                // If it's one of the fully built engines, navigate to it. Otherwise just set active to preview it.
-                if (['finance', 'manufacturing', 'healthcare', 'retail'].includes(node.slug)) {
-                  router.push(`/industries/${node.slug}`);
-                } else {
-                  setActiveIndustry(node.slug);
-                }
+                // All 15 industries are now fully built engines, navigate directly to them
+                router.push(`/industries/${node.slug}`);
               }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}

@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { milestones as timelineEvents } from "@/lib/content/company/timeline";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, CircleDashed, ArrowRight } from "lucide-react";
+import { CheckCircle2, CircleDashed } from "lucide-react";
 
 export const CompanyStoryTimeline = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,7 +17,7 @@ export const CompanyStoryTimeline = () => {
 
   return (
     <section className="section-pad bg-background relative" ref={containerRef}>
-      <div className="container-wide max-w-4xl">
+      <div className="container-wide max-w-5xl">
         
         <div className="text-center mb-24">
           <h2 className="text-sm font-space font-bold tracking-widest uppercase text-primary-accent mb-4">
@@ -29,22 +29,22 @@ export const CompanyStoryTimeline = () => {
           </h3>
         </div>
 
-        <div className="relative">
+        <div className="relative w-full">
           {/* Timeline Line (Background) */}
-          <div className="absolute top-0 bottom-0 left-4 md:left-1/2 w-[2px] bg-border -translate-x-1/2" />
+          <div className="absolute top-0 bottom-0 left-7 md:left-1/2 w-[2px] bg-border -translate-x-1/2" />
           
           {/* Timeline Line (Active/Animated) */}
           <motion.div 
-            className="absolute top-0 left-4 md:left-1/2 w-[2px] bg-gradient-to-b from-primary-accent to-[#00E5FF] -translate-x-1/2 origin-top"
+            className="absolute top-0 left-7 md:left-1/2 w-[2px] bg-gradient-to-b from-primary-accent to-[#00E5FF] -translate-x-1/2 origin-top"
             style={{ height: lineHeight }}
           />
 
           {/* Events */}
-          <div className="flex flex-col gap-12 md:gap-24 relative z-10">
+          <div className="flex flex-col gap-12 md:gap-24 relative z-10 w-full">
             {timelineEvents.map((event, index) => {
               const isEven = index % 2 === 0;
               const isCompleted = !event.year.includes("+");
-              const isCurrent = event.year === "2028"; // Just as an example for animation
+              const isCurrent = event.year === "2028"; // For animation effect
               
               return (
                 <motion.div 
@@ -53,52 +53,85 @@ export const CompanyStoryTimeline = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.6 }}
-                  className={cn(
-                    "flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-16",
-                    isEven ? "md:flex-row-reverse text-left" : "text-left md:text-right"
-                  )}
+                  className="relative flex flex-row md:grid md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-0 items-start md:items-center w-full"
                 >
-                  {/* Year & Marker */}
-                  <div className={cn(
-                    "flex flex-row items-center gap-6 md:absolute md:left-1/2 md:-translate-x-1/2 md:justify-center z-20",
-                    isEven ? "md:flex-row" : "md:flex-row-reverse"
-                  )}>
-                    {/* Only show year prominently on desktop outside the flow */}
-                    <span className="hidden md:block text-2xl font-space font-bold text-text-muted w-24 text-center">
-                      {event.year}
-                    </span>
-                    
-                    <div className="relative flex items-center justify-center">
-                      <div className="absolute inset-0 bg-background rounded-full blur-sm scale-150" />
+                  {/* Left Column (Desktop Only) */}
+                  <div className="hidden md:flex w-full justify-end items-center">
+                    {isEven ? (
+                      <span className="text-3xl font-space font-bold text-text-muted pr-16 text-right">
+                        {event.year}
+                      </span>
+                    ) : (
+                      <div className="w-full max-w-md pr-16 text-right">
+                        <div className="p-8 bg-surface-elevated border border-border rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
+                          <h4 className="text-xl font-space font-bold text-text-primary mb-3">
+                            {event.title}
+                          </h4>
+                          <p className="text-text-secondary font-inter leading-relaxed">
+                            {event.description}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Center Column (Marker) */}
+                  <div className="flex-none relative z-20 flex justify-center mt-6 md:mt-0">
+                    <div className="bg-background rounded-full p-2">
                       {isCompleted ? (
-                        <div className="w-8 h-8 rounded-full bg-primary-accent/10 border border-primary-accent flex items-center justify-center relative z-10 shadow-[0_0_15px_rgba(0,230,118,0.3)]">
-                          <CheckCircle2 size={16} className="text-primary-accent" />
+                        <div className="w-10 h-10 rounded-full bg-primary-accent/10 border border-primary-accent flex items-center justify-center relative z-10 shadow-[0_0_15px_rgba(0,230,118,0.3)]">
+                          <CheckCircle2 size={20} className="text-primary-accent" />
                         </div>
                       ) : isCurrent ? (
-                        <div className="w-8 h-8 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF] flex items-center justify-center relative z-10 shadow-[0_0_15px_rgba(0,229,255,0.4)]">
-                          <div className="w-2 h-2 rounded-full bg-[#00E5FF] animate-pulse" />
+                        <div className="w-10 h-10 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF] flex items-center justify-center relative z-10 shadow-[0_0_15px_rgba(0,229,255,0.4)]">
+                          <div className="w-3 h-3 rounded-full bg-[#00E5FF] animate-pulse" />
                         </div>
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-surface border border-text-muted flex items-center justify-center relative z-10">
-                          <CircleDashed size={16} className="text-text-muted" />
+                        <div className="w-10 h-10 rounded-full bg-surface border border-text-muted flex items-center justify-center relative z-10">
+                          <CircleDashed size={20} className="text-text-muted" />
                         </div>
                       )}
                     </div>
                   </div>
 
-                  {/* Content Card */}
-                  <div className="w-full md:w-[calc(50%-3rem)] pl-12 md:pl-0">
-                    <div className="p-8 bg-surface-elevated border border-border rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
-                      <span className="md:hidden text-sm font-space font-bold text-primary-accent mb-2 block">
-                        {event.year}
-                      </span>
-                      <h4 className="text-xl font-space font-bold text-text-primary mb-3">
-                        {event.title}
-                      </h4>
-                      <p className="text-text-secondary font-inter leading-relaxed">
-                        {event.description}
-                      </p>
-                    </div>
+                  {/* Right Column / Mobile Content */}
+                  <div className="flex-1 md:w-full md:flex md:justify-start items-center">
+                    {isEven ? (
+                      <div className="w-full max-w-md md:pl-16 text-left">
+                        <div className="p-6 md:p-8 bg-surface-elevated border border-border rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
+                          <span className="md:hidden text-sm font-space font-bold text-primary-accent mb-2 block">
+                            {event.year}
+                          </span>
+                          <h4 className="text-xl font-space font-bold text-text-primary mb-3">
+                            {event.title}
+                          </h4>
+                          <p className="text-text-secondary font-inter leading-relaxed">
+                            {event.description}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Desktop Year */}
+                        <span className="hidden md:block text-3xl font-space font-bold text-text-muted pl-16 text-left">
+                          {event.year}
+                        </span>
+                        {/* Mobile Card */}
+                        <div className="md:hidden w-full text-left">
+                          <div className="p-6 md:p-8 bg-surface-elevated border border-border rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
+                            <span className="md:hidden text-sm font-space font-bold text-primary-accent mb-2 block">
+                              {event.year}
+                            </span>
+                            <h4 className="text-xl font-space font-bold text-text-primary mb-3">
+                              {event.title}
+                            </h4>
+                            <p className="text-text-secondary font-inter leading-relaxed">
+                              {event.description}
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </motion.div>
               );

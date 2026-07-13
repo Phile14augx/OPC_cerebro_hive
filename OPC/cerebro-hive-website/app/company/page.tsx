@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 
 // Mock nodes for Org Chart
 const orgNodes = [
-  { id: '1', data: { label: 'Dr. Sarah Chen', subtitle: 'Chief Executive Officer', type: 'executive', hasTeams: false } },
+  { id: '1', data: { label: 'Philemon V Nath', subtitle: 'Chief Executive Officer', type: 'executive', hasTeams: false } },
   { id: '2', data: { label: 'Engineering & Architecture', subtitle: 'Marcus Thorne, CTO', type: 'engineering', hasTeams: true } },
   { id: '3', data: { label: 'CerebroHive Labs', subtitle: 'Elena Rodriguez, VP', type: 'research', hasTeams: true } },
   { id: '4', data: { label: 'Consulting & Delivery', subtitle: 'David Kim, Head of AI', type: 'operations', hasTeams: true } },
