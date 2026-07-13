@@ -80,12 +80,8 @@ export default function GatedDownloadModal({ title, onClose, onSuccess }: GatedD
               Thank you. The whitepaper <strong>&quot;{title}&quot;</strong> has been unlocked.
             </p>
             <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                alert("Downloading whitepaper PDF demo...");
-                onClose();
-              }}
+              href={`/whitepapers/${title.toLowerCase().replace(/\s+/g, "-")}.pdf`}
+              download
               className="btn-primary"
               style={{ width: "100%", justifyContent: "center" }}
             >

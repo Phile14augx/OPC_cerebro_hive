@@ -33,11 +33,33 @@ const benefits = [
 
 export default function CareersPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", role: "", portfolio: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          company: form.portfolio || "Not provided",
+          type: "career-application",
+          inputs: { role: form.role, portfolio: form.portfolio, message: form.message },
+        }),
+      });
+      if (!res.ok) throw new Error("Submission failed");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please email talent@cerebro-hive.com directly.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -189,10 +211,11 @@ export default function CareersPage() {
                 <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted">Tell Us About Yourself *</label>
                 <textarea required rows={5} value={form.message} onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))} placeholder="What are you working on? What kind of problems excite you? What are you looking for in your next role?" className="px-4 py-3 bg-surface border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none" />
               </div>
-              <button type="submit" className="flex items-center justify-center gap-3 px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated mt-2">
+              <button type="submit" disabled={isLoading} className="flex items-center justify-center gap-3 px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated mt-2 disabled:opacity-60 disabled:cursor-not-allowed">
                 <Send size={16} />
-                Submit Profile
+                {isLoading ? "Sending…" : "Submit Profile"}
               </button>
+              {error && <p className="text-red-400 text-xs text-center">{error}</p>}
             </form>
           )}
         </div>

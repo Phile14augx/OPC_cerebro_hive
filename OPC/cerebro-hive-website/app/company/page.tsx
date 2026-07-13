@@ -1,8 +1,6 @@
 import React, { Suspense } from 'react';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import { CompanySidebar } from '@/components/company/navigation/CompanySidebar';
 
 // Load immediately (Above the fold & critical content)
@@ -48,8 +46,7 @@ const orgEdges = [
 
 export default function CompanyPage() {
   return (
-    <main className="min-h-screen bg-background relative selection:bg-primary-accent/30 selection:text-white">
-      <Navbar />
+    <div className="min-h-screen bg-background relative selection:bg-primary-accent/30 selection:text-white">
 
       <div id="hero">
         <CompanyHero />
@@ -115,7 +112,6 @@ export default function CompanyPage() {
         </div>
       </div>
 
-      <Footer />
-    </main>
+    </div>
   );
 }

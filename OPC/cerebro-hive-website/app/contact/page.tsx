@@ -57,12 +57,34 @@ const InputField = ({ label, placeholder, type = "text", value, onChange }: { la
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", company: "", email: "", phone: "", industry: "", companySize: "", budget: "", projectType: "", timeline: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          subject: `[${form.projectType || "Inquiry"}] from ${form.company}`,
+          message: `Company: ${form.company}\nPhone: ${form.phone}\nIndustry: ${form.industry}\nCompany Size: ${form.companySize}\nBudget: ${form.budget}\nTimeline: ${form.timeline}\n\n${form.message}`,
+        }),
+      });
+      if (!res.ok) throw new Error("Submission failed");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try again or email us directly.");
+    } finally {
+      setIsLoading(false);
+    }
   };
+
 
   return (
     <div className="bg-background min-h-screen">
@@ -136,12 +158,14 @@ export default function ContactPage() {
                     className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-text-primary font-inter text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none"
                   />
                 </div>
-                <button type="submit" className="group relative mt-2 px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
-                  Submit Inquiry
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                <button type="submit" disabled={isLoading} className="group relative mt-2 px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated disabled:opacity-60 disabled:cursor-not-allowed">
+                  {isLoading ? "Sending…" : "Submit Inquiry"}
+                  {!isLoading && <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />}
                 </button>
+                {error && <p className="text-red-400 text-xs text-center mt-1">{error}</p>}
                 <p className="text-[11px] text-text-muted text-center">We respect your privacy. Your information is never shared with third parties.</p>
               </form>
+
             )}
           </motion.div>
 

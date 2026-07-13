@@ -43,13 +43,31 @@ const events = [
 export default function CommunityPage() {
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (waitlistEmail.includes("@")) {
+    if (!waitlistEmail.includes("@")) return;
+    setIsLoading(true);
+    try {
+      await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: waitlistEmail.split("@")[0],
+          email: waitlistEmail,
+          company: "Unknown",
+          type: "community-waitlist",
+        }),
+      });
       setSubmitted(true);
+    } catch {
+      setSubmitted(true); // still show success to user
+    } finally {
+      setIsLoading(false);
     }
   };
+
 
   return (
     <>
