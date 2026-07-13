@@ -7,7 +7,7 @@ import { industriesData, getIndustryBySlug } from '@/lib/data/industries';
 import { SectionHeading } from '../ui/SectionHeading';
 import { ArrowRight, BrainCircuit, Activity, Database, Server, User, Box, ArrowDownRight, Layers, FileText, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '../ui/Button';
+import { AnimatedButton as Button } from '../ui/AnimatedButton';
 
 // Icon mapping for architecture nodes
 const nodeIconMap: Record<string, any> = {

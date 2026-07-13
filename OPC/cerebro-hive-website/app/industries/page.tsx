@@ -8,7 +8,7 @@ import { IndustryDetailView } from '@/components/industries/IndustryDetailView';
 import { AICapabilityMatrix } from '@/components/industries/AICapabilityMatrix';
 import { getIndustryBySlug } from '@/lib/data/industries';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { Button } from '@/components/ui/Button';
+import { AnimatedButton as Button } from '@/components/ui/AnimatedButton';
 import { Grid, Layers, BrainCircuit, Box, Search, ShieldCheck } from 'lucide-react';
 
 function IndustriesPageContent() {
