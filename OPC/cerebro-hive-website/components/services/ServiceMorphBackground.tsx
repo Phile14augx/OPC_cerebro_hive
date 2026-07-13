@@ -304,7 +304,7 @@ const CursorLayer = () => {
 /* =========================================
    ORCHESTRATOR COMPONENT
    ========================================= */
-export const ServiceMorphBackground = ({ scrollContainerRef }: { scrollContainerRef: React.RefObject<HTMLDivElement> }) => {
+export const ServiceMorphBackground = ({ scrollContainerRef }: { scrollContainerRef: React.RefObject<HTMLElement> }) => {
   const { setScrollStage, setCursorPosition, reducedMotion } = useServiceAnimation();
   const { scrollYProgress } = useScroll({
     target: scrollContainerRef,

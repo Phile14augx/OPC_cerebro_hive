@@ -54,6 +54,7 @@ function IndustriesPageContent() {
             <div className="flex flex-col gap-3">
               <span className="text-xs font-bold uppercase tracking-widest text-text-muted">Flagship Industry Architectures</span>
               <div className="flex flex-wrap gap-3">
+                <Link href="/industries/retail" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#E81CFF] transition-colors text-sm font-bold text-text-primary">Intelligent Retail</Link>
                 <Link href="/industries/finance" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#00B8FF] transition-colors text-sm font-bold text-text-primary">Financial Services</Link>
                 <Link href="/industries/manufacturing" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#00E5FF] transition-colors text-sm font-bold text-text-primary">Smart Manufacturing</Link>
                 <Link href="/industries/healthcare" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#00E676] transition-colors text-sm font-bold text-text-primary">Healthcare</Link>
