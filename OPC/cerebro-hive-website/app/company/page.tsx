@@ -5,7 +5,6 @@ import { CompanySidebar } from '@/components/company/navigation/CompanySidebar';
 
 // Load immediately (Above the fold & critical content)
 import { CompanyHero } from '@/components/company/hero/CompanyHero';
-import { CEOMessage } from '@/components/company/leadership/CEOMessage';
 import { VisionMission } from '@/components/company/story/VisionMission';
 
 // Lazy load heavy components
@@ -58,10 +57,6 @@ export default function CompanyPage() {
         
         {/* Main Content */}
         <div className="flex-1 min-w-0">
-          <div id="ceo-letter">
-            <CEOMessage />
-          </div>
-
           <div id="vision">
             <VisionMission />
           </div>

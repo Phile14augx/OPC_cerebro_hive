@@ -1,144 +1,254 @@
-"use client";
+﻿"use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { executiveLeadership as leadershipTeam } from "@/lib/content/company/leadership";
-import { ArrowUpRight, Globe, ChevronDown } from "lucide-react";
+import React from "react";
+import { motion } from "framer-motion";
+import { CheckCircle2, Workflow, ArrowDown } from "lucide-react";
 import Image from "next/image";
-import { cn, withBasePath } from "@/lib/utils";
+import { withBasePath, cn } from "@/lib/utils";
+import { organizationalCapabilities } from "@/lib/content/company/organizationalCapabilities";
+import { SectionMetadata } from "@/components/ui/SectionMetadata";
+import { MetricChip } from "@/components/ui/MetricChip";
+import { motionPresets } from "@/lib/motion";
 
-// Group the team by category
-const groupedLeadership = leadershipTeam.reduce((acc, leader) => {
-  if (!acc[leader.category]) {
-    acc[leader.category] = [];
-  }
-  acc[leader.category].push(leader);
-  return acc;
-}, {} as Record<string, typeof leadershipTeam>);
+// Helper components for visual consistency
+const CapabilityPanel = ({ children, className }: { children: React.ReactNode, className?: string }) => (
+  <div className={cn("relative rounded-3xl border border-white/5 bg-[#0a0f12] overflow-hidden p-8 lg:p-12", className)}>
+    {children}
+  </div>
+);
 
-const categories = ["Executive", "Engineering", "Research", "Product", "Operations"];
+const SectionBackground = ({ theme }: { theme: "gold" | "cyan" | "purple" }) => {
+  const backgrounds = {
+    gold: "linear-gradient(rgba(255, 215, 0, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 215, 0, 0.4) 1px, transparent 1px)", // Subtle lines
+    cyan: "linear-gradient(rgba(0, 229, 255, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.4) 1px, transparent 1px)", // Blueprint
+    purple: "linear-gradient(rgba(157, 0, 255, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 0, 255, 0.4) 1px, transparent 1px)" // Mesh proxy
+  };
+  return (
+    <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.02]"
+         style={{
+           backgroundImage: backgrounds[theme],
+           backgroundSize: '80px 80px',
+           maskImage: 'radial-gradient(circle at 50% 50%, black 30%, transparent 80%)',
+           WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 30%, transparent 80%)'
+         }}
+    />
+  );
+};
 
 export const LeadershipGrid = () => {
-  // Open by default for Executive
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    Executive: true,
-    Engineering: true,
-    Research: true,
-  });
-
-  const toggleCategory = (category: string) => {
-    setExpandedCategories(prev => ({ ...prev, [category]: !prev[category] }));
-  };
+  const [executive, engineering, research] = organizationalCapabilities.departments;
 
   return (
-    <section className="section-pad overflow-hidden bg-background">
-      <div className="container-wide">
+    <section className="section-pad relative overflow-hidden bg-background">
+      <div className="container-wide relative z-10 flex flex-col gap-8">
         
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 md:mb-24 border-b border-border pb-12">
-          <div className="max-w-2xl">
-            <h2 className="text-sm font-space font-bold tracking-widest uppercase text-text-muted mb-4">
-              Our Leadership
-            </h2>
-            <h3 className="text-4xl md:text-5xl font-space font-bold text-text-primary tracking-tight">
-              Guided by Experience. <br/>
-              Driven by <span className="text-primary-accent">Execution.</span>
-            </h3>
+        {/* ==========================================
+            EXECUTIVE CAPABILITY (40% Weight)
+           ========================================== */}
+        <motion.div variants={motionPresets.fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }}>
+          <CapabilityPanel className="flex flex-col lg:flex-row gap-12 lg:gap-16 border-t-[3px] border-t-amber-500/50">
+            <SectionBackground theme="gold" />
+            
+            {/* Identity */}
+            <div className="lg:w-[35%] relative z-10">
+              <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-surface mb-6 shadow-2xl">
+                <Image src={withBasePath(executive.portrait.image)} alt={executive.portrait.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.8)] pointer-events-none" />
+              </div>
+              <h3 className="text-3xl font-space font-bold text-white mb-2">{executive.title}</h3>
+              <p className="text-sm font-inter text-text-secondary">{executive.subtitle}</p>
+            </div>
+
+            {/* Narrative */}
+            <div className="lg:w-[65%] relative z-10 flex flex-col">
+              <p className="text-2xl md:text-3xl font-space font-bold text-white/90 leading-tight mb-12 pl-6 border-l-2 border-amber-500/30">
+                "{executive.philosophy.quote}"
+              </p>
+              
+              <div className="grid md:grid-cols-2 gap-12 mt-auto">
+                <div>
+                  <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-6">Leadership Philosophy</h4>
+                  <div className="flex flex-col gap-4">
+                    {executive.philosophy.framework.map((step, i) => (
+                      <div key={i} className="flex items-center gap-4">
+                        <span className="text-[10px] font-mono font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">{step.label}</span>
+                        <span className="text-sm font-space font-bold text-white">{step.title}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="flex flex-col gap-8">
+                  <div>
+                    <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-4">Clients Can Expect</h4>
+                    <ul className="flex flex-col gap-2">
+                      {executive.commitments?.map((commitment, i) => (
+                        <li key={i} className="flex items-center gap-2 text-xs font-mono text-text-secondary">
+                          <CheckCircle2 size={14} className="text-amber-500 opacity-80" /> {commitment}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-4">Strategic Focus</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {executive.priorities.map((p, i) => (
+                        <span key={i} className="text-[10px] font-mono text-text-muted bg-white/5 border border-white/10 px-2 py-1 rounded cursor-default hover:bg-white/10">{p}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CapabilityPanel>
+        </motion.div>
+
+        {/* Visual Connector */}
+        <div className="hidden lg:flex justify-center -my-4 relative z-20 pointer-events-none">
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] font-mono text-amber-500/70 mb-2 uppercase tracking-widest bg-background px-4">Directs</span>
+            <div className="h-12 w-[1px] bg-gradient-to-b from-amber-500/50 to-cyan-500/50" />
+            <ArrowDown size={14} className="text-cyan-500/50 -mt-2" />
           </div>
-          <p className="text-text-secondary font-inter max-w-sm">
-            Our leadership team brings decades of experience scaling enterprise software, securing regulated architectures, and delivering measurable ROI.
-          </p>
         </div>
 
-        <div className="flex flex-col gap-8">
-          {categories.map((category) => {
-            const team = groupedLeadership[category];
-            // If we don't have members for this category in our dummy data, skip rendering or render empty state.
-            // Let's only render if there are members to keep it clean.
-            if (!team || team.length === 0) return null;
-
-            const isExpanded = !!expandedCategories[category];
-
-            return (
-              <div key={category} className="border border-border rounded-3xl bg-surface-elevated overflow-hidden">
-                <button 
-                  onClick={() => toggleCategory(category)}
-                  className="w-full flex items-center justify-between p-6 md:p-8 hover:bg-white/[0.02] transition-colors"
-                >
-                  <h4 className="text-2xl font-space font-bold text-text-primary">
-                    {category}
-                  </h4>
-                  <div className="w-10 h-10 rounded-full border border-border flex items-center justify-center bg-surface">
-                    <ChevronDown size={20} className={cn("text-text-secondary transition-transform duration-300", isExpanded && "rotate-180")} />
-                  </div>
-                </button>
-                
-                <AnimatePresence initial={false}>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                    >
-                      <div className="p-6 md:p-8 pt-0 border-t border-border mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {team.map((leader, index) => (
-                          <motion.div
-                            key={leader.name}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4, delay: index * 0.1 }}
-                            className="group cursor-pointer"
-                          >
-                            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-surface border border-border">
-                              {/* Fallback pattern */}
-                              <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                                <div className="w-full h-full opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--text-primary) 1px, transparent 0)', backgroundSize: '16px 16px' }} />
-                              </div>
-                              
-                              {/* Leader Image */}
-                              {leader.image && (
-                                <Image 
-                                  src={withBasePath(leader.image)} 
-                                  alt={leader.name} 
-                                  fill 
-                                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 z-0" 
-                                />
-                              )}
-
-                              
-                              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-                              
-                              <div className="absolute bottom-4 right-4 z-20 flex gap-2 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                <button className="w-8 h-8 rounded-full bg-surface/80 backdrop-blur border border-border flex items-center justify-center text-text-primary hover:text-primary-accent hover:border-primary-accent transition-colors">
-                                  <Globe size={14} />
-                                </button>
-                              </div>
-                            </div>
-                            
-                            <div>
-                              <div className="flex items-center justify-between mb-1">
-                                <h4 className="text-xl font-space font-bold text-text-primary group-hover:text-primary-accent transition-colors">
-                                  {leader.name}
-                                </h4>
-                                <ArrowUpRight size={16} className="text-text-muted opacity-0 group-hover:opacity-100 -translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-all" />
-                              </div>
-                              <p className="text-sm font-space font-medium text-text-secondary uppercase tracking-wider mb-3">
-                                {leader.role}
-                              </p>
-                              <p className="text-sm text-text-muted font-inter leading-relaxed line-clamp-3">
-                                {leader.bio}
-                              </p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+        {/* ==========================================
+            ENGINEERING CAPABILITY (35% Weight)
+           ========================================== */}
+        <motion.div variants={motionPresets.fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }}>
+          <CapabilityPanel className="flex flex-col lg:flex-row gap-12 lg:gap-16 border-t-[3px] border-t-cyan-500/50 py-10 lg:py-10">
+            <SectionBackground theme="cyan" />
+            
+            {/* Identity */}
+            <div className="lg:w-[35%] relative z-10 flex flex-col justify-center">
+              <div className="flex items-center gap-6 mb-6">
+                <div className="w-20 h-20 rounded-full overflow-hidden bg-surface relative shadow-lg">
+                  <Image src={withBasePath(engineering.portrait.image)} alt={engineering.portrait.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-space font-bold text-white">{engineering.title}</h3>
+                  <p className="text-sm font-inter text-text-secondary">{engineering.subtitle}</p>
+                </div>
               </div>
-            );
-          })}
+              <p className="text-sm font-inter font-medium text-white/80 leading-relaxed pl-4 border-l-2 border-cyan-500/30">
+                "{engineering.philosophy.quote}"
+              </p>
+            </div>
+
+            {/* Narrative */}
+            <div className="lg:w-[65%] relative z-10 grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-6">Engineering Framework</h4>
+                <div className="flex flex-col gap-3 relative">
+                  <div className="absolute left-[11px] top-4 bottom-4 w-[1px] bg-white/10" />
+                  {engineering.philosophy.framework.map((step, i) => (
+                    <div key={i} className="flex items-center gap-4 relative z-10">
+                      <div className="w-6 h-6 rounded-full bg-[#0a0f12] border border-cyan-500/40 flex items-center justify-center text-[8px] font-mono font-bold text-cyan-500">{step.label}</div>
+                      <span className="text-sm font-space font-bold text-white uppercase tracking-wider">{step.title}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-8">
+                <div>
+                  <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-4">Live Metrics</h4>
+                  <div className="flex flex-col gap-3">
+                    {engineering.metrics?.map((m, i) => (
+                      <MetricChip key={i} label={m.label} initialValue={m.value} status={m.status as any} />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-4">Core Competencies</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {engineering.priorities.map((p, i) => (
+                      <span key={i} className="text-[10px] font-mono text-cyan-500/70 border border-cyan-500/20 bg-cyan-500/5 px-2 py-1 rounded cursor-default">{p}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CapabilityPanel>
+        </motion.div>
+
+        {/* Visual Connector */}
+        <div className="hidden lg:flex justify-center -my-4 relative z-20 pointer-events-none">
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] font-mono text-cyan-500/70 mb-2 uppercase tracking-widest bg-background px-4">Builds & Operates</span>
+            <div className="h-12 w-[1px] bg-gradient-to-b from-cyan-500/50 to-purple-500/50" />
+            <ArrowDown size={14} className="text-purple-500/50 -mt-2" />
+          </div>
+        </div>
+
+        {/* ==========================================
+            RESEARCH CAPABILITY (25% Weight)
+           ========================================== */}
+        <motion.div variants={motionPresets.fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }}>
+          <CapabilityPanel className="flex flex-col lg:flex-row gap-8 lg:gap-16 border-t-[3px] border-t-purple-500/50 py-8 lg:py-8">
+            <SectionBackground theme="purple" />
+            
+            {/* Identity */}
+            <div className="lg:w-[35%] relative z-10 flex flex-col justify-center">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden bg-surface relative shadow-lg">
+                  <Image src={withBasePath(research.portrait.image)} alt={research.portrait.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-space font-bold text-white">{research.title}</h3>
+                  <p className="text-xs font-inter text-text-secondary">{research.subtitle}</p>
+                </div>
+              </div>
+              <p className="text-xs font-inter font-medium text-white/70 leading-relaxed pl-4 border-l-2 border-purple-500/30">
+                "{research.philosophy.quote}"
+              </p>
+            </div>
+
+            {/* Narrative */}
+            <div className="lg:w-[65%] relative z-10 grid md:grid-cols-3 gap-8 items-start">
+              
+              <div className="md:col-span-1">
+                <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-4">Innovation Pipeline</h4>
+                <div className="flex gap-2">
+                  {research.philosophy.framework.map((step, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono font-bold text-purple-500 uppercase">{step.title}</span>
+                      {i < research.philosophy.framework.length - 1 && <Workflow size={10} className="text-white/20" />}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="md:col-span-1">
+                <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-4">Applied Themes</h4>
+                <div className="flex flex-wrap gap-2">
+                  {research.priorities.map((p, i) => (
+                    <span key={i} className="text-[10px] font-mono text-purple-500/70 border border-purple-500/20 bg-purple-500/5 px-2 py-1 rounded cursor-default">{p}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="md:col-span-1">
+                <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-4">Ecosystem Value</h4>
+                <div className="flex flex-col gap-2">
+                  {research.metrics?.map((m, i) => (
+                    <div key={i} className="flex flex-col gap-1 p-2 rounded-lg bg-white/5 border border-white/5">
+                      <span className="text-[10px] font-mono text-text-muted">{m.label}</span>
+                      <span className="text-xs font-space font-bold text-white">{m.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </CapabilityPanel>
+        </motion.div>
+
+        {/* Final Connector to Outcomes */}
+        <div className="hidden lg:flex justify-center -mt-4 relative z-20 pointer-events-none">
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] font-mono text-success/70 mb-2 uppercase tracking-widest bg-background px-4">Delivers Client Outcomes</span>
+          </div>
         </div>
 
       </div>
