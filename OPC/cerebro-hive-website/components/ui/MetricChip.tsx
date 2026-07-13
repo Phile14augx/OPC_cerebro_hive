@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -30,7 +30,7 @@ export const MetricChip = ({ label, initialValue, status = "success", simulateUp
       // Fluctuate by -1 to +1
       const fluctuation = (Math.random() * 2) - 1;
       const newValue = (baseValue + fluctuation).toFixed(isPercent ? 2 : 0);
-      setValue(\\\\);
+      setValue(`${newValue}${isMs ? "ms" : "%"}`);
     }, 2500);
 
     return () => clearInterval(interval);
