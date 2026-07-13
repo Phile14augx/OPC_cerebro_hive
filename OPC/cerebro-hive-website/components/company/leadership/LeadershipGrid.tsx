@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { executiveLeadership as leadershipTeam } from "@/lib/content/company/leadership";
 import { ArrowUpRight, Globe, ChevronDown } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 // Group the team by category
@@ -94,6 +95,17 @@ export const LeadershipGrid = () => {
                               <div className="absolute inset-0 flex items-center justify-center opacity-30">
                                 <div className="w-full h-full opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--text-primary) 1px, transparent 0)', backgroundSize: '16px 16px' }} />
                               </div>
+                              
+                              {/* Leader Image */}
+                              {leader.image && (
+                                <Image 
+                                  src={leader.image} 
+                                  alt={leader.name} 
+                                  fill 
+                                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 z-0" 
+                                />
+                              )}
+
                               
                               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
                               
