@@ -1,68 +1,98 @@
 "use client";
 
 import React from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { industriesData } from '@/lib/data/industries';
+import { motion, AnimatePresence } from 'framer-motion';
+import { IndustryExplorerProvider, useIndustryExplorer } from '@/components/industries/IndustryExplorerContext';
+import { InteractiveIndustryGlobe } from '@/components/industries/InteractiveIndustryGlobe';
+import { IndustryDetailView } from '@/components/industries/IndustryDetailView';
+import { AICapabilityMatrix } from '@/components/industries/AICapabilityMatrix';
+import { getIndustryBySlug } from '@/lib/data/industries';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { ArrowRight, Globe, BarChart3, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Grid, Layers, BrainCircuit, Box, Search, ShieldCheck } from 'lucide-react';
 
-export default function IndustriesIndexPage() {
+function IndustriesPageContent() {
+  const { activeIndustry } = useIndustryExplorer();
+  const industry = activeIndustry ? getIndustryBySlug(activeIndustry) : null;
+  const themeColor = industry?.color || 'var(--accent-primary)';
+
   return (
-    <div className="bg-background min-h-screen selection:bg-primary-accent/30 transition-colors duration-500">
+    <div className="bg-background min-h-screen transition-colors duration-1000 relative">
       
-      {/* Premium Hero */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-        {/* Placeholder for Interactive Globe */}
-        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none flex items-center justify-center">
-          <Globe size={800} className="text-primary-accent animate-[spin_120s_linear_infinite]" />
-        </div>
-        
-        <div className="container-wide relative z-10 flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">
-             <span className="w-2 h-2 rounded-full bg-primary-accent animate-pulse" />
-             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Global Impact</span>
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-space font-bold text-text-primary leading-[1.1] tracking-tight mb-6 max-w-4xl">
-            Enterprise AI Across <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-[#00E5FF]">Every Industry</span>
-          </h1>
-          
-          <p className="text-lg md:text-xl text-text-secondary font-inter max-w-2xl leading-relaxed mb-16">
-            From healthcare diagnostics to financial fraud prevention, CerebroHive builds intelligent systems that solve domain-specific enterprise challenges.
-          </p>
+      {/* Dynamic Background Blur that shifts based on active industry */}
+      <div 
+        className="fixed inset-0 pointer-events-none opacity-[0.03] transition-colors duration-1000 z-0" 
+        style={{ backgroundColor: themeColor }}
+      />
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-5xl">
-            {industriesData.map((ind) => (
-              <Link key={ind.slug} href={`/industries/${ind.slug}`}>
-                <motion.div 
-                  whileHover={{ y: -5 }}
-                  className="px-6 py-8 rounded-2xl bg-surface-elevated border border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary-accent/50 group cursor-pointer"
-                >
-                  <span className="text-sm font-bold text-text-primary group-hover:text-primary-accent transition-colors">{ind.name}</span>
-                  <ArrowRight size={14} className="text-text-muted group-hover:text-primary-accent opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
-                </motion.div>
-              </Link>
-            ))}
+      {/* 1. Hero & Interactive Globe (Split Layout) */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-16 overflow-hidden">
+        <div className="container-wide relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          {/* Left: Text & CTA */}
+          <div className="flex flex-col items-start">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">
+               <span className="w-2 h-2 rounded-full bg-primary-accent animate-pulse" />
+               <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Enterprise Transformation</span>
+            </div>
+            
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary leading-[1.1] tracking-tight mb-6">
+              Industry <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-[#00E5FF]">Intelligence</span>
+            </h1>
+            
+            <p className="text-lg text-text-secondary font-inter max-w-lg leading-relaxed mb-8">
+              Explore how CerebroHive transforms entire industries through AI. 
+              Select an industry from the globe to see custom reference architectures, AI agents, and business outcomes.
+            </p>
+            
+            <div className="flex gap-4">
+              <Button variant="primary">Talk to an Architect</Button>
+            </div>
           </div>
+
+          {/* Right: Interactive Globe */}
+          <div className="relative w-full h-[500px] lg:h-[700px] flex items-center justify-center">
+            {/* The globe overlaps slightly with the hero space visually */}
+            <div className="absolute inset-[-20%]">
+              <InteractiveIndustryGlobe />
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* Global Statistics */}
-      <section className="section-pad border-t border-border bg-surface-elevated">
+      {/* 2. Capability Matrix */}
+      <section className="section-pad border-t border-border bg-surface-elevated relative z-10">
         <div className="container-wide">
-          <SectionHeading label="Scale" title="Measurable Transformation" description="Driving efficiency and intelligence globally." />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+          <AICapabilityMatrix />
+        </div>
+      </section>
+
+      {/* 3. Industry Explorer / Detail View */}
+      <section className="section-pad relative z-10" id="industry-detail">
+        <div className="container-wide">
+          <IndustryDetailView />
+        </div>
+      </section>
+
+      {/* 4. Global Scale Metrics (Replaced) */}
+      <section className="section-pad border-t border-border bg-surface-elevated relative z-10">
+        <div className="container-wide">
+          <SectionHeading label="Scale" title="Platform Capabilities" description="Enterprise infrastructure deployed globally." />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-16">
             {[
-              { metric: "$1.2B+", label: "Value Generated", icon: BarChart3 },
-              { metric: "40M+", label: "Inferences Daily", icon: TrendingUp },
-              { metric: "12", label: "Industry Verticals", icon: Globe }
+              { metric: "12", label: "Industry Verticals", icon: Grid },
+              { metric: "350+", label: "Enterprise Use Cases", icon: Search },
+              { metric: "45+", label: "Reference Architectures", icon: Layers },
+              { metric: "25+", label: "Solution Blueprints", icon: Box },
+              { metric: "10", label: "Proprietary Frameworks", icon: ShieldCheck },
+              { metric: "50+", label: "Domain AI Agents", icon: BrainCircuit }
             ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center p-10 bg-surface border border-border rounded-2xl">
-                <stat.icon size={32} className="text-primary-accent mb-6" />
-                <span className="text-5xl font-space font-bold text-text-primary mb-2">{stat.metric}</span>
-                <span className="text-sm uppercase tracking-widest text-text-muted font-bold">{stat.label}</span>
+              <div key={i} className="flex flex-col items-center p-8 bg-surface border border-border rounded-2xl group hover:border-primary-accent/50 transition-colors">
+                <stat.icon size={28} className="text-text-muted group-hover:text-primary-accent mb-4 transition-colors" />
+                <span className="text-4xl md:text-5xl font-space font-bold text-text-primary mb-2">{stat.metric}</span>
+                <span className="text-xs uppercase tracking-widest text-text-muted font-bold text-center">{stat.label}</span>
               </div>
             ))}
           </div>
@@ -70,5 +100,13 @@ export default function IndustriesIndexPage() {
       </section>
 
     </div>
+  );
+}
+
+export default function IndustriesIndexPage() {
+  return (
+    <IndustryExplorerProvider>
+      <IndustriesPageContent />
+    </IndustryExplorerProvider>
   );
 }
