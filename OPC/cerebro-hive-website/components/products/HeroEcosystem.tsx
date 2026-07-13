@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { BrainCircuit, Cpu, Database, LayoutTemplate, Network, Search, Zap } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, withBasePath } from "@/lib/utils";
 
 // Nodes in the ecosystem
 const nodes = [
@@ -38,7 +38,7 @@ export const HeroEcosystem = () => {
       {/* Background ambient lighting */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-accent/10 rounded-full blur-[120px]" />
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-screen scale-150" style={{ backgroundImage: "url('/images/noise.png')" }} />
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-screen scale-150" style={{ backgroundImage: `url('${withBasePath('/images/noise.png')}')` }} />
       </div>
 
       <motion.div style={{ y: yPos, opacity }} className="relative z-10 w-full max-w-[1200px] mx-auto px-6 flex flex-col items-center">

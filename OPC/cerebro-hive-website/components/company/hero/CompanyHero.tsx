@@ -3,6 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Globe2, Activity } from "lucide-react";
+import { withBasePath } from "@/lib/utils";
 
 const AnimatedGlobe = () => {
   return (
@@ -113,7 +114,7 @@ export const CompanyHero = () => {
       {/* Background ambient lighting */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[500px] bg-primary-accent/10 rounded-full blur-[150px]" />
-        <div className="absolute inset-0 opacity-[0.03] dark:mix-blend-screen mix-blend-multiply scale-150" style={{ backgroundImage: "url('/images/noise.png')" }} />
+        <div className="absolute inset-0 opacity-[0.03] dark:mix-blend-screen mix-blend-multiply scale-150" style={{ backgroundImage: `url('${withBasePath('/images/noise.png')}')` }} />
       </div>
 
       <div className="container-wide relative z-10 grid lg:grid-cols-2 gap-12 items-center">

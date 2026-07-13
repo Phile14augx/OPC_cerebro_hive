@@ -8,7 +8,7 @@ import {
   BrainCircuit, Activity, ChevronRight, Play, Server, Clock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { cn, withBasePath } from "@/lib/utils";
 
 const FLOAT_Y = [0, -8, 0];
 
@@ -63,7 +63,7 @@ export default function AIAgentShowcase() {
       {/* Ambient Neural Background */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--color-primary-accent,rgba(0,245,122,0.1))_0%,_transparent_50%)] opacity-30 blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.03] dark:mix-blend-screen mix-blend-multiply scale-150" style={{ backgroundImage: "url('/images/noise.png')" }} />
+        <div className="absolute inset-0 opacity-[0.03] dark:mix-blend-screen mix-blend-multiply scale-150" style={{ backgroundImage: `url('${withBasePath('/images/noise.png')}')` }} />
       </div>
 
       <div className="container-wide relative z-10 mb-10">
