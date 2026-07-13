@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const isGithubActions = process.env.GITHUB_ACTIONS === "true";
-const repo = "YOUR_REPOSITORY_NAME";
+const repo = "OPC_cerebro_hive";
 
 const nextConfig: NextConfig = {
   output: "export",
