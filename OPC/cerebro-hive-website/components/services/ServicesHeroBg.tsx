@@ -6,8 +6,8 @@ import { motion } from "framer-motion";
 export const ServicesHeroBg = () => {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none -z-10">
-      {/* Base Dark Gradient */}
-      <div className="absolute inset-0 bg-[#050A0F]" />
+      {/* Base Background */}
+      <div className="absolute inset-0 bg-background" />
       
       {/* Ambient glows */}
       <motion.div 
@@ -25,8 +25,8 @@ export const ServicesHeroBg = () => {
       <div className="absolute inset-0" 
            style={{
              backgroundImage: `
-               linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-               linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
+               linear-gradient(var(--color-border) 1px, transparent 1px),
+               linear-gradient(90deg, var(--color-border) 1px, transparent 1px)
              `,
              backgroundSize: '40px 40px',
              backgroundPosition: 'center center'
@@ -37,8 +37,8 @@ export const ServicesHeroBg = () => {
       <div className="absolute inset-0" 
            style={{
              backgroundImage: `
-               linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-               linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)
+               linear-gradient(var(--color-border) 1px, transparent 1px),
+               linear-gradient(90deg, var(--color-border) 1px, transparent 1px)
              `,
              backgroundSize: '200px 200px',
              backgroundPosition: 'center center'
@@ -104,13 +104,13 @@ export const ServicesHeroBg = () => {
         <circle cx="80%" cy="80%" r="3" fill="#00E5FF" className="animate-pulse" />
         
         {/* Decorative Architecture Boxes */}
-        <rect x="15%" y="15%" width="10%" height="10%" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-        <rect x="75%" y="75%" width="10%" height="10%" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+        <rect x="15%" y="15%" width="10%" height="10%" fill="none" stroke="var(--color-border)" strokeWidth="1" />
+        <rect x="75%" y="75%" width="10%" height="10%" fill="none" stroke="var(--color-border)" strokeWidth="1" />
 
       </svg>
       
       {/* Bottom fade */}
-      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#050A0F] to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-background to-transparent" />
     </div>
   );
 };

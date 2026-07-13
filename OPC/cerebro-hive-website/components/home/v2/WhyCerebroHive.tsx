@@ -82,7 +82,7 @@ const AICore = ({ isActive }: { isActive: boolean }) => (
       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       className="absolute inset-0 bg-primary-accent blur-md rounded-full"
     />
-    <div className={cn("relative z-10 p-2 rounded-full border border-white/20 transition-colors duration-500", isActive ? "bg-black text-primary-accent shadow-[0_0_20px_#00F57A]" : "bg-black/50 text-gray-500")}>
+    <div className={cn("relative z-10 p-2 rounded-full border border-border transition-colors duration-500", isActive ? "bg-surface-elevated text-primary-accent shadow-[0_0_20px_#00F57A]" : "bg-surface/50 text-text-muted")}>
       <BrainCircuit size={20} />
     </div>
   </div>
@@ -108,13 +108,17 @@ export default function WhyCerebroHive() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveStage(entry.target.id);
-          }
-        });
+        // Find the most-intersecting entry (in case multiple fire at once)
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible.length > 0) {
+          // IDs are "stage-digital", "stage-cloud" etc. — strip the prefix
+          const rawId = visible[0].target.id.replace("stage-", "");
+          setActiveStage(rawId);
+        }
       },
-      { rootMargin: "-40% 0px -40% 0px" } // Trigger when element is in the middle 20% of the viewport
+      { rootMargin: "-35% 0px -35% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] }
     );
 
     stages.forEach((stage) => {
@@ -128,7 +132,7 @@ export default function WhyCerebroHive() {
   const activeData = stages.find(s => s.id === activeStage) || stages[0];
 
   return (
-    <section className="section-pad bg-[#020408] relative font-inter" ref={containerRef}>
+    <section className="section-pad bg-surface-elevated relative font-inter" ref={containerRef}>
       
       {/* Subtle Background Layer Transitions */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -149,8 +153,8 @@ export default function WhyCerebroHive() {
         
         <div className="text-center max-w-3xl mx-auto mb-20">
            <span className="text-xs uppercase tracking-widest text-primary-accent font-bold mb-4 block">CerebroHive Enterprise Evolution</span>
-           <h2 className="text-4xl md:text-5xl font-bold font-space text-white tracking-tighter">The Journey to Autonomy</h2>
-           <p className="mt-6 text-gray-400 text-lg">We don't just implement AI. We guide organizations through the inevitable evolution from traditional IT to fully self-optimizing enterprises.</p>
+           <h2 className="text-4xl md:text-5xl font-bold font-space text-text-primary tracking-tighter">The Journey to Autonomy</h2>
+           <p className="mt-6 text-text-secondary text-lg">We don't just implement AI. We guide organizations through the inevitable evolution from traditional IT to fully self-optimizing enterprises.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative">
@@ -158,7 +162,7 @@ export default function WhyCerebroHive() {
           {/* Left Column: The Timeline */}
           <div className="relative pl-12">
             {/* Background static line */}
-            <div className="absolute left-[24px] top-4 bottom-4 w-px bg-white/10 -translate-x-1/2 z-0" />
+            <div className="absolute left-[24px] top-4 bottom-4 w-px bg-border -translate-x-1/2 z-0" />
             
             {/* Animated glowing progress line */}
             <motion.div 
@@ -181,22 +185,22 @@ export default function WhyCerebroHive() {
                     }}
                   >
                     {/* Node Visual */}
-                    <div className="absolute left-[-48px] top-0 -translate-x-1/2 bg-[#020408] py-2 z-20">
+                    <div className="absolute left-[-48px] top-0 -translate-x-1/2 bg-surface-elevated py-2 z-20">
                       {isFinal ? (
                          <AICore isActive={isActive} />
                       ) : (
-                        <div className={cn("w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-500", isActive ? "border-primary-accent bg-primary-accent/10 shadow-[0_0_15px_rgba(0,245,122,0.3)] scale-125" : "border-white/20 bg-black group-hover:border-white/40")}>
-                          <div className={cn("w-2 h-2 rounded-full transition-colors", isActive ? "bg-primary-accent" : "bg-transparent group-hover:bg-white/20")} />
+                        <div className={cn("w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-500", isActive ? "border-primary-accent bg-primary-accent/10 shadow-[0_0_15px_rgba(0,245,122,0.3)] scale-125" : "border-border bg-surface group-hover:border-primary-accent/40")}>
+                          <div className={cn("w-2 h-2 rounded-full transition-colors", isActive ? "bg-primary-accent" : "bg-transparent group-hover:bg-primary-accent/20")} />
                         </div>
                       )}
                     </div>
                     
                     {/* Content Block */}
                     <div className="pt-0.5">
-                      <span className={cn("text-[10px] uppercase tracking-widest font-bold block mb-2 transition-colors duration-500", isActive ? "text-primary-accent" : "text-gray-500")}>
-                        {stage.subtitle}
+                      <span className={cn("text-[10px] uppercase tracking-widest font-bold block mb-2 transition-colors duration-500", isActive ? "text-primary-accent" : "text-text-muted")}>
+                         {stage.subtitle}
                       </span>
-                      <h3 className={cn("text-2xl md:text-3xl font-space font-bold transition-colors duration-500", isActive ? "text-white" : "text-gray-400 group-hover:text-gray-300")}>
+                      <h3 className={cn("text-2xl md:text-3xl font-space font-bold transition-colors duration-500", isActive ? "text-text-primary" : "text-text-secondary group-hover:text-text-primary")}>
                         {stage.title}
                       </h3>
                       
@@ -209,7 +213,7 @@ export default function WhyCerebroHive() {
                             exit={{ opacity: 0, height: 0, marginTop: 0 }}
                             className="overflow-hidden"
                           >
-                            <p className="text-sm text-gray-400 leading-relaxed pr-8">{stage.description}</p>
+                             <p className="text-sm text-text-secondary leading-relaxed pr-8">{stage.description}</p>
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -231,37 +235,37 @@ export default function WhyCerebroHive() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="flex flex-col gap-8 bg-[#050A11] border border-white/5 rounded-3xl p-10 shadow-2xl relative overflow-hidden"
+                  className="flex flex-col gap-8 bg-surface border border-border rounded-3xl p-10 shadow-2xl relative overflow-hidden"
                 >
                   {/* Background Icon Watermark */}
                   <div className="absolute -right-8 -bottom-8 opacity-5">
                     <activeData.icon size={250} />
                   </div>
 
-                  <div className="flex items-center gap-4 border-b border-white/10 pb-6">
+                   <div className="flex items-center gap-4 border-b border-border pb-6">
                     <div className="w-12 h-12 rounded-xl bg-primary-accent/10 border border-primary-accent/20 flex items-center justify-center text-primary-accent shrink-0">
                       <activeData.icon size={24} />
                     </div>
                     <div>
-                      <h4 className="text-xl font-bold font-space text-white">{activeData.title}</h4>
-                      <p className="text-xs uppercase tracking-widest text-gray-500 font-bold">{activeData.subtitle}</p>
+                      <h4 className="text-xl font-bold font-space text-text-primary">{activeData.title}</h4>
+                      <p className="text-xs uppercase tracking-widest text-text-muted font-bold">{activeData.subtitle}</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-8">
                     {/* Primary Metric */}
-                    <div className="col-span-2 bg-white/5 border border-white/10 rounded-2xl p-6 relative overflow-hidden group">
+                     <div className="col-span-2 bg-surface-elevated border border-border rounded-2xl p-6 relative overflow-hidden group">
                       <div className="absolute inset-0 bg-primary-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold block mb-2">Business Outcome</span>
-                      <span className="text-3xl font-mono font-bold text-white tracking-tight">{activeData.metric}</span>
+                      <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold block mb-2">Business Outcome</span>
+                      <span className="text-3xl font-mono font-bold text-text-primary tracking-tight">{activeData.metric}</span>
                     </div>
 
                     {/* Features */}
-                    <div className="flex flex-col gap-4">
-                      <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Capabilities</span>
+                     <div className="flex flex-col gap-4">
+                      <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold">Capabilities</span>
                       <ul className="flex flex-col gap-3">
                         {activeData.features.map(feat => (
-                          <li key={feat} className="flex items-start gap-2 text-sm text-gray-300">
+                          <li key={feat} className="flex items-start gap-2 text-sm text-text-secondary">
                             <CheckCircle2 size={16} className="text-primary-accent shrink-0 mt-0.5" />
                             {feat}
                           </li>
@@ -270,12 +274,12 @@ export default function WhyCerebroHive() {
                     </div>
 
                     {/* Technology */}
-                    <div className="flex flex-col gap-4">
-                      <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Technology Stack</span>
+                     <div className="flex flex-col gap-4">
+                      <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold">Technology Stack</span>
                       <div className="flex flex-wrap gap-2">
                         {activeData.tech.map(tech => (
-                          <span key={tech} className="px-3 py-1.5 bg-black/40 border border-white/10 rounded text-xs text-gray-400 flex items-center gap-2">
-                            <Server size={12} className="text-gray-600"/>
+                          <span key={tech} className="px-3 py-1.5 bg-surface-elevated border border-border rounded text-xs text-text-secondary flex items-center gap-2">
+                            <Server size={12} className="text-text-muted"/>
                             {tech}
                           </span>
                         ))}
@@ -284,8 +288,8 @@ export default function WhyCerebroHive() {
                   </div>
 
                   {/* CTA */}
-                  <div className="mt-4 pt-6 border-t border-white/10">
-                     <button className="text-sm font-bold text-primary-accent flex items-center gap-2 group hover:text-white transition-colors">
+                   <div className="mt-4 pt-6 border-t border-border">
+                     <button className="text-sm font-bold text-primary-accent flex items-center gap-2 group hover:text-text-primary transition-colors">
                        View Architecture Reference <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                      </button>
                   </div>

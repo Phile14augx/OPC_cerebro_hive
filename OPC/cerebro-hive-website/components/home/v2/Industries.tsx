@@ -192,7 +192,7 @@ export default function Industries() {
   const BackgroundIllustration = ({ type, isFocused }: any) => {
     return (
       <div className={cn("absolute inset-0 pointer-events-none overflow-hidden transition-opacity duration-1000", isFocused ? "opacity-100" : "opacity-0")}>
-        <div className="absolute inset-0 bg-black/50 z-10" />
+        <div className={cn("absolute inset-0 bg-surface-elevated/50 z-10", isFocused ? "opacity-100" : "opacity-0")} />
         {/* Industry specific SVG background silhouettes */}
         <div className="absolute inset-0 opacity-[0.03] mix-blend-screen scale-150 transform-gpu z-0">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -224,20 +224,20 @@ export default function Industries() {
           transition={{ delay: 0.5 + (i * 0.1) }}
           className="flex items-center gap-4 relative z-10"
         >
-          <div className="w-6 h-6 rounded bg-[#0A1018] border border-white/20 flex items-center justify-center relative shrink-0">
+          <div className="w-6 h-6 rounded bg-surface-elevated border border-border flex items-center justify-center relative shrink-0">
             <div className="w-1.5 h-1.5 bg-primary-accent rounded-full" />
             {i < nodes.length - 1 && (
-              <div className="absolute top-6 left-1/2 -translate-x-1/2 w-px h-2 bg-white/20" />
+              <div className="absolute top-6 left-1/2 -translate-x-1/2 w-px h-2 bg-border" />
             )}
           </div>
-          <span className="text-xs font-mono font-bold text-gray-300">{node}</span>
+          <span className="text-xs font-mono font-bold text-text-secondary">{node}</span>
         </motion.div>
       ))}
     </div>
   );
 
   return (
-    <section className="section-pad bg-[#03060A] relative overflow-hidden font-inter min-h-screen">
+    <section className="section-pad bg-background relative overflow-hidden font-inter min-h-screen">
       <div className="container-wide relative z-10">
         <SectionHeading 
           label="Industries"
@@ -261,8 +261,8 @@ export default function Industries() {
                 className={cn(
                   "relative rounded-3xl border transition-colors duration-500 w-full",
                   isFocused 
-                    ? "bg-[#050B14] border-primary-accent/40 shadow-[0_0_80px_rgba(0,245,122,0.05)] cursor-default overflow-visible" 
-                    : "bg-[#090D14] border-white/5 hover:border-white/15 cursor-pointer overflow-hidden"
+                    ? "bg-surface border-primary-accent/40 shadow-[0_0_80px_rgba(0,245,122,0.05)] cursor-default overflow-visible" 
+                    : "bg-surface-elevated border-border hover:border-primary-accent/30 cursor-pointer overflow-hidden"
                 )}
                 style={{ height: isFocused ? "auto" : "120px" }}
               >
@@ -276,20 +276,20 @@ export default function Industries() {
                       style={{ padding: '0 40px' }}
                     >
                       <div className="flex items-center gap-6">
-                        <div className={cn("p-4 rounded-2xl transition-colors duration-500 shrink-0", isHovered ? "bg-primary-accent/10 text-primary-accent" : "bg-white/5 text-gray-400")}>
+                        <div className={cn("p-4 rounded-2xl transition-colors duration-500 shrink-0", isHovered ? "bg-primary-accent/10 text-primary-accent" : "bg-surface-elevated text-text-muted")}>
                           <ind.icon size={32} />
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold font-space text-white mb-1">{ind.name}</h3>
-                          <p className="text-sm text-gray-400">{ind.desc}</p>
+                          <h3 className="text-2xl font-bold font-space text-text-primary mb-1">{ind.name}</h3>
+                          <p className="text-sm text-text-secondary">{ind.desc}</p>
                         </div>
                       </div>
                       <div className="hidden md:block text-right shrink-0">
                         <div className="flex items-baseline gap-1 justify-end">
-                          <span className={cn("text-3xl font-mono font-bold transition-colors", isHovered ? "text-white" : "text-gray-300")}>{ind.idleMetric.value}</span>
+                          <span className={cn("text-3xl font-mono font-bold transition-colors", isHovered ? "text-text-primary" : "text-text-secondary")}>{ind.idleMetric.value}</span>
                           <span className="text-xl text-primary-accent font-bold font-mono">{ind.idleMetric.suffix}</span>
                         </div>
-                        <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">{ind.idleMetric.label}</span>
+                        <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold">{ind.idleMetric.label}</span>
                       </div>
                     </motion.div>
                   )}
@@ -307,7 +307,7 @@ export default function Industries() {
                     >
                       <div className="industries-expanded-content flex flex-col gap-10 md:gap-14 w-full min-w-0">
                         {/* Close Button - Absolute Positioned */}
-                        <button onClick={(e) => { e.stopPropagation(); setFocusedId(null); }} style={{ position: 'absolute', top: '24px', right: '24px' }} className="p-2 rounded-full bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors z-30">
+                        <button onClick={(e) => { e.stopPropagation(); setFocusedId(null); }} style={{ position: 'absolute', top: '24px', right: '24px' }} className="p-2 rounded-full bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface border border-border transition-colors z-30">
                            <X size={20} />
                         </button>
 
@@ -318,13 +318,13 @@ export default function Industries() {
                               <ind.icon size={28} className="md:w-8 md:h-8" />
                            </div>
                            <div className="min-w-0 flex-1">
-                              <h3 className="text-2xl md:text-3xl font-bold font-space text-white mb-2 truncate">{ind.name}</h3>
-                              <p className="text-sm md:text-base text-gray-400 font-medium mb-4 truncate">{ind.desc}</p>
+                              <h3 className="text-2xl md:text-3xl font-bold font-space text-text-primary mb-2 truncate">{ind.name}</h3>
+                              <p className="text-sm md:text-base text-text-secondary font-medium mb-4 truncate">{ind.desc}</p>
                               <div className="flex flex-wrap gap-2">
                                 {ind.capabilityBadges.map((badge, i) => (
                                   <motion.span 
                                     key={badge} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 + (i * 0.05) }}
-                                    className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] uppercase tracking-widest text-gray-300 font-bold whitespace-nowrap"
+                                    className="px-3 py-1 bg-surface-elevated border border-border rounded-full text-[10px] uppercase tracking-widest text-text-secondary font-bold whitespace-nowrap"
                                   >
                                     {badge}
                                   </motion.span>
@@ -335,7 +335,7 @@ export default function Industries() {
                       </div>
 
                       {/* Main Grid Content */}
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 border-y border-white/10 py-12 min-w-0">
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 border-y border-border py-12 min-w-0">
                         
                         {/* Left Context Column */}
                         <div className="lg:col-span-8 flex flex-col gap-12 min-w-0">
@@ -343,7 +343,7 @@ export default function Industries() {
                           {/* Challenges & Solutions */}
                           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 min-w-0">
                             <div className="min-w-0">
-                              <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-4 flex items-center gap-2"><AlertTriangle size={14}/> Critical Challenges</span>
+                              <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2"><AlertTriangle size={14}/> Critical Challenges</span>
                               <div className="flex flex-col gap-3 min-w-0">
                                 {ind.challenges.map((c, i) => (
                                   <motion.div key={c} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 + (i*0.1) }} className="flex items-center gap-3 p-3 rounded-lg bg-red-500/5 border border-red-500/10 min-w-0">
@@ -358,10 +358,10 @@ export default function Industries() {
                               <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold mb-4 flex items-center gap-2"><CheckCircle2 size={14}/> AI Solutions</span>
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-0">
                                 {ind.solutions.map((s, i) => (
-                                  <motion.div key={s.name} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 + (i*0.1) }} className="p-3 rounded-lg bg-[#0A131C] border border-primary-accent/20 flex flex-col justify-between group hover:bg-primary-accent/5 transition-colors overflow-hidden min-w-0">
-                                    <span className="text-[10px] font-bold text-gray-400 mb-3 truncate">{s.name}</span>
+                                  <motion.div key={s.name} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 + (i*0.1) }} className="p-3 rounded-lg bg-surface-elevated border border-border flex flex-col justify-between group hover:bg-primary-accent/5 hover:border-primary-accent/30 transition-colors overflow-hidden min-w-0">
+                                    <span className="text-[10px] font-bold text-text-muted mb-3 truncate">{s.name}</span>
                                     <div className="flex items-baseline gap-1 truncate">
-                                      <span className="text-lg font-mono font-bold text-white">{s.stat}</span>
+                                      <span className="text-lg font-mono font-bold text-text-primary">{s.stat}</span>
                                       <span className="text-[9px] uppercase tracking-widest text-primary-accent">{s.label}</span>
                                     </div>
                                   </motion.div>
@@ -372,8 +372,8 @@ export default function Industries() {
 
                           {/* Architecture Visualizer */}
                           <div className="min-w-0">
-                            <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-6 flex items-center gap-2"><Network size={14}/> Reference Architecture</span>
-                            <div className="p-6 rounded-2xl bg-black/40 border border-white/5 relative overflow-hidden min-w-0">
+                            <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6 flex items-center gap-2"><Network size={14}/> Reference Architecture</span>
+                            <div className="p-6 rounded-2xl bg-surface-elevated border border-border relative overflow-hidden min-w-0">
                               <MiniArchitecture nodes={ind.architecture} isFocused={isFocused} />
                             </div>
                           </div>
@@ -385,17 +385,17 @@ export default function Industries() {
                           
                           {/* Live Operational Metrics */}
                           <div className="min-w-0">
-                            <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-4 flex items-center gap-2"><Activity size={14}/> Live Operational Dashboard</span>
-                            <div className="flex flex-col border border-white/10 rounded-2xl bg-black/40 overflow-hidden shadow-2xl min-w-0">
-                              <div className="bg-white/5 px-4 py-2 text-[9px] font-mono text-gray-500 flex justify-between min-w-0">
+                            <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2"><Activity size={14}/> Live Operational Dashboard</span>
+                            <div className="flex flex-col border border-border rounded-2xl bg-surface-elevated overflow-hidden shadow-2xl min-w-0">
+                              <div className="bg-surface px-4 py-2 text-[9px] font-mono text-text-muted flex justify-between min-w-0">
                                 <span className="truncate pr-2">{ind.name.toUpperCase()}_OPS</span>
                                 <span className="text-primary-accent flex items-center gap-1 shrink-0"><div className="w-1.5 h-1.5 bg-primary-accent rounded-full animate-pulse"/> LIVE</span>
                               </div>
                               <div className="p-4 flex flex-col gap-4 min-w-0">
                                 {ind.dashboardMetrics.map((metric, i) => (
                                   <div key={metric.label} className="flex items-center justify-between gap-2 min-w-0">
-                                    <span className="text-xs text-gray-400 truncate">{metric.label}</span>
-                                    <span className="text-sm font-mono font-bold text-white bg-white/5 px-2 py-1 rounded shrink-0">
+                                    <span className="text-xs text-text-muted truncate">{metric.label}</span>
+                                    <span className="text-sm font-mono font-bold text-text-primary bg-surface-elevated px-2 py-1 rounded shrink-0">
                                       <NumberCounter value={metric.value} format={metric.format} suffix={metric.suffix} delay={0.6 + (i * 0.1)} start={isFocused} />
                                     </span>
                                   </div>
@@ -410,8 +410,8 @@ export default function Industries() {
                             <div className="flex flex-col gap-6 min-w-0">
                               {ind.businessOutcomes.map((out, i) => (
                                 <motion.div key={out.desc} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8 + (i*0.1) }} className="flex gap-4 items-start min-w-0">
-                                  <span className="text-2xl font-mono font-bold text-white shrink-0">{out.value}</span>
-                                  <span className="text-xs text-gray-400 mt-1 leading-relaxed truncate">{out.desc}</span>
+                                  <span className="text-2xl font-mono font-bold text-text-primary shrink-0">{out.value}</span>
+                                  <span className="text-xs text-text-secondary mt-1 leading-relaxed truncate">{out.desc}</span>
                                 </motion.div>
                               ))}
                             </div>
@@ -426,17 +426,17 @@ export default function Industries() {
                         
                         {/* Tech Stack Groups */}
                         <div className="flex-1 min-w-0 w-full">
-                           <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-6 block">Core Technology Stack</span>
+                           <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6 block">Core Technology Stack</span>
                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 xl:gap-6 min-w-0">
                              {ind.techStack.map((group, i) => (
                                <motion.div key={group.category} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 + (i*0.1) }} className="min-w-0">
-                                 <div className="flex items-center gap-2 mb-3 border-b border-white/10 pb-2 min-w-0">
-                                   {group.category === "AI Models" ? <BrainCircuit size={12} className="text-gray-400 shrink-0"/> : group.category === "Infrastructure" ? <Server size={12} className="text-gray-400 shrink-0"/> : <Database size={12} className="text-gray-400 shrink-0"/>}
-                                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate">{group.category}</span>
+                                 <div className="flex items-center gap-2 mb-3 border-b border-border pb-2 min-w-0">
+                                   {group.category === "AI Models" ? <BrainCircuit size={12} className="text-text-muted shrink-0"/> : group.category === "Infrastructure" ? <Server size={12} className="text-text-muted shrink-0"/> : <Database size={12} className="text-text-muted shrink-0"/>}
+                                   <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest truncate">{group.category}</span>
                                  </div>
                                  <div className="flex flex-wrap gap-2 min-w-0">
                                    {group.items.map(item => (
-                                     <span key={item} className="px-3 py-1 bg-white/5 border border-white/5 rounded text-[11px] text-gray-300 font-medium truncate max-w-full">
+                                     <span key={item} className="px-3 py-1 bg-surface-elevated border border-border rounded text-[11px] text-text-secondary font-medium truncate max-w-full">
                                        {item}
                                      </span>
                                    ))}

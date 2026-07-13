@@ -33,8 +33,8 @@ const techRows = [
   [
     { name: "PostgreSQL", icon: "https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" },
     { name: "MongoDB", icon: "https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg" },
-    { name: "Redis", icon: "https://upload.wikimedia.org/wikipedia/commons/6/64/Icon-redis.svg" },
-    { name: "Apache Kafka", icon: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Apache_kafka-icon.svg" },
+    { name: "Redis", icon: "https://cdn.simpleicons.org/redis" },
+    { name: "Apache Kafka", icon: "https://cdn.simpleicons.org/apachekafka" },
     { name: "Elasticsearch", icon: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Elasticsearch_logo.svg" },
     { name: "Linux", icon: "https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" }
   ]
@@ -42,7 +42,7 @@ const techRows = [
 
 export default function TrustBar() {
   return (
-    <div className="w-full border-y border-white/5 bg-primary overflow-hidden py-16">
+    <div className="w-full border-y border-border bg-surface-elevated overflow-hidden py-16">
       <div className="container-wide flex flex-col md:flex-row gap-12">
         <div className="md:w-1/4 shrink-0 flex items-center md:items-start pt-4">
           <span className="text-xs font-space font-semibold uppercase tracking-[0.2em] text-text-muted">
@@ -70,7 +70,7 @@ export default function TrustBar() {
                 {[...row, ...row].map((tech, index) => (
                   <div 
                     key={`${rowIndex}-${index}`}
-                    className="flex items-center gap-3 text-lg font-space font-medium text-text-muted/60 hover:text-white transition-colors cursor-default whitespace-nowrap opacity-70 hover:opacity-100 grayscale hover:grayscale-0"
+                    className="flex items-center gap-3 text-lg font-space font-medium text-text-muted/60 hover:text-text-primary transition-colors cursor-default whitespace-nowrap opacity-70 hover:opacity-100 grayscale hover:grayscale-0"
                   >
                     <img 
                       src={tech.icon} 

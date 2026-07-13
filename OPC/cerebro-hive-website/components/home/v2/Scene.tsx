@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import React, { useState, useEffect } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTheme } from "next-themes";
-import { EffectComposer, Bloom, DepthOfField, Vignette } from "@react-three/postprocessing";
+import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { NeuralNetwork } from "./NeuralNetwork";
 import { Particles } from "./Particles";
 import { FloatingPanels } from "./FloatingPanels";
@@ -17,6 +17,30 @@ function CameraRig() {
     state.camera.lookAt(0, 0, 0);
   });
   return null;
+}
+
+/** Gate EffectComposer until the GL context render target is ready */
+function PostEffects() {
+  const { gl } = useThree();
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    // Wait one frame after mount — ensures the render target is initialised
+    const id = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(id);
+  }, [gl]);
+
+  if (!ready) return null;
+
+  return (
+    // multisampling={0} is required when gl.antialias is false —
+    // otherwise postprocessing creates a multisampled render target whose
+    // alpha buffer is null, causing the "Cannot read properties of null (reading 'alpha')" crash.
+    <EffectComposer multisampling={0} disableNormalPass>
+      <Bloom luminanceThreshold={0.4} mipmapBlur intensity={1.2} radius={0.7} />
+      <Vignette eskil={false} offset={0.1} darkness={1.1} />
+    </EffectComposer>
+  );
 }
 
 export function Scene() {
@@ -56,14 +80,8 @@ export function Scene() {
       {/* Camera Movement */}
       <CameraRig />
 
-      {/* Post Processing */}
-      {isHighTier && (
-        <EffectComposer>
-          <Bloom luminanceThreshold={0.5} mipmapBlur intensity={1.5} radius={0.8} />
-          <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} height={480} />
-          <Vignette eskil={false} offset={0.1} darkness={1.1} />
-        </EffectComposer>
-      )}
+      {/* Post Processing — gated until GL context is ready */}
+      {isHighTier && <PostEffects />}
     </Canvas>
   );
 }

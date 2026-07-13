@@ -108,12 +108,12 @@ export const CompanyHero = () => {
   return (
     <section 
       ref={containerRef}
-      className="relative min-h-screen pt-32 pb-24 flex flex-col justify-center overflow-hidden bg-[#02050A]"
+      className="relative min-h-screen pt-32 pb-24 flex flex-col justify-center overflow-hidden bg-background"
     >
       {/* Background ambient lighting */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[500px] bg-primary-accent/10 rounded-full blur-[150px]" />
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-screen scale-150" style={{ backgroundImage: "url('/images/noise.png')" }} />
+        <div className="absolute inset-0 opacity-[0.03] dark:mix-blend-screen mix-blend-multiply scale-150" style={{ backgroundImage: "url('/images/noise.png')" }} />
       </div>
 
       <div className="container-wide relative z-10 grid lg:grid-cols-2 gap-12 items-center">
@@ -131,13 +131,13 @@ export const CompanyHero = () => {
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Corporate Headquarters</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-space font-bold text-white tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-5xl md:text-7xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
             Intelligence. <br/>
             Connection. <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-[#00E5FF]">Impact.</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-gray-400 font-inter leading-relaxed mb-10 max-w-xl">
+          <p className="text-lg md:text-xl text-text-secondary font-inter leading-relaxed mb-10 max-w-xl">
             CerebroHive is the definitive AI-native enterprise transformation partner. We close the gap between an executive's AI vision and a working system in production.
           </p>
 
@@ -146,7 +146,7 @@ export const CompanyHero = () => {
               Explore Our Story
               <ArrowDown size={16} />
             </button>
-            <button className="px-8 py-4 bg-transparent border border-white/20 text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/50 hover:bg-white/5 transition-all">
+            <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/50 hover:bg-surface transition-all">
               Our Methodology
             </button>
           </div>

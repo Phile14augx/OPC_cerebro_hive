@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 // Animated counter component for metrics
 const Counter = ({ value, label }: { value: string, label: string }) => (
   <div className="flex flex-col items-center">
-    <span className="text-3xl md:text-4xl font-space font-bold text-white mb-1">{value}</span>
-    <span className="text-[10px] uppercase tracking-widest font-bold text-gray-500">{label}</span>
+    <span className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-1">{value}</span>
+    <span className="text-[10px] uppercase tracking-widest font-bold text-text-muted">{label}</span>
   </div>
 );
 
@@ -27,24 +27,24 @@ export const ResearchHero = () => {
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full min-h-[90vh] flex flex-col items-center justify-center bg-[#02050A] overflow-hidden border-b border-white/5"
+      className="relative w-full min-h-[90vh] flex flex-col items-center justify-center bg-background overflow-hidden border-b border-border"
     >
       {/* Abstract Blueprint / Mathematical SVG Background */}
       <div className="absolute inset-0 pointer-events-none opacity-20">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--color-border)" strokeWidth="1"/>
             </pattern>
             <pattern id="grid-large" width="200" height="200" patternUnits="userSpaceOnUse">
-              <path d="M 200 0 L 0 0 0 200" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
+              <path d="M 200 0 L 0 0 0 200" fill="none" stroke="var(--color-border)" strokeWidth="1"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
           <rect width="100%" height="100%" fill="url(#grid-large)" />
           
           {/* Subtle math / architecture elements */}
-          <g stroke="rgba(255,255,255,0.1)" strokeWidth="1" fill="none">
+          <g stroke="var(--color-border)" strokeWidth="1" fill="none">
             <circle cx="80%" cy="30%" r="150" strokeDasharray="4 4" />
             <circle cx="80%" cy="30%" r="100" />
             <path d="M 70% 20% L 90% 40%" />
@@ -63,12 +63,12 @@ export const ResearchHero = () => {
             CerebroHive Labs
           </span>
           
-          <h1 className="text-5xl md:text-7xl font-space font-bold text-white tracking-tight leading-[1.1]">
+          <h1 className="text-5xl md:text-7xl font-space font-bold text-text-primary tracking-tight leading-[1.1]">
             Advancing Enterprise AI Through <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Applied Research</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-text-secondary to-text-muted">Applied Research</span>
           </h1>
           
-          <p className="text-gray-400 text-lg md:text-xl font-inter max-w-2xl mx-auto">
+          <p className="text-text-secondary text-lg md:text-xl font-inter max-w-2xl mx-auto">
             Explore original research, enterprise frameworks, reference architectures, and vendor-neutral benchmarking.
           </p>
           
@@ -76,14 +76,14 @@ export const ResearchHero = () => {
              <Link href="#publications" className="px-8 py-4 bg-white text-black font-space font-bold text-sm rounded-sm transition-transform hover:-translate-y-1 flex items-center justify-center gap-2">
                Explore Publications <ArrowRight size={16} />
              </Link>
-             <button className="px-8 py-4 bg-transparent border border-white/20 text-white font-space font-bold text-sm rounded-sm transition-colors hover:bg-white/5 flex items-center justify-center gap-2">
+             <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm rounded-sm transition-colors hover:bg-surface flex items-center justify-center gap-2">
                <Download size={16} /> Download Library
              </button>
           </div>
         </div>
 
         {/* Research Metrics */}
-        <div className="w-full max-w-4xl mx-auto mt-24 grid grid-cols-2 md:grid-cols-5 gap-8 border-t border-white/10 pt-12">
+        <div className="w-full max-w-4xl mx-auto mt-24 grid grid-cols-2 md:grid-cols-5 gap-8 border-t border-border pt-12">
           <Counter value="42" label="Publications" />
           <Counter value="86" label="Architectures" />
           <Counter value="18" label="Benchmarks" />

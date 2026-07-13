@@ -130,13 +130,12 @@ export default function Services() {
   }, []);
 
   return (
-    <section className="section-pad bg-[#050A0F] relative border-t border-white/5 font-inter">
+    <section className="section-pad bg-surface-elevated relative border-t border-border font-inter">
       <div className="container-wide">
         {/* We reuse SectionHeading but maybe center it to match typical layouts */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <p className="text-lg text-text-muted">
-            We deliver end-to-end <span className="text-primary-accent">intelligence architectures</span>,<br/>
-            from foundational data pipelines to <span className="text-primary-accent">autonomous agentic workflows</span>.
+            We deliver end-to-end <span className="text-primary-accent">intelligence architectures</span>, from foundational data pipelines to <span className="text-primary-accent">autonomous agentic workflows</span>.
           </p>
         </div>
 
@@ -152,7 +151,7 @@ export default function Services() {
                 onMouseEnter={() => setHoveredIdx(index)}
                 onMouseLeave={() => setHoveredIdx(null)}
                 className={cn(
-                  "service-card group relative h-[520px] rounded-xl bg-[#090D14] border border-[#1A2332] flex flex-col justify-between overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-primary-accent/50 cursor-pointer col-span-12",
+                  "service-card group relative h-[520px] rounded-xl bg-surface border border-border flex flex-col justify-between overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-primary-accent/50 cursor-pointer col-span-12",
                   // Tablet logic
                   hoveredIdx === null ? "md:col-span-6" : 
                     (isSameRowTablet ? (isHovered ? "md:col-span-8" : "md:col-span-4") : "md:col-span-6"),
@@ -162,16 +161,16 @@ export default function Services() {
                 )}
               >
               {/* Image Area (Bottom) */}
-              <div className="service-img absolute bottom-16 left-0 right-0 h-[260px] pointer-events-none transition-all duration-500 group-hover:opacity-100 opacity-50">
+              <div className="service-img absolute bottom-16 left-0 right-0 h-[260px] pointer-events-none transition-all duration-500 group-hover:opacity-100 opacity-70">
                 <Image 
                   src={svc.imageSrc} 
                   alt={svc.title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  className="object-cover object-center mix-blend-screen"
+                  className="object-cover object-center dark:mix-blend-screen mix-blend-multiply"
                 />
                 {/* Overlay gradient to fade the top of the image into the card */}
-                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-[#090D14]/40 to-[#090D14]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-surface/30 to-surface" />
               </div>
 
               {/* Number (Top Right Outline) */}
@@ -191,22 +190,22 @@ export default function Services() {
                 
                 {/* Title and Icon */}
                 <div className="flex flex-col gap-3 mb-3">
-                  <div className="w-8 h-8 rounded bg-[#101A23] border border-primary-accent/20 flex items-center justify-center text-primary-accent">
+                  <div className="w-8 h-8 rounded bg-surface-elevated border border-primary-accent/20 flex items-center justify-center text-primary-accent">
                     <svc.TitleIcon size={16} strokeWidth={2.5} />
                   </div>
-                  <h3 className="text-xl font-bold text-white tracking-wide group-hover:text-primary-accent transition-colors pr-12">
+                  <h3 className="text-xl font-bold text-text-primary tracking-wide group-hover:text-primary-accent transition-colors pr-12">
                     {svc.title}
                   </h3>
                 </div>
                 
-                <p className="text-[13px] text-gray-400 leading-relaxed mb-4">
+                <p className="text-[13px] text-text-secondary leading-relaxed mb-4">
                   {svc.desc}
                 </p>
 
                 {/* Bullets */}
                 <ul className="flex flex-col gap-1.5 mb-6">
                   {svc.bullets.map((bullet, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[12px] text-gray-300">
+                    <li key={i} className="flex items-start gap-2 text-[12px] text-text-secondary">
                       <span className="text-primary-accent mt-[4px] text-[8px]">●</span>
                       {bullet}
                     </li>
@@ -215,16 +214,16 @@ export default function Services() {
               </div>
 
               {/* Footer */}
-              <div className="service-footer relative z-10 px-6 py-4 border-t border-[#1A2332]/50 mt-auto flex items-center justify-between bg-[#090D14]/90 backdrop-blur-md">
+              <div className="service-footer relative z-10 px-6 py-4 border-t border-border/50 mt-auto flex items-center justify-between bg-surface/90 backdrop-blur-md">
                 <div className="flex items-center gap-3">
                   <div className="text-primary-accent">
                     <svc.FooterIcon size={20} strokeWidth={2} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[15px] font-bold text-white leading-tight">
+                    <span className="text-[15px] font-bold text-text-primary leading-tight">
                       {svc.metricValue}
                     </span>
-                    <span className="text-[10px] text-gray-400">
+                    <span className="text-[10px] text-text-muted">
                       {svc.metricLabel}
                     </span>
                   </div>

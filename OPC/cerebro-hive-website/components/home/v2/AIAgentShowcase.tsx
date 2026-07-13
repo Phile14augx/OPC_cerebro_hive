@@ -58,12 +58,12 @@ export default function AIAgentShowcase() {
   }, [activeWorkflowIdx]);
 
   return (
-    <section className="section-pad bg-[#02050A] relative overflow-hidden min-h-screen font-inter flex flex-col items-center">
+    <section className="section-pad bg-background relative overflow-hidden min-h-screen font-inter flex flex-col items-center">
       
       {/* Ambient Neural Background */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/10 via-transparent to-transparent opacity-50 blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-screen scale-150" style={{ backgroundImage: "url('/images/noise.png')" }} />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--color-primary-accent,rgba(0,245,122,0.1))_0%,_transparent_50%)] opacity-30 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.03] dark:mix-blend-screen mix-blend-multiply scale-150" style={{ backgroundImage: "url('/images/noise.png')" }} />
       </div>
 
       <div className="container-wide relative z-10 mb-10">
@@ -82,7 +82,7 @@ export default function AIAgentShowcase() {
                onClick={() => setActiveIndustry(ind)}
                className={cn(
                  "px-4 py-2 rounded-full border text-xs font-bold uppercase tracking-widest transition-all",
-                 activeIndustry === ind ? "bg-primary-accent/10 border-primary-accent text-primary-accent" : "bg-transparent border-white/10 text-gray-500 hover:text-white"
+                 activeIndustry === ind ? "bg-primary-accent/10 border-primary-accent text-primary-accent" : "bg-transparent border-border text-text-muted hover:text-text-primary"
                )}
              >
                {ind === "cross" ? "All Domains" : ind}
@@ -116,7 +116,7 @@ export default function AIAgentShowcase() {
               <g key={`line-${agent.id}`} style={{ opacity: isVisible ? 1 : 0.1, transition: "opacity 1s" }}>
                 <line 
                   x1="600" y1="375" x2={targetX} y2={targetY} 
-                  stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 4"
+                  stroke="var(--color-border)" strokeWidth="1" strokeDasharray="4 4"
                 />
                 {isActiveInPath && (
                   <line 
@@ -160,7 +160,7 @@ export default function AIAgentShowcase() {
            <div className="relative w-48 h-48 flex items-center justify-center">
               {/* Outer rotating ring */}
               <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute inset-0 rounded-full border border-dashed border-primary-accent/40" />
-              <motion.div animate={{ rotate: -360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute inset-4 rounded-full border border-white/10" />
+              <motion.div animate={{ rotate: -360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute inset-4 rounded-full border border-border" />
               
               {/* Pulsing Core */}
               <motion.div 
@@ -169,9 +169,9 @@ export default function AIAgentShowcase() {
                 className="absolute inset-10 rounded-full bg-primary-accent blur-xl" 
               />
               
-              <div className="relative z-10 w-24 h-24 rounded-full bg-black border-2 border-primary-accent flex flex-col items-center justify-center shadow-[0_0_50px_rgba(0,245,122,0.5)]">
+              <div className="relative z-10 w-24 h-24 rounded-full bg-surface-elevated border-2 border-primary-accent flex flex-col items-center justify-center shadow-[0_0_50px_rgba(0,245,122,0.5)]">
                 <BrainCircuit size={28} className="text-primary-accent mb-1" />
-                <span className="text-[10px] font-space font-bold text-white tracking-widest">AI CORE</span>
+                <span className="text-[10px] font-space font-bold text-text-primary tracking-widest">AI CORE</span>
               </div>
            </div>
         </div>
@@ -203,17 +203,17 @@ export default function AIAgentShowcase() {
                 onMouseLeave={() => setHoveredAgent(null)}
                 className={cn(
                   "w-[200px] rounded-xl border p-3 flex flex-col gap-2 transition-all duration-300 cursor-crosshair overflow-hidden backdrop-blur-xl shadow-2xl",
-                  isActiveInPath ? "bg-primary-accent/10 border-primary-accent/50" : "bg-[#0A121E]/80 border-white/10",
-                  isHovered ? "scale-110 w-[240px] border-primary-accent/70 bg-[#050A11]/95" : ""
+                  isActiveInPath ? "bg-primary-accent/10 border-primary-accent/50" : "bg-surface-elevated/80 border-border",
+                  isHovered ? "scale-110 w-[240px] border-primary-accent/70 bg-background/95" : ""
                 )}
               >
                 {/* Agent Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                   <div className={cn("p-1.5 rounded-lg", isActiveInPath ? "bg-primary-accent text-black" : "bg-white/5 text-gray-400")}>
+                   <div className={cn("p-1.5 rounded-lg", isActiveInPath ? "bg-primary-accent text-background" : "bg-surface text-text-muted")}>
                      <agent.icon size={14} />
                    </div>
-                   <span className={cn("text-xs font-bold font-space", isActiveInPath ? "text-white" : "text-gray-300")}>{agent.name}</span>
+                   <span className={cn("text-xs font-bold font-space", isActiveInPath ? "text-text-primary" : "text-text-secondary")}>{agent.name}</span>
                 </div>
                 {/* Status Dot */}
                 <div className="flex items-center gap-1.5">
@@ -224,30 +224,30 @@ export default function AIAgentShowcase() {
               {/* Collapsed Metrics (Only show if not hovered) */}
               {!isHovered && (
                 <div className="flex justify-between items-end mt-1">
-                  <span className="text-[9px] text-gray-500">{isActiveInPath ? "Processing..." : "Idle"}</span>
-                  <span className="text-[10px] font-mono text-white bg-white/5 px-1.5 py-0.5 rounded">{(agent.angle % 50) + 100} Tasks</span>
+                  <span className="text-[9px] text-text-muted">{isActiveInPath ? "Processing..." : "Idle"}</span>
+                  <span className="text-[10px] font-mono text-text-primary bg-surface px-1.5 py-0.5 rounded border border-border">{(agent.angle % 50) + 100} Tasks</span>
                 </div>
               )}
 
               {/* Hover Expansion */}
               <AnimatePresence>
                 {isHovered && (
-                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="pt-2 mt-1 border-t border-white/10 flex flex-col gap-3">
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="pt-2 mt-1 border-t border-border flex flex-col gap-3">
                      
                      <div className="grid grid-cols-2 gap-2">
-                       <div className="flex flex-col bg-black/40 p-1.5 rounded border border-white/5">
-                         <span className="text-[8px] uppercase text-gray-500">Latency</span>
+                       <div className="flex flex-col bg-background/40 p-1.5 rounded border border-border">
+                         <span className="text-[8px] uppercase text-text-muted">Latency</span>
                          <span className="text-xs font-mono text-primary-accent">{(agent.angle % 50) + 20}ms</span>
                        </div>
-                       <div className="flex flex-col bg-black/40 p-1.5 rounded border border-white/5">
-                         <span className="text-[8px] uppercase text-gray-500">Health</span>
-                         <span className="text-xs font-mono text-white">99.9%</span>
+                       <div className="flex flex-col bg-background/40 p-1.5 rounded border border-border">
+                         <span className="text-[8px] uppercase text-text-muted">Health</span>
+                         <span className="text-xs font-mono text-text-primary">99.9%</span>
                        </div>
                      </div>
                      
                      <div>
-                       <span className="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Active Functions</span>
-                       <ul className="text-[10px] text-gray-300 flex flex-col gap-1 pl-2 border-l border-primary-accent/30">
+                       <span className="text-[9px] uppercase tracking-widest text-text-muted mb-1 block">Active Functions</span>
+                       <ul className="text-[10px] text-text-secondary flex flex-col gap-1 pl-2 border-l border-primary-accent/30">
                          <li>Analyze Data Input</li>
                          <li>Query Vector DB</li>
                          <li>Submit Approval</li>
@@ -266,14 +266,14 @@ export default function AIAgentShowcase() {
       {/* 5. Live UI Overlays (Timeline & Dashboard) */}
       
       {/* Enterprise Timeline (Left overlay) */}
-      <div className="absolute left-8 top-32 w-64 p-5 rounded-2xl bg-[#050A11]/60 border border-white/10 backdrop-blur-md hidden xl:block z-40">
+      <div className="absolute left-8 top-32 w-64 p-5 rounded-2xl bg-surface-elevated/80 border border-border backdrop-blur-md hidden xl:block z-40">
          <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold mb-4 flex items-center gap-2"><Clock size={12}/> Live Event Log</span>
          <div className="flex flex-col gap-3">
             <AnimatePresence>
               {timelineLogs.map((log, i) => (
-                <motion.div key={`${log.time}-${i}`} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-0.5 border-l border-white/10 pl-2">
-                  <span className="text-[9px] font-mono text-gray-500">{log.time}</span>
-                  <span className="text-xs text-gray-300 truncate">{log.msg}</span>
+                <motion.div key={`${log.time}-${i}`} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-0.5 border-l border-border pl-2">
+                  <span className="text-[9px] font-mono text-text-muted">{log.time}</span>
+                  <span className="text-xs text-text-secondary truncate">{log.msg}</span>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -281,16 +281,16 @@ export default function AIAgentShowcase() {
       </div>
 
       {/* Running Workflows (Right overlay) */}
-      <div className="absolute right-8 top-32 w-64 p-5 rounded-2xl bg-[#050A11]/60 border border-white/10 backdrop-blur-md hidden xl:block z-40">
-         <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-4 flex items-center gap-2"><Activity size={12}/> Active Workflows</span>
+      <div className="absolute right-8 top-32 w-64 p-5 rounded-2xl bg-surface-elevated/80 border border-border backdrop-blur-md hidden xl:block z-40">
+         <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2"><Activity size={12}/> Active Workflows</span>
          <div className="flex flex-col gap-4">
             {workflows.slice(0,3).map((wf, i) => (
               <div key={wf.id} className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-end">
-                   <span className={cn("text-xs font-medium", i === activeWorkflowIdx ? "text-primary-accent" : "text-gray-400")}>{wf.name}</span>
+                   <span className={cn("text-xs font-medium", i === activeWorkflowIdx ? "text-primary-accent" : "text-text-muted")}>{wf.name}</span>
                    {i === activeWorkflowIdx && <Play size={10} className="text-primary-accent animate-pulse" />}
                 </div>
-                <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                <div className="h-1 bg-surface rounded-full overflow-hidden border border-border/50">
                    {i === activeWorkflowIdx ? (
                      <motion.div 
                        key={wf.id}
@@ -307,30 +307,30 @@ export default function AIAgentShowcase() {
       </div>
 
       {/* Enterprise KPI Dashboard (Bottom Overlay) */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl p-4 rounded-xl bg-[#0A121E]/80 border border-white/10 backdrop-blur-md flex flex-wrap lg:flex-nowrap items-center justify-between gap-6 z-40">
-         <div className="flex items-center gap-3 pr-6 border-r border-white/10">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl p-4 rounded-xl bg-surface-elevated/90 border border-border backdrop-blur-md flex flex-wrap lg:flex-nowrap items-center justify-between gap-6 z-40 shadow-xl">
+         <div className="flex items-center gap-3 pr-6 border-r border-border">
            <div className="w-8 h-8 rounded-full bg-primary-accent/10 flex items-center justify-center text-primary-accent"><Server size={14}/></div>
            <div>
-             <span className="text-[9px] uppercase tracking-widest text-gray-500 block">System Status</span>
-             <span className="text-sm font-bold text-white">Fully Autonomous</span>
+             <span className="text-[9px] uppercase tracking-widest text-text-muted block">System Status</span>
+             <span className="text-sm font-bold text-text-primary">Fully Autonomous</span>
            </div>
          </div>
          <div className="flex-1 flex justify-around gap-4">
            <div className="flex flex-col">
-             <span className="text-[9px] uppercase tracking-widest text-gray-500">Active Agents</span>
-             <span className="text-lg font-mono font-bold text-white">12<span className="text-xs text-primary-accent">/12</span></span>
+             <span className="text-[9px] uppercase tracking-widest text-text-muted">Active Agents</span>
+             <span className="text-lg font-mono font-bold text-text-primary">12<span className="text-xs text-primary-accent">/12</span></span>
            </div>
            <div className="flex flex-col">
-             <span className="text-[9px] uppercase tracking-widest text-gray-500">Tasks Today</span>
-             <span className="text-lg font-mono font-bold text-white">18,425</span>
+             <span className="text-[9px] uppercase tracking-widest text-text-muted">Tasks Today</span>
+             <span className="text-lg font-mono font-bold text-text-primary">18,425</span>
            </div>
            <div className="flex flex-col">
-             <span className="text-[9px] uppercase tracking-widest text-gray-500">Automation Rate</span>
+             <span className="text-[9px] uppercase tracking-widest text-text-muted">Automation Rate</span>
              <span className="text-lg font-mono font-bold text-primary-accent">92.4%</span>
            </div>
            <div className="flex flex-col">
-             <span className="text-[9px] uppercase tracking-widest text-gray-500">Value Generated</span>
-             <span className="text-lg font-mono font-bold text-white">$1.4M</span>
+             <span className="text-[9px] uppercase tracking-widest text-text-muted">Value Generated</span>
+             <span className="text-lg font-mono font-bold text-text-primary">$1.4M</span>
            </div>
          </div>
       </div>

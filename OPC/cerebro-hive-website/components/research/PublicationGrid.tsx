@@ -74,7 +74,7 @@ export const PublicationGrid = () => {
             {searchQuery && (
               <button 
                 onClick={() => setSearchQuery('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-white"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary"
               >
                 <X size={16} />
               </button>

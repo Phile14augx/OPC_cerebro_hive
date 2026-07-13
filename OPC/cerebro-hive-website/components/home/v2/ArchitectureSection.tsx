@@ -298,7 +298,7 @@ export default function ArchitectureSection() {
   }, []);
 
   return (
-    <section className="section-pad bg-[#050A0F] relative border-t border-white/5 font-inter overflow-hidden">
+    <section className="section-pad bg-surface relative border-t border-border font-inter overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute top-0 left-0 w-full h-[500px] bg-[radial-gradient(ellipse_at_top,_rgba(0,245,122,0.04),_transparent_60%)] pointer-events-none" />
 
@@ -327,7 +327,7 @@ export default function ArchitectureSection() {
                   onMouseLeave={() => setHoveredIdx(null)}
                 >
                   {/* Phase Label Above */}
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] font-space font-bold uppercase tracking-widest text-gray-500 whitespace-nowrap">
+                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] font-space font-bold uppercase tracking-widest text-text-muted whitespace-nowrap">
                     {step.phase}
                   </div>
 
@@ -336,12 +336,12 @@ export default function ArchitectureSection() {
                   <div 
                     className={cn(
                       "relative w-[300px] rounded-2xl border transition-all duration-500 flex flex-col",
-                      hoveredIdx === idx ? `border-transparent shadow-[0_0_40px_rgba(0,0,0,0.7)] z-20 -translate-y-2` : "border-[#1A2332] shadow-xl z-10"
+                      hoveredIdx === idx ? `border-transparent shadow-[0_0_40px_rgba(0,0,0,0.2)] z-20 -translate-y-2` : "border-border shadow-xl z-10"
                     )}
                     style={{
                       borderColor: hoveredIdx === idx ? step.color : undefined,
                       boxShadow: hoveredIdx === idx ? `0 10px 40px -10px ${step.color}60` : undefined,
-                      background: 'rgba(10,16,24,0.9)',
+                      background: 'var(--color-surface-elevated, rgba(248,250,252,0.95))',
                       backdropFilter: 'blur(24px)',
                       overflow: 'hidden',
                       borderRadius: '1rem',
@@ -354,21 +354,21 @@ export default function ArchitectureSection() {
                       <div className={cn("absolute inset-0 bg-gradient-to-b opacity-10 transition-opacity", step.glowClass, hoveredIdx === idx ? "opacity-30" : "")} />
                       
                       {/* Visual Icon */}
-                      <div className={cn("w-14 h-14 mb-5 relative z-10 transition-colors duration-300 shrink-0", hoveredIdx === idx ? step.textClass : "text-white/40")}>
+                      <div className={cn("w-14 h-14 mb-5 relative z-10 transition-colors duration-300 shrink-0", hoveredIdx === idx ? step.textClass : "text-text-muted/60")}>
                         <step.visual />
                       </div>
 
                       {/* Titles */}
                       <div className="relative z-10" style={{ width: '100%' }}>
-                        <h3 className="text-[17px] font-space font-bold text-white mb-1">{step.title}</h3>
-                        <p className="text-[12px] text-gray-400 leading-snug" style={{ padding: '0 8px' }}>{step.subtitle}</p>
+                        <h3 className="text-[17px] font-space font-bold text-text-primary mb-1">{step.title}</h3>
+                        <p className="text-[12px] text-text-secondary leading-snug" style={{ padding: '0 8px' }}>{step.subtitle}</p>
                       </div>
 
                       {/* Small metric pill at bottom of unexpanded state */}
                       <div className="mt-auto pt-4 relative z-10 flex justify-center w-full">
                         <div className={cn(
-                          "inline-block px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[10px] font-medium transition-opacity duration-300",
-                          hoveredIdx === idx ? "opacity-0" : "opacity-100 text-white/70"
+                          "inline-block px-3 py-1 rounded-full border border-border bg-surface text-[10px] font-medium transition-opacity duration-300",
+                          hoveredIdx === idx ? "opacity-0" : "opacity-100 text-text-muted"
                         )}>
                           {step.metric}
                         </div>
@@ -381,16 +381,16 @@ export default function ArchitectureSection() {
                         "grid transition-all duration-500 ease-in-out relative z-10",
                         hoveredIdx === idx ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                       )}
-                      style={{ background: 'rgba(5,10,15,0.6)' }}
+                      style={{ background: 'var(--expanded-bg, rgba(240,244,248,0.8))' }}
                     >
                       <div className="overflow-hidden">
                         {/* Inline padding wrapper — safe from overflow-hidden clipping */}
-                        <div style={{ padding: '8px 28px 28px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                        <div style={{ padding: '8px 28px 28px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', borderTop: '1px solid var(--color-border, rgba(0,0,0,0.08))' }}>
                           <div style={{ width: '100%', marginTop: '8px' }}>
-                            <h4 className="text-[10px] font-space text-white/40 uppercase tracking-wider mb-3">Key Capabilities</h4>
+                            <h4 className="text-[10px] font-space text-text-muted uppercase tracking-wider mb-3">Key Capabilities</h4>
                             <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center', width: '100%' }}>
                               {step.features.map((feature, fIdx) => (
-                                <li key={fIdx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '12px', color: 'rgb(209,213,219)' }}>
+                                <li key={fIdx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '12px' }} className="text-text-secondary">
                                   <CheckCircle2 size={14} className={cn("shrink-0", step.textClass)} />
                                   <span>{feature}</span>
                                 </li>
@@ -399,13 +399,13 @@ export default function ArchitectureSection() {
                           </div>
 
                           <div style={{ width: '100%' }}>
-                            <h4 className="text-[10px] font-space text-white/40 uppercase tracking-wider mb-2 mt-5">Technologies</h4>
+                            <h4 className="text-[10px] font-space text-text-muted uppercase tracking-wider mb-2 mt-5">Technologies</h4>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center' }}>
                               {step.technologies.map((tech, tIdx) => (
                                 <div 
                                   key={tIdx} 
                                   title={tech.name}
-                                  className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 hover:scale-110 transition-all cursor-pointer animate-[floatIcon_3s_ease-in-out_infinite]"
+                                  className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-elevated hover:scale-110 transition-all cursor-pointer animate-[floatIcon_3s_ease-in-out_infinite]"
                                   style={{ animationDelay: `${tIdx * 0.15}s` }}
                                 >
                                   <tech.Icon size={14} />
@@ -427,7 +427,7 @@ export default function ArchitectureSection() {
                 {idx < pipelineSteps.length - 1 && (
                   <div className="arch-connector relative w-12 h-[260px] flex items-center justify-center flex-shrink-0">
                     {/* The track */}
-                    <div className="absolute top-[130px] left-0 w-full h-[2px] bg-white/5 overflow-hidden">
+                    <div className="absolute top-[130px] left-0 w-full h-[2px] bg-border overflow-hidden">
                       {/* The colored filled line */}
                       <div 
                         className="connector-line absolute top-0 left-0 h-full w-full origin-left"

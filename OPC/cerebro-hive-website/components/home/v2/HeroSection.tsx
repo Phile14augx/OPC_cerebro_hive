@@ -26,7 +26,7 @@ export default function HeroSection() {
       {/* Content Overlay */}
       <div className="relative z-10 container-wide flex flex-col items-center text-center mt-20 pointer-events-none">
         
-        <h1 className="font-space text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white max-w-5xl leading-[1.1] mb-8">
+        <h1 className="font-space text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-text-primary max-w-5xl leading-[1.1] mb-8">
           Engineering the Next Generation <br className="hidden md:block" />
           of Intelligent <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-secondary-accent">Enterprises</span>
         </h1>
@@ -46,7 +46,7 @@ export default function HeroSection() {
       </div>
       
       {/* Subtle bottom gradient for smooth transition */}
-      <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-primary to-transparent z-10 pointer-events-none" />
+      <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
     </section>
   );
 }

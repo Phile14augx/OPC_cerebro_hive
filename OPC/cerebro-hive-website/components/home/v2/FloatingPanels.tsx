@@ -34,13 +34,13 @@ export function FloatingPanels() {
           className="pointer-events-none select-none"
         >
           <div className={cn(
-            "w-48 p-4 rounded-xl border border-white/10 bg-[#0E131A]/40 backdrop-blur-md shadow-[0_0_15px_rgba(0,245,122,0.1)] flex flex-col gap-1 transition-opacity",
+            "w-48 p-4 rounded-xl border border-border bg-surface/80 backdrop-blur-md shadow-elevated flex flex-col gap-1 transition-opacity",
             (panel as any).className
           )}>
             <span className="text-[10px] font-space font-semibold uppercase tracking-widest text-secondary-accent">
               {panel.title}
             </span>
-            <span className="text-2xl font-mono font-light text-white">
+            <span className="text-2xl font-mono font-light text-text-primary">
               {panel.metric}
             </span>
             <span className="text-xs font-inter text-text-muted">

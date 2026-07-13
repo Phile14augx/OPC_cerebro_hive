@@ -49,7 +49,7 @@ export default function AICapabilityGrid() {
               </div>
               
               <div className="relative z-10 transition-transform duration-500 ease-out translate-y-4 group-hover:translate-y-0">
-                <h3 className="text-xl md:text-2xl font-space font-bold text-white mb-2">
+                <h3 className="text-xl md:text-2xl font-space font-bold text-text-primary mb-2">
                   {cap.title}
                 </h3>
                 <p className="text-text-muted font-inter opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 max-w-sm">

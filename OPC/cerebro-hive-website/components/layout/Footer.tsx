@@ -131,9 +131,9 @@ export default function Footer() {
       <div className="container-wide relative z-10">
         
         {/* Header Message */}
-        <div className="text-center mb-16 border-b border-white/5 pb-12">
+        <div className="text-center mb-16 border-b border-border pb-12">
           <span className="text-[10px] uppercase tracking-[0.3em] text-primary-accent font-bold mb-4 block">Thank You For Exploring CerebroHive</span>
-          <h2 className="text-lg md:text-2xl font-space font-bold text-white text-center whitespace-nowrap">
+          <h2 className="text-lg md:text-2xl font-space font-bold text-text-primary text-center whitespace-nowrap">
             Engineering Intelligent Enterprises Through AI-Native Innovation
           </h2>
         </div>
@@ -147,12 +147,12 @@ export default function Footer() {
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold block mb-0.5">Live Status</span>
-              <span className="text-sm font-medium text-white">All Systems Operational</span>
+              <span className="text-sm font-medium text-text-primary">All Systems Operational</span>
             </div>
           </div>
           <div className="text-right flex items-center gap-3">
-             <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Research Published</span>
-             <span className="text-lg font-mono font-bold text-white">35<motion.span animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4, repeatDelay: 2 }}>2</motion.span></span>
+             <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold">Research Published</span>
+             <span className="text-lg font-mono font-bold text-text-primary">35<motion.span animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4, repeatDelay: 2 }}>2</motion.span></span>
           </div>
         </div>
 
@@ -164,34 +164,34 @@ export default function Footer() {
             
             {/* Live Metrics */}
             <div>
-              <h4 className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-6">Live Enterprise Metrics</h4>
+              <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-6">Live Enterprise Metrics</h4>
               <div className="grid grid-cols-2 gap-y-8 gap-x-4">
                 <div className="group cursor-help relative">
-                  <div className="text-3xl font-mono font-bold text-white mb-1 group-hover:text-primary-accent transition-colors"><AnimatedCounter to={42} suffix="+" duration={1.5} /></div>
-                  <div className="text-xs text-gray-400">Enterprise Projects</div>
+                  <div className="text-3xl font-mono font-bold text-text-primary mb-1 group-hover:text-primary-accent transition-colors"><AnimatedCounter to={42} suffix="+" duration={1.5} /></div>
+                  <div className="text-xs text-text-muted">Enterprise Projects</div>
                   {/* Tooltip */}
                   <div className="absolute top-full left-0 mt-2 w-48 p-3 rounded-lg bg-surface border border-border text-xs text-text-secondary opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-elevated">
                     Across Finance, Healthcare, Retail, & Manufacturing.
                   </div>
                 </div>
                 <div>
-                  <div className="text-3xl font-mono font-bold text-white mb-1"><AnimatedCounter to={2184} suffix="+" duration={2} /></div>
-                  <div className="text-xs text-gray-400">AI Agents Deployed</div>
+                  <div className="text-3xl font-mono font-bold text-text-primary mb-1"><AnimatedCounter to={2184} suffix="+" duration={2} /></div>
+                  <div className="text-xs text-text-muted">AI Agents Deployed</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-mono font-bold text-white mb-1"><AnimatedCounter to={14} duration={1} /></div>
-                  <div className="text-xs text-gray-400">Countries Served</div>
+                  <div className="text-3xl font-mono font-bold text-text-primary mb-1"><AnimatedCounter to={14} duration={1} /></div>
+                  <div className="text-xs text-text-muted">Countries Served</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-mono font-bold text-white mb-1"><AnimatedCounter to={120} suffix="+" duration={1.5} /></div>
-                  <div className="text-xs text-gray-400">Enterprise Integrations</div>
+                  <div className="text-3xl font-mono font-bold text-text-primary mb-1"><AnimatedCounter to={120} suffix="+" duration={1.5} /></div>
+                  <div className="text-xs text-text-muted">Enterprise Integrations</div>
                 </div>
               </div>
             </div>
 
             {/* Global Presence */}
             <div>
-              <h4 className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-6 flex items-center gap-2">
+              <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
                 <Globe size={14} /> Global Delivery
               </h4>
               <ul className="space-y-3">
@@ -202,8 +202,8 @@ export default function Footer() {
                     onMouseLeave={() => setActiveRegion(null)}
                     className="flex items-center gap-3 cursor-default"
                   >
-                    <div className={cn("w-1.5 h-1.5 rounded-full transition-all duration-300", activeRegion === region ? "bg-primary-accent scale-150" : "bg-white/20")} />
-                    <span className={cn("text-sm transition-colors duration-300 font-medium", activeRegion === region ? "text-white" : "text-gray-400")}>{region}</span>
+                    <div className={cn("w-1.5 h-1.5 rounded-full transition-all duration-300", activeRegion === region ? "bg-primary-accent scale-150" : "bg-border")} />
+                    <span className={cn("text-sm transition-colors duration-300 font-medium", activeRegion === region ? "text-text-primary" : "text-text-muted")}>{region}</span>
                   </li>
                 ))}
               </ul>
@@ -218,11 +218,11 @@ export default function Footer() {
             <div className="hidden md:grid grid-cols-3 gap-8">
               {Object.entries(footerLinks).slice(0, 3).map(([category, links]) => (
                 <div key={category}>
-                  <h4 className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-6">{category}</h4>
+                  <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-6">{category}</h4>
                   <ul className="flex flex-col gap-3">
                     {links.map((link) => (
                       <li key={link}>
-                        <Link href="#" className="text-xs text-gray-400 hover:text-white transition-colors">{link}</Link>
+                        <Link href="#" className="text-xs text-text-muted hover:text-text-primary transition-colors">{link}</Link>
                       </li>
                     ))}
                   </ul>
@@ -231,12 +231,12 @@ export default function Footer() {
             </div>
 
             {/* Mobile Accordion */}
-            <div className="md:hidden flex flex-col gap-2 border-y border-white/5 py-4">
+            <div className="md:hidden flex flex-col gap-2 border-y border-border py-4">
               {Object.entries(footerLinks).map(([category, links]) => (
-                <div key={category} className="border-b border-white/5 last:border-0">
+                <div key={category} className="border-b border-border last:border-0">
                   <button 
                     onClick={() => setOpenAccordion(openAccordion === category ? null : category)}
-                    className="w-full flex items-center justify-between py-3 text-left text-xs font-bold tracking-widest uppercase text-gray-400 hover:text-white transition-colors"
+                    className="w-full flex items-center justify-between py-3 text-left text-xs font-bold tracking-widest uppercase text-text-muted hover:text-text-primary transition-colors"
                   >
                     {category}
                     <ChevronDown size={14} className={cn("transition-transform", openAccordion === category && "rotate-180")} />
@@ -246,7 +246,7 @@ export default function Footer() {
                       <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
                         <ul className="flex flex-col gap-3 pb-4 pt-1">
                           {links.map((link) => (
-                            <li key={link}><Link href="#" className="text-xs text-gray-500 hover:text-white">{link}</Link></li>
+                            <li key={link}><Link href="#" className="text-xs text-text-muted hover:text-text-primary">{link}</Link></li>
                           ))}
                         </ul>
                       </motion.div>
@@ -258,12 +258,12 @@ export default function Footer() {
 
             {/* Enterprise Capabilities — compact single row */}
             <div>
-              <h4 className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-3 flex items-center gap-2">
+              <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-3 flex items-center gap-2">
                 <CheckCircle2 size={12} /> Enterprise Ready
               </h4>
               <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
                 {capabilities.map(cap => (
-                  <span key={cap} className="text-[10px] px-2.5 py-1 rounded-full bg-white/5 text-gray-400 border border-white/8 whitespace-nowrap hover:border-primary-accent/40 hover:text-white transition-all cursor-default shrink-0">
+                  <span key={cap} className="text-[10px] px-2.5 py-1 rounded-full bg-surface border border-border text-text-muted whitespace-nowrap hover:border-primary-accent/40 hover:text-text-primary transition-all cursor-default shrink-0">
                     {cap}
                   </span>
                 ))}
@@ -274,7 +274,7 @@ export default function Footer() {
 
           {/* Right Column: Social Dashboard */}
           <div className="lg:col-span-3">
-             <h4 className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-6">Ecosystem</h4>
+             <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-6">Ecosystem</h4>
              
              <div className="flex flex-col gap-3">
                {[
@@ -286,12 +286,12 @@ export default function Footer() {
                ].map(social => (
                  <a key={social.name} href={social.href} className="group flex items-center justify-between p-3 rounded-xl bg-surface border border-border hover:border-primary-accent/30 hover:-translate-y-1 transition-all shadow-sm hover:shadow-elevated">
                    <div className="flex items-center gap-3">
-                     <social.icon size={16} className="text-gray-400 group-hover:text-white transition-colors" />
-                     <span className="text-xs font-bold text-gray-300 group-hover:text-white transition-colors">{social.name}</span>
+                     <social.icon size={16} className="text-text-muted group-hover:text-text-primary transition-colors" />
+                     <span className="text-xs font-bold text-text-secondary group-hover:text-text-primary transition-colors">{social.name}</span>
                    </div>
                    <div className="text-right">
-                     <span className="block text-xs font-mono font-bold text-white">{social.stat}</span>
-                     <span className="block text-[9px] uppercase tracking-widest text-gray-500">{social.label}</span>
+                     <span className="block text-xs font-mono font-bold text-text-primary">{social.stat}</span>
+                     <span className="block text-[9px] uppercase tracking-widest text-text-muted">{social.label}</span>
                    </div>
                  </a>
                ))}
@@ -301,7 +301,7 @@ export default function Footer() {
         </div>
 
         {/* Motto Carousel & Interactive Quote */}
-        <div className="py-10 px-6 md:px-12 border-y border-white/5 mb-8 flex items-center justify-center overflow-hidden">
+        <div className="py-10 px-6 md:px-12 border-y border-border mb-8 flex items-center justify-center overflow-hidden">
           <AnimatePresence mode="wait">
             {mottos[mottoIdx].featured ? (
               /* CEO Featured Quote — Rich Blockquote */
@@ -317,17 +317,17 @@ export default function Footer() {
                 {/* Opening quote — top-left, mirrored to look like opening quote */}
                 <Quote size={20} className="text-primary-accent/60 absolute -top-2 -left-2.5 scale-x-[-1]" />
 
-                <p className="text-base md:text-lg font-inter text-gray-300 leading-relaxed italic mb-6">
+                <p className="text-base md:text-lg font-inter text-text-secondary leading-relaxed italic mb-6">
                   {mottos[mottoIdx].text}
                 </p>
 
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-accent to-secondary-accent flex items-center justify-center shrink-0">
-                    <span className="text-white dark:text-black text-xs font-black">P</span>
+                    <span className="text-background dark:text-black text-xs font-black">P</span>
                   </div>
                   <div>
-                    <span className="block text-sm font-bold font-space text-white">{mottos[mottoIdx].author}</span>
-                    <span className="block text-[10px] uppercase tracking-widest text-gray-500 font-bold">{mottos[mottoIdx].title}</span>
+                    <span className="block text-sm font-bold font-space text-text-primary">{mottos[mottoIdx].author}</span>
+                    <span className="block text-[10px] uppercase tracking-widest text-text-muted font-bold">{mottos[mottoIdx].title}</span>
                   </div>
                 </div>
 
@@ -348,7 +348,7 @@ export default function Footer() {
                 {/* Opening quote — top-left, mirrored to look like opening quote */}
                 <Quote size={22} className="text-primary-accent/50 absolute top-0 left-0 scale-x-[-1]" />
                 
-                <h3 className="text-xl md:text-2xl font-space font-bold text-gray-300 text-center">
+                <h3 className="text-xl md:text-2xl font-space font-bold text-text-secondary text-center">
                   {mottos[mottoIdx].text}
                 </h3>
                 
@@ -360,7 +360,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/5 pt-8 flex flex-col items-center gap-5">
+        <div className="border-t border-border pt-8 flex flex-col items-center gap-5">
           
           {/* Logo — centered */}
           <Link href="/" className="flex items-center gap-3 group relative cursor-pointer">
@@ -373,7 +373,7 @@ export default function Footer() {
               <div className="w-4 h-4 bg-background rounded-sm transition-colors duration-500" />
             </motion.div>
             <div className="flex flex-col">
-              <span className="font-space font-bold text-lg tracking-tight text-white leading-none relative z-10">
+              <span className="font-space font-bold text-lg tracking-tight text-text-primary leading-none relative z-10">
                 Cerebro<span className="text-primary-accent">Hive</span>
               </span>
               <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">OPC Pvt Ltd</span>
@@ -382,11 +382,11 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div className="flex flex-wrap justify-center gap-6 text-[10px] font-bold tracking-widest uppercase text-gray-500">
-            <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Security</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms</Link>
-            <Link href="#" className="hover:text-white transition-colors">AI Ethics</Link>
-            <Link href="#" className="hover:text-white transition-colors">Sitemap</Link>
+            <Link href="#" className="hover:text-text-primary transition-colors">Privacy</Link>
+            <Link href="#" className="hover:text-text-primary transition-colors">Security</Link>
+            <Link href="#" className="hover:text-text-primary transition-colors">Terms</Link>
+            <Link href="#" className="hover:text-text-primary transition-colors">AI Ethics</Link>
+            <Link href="#" className="hover:text-text-primary transition-colors">Sitemap</Link>
           </div>
 
           {/* Copyright */}

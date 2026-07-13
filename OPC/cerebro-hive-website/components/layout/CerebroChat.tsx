@@ -239,10 +239,10 @@ export default function CerebroChat() {
                     <button key={item.id} style={{ padding: '12px 14px' }} className="flex flex-col text-left rounded-xl border border-transparent hover:border-primary-accent/30 hover:bg-primary-accent/5 transition-all group relative overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary-accent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="flex items-center gap-2 mb-1">
-                        <item.icon size={14} className="text-gray-400 group-hover:text-primary-accent transition-colors shrink-0" />
-                        <span className="text-xs font-bold text-gray-300 group-hover:text-white transition-colors">{item.label}</span>
+                        <item.icon size={14} className="text-text-muted group-hover:text-primary-accent transition-colors shrink-0" />
+                        <span className="text-xs font-bold text-text-secondary group-hover:text-text-primary transition-colors">{item.label}</span>
                       </div>
-                      <span className="text-[10px] text-gray-500 group-hover:text-gray-400 pl-5">{item.desc}</span>
+                      <span className="text-[10px] text-text-muted group-hover:text-text-secondary pl-5">{item.desc}</span>
                     </button>
                   ))}
                 </div>
@@ -372,9 +372,9 @@ export default function CerebroChat() {
                     />
                     <div className="flex items-center justify-between px-6 py-4 bg-surface-elevated/40 dark:bg-black/20 border-t border-border dark:border-transparent">
                       <div className="flex gap-2">
-                        <button className="p-2 rounded text-gray-400 hover:text-white hover:bg-white/10"><Briefcase size={16}/></button>
-                        <button className="p-2 rounded text-gray-400 hover:text-white hover:bg-white/10"><Network size={16}/></button>
-                        <button className="p-2 rounded text-gray-400 hover:text-white hover:bg-white/10"><FileText size={16}/></button>
+                        <button className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Briefcase size={16}/></button>
+                        <button className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Network size={16}/></button>
+                        <button className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><FileText size={16}/></button>
                       </div>
                       <button 
                         onClick={() => handleSend(input)}
@@ -489,7 +489,7 @@ export default function CerebroChat() {
                    <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold block mb-4">Referenced Knowledge</span>
                    <div className="flex flex-col gap-2 overflow-y-auto">
                      {["SAP Integration Guide", "Knowledge Graph Architecture", "Agentic Patterns", "Azure Deployment Specs"].map(doc => (
-                       <div key={doc} className="text-xs text-gray-400 p-2 rounded bg-white/5 border border-white/5 flex justify-between items-center hover:text-white cursor-pointer group">
+                       <div key={doc} className="text-xs text-text-secondary p-2 rounded bg-surface border border-border flex justify-between items-center hover:text-text-primary cursor-pointer group">
                          {doc} <Download size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                        </div>
                      ))}

@@ -162,7 +162,7 @@ export const ResearchReader = ({ publication }: { publication: ResearchPublicati
                     <p className="text-[11px] text-text-secondary leading-relaxed p-3 bg-background border border-border rounded">
                       {publication.authors.map(a => a.name.split(' ').pop()).join(', ')} ({new Date(publication.publishDate).getFullYear()}). {publication.title}. CerebroHive Labs.
                     </p>
-                    <button className="absolute top-2 right-2 text-text-muted hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button className="absolute top-2 right-2 text-text-muted hover:text-text-primary opacity-0 group-hover:opacity-100 transition-opacity">
                       <Copy size={12} />
                     </button>
                   </div>

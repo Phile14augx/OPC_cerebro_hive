@@ -33,7 +33,7 @@ export const HeroEcosystem = () => {
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full min-h-screen flex flex-col items-center justify-center bg-[#02050A] overflow-hidden perspective-[1000px]"
+      className="relative w-full min-h-screen flex flex-col items-center justify-center bg-background overflow-hidden perspective-[1000px]"
     >
       {/* Background ambient lighting */}
       <div className="absolute inset-0 pointer-events-none">
@@ -47,18 +47,18 @@ export const HeroEcosystem = () => {
           <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold px-3 py-1.5 border border-primary-accent/20 rounded-full bg-primary-accent/5 backdrop-blur-sm">
             Enterprise AI Product Ecosystem
           </span>
-          <h1 className="text-5xl md:text-7xl font-space font-bold text-white tracking-tight">
+          <h1 className="text-5xl md:text-7xl font-space font-bold text-text-primary tracking-tight">
             AI-Native Platforms Built for <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Intelligent Enterprises</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-text-secondary to-text-muted">Intelligent Enterprises</span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary text-lg max-w-2xl mx-auto font-inter">
             From AI-powered ERP to autonomous enterprise agents, discover the proprietary platforms and frameworks transforming modern organizations.
           </p>
           <div className="flex justify-center gap-4 pt-4">
              <button className="px-8 py-3 bg-white text-black font-space font-bold text-sm rounded-full transition-transform hover:scale-105 hover:bg-gray-100">
                Explore Products
              </button>
-             <button className="px-8 py-3 bg-white/5 border border-white/10 text-white font-space font-bold text-sm rounded-full transition-colors hover:bg-white/10 backdrop-blur-md">
+             <button className="px-8 py-3 bg-surface border border-border text-text-primary font-space font-bold text-sm rounded-full transition-colors hover:bg-surface-elevated backdrop-blur-md">
                Schedule Demo
              </button>
           </div>
@@ -85,7 +85,7 @@ export const HeroEcosystem = () => {
                 return (
                   <g key={`line-${node.id}`} style={{ transition: 'opacity 0.5s' }} opacity={hoveredNode && !isHovered ? 0.2 : 1}>
                     {/* Base faint line */}
-                    <line x1={cx} y1={cy} x2={targetX} y2={targetY} stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 4" />
+                    <line x1={cx} y1={cy} x2={targetX} y2={targetY} stroke="var(--color-border)" strokeWidth="1" strokeDasharray="4 4" />
                     
                     {/* Hover highlight line */}
                     {isHovered && (
@@ -134,12 +134,12 @@ export const HeroEcosystem = () => {
                <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute inset-0 rounded-full border border-dashed border-primary-accent/40" />
                <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="absolute inset-6 rounded-full bg-primary-accent blur-xl" />
                
-               <div className="relative z-10 w-16 h-16 rounded-full bg-black border-2 border-primary-accent flex flex-col items-center justify-center shadow-[0_0_30px_rgba(0,245,122,0.3)] transition-transform hover:scale-110">
+               <div className="relative z-10 w-16 h-16 rounded-full bg-surface-elevated border-2 border-primary-accent flex flex-col items-center justify-center shadow-[0_0_30px_rgba(0,245,122,0.3)] transition-transform hover:scale-110">
                  <LayoutTemplate size={20} className="text-primary-accent mb-1" />
                </div>
                
                <div className="absolute -bottom-8 whitespace-nowrap text-center">
-                 <span className="text-[10px] font-space font-bold text-white tracking-widest uppercase">Cerebro Platform</span>
+                 <span className="text-[10px] font-space font-bold text-text-primary tracking-widest uppercase">Cerebro Platform</span>
                </div>
              </div>
            </div>
@@ -176,13 +176,13 @@ export const HeroEcosystem = () => {
                      "w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-md transition-all duration-300 shadow-xl",
                      isHovered 
                        ? "bg-primary-accent/20 border border-primary-accent text-primary-accent shadow-[0_0_20px_rgba(0,245,122,0.3)] scale-110" 
-                       : "bg-[#0A121E]/80 border border-white/10 text-gray-400 group-hover:border-white/30 group-hover:text-white"
+                       : "bg-surface-elevated/80 border border-border text-text-muted group-hover:border-primary-accent/30 group-hover:text-text-primary"
                    )}>
                      <node.icon size={20} />
                    </div>
                    <span className={cn(
                      "text-[11px] font-space font-bold uppercase tracking-widest whitespace-nowrap transition-colors duration-300",
-                     isHovered ? "text-primary-accent" : "text-gray-300 group-hover:text-white"
+                     isHovered ? "text-primary-accent" : "text-text-secondary group-hover:text-text-primary"
                    )}>
                      {node.label}
                    </span>

@@ -117,7 +117,7 @@ export default function TechStack() {
   };
 
   return (
-    <section className="section-pad bg-[#010306] relative overflow-hidden font-inter border-t border-white/5">
+    <section className="section-pad bg-surface relative overflow-hidden font-inter border-t border-border">
       
       {/* Ambient Blueprint Background */}
       <div className="absolute inset-0 pointer-events-none opacity-20 z-0">
@@ -129,7 +129,7 @@ export default function TechStack() {
           </defs>
           <rect width="100%" height="100%" fill="url(#blueprint)" />
         </svg>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#010306]/80 to-[#010306]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-surface/80 to-surface" />
       </div>
 
       <div className="container-wide relative z-10">
@@ -138,20 +138,20 @@ export default function TechStack() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="max-w-2xl">
             <span className="text-xs uppercase tracking-widest text-primary-accent font-bold mb-4 block">Enterprise AI Ecosystem</span>
-            <h2 className="text-4xl md:text-5xl font-bold font-space text-white tracking-tighter">Living Architecture</h2>
-            <p className="mt-4 text-gray-400">See how we assemble best-in-class technologies into highly scalable, autonomous enterprise systems.</p>
+            <h2 className="text-4xl md:text-5xl font-bold font-space text-text-primary tracking-tighter">Living Architecture</h2>
+            <p className="mt-4 text-text-secondary">See how we assemble best-in-class technologies into highly scalable, autonomous enterprise systems.</p>
           </div>
           
           {/* Controls: Search & Filters */}
           <div className="flex flex-col gap-4">
             <div className="relative">
-              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
               <input 
                 type="text" 
                 placeholder="Search technology..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full md:w-64 bg-black/50 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-primary-accent/50 transition-colors"
+                className="w-full md:w-64 bg-surface-elevated border border-border rounded-full py-2 pl-10 pr-4 text-sm text-text-primary focus:outline-none focus:border-primary-accent/50 transition-colors"
               />
             </div>
             <div className="flex gap-2">
@@ -161,7 +161,7 @@ export default function TechStack() {
                   onClick={() => { setActiveFilter(filter); setSearchQuery(""); }}
                   className={cn(
                     "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-all",
-                    activeFilter === filter ? "bg-primary-accent/10 border-primary-accent text-primary-accent" : "bg-transparent border-white/10 text-gray-500 hover:text-white"
+                    activeFilter === filter ? "bg-primary-accent/10 border-primary-accent text-primary-accent" : "bg-transparent border-border text-text-muted hover:text-text-primary"
                   )}
                 >
                   {filter}
@@ -175,7 +175,7 @@ export default function TechStack() {
         <div className="relative max-w-4xl mx-auto flex flex-col gap-8 pb-10">
           
           {/* Animated Backbone Line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/5 -translate-x-1/2 z-0" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2 z-0" />
           
           {/* Continuously Flowing Packets */}
           <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 z-0 overflow-hidden pointer-events-none">
@@ -197,14 +197,14 @@ export default function TechStack() {
                 className="relative z-10 flex flex-col gap-4 group"
               >
                 {/* Layer Header */}
-                <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                <div className="flex items-center justify-between border-b border-border pb-2">
                   <div className="flex items-center gap-3">
-                    <layer.icon size={16} className={isActive ? "text-primary-accent" : "text-gray-600"} />
-                    <h3 className={cn("text-sm font-bold font-space tracking-wide transition-colors", isActive ? "text-white" : "text-gray-500")}>
+                    <layer.icon size={16} className={isActive ? "text-primary-accent" : "text-text-muted"} />
+                    <h3 className={cn("text-sm font-bold font-space tracking-wide transition-colors", isActive ? "text-text-primary" : "text-text-muted")}>
                       {layer.title}
                     </h3>
                   </div>
-                  <span className="text-[10px] text-gray-600 font-mono hidden md:block">{layer.desc}</span>
+                  <span className="text-[10px] text-text-muted font-mono hidden md:block">{layer.desc}</span>
                 </div>
 
                 {/* Technologies Row */}
@@ -220,8 +220,8 @@ export default function TechStack() {
                         onMouseLeave={() => setHoveredTech(null)}
                         className={cn(
                           "relative rounded-xl border transition-all duration-300 cursor-default overflow-hidden",
-                          techMatch ? "bg-[#050A11] border-white/10 hover:border-primary-accent/50 hover:bg-[#0A1424]" : "bg-black/20 border-white/5 opacity-40 grayscale",
-                          isHovered && techMatch ? "z-20 scale-[1.02] shadow-[0_10px_30px_rgba(0,0,0,0.8)]" : "z-10"
+                          techMatch ? "bg-surface-elevated border-border hover:border-primary-accent/50 hover:bg-surface" : "bg-surface/50 border-border/40 opacity-40 grayscale",
+                          isHovered && techMatch ? "z-20 scale-[1.02] shadow-elevated" : "z-10"
                         )}
                         style={{ padding: '20px' }}
                       >
@@ -229,10 +229,10 @@ export default function TechStack() {
                         <div className={cn("absolute inset-0 bg-gradient-to-br from-primary-accent/5 to-transparent opacity-0 transition-opacity duration-300", isHovered && "opacity-100")} />
                         
                         <div className="relative z-10 flex flex-col h-full">
-                          <span className="text-[9px] uppercase tracking-widest text-gray-500 mb-2 font-bold block">{tech.category}</span>
+                           <span className="text-[9px] uppercase tracking-widest text-text-muted mb-2 font-bold block">{tech.category}</span>
                           <div className="flex items-center gap-2 mb-1">
-                            {tech.icon && <tech.icon size={14} className={isHovered && techMatch ? "text-primary-accent" : "text-gray-500"} />}
-                            <span className={cn("text-base font-bold font-space transition-colors", isHovered && techMatch ? "text-white" : "text-gray-300")}>{tech.name}</span>
+                             {tech.icon && <tech.icon size={14} className={isHovered && techMatch ? "text-primary-accent" : "text-text-muted"} />}
+                             <span className={cn("text-base font-bold font-space transition-colors", isHovered && techMatch ? "text-text-primary" : "text-text-secondary")}>{tech.name}</span>
                           </div>
                           
                           {/* Expanded Glass Card Content */}
@@ -282,23 +282,23 @@ export default function TechStack() {
         {/* Enterprise Metrics Footer */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 1.2 }}
-          className="max-w-4xl mx-auto mt-8 border-t border-white/10 pt-8 flex flex-wrap justify-around gap-6"
+          className="max-w-4xl mx-auto mt-8 border-t border-border pt-8 flex flex-wrap justify-around gap-6"
         >
           <div className="flex flex-col items-center text-center">
-            <span className="text-3xl font-bold font-mono text-white">60+</span>
-            <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mt-1">Core Technologies</span>
+            <span className="text-3xl font-bold font-mono text-text-primary">60+</span>
+            <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mt-1">Core Technologies</span>
           </div>
           <div className="flex flex-col items-center text-center">
-            <span className="text-3xl font-bold font-mono text-white">20+</span>
-            <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mt-1">Cloud Services</span>
+            <span className="text-3xl font-bold font-mono text-text-primary">20+</span>
+            <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mt-1">Cloud Services</span>
           </div>
           <div className="flex flex-col items-center text-center">
-            <span className="text-3xl font-bold font-mono text-white">15+</span>
-            <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mt-1">AI Frameworks</span>
+            <span className="text-3xl font-bold font-mono text-text-primary">15+</span>
+            <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mt-1">AI Frameworks</span>
           </div>
           <div className="flex flex-col items-center text-center">
             <span className="text-3xl font-bold font-mono text-primary-accent">100+</span>
-            <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mt-1">Successful Deployments</span>
+            <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mt-1">Successful Deployments</span>
           </div>
         </motion.div>
 
