@@ -22,7 +22,7 @@ export const CEOMessage = () => {
                 <div className="absolute inset-0 flex items-center justify-center opacity-30">
                   <div className="w-full h-full opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--text-primary) 1px, transparent 0)', backgroundSize: '16px 16px' }} />
                 </div>
-                {/* <Image src="/images/placeholders/ceo.jpg" alt="Philemon V Nath" fill className="object-cover grayscale" /> */}
+                <Image src="/images/leadership/philemon.png" alt="Philemon V Nath" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
               </div>
               <h3 className="text-2xl font-space font-bold text-text-primary mb-1">
                 Philemon V Nath
