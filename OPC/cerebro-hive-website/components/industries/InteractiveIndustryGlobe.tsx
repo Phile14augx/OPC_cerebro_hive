@@ -18,6 +18,7 @@ import {
   Home,
   Shield
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const iconMap: Record<string, React.ElementType> = {
   healthcare: HeartPulse,
@@ -73,6 +74,7 @@ const AICore = () => {
 
 export function InteractiveIndustryGlobe() {
   const { activeIndustry, hoveredIndustry, setActiveIndustry, setHoveredIndustry, reducedMotion } = useIndustryExplorer();
+  const router = useRouter();
 
   // Distribute industries on multiple orbital rings
   const nodes = useMemo(() => {
@@ -179,7 +181,14 @@ export function InteractiveIndustryGlobe() {
               }}
               onMouseEnter={() => setHoveredIndustry(node.slug)}
               onMouseLeave={() => setHoveredIndustry(null)}
-              onClick={() => setActiveIndustry(node.slug)}
+              onClick={() => {
+                // If it's one of the fully built engines, navigate to it. Otherwise just set active to preview it.
+                if (['finance', 'manufacturing', 'healthcare'].includes(node.slug)) {
+                  router.push(`/industries/${node.slug}`);
+                } else {
+                  setActiveIndustry(node.slug);
+                }
+              }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >

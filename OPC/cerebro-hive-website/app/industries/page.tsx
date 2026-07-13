@@ -10,6 +10,7 @@ import { getIndustryBySlug } from '@/lib/data/industries';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { AnimatedButton as Button } from '@/components/ui/AnimatedButton';
 import { Grid, Layers, BrainCircuit, Box, Search, ShieldCheck } from 'lucide-react';
+import Link from 'next/link';
 
 function IndustriesPageContent() {
   const { activeIndustry } = useIndustryExplorer();
@@ -46,8 +47,17 @@ function IndustriesPageContent() {
               Select an industry from the globe to see custom reference architectures, AI agents, and business outcomes.
             </p>
             
-            <div className="flex gap-4">
+            <div className="flex gap-4 mb-12">
               <Button variant="primary">Talk to an Architect</Button>
+            </div>
+            
+            <div className="flex flex-col gap-3">
+              <span className="text-xs font-bold uppercase tracking-widest text-text-muted">Flagship Industry Architectures</span>
+              <div className="flex flex-wrap gap-3">
+                <Link href="/industries/finance" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#00B8FF] transition-colors text-sm font-bold text-text-primary">Financial Services</Link>
+                <Link href="/industries/manufacturing" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#00E5FF] transition-colors text-sm font-bold text-text-primary">Smart Manufacturing</Link>
+                <Link href="/industries/healthcare" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#00E676] transition-colors text-sm font-bold text-text-primary">Healthcare</Link>
+              </div>
             </div>
           </div>
 

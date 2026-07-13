@@ -79,6 +79,93 @@ export function AnimatedIndustryBackground({ config }: { config: EngineConfig })
     );
   }
 
+  if (config.backgroundAnimation === 'smart-factory') {
+    return (
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" style={{ backgroundColor: 'transparent' }}>
+        <svg className="absolute inset-0 w-full h-full opacity-30" preserveAspectRatio="xMidYMid slice">
+          {/* Abstract Factory Floor Grid */}
+          <pattern id="factoryGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+            <rect width="60" height="60" fill="none" stroke={config.primaryColor} strokeWidth="1" strokeOpacity="0.15" />
+            <circle cx="30" cy="30" r="1" fill={config.secondaryColor} fillOpacity="0.3" />
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#factoryGrid)" />
+          
+          {/* Conveyor Belts / Data Flows */}
+          <g stroke={config.accentColor} strokeWidth="2" strokeOpacity="0.3" fill="none">
+            <line x1="0" y1="200" x2="100%" y2="200" strokeDasharray="10, 10">
+              <animate attributeName="stroke-dashoffset" values="20;0" dur="2s" repeatCount="indefinite" />
+            </line>
+            <line x1="100%" y1="500" x2="0" y2="500" strokeDasharray="20, 20">
+              <animate attributeName="stroke-dashoffset" values="0;40" dur="3s" repeatCount="indefinite" />
+            </line>
+            <line x1="30%" y1="0" x2="30%" y2="100%" strokeDasharray="15, 15">
+              <animate attributeName="stroke-dashoffset" values="30;0" dur="4s" repeatCount="indefinite" />
+            </line>
+          </g>
+          
+          {/* Robotic Arms / Arcs */}
+          <motion.path
+            d="M 200 800 Q 300 500 500 600"
+            fill="none"
+            stroke={config.primaryColor}
+            strokeWidth="4"
+            strokeOpacity="0.4"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: [0, 1, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.path
+            d="M 800 200 Q 1000 400 1200 300"
+            fill="none"
+            stroke={config.secondaryColor}
+            strokeWidth="3"
+            strokeOpacity="0.5"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: [0, 1, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          />
+
+          {/* IoT Sensor Pulses */}
+          {[...Array(10)].map((_, i) => (
+            <g key={`sensor-${i}`}>
+              <circle
+                cx={`${20 + Math.random() * 60}%`}
+                cy={`${20 + Math.random() * 60}%`}
+                r="4"
+                fill={config.accentColor}
+              />
+              <motion.circle
+                cx={`${20 + Math.random() * 60}%`}
+                cy={`${20 + Math.random() * 60}%`}
+                r="4"
+                fill="none"
+                stroke={config.accentColor}
+                strokeWidth="2"
+                initial={{ scale: 1, opacity: 0.8 }}
+                animate={{ scale: 6, opacity: 0 }}
+                transition={{ duration: 2, repeat: Infinity, delay: Math.random() * 2 }}
+              />
+            </g>
+          ))}
+        </svg>
+
+        {/* Ambient Industrial Glow */}
+        <motion.div 
+          className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full blur-[100px] mix-blend-screen pointer-events-none"
+          style={{ backgroundColor: config.primaryColor }}
+          animate={{ opacity: [0.03, 0.08, 0.03] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] mix-blend-screen pointer-events-none"
+          style={{ backgroundColor: config.accentColor }}
+          animate={{ opacity: [0.02, 0.05, 0.02] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+      </div>
+    );
+  }
+
   // Default / Fallback background
   return (
     <div 
