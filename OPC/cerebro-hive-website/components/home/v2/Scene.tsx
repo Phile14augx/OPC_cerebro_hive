@@ -36,6 +36,7 @@ function PostEffects() {
     // multisampling={0} is required when gl.antialias is false —
     // otherwise postprocessing creates a multisampled render target whose
     // alpha buffer is null, causing the "Cannot read properties of null (reading 'alpha')" crash.
+    // @ts-expect-error: Property 'disableNormalPass' might be missing from types but works at runtime
     <EffectComposer multisampling={0} disableNormalPass>
       <Bloom luminanceThreshold={0.4} mipmapBlur intensity={1.2} radius={0.7} />
       <Vignette eskil={false} offset={0.1} darkness={1.1} />
