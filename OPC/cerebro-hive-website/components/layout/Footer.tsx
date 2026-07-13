@@ -93,7 +93,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer ref={footerRef} className="bg-[#020407] border-t border-white/5 pt-24 pb-12 font-inter relative overflow-hidden">
+    <footer ref={footerRef} className="bg-background border-t border-border pt-24 pb-12 font-inter relative overflow-hidden transition-colors duration-500">
       
       {/* Background Neural Network SVG */}
       <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
@@ -104,11 +104,11 @@ export default function Footer() {
               <circle cx="80" cy="80" r="2" fill="#fff" />
               <circle cx="20" cy="80" r="2" fill="#fff" />
               <circle cx="80" cy="20" r="2" fill="#fff" />
-              <line x1="20" y1="20" x2="80" y2="20" stroke="#fff" strokeWidth="0.5" />
-              <line x1="20" y1="80" x2="80" y2="80" stroke="#fff" strokeWidth="0.5" />
-              <line x1="20" y1="20" x2="20" y2="80" stroke="#fff" strokeWidth="0.5" />
-              <line x1="80" y1="20" x2="80" y2="80" stroke="#fff" strokeWidth="0.5" />
-              <line x1="20" y1="20" x2="80" y2="80" stroke="#fff" strokeWidth="0.2" />
+              <line x1="20" y1="20" x2="80" y2="20" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-white" />
+              <line x1="20" y1="80" x2="80" y2="80" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-white" />
+              <line x1="20" y1="20" x2="20" y2="80" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-white" />
+              <line x1="80" y1="20" x2="80" y2="80" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-white" />
+              <line x1="20" y1="20" x2="80" y2="80" stroke="currentColor" strokeWidth="0.2" className="text-text-muted opacity-20 dark:opacity-100 dark:text-white" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#neural-grid)" />
@@ -139,7 +139,7 @@ export default function Footer() {
         </div>
 
         {/* Live Status Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between bg-[#060A10] border border-white/5 rounded-2xl p-6 mb-16 shadow-xl shadow-black/50">
+        <div className="flex flex-col md:flex-row items-center justify-between bg-surface-elevated border border-border rounded-2xl p-6 mb-16 shadow-elevated">
           <div className="flex items-center gap-4 mb-4 md:mb-0">
             <div className="relative flex items-center justify-center">
               <div className="w-2.5 h-2.5 bg-primary-accent rounded-full z-10" />
@@ -170,7 +170,7 @@ export default function Footer() {
                   <div className="text-3xl font-mono font-bold text-white mb-1 group-hover:text-primary-accent transition-colors"><AnimatedCounter to={42} suffix="+" duration={1.5} /></div>
                   <div className="text-xs text-gray-400">Enterprise Projects</div>
                   {/* Tooltip */}
-                  <div className="absolute top-full left-0 mt-2 w-48 p-3 rounded-lg bg-[#101A23] border border-white/10 text-xs text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-xl">
+                  <div className="absolute top-full left-0 mt-2 w-48 p-3 rounded-lg bg-surface border border-border text-xs text-text-secondary opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-elevated">
                     Across Finance, Healthcare, Retail, & Manufacturing.
                   </div>
                 </div>
@@ -284,7 +284,7 @@ export default function Footer() {
                  { icon: XIcon, name: "X (Twitter)", stat: "Live", label: "Updates", href: "#" },
                  { icon: MediumIcon, name: "Medium", stat: "Technical", label: "Articles", href: "#" }
                ].map(social => (
-                 <a key={social.name} href={social.href} className="group flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary-accent/30 hover:-translate-y-1 transition-all">
+                 <a key={social.name} href={social.href} className="group flex items-center justify-between p-3 rounded-xl bg-surface border border-border hover:border-primary-accent/30 hover:-translate-y-1 transition-all shadow-sm hover:shadow-elevated">
                    <div className="flex items-center gap-3">
                      <social.icon size={16} className="text-gray-400 group-hover:text-white transition-colors" />
                      <span className="text-xs font-bold text-gray-300 group-hover:text-white transition-colors">{social.name}</span>
@@ -323,7 +323,7 @@ export default function Footer() {
 
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-accent to-secondary-accent flex items-center justify-center shrink-0">
-                    <span className="text-black text-xs font-black">P</span>
+                    <span className="text-white dark:text-black text-xs font-black">P</span>
                   </div>
                   <div>
                     <span className="block text-sm font-bold font-space text-white">{mottos[mottoIdx].author}</span>
@@ -370,7 +370,7 @@ export default function Footer() {
               transition={{ duration: 0.8 }}
               className={cn("w-9 h-9 rounded-lg flex items-center justify-center relative z-10 transition-colors", logoPulse ? "bg-primary-accent" : "bg-gradient-to-br from-primary-accent to-secondary-accent")}
             >
-              <div className="w-4 h-4 bg-[#040508] rounded-sm" />
+              <div className="w-4 h-4 bg-background rounded-sm transition-colors duration-500" />
             </motion.div>
             <div className="flex flex-col">
               <span className="font-space font-bold text-lg tracking-tight text-white leading-none relative z-10">

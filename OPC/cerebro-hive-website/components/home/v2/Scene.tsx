@@ -2,6 +2,7 @@
 
 import React, { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { useTheme } from "next-themes";
 import { EffectComposer, Bloom, DepthOfField, Vignette } from "@react-three/postprocessing";
 import { NeuralNetwork } from "./NeuralNetwork";
 import { Particles } from "./Particles";
@@ -19,8 +20,13 @@ function CameraRig() {
 }
 
 export function Scene() {
+  const { theme } = useTheme();
   // Determine if high performance (this could be tied to an actual check or a global store later)
   const isHighTier = true; // Hardcoded for showcase for now
+  
+  const bgColor = theme === "light" ? "#F7F9FC" : "#050A0F";
+  const lightColor1 = theme === "light" ? "#00E676" : "#00F57A";
+  const lightColor2 = theme === "light" ? "#00B8FF" : "#00C8FF";
 
   return (
     <Canvas
@@ -28,12 +34,12 @@ export function Scene() {
       dpr={[1, 2]} // Optimize pixel ratio
       gl={{ antialias: false, powerPreference: "high-performance" }} // Antialias false because we use postprocessing
     >
-      <color attach="background" args={["#07090D"]} />
+      <color attach="background" args={[bgColor]} />
       
       {/* Lights */}
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1} color="#00F57A" />
-      <pointLight position={[-10, -10, -10]} intensity={1} color="#00C8FF" />
+      <ambientLight intensity={theme === "light" ? 1.5 : 0.5} />
+      <pointLight position={[10, 10, 10]} intensity={1} color={lightColor1} />
+      <pointLight position={[-10, -10, -10]} intensity={1} color={lightColor2} />
 
       {/* Layer 1: Procedural Gradient */}
       <GradientBackground />

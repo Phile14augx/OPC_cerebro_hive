@@ -1,8 +1,10 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { useTheme } from 'next-themes';
 import * as THREE from 'three';
 
 export function NeuralNetwork({ count = 400 }) {
+  const { theme } = useTheme();
   const nodesRef = useRef<THREE.InstancedMesh>(null);
   const linesRef = useRef<THREE.LineSegments>(null);
 
@@ -112,10 +114,10 @@ export function NeuralNetwork({ count = 400 }) {
       <instancedMesh ref={nodesRef} args={[undefined, undefined, count]}>
         <sphereGeometry args={[0.08, 16, 16]} />
         <meshPhysicalMaterial 
-          color="#00C8FF"
+          color={theme === 'light' ? "#00E676" : "#00C8FF"}
           transmission={0.9}
           thickness={1.2}
-          roughness={0.15}
+          roughness={theme === 'light' ? 0.05 : 0.15}
           metalness={0.0}
         />
       </instancedMesh>
@@ -135,7 +137,10 @@ export function NeuralNetwork({ count = 400 }) {
         <shaderMaterial
           transparent
           depthWrite={false}
-          blending={THREE.AdditiveBlending}
+          blending={theme === 'light' ? THREE.NormalBlending : THREE.AdditiveBlending}
+          uniforms={{
+            color: { value: new THREE.Color(theme === 'light' ? "#CBD5E1" : "#00F57A") }
+          }}
           vertexShader={`
             attribute float opacity;
             varying float vOpacity;
@@ -145,9 +150,10 @@ export function NeuralNetwork({ count = 400 }) {
             }
           `}
           fragmentShader={`
+            uniform vec3 color;
             varying float vOpacity;
             void main() {
-              gl_FragColor = vec4(0.0, 0.96, 0.478, vOpacity * 0.4); // #00F57A with opacity
+              gl_FragColor = vec4(color, vOpacity * (0.8));
             }
           `}
         />

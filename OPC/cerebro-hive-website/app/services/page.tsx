@@ -273,12 +273,12 @@ const InteractiveTimeline = ({ process, color }: { process: {step: string, detai
           >
             <div 
               className={cn(
-                "w-8 h-8 rounded-full border-[3px] flex items-center justify-center transition-all duration-300 bg-[#090D14]",
+                "w-8 h-8 rounded-full border-[3px] flex items-center justify-center transition-all duration-300 bg-surface",
                 activeStep === i 
                   ? "scale-110 shadow-lg" 
                   : activeStep < i 
-                    ? "scale-100 border-white/20 hover:border-white/50" 
-                    : "scale-100 border-white/20"
+                    ? "scale-100 border-primary-accent/20 hover:border-primary-accent/50" 
+                    : "scale-100 border-border dark:border-white/20"
               )}
               style={{ 
                 borderColor: activeStep >= i ? color : undefined,
@@ -298,7 +298,7 @@ const InteractiveTimeline = ({ process, color }: { process: {step: string, detai
             </div>
             <span className={cn(
               "text-[10px] md:text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors duration-300",
-              activeStep === i ? "text-white" : "text-gray-500 group-hover:text-gray-400"
+              activeStep === i ? "text-text-primary" : "text-text-muted group-hover:text-text-secondary"
             )}>
               {p.step}
             </span>
@@ -313,10 +313,10 @@ const InteractiveTimeline = ({ process, color }: { process: {step: string, detai
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
-          className="p-6 md:p-8 rounded-xl bg-white/[0.02] border border-white/5 min-h-[100px] flex items-center"
+          className="p-6 md:p-8 rounded-xl bg-surface border border-border min-h-[100px] flex items-center"
         >
-          <p className="text-sm md:text-base text-gray-300 leading-relaxed">
-            <strong className="text-white font-space mr-3">{process[activeStep].step}:</strong>
+          <p className="text-sm md:text-base text-text-secondary leading-relaxed">
+            <strong className="text-text-primary font-space mr-3">{process[activeStep].step}:</strong>
             {process[activeStep].detail}
           </p>
         </motion.div>
@@ -333,10 +333,10 @@ const FAQAccordion = ({ faqs, color }: { faqs: {q: string, a: string}[], color: 
     <div className="mt-4">
       <div className="flex flex-col gap-2">
         {faqs.map((faq, i) => (
-          <div key={i} className="border-b border-white/5 last:border-0 overflow-hidden">
+          <div key={i} className="border-b border-border dark:border-white/5 last:border-0 overflow-hidden">
             <button 
               onClick={() => setOpenIdx(openIdx === i ? null : i)}
-              className="w-full text-left py-5 flex items-center justify-between text-sm font-bold text-gray-400 hover:text-white transition-colors"
+              className="w-full text-left py-5 flex items-center justify-between text-sm font-bold text-text-secondary hover:text-text-primary transition-colors"
             >
               {faq.q}
               <ChevronDown 
@@ -353,7 +353,7 @@ const FAQAccordion = ({ faqs, color }: { faqs: {q: string, a: string}[], color: 
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="pb-6 text-sm text-gray-500 leading-relaxed pr-8">
+                  <div className="pb-6 text-sm text-text-muted leading-relaxed pr-8">
                     {faq.a}
                   </div>
                 </motion.div>
@@ -369,15 +369,15 @@ const FAQAccordion = ({ faqs, color }: { faqs: {q: string, a: string}[], color: 
 // 4. Case Study Block (Elevated Primary Focus)
 const CaseStudyBlock = ({ study, color }: { study: typeof servicesData[0]['caseStudy'], color: string }) => {
   return (
-    <div className="p-8 md:p-10 rounded-2xl bg-gradient-to-br from-white/5 to-transparent border border-white/10 backdrop-blur-md shadow-2xl relative overflow-hidden group">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[100px] -z-10 group-hover:bg-white/10 transition-colors duration-700" style={{ backgroundColor: `${color}15` }} />
+    <div className="p-8 md:p-10 rounded-2xl bg-surface-elevated dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent border border-border dark:border-white/10 backdrop-blur-md shadow-elevated relative overflow-hidden group">
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary-accent/5 rounded-full blur-[100px] -z-10 group-hover:bg-primary-accent/10 transition-colors duration-700" style={{ backgroundColor: `${color}15` }} />
       
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-8 border-b border-white/5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-8 border-b border-border dark:border-white/5">
         <div>
-          <h4 className="text-[11px] font-bold tracking-widest uppercase text-gray-500 mb-2 flex items-center gap-2">
+          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-2 flex items-center gap-2">
             <Building size={14} /> {study.industry} Case Study
           </h4>
-          <span className="text-2xl font-space font-bold text-white block">{study.metric}</span>
+          <span className="text-2xl font-space font-bold text-text-primary block">{study.metric}</span>
         </div>
         
         <div className="flex flex-col gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-500">
@@ -388,16 +388,16 @@ const CaseStudyBlock = ({ study, color }: { study: typeof servicesData[0]['caseS
 
       <div className="space-y-6 text-sm md:text-base">
         <div>
-          <h5 className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-2">The Challenge</h5>
-          <p className="text-gray-300 leading-relaxed">{study.challenge}</p>
+          <h5 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2">The Challenge</h5>
+          <p className="text-text-secondary leading-relaxed">{study.challenge}</p>
         </div>
         <div>
-          <h5 className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-2">The Solution</h5>
-          <p className="text-gray-300 leading-relaxed">{study.solution}</p>
+          <h5 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2">The Solution</h5>
+          <p className="text-text-secondary leading-relaxed">{study.solution}</p>
         </div>
-        <div className="p-4 rounded-lg bg-[#090D14] border border-[#1A2332]">
+        <div className="p-4 rounded-lg bg-surface border border-border">
           <h5 className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: color }}>Measurable Outcome</h5>
-          <p className="text-white font-medium">{study.outcome}</p>
+          <p className="text-text-primary font-medium">{study.outcome}</p>
         </div>
       </div>
     </div>
@@ -407,31 +407,31 @@ const CaseStudyBlock = ({ study, color }: { study: typeof servicesData[0]['caseS
 // 5. Engagement Profile Block (Commercial Importance)
 const EngagementProfile = ({ engagement, color }: { engagement: typeof servicesData[0]['engagement'], color: string }) => {
   return (
-    <div className="p-8 md:p-10 rounded-2xl bg-[#0B0F14] border border-[#1A2332] shadow-xl relative overflow-hidden group">
+    <div className="p-8 md:p-10 rounded-2xl bg-surface-elevated border border-border shadow-elevated relative overflow-hidden group">
       <div className="absolute top-0 right-0 p-8">
-        <Star size={24} className="text-white/5 group-hover:text-white/10 transition-colors duration-300" />
+        <Star size={24} className="text-border dark:text-white/5 group-hover:text-primary-accent/50 transition-colors duration-300" />
       </div>
       
-      <h4 className="text-[11px] font-bold tracking-widest uppercase text-gray-500 mb-6 flex items-center gap-2">
+      <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
         <Target size={14} /> Engagement Profile
       </h4>
       
       <div className="mb-6">
-        <span className="text-[10px] font-bold tracking-widest uppercase text-gray-500 block mb-2">Typical Investment</span>
+        <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted block mb-2">Typical Investment</span>
         <div className="flex items-baseline gap-3">
-          <span className="text-4xl font-mono font-bold text-white" style={{ color: color }}>{engagement.price}</span>
+          <span className="text-4xl font-mono font-bold text-text-primary" style={{ color: color }}>{engagement.price}</span>
         </div>
-        <span className="text-sm text-gray-400 mt-2 block">{engagement.model}</span>
+        <span className="text-sm text-text-secondary mt-2 block">{engagement.model}</span>
       </div>
 
-      <div className="space-y-4 pt-6 border-t border-white/5">
+      <div className="space-y-4 pt-6 border-t border-border">
         <div>
-          <span className="text-[10px] font-bold tracking-widest uppercase text-gray-500 block mb-1">Team Composition</span>
-          <span className="text-sm text-gray-300">{engagement.team}</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted block mb-1">Team Composition</span>
+          <span className="text-sm text-text-secondary">{engagement.team}</span>
         </div>
         <div>
-          <span className="text-[10px] font-bold tracking-widest uppercase text-gray-500 block mb-1">Best For</span>
-          <span className="text-sm text-gray-300 leading-relaxed block">{engagement.bestFor}</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted block mb-1">Best For</span>
+          <span className="text-sm text-text-secondary leading-relaxed block">{engagement.bestFor}</span>
         </div>
       </div>
     </div>
@@ -452,7 +452,7 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 lg:gap-24 py-32 border-b border-white/5 last:border-0 scroll-mt-24`}
+      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 lg:gap-24 py-32 border-b border-border dark:border-white/5 last:border-0 scroll-mt-24`}
     >
       {/* Left/Content Column (Focus on Outcomes & Text) */}
       <div className="w-full lg:w-1/2 flex flex-col gap-12">
@@ -467,21 +467,21 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
               <service.icon size={32} strokeWidth={1.5} />
             </div>
             <div>
-              <span className="text-[10px] font-bold tracking-widest uppercase mb-1 block text-gray-500">Service Line 0{index + 1}</span>
-              <h2 className="text-3xl md:text-5xl font-space font-bold text-white">{service.title}</h2>
+              <span className="text-[10px] font-bold tracking-widest uppercase mb-1 block text-text-muted">Service Line 0{index + 1}</span>
+              <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">{service.title}</h2>
             </div>
           </div>
-          <p className="text-lg md:text-xl text-gray-400 leading-relaxed font-inter">{service.description}</p>
+          <p className="text-lg md:text-xl text-text-secondary leading-relaxed font-inter">{service.description}</p>
         </div>
 
         {/* Business Outcomes (Primary List) */}
         <div>
-          <h4 className="text-[11px] font-bold tracking-widest uppercase text-gray-500 mb-6 flex items-center gap-2">
+          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
             <Target size={14} /> Business Outcomes
           </h4>
           <ul className="flex flex-col gap-5">
             {service.outcomes.map((outcome, i) => (
-              <li key={i} className="flex items-start gap-4 text-base md:text-lg text-gray-300">
+              <li key={i} className="flex items-start gap-4 text-base md:text-lg text-text-primary">
                 <CheckCircle2 size={20} className="shrink-0 mt-0.5" style={{ color: service.color }} />
                 <span>{outcome}</span>
               </li>
@@ -490,28 +490,28 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
         </div>
 
         {/* Deliverables (Secondary List) */}
-        <div className="pt-8 border-t border-white/5">
-          <h4 className="text-[11px] font-bold tracking-widest uppercase text-gray-500 mb-6 flex items-center gap-2">
+        <div className="pt-8 border-t border-border">
+          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
             <ShieldCheck size={14} /> Key Deliverables
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
             {service.deliverables.map((item, i) => (
               <div key={i} className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ backgroundColor: service.color }} />
-                <span className="text-sm text-gray-400 font-medium leading-snug">{item}</span>
+                <span className="text-sm text-text-secondary font-medium leading-snug">{item}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Technologies (Tertiary Chips) */}
-        <div className="pt-8 border-t border-white/5">
-          <h4 className="text-[11px] font-bold tracking-widest uppercase text-gray-500 mb-6 flex items-center gap-2">
+        <div className="pt-8 border-t border-border">
+          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
             <Cpu size={14} /> Core Technologies
           </h4>
           <div className="flex flex-wrap gap-2">
             {service.technologies.map((tech, i) => (
-              <span key={i} className="px-3 py-1.5 rounded-md text-xs font-bold tracking-wide uppercase bg-[#090D14] border border-[#1A2332] text-gray-400">
+              <span key={i} className="px-3 py-1.5 rounded-md text-xs font-bold tracking-wide uppercase bg-surface-elevated border border-border text-text-secondary">
                 {tech}
               </span>
             ))}
@@ -519,8 +519,8 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
         </div>
 
         {/* FAQs */}
-        <div className="pt-8 border-t border-white/5">
-          <h4 className="text-[11px] font-bold tracking-widest uppercase text-gray-500 mb-2 flex items-center gap-2">
+        <div className="pt-8 border-t border-border">
+          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-2 flex items-center gap-2">
             <Search size={14} /> Common Questions
           </h4>
           <FAQAccordion faqs={service.faqs} color={service.color} />
@@ -537,8 +537,8 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
             {/* Case Study prominent at top for Even */}
             <CaseStudyBlock study={service.caseStudy} color={service.color} />
             
-            <div className="p-8 md:p-10 rounded-2xl bg-[#090D14] border border-[#1A2332] shadow-xl">
-              <h4 className="text-[11px] font-bold tracking-widest uppercase text-gray-500 mb-8 flex items-center gap-2">
+            <div className="p-8 md:p-10 rounded-2xl bg-surface-elevated border border-border shadow-elevated">
+              <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-8 flex items-center gap-2">
                 <Activity size={14} /> Methodology
               </h4>
               <InteractiveTimeline process={service.process} color={service.color} />
@@ -549,8 +549,8 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
         ) : (
           <>
             {/* Methodology prominent at top for Odd */}
-            <div className="p-8 md:p-10 rounded-2xl bg-[#090D14] border border-[#1A2332] shadow-xl">
-              <h4 className="text-[11px] font-bold tracking-widest uppercase text-gray-500 mb-8 flex items-center gap-2">
+            <div className="p-8 md:p-10 rounded-2xl bg-surface-elevated border border-border shadow-elevated">
+              <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-8 flex items-center gap-2">
                 <Activity size={14} /> Methodology
               </h4>
               <InteractiveTimeline process={service.process} color={service.color} />
@@ -592,7 +592,7 @@ const StickyNav = () => {
   }, []);
 
   return (
-    <div className="sticky top-20 z-40 bg-[#050A0F]/90 backdrop-blur-xl border-y border-white/10 py-4 hidden lg:block shadow-2xl shadow-black/50">
+    <div className="sticky top-20 z-40 bg-background/90 backdrop-blur-xl border-y border-border py-4 hidden lg:block shadow-elevated">
       <div className="container-wide flex justify-center gap-10">
         {servicesData.map(s => {
           const isActive = activeId === s.id;
@@ -602,7 +602,7 @@ const StickyNav = () => {
               href={`#${s.id}`} 
               className={cn(
                 "text-xs font-bold tracking-widest uppercase transition-all duration-300 relative py-2",
-                isActive ? "text-white" : "text-gray-500 hover:text-gray-300"
+                isActive ? "text-text-primary" : "text-text-muted hover:text-text-secondary"
               )}
             >
               {s.title}
@@ -625,7 +625,7 @@ const StickyNav = () => {
 
 export default function ServicesPage() {
   return (
-    <div className="bg-[#050A0F] min-h-screen selection:bg-primary-accent/30">
+    <div className="bg-background min-h-screen selection:bg-primary-accent/30 transition-colors duration-500">
       
       {/* Premium Hero Section */}
       <section className="relative pt-40 pb-24 md:pt-52 md:pb-32 overflow-hidden">
@@ -637,17 +637,17 @@ export default function ServicesPage() {
             transition={{ duration: 0.8 }}
             className="max-w-4xl flex flex-col items-center w-full"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#00E5FF] animate-pulse" />
-              <span className="text-[10px] font-bold tracking-widest uppercase text-gray-300">Enterprise AI Capabilities</span>
+              <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Enterprise AI Capabilities</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-space font-bold text-white leading-[1.1] tracking-tight mb-6">
+            <h1 className="text-5xl md:text-7xl font-space font-bold text-text-primary leading-[1.1] tracking-tight mb-6">
               World-Class <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E5FF] to-[#00F57A]">Consulting & Delivery</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-gray-400 font-inter max-w-2xl leading-relaxed mb-10">
+            <p className="text-lg md:text-xl text-text-secondary font-inter max-w-2xl leading-relaxed mb-10">
               We partner with ambitious organizations to design AI-powered systems, enterprise software, and scalable digital platforms that drive measurable impact.
             </p>
 
@@ -658,24 +658,24 @@ export default function ServicesPage() {
                   Schedule a Strategy Consultation
                 </button>
               </Link>
-              <a href="#ai-consulting" className="px-8 py-4 bg-transparent border border-white/20 text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all duration-300">
+              <a href="#ai-consulting" className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/50 hover:bg-surface-elevated transition-all duration-300">
                 Explore Our Services
               </a>
             </div>
 
             {/* Proof Metrics Row */}
-            <div className="flex flex-wrap justify-center gap-8 md:gap-24 pt-12 mt-4 border-t border-white/5 w-full max-w-3xl opacity-80">
+            <div className="flex flex-wrap justify-center gap-8 md:gap-24 pt-12 mt-4 border-t border-border w-full max-w-3xl opacity-80">
               <div className="flex flex-col items-center">
-                <span className="text-3xl font-space font-bold text-white mb-2">50+</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">AI Projects Delivered</span>
+                <span className="text-3xl font-space font-bold text-text-primary mb-2">50+</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">AI Projects Delivered</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-3xl font-space font-bold text-white mb-2">E2E</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Strategy to Production</span>
+                <span className="text-3xl font-space font-bold text-text-primary mb-2">E2E</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Strategy to Production</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-3xl font-space font-bold text-white mb-2">100%</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Enterprise Ready</span>
+                <span className="text-3xl font-space font-bold text-text-primary mb-2">100%</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Enterprise Ready</span>
               </div>
             </div>
 
@@ -698,9 +698,9 @@ export default function ServicesPage() {
       </section>
 
       {/* Final Premium CTA Section */}
-      <section className="py-32 md:py-40 relative overflow-hidden bg-[#0B0F14] border-t border-white/5">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F14] via-transparent to-[#0B0F14]" />
+      <section className="py-32 md:py-40 relative overflow-hidden bg-surface-elevated border-t border-border">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(128,128,128,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(128,128,128,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-surface-elevated via-transparent to-surface-elevated" />
         
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary-accent/10 blur-[120px] rounded-full pointer-events-none" />
 
@@ -712,12 +712,12 @@ export default function ServicesPage() {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center flex flex-col items-center"
           >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-space font-bold text-white leading-tight mb-8">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-space font-bold text-text-primary leading-tight mb-8">
               Ready to Build Intelligent Systems <br className="hidden lg:block"/>
               That Deliver <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-[#00E5FF]">Business Value?</span>
             </h2>
             
-            <p className="text-lg text-gray-400 font-inter max-w-[700px] mx-auto leading-relaxed mb-12">
+            <p className="text-lg text-text-secondary font-inter max-w-[700px] mx-auto leading-relaxed mb-12">
               From executive AI strategy to production-grade AI systems, CerebroHive partners with organizations to deliver measurable outcomes.
             </p>
 
@@ -731,7 +731,7 @@ export default function ServicesPage() {
               </Link>
 
               <Link href="/contact">
-                <button className="px-8 py-4 bg-transparent border border-white/20 text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all duration-300">
+                <button className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/50 hover:bg-surface-elevated transition-all duration-300 shadow-sm">
                   Contact Our Team
                 </button>
               </Link>

@@ -1,14 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #07090D;
-  --color-secondary: #0E131A;
-  --color-card: #141B24;
-  --color-primary-accent: #00F57A;
-  --color-secondary-accent: #00C8FF;
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  
+  --color-primary-accent: var(--accent-primary);
+  --color-secondary-accent: var(--accent-secondary);
   --color-warning: #FFC857;
-  --color-text-primary: #FFFFFF;
-  --color-text-muted: #8B97A8;
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
 
   --font-space: var(--font-space), sans-serif;
   --font-inter: var(--font-inter), sans-serif;
@@ -20,28 +24,47 @@
    CEREBRO HIVE — DESIGN TOKENS (Engineering Elegance)
    ============================================================ */
 :root {
-  /* Background */
-  --bg-primary: #07090D;
-  --bg-secondary: #0E131A;
-  --bg-card: #141B24;
-  --bg-glass: rgba(20, 27, 36, 0.4);
+  /* LIGHT THEME (Apple + Stripe + Anthropic) */
+  --background: #F7F9FC;
+  --surface: #FFFFFF;
+  --surface-elevated: #FCFCFD;
+  --border: #E5E7EB;
 
-  /* Brand Colors */
-  --primary-accent: #00F57A;
-  --secondary-accent: #00C8FF;
-  --warning: #FFC857;
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
 
-  /* Text */
+  --accent-primary: #00E676; /* CerebroHive Green */
+  --accent-secondary: #00B8FF;
+  
+  --glow-primary: 0 0 20px rgba(0, 230, 118, 0.2), 0 0 60px rgba(0, 230, 118, 0.05);
+  --glow-secondary: 0 0 20px rgba(0, 184, 255, 0.2), 0 0 60px rgba(0, 184, 255, 0.05);
+
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 12px 40px rgba(15,23,42,0.08);
+}
+
+.dark {
+  /* DARK THEME (Original Night Mode) */
+  --background: #050A0F;
+  --surface: #090D14;
+  --surface-elevated: #1A2332;
+  --border: rgba(255, 255, 255, 0.05);
+
   --text-primary: #FFFFFF;
-  --text-muted: #8B97A8;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
 
-  /* Borders */
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --border-accent: rgba(0, 245, 122, 0.2);
+  --accent-primary: #00F57A;
+  --accent-secondary: #00C8FF;
 
-  /* Glows */
   --glow-primary: 0 0 20px rgba(0, 245, 122, 0.35), 0 0 60px rgba(0, 245, 122, 0.1);
   --glow-secondary: 0 0 20px rgba(0, 200, 255, 0.35), 0 0 60px rgba(0, 200, 255, 0.1);
+
+  --glass-bg: rgba(20, 27, 36, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --shadow-elevated: 0 12px 40px rgba(0,0,0,0.5);
 }
 
 /* ============================================================
@@ -60,7 +83,7 @@ html {
 }
 
 body {
-  background-color: var(--bg-primary);
+  background-color: var(--background);
   color: var(--text-primary);
   font-family: var(--font-inter), system-ui, sans-serif;
   font-size: 16px;
@@ -95,10 +118,11 @@ p { font-family: var(--font-inter), sans-serif; }
    UTILITIES & COMPONENTS
    ============================================================ */
 .glass {
-  background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-glass);
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  transition: background-color 500ms ease, border-color 500ms ease, box-shadow 500ms ease;
 }
 
 /* Custom Scrollbar */
@@ -144,6 +168,13 @@ p { font-family: var(--font-inter), sans-serif; }
 @keyframes floatIcon {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
+}
+
+/* Global Transitions for Theme Morphing */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 500ms;
 }
 
 /* ============================================================
