@@ -18,7 +18,7 @@ function AnimatedCounter({ from = 0, to, duration = 2, delay = 0, suffix = "", p
         delay: delay,
         ease: "easeOut",
         onUpdate(value) {
-          setDisplayValue(Math.round(value));
+          setDisplayValue(Math.round(Number(value)));
         }
       });
       return () => controls.stop();

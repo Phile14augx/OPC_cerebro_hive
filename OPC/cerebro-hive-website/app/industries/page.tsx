@@ -12,7 +12,7 @@ export default function IndustriesIndexPage() {
     <div className="bg-background min-h-screen selection:bg-primary-accent/30 transition-colors duration-500">
       
       {/* Premium Hero */}
-      <section className="relative pt-40 pb-24 md:pt-52 md:pb-32 overflow-hidden flex flex-col items-center text-center">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
         {/* Placeholder for Interactive Globe */}
         <div className="absolute inset-0 z-0 opacity-20 pointer-events-none flex items-center justify-center">
           <Globe size={800} className="text-primary-accent animate-[spin_120s_linear_infinite]" />
@@ -50,7 +50,7 @@ export default function IndustriesIndexPage() {
       </section>
 
       {/* Global Statistics */}
-      <section className="py-24 border-t border-border bg-surface-elevated">
+      <section className="section-pad border-t border-border bg-surface-elevated">
         <div className="container-wide">
           <SectionHeading label="Scale" title="Measurable Transformation" description="Driving efficiency and intelligence globally." />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">

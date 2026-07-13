@@ -132,7 +132,7 @@ export default function WhyCerebroHive() {
       
       {/* Subtle Background Layer Transitions */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <AnimatePresence mode="crossfade">
+        <AnimatePresence mode="wait">
            {activeStage === "digital" && (
              <motion.div key="bg-1" initial={{ opacity: 0 }} animate={{ opacity: 0.03 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
            )}

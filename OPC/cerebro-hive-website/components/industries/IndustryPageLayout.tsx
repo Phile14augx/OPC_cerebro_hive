@@ -66,7 +66,7 @@ export default function IndustryPageLayout({ industry }: { industry: Industry })
         <div className={cn("absolute inset-0 pointer-events-none z-0 bg-gradient-to-b opacity-50", bgGradient)} />
 
         {/* Hero Section */}
-        <section className="relative pt-40 pb-24 md:pt-52 md:pb-32 overflow-hidden flex flex-col items-center text-center z-10">
+        <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden z-10">
           <div className="container-wide flex flex-col items-center">
              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">
                 <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: industry.color }} />
@@ -94,7 +94,7 @@ export default function IndustryPageLayout({ industry }: { industry: Industry })
         <div className="relative z-10">
           
           {/* Overview & Challenges Bento */}
-          <section className="py-24 border-b border-border">
+          <section className="section-pad border-b border-border">
             <div className="container-wide">
               <SectionHeading label="Overview" title="The State of the Industry" description="Current landscape and critical bottlenecks." />
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-16">
@@ -155,7 +155,7 @@ export default function IndustryPageLayout({ industry }: { industry: Industry })
           </section>
 
           {/* Interactive Architecture (React Flow) */}
-          <section className="py-24 border-b border-border">
+          <section className="section-pad border-b border-border">
             <div className="container-wide flex flex-col gap-8">
               <SectionHeading label="Architecture" title="Reference Architecture" description="Standardized deployment model." />
               {industry.architecture.nodes.length > 0 ? (
@@ -192,7 +192,7 @@ export default function IndustryPageLayout({ industry }: { industry: Industry })
           </section>
 
           {/* Business Outcomes */}
-          <section className="py-24 border-b border-border">
+          <section className="section-pad border-b border-border">
             <div className="container-wide">
                <SectionHeading label="Outcomes" title="Business Impact" description="Measurable results from AI adoption." />
                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">

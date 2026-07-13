@@ -10,10 +10,11 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { name: "Services", href: "/services" },
-  { name: "Industries", href: "/industries" },
   { name: "Solutions", href: "/solutions" },
+  { name: "Industries", href: "/industries" },
   { name: "Products", href: "/products" },
   { name: "Research", href: "/research" },
+  { name: "Insights", href: "/insights" },
   { name: "Company", href: "/company" },
 ];
 
@@ -24,7 +25,7 @@ export default function Navbar() {
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
-    if (latest > previous && latest > 150) {
+    if (latest > previous && latest > 80) {
       setHidden(true);
     } else {
       setHidden(false);
@@ -40,7 +41,7 @@ export default function Navbar() {
         }}
         animate={hidden ? "hidden" : "visible"}
         transition={{ duration: 0.35, ease: "easeInOut" }}
-        className="fixed top-0 left-0 right-0 h-20 bg-background/80 backdrop-blur-xl border-b border-border z-50 transition-colors duration-500"
+        className="fixed top-0 left-0 right-0 h-20 bg-background/95 backdrop-blur-sm border-b border-white/5 shadow-sm z-50 transition-colors duration-500"
       >
         <div className="container-wide h-full flex items-center justify-between">
           <div className="flex items-center gap-12">
@@ -70,9 +71,11 @@ export default function Navbar() {
             <div className="flex items-center gap-4 border-r border-border pr-6">
               <ThemeToggle />
             </div>
-            <AnimatedButton variant="primary" size="sm">
-              Book Strategy Session
-            </AnimatedButton>
+            <Link href="/contact">
+              <AnimatedButton variant="primary" size="sm">
+                Book Strategy Session
+              </AnimatedButton>
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}

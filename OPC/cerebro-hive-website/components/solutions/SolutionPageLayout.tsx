@@ -25,7 +25,7 @@ export default function SolutionPageLayout({ solution }: { solution: Solution })
         <div className="absolute inset-0 pointer-events-none z-0 bg-gradient-to-b opacity-50 from-primary-accent/5 via-transparent to-primary-accent/5" />
 
         {/* Hero Section */}
-        <section className="relative pt-40 pb-24 md:pt-52 md:pb-32 overflow-hidden flex flex-col items-center text-center z-10 border-b border-border">
+        <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden z-10 border-b border-border">
           <div className="container-wide flex flex-col items-center">
              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">
                 <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: solution.color }} />
@@ -54,7 +54,7 @@ export default function SolutionPageLayout({ solution }: { solution: Solution })
         <div className="relative z-10">
           
           {/* Overview & Business Problems */}
-          <section className="py-24 border-b border-border bg-surface-elevated">
+          <section className="section-pad border-b border-border bg-surface-elevated">
             <div className="container-wide">
               <SectionHeading label="Business Case" title="The Enterprise Challenge" description={solution.overview} />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
@@ -73,7 +73,7 @@ export default function SolutionPageLayout({ solution }: { solution: Solution })
           </section>
 
           {/* Interactive Architecture (React Flow) */}
-          <section className="py-24 border-b border-border">
+          <section className="section-pad border-b border-border">
             <div className="container-wide flex flex-col gap-8">
               <SectionHeading label="Architecture" title="Reference Architecture" description="Standardized deployment model." />
               {solution.architecture.nodes.length > 0 ? (
@@ -92,7 +92,7 @@ export default function SolutionPageLayout({ solution }: { solution: Solution })
 
           {/* AI Agents Ecosystem */}
           {solution.agents && solution.agents.length > 0 && (
-             <section className="py-24 border-b border-border bg-surface-elevated">
+             <section className="section-pad border-b border-border bg-surface-elevated">
                <div className="container-wide flex flex-col gap-8">
                  <SectionHeading label="AI Ecosystem" title="Digital Workforce" description="Specialized agents working in orchestration." />
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
@@ -114,7 +114,7 @@ export default function SolutionPageLayout({ solution }: { solution: Solution })
           )}
 
           {/* Business Outcomes */}
-          <section className="py-24 border-b border-border">
+          <section className="section-pad border-b border-border">
             <div className="container-wide">
                <SectionHeading label="ROI" title="Measurable Outcomes" description="Realized business value." />
                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
@@ -130,7 +130,7 @@ export default function SolutionPageLayout({ solution }: { solution: Solution })
           </section>
 
           {/* Resources */}
-          <section className="py-24 border-b border-border bg-surface-elevated">
+          <section className="section-pad border-b border-border bg-surface-elevated">
             <div className="container-wide">
                <SectionHeading label="Resources" title="Further Reading" description="Deep dives and documentation." />
                <div className="flex flex-col gap-4 mt-16">

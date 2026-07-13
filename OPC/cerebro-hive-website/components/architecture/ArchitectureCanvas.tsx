@@ -20,6 +20,7 @@ import { ArchitectureNode } from './ArchitectureNode';
 import { AnimatedEdge } from './AnimatedEdge';
 import { Download, Maximize, Search, Image as ImageIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { cn } from '@/lib/utils';
 
 const nodeTypes = {
   architectureNode: ArchitectureNode,

@@ -225,7 +225,7 @@ export default function AIAgentShowcase() {
               {!isHovered && (
                 <div className="flex justify-between items-end mt-1">
                   <span className="text-[9px] text-gray-500">{isActiveInPath ? "Processing..." : "Idle"}</span>
-                  <span className="text-[10px] font-mono text-white bg-white/5 px-1.5 py-0.5 rounded">{Math.floor(Math.random() * 50) + 100} Tasks</span>
+                  <span className="text-[10px] font-mono text-white bg-white/5 px-1.5 py-0.5 rounded">{(agent.angle % 50) + 100} Tasks</span>
                 </div>
               )}
 
@@ -237,7 +237,7 @@ export default function AIAgentShowcase() {
                      <div className="grid grid-cols-2 gap-2">
                        <div className="flex flex-col bg-black/40 p-1.5 rounded border border-white/5">
                          <span className="text-[8px] uppercase text-gray-500">Latency</span>
-                         <span className="text-xs font-mono text-primary-accent">{Math.floor(Math.random() * 50) + 20}ms</span>
+                         <span className="text-xs font-mono text-primary-accent">{(agent.angle % 50) + 20}ms</span>
                        </div>
                        <div className="flex flex-col bg-black/40 p-1.5 rounded border border-white/5">
                          <span className="text-[8px] uppercase text-gray-500">Health</span>

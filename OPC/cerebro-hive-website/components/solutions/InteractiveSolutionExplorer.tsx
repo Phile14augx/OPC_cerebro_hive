@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { solutionsData } from '@/lib/data/solutions';
 import { SectionHeading } from '../ui/SectionHeading';
-import { ArrowRight, Cpu, Network, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Cpu, Network, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
 export const InteractiveSolutionExplorer = () => {

@@ -452,7 +452,7 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 lg:gap-24 py-32 border-b border-border dark:border-white/5 last:border-0 scroll-mt-24`}
+      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 lg:gap-24 py-20 border-b border-border dark:border-white/5 last:border-0 scroll-mt-24`}
     >
       {/* Left/Content Column (Focus on Outcomes & Text) */}
       <div className="w-full lg:w-1/2 flex flex-col gap-12">
@@ -628,7 +628,7 @@ export default function ServicesPage() {
     <div className="bg-background min-h-screen selection:bg-primary-accent/30 transition-colors duration-500">
       
       {/* Premium Hero Section */}
-      <section className="relative pt-40 pb-24 md:pt-52 md:pb-32 overflow-hidden">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
         <ServicesHeroBg />
         <div className="container-wide relative z-10 flex flex-col items-center text-center">
           <motion.div 
@@ -687,7 +687,7 @@ export default function ServicesPage() {
       <StickyNav />
 
       {/* Services List */}
-      <section className="py-12 md:py-24">
+      <section className="section-pad-sm">
         <div className="container-wide">
           <div className="flex flex-col">
             {servicesData.map((service, index) => (
@@ -698,7 +698,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Final Premium CTA Section */}
-      <section className="py-32 md:py-40 relative overflow-hidden bg-surface-elevated border-t border-border">
+      <section className="section-pad relative overflow-hidden bg-surface-elevated border-t border-border">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(128,128,128,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(128,128,128,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-t from-surface-elevated via-transparent to-surface-elevated" />
         
