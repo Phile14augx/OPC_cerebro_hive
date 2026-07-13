@@ -56,7 +56,7 @@ export const EngineeringCulture = () => {
 
             <motion.h3 variants={motionPresets.fadeUp} className="text-4xl md:text-5xl font-space font-bold text-white tracking-tight leading-[1.1] mb-6">
               {engineeringFramework.narrative.headline}
-            </motion.div>
+            </motion.h3>
             
             <motion.p variants={motionPresets.fadeUp} className="text-lg text-text-secondary font-inter leading-relaxed mb-12 border-l-2 border-white/10 pl-6">
               {engineeringFramework.narrative.description}
