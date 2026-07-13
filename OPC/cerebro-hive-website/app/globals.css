@@ -255,3 +255,27 @@ p { font-family: var(--font-inter), sans-serif; }
 .chat-input-bar {
   padding: 0 24px 24px;
 }
+
+/* ============================================================
+   COMET BORDER — Service card hover effect
+   ============================================================ */
+
+/* Total perimeter of a typical card ~3480px; tail=90px, head=6px at offset -84 from tail */
+@keyframes cometTail {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -3490; }
+}
+
+/* Head leads 84px ahead of the tail's front edge */
+@keyframes cometHead {
+  from { stroke-dashoffset: -84; }
+  to   { stroke-dashoffset: -3574; }
+}
+
+.animate-comet-tail {
+  animation: cometTail 4s linear infinite;
+}
+
+.animate-comet-head {
+  animation: cometHead 4s linear infinite;
+}

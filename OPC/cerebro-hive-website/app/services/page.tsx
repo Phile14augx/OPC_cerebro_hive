@@ -252,18 +252,24 @@ const servicesData = [
   }
 ];
 
-// 2. Interactive Timeline Component (Upgraded with active states and richer interaction)
+// 2. Interactive Timeline Component
 const InteractiveTimeline = ({ process, color }: { process: {step: string, detail: string}[], color: string }) => {
   const [activeStep, setActiveStep] = useState(0);
+  const cols = process.length;
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex justify-between relative group/timeline">
-        {/* Animated Progress Line */}
+      {/* Steps row — equal-width grid so labels never overflow */}
+      <div
+        className="relative"
+        style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+      >
+        {/* Track background */}
         <div className="absolute top-[14px] left-0 w-full h-[2px] bg-white/5 rounded-full" />
+        {/* Animated fill */}
         <motion.div 
           className="absolute top-[14px] left-0 h-[2px] rounded-full transition-all duration-500 ease-out"
-          style={{ backgroundColor: color, width: `${(activeStep / (process.length - 1)) * 100}%` }}
+          style={{ backgroundColor: color, width: `${(activeStep / (cols - 1)) * 100}%` }}
         />
 
         {process.map((p, i) => (
@@ -271,35 +277,33 @@ const InteractiveTimeline = ({ process, color }: { process: {step: string, detai
             key={i}
             onMouseEnter={() => setActiveStep(i)}
             onClick={() => setActiveStep(i)}
-            className="relative z-10 flex flex-col items-center gap-4 group"
+            className="relative z-10 flex flex-col items-center gap-3 group py-1"
           >
             <div 
               className={cn(
-                "w-8 h-8 rounded-full border-[3px] flex items-center justify-center transition-all duration-300 bg-surface",
+                "w-7 h-7 rounded-full border-[2.5px] flex items-center justify-center transition-all duration-300 bg-surface",
                 activeStep === i 
                   ? "scale-110 shadow-lg" 
-                  : activeStep < i 
-                    ? "scale-100 border-primary-accent/20 hover:border-primary-accent/50" 
-                    : "scale-100 border-border dark:border-white/20"
+                  : "scale-100"
               )}
               style={{ 
-                borderColor: activeStep >= i ? color : undefined,
-                boxShadow: activeStep === i ? `0 0 20px ${color}40` : 'none'
+                borderColor: activeStep >= i ? color : 'rgba(255,255,255,0.15)',
+                boxShadow: activeStep === i ? `0 0 16px ${color}40` : 'none'
               }}
             >
               {activeStep === i && (
                 <motion.div 
                   layoutId={`active-dot-${color}`}
-                  className="w-2.5 h-2.5 rounded-full" 
+                  className="w-2 h-2 rounded-full" 
                   style={{ backgroundColor: color }} 
                 />
               )}
               {activeStep > i && (
-                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
               )}
             </div>
             <span className={cn(
-              "text-[10px] md:text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors duration-300",
+              "text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-center leading-tight transition-colors duration-300 px-1 w-full",
               activeStep === i ? "text-text-primary" : "text-text-muted group-hover:text-text-secondary"
             )}>
               {p.step}
@@ -315,10 +319,10 @@ const InteractiveTimeline = ({ process, color }: { process: {step: string, detai
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
-          className="p-6 md:p-8 rounded-xl bg-surface border border-border min-h-[100px] flex items-center"
+          className="p-5 md:p-6 rounded-xl bg-surface border border-border min-h-[90px] flex items-center"
         >
-          <p className="text-sm md:text-base text-text-secondary leading-relaxed">
-            <strong className="text-text-primary font-space mr-3">{process[activeStep].step}:</strong>
+          <p className="text-sm text-text-secondary leading-relaxed">
+            <strong className="text-text-primary font-space mr-2">{process[activeStep].step}:</strong>
             {process[activeStep].detail}
           </p>
         </motion.div>
@@ -368,72 +372,72 @@ const FAQAccordion = ({ faqs, color }: { faqs: {q: string, a: string}[], color: 
   );
 };
 
-// 4. Case Study Block (Elevated Primary Focus)
+// 4. Case Study Block
 const CaseStudyBlock = ({ study, color }: { study: typeof servicesData[0]['caseStudy'], color: string }) => {
   return (
     <div className="p-8 md:p-10 rounded-2xl bg-surface-elevated dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent border border-border dark:border-white/10 backdrop-blur-md shadow-elevated relative overflow-hidden group">
       <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-[100px] -z-10 opacity-50 group-hover:opacity-100 transition-opacity duration-700" style={{ backgroundColor: `${color}15` }} />
       
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-8 border-b border-border dark:border-white/5">
-        <div>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-7 pb-7 border-b border-border dark:border-white/5">
+        <div className="flex-1 min-w-0 pr-4">
           <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-2 flex items-center gap-2">
-            <Building size={14} /> {study.industry} Case Study
+            <Building size={13} /> {study.industry} Case Study
           </h4>
-          <span className="text-2xl font-space font-bold text-text-primary block">{study.metric}</span>
+          <span className="text-xl md:text-2xl font-space font-bold text-text-primary block">{study.metric}</span>
         </div>
         
-        <div className="flex flex-col gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-500">
-          <span className="flex items-center gap-2"><Clock size={12} /> {study.timeline}</span>
-          <span className="flex items-center gap-2"><Users size={12} /> {study.team}</span>
+        <div className="flex flex-col gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-500 shrink-0">
+          <span className="flex items-center gap-2"><Clock size={11} /> {study.timeline}</span>
+          <span className="flex items-center gap-2"><Users size={11} /> {study.team}</span>
         </div>
       </div>
 
-      <div className="space-y-6 text-sm md:text-base">
+      <div className="space-y-5">
         <div>
           <h5 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2">The Challenge</h5>
-          <p className="text-text-secondary leading-relaxed">{study.challenge}</p>
+          <p className="text-sm text-text-secondary leading-relaxed">{study.challenge}</p>
         </div>
         <div>
           <h5 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2">The Solution</h5>
-          <p className="text-text-secondary leading-relaxed">{study.solution}</p>
+          <p className="text-sm text-text-secondary leading-relaxed">{study.solution}</p>
         </div>
         <div className="p-4 rounded-lg bg-surface border border-border">
-          <h5 className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: color }}>Measurable Outcome</h5>
-          <p className="text-text-primary font-medium">{study.outcome}</p>
+          <h5 className="text-[10px] font-bold tracking-widest uppercase mb-1.5" style={{ color: color }}>Measurable Outcome</h5>
+          <p className="text-sm text-text-primary font-medium leading-relaxed">{study.outcome}</p>
         </div>
       </div>
     </div>
   );
 };
 
-// 5. Engagement Profile Block (Commercial Importance)
+// 5. Engagement Profile Block
 const EngagementProfile = ({ engagement, color }: { engagement: typeof servicesData[0]['engagement'], color: string }) => {
   return (
     <div className="p-8 md:p-10 rounded-2xl bg-surface-elevated border border-border shadow-elevated relative overflow-hidden group">
-      <div className="absolute top-0 right-0 p-8">
-        <Star size={24} className="text-border dark:text-white/5 opacity-50 group-hover:opacity-100 transition-all duration-300" style={{ color: color }} />
+      {/* Decorative star — positioned safely inside the padding */}
+      <div className="absolute top-7 right-7">
+        <Star size={20} className="opacity-30 group-hover:opacity-80 transition-all duration-300" style={{ color: color }} />
       </div>
       
-      <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
-        <Target size={14} /> Engagement Profile
+      <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-5 flex items-center gap-2 pr-10">
+        <Target size={13} /> Engagement Profile
       </h4>
       
       <div className="mb-6">
         <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted block mb-2">Typical Investment</span>
-        <div className="flex items-baseline gap-3">
-          <span className="text-4xl font-mono font-bold text-text-primary" style={{ color: color }}>{engagement.price}</span>
-        </div>
+        <span className="text-3xl md:text-4xl font-mono font-bold block" style={{ color: color }}>{engagement.price}</span>
         <span className="text-sm text-text-secondary mt-2 block">{engagement.model}</span>
       </div>
 
-      <div className="space-y-4 pt-6 border-t border-border">
+      <div className="space-y-4 pt-5 border-t border-border">
         <div>
-          <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted block mb-1">Team Composition</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted block mb-1.5">Team Composition</span>
           <span className="text-sm text-text-secondary">{engagement.team}</span>
         </div>
         <div>
-          <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted block mb-1">Best For</span>
-          <span className="text-sm text-text-secondary leading-relaxed block">{engagement.bestFor}</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted block mb-1.5">Best For</span>
+          <span className="text-sm text-text-secondary leading-relaxed block pr-2">{engagement.bestFor}</span>
         </div>
       </div>
     </div>
@@ -441,7 +445,45 @@ const EngagementProfile = ({ engagement, color }: { engagement: typeof servicesD
 };
 
 
-// Main Service Block Component (Varying Rhythms applied)
+// Single comet pulse running around the card border
+const ElectricalBorder = ({ color, id }: { color: string; id: string }) => (
+  <svg
+    className="absolute inset-0 w-full h-full pointer-events-none z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ overflow: 'visible' }}
+  >
+    <defs>
+      <filter id={`comet-blur-${id}`} x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="5" />
+      </filter>
+    </defs>
+    {/* Glow tail — wide, blurred, low opacity */}
+    <rect
+      x="2" y="2" rx="38" ry="38" fill="none"
+      stroke={color}
+      strokeWidth="8"
+      strokeDasharray="90 3400"
+      strokeLinecap="round"
+      strokeOpacity="0.25"
+      filter={`url(#comet-blur-${id})`}
+      className="animate-comet-tail"
+      style={{ width: 'calc(100% - 4px)', height: 'calc(100% - 4px)' }}
+    />
+    {/* Sharp comet head — small bright dot leading the tail */}
+    <rect
+      x="2" y="2" rx="38" ry="38" fill="none"
+      stroke={color}
+      strokeWidth="2.5"
+      strokeDasharray="6 3474"
+      strokeLinecap="round"
+      strokeOpacity="1"
+      className="animate-comet-head"
+      style={{ width: 'calc(100% - 4px)', height: 'calc(100% - 4px)' }}
+    />
+  </svg>
+);
+
+// Main Service Block Component
 const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], index: number }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -456,74 +498,76 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
       onMouseEnter={() => setHoveredService(service.id)}
       onMouseLeave={() => setHoveredService(null)}
       onClick={() => setActiveService(service.id)}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-32 p-8 md:p-16 lg:p-24 xl:p-32 glass rounded-[2.5rem] shadow-sm hover:shadow-elevated mb-16 md:mb-32 last:mb-0 scroll-mt-40 relative overflow-hidden group cursor-pointer transition-transform hover:-translate-y-2`}
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+      transition={{ duration: 0.9, ease: "easeOut", delay: index * 0.05 }}
+      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-10 lg:gap-16 xl:gap-20 p-6 md:p-10 lg:p-14 xl:p-16 glass rounded-[2.5rem] shadow-sm hover:shadow-elevated scroll-mt-40 relative group cursor-pointer transition-shadow duration-300`}
     >
-      {/* Ambient background glow inside the glass card to make it pop */}
-      <div 
-        className={`absolute top-0 ${isEven ? 'left-0' : 'right-0'} w-[30rem] h-[30rem] blur-[120px] rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none z-0`}
-        style={{ backgroundColor: service.color }}
-      />
-      {/* Left/Content Column (Focus on Outcomes & Text) */}
-      <div className="flex-1 flex flex-col gap-12 relative z-10">
+      {/* Electrical comet border */}
+      <ElectricalBorder color={service.color} id={service.id} />
+      {/* Glow orb — own overflow-hidden container so it never clips card content */}
+      <div className="absolute inset-0 rounded-[2.5rem] overflow-hidden pointer-events-none z-0">
+        <div 
+          className={`absolute top-0 ${isEven ? 'left-0' : 'right-0'} w-[30rem] h-[30rem] blur-[120px] rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700`}
+          style={{ backgroundColor: service.color }}
+        />
+      </div>
+      {/* Left/Content Column */}
+      <div className={`flex-1 flex flex-col gap-8 relative z-10 p-2 md:p-4 ${isEven ? 'lg:pl-6 lg:pr-2' : 'lg:pr-6 lg:pl-2'}`}>
         
-        {/* Header */}
+        {/* Header — vertical stack so title never competes with icon for width */}
         <div>
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-4 mb-5">
             <div 
-              className="w-16 h-16 rounded-2xl flex items-center justify-center backdrop-blur-md border"
+              className="w-12 h-12 shrink-0 rounded-xl flex items-center justify-center backdrop-blur-md border"
               style={{ backgroundColor: `${service.color}15`, borderColor: `${service.color}30`, color: service.color }}
             >
-              <service.icon size={32} strokeWidth={1.5} />
+              <service.icon size={24} strokeWidth={1.5} />
             </div>
-            <div>
-              <span className="text-[10px] font-bold tracking-widest uppercase mb-1 block text-text-muted">Service Line 0{index + 1}</span>
-              <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">{service.title}</h2>
-            </div>
+            <span className="text-[10px] font-bold tracking-widest uppercase block text-text-muted">Service Line 0{index + 1}</span>
           </div>
-          <p className="text-lg md:text-xl text-text-secondary leading-relaxed font-inter">{service.description}</p>
+          <h2 className="text-3xl md:text-4xl xl:text-5xl font-space font-bold text-text-primary leading-tight mb-5">{service.title}</h2>
+          <p className="text-base md:text-lg text-text-secondary leading-relaxed font-inter">{service.description}</p>
         </div>
 
-        {/* Business Outcomes (Primary List) */}
+        {/* Business Outcomes */}
         <div>
-          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
-            <Target size={14} /> Business Outcomes
+          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-5 flex items-center gap-2">
+            <Target size={13} /> Business Outcomes
           </h4>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3.5 pl-1">
             {service.outcomes.map((outcome, i) => (
               <div key={i} className="flex items-start gap-3">
-                <CheckCircle2 size={18} className="shrink-0 mt-0.5" style={{ color: service.color }} />
-                <span className="text-text-primary font-medium text-sm md:text-base leading-relaxed">{outcome}</span>
+                <CheckCircle2 size={16} className="shrink-0 mt-0.5" style={{ color: service.color }} />
+                <span className="text-text-primary font-medium text-sm leading-relaxed">{outcome}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Core Deliverables (Secondary List) */}
-        <div className="pt-8 border-t border-border">
-          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
-            <ShieldCheck size={14} /> Key Deliverables
+        {/* Key Deliverables */}
+        <div className="pt-6 border-t border-border">
+          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-5 flex items-center gap-2">
+            <ShieldCheck size={13} /> Key Deliverables
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2.5 pl-1">
             {service.deliverables.map((item, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full mt-0.5 shrink-0" style={{ backgroundColor: service.color }} />
-                <span className="text-sm text-text-secondary font-medium leading-snug">{item}</span>
+              <div key={i} className="flex items-center gap-2.5">
+                <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: service.color }} />
+                <span className="text-sm text-text-secondary font-medium">{item}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Technologies (Tertiary Chips) */}
-        <div className="pt-8 border-t border-border">
-          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
-            <Cpu size={14} /> Core Technologies
+        {/* Core Technologies */}
+        <div className="pt-6 border-t border-border">
+          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-4 flex items-center gap-2">
+            <Cpu size={13} /> Core Technologies
           </h4>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 pl-1">
             {service.technologies.map((tech, i) => (
-              <span key={i} className="px-3 py-1.5 rounded-md text-xs font-bold tracking-wide uppercase bg-surface-elevated border border-border text-text-secondary">
+              <span key={i} className="px-3 py-1.5 rounded-md text-[10px] font-bold tracking-wide uppercase bg-surface-elevated border border-border text-text-secondary">
                 {tech}
               </span>
             ))}
@@ -531,17 +575,17 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
         </div>
 
         {/* FAQs */}
-        <div className="pt-8 border-t border-border">
-          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-2 flex items-center gap-2">
-            <Search size={14} /> Common Questions
+        <div className="pt-6 border-t border-border">
+          <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-1 flex items-center gap-2">
+            <Search size={13} /> Common Questions
           </h4>
           <FAQAccordion faqs={service.faqs} color={service.color} />
         </div>
 
       </div>
 
-      {/* Right/Visual Column (Focus on Proof & Interaction) */}
-      <div className="flex-1 flex flex-col gap-8">
+      {/* Right/Visual Column */}
+      <div className={`flex-1 flex flex-col gap-6 p-2 md:p-4 ${isEven ? 'lg:pr-6 lg:pl-2' : 'lg:pl-6 lg:pr-2'}`}>
         
         {/* Varying Visual Rhythm based on Even/Odd */}
         {isEven ? (
@@ -549,8 +593,8 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
             {/* Case Study prominent at top for Even */}
             <CaseStudyBlock study={service.caseStudy} color={service.color} />
             
-            <div className="p-8 md:p-10 rounded-2xl bg-surface-elevated border border-border shadow-elevated">
-              <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-8 flex items-center gap-2">
+            <div className="p-6 md:p-8 rounded-2xl bg-surface-elevated border border-border shadow-elevated overflow-hidden">
+              <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
                 <Activity size={14} /> Methodology
               </h4>
               <InteractiveTimeline process={service.process} color={service.color} />
@@ -561,8 +605,8 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
         ) : (
           <>
             {/* Methodology prominent at top for Odd */}
-            <div className="p-8 md:p-10 rounded-2xl bg-surface-elevated border border-border shadow-elevated">
-              <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-8 flex items-center gap-2">
+            <div className="p-6 md:p-8 rounded-2xl bg-surface-elevated border border-border shadow-elevated overflow-hidden">
+              <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
                 <Activity size={14} /> Methodology
               </h4>
               <InteractiveTimeline process={service.process} color={service.color} />
@@ -604,32 +648,36 @@ const StickyNav = () => {
   }, []);
 
   return (
-    <div className="relative z-[100] bg-white dark:bg-black border-y border-border py-4 hidden lg:block shadow-elevated">
-      <div className="container-wide flex justify-center gap-10">
-        {servicesData.map(s => {
-          const isActive = activeId === s.id;
-          return (
-            <a 
-              key={s.id} 
-              href={`#${s.id}`} 
-              className={cn(
-                "text-xs font-bold tracking-widest uppercase transition-all duration-300 relative py-2",
-                isActive ? "text-text-primary" : "text-text-muted hover:text-text-secondary"
-              )}
-            >
-              {s.title}
-              {isActive && (
-                <motion.div 
-                  layoutId="nav-indicator"
-                  className="absolute -bottom-4 left-0 w-full h-[2px] rounded-t-full"
-                  style={{ backgroundColor: s.color }}
-                  initial={false}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-            </a>
-          );
-        })}
+    <div className="relative z-[100] hidden lg:block">
+      <div className="backdrop-blur-xl bg-white/80 dark:bg-black/80 border-b border-gray-200 dark:border-white/10 shadow-sm py-5">
+        <div className="container-wide flex justify-center gap-12">
+          {servicesData.map(s => {
+            const isActive = activeId === s.id;
+            return (
+              <a 
+                key={s.id} 
+                href={`#${s.id}`} 
+                className={cn(
+                  "text-xs font-bold tracking-widest uppercase transition-all duration-300 relative py-1.5 whitespace-nowrap",
+                  isActive 
+                    ? "text-gray-900 dark:text-white" 
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-100"
+                )}
+              >
+                {s.title}
+                {isActive && (
+                  <motion.div 
+                    layoutId="nav-indicator"
+                    className="absolute -bottom-[22px] left-0 w-full h-[2.5px] rounded-t-full"
+                    style={{ backgroundColor: s.color }}
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </a>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -705,7 +753,7 @@ export default function ServicesPage() {
       {/* Services List */}
       <section className="section-pad-sm relative z-0">
         <div className="container-wide max-w-7xl mx-auto">
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-8 lg:gap-10 xl:gap-12">
             {servicesData.map((service, index) => (
               <ServiceBlock key={service.id} service={service} index={index} />
             ))}
