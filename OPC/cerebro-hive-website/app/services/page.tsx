@@ -452,8 +452,13 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 lg:gap-24 py-20 border-b border-border dark:border-white/5 last:border-0 scroll-mt-24`}
+      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-32 p-8 md:p-16 lg:p-24 xl:p-32 glass rounded-[2.5rem] shadow-sm hover:shadow-elevated mb-16 md:mb-32 last:mb-0 scroll-mt-40 relative overflow-hidden group`}
     >
+      {/* Ambient background glow inside the glass card to make it pop */}
+      <div 
+        className="absolute top-0 right-0 w-96 h-96 blur-[120px] rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none"
+        style={{ backgroundColor: service.color }}
+      />
       {/* Left/Content Column (Focus on Outcomes & Text) */}
       <div className="w-full lg:w-1/2 flex flex-col gap-12">
         
@@ -592,7 +597,7 @@ const StickyNav = () => {
   }, []);
 
   return (
-    <div className="sticky top-20 z-40 bg-background/90 backdrop-blur-xl border-y border-border py-4 hidden lg:block shadow-elevated">
+    <div className="relative z-[100] bg-white dark:bg-black border-y border-border py-4 hidden lg:block shadow-elevated">
       <div className="container-wide flex justify-center gap-10">
         {servicesData.map(s => {
           const isActive = activeId === s.id;
@@ -687,8 +692,8 @@ export default function ServicesPage() {
       <StickyNav />
 
       {/* Services List */}
-      <section className="section-pad-sm">
-        <div className="container-wide">
+      <section className="section-pad-sm relative z-0">
+        <div className="container-wide max-w-7xl mx-auto">
           <div className="flex flex-col">
             {servicesData.map((service, index) => (
               <ServiceBlock key={service.id} service={service} index={index} />
