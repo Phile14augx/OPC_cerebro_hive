@@ -10,6 +10,8 @@ import {
   ChevronDown, Target, TrendingUp, ShieldCheck, Clock, Users, Building, Cpu, Star
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ServiceAnimationProvider, useServiceAnimation } from "@/components/services/ServiceAnimationContext";
+import { ServiceMorphBackground } from "@/components/services/ServiceMorphBackground";
 
 // 1. Data Structure with 10/10 Enterprise Depth
 const servicesData = [
@@ -370,7 +372,7 @@ const FAQAccordion = ({ faqs, color }: { faqs: {q: string, a: string}[], color: 
 const CaseStudyBlock = ({ study, color }: { study: typeof servicesData[0]['caseStudy'], color: string }) => {
   return (
     <div className="p-8 md:p-10 rounded-2xl bg-surface-elevated dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent border border-border dark:border-white/10 backdrop-blur-md shadow-elevated relative overflow-hidden group">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-primary-accent/5 rounded-full blur-[100px] -z-10 group-hover:bg-primary-accent/10 transition-colors duration-700" style={{ backgroundColor: `${color}15` }} />
+      <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-[100px] -z-10 opacity-50 group-hover:opacity-100 transition-opacity duration-700" style={{ backgroundColor: `${color}15` }} />
       
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-8 border-b border-border dark:border-white/5">
         <div>
@@ -409,7 +411,7 @@ const EngagementProfile = ({ engagement, color }: { engagement: typeof servicesD
   return (
     <div className="p-8 md:p-10 rounded-2xl bg-surface-elevated border border-border shadow-elevated relative overflow-hidden group">
       <div className="absolute top-0 right-0 p-8">
-        <Star size={24} className="text-border dark:text-white/5 group-hover:text-primary-accent/50 transition-colors duration-300" />
+        <Star size={24} className="text-border dark:text-white/5 opacity-50 group-hover:opacity-100 transition-all duration-300" style={{ color: color }} />
       </div>
       
       <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
@@ -444,23 +446,28 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const isEven = index % 2 === 0;
+  
+  const { setHoveredService, setActiveService } = useServiceAnimation();
 
   return (
     <motion.div 
       id={service.id}
       ref={ref}
+      onMouseEnter={() => setHoveredService(service.id)}
+      onMouseLeave={() => setHoveredService(null)}
+      onClick={() => setActiveService(service.id)}
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-32 p-8 md:p-16 lg:p-24 xl:p-32 glass rounded-[2.5rem] shadow-sm hover:shadow-elevated mb-16 md:mb-32 last:mb-0 scroll-mt-40 relative overflow-hidden group`}
+      className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-32 p-8 md:p-16 lg:p-24 xl:p-32 glass rounded-[2.5rem] shadow-sm hover:shadow-elevated mb-16 md:mb-32 last:mb-0 scroll-mt-40 relative overflow-hidden group cursor-pointer transition-transform hover:-translate-y-2`}
     >
       {/* Ambient background glow inside the glass card to make it pop */}
       <div 
-        className="absolute top-0 right-0 w-96 h-96 blur-[120px] rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none"
+        className={`absolute top-0 ${isEven ? 'left-0' : 'right-0'} w-[30rem] h-[30rem] blur-[120px] rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none z-0`}
         style={{ backgroundColor: service.color }}
       />
       {/* Left/Content Column (Focus on Outcomes & Text) */}
-      <div className="w-full lg:w-1/2 flex flex-col gap-12">
+      <div className="flex-1 flex flex-col gap-12 relative z-10">
         
         {/* Header */}
         <div>
@@ -484,25 +491,25 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
           <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
             <Target size={14} /> Business Outcomes
           </h4>
-          <ul className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
             {service.outcomes.map((outcome, i) => (
-              <li key={i} className="flex items-start gap-4 text-base md:text-lg text-text-primary">
-                <CheckCircle2 size={20} className="shrink-0 mt-0.5" style={{ color: service.color }} />
-                <span>{outcome}</span>
-              </li>
+              <div key={i} className="flex items-start gap-3">
+                <CheckCircle2 size={18} className="shrink-0 mt-0.5" style={{ color: service.color }} />
+                <span className="text-text-primary font-medium text-sm md:text-base leading-relaxed">{outcome}</span>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
 
-        {/* Deliverables (Secondary List) */}
+        {/* Core Deliverables (Secondary List) */}
         <div className="pt-8 border-t border-border">
           <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
             <ShieldCheck size={14} /> Key Deliverables
           </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {service.deliverables.map((item, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ backgroundColor: service.color }} />
+              <div key={i} className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full mt-0.5 shrink-0" style={{ backgroundColor: service.color }} />
                 <span className="text-sm text-text-secondary font-medium leading-snug">{item}</span>
               </div>
             ))}
@@ -534,7 +541,7 @@ const ServiceBlock = ({ service, index }: { service: typeof servicesData[0], ind
       </div>
 
       {/* Right/Visual Column (Focus on Proof & Interaction) */}
-      <div className="w-full lg:w-1/2 flex flex-col gap-8">
+      <div className="flex-1 flex flex-col gap-8">
         
         {/* Varying Visual Rhythm based on Even/Odd */}
         {isEven ? (
@@ -629,13 +636,17 @@ const StickyNav = () => {
 };
 
 export default function ServicesPage() {
+  const scrollContainerRef = useRef<HTMLElement>(null);
+  
   return (
-    <div className="bg-background min-h-screen selection:bg-primary-accent/30 transition-colors duration-500">
-      
-      {/* Premium Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-        <ServicesHeroBg />
-        <div className="container-wide relative z-10 flex flex-col items-center text-center">
+    <ServiceAnimationProvider>
+      <div className="bg-transparent min-h-screen selection:bg-primary-accent/30 transition-colors duration-500">
+        
+        {/* Premium Hero Section */}
+        <section ref={scrollContainerRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+          <ServiceMorphBackground scrollContainerRef={scrollContainerRef} />
+          
+          <div className="container-wide relative z-10 flex flex-col items-center text-center mt-20">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -746,5 +757,6 @@ export default function ServicesPage() {
       </section>
 
     </div>
+    </ServiceAnimationProvider>
   );
 }
