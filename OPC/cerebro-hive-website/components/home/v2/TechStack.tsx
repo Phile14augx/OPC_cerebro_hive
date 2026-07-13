@@ -219,17 +219,18 @@ export default function TechStack() {
                         onMouseEnter={() => setHoveredTech(tech.name)}
                         onMouseLeave={() => setHoveredTech(null)}
                         className={cn(
-                          "relative p-4 rounded-xl border transition-all duration-300 cursor-default overflow-hidden",
+                          "relative rounded-xl border transition-all duration-300 cursor-default overflow-hidden",
                           techMatch ? "bg-[#050A11] border-white/10 hover:border-primary-accent/50 hover:bg-[#0A1424]" : "bg-black/20 border-white/5 opacity-40 grayscale",
                           isHovered && techMatch ? "z-20 scale-[1.02] shadow-[0_10px_30px_rgba(0,0,0,0.8)]" : "z-10"
                         )}
+                        style={{ padding: '20px' }}
                       >
                         {/* Hover Gradient */}
                         <div className={cn("absolute inset-0 bg-gradient-to-br from-primary-accent/5 to-transparent opacity-0 transition-opacity duration-300", isHovered && "opacity-100")} />
                         
                         <div className="relative z-10 flex flex-col h-full">
-                          <span className="text-[9px] uppercase tracking-widest text-gray-500 mb-1 font-bold">{tech.category}</span>
-                          <div className="flex items-center gap-2">
+                          <span className="text-[9px] uppercase tracking-widest text-gray-500 mb-2 font-bold block">{tech.category}</span>
+                          <div className="flex items-center gap-2 mb-1">
                             {tech.icon && <tech.icon size={14} className={isHovered && techMatch ? "text-primary-accent" : "text-gray-500"} />}
                             <span className={cn("text-base font-bold font-space transition-colors", isHovered && techMatch ? "text-white" : "text-gray-300")}>{tech.name}</span>
                           </div>
@@ -237,22 +238,26 @@ export default function TechStack() {
                           {/* Expanded Glass Card Content */}
                           <AnimatePresence>
                             {isHovered && techMatch && (
-                              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="pt-3 mt-3 border-t border-white/10 flex flex-col gap-3">
+                              <motion.div 
+                                initial={{ opacity: 0, height: 0 }} 
+                                animate={{ opacity: 1, height: "auto" }} 
+                                exit={{ opacity: 0, height: 0 }} 
+                                style={{ paddingTop: '12px', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: '12px' }}
+                              >
+                                <p style={{ fontSize: '10px', color: 'rgb(156,163,175)', lineHeight: '1.4' }}>{tech.desc}</p>
                                 
-                                <p className="text-[10px] text-gray-400 leading-tight">{tech.desc}</p>
-                                
-                                <div className="flex flex-col gap-1">
-                                  <span className="text-[8px] uppercase tracking-widest text-gray-500">System Maturity</span>
-                                  <div className="flex gap-0.5">
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                  <span style={{ fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgb(107,114,128)' }}>System Maturity</span>
+                                  <div style={{ display: 'flex', gap: '2px' }}>
                                     {[...Array(5)].map((_, i) => (
-                                      <svg key={i} className={cn("w-2 h-2", i < tech.rating ? "text-primary-accent fill-current" : "text-gray-700 fill-current")} viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                      <svg key={i} className={cn("w-2.5 h-2.5", i < tech.rating ? "text-primary-accent fill-current" : "text-gray-700 fill-current")} viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                                     ))}
                                   </div>
                                 </div>
 
-                                <div className="flex flex-col gap-1">
-                                  <span className="text-[8px] uppercase tracking-widest text-gray-500">Deployments</span>
-                                  <span className="text-xs font-mono text-white">{tech.deployments} Enterprise Apps</span>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                  <span style={{ fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgb(107,114,128)' }}>Deployments</span>
+                                  <span style={{ fontSize: '12px', fontFamily: 'monospace', color: 'white', fontWeight: 700 }}>{tech.deployments} Enterprise Apps</span>
                                 </div>
                               </motion.div>
                             )}

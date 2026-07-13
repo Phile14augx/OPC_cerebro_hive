@@ -332,18 +332,23 @@ export default function ArchitectureSection() {
                   </div>
 
                   {/* Glassmorphism Card Core */}
+                  {/* Glassmorphism Card Core — Clipped with border-radius */}
                   <div 
                     className={cn(
-                      "relative w-[280px] rounded-2xl bg-[#0A1018]/90 backdrop-blur-xl border transition-all duration-500 overflow-hidden flex flex-col",
+                      "relative w-[300px] rounded-2xl border transition-all duration-500 flex flex-col",
                       hoveredIdx === idx ? `border-transparent shadow-[0_0_40px_rgba(0,0,0,0.7)] z-20 -translate-y-2` : "border-[#1A2332] shadow-xl z-10"
                     )}
                     style={{
                       borderColor: hoveredIdx === idx ? step.color : undefined,
                       boxShadow: hoveredIdx === idx ? `0 10px 40px -10px ${step.color}60` : undefined,
+                      background: 'rgba(10,16,24,0.9)',
+                      backdropFilter: 'blur(24px)',
+                      overflow: 'hidden',
+                      borderRadius: '1rem',
                     }}
                   >
                     {/* Top Section (Always Visible) */}
-                    <div className="p-6 flex flex-col items-center text-center min-h-[260px] relative z-10">
+                    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minHeight: '260px', position: 'relative', zIndex: 10 }}>
                       
                       {/* Gradient Glow */}
                       <div className={cn("absolute inset-0 bg-gradient-to-b opacity-10 transition-opacity", step.glowClass, hoveredIdx === idx ? "opacity-30" : "")} />
@@ -354,9 +359,9 @@ export default function ArchitectureSection() {
                       </div>
 
                       {/* Titles */}
-                      <div className="relative z-10">
+                      <div className="relative z-10" style={{ width: '100%' }}>
                         <h3 className="text-[17px] font-space font-bold text-white mb-1">{step.title}</h3>
-                        <p className="text-[12px] text-gray-400 leading-snug px-2">{step.subtitle}</p>
+                        <p className="text-[12px] text-gray-400 leading-snug" style={{ padding: '0 8px' }}>{step.subtitle}</p>
                       </div>
 
                       {/* Small metric pill at bottom of unexpanded state */}
@@ -373,17 +378,19 @@ export default function ArchitectureSection() {
                     {/* Expanded Content (Revealed on hover via CSS Grid animation) */}
                     <div 
                       className={cn(
-                        "grid transition-all duration-500 ease-in-out relative z-10 bg-[#050A0F]/50",
+                        "grid transition-all duration-500 ease-in-out relative z-10",
                         hoveredIdx === idx ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                       )}
+                      style={{ background: 'rgba(5,10,15,0.6)' }}
                     >
                       <div className="overflow-hidden">
-                        <div className="px-6 pb-6 pt-2 flex flex-col items-center justify-between border-t border-white/5 text-center">
-                          <div className="mt-2 w-full">
+                        {/* Inline padding wrapper — safe from overflow-hidden clipping */}
+                        <div style={{ padding: '8px 28px 28px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                          <div style={{ width: '100%', marginTop: '8px' }}>
                             <h4 className="text-[10px] font-space text-white/40 uppercase tracking-wider mb-3">Key Capabilities</h4>
-                            <ul className="flex flex-col gap-2 items-center">
+                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center', width: '100%' }}>
                               {step.features.map((feature, fIdx) => (
-                                <li key={fIdx} className="flex items-center justify-center gap-2 text-[12px] text-gray-300">
+                                <li key={fIdx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '12px', color: 'rgb(209,213,219)' }}>
                                   <CheckCircle2 size={14} className={cn("shrink-0", step.textClass)} />
                                   <span>{feature}</span>
                                 </li>
@@ -391,9 +398,9 @@ export default function ArchitectureSection() {
                             </ul>
                           </div>
 
-                          <div className="w-full">
+                          <div style={{ width: '100%' }}>
                             <h4 className="text-[10px] font-space text-white/40 uppercase tracking-wider mb-2 mt-5">Technologies</h4>
-                            <div className="flex flex-wrap gap-3 justify-center">
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center' }}>
                               {step.technologies.map((tech, tIdx) => (
                                 <div 
                                   key={tIdx} 

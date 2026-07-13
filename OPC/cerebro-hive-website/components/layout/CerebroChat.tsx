@@ -232,14 +232,14 @@ export default function CerebroChat() {
             <div className="flex-1 grid grid-cols-1 md:grid-cols-12 min-h-0 relative z-10">
               
               {/* Left Panel: Navigator */}
-              <div className="hidden md:flex flex-col border-r border-white/10 col-span-2 bg-[#050B14]/40 overflow-y-auto pt-6 px-4">
-                <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-4 pl-2">Navigator</span>
+              <div className="chat-navigator hidden md:flex flex-col border-r border-white/10 col-span-3 bg-[#050B14]/40 overflow-y-auto">
+                <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-6">Navigator</span>
                 <div className="flex flex-col gap-2">
                   {navigatorItems.map(item => (
-                    <button key={item.id} className="flex flex-col text-left p-3 rounded-lg border border-transparent hover:border-primary-accent/30 hover:bg-primary-accent/5 transition-all group relative overflow-hidden">
-                      <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary-accent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <button key={item.id} style={{ padding: '12px 14px' }} className="flex flex-col text-left rounded-xl border border-transparent hover:border-primary-accent/30 hover:bg-primary-accent/5 transition-all group relative overflow-hidden">
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary-accent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="flex items-center gap-2 mb-1">
-                        <item.icon size={14} className="text-gray-400 group-hover:text-primary-accent transition-colors" />
+                        <item.icon size={14} className="text-gray-400 group-hover:text-primary-accent transition-colors shrink-0" />
                         <span className="text-xs font-bold text-gray-300 group-hover:text-white transition-colors">{item.label}</span>
                       </div>
                       <span className="text-[10px] text-gray-500 group-hover:text-gray-400 pl-5">{item.desc}</span>
@@ -249,11 +249,11 @@ export default function CerebroChat() {
               </div>
 
               {/* Center Panel: AI Workspace */}
-              <div className="col-span-1 md:col-span-6 flex flex-col relative bg-[#02050A]/60 shadow-[0_0_50px_rgba(0,0,0,0.5)] z-20">
+              <div className="col-span-1 md:col-span-5 flex flex-col relative bg-[#02050A]/60 shadow-[0_0_50px_rgba(0,0,0,0.5)] z-20">
                 <div className="absolute top-0 inset-x-0 h-10 bg-gradient-to-b from-[#03060A] to-transparent z-10 pointer-events-none" />
                 
                 {/* Messages Feed */}
-                <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-8 pb-32">
+                <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-8">
                   {messages.map((msg) => (
                     <div key={msg.id} className={cn("flex gap-4 w-full", msg.sender === "user" ? "justify-end" : "justify-start")}>
                       {msg.sender === "bot" && <AICoreOrb isGenerating={msg.isGenerating || false} />}
@@ -356,7 +356,7 @@ export default function CerebroChat() {
                 </div>
 
                 {/* IDE-Style Input Area */}
-                <div className="absolute bottom-6 left-6 right-6">
+                <div className="chat-input-bar shrink-0">
                   <div className="flex flex-col bg-[#0A121E] border border-white/10 rounded-xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)] focus-within:border-primary-accent/50 transition-colors">
                     <div className="flex items-center px-4 py-3 border-b border-white/5">
                        <span className="text-[10px] text-gray-500 font-mono">⌘ Command Mode ready (type /)</span>
@@ -370,18 +370,18 @@ export default function CerebroChat() {
                       placeholder="Ask Cerebro..."
                       className="w-full bg-transparent px-4 py-4 text-sm text-white focus:outline-none resize-none min-h-[60px]"
                     />
-                    <div className="flex items-center justify-between px-4 py-2 bg-black/20">
+                    <div className="flex items-center justify-between px-6 py-4 bg-black/20">
                       <div className="flex gap-2">
-                        <button className="p-1.5 rounded text-gray-400 hover:text-white hover:bg-white/10"><Briefcase size={14}/></button>
-                        <button className="p-1.5 rounded text-gray-400 hover:text-white hover:bg-white/10"><Network size={14}/></button>
-                        <button className="p-1.5 rounded text-gray-400 hover:text-white hover:bg-white/10"><FileText size={14}/></button>
+                        <button className="p-2 rounded text-gray-400 hover:text-white hover:bg-white/10"><Briefcase size={16}/></button>
+                        <button className="p-2 rounded text-gray-400 hover:text-white hover:bg-white/10"><Network size={16}/></button>
+                        <button className="p-2 rounded text-gray-400 hover:text-white hover:bg-white/10"><FileText size={16}/></button>
                       </div>
                       <button 
                         onClick={() => handleSend(input)}
                         disabled={!input.trim()}
-                        className="px-3 py-1.5 bg-primary-accent text-black text-xs font-bold rounded flex items-center gap-2 hover:bg-white transition-colors disabled:opacity-50"
+                        className="px-6 py-2 bg-primary-accent text-black text-sm font-bold rounded flex items-center gap-3 hover:bg-white transition-colors disabled:opacity-50"
                       >
-                        Send <Send size={12} />
+                        Send <Send size={14} />
                       </button>
                     </div>
                   </div>
@@ -485,8 +485,8 @@ export default function CerebroChat() {
                 </div>
 
                 {/* Dynamic Knowledge Sidebar (Bottom) */}
-                <div className="h-48 border-t border-white/5 bg-[#03060A] p-6 flex flex-col gap-3">
-                   <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Referenced Knowledge</span>
+                <div className="h-56 border-t border-white/5 bg-[#03060A] shrink-0" style={{ padding: '24px' }}>
+                   <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold block mb-4">Referenced Knowledge</span>
                    <div className="flex flex-col gap-2 overflow-y-auto">
                      {["SAP Integration Guide", "Knowledge Graph Architecture", "Agentic Patterns", "Azure Deployment Specs"].map(doc => (
                        <div key={doc} className="text-xs text-gray-400 p-2 rounded bg-white/5 border border-white/5 flex justify-between items-center hover:text-white cursor-pointer group">

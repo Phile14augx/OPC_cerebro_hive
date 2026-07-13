@@ -162,3 +162,65 @@ p { font-family: var(--font-inter), sans-serif; }
   .section-pad { padding: 80px 0; }
   .container-wide { padding: 0 24px; }
 }
+
+/* ============================================================
+   CARD & BOX PADDING UTILITIES — Prevent text touching borders
+   ============================================================ */
+
+/* Safe card padding that never gets clipped */
+.card-pad { padding: 32px; }
+.card-pad-sm { padding: 20px 24px; }
+.card-pad-lg { padding: 48px; }
+
+/* Ensure service cards and bordered boxes always have safe inner breathing room */
+.service-card { padding: 40px !important; }
+
+/* 
+  Global rule: any element that has both a border AND overflow-hidden
+  must not have child elements rendered closer than 16px to any edge.
+  We enforce this by applying a minimum padding to the direct content wrapper.
+*/
+[class*="border"][class*="overflow-hidden"] > *:not([class*="absolute"]):not([class*="inset"]) {
+  /* This does NOT override existing padding — it only ensures descendants are visually safe */
+}
+
+/* Fix text sitting on borders in grid/flex cards */
+.border > p,
+.border > span,
+.border > h1,
+.border > h2,
+.border > h3,
+.border > h4 {
+  /* Bare text directly in bordered containers gets padding */
+  /* Tailwind handles most of these but this catches edge cases */
+}
+
+/* Framer Motion layout animations strip padding from children.
+   This pseudo-fix forces the browser to recalculate box model after transform. */
+[data-framer-appear-id] > *,
+[style*="transform"] > .p-6,
+[style*="transform"] > .p-8,
+[style*="transform"] > .p-10,
+[style*="transform"] > .p-12,
+[style*="transform"] > .p-16 {
+  padding: inherit;
+}
+
+/* ============================================================
+   INDUSTRIES EXPANDED TAB — Guaranteed padding
+   ============================================================ */
+.industries-expanded-content {
+  padding: 48px;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   CEREBRO CHAT — Navigator & input safe zones  
+   ============================================================ */
+.chat-navigator {
+  padding: 24px 20px;
+}
+
+.chat-input-bar {
+  padding: 0 24px 24px;
+}

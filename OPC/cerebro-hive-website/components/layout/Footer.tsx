@@ -34,11 +34,17 @@ const footerLinks = {
 const capabilities = ["AI Consulting", "Software Engineering", "Cloud", "Data Engineering", "Cybersecurity", "Quantiva ERP", "AI Agents", "Research"];
 const regions = ["India", "North America", "Europe", "Middle East", "APAC"];
 
-const mottos = [
-  "Engineering Intelligent Enterprises",
-  "Building Enterprise AI Systems",
-  "Transforming Business Through Intelligence",
-  "The Future Is Autonomous"
+const mottos: Array<{ text: string; author?: string; title?: string; featured?: boolean }> = [
+  { text: "Engineering Intelligent Enterprises" },
+  {
+    text: "Artificial Intelligence should not simply automate work—it should elevate human potential. At CerebroHive, we don't just build software; we architect intelligent enterprises that learn, reason, and evolve with the people they serve. The future belongs to organizations that can transform knowledge into action, and we are here to engineer that future.",
+    author: "Philemon V. Nath",
+    title: "Founder & CEO, CerebroHive OPC Pvt. Ltd.",
+    featured: true,
+  },
+  { text: "Building Enterprise AI Systems" },
+  { text: "Transforming Business Through Intelligence" },
+  { text: "The Future Is Autonomous" },
 ];
 
 function AnimatedCounter({ from = 0, to, duration = 2, suffix = "", delay = 0 }: any) {
@@ -127,7 +133,7 @@ export default function Footer() {
         {/* Header Message */}
         <div className="text-center mb-16 border-b border-white/5 pb-12">
           <span className="text-[10px] uppercase tracking-[0.3em] text-primary-accent font-bold mb-4 block">Thank You For Exploring CerebroHive</span>
-          <h2 className="text-2xl md:text-3xl font-space font-bold text-white max-w-2xl mx-auto">
+          <h2 className="text-lg md:text-2xl font-space font-bold text-white text-center whitespace-nowrap">
             Engineering Intelligent Enterprises Through AI-Native Innovation
           </h2>
         </div>
@@ -151,7 +157,7 @@ export default function Footer() {
         </div>
 
         {/* Main Grid Structure */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
           
           {/* Left Column: Metrics & Presence */}
           <div className="lg:col-span-4 flex flex-col gap-12">
@@ -206,7 +212,7 @@ export default function Footer() {
           </div>
 
           {/* Middle Column: Nav Links (Desktop) & Capabilities */}
-          <div className="lg:col-span-5 flex flex-col gap-12">
+          <div className="lg:col-span-5 flex flex-col gap-8">
             
             {/* Nav Links (Desktop Grid / Mobile Accordion) */}
             <div className="hidden md:grid grid-cols-3 gap-8">
@@ -250,18 +256,16 @@ export default function Footer() {
               ))}
             </div>
 
-            {/* Enterprise Capabilities Chips */}
+            {/* Enterprise Capabilities — compact single row */}
             <div>
-              <h4 className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-6 flex items-center gap-2">
-                <CheckCircle2 size={14} /> Enterprise Ready
+              <h4 className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-3 flex items-center gap-2">
+                <CheckCircle2 size={12} /> Enterprise Ready
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
                 {capabilities.map(cap => (
-                  <div key={cap} className="group relative">
-                    <span className="text-xs px-3 py-1.5 rounded-full bg-white/5 text-gray-300 border border-white/10 hover:border-primary-accent/50 hover:text-white hover:bg-primary-accent/5 transition-all cursor-default block">
-                      {cap}
-                    </span>
-                  </div>
+                  <span key={cap} className="text-[10px] px-2.5 py-1 rounded-full bg-white/5 text-gray-400 border border-white/8 whitespace-nowrap hover:border-primary-accent/40 hover:text-white transition-all cursor-default shrink-0">
+                    {cap}
+                  </span>
                 ))}
               </div>
             </div>
@@ -297,56 +301,98 @@ export default function Footer() {
         </div>
 
         {/* Motto Carousel & Interactive Quote */}
-        <div className="py-12 border-y border-white/5 mb-8 text-center relative h-32 flex flex-col items-center justify-center overflow-hidden">
-          <Quote size={24} className="text-white/10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[3]" />
+        <div className="py-10 px-6 md:px-12 border-y border-white/5 mb-8 flex items-center justify-center overflow-hidden">
           <AnimatePresence mode="wait">
-            <motion.h3 
-              key={mottoIdx}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.5 }}
-              className="text-xl md:text-2xl font-space font-bold text-gray-300 relative z-10"
-            >
-              {mottos[mottoIdx]}
-            </motion.h3>
+            {mottos[mottoIdx].featured ? (
+              /* CEO Featured Quote — Rich Blockquote */
+              <motion.div
+                key={mottoIdx}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.6 }}
+                className="max-w-3xl mx-auto relative"
+                style={{ padding: '8px 0 8px 32px', borderLeft: '2px solid rgba(0,245,122,0.4)' }}
+              >
+                {/* Opening quote — top-left, mirrored to look like opening quote */}
+                <Quote size={20} className="text-primary-accent/60 absolute -top-2 -left-2.5 scale-x-[-1]" />
+
+                <p className="text-base md:text-lg font-inter text-gray-300 leading-relaxed italic mb-6">
+                  {mottos[mottoIdx].text}
+                </p>
+
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-accent to-secondary-accent flex items-center justify-center shrink-0">
+                    <span className="text-black text-xs font-black">P</span>
+                  </div>
+                  <div>
+                    <span className="block text-sm font-bold font-space text-white">{mottos[mottoIdx].author}</span>
+                    <span className="block text-[10px] uppercase tracking-widest text-gray-500 font-bold">{mottos[mottoIdx].title}</span>
+                  </div>
+                </div>
+
+                {/* Closing quote — bottom-right */}
+                <Quote size={20} className="text-primary-accent/60 absolute -bottom-2 right-0" />
+              </motion.div>
+            ) : (
+              /* Short Motto — Inline Quote Style */
+              <motion.div
+                key={mottoIdx}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.5 }}
+                className="relative inline-flex items-center justify-center"
+                style={{ padding: '12px 40px' }}
+              >
+                {/* Opening quote — top-left, mirrored to look like opening quote */}
+                <Quote size={22} className="text-primary-accent/50 absolute top-0 left-0 scale-x-[-1]" />
+                
+                <h3 className="text-xl md:text-2xl font-space font-bold text-gray-300 text-center">
+                  {mottos[mottoIdx].text}
+                </h3>
+                
+                {/* Closing quote — bottom-right */}
+                <Quote size={22} className="text-primary-accent/50 absolute bottom-0 right-0" />
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
 
-        {/* Bottom Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-center gap-6 pt-6">
+        {/* Bottom Bar */}
+        <div className="border-t border-white/5 pt-8 flex flex-col items-center gap-5">
           
-          {/* Interactive Easter Egg Logo */}
+          {/* Logo — centered */}
           <Link href="/" className="flex items-center gap-3 group relative cursor-pointer">
             <div className="absolute inset-0 bg-primary-accent/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             <motion.div 
               animate={logoPulse ? { scale: [1, 1.2, 1], boxShadow: ["0px 0px 0px rgba(0,245,122,0)", "0px 0px 20px rgba(0,245,122,0.8)", "0px 0px 0px rgba(0,245,122,0)"] } : {}}
               transition={{ duration: 0.8 }}
-              className={cn("w-10 h-10 rounded-lg flex items-center justify-center relative z-10 transition-colors", logoPulse ? "bg-primary-accent" : "bg-gradient-to-br from-primary-accent to-secondary-accent")}
+              className={cn("w-9 h-9 rounded-lg flex items-center justify-center relative z-10 transition-colors", logoPulse ? "bg-primary-accent" : "bg-gradient-to-br from-primary-accent to-secondary-accent")}
             >
-              <div className="w-5 h-5 bg-[#040508] rounded-sm" />
+              <div className="w-4 h-4 bg-[#040508] rounded-sm" />
             </motion.div>
             <div className="flex flex-col">
-              <span className="font-space font-bold text-xl tracking-tight text-white leading-none relative z-10">
+              <span className="font-space font-bold text-lg tracking-tight text-white leading-none relative z-10">
                 Cerebro<span className="text-primary-accent">Hive</span>
               </span>
-              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">OPC Pvt Ltd</span>
+              <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">OPC Pvt Ltd</span>
             </div>
           </Link>
 
-          {/* Links & Copyright */}
-          <div className="flex flex-col items-center lg:items-end gap-3 text-center lg:text-right">
-            <div className="flex flex-wrap justify-center lg:justify-end gap-4 text-xs font-bold tracking-widest uppercase text-gray-500">
-              <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
-              <Link href="#" className="hover:text-white transition-colors">Security</Link>
-              <Link href="#" className="hover:text-white transition-colors">Terms</Link>
-              <Link href="#" className="hover:text-white transition-colors">AI Ethics</Link>
-              <Link href="#" className="hover:text-white transition-colors">Sitemap</Link>
-            </div>
-            <div className="text-xs text-gray-600">
-              © {new Date().getFullYear()} CerebroHive. Engineering the Future of Intelligent Enterprises.
-            </div>
+          {/* Legal Links */}
+          <div className="flex flex-wrap justify-center gap-6 text-[10px] font-bold tracking-widest uppercase text-gray-500">
+            <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="#" className="hover:text-white transition-colors">Security</Link>
+            <Link href="#" className="hover:text-white transition-colors">Terms</Link>
+            <Link href="#" className="hover:text-white transition-colors">AI Ethics</Link>
+            <Link href="#" className="hover:text-white transition-colors">Sitemap</Link>
           </div>
+
+          {/* Copyright */}
+          <p className="text-[11px] text-gray-600 text-center">
+            © {new Date().getFullYear()} CerebroHive OPC Pvt. Ltd. · Engineering the Future of Intelligent Enterprises.
+          </p>
 
         </div>
 
