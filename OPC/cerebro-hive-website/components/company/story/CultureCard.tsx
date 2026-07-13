@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef } from "react";
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
@@ -48,8 +48,8 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
     mouseY.set(e.clientY - top);
   };
 
-  const background = useMotionTemplate\adial-gradient(400px circle at \px \px, \15, transparent 80%)\;
-  const borderGradient = useMotionTemplate\adial-gradient(300px circle at \px \px, \60, transparent 60%)\;
+  const background = useMotionTemplate`radial-gradient(400px circle at ${smoothX}px ${smoothY}px, ${value.color}15, transparent 80%)`;
+  const borderGradient = useMotionTemplate`radial-gradient(300px circle at ${smoothX}px ${smoothY}px, ${value.color}60, transparent 60%)`;
 
   return (
     <motion.div
@@ -90,7 +90,7 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
 
       {/* 3. Subtle Noise / Texture Overlay */}
       <div className="absolute inset-0 z-0 opacity-[0.03] mix-blend-overlay pointer-events-none" 
-           style={{ backgroundImage: \url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\ }} />
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
       <div className="relative z-10 flex flex-col h-full">
         
@@ -104,9 +104,9 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
           <div className="flex items-start justify-between mb-6">
             <div 
               className="w-12 h-12 rounded-xl flex items-center justify-center relative overflow-hidden transition-all duration-[220ms] group-hover:scale-105 group-hover:-rotate-3"
-              style={{ backgroundColor: \\10\, border: \1px solid \20\ }}
+              style={{ backgroundColor: `${value.color}10`, border: `1px solid ${value.color}20` }}
             >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300" style={{ background: \adial-gradient(circle at center, \, transparent)\ }} />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300" style={{ background: `radial-gradient(circle at center, ${value.color}, transparent)` }} />
               <Icon size={24} color={value.color} className="relative z-10" />
             </div>
           </div>
@@ -116,7 +116,7 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
           </h3>
           
           <div className="h-[1px] w-12 bg-white/10 mb-4 transition-all duration-500 group-hover:w-full group-hover:bg-gradient-to-r" 
-               style={{ backgroundImage: \linear-gradient(to right, \80, transparent)\ }} />
+               style={{ backgroundImage: `linear-gradient(to right, ${value.color}80, transparent)` }} />
 
           <p className="text-sm font-bold text-text-primary mb-3 font-inter">
             {value.statement}
@@ -146,7 +146,7 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: value.color }} />
               {value.bottomTag}
             </span>
-            <div className="w-5 h-5 rounded-full flex items-center justify-center opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" style={{ backgroundColor: \\20\, color: value.color }}>
+            <div className="w-5 h-5 rounded-full flex items-center justify-center opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" style={{ backgroundColor: `${value.color}20`, color: value.color }}>
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </div>
           </div>
@@ -158,3 +158,4 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
 });
 
 CultureCard.displayName = "CultureCard";
+
