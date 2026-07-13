@@ -1,6 +1,6 @@
 import { getIndustryBySlug, industriesData } from "@/lib/data/industries";
 import { notFound } from "next/navigation";
-import IndustryPageLayout from "@/components/industries/IndustryPageLayout";
+import { IndustryRenderer } from "@/components/industries/engine/IndustryRenderer";
 
 export async function generateStaticParams() {
   return industriesData.map((ind) => ({
@@ -15,5 +15,5 @@ export default function IndustryPage({ params }: { params: { slug: string } }) {
     notFound();
   }
 
-  return <IndustryPageLayout industry={industry} />;
+  return <IndustryRenderer industry={industry} />;
 }
