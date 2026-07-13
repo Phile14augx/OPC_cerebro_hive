@@ -199,13 +199,13 @@ export default function StudentDashboard() {
                           <Award size={14} /> View Certificate
                         </button>
                       ) : (
-                        <button
+                        <a
+                          href="/academy/courses"
                           className="btn-ghost"
-                          onClick={() => alert(`Starting/resuming course: ${course.title}`)}
-                          style={{ fontSize: "0.75rem", padding: "8px 18px" }}
+                          style={{ fontSize: "0.75rem", padding: "8px 18px", display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none" }}
                         >
                           <Play size={12} /> Resume Course
-                        </button>
+                        </a>
                       )}
                     </div>
 

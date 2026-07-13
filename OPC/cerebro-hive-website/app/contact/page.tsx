@@ -190,10 +190,10 @@ export default function ContactPage() {
                   </div>
                 ))}
               </div>
-              <button className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform">
+              <a href="https://calendly.com/cerebro-hive" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform">
                 <Calendar size={16} />
                 Schedule Meeting
-              </button>
+              </a>
             </div>
 
             {/* Office Info */}

@@ -23,13 +23,51 @@ const YoutubeIcon = ({ size = 20, className = "" }: any) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
 );
 
-const footerLinks = {
-  "ABOUT": ["Leadership Team", "Board of Directors", "Partners"],
-  "SERVICES": ["Artificial Intelligence", "Data", "Functional Testing", "Non-Functional Testing", "Automation", "Enterprise Platforms", "Digital Engineering", "Advisory & Consulting"],
-  "INDUSTRIES": ["Technology", "Financial Services", "Healthcare & Life Sciences", "Retail & Consumer Goods", "Communications", "Public Sector", "Aerospace & Defense", "Manufacturing"],
-  "RESEARCH": ["Papers", "Benchmarks", "Architecture Guides", "Insights"],
-  "COMPANY": ["Careers", "Contact", "News", "Events"]
+const footerLinks: Record<string, { label: string; href: string }[]> = {
+  "ABOUT": [
+    { label: "Leadership Team", href: "/company#leadership" },
+    { label: "Board of Directors", href: "/company#leadership" },
+    { label: "Partners", href: "/company#ecosystem" },
+  ],
+  "SERVICES": [
+    { label: "AI Consulting", href: "/services/ai-consulting" },
+    { label: "AI Automation & Agents", href: "/services/ai-automation" },
+    { label: "Data Engineering", href: "/services/data-engineering" },
+    { label: "AI Development", href: "/services/ai-development" },
+    { label: "Corporate Training", href: "/services/corporate-training" },
+    { label: "Advisory & Consulting", href: "/services/ai-consulting" },
+  ],
+  "INDUSTRIES": [
+    { label: "Technology", href: "/industries/technology" },
+    { label: "Financial Services", href: "/industries/financial-services" },
+    { label: "Healthcare & Life Sciences", href: "/industries/healthcare" },
+    { label: "Retail & Consumer Goods", href: "/industries/retail" },
+    { label: "Manufacturing", href: "/industries/manufacturing" },
+    { label: "Government & Public Sector", href: "/industries/government" },
+  ],
+  "RESEARCH": [
+    { label: "Research Papers", href: "/research" },
+    { label: "Architecture Guides", href: "/resources" },
+    { label: "Insights & Analysis", href: "/insights" },
+    { label: "Case Studies", href: "/case-studies" },
+  ],
+  "COMPANY": [
+    { label: "Careers", href: "/careers" },
+    { label: "Contact", href: "/contact" },
+    { label: "News & Insights", href: "/insights" },
+    { label: "Community", href: "/community" },
+  ],
 };
+
+const socialLinks = [
+  { icon: LinkedinIcon, name: "LinkedIn", stat: "10k+", label: "Followers", href: "https://linkedin.com/company/cerebro-hive" },
+  { icon: GithubIcon, name: "GitHub", stat: "120+", label: "Repositories", href: "https://github.com/Phile14augx" },
+  { icon: YoutubeIcon, name: "YouTube", stat: "Research", label: "Videos", href: "https://youtube.com/@cerebro-hive" },
+  { icon: XIcon, name: "X (Twitter)", stat: "Live", label: "Updates", href: "https://x.com/cerebro_hive" },
+  { icon: MediumIcon, name: "Medium", stat: "Technical", label: "Articles", href: "https://medium.com/@cerebro-hive" },
+];
+
+
 
 const capabilities = ["AI Consulting", "Software Engineering", "Cloud", "Data Engineering", "Cybersecurity", "Quantiva ERP", "AI Agents", "Research"];
 const regions = ["India", "North America", "Europe", "Middle East", "APAC"];
@@ -221,8 +259,8 @@ export default function Footer() {
                   <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-6">{category}</h4>
                   <ul className="flex flex-col gap-3">
                     {links.map((link) => (
-                      <li key={link}>
-                        <Link href="#" className="text-xs text-text-muted hover:text-text-primary transition-colors">{link}</Link>
+                      <li key={link.href}>
+                        <Link href={link.href} className="text-xs text-text-muted hover:text-text-primary transition-colors">{link.label}</Link>
                       </li>
                     ))}
                   </ul>
@@ -246,7 +284,7 @@ export default function Footer() {
                       <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
                         <ul className="flex flex-col gap-3 pb-4 pt-1">
                           {links.map((link) => (
-                            <li key={link}><Link href="#" className="text-xs text-text-muted hover:text-text-primary">{link}</Link></li>
+                            <li key={link.href}><Link href={link.href} className="text-xs text-text-muted hover:text-text-primary">{link.label}</Link></li>
                           ))}
                         </ul>
                       </motion.div>
@@ -277,14 +315,8 @@ export default function Footer() {
              <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-6">Ecosystem</h4>
              
              <div className="flex flex-col gap-3">
-               {[
-                 { icon: LinkedinIcon, name: "LinkedIn", stat: "10k+", label: "Followers", href: "#" },
-                 { icon: GithubIcon, name: "GitHub", stat: "120+", label: "Repositories", href: "#" },
-                 { icon: YoutubeIcon, name: "YouTube", stat: "Research", label: "Videos", href: "#" },
-                 { icon: XIcon, name: "X (Twitter)", stat: "Live", label: "Updates", href: "#" },
-                 { icon: MediumIcon, name: "Medium", stat: "Technical", label: "Articles", href: "#" }
-               ].map(social => (
-                 <a key={social.name} href={social.href} className="group flex items-center justify-between p-3 rounded-xl bg-surface border border-border hover:border-primary-accent/30 hover:-translate-y-1 transition-all shadow-sm hover:shadow-elevated">
+               {socialLinks.map(social => (
+                 <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between p-3 rounded-xl bg-surface border border-border hover:border-primary-accent/30 hover:-translate-y-1 transition-all shadow-sm hover:shadow-elevated">
                    <div className="flex items-center gap-3">
                      <social.icon size={16} className="text-text-muted group-hover:text-text-primary transition-colors" />
                      <span className="text-xs font-bold text-text-secondary group-hover:text-text-primary transition-colors">{social.name}</span>
@@ -382,12 +414,13 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div className="flex flex-wrap justify-center gap-6 text-[10px] font-bold tracking-widest uppercase text-gray-500">
-            <Link href="#" className="hover:text-text-primary transition-colors">Privacy</Link>
-            <Link href="#" className="hover:text-text-primary transition-colors">Security</Link>
-            <Link href="#" className="hover:text-text-primary transition-colors">Terms</Link>
-            <Link href="#" className="hover:text-text-primary transition-colors">AI Ethics</Link>
-            <Link href="#" className="hover:text-text-primary transition-colors">Sitemap</Link>
+            <Link href="/legal/privacy" className="hover:text-text-primary transition-colors">Privacy</Link>
+            <Link href="/legal/security" className="hover:text-text-primary transition-colors">Security</Link>
+            <Link href="/legal/terms" className="hover:text-text-primary transition-colors">Terms</Link>
+            <Link href="/legal/ai-ethics" className="hover:text-text-primary transition-colors">AI Ethics</Link>
+            <Link href="/sitemap.xml" className="hover:text-text-primary transition-colors">Sitemap</Link>
           </div>
+
 
           {/* Copyright */}
           <p className="text-[11px] text-gray-600 text-center">
