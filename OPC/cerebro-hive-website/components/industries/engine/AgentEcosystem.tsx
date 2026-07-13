@@ -45,7 +45,7 @@ export function AgentEcosystem({ agents, config }: { agents: AI_Agent[], config:
                   <motion.div
                     key={i}
                     className="absolute top-1/2 left-1/2 flex items-center justify-center cursor-pointer group"
-                    style={{ x, y, xOrigin: "-50%", yOrigin: "-50%" }}
+                    style={{ x, y, originX: "-50%", originY: "-50%" }}
                     initial={{ x, y, opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     transition={{ delay: i * 0.1 }}
