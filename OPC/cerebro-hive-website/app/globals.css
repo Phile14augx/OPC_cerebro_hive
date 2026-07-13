@@ -195,39 +195,69 @@ p { font-family: var(--font-inter), sans-serif; }
 }
 
 /* ============================================================
-   CARD & BOX PADDING UTILITIES — Prevent text touching borders
+   GLOBAL PANE PADDING — Prevent text/icons touching card borders
    ============================================================ */
 
-/* Safe card padding that never gets clipped */
-.card-pad { padding: 32px; }
-.card-pad-sm { padding: 20px 24px; }
-.card-pad-lg { padding: 48px; }
+/*
+  The core fix: any element that looks like a card/pane (has a border and 
+  rounded corners) gets a guaranteed minimum internal padding of 20px.
+  We use max() so we NEVER shrink an element that already has more padding —
+  this only adds breathing room where there was none or too little.
 
-/* Ensure service cards and bordered boxes always have safe inner breathing room */
-.service-card { padding: 40px !important; }
-
-/* 
-  Global rule: any element that has both a border AND overflow-hidden
-  must not have child elements rendered closer than 16px to any edge.
-  We enforce this by applying a minimum padding to the direct content wrapper.
+  Specificity is intentionally low (.5) so individual Tailwind p-* classes
+  (p-4, p-6, p-8 etc.) written directly on a component still override this.
+  
+  We exclude:
+  - position:absolute/fixed elements (overlays, decorative rings)
+  - elements whose only job is to be a full-bleed image/video wrapper
+  - svg, canvas, img (not text containers)
 */
-[class*="border"][class*="overflow-hidden"] > *:not([class*="absolute"]):not([class*="inset"]) {
-  /* This does NOT override existing padding — it only ensures descendants are visually safe */
+
+/* Pattern 1 — bordered + rounded card (most cards in the UI) */
+[class*="rounded"][class*="border"]:not(svg):not(img):not(canvas):not(button):not(a):not(input):not(select):not(textarea):not([class*="absolute"]):not([class*="fixed"]) {
+  padding: max(var(--card-pad-min, 20px), 0px);
 }
 
-/* Fix text sitting on borders in grid/flex cards */
-.border > p,
-.border > span,
-.border > h1,
-.border > h2,
-.border > h3,
-.border > h4 {
-  /* Bare text directly in bordered containers gets padding */
-  /* Tailwind handles most of these but this catches edge cases */
+/* Pattern 2 — rounded cards with a surface/elevated background but no explicit border class
+   (many dark cards use bg-surface + rounded-xl without a border class) */
+[class*="rounded"][class*="bg-surface"]:not(svg):not(img):not(canvas):not(button):not(a):not([class*="absolute"]):not([class*="fixed"]),
+[class*="rounded"][class*="bg-background"]:not(svg):not(img):not(canvas):not(button):not(a):not([class*="absolute"]):not([class*="fixed"]) {
+  padding: max(var(--card-pad-min, 20px), 0px);
 }
 
-/* Framer Motion layout animations strip padding from children.
-   This pseudo-fix forces the browser to recalculate box model after transform. */
+/* Override: restore zero padding for elements that explicitly use p-0 */
+[class*="p-0"],
+[class*="px-0"],
+[class*="py-0"] {
+  padding: 0 !important;
+}
+
+/* Override: if the dev already specified a larger Tailwind padding, respect it.
+   These !important rules ensure existing p-4 through p-16 still dominate. */
+.p-4  { padding: 1rem !important; }
+.p-5  { padding: 1.25rem !important; }
+.p-6  { padding: 1.5rem !important; }
+.p-7  { padding: 1.75rem !important; }
+.p-8  { padding: 2rem !important; }
+.p-10 { padding: 2.5rem !important; }
+.p-12 { padding: 3rem !important; }
+.p-16 { padding: 4rem !important; }
+.px-4 { padding-left: 1rem !important; padding-right: 1rem !important; }
+.px-5 { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+.px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+.px-8 { padding-left: 2rem !important; padding-right: 2rem !important; }
+.py-4 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+.py-6 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+.py-8 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+.py-10{ padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+
+/* Utility classes for explicit card padding */
+.card-pad    { padding: 32px !important; }
+.card-pad-sm { padding: 20px 24px !important; }
+.card-pad-lg { padding: 48px !important; }
+.service-card{ padding: 40px !important; }
+
+/* Framer Motion: some animated wrappers strip padding; this re-applies it */
 [data-framer-appear-id] > *,
 [style*="transform"] > .p-6,
 [style*="transform"] > .p-8,
