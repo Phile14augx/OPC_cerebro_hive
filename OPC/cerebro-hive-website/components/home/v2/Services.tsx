@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { cn } from "@/lib/utils";
+import { cn, withBasePath } from "@/lib/utils";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Brain, Bot, Code2, Cloud, ShieldCheck, Database, LayoutDashboard, Zap, TrendingUp, Users, Rocket, CloudLightning, Lock, BarChart, FileLineChart, ArrowRight } from "lucide-react";
@@ -163,7 +163,7 @@ export default function Services() {
               {/* Image Area (Bottom) */}
               <div className="service-img absolute bottom-16 left-0 right-0 h-[260px] pointer-events-none transition-all duration-500 group-hover:opacity-100 opacity-70">
                 <Image 
-                  src={svc.imageSrc} 
+                  src={withBasePath(svc.imageSrc)} 
                   alt={svc.title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"

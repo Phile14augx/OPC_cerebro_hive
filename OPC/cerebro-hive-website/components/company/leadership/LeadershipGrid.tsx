@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { executiveLeadership as leadershipTeam } from "@/lib/content/company/leadership";
 import { ArrowUpRight, Globe, ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn, withBasePath } from "@/lib/utils";
 
 // Group the team by category
 const groupedLeadership = leadershipTeam.reduce((acc, leader) => {
@@ -99,7 +99,7 @@ export const LeadershipGrid = () => {
                               {/* Leader Image */}
                               {leader.image && (
                                 <Image 
-                                  src={leader.image} 
+                                  src={withBasePath(leader.image)} 
                                   alt={leader.name} 
                                   fill 
                                   className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 z-0" 
