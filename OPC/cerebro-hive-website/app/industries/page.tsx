@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IndustryExplorerProvider, useIndustryExplorer } from '@/components/industries/IndustryExplorerContext';
 import { InteractiveIndustryGlobe } from '@/components/industries/InteractiveIndustryGlobe';
@@ -109,8 +109,10 @@ function IndustriesPageContent() {
 
 export default function IndustriesIndexPage() {
   return (
-    <IndustryExplorerProvider>
-      <IndustriesPageContent />
-    </IndustryExplorerProvider>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+      <IndustryExplorerProvider>
+        <IndustriesPageContent />
+      </IndustryExplorerProvider>
+    </Suspense>
   );
 }
