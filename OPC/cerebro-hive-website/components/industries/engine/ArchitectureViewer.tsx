@@ -6,7 +6,7 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 import { motion } from 'framer-motion';
 import { Database, Server, User, Box, BrainCircuit, Activity } from 'lucide-react';
 
-const iconMap: Record<string, React.ElementType> = {
+const iconMap: Record<string, any> = {
   client: User,
   gateway: Server,
   database: Database,
