@@ -1,15 +1,16 @@
 import type { NextConfig } from "next";
 
-const isGithubActions = process.env.GITHUB_ACTIONS || false;
-let repo = "OPC_cerebro_hive";
+const isGithubActions = process.env.GITHUB_ACTIONS === "true";
+const repo = "YOUR_REPOSITORY_NAME";
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  output: "export",
   images: {
-    unoptimized: true, // Required for static export in Next.js
+    unoptimized: true,
   },
-  basePath: isGithubActions ? `/${repo}` : '',
-  assetPrefix: isGithubActions ? `/${repo}/` : '',
+  trailingSlash: true,
+  basePath: isGithubActions ? `/${repo}` : "",
+  assetPrefix: isGithubActions ? `/${repo}/` : "",
 };
 
 export default nextConfig;
