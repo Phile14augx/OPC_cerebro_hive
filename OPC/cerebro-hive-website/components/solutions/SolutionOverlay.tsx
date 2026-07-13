@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Solution } from '@/lib/data/solutions/types';
-import { X, ChevronLeft, ChevronRight, ArrowRight, CheckCircle2, Box, Users, FileText, Target, Workflow, Network } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ArrowRight, CheckCircle2, Box, Users, FileText, Target, Workflow, Network, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { SVGArchitecturePipeline } from './SVGArchitecturePipeline';
 

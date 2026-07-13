@@ -176,7 +176,7 @@ export default function IndustryPageLayout({ industry }: { industry: Industry })
           <section className="py-24 border-b border-border bg-surface-elevated">
             <div className="container-wide flex flex-col gap-8">
               <SectionHeading label="Workflows" title="Enterprise Workflows" description="Automated business processes." />
-              {industry.workflows.nodes.length > 0 ? (
+              {industry.workflows && industry.workflows.nodes.length > 0 ? (
                  <ArchitectureCanvas 
                    initialNodes={industry.workflows.nodes} 
                    initialEdges={industry.workflows.edges} 

@@ -16,11 +16,12 @@ import {
   Truck,
   Phone,
   Home,
-  Shield
+  Shield,
+  LucideIcon
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-const iconMap: Record<string, React.ElementType> = {
+const iconMap: Record<string, LucideIcon> = {
   healthcare: HeartPulse,
   finance: Building2,
   retail: ShoppingCart,
