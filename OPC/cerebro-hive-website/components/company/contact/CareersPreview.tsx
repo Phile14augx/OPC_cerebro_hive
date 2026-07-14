@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 export const CareersPreview = () => {
   return (
-    <section className="section-pad bg-background border-t border-border">
+    <section id="careers" className="section-pad bg-background border-t border-border">
       <div className="container-wide">
         
         <div className="flex flex-col lg:flex-row gap-16 max-w-6xl mx-auto">

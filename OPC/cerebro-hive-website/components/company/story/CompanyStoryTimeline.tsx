@@ -17,7 +17,7 @@ export const CompanyStoryTimeline = () => {
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section className="section-pad bg-background relative" ref={containerRef}>
+    <section id="timeline" className="section-pad bg-background relative" ref={containerRef}>
       <div className="container-wide max-w-5xl">
         
         <div className="text-center mb-24">

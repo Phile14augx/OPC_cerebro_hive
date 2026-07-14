@@ -57,9 +57,9 @@ const explorerTree: ExplorerNode[] = [
         id: "leadership", 
         label: "Executive Leadership", 
         children: [
-          { id: "leadership-ceo", label: "Elena Rodriguez", metadata: "CEO" },
+          { id: "leadership-ceo", label: "Philemon V Nath", metadata: "CEO" },
           { id: "leadership-cto", label: "Marcus Thorne", metadata: "CTO" },
-          { id: "leadership-coo", label: "Sarah Chen", metadata: "COO" },
+          { id: "leadership-vp", label: "Elena Rodriguez", metadata: "VP" },
         ]
       },
       { id: "presence", label: "Global Presence" }
