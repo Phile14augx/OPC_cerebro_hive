@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -19,7 +19,7 @@ const Particles = () => {
             scale: Math.random() * 2,
           }}
           animate={{
-            y: [null, \\%\],
+            y: [null, `${Math.random() * 100}%`],
             opacity: [0.1, 0.4, 0.1],
           }}
           transition={{
@@ -51,10 +51,10 @@ const AnimatedGlobe = () => {
         
         <g stroke="rgba(255, 255, 255, 0.1)" strokeWidth="0.5" fill="none">
           {[...Array(6)].map((_, i) => (
-            <ellipse key={\lat-\\} cx="200" cy="200" rx="180" ry={30 * (i + 1)} />
+            <ellipse key={`lat-${i}`} cx="200" cy="200" rx="180" ry={30 * (i + 1)} />
           ))}
           {[...Array(6)].map((_, i) => (
-            <ellipse key={\lon-\\} cx="200" cy="200" rx={30 * (i + 1)} ry="180" />
+            <ellipse key={`lon-${i}`} cx="200" cy="200" rx={30 * (i + 1)} ry="180" />
           ))}
           <circle cx="200" cy="200" r="180" />
         </g>
@@ -106,10 +106,10 @@ export const CompanyHero = () => {
           transition={{ duration: 30, repeat: Infinity, ease: "easeInOut", delay: 5 }}
         />
         <div className="absolute inset-0 opacity-[0.04]" 
-             style={{ backgroundImage: \linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)\, backgroundSize: '40px 40px' }} 
+             style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`, backgroundSize: '40px 40px' }} 
         />
         <Particles />
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: \url('\')\ }} />
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: `url('${withBasePath('/images/noise.png')}')` }} />
       </div>
 
       <div className="container-wide relative z-10 grid lg:grid-cols-2 gap-12 items-center h-full">
