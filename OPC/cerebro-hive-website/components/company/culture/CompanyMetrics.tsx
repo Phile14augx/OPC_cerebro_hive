@@ -19,7 +19,7 @@ const getIcon = (name: string) => {
 
 export const CompanyMetrics = () => {
   return (
-    <section className="section-pad-sm bg-background border-t border-border">
+    <section className="section-pad-sm bg-[#030608] border-t border-white/5">
       <div className="container-wide">
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 divide-x divide-border/50">
@@ -32,7 +32,7 @@ export const CompanyMetrics = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="flex flex-col items-center text-center px-4"
             >
-              <div className="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center text-primary-accent mb-4">
+              <div className="w-12 h-12 rounded-full bg-[#0a0d14] border border-white/10 flex items-center justify-center text-primary-accent mb-4">
                 {getIcon(metric.icon)}
               </div>
               <h4 className="text-3xl font-space font-bold text-text-primary mb-1">

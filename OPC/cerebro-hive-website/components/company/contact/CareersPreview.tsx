@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 export const CareersPreview = () => {
   return (
-    <section className="section-pad bg-surface-elevated border-t border-border">
+    <section className="section-pad bg-[#030608] border-t border-white/5">
       <div className="container-wide">
         
         <div className="flex flex-col lg:flex-row gap-16 max-w-6xl mx-auto">
@@ -36,12 +36,12 @@ export const CareersPreview = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="p-6 rounded-2xl bg-background border border-border flex flex-col items-start gap-4 hover:border-primary-accent/30 transition-colors group cursor-pointer"
+                  className="p-6 rounded-2xl bg-[#0a0d14] border border-white/8 flex flex-col items-start gap-4 hover:border-primary-accent/30 transition-colors group cursor-pointer"
                 >
                   <h4 className="text-lg font-space font-bold text-text-primary group-hover:text-primary-accent transition-colors">
                     {career.department}
                   </h4>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted bg-surface px-3 py-1 rounded-full border border-border">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted bg-[#030608] px-3 py-1 rounded-full border border-white/8">
                     {career.status}
                   </span>
                 </motion.div>
