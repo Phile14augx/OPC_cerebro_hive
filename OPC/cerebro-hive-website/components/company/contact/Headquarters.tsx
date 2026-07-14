@@ -34,7 +34,7 @@ export const Headquarters = () => {
 
             <div className="space-y-8">
               <div className="flex gap-4 items-start">
-                <div className="w-10 h-10 rounded-full bg-surface-elevated border border-border flex items-center justify-center shrink-0 mt-1">
+                <div className="w-10 h-10 rounded-full bg-[#0a0d14] border border-white/10 flex items-center justify-center shrink-0 mt-1">
                   <MapPin size={18} className="text-text-primary" />
                 </div>
                 <div>
@@ -48,7 +48,7 @@ export const Headquarters = () => {
               </div>
 
               <div className="flex gap-4 items-center">
-                <div className="w-10 h-10 rounded-full bg-surface-elevated border border-border flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-[#0a0d14] border border-white/10 flex items-center justify-center shrink-0">
                   <Mail size={18} className="text-text-primary" />
                 </div>
                 <div>
@@ -67,14 +67,14 @@ export const Headquarters = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden bg-surface-elevated border border-border flex items-center justify-center"
+            className="relative aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden bg-[#0a0d14] border border-white/8 flex items-center justify-center"
           >
             {/* Minimalist architectural representation */}
             <div className="absolute inset-0 opacity-20">
               <div className="w-full h-full" style={{ backgroundImage: 'linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
             </div>
             
-            <div className="relative z-10 w-48 h-64 bg-background border border-border shadow-2xl flex flex-col items-center justify-end pb-8">
+            <div className="relative z-10 w-48 h-64 bg-[#020408] border border-white/10 shadow-2xl flex flex-col items-center justify-end pb-8">
                <div className="w-20 h-1 bg-primary-accent/50 rounded-full mb-4" />
                <div className="w-32 h-1 bg-border rounded-full" />
             </div>

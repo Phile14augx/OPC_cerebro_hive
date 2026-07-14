@@ -106,7 +106,7 @@ export const LeadershipGrid = () => {
         {/* Visual Connector */}
         <div className="hidden lg:flex justify-center -my-4 relative z-20 pointer-events-none">
           <div className="flex flex-col items-center">
-            <span className="text-[10px] font-mono text-amber-500/70 mb-2 uppercase tracking-widest bg-background px-4">Directs</span>
+            <span className="text-[10px] font-mono text-amber-500/70 mb-2 uppercase tracking-widest bg-[#020408] px-4">Directs</span>
             <div className="h-12 w-[1px] bg-gradient-to-b from-amber-500/50 to-cyan-500/50" />
             <ArrowDown size={14} className="text-cyan-500/50 -mt-2" />
           </div>
@@ -175,7 +175,7 @@ export const LeadershipGrid = () => {
         {/* Visual Connector */}
         <div className="hidden lg:flex justify-center -my-4 relative z-20 pointer-events-none">
           <div className="flex flex-col items-center">
-            <span className="text-[10px] font-mono text-cyan-500/70 mb-2 uppercase tracking-widest bg-background px-4">Builds & Operates</span>
+            <span className="text-[10px] font-mono text-cyan-500/70 mb-2 uppercase tracking-widest bg-[#020408] px-4">Builds & Operates</span>
             <div className="h-12 w-[1px] bg-gradient-to-b from-cyan-500/50 to-purple-500/50" />
             <ArrowDown size={14} className="text-purple-500/50 -mt-2" />
           </div>
@@ -247,7 +247,7 @@ export const LeadershipGrid = () => {
         {/* Final Connector to Outcomes */}
         <div className="hidden lg:flex justify-center -mt-4 relative z-20 pointer-events-none">
           <div className="flex flex-col items-center">
-            <span className="text-[10px] font-mono text-success/70 mb-2 uppercase tracking-widest bg-background px-4">Delivers Client Outcomes</span>
+            <span className="text-[10px] font-mono text-success/70 mb-2 uppercase tracking-widest bg-[#020408] px-4">Delivers Client Outcomes</span>
           </div>
         </div>
 

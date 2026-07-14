@@ -184,7 +184,7 @@ export const VisionMission = () => {
               variants={motionPresets.fadeUp} 
               className="lg:col-span-7 lg:pr-12 relative z-10"
             >
-              <div className="group relative h-full bg-surface-elevated border border-[#00B8FF]/20 rounded-3xl p-10 md:p-14 overflow-hidden shadow-2xl backdrop-blur-md flex flex-col justify-between transition-all duration-500 hover:border-[#00B8FF]/40">
+              <div className="group relative h-full bg-[#040d1a] border border-[#00B8FF]/20 rounded-3xl p-10 md:p-14 overflow-hidden shadow-2xl backdrop-blur-md flex flex-col justify-between transition-all duration-500 hover:border-[#00B8FF]/40">
                 
                 {/* Animated Top Accent */}
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#00B8FF] to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
@@ -211,7 +211,7 @@ export const VisionMission = () => {
                 </div>
 
                 {/* Footer Anchor */}
-                <div className="relative z-10 mt-auto border-t border-border pt-6 flex items-center justify-between">
+                <div className="relative z-10 mt-auto border-t border-white/10 pt-6 flex items-center justify-between">
                   <span className="text-xs font-space text-text-muted uppercase tracking-widest">
                     {visionMission.vision.footer}
                   </span>
@@ -227,7 +227,7 @@ export const VisionMission = () => {
               variants={motionPresets.fadeUp} 
               className="lg:col-span-6 lg:-ml-12 mt-6 lg:mt-24 relative z-20"
             >
-              <div className="group relative h-full bg-surface border border-primary-accent/20 rounded-3xl p-10 md:p-12 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.4)] backdrop-blur-xl flex flex-col justify-between transition-all duration-500 hover:border-primary-accent/40">
+              <div className="group relative h-full bg-[#07120d] border border-primary-accent/20 rounded-3xl p-10 md:p-12 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.4)] backdrop-blur-xl flex flex-col justify-between transition-all duration-500 hover:border-primary-accent/40">
                 
                 {/* Subtle Grid Background */}
                 <div className="absolute inset-0 opacity-[0.05]" 
@@ -244,7 +244,7 @@ export const VisionMission = () => {
                   {/* Operational Keywords Grid */}
                   <div className="grid grid-cols-2 gap-3">
                     {visionMission.mission.keywords.map((keyword, i) => (
-                      <div key={i} className="flex items-center gap-2 bg-white/5 border border-border rounded-lg px-3 py-2">
+                      <div key={i} className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-primary-accent/50" />
                         <span className="text-xs font-mono text-text-secondary">{keyword}</span>
                       </div>
@@ -253,7 +253,7 @@ export const VisionMission = () => {
                 </div>
 
                 {/* Footer Anchor */}
-                <div className="relative z-10 mt-auto border-t border-border pt-6 flex items-center justify-between">
+                <div className="relative z-10 mt-auto border-t border-white/10 pt-6 flex items-center justify-between">
                   <span className="text-xs font-space text-text-muted uppercase tracking-widest">
                     {visionMission.mission.footer}
                   </span>
