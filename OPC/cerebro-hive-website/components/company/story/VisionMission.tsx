@@ -27,7 +27,7 @@ export const VisionMission = () => {
   });
 
   return (
-    <section ref={containerRef} className="section-pad relative overflow-hidden bg-[#05070a]">
+    <section ref={containerRef} className="section-pad relative overflow-hidden bg-background">
       
       {/* 1. Ambient Background (Restrained) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -78,7 +78,7 @@ export const VisionMission = () => {
               </p>
 
               {/* Editorial Pull Quote */}
-              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl relative overflow-hidden">
+              <div className="bg-white/[0.02] border border-border p-8 rounded-2xl relative overflow-hidden">
                 <Quote size={120} className="absolute -top-6 -left-6 text-white/5 -rotate-12" />
                 <p className="relative z-10 text-lg font-space italic text-text-primary leading-relaxed">
                   "Our goal is not merely to deploy AI models. It is to fundamentally transform how entire enterprise divisions operate, measure, and scale."
@@ -88,10 +88,10 @@ export const VisionMission = () => {
 
             {/* Right Interactive Transformation Roadmap */}
             <motion.div variants={motionPresets.fadeUp} className="lg:col-span-5 relative mt-12 lg:mt-0">
-              <div className="bg-[#0a0f12]/80 border border-white/10 rounded-3xl p-8 backdrop-blur-xl relative overflow-hidden shadow-2xl">
+              <div className="bg-surface/80 border border-border rounded-3xl p-8 backdrop-blur-xl relative overflow-hidden shadow-2xl">
                 
                 {/* Roadmap Context Header */}
-                <div className="flex items-center justify-between pb-6 mb-6 border-b border-white/5">
+                <div className="flex items-center justify-between pb-6 mb-6 border-b border-border">
                   <div className="flex items-center gap-2 text-[10px] font-space font-bold uppercase tracking-widest text-text-muted">
                     <BookOpen size={14} /> Transformation Journey
                   </div>
@@ -124,8 +124,8 @@ export const VisionMission = () => {
                         <div className="flex items-center gap-4 py-4">
                           {/* Icon Indicator */}
                           <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 z-10 bg-[#0a0d14] shrink-0",
-                            isActive ? "border-primary-accent shadow-[0_0_15px_rgba(0,245,122,0.3)] text-primary-accent scale-110" : "border-white/20 group-hover:border-white/50 text-text-muted group-hover:text-white"
+                            "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 z-10 bg-surface-elevated shrink-0",
+                            isActive ? "border-primary-accent shadow-[0_0_15px_rgba(0,245,122,0.3)] text-primary-accent scale-110" : "border-white/20 group-hover:border-border0 text-text-muted group-hover:text-white"
                           )}>
                             {frameworkIcons[node.id] || <User size={14} />}
                           </div>
@@ -184,7 +184,7 @@ export const VisionMission = () => {
               variants={motionPresets.fadeUp} 
               className="lg:col-span-7 lg:pr-12 relative z-10"
             >
-              <div className="group relative h-full bg-[#030b14] border border-[#00B8FF]/20 rounded-3xl p-10 md:p-14 overflow-hidden shadow-2xl backdrop-blur-md flex flex-col justify-between transition-all duration-500 hover:border-[#00B8FF]/40">
+              <div className="group relative h-full bg-surface-elevated border border-[#00B8FF]/20 rounded-3xl p-10 md:p-14 overflow-hidden shadow-2xl backdrop-blur-md flex flex-col justify-between transition-all duration-500 hover:border-[#00B8FF]/40">
                 
                 {/* Animated Top Accent */}
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#00B8FF] to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
@@ -211,7 +211,7 @@ export const VisionMission = () => {
                 </div>
 
                 {/* Footer Anchor */}
-                <div className="relative z-10 mt-auto border-t border-white/10 pt-6 flex items-center justify-between">
+                <div className="relative z-10 mt-auto border-t border-border pt-6 flex items-center justify-between">
                   <span className="text-xs font-space text-text-muted uppercase tracking-widest">
                     {visionMission.vision.footer}
                   </span>
@@ -227,7 +227,7 @@ export const VisionMission = () => {
               variants={motionPresets.fadeUp} 
               className="lg:col-span-6 lg:-ml-12 mt-6 lg:mt-24 relative z-20"
             >
-              <div className="group relative h-full bg-[#0a0f12] border border-primary-accent/20 rounded-3xl p-10 md:p-12 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.4)] backdrop-blur-xl flex flex-col justify-between transition-all duration-500 hover:border-primary-accent/40">
+              <div className="group relative h-full bg-surface border border-primary-accent/20 rounded-3xl p-10 md:p-12 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.4)] backdrop-blur-xl flex flex-col justify-between transition-all duration-500 hover:border-primary-accent/40">
                 
                 {/* Subtle Grid Background */}
                 <div className="absolute inset-0 opacity-[0.05]" 
@@ -244,7 +244,7 @@ export const VisionMission = () => {
                   {/* Operational Keywords Grid */}
                   <div className="grid grid-cols-2 gap-3">
                     {visionMission.mission.keywords.map((keyword, i) => (
-                      <div key={i} className="flex items-center gap-2 bg-white/5 border border-white/5 rounded-lg px-3 py-2">
+                      <div key={i} className="flex items-center gap-2 bg-white/5 border border-border rounded-lg px-3 py-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-primary-accent/50" />
                         <span className="text-xs font-mono text-text-secondary">{keyword}</span>
                       </div>
@@ -253,7 +253,7 @@ export const VisionMission = () => {
                 </div>
 
                 {/* Footer Anchor */}
-                <div className="relative z-10 mt-auto border-t border-white/10 pt-6 flex items-center justify-between">
+                <div className="relative z-10 mt-auto border-t border-border pt-6 flex items-center justify-between">
                   <span className="text-xs font-space text-text-muted uppercase tracking-widest">
                     {visionMission.mission.footer}
                   </span>
@@ -267,7 +267,7 @@ export const VisionMission = () => {
           {/* ==========================================
               C. STRATEGIC PILLARS (Badges)
              ========================================== */}
-          <motion.div variants={motionPresets.fadeUp} className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-12 border-t border-white/5">
+          <motion.div variants={motionPresets.fadeUp} className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-12 border-t border-border">
             <span className="text-[10px] font-space font-bold uppercase tracking-[0.2em] text-text-muted mr-4 hidden md:block">
               Strategic Pillars
             </span>

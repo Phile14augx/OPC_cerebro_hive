@@ -91,7 +91,7 @@ export const CompanyHero = () => {
   return (
     <section 
       ref={containerRef}
-      className="relative min-h-screen pt-32 pb-32 flex flex-col justify-center overflow-hidden bg-[#030608]"
+      className="relative min-h-screen pt-32 pb-32 flex flex-col justify-center overflow-hidden bg-background"
     >
       {/* Immersive Ambient Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -163,7 +163,7 @@ export const CompanyHero = () => {
       </div>
       
       {/* Seamless Section Transition Bottom Fade */}
-      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#05070a] via-[#05070a]/80 to-transparent z-20 pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-background via-background/80 to-transparent z-20 pointer-events-none" />
     </section>
   );
 };

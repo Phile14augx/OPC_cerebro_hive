@@ -16,7 +16,7 @@ export const CompanyStoryTimeline = () => {
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section className="section-pad bg-[#030608] relative" ref={containerRef}>
+    <section className="section-pad bg-background relative" ref={containerRef}>
       <div className="container-wide max-w-5xl">
         
         <div className="text-center mb-24">
@@ -63,7 +63,7 @@ export const CompanyStoryTimeline = () => {
                       </span>
                     ) : (
                       <div className="w-full max-w-md pr-16 text-right">
-                        <div className="p-8 bg-[#0a0d14] border border-white/8 rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
+                        <div className="p-8 bg-surface-elevated border border-border rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
                           <h4 className="text-xl font-space font-bold text-text-primary mb-3">
                             {event.title}
                           </h4>
@@ -77,7 +77,7 @@ export const CompanyStoryTimeline = () => {
 
                   {/* Center Column (Marker) */}
                   <div className="flex-none relative z-20 flex justify-center mt-6 md:mt-0">
-                    <div className="bg-[#030608] rounded-full p-2">
+                    <div className="bg-background rounded-full p-2">
                       {isCompleted ? (
                         <div className="w-10 h-10 rounded-full bg-primary-accent/10 border border-primary-accent flex items-center justify-center relative z-10 shadow-[0_0_15px_rgba(0,230,118,0.3)]">
                           <CheckCircle2 size={20} className="text-primary-accent" />
@@ -87,7 +87,7 @@ export const CompanyStoryTimeline = () => {
                           <div className="w-3 h-3 rounded-full bg-[#00E5FF] animate-pulse" />
                         </div>
                       ) : (
-                        <div className="w-10 h-10 rounded-full bg-[#0a0d14] border border-white/20 flex items-center justify-center relative z-10">
+                        <div className="w-10 h-10 rounded-full bg-surface-elevated border border-white/20 flex items-center justify-center relative z-10">
                           <CircleDashed size={20} className="text-text-muted" />
                         </div>
                       )}
@@ -98,7 +98,7 @@ export const CompanyStoryTimeline = () => {
                   <div className="flex-1 md:w-full md:flex md:justify-start items-center">
                     {isEven ? (
                       <div className="w-full max-w-md md:pl-16 text-left">
-                        <div className="p-6 md:p-8 bg-[#0a0d14] border border-white/8 rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
+                        <div className="p-6 md:p-8 bg-surface-elevated border border-border rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
                           <span className="md:hidden text-sm font-space font-bold text-primary-accent mb-2 block">
                             {event.year}
                           </span>
@@ -118,7 +118,7 @@ export const CompanyStoryTimeline = () => {
                         </span>
                         {/* Mobile Card */}
                         <div className="md:hidden w-full text-left">
-                          <div className="p-6 md:p-8 bg-[#0a0d14] border border-white/8 rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
+                          <div className="p-6 md:p-8 bg-surface-elevated border border-border rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
                             <span className="md:hidden text-sm font-space font-bold text-primary-accent mb-2 block">
                               {event.year}
                             </span>

@@ -79,7 +79,7 @@ export const CompanySidebar = () => {
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="hidden lg:flex flex-col shrink-0 sticky top-[80px] h-[calc(100vh-80px)] bg-[#030608]/95 backdrop-blur-xl border-r border-white/5 z-40 overflow-hidden"
+      className="hidden lg:flex flex-col shrink-0 sticky top-[80px] h-[calc(100vh-80px)] bg-background/95 backdrop-blur-xl border-r border-white/5 z-40 overflow-hidden"
     >
       
       {/* Header */}
@@ -91,7 +91,7 @@ export const CompanySidebar = () => {
         </div>
 
         {/* Story Mode / Explorer Mode Toggle */}
-        <div className="flex bg-[#0a0d14] border border-white/5 rounded-lg p-1 mb-8">
+        <div className="flex bg-surface-elevated border border-border rounded-lg p-1 mb-8">
           <button 
             onClick={() => setExplorerMode(false)} 
             className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors", !explorerMode ? "bg-white/10 text-white" : "text-text-muted hover:text-white")}
@@ -195,7 +195,7 @@ export const CompanySidebar = () => {
         </div>
         
         {/* Progress Bar */}
-        <div className="w-full h-1 bg-[#0a0d14] rounded-full overflow-hidden">
+        <div className="w-full h-1 bg-surface-elevated rounded-full overflow-hidden">
           <motion.div 
             className="h-full bg-primary-accent"
             initial={{ width: 0 }}

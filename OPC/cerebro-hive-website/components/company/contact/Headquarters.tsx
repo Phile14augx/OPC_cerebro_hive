@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export const Headquarters = () => {
   return (
-    <section className="section-pad bg-[#030608] relative overflow-hidden">
+    <section className="section-pad bg-background relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] bg-primary-accent/5 rounded-full blur-[100px] pointer-events-none" />
       
@@ -34,7 +34,7 @@ export const Headquarters = () => {
 
             <div className="space-y-8">
               <div className="flex gap-4 items-start">
-                <div className="w-10 h-10 rounded-full bg-[#0a0d14] border border-white/10 flex items-center justify-center shrink-0 mt-1">
+                <div className="w-10 h-10 rounded-full bg-surface-elevated border border-border flex items-center justify-center shrink-0 mt-1">
                   <MapPin size={18} className="text-text-primary" />
                 </div>
                 <div>
@@ -48,7 +48,7 @@ export const Headquarters = () => {
               </div>
 
               <div className="flex gap-4 items-center">
-                <div className="w-10 h-10 rounded-full bg-[#0a0d14] border border-white/10 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-surface-elevated border border-border flex items-center justify-center shrink-0">
                   <Mail size={18} className="text-text-primary" />
                 </div>
                 <div>
@@ -67,19 +67,19 @@ export const Headquarters = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden bg-[#0a0d14] border border-white/8 flex items-center justify-center"
+            className="relative aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden bg-surface-elevated border border-border flex items-center justify-center"
           >
             {/* Minimalist architectural representation */}
             <div className="absolute inset-0 opacity-20">
               <div className="w-full h-full" style={{ backgroundImage: 'linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
             </div>
             
-            <div className="relative z-10 w-48 h-64 bg-[#030608] border border-white/10 shadow-2xl flex flex-col items-center justify-end pb-8">
+            <div className="relative z-10 w-48 h-64 bg-background border border-border shadow-2xl flex flex-col items-center justify-end pb-8">
                <div className="w-20 h-1 bg-primary-accent/50 rounded-full mb-4" />
                <div className="w-32 h-1 bg-border rounded-full" />
             </div>
             
-            <div className="absolute bottom-8 left-8 right-8 p-6 bg-[#030608]/90 backdrop-blur-md border border-white/10 rounded-xl">
+            <div className="absolute bottom-8 left-8 right-8 p-6 bg-background/90 backdrop-blur-md border border-border rounded-xl">
               <p className="text-sm font-space font-bold text-text-primary mb-1">Engineering Center</p>
               <p className="text-xs text-text-muted font-inter">Operating at the intersection of AI research and enterprise delivery.</p>
             </div>

@@ -6,7 +6,7 @@ import { ShieldCheck, ShieldAlert } from "lucide-react";
 
 export const Certifications = () => {
   return (
-    <section className="section-pad-sm bg-[#030608] border-y border-white/5">
+    <section className="section-pad-sm bg-background border-y border-border">
       <div className="container-wide max-w-4xl">
         
         <div className="flex flex-col md:flex-row gap-12">
@@ -19,13 +19,13 @@ export const Certifications = () => {
             {certifications.achieved.length > 0 ? (
               <ul className="space-y-4">
                 {certifications.achieved.map(cert => (
-                  <li key={cert} className="px-6 py-4 rounded-xl bg-[#0a0d14] border border-primary-accent/20 font-space font-medium text-white">
+                  <li key={cert} className="px-6 py-4 rounded-xl bg-surface-elevated border border-primary-accent/20 font-space font-medium text-text-primary">
                     {cert}
                   </li>
                 ))}
               </ul>
             ) : (
-              <div className="px-6 py-4 rounded-xl bg-[#0a0d14] border border-white/8 text-text-muted font-inter italic text-sm">
+              <div className="px-6 py-4 rounded-xl bg-surface-elevated border border-border text-text-muted font-inter italic text-sm">
                 No active certifications to display.
               </div>
             )}
@@ -40,13 +40,13 @@ export const Certifications = () => {
             {certifications.roadmap.length > 0 ? (
               <ul className="space-y-4 opacity-70">
                 {certifications.roadmap.map(cert => (
-                  <li key={cert} className="px-6 py-4 rounded-xl bg-[#0a0d14] border border-white/8 font-space text-text-secondary border-dashed">
+                  <li key={cert} className="px-6 py-4 rounded-xl bg-surface-elevated border border-border font-space text-text-secondary border-dashed">
                     {cert}
                   </li>
                 ))}
               </ul>
             ) : (
-              <div className="px-6 py-4 rounded-xl bg-[#0a0d14] border border-white/8 text-text-muted font-inter italic text-sm">
+              <div className="px-6 py-4 rounded-xl bg-surface-elevated border border-border text-text-muted font-inter italic text-sm">
                 Roadmap currently empty.
               </div>
             )}

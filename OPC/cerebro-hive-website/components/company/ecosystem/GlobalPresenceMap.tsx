@@ -10,7 +10,7 @@ export const GlobalPresenceMap = () => {
   const [activeRegion, setActiveRegion] = useState(globalPresence[0]);
 
   return (
-    <section className="section-pad bg-[#030608] relative overflow-hidden">
+    <section className="section-pad bg-background relative overflow-hidden">
       
       {/* Background Ambience */}
       <div className="absolute inset-0 pointer-events-none">
@@ -36,7 +36,7 @@ export const GlobalPresenceMap = () => {
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start max-w-7xl mx-auto">
           
           {/* Left: Map Visualization */}
-          <div className="lg:col-span-7 bg-[#05070a]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-8 aspect-square md:aspect-video lg:aspect-square relative flex items-center justify-center overflow-hidden shadow-2xl">
+          <div className="lg:col-span-7 bg-[#05070a]/80 backdrop-blur-xl border border-border rounded-3xl p-8 aspect-square md:aspect-video lg:aspect-square relative flex items-center justify-center overflow-hidden shadow-2xl">
             <Globe size={500} className="text-white/5 absolute" />
             
             <div className="relative z-10 w-full h-full flex flex-wrap gap-4 items-center justify-center content-center">
@@ -54,7 +54,7 @@ export const GlobalPresenceMap = () => {
                         ? (isOperational 
                             ? "bg-primary-accent/10 border-primary-accent/50 shadow-[0_0_30px_rgba(0,245,122,0.15)] scale-[1.02]" 
                             : "bg-[#00E5FF]/10 border-[#00E5FF]/50 shadow-[0_0_30px_rgba(0,229,255,0.15)] scale-[1.02]")
-                        : "bg-white/[0.02] border-white/10 hover:border-white/30 opacity-50 hover:opacity-100 hover:scale-[1.01]"
+                        : "bg-white/[0.02] border-border hover:border-white/30 opacity-50 hover:opacity-100 hover:scale-[1.01]"
                     )}
                   >
                     <div className={cn("shrink-0", isActive ? (isOperational ? "text-primary-accent" : "text-[#00E5FF]") : "text-text-muted")}>

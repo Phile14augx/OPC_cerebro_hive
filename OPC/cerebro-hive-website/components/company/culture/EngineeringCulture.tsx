@@ -16,7 +16,7 @@ export const EngineeringCulture = () => {
   const activePhase = engineeringFramework.framework.find(p => p.id === activePhaseId) || engineeringFramework.framework[0];
 
   return (
-    <section className="section-pad relative overflow-hidden bg-[#020508] border-t border-white/5">
+    <section className="section-pad relative overflow-hidden bg-background border-t border-border">
       
       {/* 1. Ambient Environment */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -58,7 +58,7 @@ export const EngineeringCulture = () => {
               {engineeringFramework.narrative.headline}
             </motion.h3>
             
-            <motion.p variants={motionPresets.fadeUp} className="text-lg text-text-secondary font-inter leading-relaxed mb-12 border-l-2 border-white/10 pl-6">
+            <motion.p variants={motionPresets.fadeUp} className="text-lg text-text-secondary font-inter leading-relaxed mb-12 border-l-2 border-border pl-6">
               {engineeringFramework.narrative.description}
             </motion.p>
 
@@ -86,7 +86,7 @@ export const EngineeringCulture = () => {
                       {/* Node Indicator */}
                       <div className={cn(
                         "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300",
-                        isActive ? "border-white/40 bg-[#0a0d14]" : "border-white/10 bg-[#020508] group-hover:border-white/30"
+                        isActive ? "border-white/40 bg-surface-elevated" : "border-border bg-background group-hover:border-white/30"
                       )}>
                         <div className={cn(
                           "w-2.5 h-2.5 rounded-full transition-all duration-300",
@@ -108,7 +108,7 @@ export const EngineeringCulture = () => {
             </motion.div>
 
             {/* Engineering Proof (Built Around) */}
-            <motion.div variants={motionPresets.fadeUp} className="mt-auto bg-white/5 border border-white/5 rounded-2xl p-6 backdrop-blur-md">
+            <motion.div variants={motionPresets.fadeUp} className="mt-auto bg-white/5 border border-border rounded-2xl p-6 backdrop-blur-md">
               <h4 className="text-[10px] font-space uppercase tracking-widest text-text-muted mb-4">
                 Built Around
               </h4>
@@ -128,10 +128,10 @@ export const EngineeringCulture = () => {
               RIGHT PANEL: The Control Center (60%)
              ========================================== */}
           <motion.div variants={motionPresets.fadeUp} className="lg:w-[60%] flex flex-col">
-            <div className="relative w-full h-[600px] lg:h-full min-h-[600px] bg-[#070a0f] border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col group">
+            <div className="relative w-full h-[600px] lg:h-full min-h-[600px] bg-[#070a0f] border border-border rounded-3xl overflow-hidden shadow-2xl flex flex-col group">
               
               {/* Glass Header */}
-              <div className="h-12 border-b border-white/10 bg-white/[0.02] backdrop-blur-md flex items-center px-6 justify-between shrink-0">
+              <div className="h-12 border-b border-border bg-white/[0.02] backdrop-blur-md flex items-center px-6 justify-between shrink-0">
                 <div className="flex gap-2">
                   <div className="w-3 h-3 rounded-full bg-error/80" />
                   <div className="w-3 h-3 rounded-full bg-warning/80" />
