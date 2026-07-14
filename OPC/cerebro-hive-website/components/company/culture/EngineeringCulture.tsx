@@ -17,7 +17,7 @@ export const EngineeringCulture = () => {
   const activePhase = engineeringFramework.framework.find(p => p.id === activePhaseId) || engineeringFramework.framework[0];
 
   return (
-    <section className="section-pad relative overflow-hidden bg-background border-t border-border">
+    <section id="engineering" className="section-pad relative overflow-hidden bg-background border-t border-border">
       
       {/* 1. Ambient Environment */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -73,6 +73,7 @@ export const EngineeringCulture = () => {
                   return (
                     <div 
                       key={phase.id}
+                      id={`engineering-${phase.id}`}
                       className="relative z-10 flex items-center gap-6 cursor-pointer group"
                       onMouseEnter={() => setActivePhaseId(phase.id)}
                     >

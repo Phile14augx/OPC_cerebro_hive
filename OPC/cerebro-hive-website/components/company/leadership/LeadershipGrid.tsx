@@ -45,7 +45,7 @@ export const LeadershipGrid = () => {
         {/* ==========================================
             EXECUTIVE CAPABILITY (40% Weight)
            ========================================== */}
-        <motion.div variants={motionPresets.fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }}>
+        <motion.div id="leadership-ceo" variants={motionPresets.fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }}>
           <CapabilityPanel className="flex flex-col lg:flex-row gap-12 lg:gap-16 border-t-[3px] border-t-amber-500/50">
             <SectionBackground theme="gold" />
             
@@ -115,7 +115,7 @@ export const LeadershipGrid = () => {
         {/* ==========================================
             ENGINEERING CAPABILITY (35% Weight)
            ========================================== */}
-        <motion.div variants={motionPresets.fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }}>
+        <motion.div id="leadership-cto" variants={motionPresets.fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }}>
           <CapabilityPanel className="flex flex-col lg:flex-row gap-12 lg:gap-16 border-t-[3px] border-t-cyan-500/50 py-10 lg:py-10">
             <SectionBackground theme="cyan" />
             
@@ -184,7 +184,7 @@ export const LeadershipGrid = () => {
         {/* ==========================================
             RESEARCH CAPABILITY (25% Weight)
            ========================================== */}
-        <motion.div variants={motionPresets.fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }}>
+        <motion.div id="leadership-coo" variants={motionPresets.fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-50px" }}>
           <CapabilityPanel className="flex flex-col lg:flex-row gap-8 lg:gap-16 border-t-[3px] border-t-purple-500/50 py-8 lg:py-8">
             <SectionBackground theme="purple" />
             

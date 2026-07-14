@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 export const CoreValuesBento = () => {
   return (
-    <section className="section-pad relative bg-background overflow-hidden border-t border-white/5">
+    <section id="culture-code" className="section-pad relative bg-background overflow-hidden border-t border-white/5">
       
       {/* 1. Ambient Background Layer */}
       <div className="absolute inset-0 z-0 pointer-events-none">

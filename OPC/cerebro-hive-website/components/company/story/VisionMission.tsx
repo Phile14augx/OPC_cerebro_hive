@@ -66,7 +66,7 @@ export const VisionMission = () => {
           {/* ==========================================
               A. PURPOSE HERO (Editorial Focus)
              ========================================== */}
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-start">
+          <div id="company-purpose" className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-start">
             
             {/* Left Narrative */}
             <motion.div variants={motionPresets.fadeUp} className="lg:col-span-7 pr-0 lg:pr-12">
@@ -190,6 +190,7 @@ export const VisionMission = () => {
             
             {/* 1. VISION CARD (Aspirational, 25% relative weight, spans 7 cols) */}
             <motion.div 
+              id="vision"
               variants={motionPresets.fadeUp} 
               className="lg:col-span-7 lg:pr-12 relative z-10"
             >
@@ -233,6 +234,7 @@ export const VisionMission = () => {
 
             {/* 2. MISSION CARD (Operational, 15% relative weight, spans 6 cols, overlaps left by 1 col) */}
             <motion.div 
+              id="mission"
               variants={motionPresets.fadeUp} 
               className="lg:col-span-6 lg:-ml-12 mt-6 lg:mt-24 relative z-20"
             >
