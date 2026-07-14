@@ -124,7 +124,7 @@ export const VisionMission = () => {
                         <div className="flex items-center gap-4 py-4">
                           {/* Icon Indicator */}
                           <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 z-10 bg-surface-elevated shrink-0",
+                            "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 z-10 bg-[#0a0d14] shrink-0",
                             isActive ? "border-primary-accent shadow-[0_0_15px_rgba(0,245,122,0.3)] text-primary-accent scale-110" : "border-white/20 group-hover:border-white/50 text-text-muted group-hover:text-white"
                           )}>
                             {frameworkIcons[node.id] || <User size={14} />}

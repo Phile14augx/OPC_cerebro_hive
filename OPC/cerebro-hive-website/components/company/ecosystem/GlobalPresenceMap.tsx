@@ -10,7 +10,7 @@ export const GlobalPresenceMap = () => {
   const [activeRegion, setActiveRegion] = useState(globalPresence[0]);
 
   return (
-    <section className="section-pad bg-background relative overflow-hidden">
+    <section className="section-pad bg-[#030608] relative overflow-hidden">
       
       {/* Background Ambience */}
       <div className="absolute inset-0 pointer-events-none">

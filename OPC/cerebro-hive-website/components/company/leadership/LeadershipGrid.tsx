@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { motion } from "framer-motion";
@@ -39,7 +39,7 @@ export const LeadershipGrid = () => {
   const [executive, engineering, research] = organizationalCapabilities.departments;
 
   return (
-    <section className="section-pad relative overflow-hidden bg-background">
+    <section className="section-pad relative overflow-hidden bg-[#030608]">
       <div className="container-wide relative z-10 flex flex-col gap-8">
         
         {/* ==========================================
@@ -51,7 +51,7 @@ export const LeadershipGrid = () => {
             
             {/* Identity */}
             <div className="lg:w-[35%] relative z-10">
-              <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-surface mb-6 shadow-2xl">
+              <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-[#0a0d14] mb-6 shadow-2xl">
                 <Image src={withBasePath(executive.portrait.image)} alt={executive.portrait.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-700" />
                 <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.8)] pointer-events-none" />
               </div>
@@ -106,7 +106,7 @@ export const LeadershipGrid = () => {
         {/* Visual Connector */}
         <div className="hidden lg:flex justify-center -my-4 relative z-20 pointer-events-none">
           <div className="flex flex-col items-center">
-            <span className="text-[10px] font-mono text-amber-500/70 mb-2 uppercase tracking-widest bg-background px-4">Directs</span>
+            <span className="text-[10px] font-mono text-amber-500/70 mb-2 uppercase tracking-widest bg-[#030608] px-4">Directs</span>
             <div className="h-12 w-[1px] bg-gradient-to-b from-amber-500/50 to-cyan-500/50" />
             <ArrowDown size={14} className="text-cyan-500/50 -mt-2" />
           </div>
@@ -122,7 +122,7 @@ export const LeadershipGrid = () => {
             {/* Identity */}
             <div className="lg:w-[35%] relative z-10 flex flex-col justify-center">
               <div className="flex items-center gap-6 mb-6">
-                <div className="w-20 h-20 rounded-full overflow-hidden bg-surface relative shadow-lg">
+                <div className="w-20 h-20 rounded-full overflow-hidden bg-[#0a0d14] relative shadow-lg">
                   <Image src={withBasePath(engineering.portrait.image)} alt={engineering.portrait.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
                 </div>
                 <div>
@@ -175,7 +175,7 @@ export const LeadershipGrid = () => {
         {/* Visual Connector */}
         <div className="hidden lg:flex justify-center -my-4 relative z-20 pointer-events-none">
           <div className="flex flex-col items-center">
-            <span className="text-[10px] font-mono text-cyan-500/70 mb-2 uppercase tracking-widest bg-background px-4">Builds & Operates</span>
+            <span className="text-[10px] font-mono text-cyan-500/70 mb-2 uppercase tracking-widest bg-[#030608] px-4">Builds & Operates</span>
             <div className="h-12 w-[1px] bg-gradient-to-b from-cyan-500/50 to-purple-500/50" />
             <ArrowDown size={14} className="text-purple-500/50 -mt-2" />
           </div>
@@ -191,7 +191,7 @@ export const LeadershipGrid = () => {
             {/* Identity */}
             <div className="lg:w-[35%] relative z-10 flex flex-col justify-center">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-full overflow-hidden bg-surface relative shadow-lg">
+                <div className="w-16 h-16 rounded-full overflow-hidden bg-[#0a0d14] relative shadow-lg">
                   <Image src={withBasePath(research.portrait.image)} alt={research.portrait.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
                 </div>
                 <div>
@@ -247,7 +247,7 @@ export const LeadershipGrid = () => {
         {/* Final Connector to Outcomes */}
         <div className="hidden lg:flex justify-center -mt-4 relative z-20 pointer-events-none">
           <div className="flex flex-col items-center">
-            <span className="text-[10px] font-mono text-success/70 mb-2 uppercase tracking-widest bg-background px-4">Delivers Client Outcomes</span>
+            <span className="text-[10px] font-mono text-success/70 mb-2 uppercase tracking-widest bg-[#030608] px-4">Delivers Client Outcomes</span>
           </div>
         </div>
 

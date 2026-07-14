@@ -86,7 +86,7 @@ export const EngineeringCulture = () => {
                       {/* Node Indicator */}
                       <div className={cn(
                         "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300",
-                        isActive ? "border-white/40 bg-surface-elevated" : "border-white/10 bg-[#020508] group-hover:border-white/30"
+                        isActive ? "border-white/40 bg-[#0a0d14]" : "border-white/10 bg-[#020508] group-hover:border-white/30"
                       )}>
                         <div className={cn(
                           "w-2.5 h-2.5 rounded-full transition-all duration-300",

@@ -87,7 +87,7 @@ export const CompanyStoryTimeline = () => {
                           <div className="w-3 h-3 rounded-full bg-[#00E5FF] animate-pulse" />
                         </div>
                       ) : (
-                        <div className="w-10 h-10 rounded-full bg-surface border border-text-muted flex items-center justify-center relative z-10">
+                        <div className="w-10 h-10 rounded-full bg-[#0a0d14] border border-white/20 flex items-center justify-center relative z-10">
                           <CircleDashed size={20} className="text-text-muted" />
                         </div>
                       )}
