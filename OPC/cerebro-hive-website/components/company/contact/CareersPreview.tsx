@@ -131,7 +131,16 @@ export const CareersPreview = () => {
                         <div className="flex items-center gap-2">
                           {/* Status Badge */}
                           <div className={cn("px-2 py-1 rounded-full border text-[9px] font-mono uppercase tracking-widest flex items-center gap-1.5", theme.border, theme.bg, theme.text)}>
-                            <NeuralOrb size="sm" color={domain.theme as any} state="active" />
+                            <NeuralOrb 
+                              size="sm" 
+                              color={
+                                domain.theme === "orange" ? "amber" :
+                                domain.theme === "teal" ? "green" :
+                                domain.theme === "blue" ? "cyan" :
+                                domain.theme as any
+                              } 
+                              state="active" 
+                            />
                             {domain.hiringStatus}
                           </div>
                         </div>
