@@ -1,20 +1,16 @@
-"use client";
+﻿"use client";
 
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   ReactFlow,
-  MiniMap,
-  Controls,
   useNodesState,
   useEdgesState,
   ReactFlowProvider,
   Node,
   Edge,
   useReactFlow,
-  Panel
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Download, Maximize2 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { toPng } from 'html-to-image';
 
@@ -25,6 +21,9 @@ import { DepartmentNode } from './org-chart/DepartmentNode';
 import { TeamNode } from './org-chart/TeamNode';
 import { AnimatedNeuralEdge } from './org-chart/AnimatedNeuralEdge';
 import { InspectorPanel } from './org-chart/InspectorPanel';
+import { OrgNavRail } from './org-chart/OrgNavRail';
+import { OrgStatusBar } from './org-chart/OrgStatusBar';
+import { OrganizationWorkspaceProvider, useOrganizationWorkspace } from './org-chart/OrganizationWorkspaceContext';
 
 const nodeTypes = {
   executive: CEOExecutiveNode,
@@ -39,15 +38,12 @@ const edgeTypes = {
 const Flow = () => {
   const { theme } = useTheme();
   const { fitView, setCenter } = useReactFlow();
-  const { getLayoutedElements, isLayouting } = useElkLayout();
+  const { getLayoutedElements } = useElkLayout();
   
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   
-  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
-  const [selectedOrgNode, setSelectedOrgNode] = useState<OrganizationNodeData | null>(null);
-
-  const flowRef = useRef<HTMLDivElement>(null);
+  const { expandedNodes, setExpandedNodes, setSelectedNode } = useOrganizationWorkspace();
 
   // Initial Load
   useEffect(() => {
@@ -71,7 +67,7 @@ const Flow = () => {
   // Handle Node Click (Selection + Lazy Expansion)
   const onNodeClick = useCallback(async (_: React.MouseEvent, node: Node) => {
     const orgData = node.data as unknown as OrganizationNodeData;
-    setSelectedOrgNode(orgData);
+    setSelectedNode(orgData);
 
     // If it has children and isn't expanded yet, lazy load them
     if (orgData.hasChildren && !expandedNodes.has(orgData.id)) {
@@ -85,7 +81,7 @@ const Flow = () => {
       }));
 
       const newEdges: Edge[] = childrenData.map(child => ({
-        id: `e-${orgData.id}-${child.id}`,
+        id: \e-\-\\,
         source: orgData.id,
         target: child.id,
         type: 'neural',
@@ -110,76 +106,67 @@ const Flow = () => {
         }, 50);
       }
     }
-  }, [nodes, edges, expandedNodes, getLayoutedElements, setNodes, setEdges, setCenter]);
+  }, [nodes, edges, expandedNodes, getLayoutedElements, setNodes, setEdges, setCenter, setExpandedNodes, setSelectedNode]);
 
-  // Download
-  const onDownloadPng = useCallback(() => {
-    if (flowRef.current === null) return;
-    toPng(flowRef.current, { backgroundColor: theme === 'light' ? '#FFFFFF' : '#050A0F' })
-      .then((dataUrl) => {
-        const link = document.createElement('a');
-        link.download = 'cerebrohive-org.png';
-        link.href = dataUrl;
-        link.click();
-      });
-  }, [theme]);
+  // Deselect on canvas click
+  const onPaneClick = useCallback(() => {
+    setSelectedNode(null);
+  }, [setSelectedNode]);
 
   return (
-    <div className="relative w-full h-[700px] border border-border rounded-3xl overflow-hidden bg-[#050a0f]" ref={flowRef}>
+    <div className="relative w-full h-[700px] bg-black">
       
-      {/* Premium Ambient Background */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-accent/10 rounded-full blur-[120px]" />
-      </div>
-
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onNodeClick={onNodeClick}
-        minZoom={0.1}
-        maxZoom={1.5}
-        className="z-10"
+      <div 
+        className="absolute inset-4 overflow-hidden" 
+        style={{
+          borderRadius: '32px',
+          border: '1px solid rgba(255,255,255,0.06)',
+          boxShadow: '0 0 80px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.5)',
+          background: '#050a0f'
+        }}
       >
-        <Panel position="top-left" className="m-4 pointer-events-none">
-          <div className="px-4 py-2 bg-background/80 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl pointer-events-auto">
-            <h1 className="text-sm font-space font-bold uppercase tracking-widest text-white">Organization Intelligence Map</h1>
-            <p className="text-[10px] text-text-muted font-inter">Interactive Operating System</p>
-          </div>
-        </Panel>
-
-        <Panel position="top-right" className="m-4 flex gap-2">
-          <button onClick={() => fitView({ padding: 0.2, duration: 800 })} className="px-3 py-2 bg-background/80 backdrop-blur border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors">
-            <Maximize2 size={16} />
-          </button>
-          <button onClick={onDownloadPng} className="px-4 py-2 bg-background/80 backdrop-blur border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors flex items-center gap-2 text-xs font-space font-bold uppercase">
-            <Download size={14} /> Export PNG
-          </button>
-        </Panel>
-
-        <Controls className="!bg-background/80 !backdrop-blur !border-white/10 !shadow-2xl !rounded-lg overflow-hidden [&>button]:!border-b-white/10 [&>button]:!text-white hover:[&>button]:!bg-white/5" />
         
-        <MiniMap 
-          nodeColor={n => n.type === 'executive' ? '#F59E0B' : n.type === 'team' ? '#6B7280' : '#3B82F6'}
-          maskColor="rgba(0, 0, 0, 0.8)"
-          className="!bg-background/90 !backdrop-blur-xl !border-white/10 !shadow-2xl !rounded-xl overflow-hidden" 
-        />
-      </ReactFlow>
+        {/* Premium Ambient Background */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-accent/10 rounded-full blur-[120px]" />
+        </div>
 
-      {/* Slide-in Inspector Panel */}
-      <InspectorPanel node={selectedOrgNode} onClose={() => setSelectedOrgNode(null)} />
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onNodeClick={onNodeClick}
+          onPaneClick={onPaneClick}
+          minZoom={0.1}
+          maxZoom={1.5}
+          className="z-10"
+        >
+          {/* Top Left Title (Floating inside canvas) */}
+          <div className="absolute top-6 left-24 z-50 pointer-events-none">
+            <h1 className="text-base font-space font-bold uppercase tracking-widest text-white drop-shadow-md">Corporate Structure</h1>
+          </div>
+
+          <InspectorPanel />
+        </ReactFlow>
+
+        <OrgNavRail />
+        <OrgStatusBar />
+
+      </div>
     </div>
   );
 };
 
 export const OrganizationChartCanvas = () => {
   return (
-    <ReactFlowProvider>
-      <Flow />
-    </ReactFlowProvider>
+    <OrganizationWorkspaceProvider>
+      <ReactFlowProvider>
+        <Flow />
+      </ReactFlowProvider>
+    </OrganizationWorkspaceProvider>
   );
 };
