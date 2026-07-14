@@ -36,7 +36,7 @@ const Particles = () => {
 // SVG Globe from original implementation
 const AnimatedGlobe = () => {
   return (
-    <div className="relative w-full max-w-[600px] aspect-square mx-auto opacity-60">
+    <div className="relative w-full max-w-[600px] aspect-square mx-auto opacity-90">
       <svg viewBox="0 0 400 400" className="w-full h-full animate-[spin_120s_linear_infinite]">
         <defs>
           <radialGradient id="globeGlow" cx="50%" cy="50%" r="50%">
@@ -47,9 +47,9 @@ const AnimatedGlobe = () => {
         </defs>
         
         <circle cx="200" cy="200" r="180" fill="url(#globeGlow)" />
-        <circle cx="200" cy="200" r="198" fill="none" stroke="rgba(0, 229, 255, 0.1)" strokeWidth="1" strokeDasharray="4 8" />
+        <circle cx="200" cy="200" r="198" fill="none" stroke="rgba(0, 229, 255, 0.3)" strokeWidth="1" strokeDasharray="4 8" />
         
-        <g stroke="rgba(255, 255, 255, 0.1)" strokeWidth="0.5" fill="none">
+        <g stroke="rgba(0, 229, 255, 0.25)" strokeWidth="0.5" fill="none">
           {[...Array(6)].map((_, i) => (
             <ellipse key={`lat-${i}`} cx="200" cy="200" rx="180" ry={30 * (i + 1)} />
           ))}
