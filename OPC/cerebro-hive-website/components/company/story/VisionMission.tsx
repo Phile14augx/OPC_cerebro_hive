@@ -1,42 +1,56 @@
-"use client";
+﻿"use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { visionMission } from "@/lib/content/company/company";
 import { PrincipleBadge } from "@/components/ui/PrincipleBadge";
 import { motionPresets } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight, User, Target, Code, Rocket, TrendingUp, Clock, BookOpen, Quote } from "lucide-react";
+
+// Mapping icons to framework IDs
+const frameworkIcons: Record<string, React.ReactNode> = {
+  vision: <User size={14} />,
+  strategy: <Target size={14} />,
+  engineering: <Code size={14} />,
+  deployment: <Rocket size={14} />,
+  value: <TrendingUp size={14} />
+};
 
 export const VisionMission = () => {
   const [activeNode, setActiveNode] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"],
+  });
 
   return (
-    <section className="section-pad relative overflow-hidden bg-[#05070a]">
+    <section ref={containerRef} className="section-pad relative overflow-hidden bg-[#05070a]">
       
       {/* 1. Ambient Background (Restrained) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.08]" 
              style={{ 
-               backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`, 
+               backgroundImage: \linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)\, 
                backgroundSize: '80px 80px',
              }} 
         />
-        {/* Subtle Noise */}
         <div className="absolute inset-0 opacity-[0.02] mix-blend-overlay" 
-             style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
-        {/* Blurred Radial Light */}
+             style={{ backgroundImage: \url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\ }} />
         <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-primary-accent/5 rounded-full blur-[150px] mix-blend-screen" />
       </div>
 
       <div className="container-wide relative z-10">
         
-        {/* Top Metadata */}
-        <div className="flex items-center gap-4 mb-16 md:mb-24">
-          <div className="h-[1px] w-12 bg-white/10" />
-          <span className="text-[10px] font-space font-bold tracking-widest uppercase text-text-muted">
-            {visionMission.sectionMetadata.number} / {visionMission.sectionMetadata.label}
-          </span>
+        {/* Editorial Divider */}
+        <div className="w-full flex items-center justify-center mb-16 md:mb-24 opacity-60">
+          <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/20" />
+          <div className="px-6 text-[10px] font-space font-bold tracking-[0.2em] uppercase text-text-muted">
+            {visionMission.sectionMetadata.number} &mdash; {visionMission.sectionMetadata.label}
+          </div>
+          <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-white/20" />
         </div>
 
         {/* Narrative Flow Container */}
@@ -49,7 +63,7 @@ export const VisionMission = () => {
         >
           
           {/* ==========================================
-              A. PURPOSE HERO (60% Visual Weight)
+              A. PURPOSE HERO (Editorial Focus)
              ========================================== */}
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-start">
             
@@ -59,18 +73,42 @@ export const VisionMission = () => {
                 Building Production AI, <br />
                 <span className="text-text-muted">Not PowerPoint AI.</span>
               </h2>
-              <p className="text-xl md:text-2xl text-text-secondary font-inter leading-relaxed max-w-2xl border-l-2 border-primary-accent pl-6">
+              <p className="text-xl md:text-2xl text-text-secondary font-inter leading-[1.8] max-w-[55ch] border-l-2 border-primary-accent pl-6 mb-12">
                 {visionMission.purpose.description}
               </p>
+
+              {/* Editorial Pull Quote */}
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-2xl relative overflow-hidden">
+                <Quote size={120} className="absolute -top-6 -left-6 text-white/5 -rotate-12" />
+                <p className="relative z-10 text-lg font-space italic text-text-primary leading-relaxed">
+                  "Our goal is not merely to deploy AI models. It is to fundamentally transform how entire enterprise divisions operate, measure, and scale."
+                </p>
+              </div>
             </motion.div>
 
-            {/* Right Interactive Transformation Diagram */}
+            {/* Right Interactive Transformation Roadmap */}
             <motion.div variants={motionPresets.fadeUp} className="lg:col-span-5 relative mt-12 lg:mt-0">
-              <div className="bg-surface-elevated border border-white/10 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden">
-                {/* Internal Glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-accent/5 to-transparent opacity-50" />
+              <div className="bg-[#0a0f12]/80 border border-white/10 rounded-3xl p-8 backdrop-blur-xl relative overflow-hidden shadow-2xl">
                 
-                <div className="relative z-10 flex flex-col gap-1">
+                {/* Roadmap Context Header */}
+                <div className="flex items-center justify-between pb-6 mb-6 border-b border-white/5">
+                  <div className="flex items-center gap-2 text-[10px] font-space font-bold uppercase tracking-widest text-text-muted">
+                    <BookOpen size={14} /> Transformation Journey
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] font-mono text-text-muted">
+                    <Clock size={12} /> 8 min read
+                  </div>
+                </div>
+                
+                <div className="relative z-10 flex flex-col gap-0">
+                  {/* Dynamic Scroll Fill Line */}
+                  <div className="absolute left-[15px] top-[24px] bottom-[24px] w-[2px] bg-white/5 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="w-full bg-primary-accent rounded-full"
+                      style={{ height: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) }}
+                    />
+                  </div>
+
                   {visionMission.purpose.evidence.framework.map((node, index) => {
                     const isLast = index === visionMission.purpose.evidence.framework.length - 1;
                     const isActive = activeNode === node.id;
@@ -78,21 +116,18 @@ export const VisionMission = () => {
                     return (
                       <div 
                         key={node.id} 
-                        className="relative group cursor-default"
+                        className="relative group cursor-pointer"
                         onMouseEnter={() => setActiveNode(node.id)}
                         onMouseLeave={() => setActiveNode(null)}
                       >
                         {/* Node Container */}
-                        <div className="flex items-center gap-4 py-3">
-                          {/* Circle Indicator */}
+                        <div className="flex items-center gap-4 py-4">
+                          {/* Icon Indicator */}
                           <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 z-10 bg-surface-elevated",
-                            isActive ? "border-primary-accent shadow-[0_0_15px_rgba(0,245,122,0.3)]" : "border-white/20 group-hover:border-white/50"
+                            "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 z-10 bg-surface-elevated shrink-0",
+                            isActive ? "border-primary-accent shadow-[0_0_15px_rgba(0,245,122,0.3)] text-primary-accent scale-110" : "border-white/20 group-hover:border-white/50 text-text-muted group-hover:text-white"
                           )}>
-                            <div className={cn(
-                              "w-2 h-2 rounded-full transition-all duration-300",
-                              isActive ? "bg-primary-accent scale-100" : "bg-white/20 scale-0 group-hover:scale-100 group-hover:bg-white/50"
-                            )} />
+                            {frameworkIcons[node.id] || <User size={14} />}
                           </div>
                           
                           {/* Label */}
@@ -104,23 +139,6 @@ export const VisionMission = () => {
                           </span>
                         </div>
 
-                        {/* Connecting Line (Vertical) */}
-                        {!isLast && (
-                          <div className="absolute left-[15px] top-[36px] w-[2px] h-[32px] bg-white/10 overflow-hidden">
-                            {/* Animated Progression Dot */}
-                            <motion.div 
-                              className="w-full h-[8px] bg-primary-accent/50 rounded-full"
-                              animate={{ y: [ -8, 32 ] }}
-                              transition={{ 
-                                duration: 1.5, 
-                                repeat: Infinity, 
-                                ease: "linear",
-                                delay: index * 1.5 // Staggered delays for sequential flow
-                              }}
-                            />
-                          </div>
-                        )}
-
                         {/* Interactive Details Expansion */}
                         <AnimatePresence>
                           {isActive && (
@@ -128,14 +146,17 @@ export const VisionMission = () => {
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: "auto", opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2 }}
+                              transition={{ duration: 0.25, ease: "easeOut" }}
                               className="overflow-hidden pl-12"
                             >
-                              <div className="flex flex-wrap gap-2 pb-4 pt-1">
+                              <div className="flex flex-col gap-1.5 pb-5 pt-1">
                                 {node.details.map((detail, i) => (
-                                  <span key={i} className="text-[10px] font-mono text-text-muted bg-white/5 px-2 py-1 rounded-md border border-white/5">
-                                    {detail}
-                                  </span>
+                                  <div key={i} className="flex items-center gap-2">
+                                    <div className="w-1 h-1 rounded-full bg-primary-accent/50" />
+                                    <span className="text-xs font-inter text-text-muted">
+                                      {detail}
+                                    </span>
+                                  </div>
                                 ))}
                               </div>
                             </motion.div>
@@ -153,7 +174,7 @@ export const VisionMission = () => {
           {/* ==========================================
               B. VISION & MISSION (Asymmetric Presentation)
              ========================================== */}
-          <div className="grid lg:grid-cols-12 gap-6 lg:gap-0 relative">
+          <div className="grid lg:grid-cols-12 gap-6 lg:gap-0 relative mt-12">
             
             {/* Visual Connector (Purpose -> Vision) */}
             <div className="hidden lg:block absolute -top-16 left-[20%] w-[1px] h-16 bg-gradient-to-b from-primary-accent/50 to-transparent" />
@@ -184,7 +205,7 @@ export const VisionMission = () => {
                   <h3 className="text-xs font-space font-bold uppercase tracking-[0.2em] text-[#00B8FF] mb-6">
                     Our Vision
                   </h3>
-                  <p className="text-3xl md:text-4xl font-space font-bold text-white leading-tight max-w-xl">
+                  <p className="text-3xl md:text-4xl font-space font-bold text-white leading-[1.3] max-w-xl">
                     {visionMission.vision.headline}
                   </p>
                 </div>
@@ -210,7 +231,7 @@ export const VisionMission = () => {
                 
                 {/* Subtle Grid Background */}
                 <div className="absolute inset-0 opacity-[0.05]" 
-                     style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
+                     style={{ backgroundImage: \linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)\, backgroundSize: '20px 20px' }} />
 
                 <div className="relative z-10 mb-10">
                   <h3 className="text-xs font-space font-bold uppercase tracking-[0.2em] text-primary-accent mb-6">
@@ -265,4 +286,3 @@ export const VisionMission = () => {
     </section>
   );
 };
-
