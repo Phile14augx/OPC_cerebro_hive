@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -199,7 +199,7 @@ export const CompanySidebar = () => {
           <motion.div 
             className="h-full bg-primary-accent"
             initial={{ width: 0 }}
-            animate={{ width: \\%\ }}
+            animate={{ width: `${((activeChapterIndex + 1) / chapters.length) * 100}%` }}
             transition={{ duration: 0.5 }}
           />
         </div>
