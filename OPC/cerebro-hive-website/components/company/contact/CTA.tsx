@@ -102,15 +102,15 @@ const DynamicHeadline = () => {
       <h2 className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary-accent mb-6 flex items-center justify-center gap-2">
         <Terminal size={12} /> Executive Command Center
       </h2>
-      <div className="relative w-full flex justify-center">
+      <div className="relative w-full flex justify-center h-20 md:h-24">
         <AnimatePresence mode="wait">
           <motion.h3
             key={index}
-            initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-            transition={{ duration: 0.8 }}
-            className="text-4xl md:text-6xl font-space font-bold text-white tracking-tight absolute"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-6xl font-space font-bold text-white tracking-tight text-center"
           >
             {headlines[index]}
           </motion.h3>
