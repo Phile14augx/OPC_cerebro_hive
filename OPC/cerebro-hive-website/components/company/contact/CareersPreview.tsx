@@ -8,7 +8,7 @@ import { NeuralOrb } from "@/components/ui/NeuralOrb";
 import { cn } from "@/lib/utils";
 
 // Icon Mapper
-const IconMap: Record<string, React.ElementType> = {
+const IconMap: Record<string, React.ElementType<any>> = {
   Network,
   Atom,
   Cpu,
