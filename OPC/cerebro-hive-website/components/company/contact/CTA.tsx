@@ -51,8 +51,8 @@ const JourneyPipeline = () => {
               transition={{ duration: 0.5, delay: i * 0.15 }}
               className="flex flex-col items-center gap-3 relative"
             >
-              <div className="w-6 h-6 rounded-full bg-surface-elevated border border-primary-accent/30 flex items-center justify-center relative z-10">
-                <CheckCircle2 size={12} className="text-primary-accent" />
+              <div className="w-10 h-10 flex items-center justify-center relative z-10 bg-surface-elevated/50 rounded-full border border-primary-accent/20">
+                <NeuralOrb size="sm" color="cyan" state="completed" pulse={false} />
               </div>
               <span className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted hidden sm:block whitespace-nowrap">
                 {stage}
@@ -130,16 +130,7 @@ export const CTA = () => {
       
       <div className="container-wide relative z-20 flex flex-col items-center">
         
-        {/* The Signature Centerpiece */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="mb-16"
-        >
-          <NeuralOrb size="lg" color="cyan" state="thinking" pulse={true} />
-        </motion.div>
+
 
         <JourneyPipeline />
         
