@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 
 export default function CompanyPage() {
   return (
-    <div className="dark min-h-screen bg-background relative selection:bg-primary-accent/30 selection:text-white">
+    <div className="min-h-screen bg-background relative selection:bg-primary-accent/30 selection:text-white">
 
       <div id="hero">
         <CompanyHero />
