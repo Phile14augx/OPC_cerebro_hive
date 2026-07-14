@@ -231,7 +231,7 @@ export const VisionMission = () => {
                 
                 {/* Subtle Grid Background */}
                 <div className="absolute inset-0 opacity-[0.05]" 
-                     style={{ backgroundImage: \linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)\, backgroundSize: '20px 20px' }} />
+                     style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
 
                 <div className="relative z-10 mb-10">
                   <h3 className="text-xs font-space font-bold uppercase tracking-[0.2em] text-primary-accent mb-6">
