@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { milestones as timelineEvents } from "@/lib/content/company/timeline";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, CircleDashed } from "lucide-react";
+import { NeuralOrb } from "@/components/ui/NeuralOrb";
 
 export const CompanyStoryTimeline = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -78,19 +79,14 @@ export const CompanyStoryTimeline = () => {
                   {/* Center Column (Marker) */}
                   <div className="flex-none relative z-20 flex justify-center mt-6 md:mt-0">
                     <div className="bg-background rounded-full p-2">
-                      {isCompleted ? (
-                        <div className="w-10 h-10 rounded-full bg-primary-accent/10 border border-primary-accent flex items-center justify-center relative z-10 shadow-[0_0_15px_rgba(0,230,118,0.3)]">
-                          <CheckCircle2 size={20} className="text-primary-accent" />
-                        </div>
-                      ) : isCurrent ? (
-                        <div className="w-10 h-10 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF] flex items-center justify-center relative z-10 shadow-[0_0_15px_rgba(0,229,255,0.4)]">
-                          <div className="w-3 h-3 rounded-full bg-[#00E5FF] animate-pulse" />
-                        </div>
-                      ) : (
-                        <div className="w-10 h-10 rounded-full bg-surface-elevated border border-white/20 flex items-center justify-center relative z-10">
-                          <CircleDashed size={20} className="text-text-muted" />
-                        </div>
-                      )}
+                      <NeuralOrb 
+                        size="md" 
+                        color={isCompleted ? "green" : isCurrent ? "cyan" : "white"} 
+                        state={isCompleted ? "completed" : isCurrent ? "active" : "upcoming"}
+                      >
+                        {isCompleted && <CheckCircle2 size={20} className="text-primary-accent" />}
+                        {!isCompleted && !isCurrent && <CircleDashed size={20} className="text-text-muted" />}
+                      </NeuralOrb>
                     </div>
                   </div>
 
