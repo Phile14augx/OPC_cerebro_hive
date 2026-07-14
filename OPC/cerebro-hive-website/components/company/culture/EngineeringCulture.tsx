@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { engineeringFramework } from "@/lib/content/company/engineering";
 import { SectionMetadata } from "@/components/ui/SectionMetadata";
 import { MetricChip } from "@/components/ui/MetricChip";
+import { NeuralOrb } from "@/components/ui/NeuralOrb";
 import { motionPresets } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { CheckCircle2 } from "lucide-react";
@@ -69,14 +70,6 @@ export const EngineeringCulture = () => {
               <div className="flex flex-col gap-6">
                 {engineeringFramework.framework.map((phase) => {
                   const isActive = activePhaseId === phase.id;
-                  // Color mappings for nodes
-                  const colors = {
-                    cyan: "bg-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.4)]",
-                    purple: "bg-[#9D00FF] shadow-[0_0_15px_rgba(157,0,255,0.4)]",
-                    amber: "bg-warning shadow-[0_0_15px_rgba(255,176,0,0.4)]",
-                    green: "bg-primary-accent shadow-[0_0_15px_rgba(0,245,122,0.4)]"
-                  };
-                  
                   return (
                     <div 
                       key={phase.id}
@@ -84,14 +77,12 @@ export const EngineeringCulture = () => {
                       onMouseEnter={() => setActivePhaseId(phase.id)}
                     >
                       {/* Node Indicator */}
-                      <div className={cn(
-                        "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300",
-                        isActive ? "border-white/40 bg-surface-elevated" : "border-border bg-background group-hover:border-white/30"
-                      )}>
-                        <div className={cn(
-                          "w-2.5 h-2.5 rounded-full transition-all duration-300",
-                          isActive ? colors[phase.color as keyof typeof colors] : "bg-white/20 group-hover:bg-white/40"
-                        )} />
+                      <div className="z-10 bg-[#040d1a] rounded-full shrink-0">
+                        <NeuralOrb 
+                          size="sm" 
+                          color={phase.color as any} 
+                          state={isActive ? "active" : "idle"}
+                        />
                       </div>
                       
                       {/* Node Label */}

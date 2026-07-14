@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { visionMission } from "@/lib/content/company/company";
 import { PrincipleBadge } from "@/components/ui/PrincipleBadge";
+import { NeuralOrb } from "@/components/ui/NeuralOrb";
 import { motionPresets } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { ArrowRight, ChevronRight, User, Target, Code, Rocket, TrendingUp, Clock, BookOpen, Quote } from "lucide-react";
@@ -123,11 +124,19 @@ export const VisionMission = () => {
                         {/* Node Container */}
                         <div className="flex items-center gap-4 py-4">
                           {/* Icon Indicator */}
-                          <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 z-10 bg-surface-elevated shrink-0",
-                            isActive ? "border-primary-accent shadow-[0_0_15px_rgba(0,245,122,0.3)] text-primary-accent scale-110" : "border-white/20 group-hover:border-border0 text-text-muted group-hover:text-white"
-                          )}>
-                            {frameworkIcons[node.id] || <User size={14} />}
+                          <div className="z-10 bg-[#040d1a] rounded-full shrink-0">
+                            <NeuralOrb 
+                              size="sm" 
+                              color="green" 
+                              state={isActive ? "active" : "idle"}
+                            >
+                              <div className={cn(
+                                "transition-colors duration-300",
+                                isActive ? "text-primary-accent" : "text-text-muted group-hover:text-white"
+                              )}>
+                                {frameworkIcons[node.id] || <User size={14} />}
+                              </div>
+                            </NeuralOrb>
                           </div>
                           
                           {/* Label */}

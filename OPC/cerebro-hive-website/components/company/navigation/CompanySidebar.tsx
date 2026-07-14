@@ -7,6 +7,7 @@ import {
   BookOpen, AlignLeft, Hexagon, Target, Book, 
   Users, Briefcase, Activity, Globe2, ChevronRight, CheckCircle2, Circle
 } from "lucide-react";
+import { NeuralOrb } from "@/components/ui/NeuralOrb";
 
 const chapters = [
   { id: "hero", label: "Introduction", icon: <BookOpen size={16} /> },
@@ -152,14 +153,13 @@ export const CompanySidebar = () => {
                     isCurrent ? "translate-x-1" : "hover:bg-white/[0.02]"
                   )}
                 >
-                  <div className={cn(
-                    "flex-shrink-0 flex items-center justify-center w-6 h-6 transition-colors duration-300",
-                    isCurrent ? "text-primary-accent" : (isCompleted ? "text-text-muted" : "text-text-muted/50")
-                  )}>
+                  <div className="flex-shrink-0 flex items-center justify-center w-6 h-6">
                     {!isCollapsed ? (
-                      isCurrent ? <Circle fill="currentColor" size={10} className="animate-pulse" /> :
-                      isCompleted ? <CheckCircle2 size={12} /> : 
-                      <Circle size={10} />
+                      <NeuralOrb 
+                        size="sm" 
+                        color="cyan" 
+                        state={isCurrent ? "active" : isCompleted ? "completed" : "upcoming"} 
+                      />
                     ) : (
                       <div className={cn("transition-colors", isCurrent ? "text-primary-accent" : "text-text-muted hover:text-white")}>
                         {chapter.icon}
