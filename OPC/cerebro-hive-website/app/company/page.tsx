@@ -28,20 +28,7 @@ export const metadata: Metadata = {
   description: 'The definitive AI-native enterprise transformation partner. Explore our vision, leadership, and global presence.',
 };
 
-// Mock nodes for Org Chart
-const orgNodes = [
-  { id: '1', data: { label: 'Philemon V Nath', subtitle: 'Chief Executive Officer', type: 'executive', hasTeams: false } },
-  { id: '2', data: { label: 'Engineering & Architecture', subtitle: 'Marcus Thorne, CTO', type: 'engineering', hasTeams: true } },
-  { id: '3', data: { label: 'CerebroHive Labs', subtitle: 'Elena Rodriguez, VP', type: 'research', hasTeams: true } },
-  { id: '4', data: { label: 'Consulting & Delivery', subtitle: 'David Kim, Head of AI', type: 'operations', hasTeams: true } },
-  { id: '5', data: { label: 'Business Strategy', type: 'business', hasTeams: true } },
-];
-const orgEdges = [
-  { id: 'e1-2', source: '1', target: '2' },
-  { id: 'e1-3', source: '1', target: '3' },
-  { id: 'e1-4', source: '1', target: '4' },
-  { id: 'e1-5', source: '1', target: '5' },
-];
+
 
 export default function CompanyPage() {
   return (
@@ -84,7 +71,7 @@ export default function CompanyPage() {
                   Designed for Scale.
                 </h3>
               </div>
-              <OrganizationChartWrapper initialNodes={orgNodes} initialEdges={orgEdges} />
+              <OrganizationChartWrapper />
             </div>
           </div>
 

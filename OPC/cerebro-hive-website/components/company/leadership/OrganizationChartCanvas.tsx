@@ -1,211 +1,185 @@
-"use client";
+﻿"use client";
 
-import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import {
   ReactFlow,
   MiniMap,
   Controls,
-  Background,
   useNodesState,
   useEdgesState,
   ReactFlowProvider,
   Node,
   Edge,
-  Handle,
-  Position,
-  BackgroundVariant
+  useReactFlow,
+  Panel
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import dagre from 'dagre';
-import { toPng } from 'html-to-image';
-import { Download, Users, Code, Lightbulb, TrendingUp, Settings, Briefcase, Activity } from 'lucide-react';
+import { Download, Maximize2 } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { cn } from '@/lib/utils';
+import { toPng } from 'html-to-image';
 
-// --- Node Icon Mapping ---
-const iconMap: Record<string, React.ReactNode> = {
-  executive: <Briefcase size={16} />,
-  engineering: <Code size={16} />,
-  research: <Lightbulb size={16} />,
-  product: <Activity size={16} />,
-  operations: <Settings size={16} />,
-  business: <TrendingUp size={16} />,
-  default: <Users size={16} />
-};
-
-// --- Custom Node Component ---
-const OrganizationNode = ({ data }: { data: any }) => {
-  const type = data.type || 'default';
-
-  return (
-    <div className="relative group min-w-[200px] bg-background border border-border shadow-sm rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary-accent/50">
-      
-      {/* Notion-style header bar */}
-      <div className="h-1 w-full bg-border group-hover:bg-primary-accent/70 transition-colors" />
-      
-      <div className="p-4">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-lg bg-surface flex items-center justify-center text-text-secondary border border-border">
-            {iconMap[type] || iconMap.default}
-          </div>
-          <div>
-            <h4 className="text-sm font-space font-bold text-text-primary whitespace-nowrap">{data.label}</h4>
-            {data.subtitle && (
-              <p className="text-[10px] text-text-muted font-inter uppercase tracking-wide">{data.subtitle}</p>
-            )}
-          </div>
-        </div>
-        
-        {data.description && (
-          <p className="text-xs text-text-secondary font-inter leading-relaxed line-clamp-2">
-            {data.description}
-          </p>
-        )}
-
-        {/* View Teams expander (Mock UX for now) */}
-        {data.hasTeams && (
-          <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-[11px] text-primary-accent font-space font-medium cursor-pointer hover:text-text-primary transition-colors">
-            View Teams <span>→</span>
-          </div>
-        )}
-      </div>
-
-      <Handle type="target" position={Position.Top} className="w-2.5 h-2.5 !bg-surface !border-border" />
-      <Handle type="source" position={Position.Bottom} className="w-2.5 h-2.5 !bg-surface !border-border" />
-    </div>
-  );
-};
+import { OrganizationService, OrganizationNodeData } from '@/lib/services/organizationService';
+import { useElkLayout } from './org-chart/useElkLayout';
+import { CEOExecutiveNode } from './org-chart/CEOExecutiveNode';
+import { DepartmentNode } from './org-chart/DepartmentNode';
+import { TeamNode } from './org-chart/TeamNode';
+import { AnimatedNeuralEdge } from './org-chart/AnimatedNeuralEdge';
+import { InspectorPanel } from './org-chart/InspectorPanel';
 
 const nodeTypes = {
-  orgNode: OrganizationNode,
+  executive: CEOExecutiveNode,
+  department: DepartmentNode,
+  team: TeamNode
 };
 
-// --- DAGRE Layout Engine ---
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
-
-const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => {
-  dagreGraph.setGraph({ rankdir: direction, ranksep: 60, nodesep: 40 });
-
-  nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: 220, height: 120 });
-  });
-
-  edges.forEach((edge) => {
-    dagreGraph.setEdge(edge.source, edge.target);
-  });
-
-  dagre.layout(dagreGraph);
-
-  const layoutedNodes = nodes.map((node) => {
-    const nodeWithPosition = dagreGraph.node(node.id);
-    const newNode = { ...node };
-    newNode.targetPosition = Position.Top;
-    newNode.sourcePosition = Position.Bottom;
-    newNode.position = {
-      x: nodeWithPosition.x - 220 / 2,
-      y: nodeWithPosition.y - 120 / 2,
-    };
-    return newNode;
-  });
-
-  return { nodes: layoutedNodes, edges };
+const edgeTypes = {
+  neural: AnimatedNeuralEdge
 };
 
-// --- Canvas Component ---
-interface OrgChartProps {
-  initialNodes: any[];
-  initialEdges: any[];
-  className?: string;
-}
-
-const Flow = ({ initialNodes, initialEdges }: OrgChartProps) => {
+const Flow = () => {
   const { theme } = useTheme();
+  const { fitView, setCenter } = useReactFlow();
+  const { getLayoutedElements, isLayouting } = useElkLayout();
   
-  // Format nodes for our specific org Node
-  const processedNodes = useMemo(() => {
-    return initialNodes.map(node => ({
-      ...node,
-      type: 'orgNode'
-    }));
-  }, [initialNodes]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  
+  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
+  const [selectedOrgNode, setSelectedOrgNode] = useState<OrganizationNodeData | null>(null);
 
-  // Clean, thin edges for org chart (no animation or neon glow)
-  const processedEdges = useMemo(() => {
-    return initialEdges.map(edge => ({
-      ...edge,
-      style: { stroke: 'var(--border)', strokeWidth: 1.5 },
-      type: 'default' // Built-in xyflow edge, nice and clean
-    }));
-  }, [initialEdges]);
-
-  const { nodes: layoutedNodes, edges: layoutedEdges } = useMemo(
-    () => getLayoutedElements(processedNodes, processedEdges, 'TB'),
-    [processedNodes, processedEdges]
-  );
-
-  const [nodes, setNodes] = useNodesState(layoutedNodes);
-  const [edges, setEdges] = useEdgesState(layoutedEdges);
   const flowRef = useRef<HTMLDivElement>(null);
 
+  // Initial Load
+  useEffect(() => {
+    const loadRoot = async () => {
+      const rootData = await OrganizationService.getRootNode();
+      const initialNode: Node = {
+        id: rootData.id,
+        type: 'executive',
+        position: { x: 0, y: 0 },
+        data: rootData
+      };
+      
+      const { nodes: layoutedNodes, edges: layoutedEdges } = await getLayoutedElements([initialNode], []);
+      setNodes(layoutedNodes);
+      setEdges(layoutedEdges);
+      window.setTimeout(() => fitView({ padding: 0.2, duration: 800 }), 50);
+    };
+    loadRoot();
+  }, [getLayoutedElements, setNodes, setEdges, fitView]);
+
+  // Handle Node Click (Selection + Lazy Expansion)
+  const onNodeClick = useCallback(async (_: React.MouseEvent, node: Node) => {
+    const orgData = node.data as unknown as OrganizationNodeData;
+    setSelectedOrgNode(orgData);
+
+    // If it has children and isn't expanded yet, lazy load them
+    if (orgData.hasChildren && !expandedNodes.has(orgData.id)) {
+      const childrenData = await OrganizationService.getChildren(orgData.id);
+      
+      const newNodes: Node[] = childrenData.map(child => ({
+        id: child.id,
+        type: child.type,
+        position: { x: node.position.x, y: node.position.y }, // spawn at parent
+        data: child
+      }));
+
+      const newEdges: Edge[] = childrenData.map(child => ({
+        id: \e-\-\\,
+        source: orgData.id,
+        target: child.id,
+        type: 'neural',
+        data: { theme: child.theme },
+        animated: true
+      }));
+
+      const allNodes = [...nodes, ...newNodes];
+      const allEdges = [...edges, ...newEdges];
+
+      const { nodes: layoutedNodes, edges: layoutedEdges } = await getLayoutedElements(allNodes, allEdges);
+      
+      setNodes(layoutedNodes);
+      setEdges(layoutedEdges);
+      setExpandedNodes(prev => new Set(prev).add(orgData.id));
+      
+      // Center on the expanded node
+      const centerNode = layoutedNodes.find(n => n.id === orgData.id);
+      if (centerNode) {
+        window.setTimeout(() => {
+          setCenter(centerNode.position.x + 100, centerNode.position.y + 100, { zoom: 0.8, duration: 800 });
+        }, 50);
+      }
+    }
+  }, [nodes, edges, expandedNodes, getLayoutedElements, setNodes, setEdges, setCenter]);
+
+  // Download
   const onDownloadPng = useCallback(() => {
     if (flowRef.current === null) return;
     toPng(flowRef.current, { backgroundColor: theme === 'light' ? '#FFFFFF' : '#050A0F' })
       .then((dataUrl) => {
         const link = document.createElement('a');
-        link.download = 'cerebrohive-org-chart.png';
+        link.download = 'cerebrohive-org.png';
         link.href = dataUrl;
         link.click();
       });
   }, [theme]);
 
   return (
-    <div className="relative w-full h-[600px] border border-border rounded-3xl overflow-hidden bg-surface-elevated" ref={flowRef}>
+    <div className="relative w-full h-[700px] border border-border rounded-3xl overflow-hidden bg-[#050a0f]" ref={flowRef}>
       
-      {/* Top Bar for Org Chart */}
-      <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center pointer-events-none">
-        <div className="px-4 py-2 bg-background/80 backdrop-blur border border-border rounded-lg shadow-sm">
-          <p className="text-xs font-space font-bold uppercase tracking-widest text-text-primary">Corporate Structure</p>
-        </div>
-        <button 
-          onClick={onDownloadPng}
-          className="pointer-events-auto px-4 py-2 bg-background/80 backdrop-blur border border-border rounded-lg shadow-sm text-text-primary hover:text-primary-accent hover:border-primary-accent transition-colors flex items-center gap-2 text-xs font-space font-bold uppercase"
-        >
-          <Download size={14} /> Export PNG
-        </button>
+      {/* Premium Ambient Background */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-accent/10 rounded-full blur-[120px]" />
       </div>
 
       <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
-        fitView
-        fitViewOptions={{ padding: 0.2 }}
-        minZoom={0.2}
+        edgeTypes={edgeTypes}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onNodeClick={onNodeClick}
+        minZoom={0.1}
         maxZoom={1.5}
-        className="react-flow-org-theme"
+        className="z-10"
       >
-        <Background 
-          variant={BackgroundVariant.Dots} 
-          gap={24} 
-          size={1.5} 
-          color={theme === 'dark' ? '#333' : '#E5E7EB'} 
-        />
-        <Controls className="!bg-background !border-border !shadow-sm !rounded-lg overflow-hidden [&>button]:!border-b-border [&>button]:!text-text-primary hover:[&>button]:!bg-surface" />
+        <Panel position="top-left" className="m-4 pointer-events-none">
+          <div className="px-4 py-2 bg-background/80 backdrop-blur-md border border-white/10 rounded-lg shadow-2xl pointer-events-auto">
+            <h1 className="text-sm font-space font-bold uppercase tracking-widest text-white">Organization Intelligence Map</h1>
+            <p className="text-[10px] text-text-muted font-inter">Interactive Operating System</p>
+          </div>
+        </Panel>
+
+        <Panel position="top-right" className="m-4 flex gap-2">
+          <button onClick={() => fitView({ padding: 0.2, duration: 800 })} className="px-3 py-2 bg-background/80 backdrop-blur border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors">
+            <Maximize2 size={16} />
+          </button>
+          <button onClick={onDownloadPng} className="px-4 py-2 bg-background/80 backdrop-blur border border-white/10 rounded-lg text-white hover:bg-white/5 transition-colors flex items-center gap-2 text-xs font-space font-bold uppercase">
+            <Download size={14} /> Export PNG
+          </button>
+        </Panel>
+
+        <Controls className="!bg-background/80 !backdrop-blur !border-white/10 !shadow-2xl !rounded-lg overflow-hidden [&>button]:!border-b-white/10 [&>button]:!text-white hover:[&>button]:!bg-white/5" />
+        
         <MiniMap 
-          nodeColor={theme === 'dark' ? '#1F2937' : '#F3F4F6'}
-          maskColor={theme === 'dark' ? 'rgba(5, 10, 15, 0.7)' : 'rgba(255, 255, 255, 0.7)'}
-          className="!bg-background !border-border !shadow-sm !rounded-xl overflow-hidden" 
+          nodeColor={n => n.type === 'executive' ? '#F59E0B' : n.type === 'team' ? '#6B7280' : '#3B82F6'}
+          maskColor="rgba(0, 0, 0, 0.8)"
+          className="!bg-background/90 !backdrop-blur-xl !border-white/10 !shadow-2xl !rounded-xl overflow-hidden" 
         />
       </ReactFlow>
+
+      {/* Slide-in Inspector Panel */}
+      <InspectorPanel node={selectedOrgNode} onClose={() => setSelectedOrgNode(null)} />
     </div>
   );
 };
 
-export const OrganizationChartCanvas = (props: OrgChartProps) => {
+export const OrganizationChartCanvas = () => {
   return (
     <ReactFlowProvider>
-      <Flow {...props} />
+      <Flow />
     </ReactFlowProvider>
   );
 };
