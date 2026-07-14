@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Lock, Eye, Building2, BrainCircuit, Activity, FileText, ArrowRight, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, Lock, Eye, Building2, BrainCircuit, Activity, FileText, ArrowRight, CheckCircle2, Landmark } from "lucide-react";
 import { trustCenter } from "@/lib/content/company/trustCenter";
 import { cn } from "@/lib/utils";
 import { NeuralOrb } from "@/components/ui/NeuralOrb";
@@ -84,11 +84,16 @@ const TrustMaturityRoadmap = () => {
               {/* Node Marker */}
               <motion.div 
                 className={cn(
-                  "w-6 h-6 rounded-full border-[3px] bg-background flex items-center justify-center transition-all duration-300 cursor-pointer relative z-10",
-                  isHovered ? "border-primary-accent scale-125 shadow-[0_0_20px_rgba(0,245,122,0.5)]" : "border-white/20 hover:border-primary-accent/50"
+                  "flex items-center justify-center transition-all duration-300 cursor-pointer relative z-10",
+                  isHovered ? "scale-125" : "hover:scale-110"
                 )}
               >
-                <div className={cn("w-2 h-2 rounded-full transition-colors", isHovered ? "bg-primary-accent" : "bg-white/20")} />
+                <NeuralOrb size="sm" color={isHovered ? "green" : "white"} state={isHovered ? "completed" : "idle"} pulse={false}>
+                  {node.id === "foundation" && <Lock size={10} className={isHovered ? "text-primary-accent" : "text-white/60"} />}
+                  {node.id === "enterprise" && <ShieldCheck size={10} className={isHovered ? "text-primary-accent" : "text-white/60"} />}
+                  {node.id === "healthcare" && <Activity size={10} className={isHovered ? "text-primary-accent" : "text-white/60"} />}
+                  {node.id === "government" && <Landmark size={10} className={isHovered ? "text-primary-accent" : "text-white/60"} />}
+                </NeuralOrb>
               </motion.div>
 
               {/* Static Label */}
