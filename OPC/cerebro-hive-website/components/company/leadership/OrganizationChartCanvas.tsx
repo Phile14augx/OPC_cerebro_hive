@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import {
@@ -85,7 +85,7 @@ const Flow = () => {
       }));
 
       const newEdges: Edge[] = childrenData.map(child => ({
-        id: \e-\-\\,
+        id: `e-${orgData.id}-${child.id}`,
         source: orgData.id,
         target: child.id,
         type: 'neural',
