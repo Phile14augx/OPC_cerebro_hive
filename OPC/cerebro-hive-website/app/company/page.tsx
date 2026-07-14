@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { CompanySidebar } from '@/components/company/navigation/CompanySidebar';
+import { ForceDarkTheme } from '@/components/company/ForceDarkTheme';
 
 // Load immediately (Above the fold & critical content)
 import { CompanyHero } from '@/components/company/hero/CompanyHero';
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
 export default function CompanyPage() {
   return (
     <div className="min-h-screen bg-background relative selection:bg-primary-accent/30 selection:text-white">
-
+      <ForceDarkTheme />
       <div id="hero">
         <CompanyHero />
       </div>
