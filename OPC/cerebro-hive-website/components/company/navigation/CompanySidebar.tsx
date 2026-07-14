@@ -80,7 +80,8 @@ const explorerTree: ExplorerNode[] = [
           { id: "engineering-scale", label: "Phase 4: Scale" },
         ]
       },
-      { id: "ecosystem", label: "Tech Ecosystem" }
+      { id: "ecosystem", label: "Tech Ecosystem" },
+      { id: "trust-center", label: "Enterprise Trust", metadata: "Security" }
     ]
   },
   {

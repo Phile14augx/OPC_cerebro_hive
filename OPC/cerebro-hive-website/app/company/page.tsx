@@ -18,7 +18,7 @@ import { OrganizationChartWrapper } from '@/components/company/leadership/Organi
 const CompanyMetrics = dynamic(() => import('@/components/company/culture/CompanyMetrics').then(mod => mod.CompanyMetrics));
 const GlobalPresenceMap = dynamic(() => import('@/components/company/ecosystem/GlobalPresenceMap').then(mod => mod.GlobalPresenceMap));
 const EcosystemGrid = dynamic(() => import('@/components/company/ecosystem/EcosystemGrid').then(mod => mod.EcosystemGrid));
-const Certifications = dynamic(() => import('@/components/company/ecosystem/Certifications').then(mod => mod.Certifications));
+const EnterpriseTrustCenter = dynamic(() => import('@/components/company/ecosystem/EnterpriseTrustCenter').then(mod => mod.EnterpriseTrustCenter));
 const EngineeringCulture = dynamic(() => import('@/components/company/culture/EngineeringCulture').then(mod => mod.EngineeringCulture));
 const Headquarters = dynamic(() => import('@/components/company/contact/Headquarters').then(mod => mod.Headquarters));
 const CareersPreview = dynamic(() => import('@/components/company/contact/CareersPreview').then(mod => mod.CareersPreview));
@@ -82,7 +82,7 @@ export default function CompanyPage() {
 
           <div id="ecosystem">
             <EcosystemGrid />
-            <Certifications />
+            <EnterpriseTrustCenter />
           </div>
 
           <div id="presence">
