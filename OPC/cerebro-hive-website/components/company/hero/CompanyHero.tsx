@@ -1,14 +1,42 @@
-"use client";
+﻿"use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, Globe2, Activity } from "lucide-react";
+import { ArrowDown, Globe2 } from "lucide-react";
 import { withBasePath } from "@/lib/utils";
 
+// Floating Particles
+const Particles = () => {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-white rounded-full opacity-20"
+          initial={{
+            x: Math.random() * 100 + "%",
+            y: Math.random() * 100 + "%",
+            scale: Math.random() * 2,
+          }}
+          animate={{
+            y: [null, \\%\],
+            opacity: [0.1, 0.4, 0.1],
+          }}
+          transition={{
+            duration: Math.random() * 20 + 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// SVG Globe from original implementation
 const AnimatedGlobe = () => {
   return (
     <div className="relative w-full max-w-[600px] aspect-square mx-auto opacity-60">
-      {/* Base Globe Grid */}
       <svg viewBox="0 0 400 400" className="w-full h-full animate-[spin_120s_linear_infinite]">
         <defs>
           <radialGradient id="globeGlow" cx="50%" cy="50%" r="50%">
@@ -18,78 +46,31 @@ const AnimatedGlobe = () => {
           </radialGradient>
         </defs>
         
-        {/* Glow */}
         <circle cx="200" cy="200" r="180" fill="url(#globeGlow)" />
         <circle cx="200" cy="200" r="198" fill="none" stroke="rgba(0, 229, 255, 0.1)" strokeWidth="1" strokeDasharray="4 8" />
         
-        {/* Latitudes & Longitudes */}
         <g stroke="rgba(255, 255, 255, 0.1)" strokeWidth="0.5" fill="none">
           {[...Array(6)].map((_, i) => (
-            <ellipse key={`lat-${i}`} cx="200" cy="200" rx="180" ry={30 * (i + 1)} />
+            <ellipse key={\lat-\\} cx="200" cy="200" rx="180" ry={30 * (i + 1)} />
           ))}
           {[...Array(6)].map((_, i) => (
-            <ellipse key={`lon-${i}`} cx="200" cy="200" rx={30 * (i + 1)} ry="180" />
+            <ellipse key={\lon-\\} cx="200" cy="200" rx={30 * (i + 1)} ry="180" />
           ))}
           <circle cx="200" cy="200" r="180" />
         </g>
       </svg>
-
-      {/* Pulsing Nodes representing HQs */}
       <div className="absolute inset-0">
-        {/* NY */}
-        <motion.div 
-          className="absolute top-[30%] left-[25%] w-3 h-3 bg-primary-accent rounded-full"
-          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
+        <motion.div className="absolute top-[30%] left-[25%] w-3 h-3 bg-primary-accent rounded-full" animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }}>
           <div className="absolute inset-0 w-full h-full bg-primary-accent/40 rounded-full animate-ping" />
         </motion.div>
-        
-        {/* London */}
-        <motion.div 
-          className="absolute top-[25%] left-[45%] w-2 h-2 bg-[#00E5FF] rounded-full"
-          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
-        >
+        <motion.div className="absolute top-[25%] left-[45%] w-2 h-2 bg-[#00E5FF] rounded-full" animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}>
           <div className="absolute inset-0 w-full h-full bg-[#00E5FF]/40 rounded-full animate-ping" />
         </motion.div>
-
-        {/* Dubai */}
-        <motion.div 
-          className="absolute top-[40%] left-[60%] w-2 h-2 bg-[#00E5FF] rounded-full"
-          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-        />
-
-        {/* Sydney */}
-        <motion.div 
-          className="absolute top-[70%] left-[85%] w-2 h-2 bg-[#00E5FF] rounded-full"
-          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2.2, repeat: Infinity, delay: 1.5 }}
-        />
-        
-        {/* Connecting Arc SVG */}
+        <motion.div className="absolute top-[40%] left-[60%] w-2 h-2 bg-[#00E5FF] rounded-full" animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 3, repeat: Infinity, delay: 1 }} />
+        <motion.div className="absolute top-[70%] left-[85%] w-2 h-2 bg-[#00E5FF] rounded-full" animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 2.2, repeat: Infinity, delay: 1.5 }} />
         <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 400">
-          <motion.path
-            d="M 100 120 Q 140 80 180 100"
-            fill="none"
-            stroke="rgba(0, 229, 255, 0.5)"
-            strokeWidth="1.5"
-            strokeDasharray="4 4"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-          />
-          <motion.path
-            d="M 180 100 Q 210 140 240 160"
-            fill="none"
-            stroke="rgba(0, 245, 122, 0.5)"
-            strokeWidth="1.5"
-            strokeDasharray="4 4"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse", delay: 0.5 }}
-          />
+          <motion.path d="M 100 120 Q 140 80 180 100" fill="none" stroke="rgba(0, 229, 255, 0.5)" strokeWidth="1.5" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }} />
+          <motion.path d="M 180 100 Q 210 140 240 160" fill="none" stroke="rgba(0, 245, 122, 0.5)" strokeWidth="1.5" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse", delay: 0.5 }} />
         </svg>
       </div>
     </div>
@@ -103,70 +84,86 @@ export const CompanyHero = () => {
     offset: ["start start", "end start"],
   });
 
-  const yPos = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const yPos = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
 
   return (
     <section 
       ref={containerRef}
-      className="relative min-h-screen pt-32 pb-24 flex flex-col justify-center overflow-hidden bg-background"
+      className="relative min-h-screen pt-32 pb-32 flex flex-col justify-center overflow-hidden bg-[#030608]"
     >
-      {/* Background ambient lighting */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[500px] bg-primary-accent/10 rounded-full blur-[150px]" />
-        <div className="absolute inset-0 opacity-[0.03] dark:mix-blend-screen mix-blend-multiply scale-150" style={{ backgroundImage: `url('${withBasePath('/images/noise.png')}')` }} />
+      {/* Immersive Ambient Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <motion.div 
+          className="absolute -top-1/4 -right-1/4 w-[1200px] h-[1200px] bg-primary-accent/10 rounded-full blur-[200px] mix-blend-screen"
+          animate={{ x: [0, -100, 0], y: [0, 50, 0], scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute top-1/4 -left-1/4 w-[1000px] h-[1000px] bg-[#00E5FF]/10 rounded-full blur-[150px] mix-blend-screen"
+          animate={{ x: [0, 100, 0], y: [0, -50, 0], scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+        />
+        <div className="absolute inset-0 opacity-[0.04]" 
+             style={{ backgroundImage: \linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)\, backgroundSize: '40px 40px' }} 
+        />
+        <Particles />
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: \url('\')\ }} />
       </div>
 
-      <div className="container-wide relative z-10 grid lg:grid-cols-2 gap-12 items-center">
-        
+      <div className="container-wide relative z-10 grid lg:grid-cols-2 gap-12 items-center h-full">
         {/* Left: Content */}
         <motion.div 
-          style={{ y: yPos, opacity }} 
+          style={{ y: yPos, opacity, scale }} 
           className="flex flex-col items-start text-left max-w-2xl"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-md shadow-sm">
             <Globe2 size={12} className="text-primary-accent" />
-            <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Corporate Headquarters</span>
+            <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Corporate Handbook</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-5xl md:text-7xl font-space font-bold text-white tracking-tight leading-[1.05] mb-6 drop-shadow-2xl">
             Intelligence. <br/>
             Connection. <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-[#00E5FF]">Impact.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent via-[#00E5FF] to-primary-accent bg-[length:200%_auto] animate-gradient-shift">
+              Impact.
+            </span>
           </h1>
 
-          <p className="text-lg md:text-xl text-text-secondary font-inter leading-relaxed mb-10 max-w-xl">
+          <p className="text-lg md:text-xl text-text-secondary font-inter leading-[1.8] mb-10 max-w-[60ch]">
             CerebroHive is the definitive AI-native enterprise transformation partner. We close the gap between an executive's AI vision and a working system in production.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-transform hover:-translate-y-1">
-              Explore Our Story
-              <ArrowDown size={16} />
+            <button className="group px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-white hover:shadow-[0_0_30px_rgba(0,245,122,0.4)]">
+              See How We Deliver
+              <ArrowDown size={16} className="transition-transform group-hover:translate-y-1" />
             </button>
-            <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/50 hover:bg-surface transition-all">
-              Our Methodology
+            <button className="px-8 py-4 bg-white/5 border border-white/10 text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/30 hover:bg-white/10 transition-all">
+              Download Handbook
             </button>
           </div>
         </motion.div>
 
         {/* Right: SVG Globe Animation */}
         <motion.div
+          style={{ y: yPos, opacity, scale }}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.2 }}
-          className="relative lg:h-[600px] flex items-center justify-center"
+          className="relative lg:h-[600px] flex items-center justify-center hidden lg:flex"
         >
           <AnimatedGlobe />
         </motion.div>
 
       </div>
       
-      {/* Bottom fade */}
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+      {/* Seamless Section Transition Bottom Fade */}
+      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#05070a] via-[#05070a]/80 to-transparent z-20 pointer-events-none" />
     </section>
   );
 };

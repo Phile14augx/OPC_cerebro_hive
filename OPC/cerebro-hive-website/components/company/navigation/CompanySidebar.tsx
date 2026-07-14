@@ -1,65 +1,68 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { 
+  BookOpen, AlignLeft, Hexagon, Target, Book, 
+  Users, Briefcase, Activity, Globe2, ChevronRight, CheckCircle2, Circle
+} from "lucide-react";
 
-const sections = [
-  { id: "hero", label: "Overview" },
-  { id: "ceo-letter", label: "CEO Letter" },
-  { id: "vision", label: "Vision & Mission" },
-  { id: "story", label: "Our Story" },
-  { id: "culture", label: "Culture Code" },
-  { id: "leadership", label: "Leadership" },
-  { id: "org-chart", label: "Structure" },
-  { id: "metrics", label: "Metrics" },
-  { id: "ecosystem", label: "Ecosystem" },
-  { id: "presence", label: "Global Presence" }
+const chapters = [
+  { id: "hero", label: "Introduction", icon: <BookOpen size={16} /> },
+  { id: "vision", label: "Corporate Purpose", icon: <Target size={16} /> },
+  { id: "story", label: "Our Story", icon: <Book size={16} /> },
+  { id: "culture", label: "Culture Code", icon: <Users size={16} /> },
+  { id: "leadership", label: "Leadership", icon: <Briefcase size={16} /> },
+  { id: "org-chart", label: "Structure", icon: <Hexagon size={16} /> },
+  { id: "metrics", label: "Metrics", icon: <Activity size={16} /> },
+  { id: "presence", label: "Global Presence", icon: <Globe2 size={16} /> }
 ];
 
 export const CompanySidebar = () => {
-  const [activeSection, setActiveSection] = useState("hero");
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeChapterIndex, setActiveChapterIndex] = useState(0);
+  const [isScrolledPastHero, setIsScrolledPastHero] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [explorerMode, setExplorerMode] = useState(false);
 
   useEffect(() => {
-    // Scroll progress calculator
-    const calculateProgress = () => {
-      const winScroll = document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      setScrollProgress(scrolled);
+    const handleScroll = () => {
+      const heroElement = document.getElementById("hero");
+      if (heroElement) {
+        setIsScrolledPastHero(window.scrollY > heroElement.offsetHeight * 0.8);
+      }
     };
+    
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // init
 
-    window.addEventListener("scroll", calculateProgress);
-    calculateProgress(); // init
-
-    // Intersection observer for active section
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+            const index = chapters.findIndex(c => c.id === entry.target.id);
+            if (index !== -1) setActiveChapterIndex(index);
           }
         });
       },
-      { rootMargin: "-20% 0px -60% 0px" } // trigger when element is roughly in middle of viewport
+      { rootMargin: "-30% 0px -70% 0px" }
     );
 
-    sections.forEach(({ id }) => {
+    chapters.forEach(({ id }) => {
       const element = document.getElementById(id);
       if (element) observer.observe(element);
     });
 
     return () => {
-      window.removeEventListener("scroll", calculateProgress);
+      window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
     };
   }, []);
 
-  const scrollToSection = (id: string) => {
+  const scrollToChapter = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const navOffset = 80; // height of the main navbar
+      const navOffset = 80;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY;
       window.scrollTo({
         top: elementPosition - navOffset,
@@ -68,55 +71,108 @@ export const CompanySidebar = () => {
     }
   };
 
+  const isCollapsed = isScrolledPastHero && !isHovered && !explorerMode;
+
   return (
-    <nav className="hidden lg:block w-72 shrink-0 sticky top-32 max-h-[calc(100vh-8rem)] overflow-y-auto pl-4 border-r border-border/40 pr-6">
+    <motion.nav 
+      animate={{ width: isCollapsed ? 80 : 320 }}
+      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="hidden lg:flex flex-col shrink-0 sticky top-[80px] h-[calc(100vh-80px)] bg-background/95 backdrop-blur-xl border-r border-border/40 z-40 overflow-hidden"
+    >
       
-      <div className="mb-10 pl-4">
-        <div className="text-[9px] font-space font-bold uppercase tracking-[0.2em] text-primary-accent mb-1 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary-accent animate-pulse" />
-          Live Document
+      {/* Header */}
+      <div className={cn("p-6 pb-4 whitespace-nowrap transition-opacity duration-300", isCollapsed ? "opacity-0" : "opacity-100")}>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2 text-xs font-space font-bold uppercase tracking-widest text-text-muted">
+            <AlignLeft size={14} /> Corporate Handbook
+          </div>
         </div>
-        <h3 className="text-xs font-space font-bold uppercase tracking-widest text-text-secondary">
-          Corporate Handbook
-        </h3>
-        <span className="text-[10px] text-text-muted font-mono mt-1 block">v2026.1.4</span>
+
+        {/* Story Mode / Explorer Mode Toggle */}
+        <div className="flex bg-surface border border-white/5 rounded-lg p-1 mb-8">
+          <button 
+            onClick={() => setExplorerMode(false)} 
+            className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors", !explorerMode ? "bg-white/10 text-white" : "text-text-muted hover:text-white")}
+          >
+            Story
+          </button>
+          <button 
+            onClick={() => setExplorerMode(true)} 
+            className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors", explorerMode ? "bg-white/10 text-white" : "text-text-muted hover:text-white")}
+          >
+            Explorer
+          </button>
+        </div>
       </div>
 
-      <div className="relative">
-        {/* Static Background Track */}
-        <div className="absolute left-[7px] top-2 bottom-2 w-[1px] bg-border" />
-        
-        {/* Dynamic Reading Progress Fill */}
-        <div 
-          className="absolute left-[7px] top-2 w-[2px] bg-primary-accent shadow-[0_0_8px_rgba(0,245,122,0.6)] transition-all duration-150 ease-out"
-          style={{ height: `calc(${scrollProgress}% - 16px)`, maxHeight: "calc(100% - 16px)" }}
-        />
+      {/* Collapsed Header Icon (visible when collapsed) */}
+      <AnimatePresence>
+        {isCollapsed && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute top-6 left-0 right-0 flex justify-center text-text-muted"
+          >
+            <AlignLeft size={20} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
+      {/* Chapters */}
+      <div className="flex-1 overflow-y-auto px-4 custom-scrollbar mt-12 lg:mt-0">
         <ul className="flex flex-col gap-1 relative z-10">
-          {sections.map(({ id, label }, index) => {
-            const isActive = activeSection === id;
-            const number = (index + 1).toString().padStart(2, '0');
+          {chapters.map((chapter, index) => {
+            const isCurrent = activeChapterIndex === index;
+            const isCompleted = index < activeChapterIndex;
+            const isUpcoming = index > activeChapterIndex;
             
             return (
-              <li key={id} className="relative group">
+              <li key={chapter.id} className="relative group">
+                {/* Active Highlight Background */}
+                <AnimatePresence>
+                  {isCurrent && !isCollapsed && (
+                    <motion.div 
+                      layoutId="activeChapterBg"
+                      className="absolute inset-0 bg-white/5 rounded-lg z-0"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    />
+                  )}
+                </AnimatePresence>
+
                 <button
-                  onClick={() => scrollToSection(id)}
+                  onClick={() => scrollToChapter(chapter.id)}
                   className={cn(
-                    "w-full text-left py-2.5 pl-6 flex items-center gap-3 transition-all duration-300 group-hover:translate-x-1",
-                    isActive ? "opacity-100" : "opacity-60 hover:opacity-100"
+                    "relative z-10 w-full text-left py-2.5 px-3 rounded-lg flex items-center transition-all duration-200",
+                    isCurrent ? "translate-x-1" : "hover:bg-white/[0.02]"
                   )}
                 >
-                  <span className={cn(
-                    "text-[10px] font-mono transition-colors duration-300",
-                    isActive ? "text-primary-accent font-bold" : "text-text-muted"
+                  <div className={cn(
+                    "flex-shrink-0 flex items-center justify-center w-6 h-6 transition-colors duration-300",
+                    isCurrent ? "text-primary-accent" : (isCompleted ? "text-text-muted" : "text-text-muted/50")
                   )}>
-                    {number}
-                  </span>
+                    {!isCollapsed ? (
+                      isCurrent ? <Circle fill="currentColor" size={10} className="animate-pulse" /> :
+                      isCompleted ? <CheckCircle2 size={12} /> : 
+                      <Circle size={10} />
+                    ) : (
+                      <div className={cn("transition-colors", isCurrent ? "text-primary-accent" : "text-text-muted hover:text-white")}>
+                        {chapter.icon}
+                      </div>
+                    )}
+                  </div>
+
                   <span className={cn(
-                    "text-sm font-space transition-colors duration-300",
-                    isActive ? "text-text-primary font-bold shadow-primary-accent" : "text-text-secondary"
-                  )} style={{ textShadow: isActive ? "0 0 12px rgba(0,245,122,0.3)" : "none" }}>
-                    {label}
+                    "ml-3 text-sm font-space whitespace-nowrap transition-all duration-300",
+                    isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100",
+                    isCurrent ? "text-white font-bold" : "text-text-secondary group-hover:text-white"
+                  )}>
+                    {chapter.label}
                   </span>
                 </button>
               </li>
@@ -124,6 +180,30 @@ export const CompanySidebar = () => {
           })}
         </ul>
       </div>
-    </nav>
+
+      {/* Footer Metrics */}
+      <div className={cn("p-6 pt-4 border-t border-border/40 whitespace-nowrap transition-opacity duration-300", isCollapsed ? "opacity-0" : "opacity-100")}>
+        <div className="flex justify-between items-end mb-4">
+          <div>
+            <span className="block text-[10px] font-mono text-text-muted uppercase mb-1">Progress</span>
+            <span className="block text-sm font-space font-bold text-white">Chapter {activeChapterIndex + 1} / {chapters.length}</span>
+          </div>
+          <div className="text-right">
+            <span className="block text-[10px] font-mono text-text-muted uppercase mb-1">Est. Time</span>
+            <span className="block text-sm font-space font-bold text-white">12 min remaining</span>
+          </div>
+        </div>
+        
+        {/* Progress Bar */}
+        <div className="w-full h-1 bg-surface rounded-full overflow-hidden">
+          <motion.div 
+            className="h-full bg-primary-accent"
+            initial={{ width: 0 }}
+            animate={{ width: \\%\ }}
+            transition={{ duration: 0.5 }}
+          />
+        </div>
+      </div>
+    </motion.nav>
   );
 };
