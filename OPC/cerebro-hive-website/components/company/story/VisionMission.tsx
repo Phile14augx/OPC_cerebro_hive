@@ -236,7 +236,7 @@ export const VisionMission = () => {
             <motion.div 
               id="mission"
               variants={motionPresets.fadeUp} 
-              className="lg:col-span-6 mt-6 lg:mt-24 relative z-20"
+              className="lg:col-span-5 mt-6 lg:mt-24 relative z-20"
             >
               <div className="group relative h-full bg-[#07120d] border border-primary-accent/20 rounded-3xl p-10 md:p-12 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.4)] backdrop-blur-xl flex flex-col justify-between transition-all duration-500 hover:border-primary-accent/40">
                 
