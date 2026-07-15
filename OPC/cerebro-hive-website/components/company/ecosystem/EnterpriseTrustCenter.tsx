@@ -222,7 +222,7 @@ export const EnterpriseTrustCenter = () => {
         </div>
 
         {/* Main Grid Layout - Bento Style */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6 mb-16">
           
           {/* Left: Trust Pillars */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -322,7 +322,7 @@ export const EnterpriseTrustCenter = () => {
         </div>
 
         {/* Interactive Pipeline */}
-        <div className="p-8 md:p-12 rounded-3xl bg-surface-elevated border border-white/5 mt-12 overflow-hidden relative">
+        <div className="p-8 md:p-12 rounded-3xl bg-surface-elevated border border-white/5 mt-16 relative z-40">
           <TrustMaturityRoadmap />
         </div>
 
