@@ -100,8 +100,8 @@ export const CareersPreview = () => {
           <div className="lg:w-[65%] w-full relative">
             <div className="columns-1 md:columns-2 gap-4 space-y-4">
               {careerDomains.map((domain, index) => {
-                const Icon = IconMap[domain.iconName] || Briefcase;
-                const theme = themeConfig[domain.theme];
+                const Icon = (IconMap[domain.iconName] || Briefcase) as React.ElementType<any>;
+                const theme = themeConfig[domain.theme as keyof typeof themeConfig];
                 const isSelected = activeDomain?.id === domain.id;
 
                 return (
