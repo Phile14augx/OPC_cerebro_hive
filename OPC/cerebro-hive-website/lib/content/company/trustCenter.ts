@@ -1,102 +1,78 @@
 export const trustCenter = {
-  summary: [
-    { label: "Security", status: "Operational", indicator: "good" },
-    { label: "Privacy", status: "Operational", indicator: "good" },
-    { label: "Responsible AI", status: "Continuous", indicator: "active" },
-    { label: "Compliance", status: "Roadmap", indicator: "pending" },
-    { label: "Operations", status: "Operational", indicator: "good" }
-  ],
-  pillars: [
-    { 
-      id: "security", 
-      title: "Security", 
-      status: "Operational", 
-      description: "Zero-trust architecture protecting enterprise IP and client data.",
-      controls: ["Zero Trust", "Encryption", "Monitoring", "Least Privilege"],
-      orbState: "breathing-slow"
-    },
-    { 
-      id: "privacy", 
-      title: "Privacy", 
-      status: "Operational", 
-      description: "Privacy by design with rigorous data isolation protocols.",
-      controls: ["Data Isolation", "Anonymization", "Retention Lifecycle", "Tenant Separation"],
-      orbState: "breathing-slower"
-    },
-    { 
-      id: "operations", 
-      title: "Operations", 
-      status: "Operational", 
-      description: "24/7 proactive monitoring and incident response.",
-      controls: ["24/7 SOC", "Incident Response", "Disaster Recovery", "High Availability"],
-      orbState: "heartbeat"
-    },
-    { 
-      id: "compliance", 
-      title: "Compliance", 
-      status: "Roadmap", 
-      description: "Active alignment with international infosec standards.",
-      controls: ["ISO 27001", "SOC 2", "HIPAA", "FedRAMP"],
-      orbState: "rotating"
-    }
-  ],
-  roadmap: [
-    { 
-      id: "foundation", 
-      standard: "ISO 27001", 
-      stage: "Foundation", 
-      description: "Information Security Management", 
-      impact: "Supports enterprise procurement and standardizes core security controls." 
-    },
-    { 
-      id: "enterprise", 
-      standard: "SOC 2 Type II", 
-      stage: "Enterprise Readiness", 
-      description: "Service Organization Controls", 
-      impact: "Demonstrates operational maturity and continuous compliance for SaaS customers." 
-    },
-    { 
-      id: "healthcare", 
-      standard: "HIPAA", 
-      stage: "Healthcare Expansion", 
-      description: "Health Insurance Portability", 
-      impact: "Enables secure processing of Protected Health Information (PHI)." 
-    },
-    { 
-      id: "government", 
-      standard: "FedRAMP", 
-      stage: "Government Readiness", 
-      description: "Federal Risk and Authorization", 
-      impact: "Unlocks highly regulated public sector and defense deployments." 
-    }
-  ],
-  aiGovernance: {
-    title: "Responsible AI",
-    status: "Continuous",
-    description: "Ethical modeling and safety alignment are first-class citizens in our framework.",
-    areas: [
-      "Model Registry",
-      "Evaluation",
-      "Prompt Security",
-      "Human Review",
-      "Versioning",
-      "Safety Guardrails"
-    ],
-    orbState: "active"
+  executiveScorecard: {
+    trustScore: { value: "98%", trend: "+2%" },
+    lastAudit: "3 Days Ago",
+    compliance: "8/8",
+    status: "Healthy"
   },
-  readinessMetrics: {
-    security: [
-      { label: "Encryption", value: "AES-256 At Rest" },
-      { label: "Identity", value: "SSO & MFA Required" },
-      { label: "Monitoring", value: "24/7 SOC" }
-    ],
-    privacy: [
-      { label: "Data Handling", value: "Tenant Isolation" },
-      { label: "Retention", value: "Automated Lifecycle" }
-    ],
-    ai: [
-      { label: "Training Data", value: "Zero Customer Data" },
-      { label: "Governance", value: "Red Teaming Standard" }
-    ]
-  }
+  capabilities: [
+    {
+      id: "architecture",
+      title: "Enterprise Platform",
+      subtitle: "Central Trust Layer",
+      description: "The core orchestration layer where security, privacy, and compliance intersect.",
+      metrics: "Orchestration Hub",
+      color: "orange",
+      icon: "hexagon",
+      controls: ["Service Mesh", "Policy Engine", "Audit Logs"]
+    },
+    {
+      id: "security",
+      title: "Zero Trust",
+      subtitle: "Always Verify",
+      description: "Implicit trust is removed from all computing infrastructure.",
+      metrics: "34 Controls",
+      color: "emerald",
+      icon: "shield",
+      controls: ["Identity Access", "Network Micro-segmentation", "Encryption in Transit/Rest"]
+    },
+    {
+      id: "privacy",
+      title: "Privacy by Design",
+      subtitle: "Data Minimization",
+      description: "Rigorous data isolation and lifecycle management protocols.",
+      metrics: "12 Policies",
+      color: "blue",
+      icon: "lock",
+      controls: ["Tenant Isolation", "Anonymization Pipeline", "Automated Retention"]
+    },
+    {
+      id: "responsible-ai",
+      title: "Responsible AI",
+      subtitle: "Continuous Evaluation",
+      description: "Ethical modeling, safety alignment, and bias detection.",
+      metrics: "42 Checks",
+      color: "purple",
+      icon: "scale",
+      controls: ["Red Teaming", "Prompt Guardrails", "Toxicity Filtering"]
+    },
+    {
+      id: "compliance",
+      title: "Compliance",
+      subtitle: "Global Standards",
+      description: "Active alignment with international infosec and privacy standards.",
+      metrics: "8 Frameworks",
+      color: "gold",
+      icon: "check-circle",
+      controls: ["SOC 2 Type II", "ISO 27001", "HIPAA", "FedRAMP"]
+    },
+    {
+      id: "monitoring",
+      title: "Continuous Monitoring",
+      subtitle: "Real-time Telemetry",
+      description: "24/7 proactive threat hunting and anomaly detection.",
+      metrics: "0 Incidents",
+      color: "cyan",
+      icon: "activity",
+      controls: ["SIEM Integration", "Alert Triage", "Automated Response"]
+    }
+  ],
+  pipeline: [
+    { id: "design", label: "Design", description: "Architecture Review" },
+    { id: "develop", label: "Develop", description: "Secure Coding" },
+    { id: "validate", label: "Validate", description: "Red Teaming" },
+    { id: "deploy", label: "Deploy", description: "Policy Gates" },
+    { id: "monitor", label: "Monitor", description: "Telemetry" },
+    { id: "govern", label: "Govern", description: "Audits" }
+  ]
 };
