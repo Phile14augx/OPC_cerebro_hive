@@ -43,8 +43,8 @@ export const ProductPageLayout = ({ product }: { product: ProductData }) => {
                {product.tagline}
              </p>
 
-             <div className="flex gap-4">
-                <button className="px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg transition-transform hover:-translate-y-1 shadow-elevated">
+             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">
+                <button className="w-full sm:w-auto px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg transition-transform hover:-translate-y-1 shadow-elevated">
                   {isSoftware ? "Request Demo" : "Explore Framework"}
                 </button>
              </div>

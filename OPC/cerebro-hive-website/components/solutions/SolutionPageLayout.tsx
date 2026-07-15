@@ -40,11 +40,11 @@ export default function SolutionPageLayout({ solution }: { solution: Solution })
                {solution.hero.description}
              </p>
 
-             <div className="flex gap-4">
-                <button className="px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg transition-transform hover:-translate-y-1 shadow-elevated">
+             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">
+                <button className="w-full sm:w-auto px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg transition-transform hover:-translate-y-1 shadow-elevated">
                   {solution.hero.primaryCta}
                 </button>
-                <button className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/50 hover:bg-surface-elevated transition-all duration-300">
+                <button className="w-full sm:w-auto px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/50 hover:bg-surface-elevated transition-all duration-300">
                   {solution.hero.secondaryCta}
                 </button>
              </div>

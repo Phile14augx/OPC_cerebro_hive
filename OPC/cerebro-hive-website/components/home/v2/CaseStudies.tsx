@@ -91,7 +91,7 @@ export default function CaseStudies() {
               <p className="text-lg text-text-secondary">Reduction in manual compliance checks.</p>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 border-t border-border pt-6 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-border pt-6 relative z-10">
               <div>
                 <span className="block text-[10px] uppercase text-text-muted font-bold tracking-wider mb-1">Savings</span>
                 <span className="text-text-primary font-mono text-lg">18.5k hrs</span>
@@ -122,7 +122,7 @@ export default function CaseStudies() {
               </div>
               <h3 className="text-xl font-bold text-text-primary mb-10">Predictive Maintenance</h3>
               
-              <div className="text-6xl font-bold font-mono text-text-primary mb-2 group-hover:text-primary-accent transition-colors">
+              <div className="text-5xl md:text-6xl font-bold font-mono text-text-primary mb-2 group-hover:text-primary-accent transition-colors">
                 <AnimatedCounter to={4} prefix="$" suffix="M" duration={2} delay={0.5} />
               </div>
               <p className="text-sm text-text-secondary">Saved annually via knowledge graph.</p>

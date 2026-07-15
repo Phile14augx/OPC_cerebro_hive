@@ -75,7 +75,7 @@ export default function AIAgentShowcase() {
         />
         
         {/* Industry Context Filters */}
-        <div className="flex justify-center gap-4 mt-8">
+        <div className="flex flex-wrap justify-center gap-4 mt-8">
            {["cross", "finance", "manufacturing", "healthcare"].map(ind => (
              <button 
                key={ind}
@@ -315,7 +315,7 @@ export default function AIAgentShowcase() {
              <span className="text-sm font-bold text-text-primary">Fully Autonomous</span>
            </div>
          </div>
-         <div className="flex-1 flex justify-around gap-4">
+         <div className="flex-1 flex flex-wrap lg:flex-nowrap justify-around gap-4">
            <div className="flex flex-col">
              <span className="text-[9px] uppercase tracking-widest text-text-muted">Active Agents</span>
              <span className="text-lg font-mono font-bold text-text-primary">12<span className="text-xs text-primary-accent">/12</span></span>

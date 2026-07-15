@@ -75,7 +75,7 @@ export const CareersPreview = () => {
             </div>
 
             {/* Employee Impact Metrics */}
-            <div className="grid grid-cols-3 gap-4 mb-12 py-6 border-t border-b border-border/50">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 py-6 border-t border-b border-border/50">
               <div className="flex flex-col">
                 <span className="text-2xl font-space font-bold text-white">145</span>
                 <span className="text-[10px] font-mono uppercase text-text-muted">Engineers</span>

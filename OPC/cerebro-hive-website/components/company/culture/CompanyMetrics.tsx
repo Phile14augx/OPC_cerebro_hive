@@ -22,7 +22,7 @@ export const CompanyMetrics = () => {
     <section className="section-pad-sm bg-background border-t border-border">
       <div className="container-wide">
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 divide-x divide-border/50">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 lg:divide-x divide-border/50">
           {companyMetrics.map((metric, index) => (
             <motion.div
               key={metric.label}

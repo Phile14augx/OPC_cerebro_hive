@@ -155,7 +155,7 @@ export const EngineeringCulture = () => {
               </div>
 
               {/* Floating Telemetry Dashboard */}
-              <div className="absolute bottom-6 right-6 left-6 grid grid-cols-2 gap-4">
+              <div className="absolute bottom-6 right-6 left-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <AnimatePresence mode="popLayout">
                   {activePhase.telemetry.map((metric, i) => (
                     <motion.div

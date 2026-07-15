@@ -110,7 +110,7 @@ export const ROICalculator = () => {
             {/* Assumptions */}
             <div className="p-6 rounded-2xl bg-surface border border-border shadow-sm">
               <h5 className="text-sm font-bold text-text-primary mb-4">Calculation Assumptions</h5>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <span className="text-xs text-text-muted">Manual Doc Processing</span>
                   <span className="text-sm font-mono text-text-primary">{manualDocTimeMinutes} mins</span>
@@ -146,7 +146,7 @@ export const ROICalculator = () => {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-4 mb-12">
+                <div className="flex flex-wrap items-center gap-4 mb-12">
                    <div className="flex flex-col px-4 border-l-2 border-border">
                      <span className="text-[10px] uppercase tracking-widest text-text-muted">Conservative</span>
                      <span className="text-sm font-space font-bold text-text-secondary">${(savings.conservative / 1000).toFixed(0)}k</span>

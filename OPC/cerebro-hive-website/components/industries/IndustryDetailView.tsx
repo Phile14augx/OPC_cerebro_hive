@@ -271,9 +271,9 @@ export function IndustryDetailView() {
           <p className="text-text-secondary max-w-2xl mb-8 relative z-10">
             Schedule an industry workshop to map your AI transformation journey with our enterprise architects.
           </p>
-          <div className="flex gap-4 relative z-10">
-            <Button variant="primary">Book Industry Workshop</Button>
-            <Button variant="outline">Download Blueprint</Button>
+          <div className="flex flex-col sm:flex-row gap-4 relative z-10 w-full sm:w-auto px-4 sm:px-0">
+            <Button variant="primary" className="w-full sm:w-auto">Book Industry Workshop</Button>
+            <Button variant="outline" className="w-full sm:w-auto">Download Blueprint</Button>
           </div>
         </div>
 

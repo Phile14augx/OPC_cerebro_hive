@@ -66,7 +66,9 @@ export const ProductComparisonCard: React.FC<ProductComparisonCardProps> = ({ pl
         </div>
       </div>
 
-      <div className="grid grid-cols-3 bg-background border-b border-border">
+      <div className="overflow-x-auto custom-scrollbar">
+        <div className="min-w-[600px]">
+          <div className="grid grid-cols-3 bg-background border-b border-border">
         <div className="col-span-1 p-4 font-bold text-xs uppercase tracking-widest text-text-muted">Capability</div>
         <div className="col-span-1 p-4 font-bold text-xs uppercase tracking-widest text-text-primary border-l border-border bg-primary-accent/5">
           {platform.name}
@@ -116,6 +118,8 @@ export const ProductComparisonCard: React.FC<ProductComparisonCardProps> = ({ pl
             </div>
           );
         })}
+      </div>
+      </div>
       </div>
     </div>
   );
