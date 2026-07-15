@@ -1,0 +1,405 @@
+# ==============================================================================
+# Dependabot Configuration
+# Repository : OPC_cerebro_hive
+# Owner      : Phile14augx
+#
+# Documentation:
+# https://docs.github.com/en/code-security/dependabot
+#
+# Place this file at:
+# .github/dependabot.yml
+#
+# Supported Ecosystems
+# --------------------
+# ✓ npm / Yarn / pnpm
+# ✓ Maven
+# ✓ Docker
+# ✓ GitHub Actions
+# ✓ Python (pip)
+# ✓ Gradle
+# ✓ Terraform
+# ==============================================================================
+
+version: 2
+
+updates:
+
+# ==============================================================================
+# FRONTEND
+# Next.js • React • TypeScript • Tailwind CSS
+# ==============================================================================
+
+- package-ecosystem: "npm"
+  directory: "/"
+
+  schedule:
+    interval: "weekly"
+    day: "monday"
+    time: "09:00"
+    timezone: "Asia/Kolkata"
+
+  open-pull-requests-limit: 10
+
+  reviewers:
+    - "Phile14augx"
+
+  assignees:
+    - "Phile14augx"
+
+  labels:
+    - "dependencies"
+    - "frontend"
+    - "npm"
+
+  commit-message:
+    prefix: "chore"
+    include: "scope"
+
+  rebase-strategy: "auto"
+
+  versioning-strategy: "increase"
+
+  groups:
+
+    react:
+      patterns:
+        - "react"
+        - "react-dom"
+        - "@types/react*"
+
+    nextjs:
+      patterns:
+        - "next"
+
+    typescript:
+      patterns:
+        - "typescript"
+        - "@types/*"
+
+    tailwind:
+      patterns:
+        - "tailwindcss"
+        - "@tailwindcss/*"
+
+    eslint:
+      patterns:
+        - "eslint*"
+        - "@eslint/*"
+
+    testing:
+      patterns:
+        - "jest*"
+        - "vitest*"
+        - "@testing-library/*"
+
+    ui:
+      patterns:
+        - "framer-motion"
+        - "lucide-react"
+        - "clsx"
+        - "class-variance-authority"
+
+    build-tools:
+      patterns:
+        - "vite"
+        - "@vitejs/*"
+        - "webpack"
+        - "rollup"
+        - "esbuild"
+
+  ignore:
+    - dependency-name: "*"
+      update-types:
+        - "version-update:semver-major"
+
+# ==============================================================================
+# BACKEND
+# Spring Boot / Maven
+# ==============================================================================
+
+- package-ecosystem: "maven"
+  directory: "/backend"
+
+  schedule:
+    interval: "weekly"
+    day: "monday"
+    time: "09:30"
+    timezone: "Asia/Kolkata"
+
+  open-pull-requests-limit: 10
+
+  reviewers:
+    - "Phile14augx"
+
+  assignees:
+    - "Phile14augx"
+
+  labels:
+    - "dependencies"
+    - "backend"
+    - "spring-boot"
+
+  commit-message:
+    prefix: "chore"
+    include: "scope"
+
+  rebase-strategy: "auto"
+
+  groups:
+
+    spring:
+      patterns:
+        - "org.springframework*"
+
+    spring-security:
+      patterns:
+        - "org.springframework.security*"
+
+    spring-cloud:
+      patterns:
+        - "org.springframework.cloud*"
+
+    jackson:
+      patterns:
+        - "com.fasterxml.jackson*"
+
+    testing:
+      patterns:
+        - "org.junit*"
+        - "org.mockito*"
+
+    database:
+      patterns:
+        - "mysql*"
+        - "postgresql*"
+        - "org.flywaydb*"
+        - "org.liquibase*"
+
+  ignore:
+    - dependency-name: "*"
+      update-types:
+        - "version-update:semver-major"
+
+# ==============================================================================
+# DOCKER
+# ==============================================================================
+
+- package-ecosystem: "docker"
+  directory: "/"
+
+  schedule:
+    interval: "weekly"
+    day: "tuesday"
+    time: "09:00"
+    timezone: "Asia/Kolkata"
+
+  reviewers:
+    - "Phile14augx"
+
+  assignees:
+    - "Phile14augx"
+
+  labels:
+    - "dependencies"
+    - "docker"
+
+  commit-message:
+    prefix: "chore"
+
+  rebase-strategy: "auto"
+
+# ==============================================================================
+# GITHUB ACTIONS
+# ==============================================================================
+
+- package-ecosystem: "github-actions"
+  directory: "/"
+
+  schedule:
+    interval: "weekly"
+    day: "wednesday"
+    time: "09:00"
+    timezone: "Asia/Kolkata"
+
+  reviewers:
+    - "Phile14augx"
+
+  assignees:
+    - "Phile14augx"
+
+  labels:
+    - "dependencies"
+    - "github-actions"
+
+  commit-message:
+    prefix: "ci"
+
+  rebase-strategy: "auto"
+
+  groups:
+
+    github-actions:
+      patterns:
+        - "actions/*"
+        - "github/*"
+
+# ==============================================================================
+# PYTHON
+# Remove this section if the repository does not contain Python dependencies.
+# ==============================================================================
+
+- package-ecosystem: "pip"
+  directory: "/python"
+
+  schedule:
+    interval: "monthly"
+    day: "friday"
+    time: "09:00"
+    timezone: "Asia/Kolkata"
+
+  reviewers:
+    - "Phile14augx"
+
+  assignees:
+    - "Phile14augx"
+
+  labels:
+    - "dependencies"
+    - "python"
+
+  commit-message:
+    prefix: "chore"
+
+  rebase-strategy: "auto"
+
+  groups:
+
+    data-science:
+      patterns:
+        - "numpy"
+        - "pandas"
+        - "scipy"
+        - "scikit-learn"
+
+    ai:
+      patterns:
+        - "openai"
+        - "anthropic"
+        - "langchain*"
+        - "langgraph*"
+        - "transformers"
+
+    web:
+      patterns:
+        - "fastapi"
+        - "uvicorn"
+
+  ignore:
+    - dependency-name: "*"
+      update-types:
+        - "version-update:semver-major"
+
+# ==============================================================================
+# GRADLE
+# Remove if not used.
+# ==============================================================================
+
+- package-ecosystem: "gradle"
+  directory: "/gradle"
+
+  schedule:
+    interval: "monthly"
+    day: "thursday"
+    time: "09:00"
+    timezone: "Asia/Kolkata"
+
+  reviewers:
+    - "Phile14augx"
+
+  assignees:
+    - "Phile14augx"
+
+  labels:
+    - "dependencies"
+    - "gradle"
+
+  commit-message:
+    prefix: "build"
+
+# ==============================================================================
+# TERRAFORM
+# Remove if not used.
+# ==============================================================================
+
+- package-ecosystem: "terraform"
+  directory: "/infrastructure"
+
+  schedule:
+    interval: "monthly"
+    day: "thursday"
+    time: "10:00"
+    timezone: "Asia/Kolkata"
+
+  reviewers:
+    - "Phile14augx"
+
+  assignees:
+    - "Phile14augx"
+
+  labels:
+    - "dependencies"
+    - "terraform"
+
+  commit-message:
+    prefix: "infra"
+
+# ==============================================================================
+# FUTURE ECOSYSTEMS
+# Uncomment as your repository grows.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Go Modules
+# ------------------------------------------------------------------------------
+#
+# - package-ecosystem: "gomod"
+#   directory: "/go"
+#   schedule:
+#     interval: "monthly"
+#
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# Rust
+# ------------------------------------------------------------------------------
+#
+# - package-ecosystem: "cargo"
+#   directory: "/rust"
+#   schedule:
+#     interval: "monthly"
+#
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# .NET
+# ------------------------------------------------------------------------------
+#
+# - package-ecosystem: "nuget"
+#   directory: "/dotnet"
+#   schedule:
+#     interval: "monthly"
+#
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# PHP / Composer
+# ------------------------------------------------------------------------------
+#
+# - package-ecosystem: "composer"
+#   directory: "/php"
+#   schedule:
+#     interval: "monthly"
+#
+# ------------------------------------------------------------------------------
+
+# End of file
