@@ -183,7 +183,7 @@ export const VisionMission = () => {
           {/* ==========================================
               B. VISION & MISSION (Asymmetric Presentation)
              ========================================== */}
-          <div className="grid lg:grid-cols-12 gap-6 lg:gap-0 relative mt-12">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-8 relative mt-12">
             
             {/* Visual Connector (Purpose -> Vision) */}
             <div className="hidden lg:block absolute -top-16 left-[20%] w-[1px] h-16 bg-gradient-to-b from-primary-accent/50 to-transparent" />
@@ -236,7 +236,7 @@ export const VisionMission = () => {
             <motion.div 
               id="mission"
               variants={motionPresets.fadeUp} 
-              className="lg:col-span-6 lg:-ml-12 mt-6 lg:mt-24 relative z-20"
+              className="lg:col-span-6 mt-6 lg:mt-24 relative z-20"
             >
               <div className="group relative h-full bg-[#07120d] border border-primary-accent/20 rounded-3xl p-10 md:p-12 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.4)] backdrop-blur-xl flex flex-col justify-between transition-all duration-500 hover:border-primary-accent/40">
                 
