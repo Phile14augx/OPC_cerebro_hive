@@ -18,6 +18,19 @@
   --font-inter: var(--font-inter), sans-serif;
   --font-plex: var(--font-plex), monospace;
   --font-jetbrains: var(--font-jetbrains), monospace;
+
+  /* Fluid Typography overrides for Tailwind v4 */
+  --text-xs: var(--text-xs-fluid);
+  --text-sm: var(--text-sm-fluid);
+  --text-base: var(--text-base-fluid);
+  --text-lg: var(--text-lg-fluid);
+  --text-xl: var(--text-xl-fluid);
+  --text-2xl: var(--text-2xl-fluid);
+  --text-3xl: var(--text-3xl-fluid);
+  --text-4xl: var(--text-4xl-fluid);
+  --text-5xl: var(--text-5xl-fluid);
+  --text-6xl: var(--text-6xl-fluid);
+  --text-7xl: var(--text-7xl-fluid);
 }
 
 /* ============================================================
@@ -43,6 +56,19 @@
   --glass-bg: rgba(255, 255, 255, 0.72);
   --glass-border: rgba(0, 0, 0, 0.06);
   --shadow-elevated: 0 12px 40px rgba(15,23,42,0.08);
+
+  /* Fluid Typography Tokens (Min, Target, Max) */
+  --text-xs-fluid: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm-fluid: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  --text-base-fluid: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg-fluid: clamp(1.125rem, 1.05rem + 0.38vw, 1.25rem);
+  --text-xl-fluid: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --text-2xl-fluid: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --text-3xl-fluid: clamp(1.875rem, 1.5rem + 1.88vw, 2.25rem);
+  --text-4xl-fluid: clamp(2.25rem, 1.75rem + 2.5vw, 3rem);
+  --text-5xl-fluid: clamp(3rem, 2.25rem + 3.75vw, 4rem);
+  --text-6xl-fluid: clamp(3.75rem, 2.5rem + 6.25vw, 6rem);
+  --text-7xl-fluid: clamp(4.5rem, 3.25rem + 6.25vw, 7rem);
 }
 
 .dark {

@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const techRows = [
@@ -72,11 +73,12 @@ export default function TrustBar() {
                     key={`${rowIndex}-${index}`}
                     className="flex items-center gap-3 text-lg font-space font-medium text-text-muted/60 hover:text-text-primary transition-colors cursor-default whitespace-nowrap opacity-70 hover:opacity-100 grayscale hover:grayscale-0"
                   >
-                    <img 
+                    <Image 
                       src={tech.icon} 
                       alt={tech.name} 
+                      width={32}
+                      height={32}
                       className="w-8 h-8 object-contain"
-                      loading="lazy"
                     />
                     <span>{tech.name}</span>
                   </div>
