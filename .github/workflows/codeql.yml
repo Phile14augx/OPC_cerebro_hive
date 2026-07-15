@@ -1,0 +1,277 @@
+# ==============================================================================
+# GitHub CodeQL Advanced Security Workflow
+# Project      : OPC_cerebro_hive
+# Maintainer   : Phile14augx
+#
+# Documentation
+# https://docs.github.com/en/code-security/code-scanning
+#
+# Features
+# ------------------------------------------------------------------------------
+# • Multi-language analysis
+# • JavaScript / TypeScript
+# • GitHub Actions
+# • Java / Kotlin (Spring Boot)
+# • Python (optional)
+# • Weekly scheduled scans
+# • Pull Request analysis
+# • Push analysis
+# • Security Extended Queries
+# • Security & Quality Queries
+# • Automatic Build Detection
+# • Manual Build Support
+# • SARIF Upload
+# • Least Privilege Permissions
+#
+# Save As
+#
+# .github/workflows/codeql.yml
+#
+# ==============================================================================
+
+name: "Enterprise CodeQL Security Scan"
+
+###############################################################################
+# Trigger Events
+###############################################################################
+
+on:
+
+  push:
+    branches:
+      - main
+      - develop
+      - release/**
+      - hotfix/**
+
+  pull_request:
+    branches:
+      - main
+      - develop
+
+  schedule:
+    # Every Sunday at 02:30 UTC
+    - cron: "30 2 * * 0"
+
+  workflow_dispatch:
+
+###############################################################################
+# Permissions
+###############################################################################
+
+permissions:
+
+  actions: read
+
+  contents: read
+
+  security-events: write
+
+  packages: read
+
+###############################################################################
+# Jobs
+###############################################################################
+
+jobs:
+
+###############################################################################
+# Analyze
+###############################################################################
+
+  analyze:
+
+    name: Analyze (${{ matrix.language }})
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 120
+
+    strategy:
+
+      fail-fast: false
+
+      matrix:
+
+        include:
+
+          ######################################################################
+          # GitHub Actions
+          ######################################################################
+
+          - language: actions
+            build-mode: none
+
+          ######################################################################
+          # JavaScript / TypeScript
+          ######################################################################
+
+          - language: javascript-typescript
+            build-mode: none
+
+          ######################################################################
+          # Java / Kotlin
+          ######################################################################
+
+          - language: java-kotlin
+            build-mode: autobuild
+
+          ######################################################################
+          # Python
+          ######################################################################
+
+          - language: python
+            build-mode: none
+
+###############################################################################
+# Steps
+###############################################################################
+
+    steps:
+
+###########################################################################
+# Checkout
+###########################################################################
+
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+###########################################################################
+# Java Setup
+###########################################################################
+
+    - name: Setup Java
+
+      if: matrix.language == 'java-kotlin'
+
+      uses: actions/setup-java@v4
+
+      with:
+
+        distribution: temurin
+
+        java-version: "21"
+
+        cache: maven
+
+###########################################################################
+# Node Setup
+###########################################################################
+
+    - name: Setup Node.js
+
+      if: matrix.language == 'javascript-typescript'
+
+      uses: actions/setup-node@v4
+
+      with:
+
+        node-version: 22
+
+        cache: npm
+
+###########################################################################
+# Python Setup
+###########################################################################
+
+    - name: Setup Python
+
+      if: matrix.language == 'python'
+
+      uses: actions/setup-python@v5
+
+      with:
+
+        python-version: "3.12"
+
+###########################################################################
+# Install Node Dependencies
+###########################################################################
+
+    - name: Install Node Dependencies
+
+      if: matrix.language == 'javascript-typescript'
+
+      run: npm ci
+
+###########################################################################
+# Install Python Dependencies
+###########################################################################
+
+    - name: Install Python Dependencies
+
+      if: matrix.language == 'python'
+
+      run: |
+
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt
+        fi
+
+###########################################################################
+# Initialize CodeQL
+###########################################################################
+
+    - name: Initialize CodeQL
+
+      uses: github/codeql-action/init@v4
+
+      with:
+
+        languages: ${{ matrix.language }}
+
+        build-mode: ${{ matrix.build-mode }}
+
+        queries: |
+
+          security-extended
+
+          security-and-quality
+
+###########################################################################
+# Autobuild
+###########################################################################
+
+    - name: Autobuild
+
+      if: matrix.build-mode == 'autobuild'
+
+      uses: github/codeql-action/autobuild@v4
+
+###########################################################################
+# Manual Build (Optional)
+###########################################################################
+
+    - name: Manual Build
+
+      if: matrix.build-mode == 'manual'
+
+      shell: bash
+
+      run: |
+
+        echo "Replace this section with your build commands."
+
+        echo "Examples"
+
+        echo "./mvnw clean package"
+
+        echo "npm run build"
+
+        exit 1
+
+###########################################################################
+# Perform Analysis
+###########################################################################
+
+    - name: Perform CodeQL Analysis
+
+      uses: github/codeql-action/analyze@v4
+
+      with:
+
+        category: "/language:${{ matrix.language }}"
+
+###############################################################################
+# End of File
+###############################################################################
