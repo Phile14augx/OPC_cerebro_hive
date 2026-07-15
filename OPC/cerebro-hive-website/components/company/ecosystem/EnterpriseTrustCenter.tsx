@@ -48,7 +48,7 @@ const TrustMaturityRoadmap = () => {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto py-12">
+    <div className="relative w-full max-w-5xl mx-auto pt-12 pb-4">
       <h3 className="text-xs font-space font-bold uppercase tracking-widest text-text-muted mb-16 flex items-center gap-2">
         <Activity size={14} className="text-primary-accent" />
         Trust Maturity Roadmap
@@ -322,7 +322,7 @@ export const EnterpriseTrustCenter = () => {
         </div>
 
         {/* Interactive Pipeline */}
-        <div className="p-8 md:p-12 rounded-3xl bg-surface-elevated border border-white/5 mt-16 relative z-40">
+        <div className="p-8 pb-4 md:px-12 md:pt-12 md:pb-4 rounded-3xl bg-surface-elevated border border-white/5 mt-16 relative z-40">
           <TrustMaturityRoadmap />
         </div>
 
@@ -330,7 +330,7 @@ export const EnterpriseTrustCenter = () => {
         <ReadinessMetrics />
 
         {/* Architecture Principles & Documentation / Footer Links */}
-        <div className="mt-32 pt-16 border-t border-white/5 flex flex-col items-center justify-center gap-10">
+        <div className="mt-40 pt-20 border-t border-white/5 flex flex-col items-center justify-center gap-10">
           
           <div className="flex flex-wrap justify-center gap-3 w-full max-w-3xl">
             {["Zero Trust", "Privacy by Design", "Responsible AI", "Least Privilege", "Continuous Monitoring", "Enterprise Architecture"].map(principle => (
