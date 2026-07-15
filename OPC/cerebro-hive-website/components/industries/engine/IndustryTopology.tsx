@@ -31,8 +31,8 @@ export function IndustryTopology({ segments, config }: { segments: string[], con
   }, [segments]);
 
   return (
-    <div className="absolute inset-y-0 right-0 w-full lg:w-1/2 flex items-center justify-center pointer-events-none">
-      <div className="relative w-[500px] h-[500px] flex items-center justify-center pointer-events-auto">
+    <div className="absolute inset-y-0 right-0 w-full lg:w-1/2 flex items-center justify-center pointer-events-none overflow-hidden">
+      <div className="relative w-[500px] h-[500px] scale-[0.6] sm:scale-75 lg:scale-100 flex items-center justify-center pointer-events-auto">
         
         {/* Core Node */}
         <div className="relative flex items-center justify-center w-24 h-24 z-10 group">

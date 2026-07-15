@@ -141,7 +141,7 @@ export const ROICalculator = () => {
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-text-muted block mb-4">Estimated Annual Savings</span>
                 <div className="flex items-baseline gap-4 mb-8">
-                  <span className="text-6xl lg:text-8xl font-space font-bold text-transparent bg-clip-text bg-gradient-to-br from-text-primary to-text-secondary tracking-tight">
+                  <span className="text-5xl md:text-6xl lg:text-8xl font-space font-bold text-transparent bg-clip-text bg-gradient-to-br from-text-primary to-text-secondary tracking-tight">
                     ${(savings.annual / 1000000).toFixed(2)}M
                   </span>
                 </div>

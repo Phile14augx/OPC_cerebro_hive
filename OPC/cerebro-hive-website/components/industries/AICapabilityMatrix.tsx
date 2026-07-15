@@ -76,7 +76,7 @@ export function AICapabilityMatrix() {
       <div className="mt-12 flex flex-col lg:flex-row gap-8">
         
         {/* Left/Center: The Matrix */}
-        <div className="flex-1 overflow-x-auto hide-scrollbar">
+        <div className="flex-1 min-w-0 overflow-x-auto hide-scrollbar">
           <div className="min-w-[600px]">
             {/* Header Row */}
             <div className="grid grid-cols-6 gap-2 mb-4">
