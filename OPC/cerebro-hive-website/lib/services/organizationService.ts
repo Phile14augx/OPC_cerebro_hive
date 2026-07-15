@@ -1,4 +1,4 @@
-﻿export type DepartmentTheme = 'executive' | 'engineering' | 'research' | 'consulting' | 'business';
+export type DepartmentTheme = 'executive' | 'engineering' | 'research' | 'consulting' | 'business';
 
 export interface OrgMetrics {
   employees: number;
@@ -8,7 +8,7 @@ export interface OrgMetrics {
   [key: string]: number | undefined;
 }
 
-export interface OrganizationNodeData {
+export interface OrganizationNodeData extends Record<string, unknown> {
   id: string;
   type: 'executive' | 'department' | 'team';
   theme: DepartmentTheme;

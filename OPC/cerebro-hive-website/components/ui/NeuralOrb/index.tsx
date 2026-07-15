@@ -198,7 +198,6 @@ export const NeuralOrb = ({
       {/* ── Layer 6: Core ──────────────────────────────────────────── */}
       <motion.div
         className="relative z-10 rounded-full flex items-center justify-center overflow-hidden"
-        style={{ width: S.core, height: S.core }}
         animate={{
           borderColor: borderColors,
           boxShadow: isActive
@@ -219,6 +218,8 @@ export const NeuralOrb = ({
         }}
         transition={borderTransition}
         style={{
+          width: S.core,
+          height: S.core,
           border: "1px solid transparent",
           willChange: "transform, box-shadow",
         }}

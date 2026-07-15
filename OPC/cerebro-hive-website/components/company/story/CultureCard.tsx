@@ -4,6 +4,8 @@ import React, { useRef } from "react";
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+type IconComponent = React.ComponentType<{ size?: number; color?: string; className?: string }>;
+
 interface Metric {
   label: string;
   value: string;
@@ -18,7 +20,7 @@ interface CultureCardProps {
     title: string;
     statement: string;
     description: string;
-    icon: any;
+    icon: IconComponent;
     color: string;
     pattern: string;
     metrics: Metric[];

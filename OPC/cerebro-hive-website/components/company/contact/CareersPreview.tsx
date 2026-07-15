@@ -8,7 +8,8 @@ import { NeuralOrb } from "@/components/ui/NeuralOrb";
 import { cn } from "@/lib/utils";
 
 // Icon Mapper
-const IconMap: Record<string, React.ElementType<any>> = {
+type IconComponent = React.ComponentType<{ size?: number; className?: string }>;
+const IconMap: Record<string, IconComponent> = {
   Network,
   Atom,
   Cpu,
@@ -100,7 +101,7 @@ export const CareersPreview = () => {
           <div className="lg:w-[65%] w-full relative">
             <div className="columns-1 md:columns-2 gap-4 space-y-4">
               {careerDomains.map((domain, index) => {
-                const Icon = (IconMap[domain.iconName] || Briefcase) as React.ElementType<any>;
+                const Icon = (IconMap[domain.iconName] || Briefcase) as IconComponent;
                 const theme = themeConfig[domain.theme as keyof typeof themeConfig];
                 const isSelected = activeDomain?.id === domain.id;
 

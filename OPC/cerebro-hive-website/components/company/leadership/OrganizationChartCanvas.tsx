@@ -40,8 +40,8 @@ const Flow = () => {
   const { fitView, setCenter } = useReactFlow();
   const { getLayoutedElements } = useElkLayout();
   
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   
   const { expandedNodes, setExpandedNodes, setSelectedNode } = useOrganizationWorkspace();
 

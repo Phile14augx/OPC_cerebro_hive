@@ -1,11 +1,11 @@
-﻿import React from 'react';
-import { Handle, Position, NodeProps } from '@xyflow/react';
+import React from 'react';
+import { Handle, Position, NodeProps, Node } from '@xyflow/react';
 import Image from 'next/image';
 import { withBasePath, cn } from '@/lib/utils';
 import { OrganizationNodeData } from '@/lib/services/organizationService';
 import { Hexagon } from 'lucide-react';
 
-export const CEOExecutiveNode = ({ data, selected }: NodeProps<OrganizationNodeData>) => {
+export const CEOExecutiveNode = ({ data, selected }: NodeProps<Node<OrganizationNodeData>>) => {
   return (
     <div className={cn(
       "relative w-[320px] rounded-2xl overflow-hidden transition-all duration-300",

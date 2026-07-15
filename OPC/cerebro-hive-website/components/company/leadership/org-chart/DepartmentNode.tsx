@@ -1,5 +1,5 @@
-﻿import React from 'react';
-import { Handle, Position, NodeProps } from '@xyflow/react';
+import React from 'react';
+import { Handle, Position, NodeProps, Node } from '@xyflow/react';
 import { OrganizationNodeData } from '@/lib/services/organizationService';
 import { cn } from '@/lib/utils';
 import { Code, Lightbulb, TrendingUp, Briefcase } from 'lucide-react';
@@ -11,7 +11,7 @@ const themeConfig: Record<string, { color: string, icon: React.ReactNode, border
   business: { color: '#F97316', icon: <TrendingUp size={16} />, borderClass: 'border-orange-500/50', shadowClass: 'shadow-[inset_0_0_20px_rgba(249,115,22,0.1)] hover:shadow-[0_0_30px_rgba(249,115,22,0.15)]', textClass: 'text-orange-500' }
 };
 
-export const DepartmentNode = ({ data, selected }: NodeProps<OrganizationNodeData>) => {
+export const DepartmentNode = ({ data, selected }: NodeProps<Node<OrganizationNodeData>>) => {
   const config = themeConfig[data.theme as string] || themeConfig.engineering;
 
   return (

@@ -431,7 +431,7 @@ export const CompanySidebar = () => {
                     </AnimatePresence>
 
                     <button
-                      onClick={() => scrollToChapter(chapter.id)}
+                      onClick={() => scrollToId(chapter.id)}
                       className={cn(
                         "relative z-10 w-full text-left py-2.5 px-3 rounded-lg flex items-center transition-all duration-200 overflow-hidden",
                         isCurrent ? "translate-x-1" : "hover:bg-white/[0.02]"

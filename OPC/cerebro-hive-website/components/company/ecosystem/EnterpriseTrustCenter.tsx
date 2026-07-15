@@ -247,7 +247,7 @@ export const EnterpriseTrustCenter = () => {
                 >
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-4">
-                      <motion.div {...motionProps} className="w-8 h-8 flex items-center justify-center">
+                      <motion.div {...(motionProps as any)} className="w-8 h-8 flex items-center justify-center">
                         <NeuralOrb size="sm" color={pillar.status === "Roadmap" ? "amber" : "green"} state={pillar.status === "Roadmap" ? "idle" : "completed"} pulse={false} />
                       </motion.div>
                       <h4 className="text-xl font-space font-bold text-white group-hover:text-primary-accent transition-colors">{pillar.title}</h4>

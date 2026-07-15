@@ -27,9 +27,9 @@ export const coreValues = [
     color: "#00E5FF", // Cyan
     pattern: "bar-chart",
     metrics: [
-      { label: "Revenue", value: "+28%", sub: "Avg Lift", type: "up" },
-      { label: "Costs", value: "-18%", sub: "Avg Drop", type: "down" },
-      { label: "Risk", value: "Low", sub: "Exposure", type: "down" }
+      { label: "Revenue", value: "+28%", sub: "Avg Lift", type: "up" as const },
+      { label: "Costs", value: "-18%", sub: "Avg Drop", type: "down" as const },
+      { label: "Risk", value: "Low", sub: "Exposure", type: "down" as const }
     ],
     bottomTag: "Business First"
   },

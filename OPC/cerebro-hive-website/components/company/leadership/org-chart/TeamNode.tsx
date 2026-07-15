@@ -1,5 +1,5 @@
-﻿import React from 'react';
-import { Handle, Position, NodeProps } from '@xyflow/react';
+import React from 'react';
+import { Handle, Position, NodeProps, Node } from '@xyflow/react';
 import { OrganizationNodeData } from '@/lib/services/organizationService';
 import { cn } from '@/lib/utils';
 
@@ -10,7 +10,7 @@ const themeConfig: Record<string, { colorClass: string }> = {
   business: { colorClass: 'border-orange-500' }
 };
 
-export const TeamNode = ({ data, selected }: NodeProps<OrganizationNodeData>) => {
+export const TeamNode = ({ data, selected }: NodeProps<Node<OrganizationNodeData>>) => {
   const config = themeConfig[data.theme as string] || themeConfig.engineering;
 
   return (
