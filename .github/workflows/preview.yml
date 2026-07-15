@@ -1,0 +1,20 @@
+name: Preview Deployments
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Placeholder for Preview Deployment
+        run: echo "This workflow will deploy PR previews to Vercel/Cloudflare Pages once an integration is added."

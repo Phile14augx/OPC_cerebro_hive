@@ -1,0 +1,27 @@
+name: Comprehensive Security Checks
+
+on:
+  push:
+    branches: ["main"]
+  schedule:
+    - cron: '0 2 * * 0' # Weekly
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  npm-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          
+      - name: Run NPM Audit
+        working-directory: ./OPC/cerebro-hive-website
+        run: npm audit --audit-level=high

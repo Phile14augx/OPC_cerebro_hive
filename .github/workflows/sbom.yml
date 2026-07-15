@@ -1,0 +1,33 @@
+name: Generate SBOM
+
+on:
+  push:
+    branches: ["main"]
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate CycloneDX SBOM
+        run: |
+          cd OPC/cerebro-hive-website
+          npx @cyclonedx/cyclonedx-npm --output-format JSON --output-file ../../sbom.json
+          
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json

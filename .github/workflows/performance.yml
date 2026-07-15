@@ -1,0 +1,23 @@
+name: Web Performance Checks
+
+on:
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          
+      - name: Placeholder for Lighthouse CI
+        run: echo "This workflow will run Lighthouse CI on preview URLs once environments are configured."

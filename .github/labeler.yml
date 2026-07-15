@@ -1,0 +1,19 @@
+frontend:
+  - changed-files:
+    - any-glob-to-any-file: 'OPC/cerebro-hive-website/components/**/*'
+    - any-glob-to-any-file: 'OPC/cerebro-hive-website/app/**/*'
+
+backend:
+  - changed-files:
+    - any-glob-to-any-file: 'OPC/cerebro-hive-website/api/**/*'
+    - any-glob-to-any-file: 'OPC/cerebro-hive-website/lib/db.ts'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: 'docs/**/*'
+    - any-glob-to-any-file: '**/*.md'
+
+github-actions:
+  - changed-files:
+    - any-glob-to-any-file: '.github/workflows/**/*'
+    - any-glob-to-any-file: '.github/labeler.yml'
