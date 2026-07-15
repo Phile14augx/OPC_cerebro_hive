@@ -25,20 +25,20 @@ const sections: Section[] = [
   {
     id: "welcome", title: "Welcome to CerebroHive", eyebrow: "Company handbook", icon: BookOpen,
     description: "The operating system for how we build, learn, and scale enterprise AI transformation.",
-    readingTime: "4 min", owner: "Chief Strategy Officer", tags: ["Company", "Onboarding"],
+    readingTime: "4 min", owner: "Philemon V. Nath, CEO", tags: ["Company", "Onboarding"],
     blocks: [
-      { heading: "Our purpose", body: "CerebroHive is an AI-native enterprise engineering and transformation partner. We combine executive advisory, full-stack AI engineering, proprietary delivery frameworks, and managed operations to turn AI initiatives into measurable production outcomes." },
+      { heading: "Our purpose", body: "CerebroHive is a Bengaluru-based, AI-native enterprise engineering and transformation partner. We combine executive advisory, full-stack AI engineering, proprietary delivery frameworks, and managed operations to turn AI initiatives into measurable production outcomes for Indian enterprises." },
       { heading: "How to use this handbook", body: "Start in Story mode if you are new to CerebroHive. Use Explorer mode to find a policy or operating standard. This handbook links the detailed source documentation and is reviewed quarterly." },
     ],
   },
   {
     id: "company", title: "Company & Strategy", eyebrow: "01 — Company", icon: Building2,
     description: "Why we exist, where we are going, and the standards that make us different.",
-    readingTime: "6 min", owner: "Chief Strategy Officer", tags: ["Mission", "Strategy"],
+    readingTime: "6 min", owner: "Philemon V. Nath, CEO", tags: ["Mission", "Strategy"],
     blocks: [
       { heading: "Mission", body: "Accelerate enterprise AI transformation by combining strategic advisory, full-stack engineering, and proprietary frameworks that deliver measurable, durable business outcomes." },
       { heading: "Vision", body: "To be the world’s most trusted AI-native enterprise transformation partner—the firm enterprises call when AI transformation is too important to get wrong." },
-      { heading: "Our difference", body: "We connect strategy, data, engineering, governance, adoption, and operations. We measure success in revenue gained, cost removed, or risk reduced—not the number of models or features shipped." },
+      { heading: "Our difference", body: "From Bengaluru, we connect strategy, data, engineering, governance, adoption, and operations for India’s mid-market and enterprise organizations. We measure success in revenue gained, cost removed, or risk reduced—not the number of models or features shipped." },
     ],
   },
   {

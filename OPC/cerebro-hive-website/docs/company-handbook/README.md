@@ -1,9 +1,9 @@
 # CerebroHive Company Handbook
 
 > **Classification:** Internal — Confidential  
-> **Version:** 1.0  
+> **Version:** 1.1  
 > **Last updated:** July 2026  
-> **Owner:** Founder / Chief Strategy Officer  
+> **Owner:** Philemon V. Nath, Chief Executive Officer  
 > **Status:** Living handbook — this page is the operating guide; linked source documents are the detailed references.
 
 ## Purpose and scope
@@ -12,7 +12,7 @@ This handbook is the shared reference for how CerebroHive operates, builds, lear
 
 ## 1. Who we are
 
-CerebroHive is an AI-native enterprise engineering and transformation partner, founded in 2026. We combine executive advisory, full-stack AI engineering, proprietary delivery frameworks, and managed AI operations to help enterprises move from AI initiatives to measurable production outcomes.
+CerebroHive is an AI-native enterprise engineering and transformation partner headquartered in Bengaluru, India, led by Chief Executive Officer Philemon V. Nath. We combine executive advisory, full-stack AI engineering, proprietary delivery frameworks, and managed AI operations to help Indian enterprises move from AI initiatives to measurable production outcomes.
 
 We are neither a strategy-only firm nor a technology vendor that treats delivery as the end point. Our work connects strategy, data, engineering, governance, adoption, and operations. We focus on revenue gained, cost removed, or risk reduced—not the number of models, dashboards, or features shipped.
 
@@ -20,7 +20,7 @@ We are neither a strategy-only firm nor a technology vendor that treats delivery
 
 **Vision:** Be the world’s most trusted AI-native enterprise transformation partner—the firm enterprises call when AI transformation is too important to get wrong.
 
-Our primary market is mid-market and enterprise organizations, with North America as the initial focus and planned growth into the UK, Australia, and the Middle East. See [Company Overview](../01-company-foundation/01-overview.md), [Mission](../01-company-foundation/02-mission-statement.md), and [Vision](../01-company-foundation/03-vision-statement.md).
+Our immediate focus is mid-market and enterprise organizations in India, with Bengaluru as our operating base. See [Company Overview](../01-company-foundation/01-overview.md), [Mission](../01-company-foundation/02-mission-statement.md), and [Vision](../01-company-foundation/03-vision-statement.md).
 
 ## 2. Our values and culture
 
@@ -123,4 +123,4 @@ This handbook is reviewed quarterly by the owner and practice leads, and after a
 
 | Revision | Date | Change | Owner |
 | --- | --- | --- | --- |
-| 1.0 | July 2026 | Initial handbook assembled from existing documentation | Founder / Chief Strategy Officer |
+| 1.1 | July 2026 | Corrected company profile: Bengaluru, India; Philemon V. Nath, CEO | Chief Executive Officer |

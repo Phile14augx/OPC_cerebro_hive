@@ -105,25 +105,25 @@ const CapabilityNetwork = () => {
   
   const getCoordinates = (i: number) => {
     switch (i) {
-      case 0: return "M 20% 20% L 50% 50%"; // Top Left
-      case 1: return "M 80% 20% L 50% 50%"; // Top Right
-      case 2: return "M 20% 80% L 50% 50%"; // Bottom Left
-      case 3: return "M 80% 80% L 50% 50%"; // Bottom Right
-      case 4: return "M 50% 88% L 50% 50%"; // Bottom Center
+      case 0: return "M 15% 20% L 50% 50%"; // Top Left
+      case 1: return "M 50% 15% L 50% 50%"; // Top Center
+      case 2: return "M 85% 20% L 50% 50%"; // Top Right
+      case 3: return "M 30% 85% L 50% 50%"; // Bottom Left
+      case 4: return "M 70% 85% L 50% 50%"; // Bottom Right
       default: return "";
     }
   };
 
   const positions = [
-    "lg:top-[20%] lg:left-[20%] lg:-translate-x-1/2 lg:-translate-y-1/2",
-    "lg:top-[20%] lg:left-[80%] lg:-translate-x-1/2 lg:-translate-y-1/2",
-    "lg:top-[80%] lg:left-[20%] lg:-translate-x-1/2 lg:-translate-y-1/2",
-    "lg:top-[80%] lg:left-[80%] lg:-translate-x-1/2 lg:-translate-y-1/2",
-    "lg:top-[90%] lg:left-[50%] lg:-translate-x-1/2 lg:-translate-y-1/2",
+    "lg:top-[20%] lg:left-[15%] lg:-translate-x-1/2 lg:-translate-y-1/2",
+    "lg:top-[15%] lg:left-[50%] lg:-translate-x-1/2 lg:-translate-y-1/2",
+    "lg:top-[20%] lg:left-[85%] lg:-translate-x-1/2 lg:-translate-y-1/2",
+    "lg:top-[85%] lg:left-[30%] lg:-translate-x-1/2 lg:-translate-y-1/2",
+    "lg:top-[85%] lg:left-[70%] lg:-translate-x-1/2 lg:-translate-y-1/2",
   ];
 
   return (
-    <div className="relative w-full max-w-[1200px] mx-auto py-12 lg:py-40">
+    <div className="relative w-full max-w-[1200px] mx-auto py-12 lg:py-0 lg:h-[900px] lg:mt-24">
       
       {/* Desktop Hub and Spoke SVG Lines (The Trust Core Animation) */}
       <div className="hidden lg:block absolute inset-0 pointer-events-none z-0">
@@ -156,7 +156,7 @@ const CapabilityNetwork = () => {
         </svg>
       </div>
 
-      <div className="relative z-10 flex flex-col lg:static items-center justify-center gap-6 lg:gap-0">
+      <div className="relative z-10 flex flex-col lg:static items-center justify-center gap-6 lg:gap-0 w-full h-full">
         
         {/* Architecture Center (Hub) */}
         {architecture && (
@@ -187,7 +187,7 @@ const CapabilityNetwork = () => {
             <motion.div 
               key={spoke.id}
               className={cn(
-                "w-full lg:w-72 p-6 rounded-2xl bg-surface-elevated/60 border border-white/5 backdrop-blur-md transition-all group hover:bg-surface-elevated hover:scale-105 hover:-translate-y-1 cursor-default z-10 lg:absolute",
+                "w-full lg:w-72 p-6 rounded-2xl bg-surface-elevated/60 border border-white/5 backdrop-blur-md transition-all group hover:bg-surface-elevated hover:scale-105 cursor-default z-10 lg:absolute",
                 positions[i],
                 getGlowClass(spoke.color)
               )}
