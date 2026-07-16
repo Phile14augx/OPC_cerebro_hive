@@ -55,7 +55,7 @@ export const ROICalculator = () => {
         <SectionHeading 
           label="Value" 
           title="Business Value Estimator" 
-          description="Calculate your projected ROI based on operational assumptions." 
+          description="Calculate your projected ROI based on operational assumptions. Note: These estimates are illustrative and rely on standardized industry benchmarks."  
         />
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-16">

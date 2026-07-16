@@ -259,7 +259,7 @@ export default function Footer() {
                   <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-6">{category}</h4>
                   <ul className="flex flex-col gap-3">
                     {links.map((link) => (
-                      <li key={link.href}>
+                      <li key={link.label}>
                         <Link href={link.href} className="text-xs text-text-muted hover:text-text-primary transition-colors">{link.label}</Link>
                       </li>
                     ))}
@@ -284,7 +284,7 @@ export default function Footer() {
                       <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
                         <ul className="flex flex-col gap-3 pb-4 pt-1">
                           {links.map((link) => (
-                            <li key={link.href}><Link href={link.href} className="text-xs text-text-muted hover:text-text-primary">{link.label}</Link></li>
+                            <li key={link.label}><Link href={link.href} className="text-xs text-text-muted hover:text-text-primary">{link.label}</Link></li>
                           ))}
                         </ul>
                       </motion.div>
