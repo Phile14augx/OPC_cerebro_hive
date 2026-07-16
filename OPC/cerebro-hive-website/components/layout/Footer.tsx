@@ -24,38 +24,38 @@ const YoutubeIcon = ({ size = 20, className = "" }: any) => (
 );
 
 const footerLinks: Record<string, { label: string; href: string }[]> = {
-  "ABOUT": [
-    { label: "Leadership Team", href: "/company#leadership" },
-    { label: "Board of Directors", href: "/company#leadership" },
-    { label: "Partners", href: "/company#ecosystem" },
+  "PLATFORM": [
+    { label: "AgentOS", href: "/products/agent-os" },
+    { label: "Quantiva ERP", href: "/products/quantiva" },
+    { label: "Knowledge Hub", href: "/products/knowledge-hub" },
+    { label: "Architecture Docs", href: "/architecture" },
+    { label: "API Reference", href: "/api" },
+    { label: "Enterprise Status", href: "/status" },
   ],
   "SERVICES": [
     { label: "AI Consulting", href: "/services/ai-consulting" },
-    { label: "AI Automation & Agents", href: "/services/ai-automation" },
+    { label: "AI Automation", href: "/services/ai-automation" },
     { label: "Data Engineering", href: "/services/data-engineering" },
-    { label: "AI Development", href: "/services/ai-development" },
     { label: "Corporate Training", href: "/services/corporate-training" },
-    { label: "Advisory & Consulting", href: "/services/ai-consulting" },
   ],
   "INDUSTRIES": [
     { label: "Technology", href: "/industries/technology" },
     { label: "Financial Services", href: "/industries/financial-services" },
-    { label: "Healthcare & Life Sciences", href: "/industries/healthcare" },
-    { label: "Retail & Consumer Goods", href: "/industries/retail" },
+    { label: "Healthcare", href: "/industries/healthcare" },
     { label: "Manufacturing", href: "/industries/manufacturing" },
-    { label: "Government & Public Sector", href: "/industries/government" },
   ],
-  "RESEARCH": [
-    { label: "Research Papers", href: "/research" },
-    { label: "Architecture Guides", href: "/resources" },
-    { label: "Insights & Analysis", href: "/insights" },
-    { label: "Case Studies", href: "/case-studies" },
+  "RESOURCES": [
+    { label: "Research Institute", href: "/research" },
+    { label: "Executive Insights", href: "/insights" },
+    { label: "Developer Portal", href: "/developers" },
+    { label: "Roadmap", href: "/roadmap" },
+    { label: "Release Notes", href: "/releases" },
+    { label: "Changelog", href: "/changelog" },
   ],
   "COMPANY": [
+    { label: "About Us", href: "/company" },
     { label: "Careers", href: "/careers" },
     { label: "Contact", href: "/contact" },
-    { label: "News & Insights", href: "/insights" },
-    { label: "Community", href: "/community" },
   ],
 };
 
@@ -253,8 +253,8 @@ export default function Footer() {
           <div className="lg:col-span-5 flex flex-col gap-8">
             
             {/* Nav Links (Desktop Grid / Mobile Accordion) */}
-            <div className="hidden md:grid grid-cols-3 gap-8">
-              {Object.entries(footerLinks).slice(0, 3).map(([category, links]) => (
+            <div className="hidden md:grid grid-cols-4 gap-8">
+              {Object.entries(footerLinks).slice(0, 4).map(([category, links]) => (
                 <div key={category}>
                   <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-6">{category}</h4>
                   <ul className="flex flex-col gap-3">
