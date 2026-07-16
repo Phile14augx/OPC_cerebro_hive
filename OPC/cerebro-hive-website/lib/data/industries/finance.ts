@@ -5,6 +5,11 @@ export const finance: Industry = {
   slug: "finance",
   color: "#0B5FFF", // Deep Blue
   
+  tier: "Core Enterprise",
+  category: "Finance",
+  subcategory: "Banking & Capital Markets",
+  featured: true,
+  
   engineConfig: {
     heroTheme: "finance",
     backgroundAnimation: "transaction-network",
@@ -34,6 +39,19 @@ export const finance: Industry = {
       { metric: "Enterprise Grade", label: "Security" }
     ]
   },
+  
+  maturity: {
+    aiAdoption: 8,
+    automation: 9,
+    knowledge: 7
+  },
+  
+  aiOpportunities: [
+    { domain: "Fraud & Risk", score: 10 },
+    { domain: "Compliance", score: 9 },
+    { domain: "Wealth Management", score: 7 },
+    { domain: "Customer Experience", score: 8 }
+  ],
 
   segments: [
     "Retail Banking",
@@ -194,15 +212,17 @@ export const finance: Industry = {
   ],
   
   compliance: [
-    { badge: "PCI DSS", description: "Payment Card Industry Data Security Standard" },
-    { badge: "ISO 27001", description: "Information Security Management" },
-    { badge: "SOC 2", description: "System and Organization Controls" },
-    { badge: "Basel III", description: "Global Regulatory Framework for Banks" },
+    { badge: "PCI DSS", description: "Payment Card Industry Data Security Standard", whyItMatters: "Secures credit card transactions.", affectedWorkflows: ["Payments"] },
+    { badge: "ISO 27001", description: "Information Security Management", whyItMatters: "Ensures information security.", affectedWorkflows: ["IT Infrastructure"] },
+    { badge: "SOC 2", description: "System and Organization Controls", whyItMatters: "Validates cloud security practices.", affectedWorkflows: ["Cloud"] },
+    { badge: "Basel III", description: "Global Regulatory Framework for Banks", whyItMatters: "Governs capital adequacy.", affectedWorkflows: ["Treasury", "Risk"] },
     { badge: "GDPR", description: "General Data Protection Regulation" },
-    { badge: "SOX", description: "Sarbanes-Oxley Act" },
-    { badge: "KYC", description: "Know Your Customer" },
-    { badge: "AML", description: "Anti-Money Laundering" }
+    { badge: "SOX", description: "Sarbanes-Oxley Act", whyItMatters: "Governs financial reporting.", affectedWorkflows: ["Accounting"] },
+    { badge: "KYC", description: "Know Your Customer", whyItMatters: "Mandates identity verification.", affectedWorkflows: ["Onboarding"] },
+    { badge: "AML", description: "Anti-Money Laundering", whyItMatters: "Prevents illegal money transfers.", affectedWorkflows: ["Transactions"] }
   ],
+  
+  relatedIndustries: ["healthcare", "government", "retail"],
   
   relatedProducts: [
     "DecisionDNA™",

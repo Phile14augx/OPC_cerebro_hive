@@ -3,90 +3,46 @@
 import React, { Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IndustryExplorerProvider, useIndustryExplorer } from '@/components/industries/IndustryExplorerContext';
-import { InteractiveIndustryGlobe } from '@/components/industries/InteractiveIndustryGlobe';
-
-import { AICapabilityMatrix } from '@/components/industries/AICapabilityMatrix';
-import { getIndustryBySlug } from '@/lib/data/industries';
+import { InteractiveIndustryExplorer } from '@/components/industries/InteractiveIndustryExplorer';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { AnimatedButton as Button } from '@/components/ui/AnimatedButton';
 import { Grid, Layers, BrainCircuit, Box, Search, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
 function IndustriesPageContent() {
-  const { activeIndustry } = useIndustryExplorer();
-  const industry = activeIndustry ? getIndustryBySlug(activeIndustry) : null;
-  const themeColor = industry?.color || 'var(--accent-primary)';
-
   return (
-    <div className="bg-background min-h-screen transition-colors duration-1000 relative">
+    <div className="bg-background min-h-screen relative overflow-hidden">
       
-      {/* Dynamic Background Blur that shifts based on active industry */}
-      <div 
-        className="fixed inset-0 pointer-events-none opacity-[0.03] transition-colors duration-1000 z-0" 
-        style={{ backgroundColor: themeColor }}
-      />
-
-      {/* 1. Hero & Interactive Globe (Split Layout) */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-16 overflow-hidden">
-        <div className="container-wide relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {/* 1. Hero & Interactive Explorer */}
+      <section className="relative min-h-screen flex flex-col items-center justify-start pt-32 pb-16">
+        <div className="container-wide relative z-10 w-full flex flex-col items-center text-center">
           
-          {/* Left: Text & CTA */}
-          <div className="flex flex-col items-start">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">
-               <span className="w-2 h-2 rounded-full bg-primary-accent animate-pulse" />
-               <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Enterprise Transformation</span>
-            </div>
-            
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary leading-[1.1] tracking-tight mb-6">
-              Industry <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-[#00E5FF]">Intelligence</span>
-            </h1>
-            
-            <p className="text-lg text-text-secondary font-inter max-w-lg leading-relaxed mb-8">
-              Explore how CerebroHive transforms entire industries through AI. 
-              Select an industry from the globe to see custom reference architectures, AI agents, and business outcomes.
-            </p>
-            
-            <div className="flex gap-4 mb-12">
-              <Button variant="primary">Talk to an Architect</Button>
-            </div>
-            
-            <div className="flex flex-col gap-3">
-              <span className="text-xs font-bold uppercase tracking-widest text-text-muted">Flagship Industry Architectures</span>
-              <div className="flex flex-wrap gap-3">
-                <Link href="/industries/retail" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#E81CFF] transition-colors text-sm font-bold text-text-primary">Intelligent Retail</Link>
-                <Link href="/industries/finance" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#00B8FF] transition-colors text-sm font-bold text-text-primary">Financial Services</Link>
-                <Link href="/industries/manufacturing" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#00E5FF] transition-colors text-sm font-bold text-text-primary">Smart Manufacturing</Link>
-                <Link href="/industries/healthcare" className="px-4 py-2 rounded-lg bg-surface border border-border hover:border-[#00E676] transition-colors text-sm font-bold text-text-primary">Healthcare</Link>
-              </div>
-            </div>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">
+             <span className="w-2 h-2 rounded-full bg-primary-accent animate-pulse" />
+             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Platform Taxonomy</span>
           </div>
+          
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary leading-[1.1] tracking-tight mb-6 max-w-4xl">
+            Enterprise Knowledge <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-[#00E5FF]">Graph</span>
+          </h1>
+          
+          <p className="text-lg text-text-secondary font-inter max-w-2xl leading-relaxed mb-12">
+            Explore 100+ interconnected industry architectures, compliance frameworks, and AI agents. Select a domain below to see its reference ecosystem.
+          </p>
 
-          {/* Right: Interactive Globe */}
-          <div className="relative w-full h-[500px] lg:h-[700px] flex items-center justify-center">
-            {/* The globe overlaps slightly with the hero space visually */}
-            <div className="absolute inset-[-20%]">
-              <InteractiveIndustryGlobe />
-            </div>
-          </div>
-
+          <InteractiveIndustryExplorer />
+          
         </div>
       </section>
 
-      {/* 2. Capability Matrix */}
-      <section className="section-pad border-t border-border bg-surface-elevated relative z-10">
-        <div className="container-wide">
-          <AICapabilityMatrix />
-        </div>
-      </section>
-
-      {/* 4. Global Scale Metrics (Replaced) */}
+      {/* 2. Global Scale Metrics */}
       <section className="section-pad border-t border-border bg-surface-elevated relative z-10">
         <div className="container-wide">
           <SectionHeading label="Scale" title="Platform Capabilities" description="Enterprise infrastructure deployed globally." />
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-16">
             {[
-              { metric: "12", label: "Industry Verticals", icon: Grid },
+              { metric: "100+", label: "Industry Verticals", icon: Grid },
               { metric: "350+", label: "Enterprise Use Cases", icon: Search },
               { metric: "45+", label: "Reference Architectures", icon: Layers },
               { metric: "25+", label: "Solution Blueprints", icon: Box },

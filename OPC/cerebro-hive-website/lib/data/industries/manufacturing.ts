@@ -5,6 +5,11 @@ export const manufacturing: Industry = {
   slug: "manufacturing",
   color: "#00E5FF", // Electric Cyan
   
+  tier: "Core Enterprise",
+  category: "Manufacturing",
+  subcategory: "Industrial Production",
+  featured: true,
+  
   engineConfig: {
     heroTheme: "manufacturing",
     backgroundAnimation: "smart-factory",
@@ -34,6 +39,19 @@ export const manufacturing: Industry = {
       { metric: "Enterprise Scale", label: "OT + IT Integration" }
     ]
   },
+
+  maturity: {
+    aiAdoption: 6,
+    automation: 9,
+    knowledge: 5
+  },
+  
+  aiOpportunities: [
+    { domain: "Predictive Maintenance", score: 9 },
+    { domain: "Supply Chain", score: 8 },
+    { domain: "Quality Control", score: 10 },
+    { domain: "Production Planning", score: 7 }
+  ],
 
   segments: [
     "Production",
@@ -193,15 +211,15 @@ export const manufacturing: Industry = {
   ],
   
   compliance: [
-    { badge: "ISA-95", description: "Enterprise-Control System Integration" },
-    { badge: "IEC 62443", description: "Industrial Communication Networks Security" },
-    { badge: "ISO 9001", description: "Quality Management Systems" },
-    { badge: "ISO 55000", description: "Asset Management" },
-    { badge: "OPC UA", description: "Industrial Interoperability Standard" },
-    { badge: "MQTT", description: "Lightweight IoT Messaging" },
-    { badge: "Industry 4.0", description: "Smart Factory Framework" },
-    { badge: "Industry 5.0", description: "Human-Centric Smart Automation" }
+    { badge: "ISO 9001", description: "Quality Management Systems", whyItMatters: "Ensures consistent quality.", affectedWorkflows: ["Quality Control"] },
+    { badge: "ISO 14001", description: "Environmental Management", whyItMatters: "Governs sustainability.", affectedWorkflows: ["Waste Management"] },
+    { badge: "OSHA", description: "Occupational Safety and Health", whyItMatters: "Worker safety regulations.", affectedWorkflows: ["Plant Floor"] },
+    { badge: "RoHS", description: "Restriction of Hazardous Substances", whyItMatters: "Limits hazardous materials.", affectedWorkflows: ["Procurement"] },
+    { badge: "SOC 2", description: "System and Organization Controls" },
+    { badge: "GDPR", description: "General Data Protection Regulation" }
   ],
+  
+  relatedIndustries: ["retail", "energy", "logistics"],
   
   relatedProducts: [
     "Quantiva Integration Framework™",

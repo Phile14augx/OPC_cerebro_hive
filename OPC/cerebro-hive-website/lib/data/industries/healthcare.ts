@@ -5,6 +5,11 @@ export const healthcare: Industry = {
   slug: "healthcare",
   color: "#00E676", // Deep Green / Teal
   
+  tier: "Core Enterprise",
+  category: "Healthcare",
+  subcategory: "Hospitals & Health Systems",
+  featured: true,
+  
   engineConfig: {
     heroTheme: "healthcare",
     backgroundAnimation: "transaction-network",
@@ -32,6 +37,19 @@ export const healthcare: Industry = {
       { metric: "99.9%", label: "Uptime" }
     ]
   },
+  
+  maturity: {
+    aiAdoption: 7,
+    automation: 6,
+    knowledge: 8
+  },
+  
+  aiOpportunities: [
+    { domain: "Clinical", score: 9 },
+    { domain: "Operations", score: 7 },
+    { domain: "Revenue Cycle", score: 6 },
+    { domain: "Research", score: 8 }
+  ],
 
   segments: [
     "Patient Care",
@@ -160,10 +178,28 @@ export const healthcare: Industry = {
   ],
   
   compliance: [
-    { badge: "HIPAA", description: "Health Insurance Portability and Accountability Act" },
-    { badge: "HITRUST", description: "Common Security Framework" },
-    { badge: "SOC 2 Type II", description: "Security, Availability, and Confidentiality" },
-    { badge: "GDPR", description: "European Data Privacy Standard" }
+    { 
+      badge: "HIPAA", 
+      description: "Health Insurance Portability and Accountability Act",
+      whyItMatters: "Governs the privacy and security of PHI (Protected Health Information).",
+      affectedWorkflows: ["Patient Intake", "Clinical Notes", "Data Sharing"],
+      supportedProducts: ["CerebroSphere™", "HiveMatrix™"]
+    },
+    { 
+      badge: "HITRUST", 
+      description: "Common Security Framework",
+      whyItMatters: "Provides a certifiable framework for healthcare security.",
+      affectedWorkflows: ["Cloud Infrastructure", "API Gateways"]
+    },
+    { 
+      badge: "SOC 2 Type II", 
+      description: "Security, Availability, and Confidentiality",
+      whyItMatters: "Validates strict security practices via third-party audit." 
+    },
+    { 
+      badge: "GDPR", 
+      description: "European Data Privacy Standard" 
+    }
   ],
   
   relatedProducts: [
@@ -176,6 +212,12 @@ export const healthcare: Industry = {
     "Predictive Healthcare",
     "Digital Scribe",
     "Intelligent Triage"
+  ],
+  
+  relatedIndustries: [
+    "finance", // For insurance/claims overlap
+    "government", // For public health overlapping
+    "technology" // For medtech
   ],
   
   resources: [

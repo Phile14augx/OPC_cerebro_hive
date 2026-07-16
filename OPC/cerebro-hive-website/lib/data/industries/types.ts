@@ -92,10 +92,29 @@ export interface RoadmapPhase {
   description: string;
 }
 
+export interface ComplianceFramework {
+  badge: string; 
+  description: string;
+  whyItMatters?: string;
+  affectedWorkflows?: string[];
+  supportedProducts?: string[];
+}
+
+export interface AIOpportunity {
+  domain: string; // e.g. "Clinical", "Operations"
+  score: number; // 0 to 10
+}
+
 export interface Industry {
   name: string;
   slug: string;
   color: string;
+  
+  // NEW ENTERPRISE TAXONOMY
+  tier?: "Core Enterprise" | "Enterprise Verticals" | "Industrial & Infrastructure" | "Professional Services" | "Public Sector" | "Science & Research" | "Agriculture & Food" | "Emerging Industries" | "Consumer Services" | "Specialized Sectors";
+  category?: string;
+  subcategory?: string;
+  featured?: boolean;
   
   // The new rendering engine config
   engineConfig: EngineConfig;
@@ -109,6 +128,14 @@ export interface Industry {
     statistics: { metric: string; label: string }[];
   };
 
+  // NEW MATURITY & OPPORTUNITY
+  maturity?: {
+    aiAdoption: number; // 0-10
+    automation: number; // 0-10
+    knowledge: number; // 0-10
+  };
+  aiOpportunities?: AIOpportunity[];
+  
   // Data for IndustryTopology (Globe)
   segments: string[];
 
@@ -135,10 +162,12 @@ export interface Industry {
   caseStudy: CaseStudy;
   roadmap: RoadmapPhase[];
   
-  compliance: { badge: string; description: string }[];
+  compliance: ComplianceFramework[];
   
   relatedProducts: string[];
   relatedSolutions: string[];
+  relatedIndustries?: string[]; // Slugs of related industries
+  
   resources: { title: string; type: string; link: string }[];
 
   // NEW: Enterprise Digital Twin Config

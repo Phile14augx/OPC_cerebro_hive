@@ -9,6 +9,9 @@ import { ArrowRight, BrainCircuit, Activity, Database, Server, User, Box, ArrowD
 import Link from 'next/link';
 import { AnimatedButton as Button } from '../ui/AnimatedButton';
 import { EnterpriseDigitalTwin } from './engine/EnterpriseDigitalTwin';
+import { IndustryMaturity } from './engine/IndustryMaturity';
+import { AIOpportunityMap } from './engine/AIOpportunityMap';
+import { ComplianceEngine } from './engine/ComplianceEngine';
 
 // Icon mapping for architecture nodes
 const nodeIconMap: Record<string, any> = {
@@ -149,23 +152,13 @@ export function IndustryDetailView() {
 
             <div>
               <SectionHeading label="The Strategy" title="AI Transformation" />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-                {industry.opportunityMatrix?.map((opp, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="p-5 rounded-2xl bg-surface-elevated border border-border group hover:border-primary-accent/50 transition-colors"
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-bold text-text-primary group-hover:text-primary-accent transition-colors">{opp.name}</h4>
-                      <ArrowDownRight size={16} className="text-text-muted" />
-                    </div>
-                    <p className="text-xs text-text-secondary leading-relaxed">{opp.description}</p>
-                  </motion.div>
-                ))}
+              <div className="grid grid-cols-1 gap-6 mt-8">
+                {industry.aiOpportunities && (
+                  <AIOpportunityMap opportunities={industry.aiOpportunities} color={industry.color} />
+                )}
+                {industry.maturity && (
+                  <IndustryMaturity maturity={industry.maturity} color={industry.color} />
+                )}
               </div>
             </div>
           </div>
@@ -204,7 +197,15 @@ export function IndustryDetailView() {
           </div>
         )}
 
-        {/* 4. Products & Research Interlinks */}
+        {/* 4. Compliance Engine */}
+        {industry.compliance && industry.compliance.length > 0 && (
+          <div className="w-full">
+            <SectionHeading label="Governance" title="Enterprise Compliance" />
+            <ComplianceEngine compliance={industry.compliance} color={industry.color} />
+          </div>
+        )}
+
+        {/* 5. Products & Research Interlinks */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="p-8 rounded-[2rem] bg-surface-elevated border border-border flex flex-col items-start">
             <Layers className="text-text-muted mb-4" size={24} />
@@ -241,7 +242,29 @@ export function IndustryDetailView() {
           </div>
         </div>
 
-        {/* 5. Business Outcomes & CTA */}
+        {/* 6. Related Industries */}
+        {industry.relatedIndustries && industry.relatedIndustries.length > 0 && (
+          <div className="w-full">
+            <SectionHeading label="Cross-Domain" title="Related Industries" />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 mb-16">
+              {industry.relatedIndustries.map((rel, i) => {
+                const relInd = getIndustryBySlug(rel);
+                if (!relInd) return null;
+                return (
+                  <Link key={rel} href={`/industries/${rel}`} className="p-6 rounded-2xl bg-surface border border-border hover:border-primary-accent/50 transition-colors flex items-center justify-between group">
+                    <div className="flex items-center gap-3">
+                      <span className="w-3 h-3 rounded-full" style={{ backgroundColor: relInd.color }} />
+                      <span className="font-bold text-sm text-text-primary group-hover:text-primary-accent">{relInd.name}</span>
+                    </div>
+                    <ArrowRight size={14} className="text-text-muted group-hover:text-primary-accent" />
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* 7. Business Outcomes & CTA */}
         {industry.outcomes && industry.outcomes.length > 0 && (
           <div>
             <SectionHeading label="Outcomes" title="Measurable Impact" />

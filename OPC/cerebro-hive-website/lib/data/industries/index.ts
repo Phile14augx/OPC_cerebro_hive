@@ -35,3 +35,12 @@ export const industriesData = [
 export const getIndustryBySlug = (slug: string) => {
   return industriesData.find((ind) => ind.slug === slug);
 };
+
+export function getIndustriesByTier(tier: string) {
+  return industriesData.filter(i => i.tier === tier);
+}
+
+export function getAllCategories(): string[] {
+  const categories = new Set(industriesData.filter(i => i.category).map(i => i.category as string));
+  return Array.from(categories).sort();
+}

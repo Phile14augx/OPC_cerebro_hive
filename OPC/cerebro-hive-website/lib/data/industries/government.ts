@@ -4,6 +4,12 @@ export const government: Industry = {
   name: "Government",
   slug: "government",
   color: "#10B981", // Emerald
+  
+  tier: "Core Enterprise",
+  category: "Government",
+  subcategory: "Public Sector",
+  featured: true,
+
   engineConfig: {
     heroTheme: "government",
     backgroundAnimation: "transaction-network",
@@ -28,6 +34,20 @@ export const government: Industry = {
       { metric: "24/7", label: "Automated Services" }
     ]
   },
+  
+  maturity: {
+    aiAdoption: 4,
+    automation: 5,
+    knowledge: 6
+  },
+  
+  aiOpportunities: [
+    { domain: "Citizen Services", score: 9 },
+    { domain: "Cybersecurity", score: 10 },
+    { domain: "Fraud Analytics", score: 8 },
+    { domain: "Legacy Modernization", score: 9 }
+  ],
+  
   segments: ["Federal", "State & Local", "Defense", "Intelligence", "Public Health", "Transportation"],
   challenges: [
     {
@@ -97,7 +117,13 @@ export const government: Industry = {
   outcomes: [],
   caseStudy: { client: "Federal Agency", title: "Digital Modernization", timeline: "12 Months", architecture: "Gov AI", outcome: "Success", metric: "100%" },
   roadmap: [],
-  compliance: [{ badge: "FedRAMP", description: "Federal Risk and Authorization Management Program" }],
+  compliance: [
+    { badge: "FedRAMP", description: "Federal Risk and Authorization Management Program", whyItMatters: "Required for cloud services.", affectedWorkflows: ["Cloud Hosting"] },
+    { badge: "FISMA", description: "Federal Information Security Management Act", whyItMatters: "Governs information security.", affectedWorkflows: ["Data Processing"] }
+  ],
+  
+  relatedIndustries: ["healthcare", "education", "finance"],
+  
   relatedProducts: [],
   relatedSolutions: [],
   resources: []

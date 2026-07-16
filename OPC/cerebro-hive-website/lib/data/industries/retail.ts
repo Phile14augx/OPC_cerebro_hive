@@ -5,6 +5,11 @@ export const retail: Industry = {
   slug: "retail",
   color: "#E81CFF", // Retail Magenta
   
+  tier: "Core Enterprise",
+  category: "Retail",
+  subcategory: "E-Commerce & Stores",
+  featured: true,
+  
   engineConfig: {
     heroTheme: "retail",
     backgroundAnimation: "transaction-network", // We will use transaction-network but styled for commerce
@@ -32,6 +37,19 @@ export const retail: Industry = {
       { metric: "120+", label: "Commerce Integrations" }
     ]
   },
+  
+  maturity: {
+    aiAdoption: 7,
+    automation: 8,
+    knowledge: 6
+  },
+  
+  aiOpportunities: [
+    { domain: "Customer Personalization", score: 10 },
+    { domain: "Inventory Forecasting", score: 9 },
+    { domain: "Dynamic Pricing", score: 8 },
+    { domain: "Supply Chain", score: 7 }
+  ],
 
   segments: [
     "Stores",
@@ -181,10 +199,12 @@ export const retail: Industry = {
   ],
   
   compliance: [
-    { badge: "PCI DSS", description: "Payment Card Industry Data Security Standard" },
-    { badge: "GS1", description: "Global Standards for Supply Chain" },
-    { badge: "GDPR / CCPA", description: "Consumer Data Privacy Frameworks" }
+    { badge: "PCI DSS", description: "Payment Card Industry Data Security Standard", whyItMatters: "Secures customer payment data.", affectedWorkflows: ["Checkout", "Payments"] },
+    { badge: "GS1", description: "Global Standards for Supply Chain", whyItMatters: "Standardizes barcodes and RFID.", affectedWorkflows: ["Inventory", "Logistics"] },
+    { badge: "GDPR / CCPA", description: "Consumer Data Privacy Frameworks", whyItMatters: "Protects customer profiles.", affectedWorkflows: ["Marketing", "Loyalty"] }
   ],
+  
+  relatedIndustries: ["manufacturing", "logistics", "finance"],
   
   relatedProducts: [
     "Quantiva Integration Framework™",
