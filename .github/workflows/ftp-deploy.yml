@@ -29,6 +29,8 @@ jobs:
     - name: 🏗️ Build Project
       working-directory: ./OPC/cerebro-hive-website
       run: npm run build
+      env:
+        IS_FTP_DEPLOY: "true"
       
     - name: 📂 Sync files to Hostinger
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5

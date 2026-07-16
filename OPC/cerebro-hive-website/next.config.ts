@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
-const isGithubActions = process.env.GITHUB_ACTIONS === "true";
+const isGithubPages = process.env.GITHUB_ACTIONS === "true" && process.env.IS_FTP_DEPLOY !== "true";
 const repo = "OPC_cerebro_hive";
-const basePath = isGithubActions ? `/${repo}` : "";
+const basePath = isGithubPages ? `/${repo}` : "";
 
 const nextConfig: NextConfig = {
   output: "export",
@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   },
   trailingSlash: true,
   basePath,
-  assetPrefix: isGithubActions ? `/${repo}/` : "",
+  assetPrefix: isGithubPages ? `/${repo}/` : "",
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
