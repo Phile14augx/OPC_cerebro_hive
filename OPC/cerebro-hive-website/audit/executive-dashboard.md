@@ -9,11 +9,11 @@
 | **Accessibility** | 92% | ✅ WCAG AA |
 | **SEO Readiness** | 15% | ❌ Metadata missing |
 | **Analytics Coverage** | 0% | ❌ Untracked CTAs |
-| **Design System** | 97% | ✅ Token Parity |
+| **Design System** | 0% | ⚠️ Token Parity |
 | **Downloads/Assets** | 100% | ✅ Verified |
 | **Performance** | 100% | ✅ Verified |
 
-### Overall Enterprise Score: **75.5/100**
+### Overall Enterprise Score: **63.4/100**
 
 ---
 

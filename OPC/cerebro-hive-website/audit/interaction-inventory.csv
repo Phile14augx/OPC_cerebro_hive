@@ -176,9 +176,11 @@ SolutionOverlay,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/com
 SolutionPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionPageLayout.tsx,44,button,{dynamic},,Missing,High,Unknown
 SolutionPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionPageLayout.tsx,47,button,{dynamic},,Missing,High,Unknown
 SolutionPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionPageLayout.tsx,138,Link,[Icon/Image],[Dynamic: res.link],Valid,Low,Unknown
-AnimatedButton,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/AnimatedButton.tsx,18,button,{dynamic} {dynamic},,Missing,High,Unknown
+AnimatedButton,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/AnimatedButton.tsx,17,motion.button,[Icon/Image],,Missing,High,Unknown
 ThemeToggle,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/ThemeToggle.tsx,35,button,{dynamic} {dynamic},Handler: {() => setTheme(option.value)},Action,Medium,Action
 ThemeToggle,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/ThemeToggle.tsx,45,Icon,[Icon],,Missing,High,Unknown
+TrackedButton,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/TrackedButton.tsx,33,button,{dynamic},Handler: {handleClick},Action,Medium,Action
+TrackedLink,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/TrackedLink.tsx,36,Link,{dynamic},[Dynamic: href],Valid,Low,Unknown
 page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/about/page.tsx,155,Link,[Icon/Image],/contact,Valid,Low,OK
 page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/about/page.tsx,156,Link,[Empty],/services,Valid,Low,OK
 page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/about/page.tsx,107,Icon,[Icon],,Missing,High,Unknown
@@ -334,8 +336,8 @@ EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website
 EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,141,button,[Icon/Image],,Missing,High,Unknown
 EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,184,button,[Icon/Image],,Missing,High,Unknown
 EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,187,button,[Empty],Handler: {() => { setGenerated(false); setStep(1); setSelections({ industry: ""  erp: ""  maturity: "" }); }},Action,Medium,Action
-HomeHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,54,button,[Icon/Image],,Missing,High,Unknown
-HomeHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,57,button,[Empty],,Missing,High,Unknown
+HomeHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,89,button,[Icon/Image],,Missing,High,Unknown
+HomeHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,92,button,[Empty],,Missing,High,Unknown
 HumanProof,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HumanProof.tsx,56,button,[Icon/Image],Handler: {() => setActiveCase(c)},Action,Medium,Action
 HumanProof,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HumanProof.tsx,126,button,[Icon/Image],,Missing,High,Unknown
 LivingArchitecture,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/LivingArchitecture.tsx,83,button,[Icon/Image],Handler: {() => setActiveLayer(layer.id)},Action,Medium,Action

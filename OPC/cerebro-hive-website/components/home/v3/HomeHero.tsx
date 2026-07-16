@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronRight, Play, Database, BrainCircuit, Bot, Network, Lightbulb, Target } from "lucide-react";
-import { HeroBackground } from "@/components/ui/HeroBackground";
+import { BackgroundEngine } from "@/components/ui/BackgroundEngine";
 
 const stages = [
   { id: "disconnected", title: "Disconnected Enterprise", icon: Database, color: "text-warning" },
@@ -29,36 +29,71 @@ export default function HomeHero() {
     <section ref={containerRef} className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden bg-background">
       
       {/* Immersive Theme-Aware Ambient Background */}
-      <HeroBackground />
+      <BackgroundEngine type="hero" />
 
       <div className="container-wide relative z-10 pt-32 pb-20">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
           {/* Left: Copy */}
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold mb-8">
+          {/* Left: Copy */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.15, delayChildren: 0.2 }
+              }
+            }}
+          >
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+              }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold mb-8"
+            >
               <span className="w-2 h-2 rounded-full bg-accent-primary animate-pulse" />
               The Enterprise AI Operating System
-            </div>
+            </motion.div>
             
-            <h1 className="text-5xl md:text-7xl font-space font-bold text-text-primary leading-[1.1] mb-6">
+            <motion.h1 
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+              }}
+              className="text-5xl md:text-7xl font-space font-bold text-text-primary leading-[1.1] mb-6"
+            >
               Engineering the <br />
               <span className="text-accent-secondary dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-[#00E5FF] dark:to-[#00F57A]">AI-Native</span> Enterprise.
-            </h1>
+            </motion.h1>
             
-            <p className="text-lg text-text-secondary max-w-xl font-inter mb-10 leading-relaxed">
+            <motion.p 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+              }}
+              className="text-lg text-text-secondary max-w-xl font-inter mb-10 leading-relaxed"
+            >
               We architect enterprise AI systems, build production software, and deploy intelligent agent swarms that transform disconnected data into autonomous business outcomes.
-            </p>
+            </motion.p>
             
-            <div className="flex flex-wrap gap-4">
+            <motion.div 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+              }}
+              className="flex flex-wrap gap-4"
+            >
               <button className="theme-button-primary px-8 py-4 text-sm tracking-widest uppercase flex items-center gap-2 group">
                 Explore The Platform <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
               <button className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-full hover:bg-surface-secondary shadow-sm transition-all duration-250">
                 Read Research
               </button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Right: The Transformation Animation */}
           <div className="relative h-[500px] flex items-center justify-center">

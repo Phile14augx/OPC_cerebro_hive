@@ -161,8 +161,10 @@ D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solution
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionPageLayout.tsx,44,button,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionPageLayout.tsx,47,button,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionPageLayout.tsx,138,Link,"Interaction element is not using a Tracked wrapper",Medium
-D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/AnimatedButton.tsx,18,button,"Interaction element is not using a Tracked wrapper",Medium
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/AnimatedButton.tsx,17,motion.button,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/ThemeToggle.tsx,35,button,"Interaction element is not using a Tracked wrapper",Medium
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/TrackedButton.tsx,33,button,"Interaction element is not using a Tracked wrapper",Medium
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/TrackedLink.tsx,36,Link,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/about/page.tsx,155,Link,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/about/page.tsx,156,Link,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,317,Link,"Interaction element is not using a Tracked wrapper",Medium
@@ -299,8 +301,8 @@ D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,141,button,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,184,button,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,187,button,"Interaction element is not using a Tracked wrapper",Medium
-D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,54,button,"Interaction element is not using a Tracked wrapper",Medium
-D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,57,button,"Interaction element is not using a Tracked wrapper",Medium
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,89,button,"Interaction element is not using a Tracked wrapper",Medium
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,92,button,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HumanProof.tsx,56,button,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HumanProof.tsx,126,button,"Interaction element is not using a Tracked wrapper",Medium
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/LivingArchitecture.tsx,83,button,"Interaction element is not using a Tracked wrapper",Medium

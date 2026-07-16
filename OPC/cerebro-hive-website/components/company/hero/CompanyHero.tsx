@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Globe2 } from "lucide-react";
 import { withBasePath } from "@/lib/utils";
-import { HeroBackground } from "@/components/ui/HeroBackground";
+import { BackgroundEngine } from "@/components/ui/BackgroundEngine";
 
 // Floating Particles
 const Particles = () => {
@@ -100,7 +100,7 @@ export const CompanyHero = () => {
       className="relative min-h-screen pt-32 pb-32 flex flex-col justify-center overflow-hidden bg-background"
     >
       {/* Immersive Theme-Aware Ambient Background */}
-      <HeroBackground />
+      <BackgroundEngine type="hero" />
 
       <div className="container-wide relative z-10 grid lg:grid-cols-2 gap-12 items-center h-full">
         {/* Left: Content */}

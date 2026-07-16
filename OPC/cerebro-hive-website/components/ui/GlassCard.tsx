@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 import React from "react";
+import { motion } from "framer-motion";
+import { useCerebroMotion } from "../motion/foundation/MotionProvider";
 
 interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -7,30 +9,49 @@ interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
   intensity?: "low" | "medium" | "high";
 }
 
-export function GlassCard({
-  children,
-  className,
-  interactive = false,
-  intensity = "medium",
-  ...props
-}: GlassCardProps) {
-  const intensityClasses = {
-    low: "bg-card/30 border-border backdrop-blur-md",
-    medium: "bg-card/50 border-border backdrop-blur-lg",
-    high: "bg-card/80 border-border backdrop-blur-xl",
-  };
+export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
+  ({ children, className, interactive = false, intensity = "medium", ...props }, ref) => {
+    const { getVariant } = useCerebroMotion();
 
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border transition-all duration-300",
-        intensityClasses[intensity],
-        interactive && "hover:bg-card/70 hover:border-primary-accent/30 hover:shadow-[0_8px_30px_rgb(0,0,0,0.4),0_0_20px_rgba(0,245,122,0.15)] hover:-translate-y-1 cursor-pointer",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
+    const intensityClasses = {
+      low: "bg-card/30 border-border backdrop-blur-md",
+      medium: "bg-card/50 border-border backdrop-blur-lg",
+      high: "bg-card/80 border-border backdrop-blur-xl",
+    };
+
+    if (!interactive) {
+      return (
+        <div
+          ref={ref}
+          className={cn(
+            "rounded-2xl border",
+            intensityClasses[intensity],
+            className
+          )}
+          {...props}
+        >
+          {children}
+        </div>
+      );
+    }
+
+    return (
+      <motion.div
+        ref={ref}
+        className={cn(
+          "rounded-2xl border cursor-pointer",
+          intensityClasses[intensity],
+          className
+        )}
+        variants={getVariant("card", "hover")}
+        initial="rest"
+        whileHover="hover"
+        whileTap="hover" // Treat tap on mobile as hover state
+        {...props as any}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+);
+GlassCard.displayName = "GlassCard";
