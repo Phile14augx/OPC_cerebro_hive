@@ -316,7 +316,7 @@ export const EnterpriseTrustCenter = () => {
             </h2>
             <h3 className="text-4xl md:text-5xl lg:text-6xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-8">
               Enterprise AI <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-transparent">begins with trust.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-text-primary to-transparent">begins with trust.</span>
             </h3>
             <p className="text-base md:text-lg text-text-secondary font-inter max-w-xl leading-relaxed mb-8">
               A comprehensive operating model where architecture orchestration coordinates security, privacy, and compliance across the entire deployment lifecycle.

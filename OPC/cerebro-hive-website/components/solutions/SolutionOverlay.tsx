@@ -41,7 +41,7 @@ export const SolutionOverlay: React.FC<SolutionOverlayProps> = ({ solution, onCl
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm cursor-pointer"
+            className="absolute inset-0 bg-surface-elevated backdrop-blur-sm cursor-pointer"
           />
 
           {/* Side Panel */}

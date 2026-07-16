@@ -129,7 +129,7 @@ export default function HandbookPage() {
           </nav>
           <div className="mt-7 border-t border-border-default pt-5"><p className="mb-3 px-2 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-600">Quick access</p><button className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-sm text-slate-400 hover:text-text-primary"><Star size={15} /> Favorites <span className="ml-auto text-xs text-slate-600">{saved.length}</span></button><button className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-sm text-slate-400 hover:text-text-primary"><ClipboardCheck size={15} /> Playbooks</button></div>
         </aside>
-        {sidebarOpen && <button onClick={() => setSidebarOpen(false)} className="fixed inset-0 z-40 bg-black/60 lg:hidden" aria-label="Close navigation" />}
+        {sidebarOpen && <button onClick={() => setSidebarOpen(false)} className="fixed inset-0 z-40 bg-surface-elevated lg:hidden" aria-label="Close navigation" />}
 
         <main className="min-w-0 px-4 py-7 sm:px-7 lg:px-12 lg:py-12">
           <div className="mx-auto max-w-[820px]">

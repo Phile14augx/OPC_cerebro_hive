@@ -47,7 +47,7 @@ export const InsightsHero = () => {
 
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
             Enterprise <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-text-secondary to-text-muted">AI Intelligence</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-text-primary via-text-secondary to-text-muted">AI Intelligence</span>
           </h1>
 
           <p className="text-lg text-text-secondary font-inter leading-[1.8] mb-10 max-w-[50ch]">

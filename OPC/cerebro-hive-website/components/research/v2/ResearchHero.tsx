@@ -54,7 +54,7 @@ export const ResearchHero = () => {
 
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
             Advancing <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-text-secondary to-text-muted">Enterprise Intelligence</span> <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-text-primary via-text-secondary to-text-muted">Enterprise Intelligence</span> <br/>
             Through Applied Research.
           </h1>
 

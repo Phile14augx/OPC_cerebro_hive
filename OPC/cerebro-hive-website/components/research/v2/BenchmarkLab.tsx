@@ -106,7 +106,7 @@ export const BenchmarkLab = () => {
                       animate={{ height: `${score}%` }}
                       transition={{ duration: 0.8, type: "spring", bounce: 0.2 }}
                     >
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
                     </motion.div>
                     
                     {/* Label */}

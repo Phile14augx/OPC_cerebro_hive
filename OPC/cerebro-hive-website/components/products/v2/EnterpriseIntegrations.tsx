@@ -82,7 +82,7 @@ export const EnterpriseIntegrations = () => {
                   )}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={cn("p-2 rounded-lg", isActive ? "bg-primary-accent/20 text-primary-accent" : "bg-black/30 text-text-muted")}>
+                    <div className={cn("p-2 rounded-lg", isActive ? "bg-primary-accent/20 text-primary-accent" : "bg-surface-elevated text-text-muted")}>
                       <integration.icon size={20} />
                     </div>
                     <div>

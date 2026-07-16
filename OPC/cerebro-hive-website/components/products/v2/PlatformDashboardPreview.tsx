@@ -72,7 +72,7 @@ export const PlatformDashboardPreview = () => {
         <div className="w-full bg-background border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col">
           
           {/* Top Bar */}
-          <div className="h-12 border-b border-border flex items-center px-4 justify-between bg-black/20">
+          <div className="h-12 border-b border-border flex items-center px-4 justify-between bg-surface-elevated">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500/50" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/50" />

@@ -133,7 +133,7 @@ export const MethodologyVisualizer = () => {
                 {/* The Deliverable */}
                 <div className="w-full md:w-auto">
                   <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3 text-center md:text-left">Phase Output</div>
-                  <div className="bg-black/40 border border-border rounded-xl p-6 flex items-center gap-4 min-w-[280px] group hover:border-[#00E5FF]/50 transition-colors">
+                  <div className="bg-surface-elevated border border-border rounded-xl p-6 flex items-center gap-4 min-w-[280px] group hover:border-[#00E5FF]/50 transition-colors">
                     <div className="w-12 h-12 rounded-lg bg-[#00E5FF]/10 text-accent-secondary flex items-center justify-center shrink-0">
                       {React.createElement(phases[activePhase].deliverableIcon, { size: 24 })}
                     </div>

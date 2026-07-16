@@ -58,13 +58,13 @@ export const OpinionAnalysis = () => {
               </p>
 
               <div className="grid sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-black/40 border border-border">
+                <div className="p-4 rounded-xl bg-surface-elevated border border-border">
                   <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-1 flex items-center gap-1">
                     <Target size={12} /> Forecast Confidence
                   </div>
                   <div className={cn("text-sm font-bold", op.iconColor)}>{op.confidence}</div>
                 </div>
-                <div className="p-4 rounded-xl bg-black/40 border border-border">
+                <div className="p-4 rounded-xl bg-surface-elevated border border-border">
                   <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-1 flex items-center gap-1">
                     <Activity size={12} /> Key Assumption
                   </div>

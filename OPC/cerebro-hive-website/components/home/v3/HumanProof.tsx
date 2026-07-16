@@ -100,7 +100,7 @@ export default function HumanProof() {
                 </div>
 
                 <div className="grid sm:grid-cols-3 gap-4 mb-10">
-                  <div className="p-4 rounded-xl bg-black/40 border border-border">
+                  <div className="p-4 rounded-xl bg-surface-elevated border border-border">
                     <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-2">Products Used</div>
                     <div className="flex flex-col gap-2">
                       {activeCase.products.map(p => (
@@ -110,7 +110,7 @@ export default function HumanProof() {
                       ))}
                     </div>
                   </div>
-                  <div className="p-4 rounded-xl bg-black/40 border border-border">
+                  <div className="p-4 rounded-xl bg-surface-elevated border border-border">
                     <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-2">Timeline</div>
                     <div className="text-sm font-bold text-text-primary">{activeCase.timeline}</div>
                   </div>

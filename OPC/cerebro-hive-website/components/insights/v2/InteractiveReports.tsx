@@ -68,7 +68,7 @@ export const InteractiveReports = () => {
           <div className="lg:col-span-8 bg-surface border border-border rounded-2xl flex flex-col overflow-hidden h-[600px]">
             
             {/* Viewer Header */}
-            <div className="p-6 border-b border-border bg-black/40 flex justify-between items-center">
+            <div className="p-6 border-b border-border bg-surface-elevated flex justify-between items-center">
               <div>
                 <h3 className="text-xl font-space font-bold text-text-primary">{activeReport.title}</h3>
               </div>
@@ -79,7 +79,7 @@ export const InteractiveReports = () => {
 
             <div className="flex flex-1 overflow-hidden">
               {/* Viewer Tabs */}
-              <div className="w-48 border-r border-border bg-black/20 p-4 space-y-1 overflow-y-auto">
+              <div className="w-48 border-r border-border bg-surface-elevated p-4 space-y-1 overflow-y-auto">
                 {activeReport.sections.map((sec, i) => (
                   <button 
                     key={i}

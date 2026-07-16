@@ -74,7 +74,7 @@ export const FeaturedIntelligence = () => {
                 {article.summary}
               </p>
 
-              <div className="mt-auto p-4 rounded-xl bg-black/40 border border-border mb-6">
+              <div className="mt-auto p-4 rounded-xl bg-surface-elevated border border-border mb-6">
                 <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-2">Why it matters</div>
                 <p className="text-xs text-text-primary leading-relaxed">{article.impact}</p>
               </div>

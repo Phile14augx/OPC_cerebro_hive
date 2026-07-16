@@ -9,7 +9,7 @@ export const CEOExecutiveNode = ({ data, selected }: NodeProps<Node<Organization
   return (
     <div className={cn(
       "relative w-[320px] rounded-2xl overflow-hidden transition-all duration-300",
-      "bg-black/60 backdrop-blur-xl border-2 shadow-2xl",
+      "bg-surface-elevated backdrop-blur-xl border-2 shadow-2xl",
       selected ? "border-amber-500 shadow-[0_0_40px_rgba(245,158,11,0.2)] scale-[1.02] -translate-y-2" : "border-border hover:border-amber-500/50 hover:shadow-[0_0_30px_rgba(245,158,11,0.15)] hover:-translate-y-2 cursor-pointer"
     )}>
       {/* Premium Glass reflection */}

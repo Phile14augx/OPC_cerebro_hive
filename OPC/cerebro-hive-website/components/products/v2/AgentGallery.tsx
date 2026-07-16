@@ -82,7 +82,7 @@ export const AgentGallery = () => {
                   )}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={cn("p-2 rounded-lg", isActive ? "bg-[#00E5FF]/20 text-accent-secondary" : "bg-black/30 text-text-muted group-hover:text-text-primary")}>
+                    <div className={cn("p-2 rounded-lg", isActive ? "bg-[#00E5FF]/20 text-accent-secondary" : "bg-surface-elevated text-text-muted group-hover:text-text-primary")}>
                       <agent.icon size={20} />
                     </div>
                     <span className={cn("font-space font-bold", isActive ? "text-text-primary" : "text-text-muted group-hover:text-text-primary")}>{agent.name}</span>
@@ -122,7 +122,7 @@ export const AgentGallery = () => {
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
                   
                   {/* Workflow */}
-                  <div className="bg-black/20 border border-border rounded-xl p-5">
+                  <div className="bg-surface-elevated border border-border rounded-xl p-5">
                     <div className="flex items-center gap-2 text-text-muted mb-3 text-xs uppercase tracking-widest font-bold">
                       <Network size={14} /> Standard Workflow
                     </div>
@@ -130,7 +130,7 @@ export const AgentGallery = () => {
                   </div>
 
                   {/* Memory */}
-                  <div className="bg-black/20 border border-border rounded-xl p-5">
+                  <div className="bg-surface-elevated border border-border rounded-xl p-5">
                     <div className="flex items-center gap-2 text-text-muted mb-3 text-xs uppercase tracking-widest font-bold">
                       <BrainCircuit size={14} /> Contextual Memory
                     </div>
@@ -138,7 +138,7 @@ export const AgentGallery = () => {
                   </div>
 
                   {/* Tools */}
-                  <div className="bg-black/20 border border-border rounded-xl p-5">
+                  <div className="bg-surface-elevated border border-border rounded-xl p-5">
                     <div className="flex items-center gap-2 text-text-muted mb-3 text-xs uppercase tracking-widest font-bold">
                       <Wrench size={14} /> Equipped Tools
                     </div>

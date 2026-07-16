@@ -62,7 +62,7 @@ export const FeaturedResearch = () => {
 
           {/* Trending List */}
           <div className="lg:col-span-4 flex flex-col gap-4">
-            <div className="bg-black/40 border border-border rounded-2xl p-6 mb-2">
+            <div className="bg-surface-elevated border border-border rounded-2xl p-6 mb-2">
               <div className="text-xs uppercase tracking-widest text-accent-secondary font-bold mb-1 flex items-center gap-2">
                 <Bookmark size={14} /> Trending Now
               </div>

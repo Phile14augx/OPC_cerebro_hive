@@ -141,10 +141,10 @@ export default function WhyCerebroHive() {
              <motion.div key="bg-1" initial={{ opacity: 0 }} animate={{ opacity: 0.03 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
            )}
            {activeStage === "generative" && (
-             <motion.div key="bg-2" initial={{ opacity: 0 }} animate={{ opacity: 0.05 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black" />
+             <motion.div key="bg-2" initial={{ opacity: 0 }} animate={{ opacity: 0.05 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-background to-background" />
            )}
            {(activeStage === "agentic" || activeStage === "autonomous") && (
-             <motion.div key="bg-3" initial={{ opacity: 0 }} animate={{ opacity: 0.08 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/10 via-black to-black" />
+             <motion.div key="bg-3" initial={{ opacity: 0 }} animate={{ opacity: 0.08 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/10 via-background to-background" />
            )}
         </AnimatePresence>
       </div>

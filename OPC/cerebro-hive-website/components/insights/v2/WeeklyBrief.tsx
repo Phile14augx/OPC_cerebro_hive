@@ -8,7 +8,7 @@ export const WeeklyBrief = () => {
     <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
-        <div className="max-w-5xl mx-auto bg-gradient-to-br from-surface to-black border border-border rounded-2xl overflow-hidden shadow-2xl relative">
+        <div className="max-w-5xl mx-auto bg-gradient-to-br from-surface to-background border border-border rounded-2xl overflow-hidden shadow-2xl relative">
           
           <div className="absolute top-0 right-0 w-[500px] h-[500px] opacity-20 pointer-events-none" style={{ backgroundImage: `radial-gradient(circle at top right, #00E5FF, transparent)` }} />
 
@@ -61,7 +61,7 @@ export const WeeklyBrief = () => {
               <p className="text-sm text-text-secondary leading-relaxed mb-4">
                 Chat interfaces rely on human reasoning to drive the tool. Agents absorb the reasoning burden. This means the ROI of AI is no longer bottlenecked by employee adoption rates—it is directly tied to the infrastructure's ability to execute autonomous tasks.
               </p>
-              <div className="p-4 rounded-lg bg-black/40 border border-border">
+              <div className="p-4 rounded-lg bg-surface-elevated border border-border">
                 <div className="text-xs text-text-primary font-bold mb-1">Why it matters</div>
                 <div className="text-xs text-text-muted">Companies investing purely in employee copilot licenses may miss out on the much larger ROI of process automation.</div>
               </div>

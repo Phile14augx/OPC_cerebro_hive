@@ -67,7 +67,7 @@ export default function ResearchHighlights() {
               </div>
 
               {/* The Product */}
-              <div className="bg-black/40 border border-border rounded-2xl p-8 relative z-10">
+              <div className="bg-surface-elevated border border-border rounded-2xl p-8 relative z-10">
                 <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-4">Integrated Into Platform</div>
                 <div className="flex items-center gap-4">
                   <div className={`w-12 h-12 rounded-xl bg-surface-elevated flex items-center justify-center ${item.color}`}>

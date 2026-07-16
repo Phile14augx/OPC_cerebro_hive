@@ -83,7 +83,7 @@ export default function TransformationRoadmap() {
               return (
                 <div key={phase.id} className="relative z-10 flex flex-row md:flex-col items-center gap-4 md:gap-4 mb-6 md:mb-0 cursor-pointer group" onClick={() => setActivePhase(phase)}>
                   <div className={`w-12 h-12 rounded-full border-4 flex items-center justify-center transition-colors ${
-                    isActive ? `border-[#0A0D14] ${phase.bgColor} text-black` :
+                    isActive ? `border-[#0A0D14] ${phase.bgColor} text-text-primary` :
                     isPast ? `border-[#0A0D14] bg-surface-elevated text-text-primary` :
                     "border-border bg-background text-text-muted group-hover:text-text-primary group-hover:border-border-strong"
                   }`}>

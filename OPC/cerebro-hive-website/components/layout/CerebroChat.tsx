@@ -206,7 +206,7 @@ export default function CerebroChat() {
             </div>
 
             {/* Header */}
-            <div className="h-14 border-b border-border dark:border-border-default flex items-center justify-between px-6 bg-surface/40 dark:bg-black/40 relative z-10 shrink-0">
+            <div className="h-14 border-b border-border dark:border-border-default flex items-center justify-between px-6 bg-surface/40 dark:bg-surface-elevated relative z-10 shrink-0">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-sm font-space font-bold text-text-primary tracking-wide">
                   <div className="w-2 h-2 rounded-full bg-primary-accent shadow-[0_0_8px_#00F57A] animate-pulse" />
@@ -370,7 +370,7 @@ export default function CerebroChat() {
                       placeholder="Ask Cerebro..."
                       className="w-full bg-transparent px-4 py-4 text-sm text-text-primary focus:outline-none resize-none min-h-[60px]"
                     />
-                    <div className="flex items-center justify-between px-6 py-4 bg-surface-elevated/40 dark:bg-black/20 border-t border-border dark:border-transparent">
+                    <div className="flex items-center justify-between px-6 py-4 bg-surface-elevated/40 dark:bg-surface-elevated border-t border-border dark:border-transparent">
                       <div className="flex gap-2">
                         <button className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Briefcase size={16}/></button>
                         <button className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Network size={16}/></button>

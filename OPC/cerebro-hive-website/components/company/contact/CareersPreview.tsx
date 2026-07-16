@@ -120,7 +120,7 @@ export const CareersPreview = () => {
                     )}
                   >
                     {/* Hover Gradient Effect */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br from-white to-transparent" />
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br from-text-primary to-transparent" />
                     
                     <div className="relative z-10 w-full flex flex-col h-full">
                       
@@ -195,7 +195,7 @@ export const CareersPreview = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={handleClose}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden" // Only dim on mobile/tablet where it covers the screen
+              className="fixed inset-0 bg-surface-elevated backdrop-blur-sm z-50 lg:hidden" // Only dim on mobile/tablet where it covers the screen
             />
 
             {/* Inspector Panel */}

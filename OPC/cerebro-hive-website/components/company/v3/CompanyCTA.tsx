@@ -17,7 +17,7 @@ export default function CompanyCTA() {
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary mb-8 tracking-tighter leading-none">
             Build the Future of Enterprise AI Together.
           </h2>
-          <p className="text-xl md:text-2xl text-black/70 max-w-2xl mx-auto font-inter font-medium mb-12">
+          <p className="text-xl md:text-2xl text-text-muted max-w-2xl mx-auto font-inter font-medium mb-12">
             Whether you are an enterprise looking to transform your architecture, or an engineer looking to solve the hardest problems in AI—we should talk.
           </p>
 
@@ -32,7 +32,7 @@ export default function CompanyCTA() {
             
             <Link 
               href="/careers" 
-              className="px-8 py-4 bg-transparent border-2 border-border-default text-text-primary rounded-full font-space font-bold text-lg hover:bg-black/5 transition-colors flex items-center gap-3 w-full sm:w-auto justify-center"
+              className="px-8 py-4 bg-transparent border-2 border-border-default text-text-primary rounded-full font-space font-bold text-lg hover:bg-surface-elevated transition-colors flex items-center gap-3 w-full sm:w-auto justify-center"
             >
               View Open Roles
             </Link>

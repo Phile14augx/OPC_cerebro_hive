@@ -32,7 +32,7 @@ const categoryConfig: Record<string, { color: string, icon: any }> = {
 
 const ArchitectureFlow = ({ color }: { color: string }) => {
   return (
-    <div className="w-full h-16 relative flex items-center justify-between px-2 mt-4 border border-border rounded-lg bg-black/20">
+    <div className="w-full h-16 relative flex items-center justify-between px-2 mt-4 border border-border rounded-lg bg-surface-elevated">
       <div className="flex flex-col items-center">
         <Database size={14} className="text-text-muted" />
         <span className="text-[9px] text-text-muted mt-1 uppercase tracking-widest">Data</span>
@@ -127,7 +127,7 @@ export function ChallengeExplorer({ challenges, config }: { challenges: Industry
                   {/* Header Row */}
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-black/20 border border-border group-hover:rotate-12 transition-transform duration-500">
+                      <div className="p-2 rounded-lg bg-surface-elevated border border-border group-hover:rotate-12 transition-transform duration-500">
                         <Icon size={24} style={{ color: catConfig.color }} />
                       </div>
                       <h3 className="text-xl font-bold text-text-primary leading-tight group-hover:translate-x-1 transition-transform duration-300">
@@ -216,7 +216,7 @@ export function ChallengeExplorer({ challenges, config }: { challenges: Industry
                             <span className="text-xs uppercase tracking-widest text-text-muted font-bold block mb-2">Technologies</span>
                             <div className="flex flex-wrap gap-2">
                               {challenge.techStack.map((tech, idx) => (
-                                <span key={idx} className="text-xs px-2 py-1 rounded bg-black/30 text-text-secondary border border-border">
+                                <span key={idx} className="text-xs px-2 py-1 rounded bg-surface-elevated text-text-secondary border border-border">
                                   {tech}
                                 </span>
                               ))}

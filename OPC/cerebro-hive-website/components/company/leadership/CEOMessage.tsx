@@ -68,7 +68,7 @@ export const CEOMessage = () => {
             <motion.div variants={motionPresets.fadeUp} className="flex flex-col items-center lg:items-start text-center lg:text-left">
               {/* Subtle SVG Signature Placeholder */}
               <div className="w-32 h-12 mb-2 opacity-60 flex items-center justify-center lg:justify-start">
-                <svg viewBox="0 0 200 60" className="w-full h-full stroke-white fill-none stroke-2" style={{ strokeLinecap: "round", strokeLinejoin: "round" }}>
+                <svg viewBox="0 0 200 60" className="w-full h-full stroke-text-primary fill-none stroke-2" style={{ strokeLinecap: "round", strokeLinejoin: "round" }}>
                   <path d="M 20,40 C 30,20 40,10 50,35 C 60,60 70,20 80,40 C 90,60 100,10 110,35 C 120,60 130,20 140,40 C 150,60 160,20 170,35" className="opacity-50" />
                   <path d="M 40,45 L 180,45" className="stroke-primary-accent opacity-30" />
                 </svg>

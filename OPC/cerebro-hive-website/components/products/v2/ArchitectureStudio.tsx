@@ -97,7 +97,7 @@ export const ArchitectureStudio = () => {
                     <button
                       key={i}
                       onClick={() => handleSelect(option)}
-                      className="p-6 rounded-xl border border-border bg-black/30 hover:bg-[#00E5FF]/5 hover:border-[#00E5FF]/30 text-left transition-all duration-300 group flex items-center justify-between"
+                      className="p-6 rounded-xl border border-border bg-surface-elevated hover:bg-[#00E5FF]/5 hover:border-[#00E5FF]/30 text-left transition-all duration-300 group flex items-center justify-between"
                     >
                       <span className="text-lg font-medium text-text-primary group-hover:text-[#00E5FF]">{option}</span>
                       <ArrowRight size={18} className="text-transparent group-hover:text-[#00E5FF] -translate-x-4 group-hover:translate-x-0 transition-all" />
@@ -171,7 +171,7 @@ export const ArchitectureStudio = () => {
                     </h4>
                     <div className="space-y-3">
                       {["Knowledge Hub (RAG Base)", "AgentOS (Workflow Gen)", "Quantiva ERP Layer"].map((prod, i) => (
-                        <div key={i} className="p-4 rounded-xl border border-border bg-black/30 flex items-center gap-4">
+                        <div key={i} className="p-4 rounded-xl border border-border bg-surface-elevated flex items-center gap-4">
                           <div className="w-8 h-8 rounded bg-primary-accent/20 text-primary-accent flex items-center justify-center shrink-0">
                             <CheckCircle2 size={16} />
                           </div>
@@ -193,11 +193,11 @@ export const ArchitectureStudio = () => {
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 rounded-xl border border-border bg-black/30">
+                      <div className="p-4 rounded-xl border border-border bg-surface-elevated">
                         <div className="text-text-muted text-[10px] uppercase tracking-widest font-bold mb-1 flex items-center gap-1"><Calendar size={12}/> Timeline</div>
                         <div className="text-text-primary font-space font-bold text-xl">90 Days</div>
                       </div>
-                      <div className="p-4 rounded-xl border border-border bg-black/30">
+                      <div className="p-4 rounded-xl border border-border bg-surface-elevated">
                         <div className="text-text-muted text-[10px] uppercase tracking-widest font-bold mb-1 flex items-center gap-1"><DollarSign size={12}/> Expected ROI</div>
                         <div className="text-primary-accent font-space font-bold text-xl">250%+</div>
                       </div>
@@ -207,7 +207,7 @@ export const ArchitectureStudio = () => {
                 </div>
 
                 {/* Reset */}
-                <div className="p-4 border-t border-border bg-black/20 text-center">
+                <div className="p-4 border-t border-border bg-surface-elevated text-center">
                   <button onClick={reset} className="text-xs text-text-muted hover:text-text-primary transition-colors underline underline-offset-4">
                     Reconfigure Architecture
                   </button>

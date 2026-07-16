@@ -190,7 +190,7 @@ export const PlatformExplorer = () => {
                       <h4 className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4">Core KPIs</h4>
                       <div className="space-y-2">
                         {activeProduct.business.kpis.map((kpi, i) => (
-                          <div key={i} className="w-full bg-black/30 rounded-lg p-3 border border-border text-sm font-space font-medium text-text-primary flex justify-between items-center">
+                          <div key={i} className="w-full bg-surface-elevated rounded-lg p-3 border border-border text-sm font-space font-medium text-text-primary flex justify-between items-center">
                             {kpi} <TrendingUp size={14} className="text-primary-accent" />
                           </div>
                         ))}
@@ -229,7 +229,7 @@ export const PlatformExplorer = () => {
                       <h4 className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2"><Layers size={14} /> Supported Models / Tech</h4>
                       <ul className="space-y-2 mb-8">
                         {activeProduct.technical.models.map((model, i) => (
-                          <li key={i} className="flex items-center gap-3 text-text-primary text-sm bg-black/20 p-2 rounded border border-border font-mono">
+                          <li key={i} className="flex items-center gap-3 text-text-primary text-sm bg-surface-elevated p-2 rounded border border-border font-mono">
                             <span className="w-1.5 h-1.5 rounded-full bg-primary-accent" /> {model}
                           </li>
                         ))}

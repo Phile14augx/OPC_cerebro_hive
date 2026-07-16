@@ -38,7 +38,7 @@ export default function CompanyHero() {
           className="text-5xl md:text-7xl lg:text-8xl font-space font-bold text-text-primary mb-8 tracking-tighter"
         >
           Engineering the <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-transparent">Intelligent Enterprise.</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-text-primary to-transparent">Intelligent Enterprise.</span>
         </motion.h1>
         
         <motion.p 

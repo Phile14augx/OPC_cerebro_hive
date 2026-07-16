@@ -88,7 +88,7 @@ export default function LivingArchitecture() {
                 }`}
               >
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 border ${
-                  activeLayer === layer.id ? `${layer.color} border-border text-black shadow-[0_0_15px_currentColor]` : 'bg-surface border-border text-text-primary'
+                  activeLayer === layer.id ? `${layer.color} border-border text-text-primary shadow-[0_0_15px_currentColor]` : 'bg-surface border-border text-text-primary'
                 }`}>
                   <layer.icon size={20} />
                 </div>
@@ -119,7 +119,7 @@ export default function LivingArchitecture() {
                   className="relative z-10"
                 >
                   <div className="flex items-center gap-3 mb-6">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white ${layer.color}`}>
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-text-primary ${layer.color}`}>
                       <layer.icon size={20} />
                     </div>
                     <h3 className="text-2xl font-space font-bold text-text-primary">{layer.label}</h3>
@@ -147,7 +147,7 @@ export default function LivingArchitecture() {
                       <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-1">CerebroHive Implementation</div>
                       <div className="font-bold text-accent-secondary">{layer.products}</div>
                     </div>
-                    <button className="px-4 py-2 border border-border rounded text-xs font-bold uppercase tracking-widest text-text-primary hover:bg-black/5 dark:hover:bg-surface-elevated transition-colors">
+                    <button className="px-4 py-2 border border-border rounded text-xs font-bold uppercase tracking-widest text-text-primary hover:bg-surface-elevated dark:hover:bg-surface-elevated transition-colors">
                       View Documentation
                     </button>
                   </div>

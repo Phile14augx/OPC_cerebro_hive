@@ -39,7 +39,7 @@ export const ExperimentGallery = () => {
         <div className="max-w-4xl mx-auto bg-surface border border-border rounded-2xl overflow-hidden shadow-2xl">
           
           {/* Header */}
-          <div className="p-8 border-b border-border bg-black/20 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="p-8 border-b border-border bg-surface-elevated flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <div className="text-xs uppercase tracking-widest text-accent-secondary font-bold mb-2">Experiment {activeExp.id}</div>
               <h3 className="text-2xl font-space font-bold text-text-primary leading-tight">{activeExp.title}</h3>
@@ -71,7 +71,7 @@ export const ExperimentGallery = () => {
                 <h4 className="flex items-center gap-2 text-xs uppercase tracking-widest text-text-muted font-bold mb-3">
                   <Database size={14} /> Dataset
                 </h4>
-                <div className="p-3 bg-black/40 border border-border rounded-lg text-sm text-text-primary font-mono">
+                <div className="p-3 bg-surface-elevated border border-border rounded-lg text-sm text-text-primary font-mono">
                   {activeExp.dataset}
                 </div>
               </div>
@@ -92,7 +92,7 @@ export const ExperimentGallery = () => {
                 <h4 className="flex items-center gap-2 text-xs uppercase tracking-widest text-warning font-bold mb-3">
                   <AlertTriangle size={14} /> Limitations
                 </h4>
-                <div className="p-4 bg-black/40 border border-[#FFB300]/20 border-l-2 border-l-[#FFB300] rounded-r-xl">
+                <div className="p-4 bg-surface-elevated border border-[#FFB300]/20 border-l-2 border-l-[#FFB300] rounded-r-xl">
                   <p className="text-sm text-text-secondary leading-relaxed">{activeExp.limitations}</p>
                 </div>
               </div>
@@ -101,7 +101,7 @@ export const ExperimentGallery = () => {
           </div>
 
           {/* Footer Navigation */}
-          <div className="p-4 bg-black/20 border-t border-border flex justify-between items-center text-sm text-text-muted">
+          <div className="p-4 bg-surface-elevated border-t border-border flex justify-between items-center text-sm text-text-muted">
             <button className="hover:text-text-primary transition-colors">Previous Experiment</button>
             <button className="flex items-center gap-2 hover:text-text-primary transition-colors">Next Experiment <ArrowRight size={16} /></button>
           </div>

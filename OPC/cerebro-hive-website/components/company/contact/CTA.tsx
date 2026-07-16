@@ -199,7 +199,7 @@ export const CTA = () => {
       </div>
 
       {/* Footer Vignette Blend */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-black pointer-events-none z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-background pointer-events-none z-10" />
     </section>
   );
 };

@@ -78,7 +78,7 @@ export default function OriginStory() {
                     className="flex items-center gap-6 group text-left relative z-10"
                   >
                     <div className={`w-12 h-12 rounded-full border-4 flex items-center justify-center shrink-0 transition-colors ${
-                      isActive ? `border-[#0A0D14] ${step.bgColor} text-black` :
+                      isActive ? `border-[#0A0D14] ${step.bgColor} text-text-primary` :
                       isPast ? `border-[#0A0D14] bg-surface-elevated text-text-primary` :
                       `border-border bg-background text-text-muted group-hover:text-text-primary group-hover:border-border-strong`
                     }`}>

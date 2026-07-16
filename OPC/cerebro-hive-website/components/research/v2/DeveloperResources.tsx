@@ -15,7 +15,7 @@ export const DeveloperResources = () => {
     <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
-        <div className="bg-gradient-to-br from-surface to-black border border-border rounded-3xl p-8 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center gap-12">
+        <div className="bg-gradient-to-br from-surface to-background border border-border rounded-3xl p-8 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center gap-12">
           
           <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none" style={{ backgroundImage: `radial-gradient(circle at top right, #00E5FF, transparent)` }} />
 

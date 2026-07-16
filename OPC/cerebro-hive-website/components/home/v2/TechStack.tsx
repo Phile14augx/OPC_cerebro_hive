@@ -257,7 +257,7 @@ export default function TechStack() {
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                                   <span style={{ fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgb(107,114,128)' }}>Deployments</span>
-                                  <span style={{ fontSize: '12px', fontFamily: 'monospace', color: 'white', fontWeight: 700 }}>{tech.deployments} Enterprise Apps</span>
+                                  <span style={{ fontSize: '12px', fontFamily: 'monospace', color: 'var(--color-text-primary)', fontWeight: 700 }}>{tech.deployments} Enterprise Apps</span>
                                 </div>
                               </motion.div>
                             )}
