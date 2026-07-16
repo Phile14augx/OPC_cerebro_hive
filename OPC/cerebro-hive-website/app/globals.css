@@ -77,13 +77,21 @@ p { font-family: var(--font-inter), sans-serif; }
   box-shadow: var(--shadow-elevation-floating);
 }
 
-.theme-glass {
+.theme-glass,
+.card-glass {
   background: var(--glass-bg);
   backdrop-filter: blur(var(--blur-glass));
   -webkit-backdrop-filter: blur(var(--blur-glass));
   border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
   box-shadow: var(--shadow-elevation-floating), var(--shadow-glow-secondary);
   transition: all var(--motion-duration) var(--motion-easing-default);
+}
+
+.card-glass:hover {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-elevation-popover), var(--shadow-glow-primary);
+  transform: translateY(-2px);
 }
 
 .theme-button-primary {
@@ -98,6 +106,57 @@ p { font-family: var(--font-inter), sans-serif; }
   background: var(--btn-primary-hover);
   box-shadow: var(--shadow-elevation-floating), var(--shadow-glow-primary);
   transform: translateY(-1px);
+}
+
+.btn-primary,
+.btn-ghost,
+.btn-orange {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  font-weight: var(--font-weight-heavy, 700);
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  transition: all var(--motion-duration) var(--motion-easing-default);
+  text-decoration: none;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: var(--shadow-elevation-raised), var(--shadow-glow-primary);
+}
+.btn-primary:hover {
+  background: var(--btn-primary-hover);
+  box-shadow: var(--shadow-elevation-floating), var(--shadow-glow-primary);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-accent);
+  border: 1px solid var(--border-default);
+}
+.btn-ghost:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-focus);
+  transform: translateY(-2px);
+}
+
+.btn-orange {
+  background: var(--text-warning);
+  color: var(--btn-primary-text);
+  box-shadow: var(--shadow-elevation-raised);
+}
+.btn-orange:hover {
+  box-shadow: var(--shadow-elevation-floating);
+  transform: translateY(-2px);
 }
 
 /* Custom Scrollbar */
