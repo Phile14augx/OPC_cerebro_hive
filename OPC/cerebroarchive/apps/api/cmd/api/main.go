@@ -5,9 +5,15 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/cerebro/cerebroarchive/apps/api/internal/ai"
+	"github.com/cerebro/cerebroarchive/apps/api/internal/archive"
+	"github.com/cerebro/cerebroarchive/apps/api/internal/common/validation"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/identity"
+	"github.com/cerebro/cerebroarchive/apps/api/internal/platform/ai"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/platform/config"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/platform/logger"
+	"github.com/cerebro/cerebroarchive/apps/api/internal/platform/storage"
+	"github.com/cerebro/cerebroarchive/apps/api/internal/platform/vector"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -52,12 +58,25 @@ func main() {
 func bootstrap(app *App) {
 	// Initialize Repositories (will inject SQLC Queries instance here)
 	identityRepo := identity.NewRepository(app.DB)
+	validator := validation.NewValidator()
 
 	// Initialize Services
 	app.IdentityService = identity.NewService(identityRepo, app.Logger)
 
 	// Initialize Handlers
-	identityHandler := identity.NewHandler(app.IdentityService)
+	identityHandler := identity.NewHandler(app.IdentityService, validator)
+
+	// Archive Domain
+	blobStorage := storage.NewS3Storage("cerebro-documents-bucket")
+	archiveRepo := archive.NewPostgresRepository(nil)
+	archiveService := archive.NewService(archiveRepo, blobStorage, app.Logger)
+	archiveHandler := archive.NewHandler(archiveService, validator)
+
+	// AI Domain
+	pineconeStore := vector.NewPineconeStore("cerebro-index")
+	openAIClient := platformai.NewOpenAIClient() // implements Embedder & Generator
+	aiService := ai.NewService(openAIClient, pineconeStore, openAIClient, app.Logger)
+	aiHandler := ai.NewHandler(aiService, validator)
 
 	// Mount Routes
 	api := app.Fiber.Group("/api/v1")
@@ -75,4 +94,13 @@ func bootstrap(app *App) {
 	// Identity Domain Routes
 	identityGroup := api.Group("/identity")
 	identityHandler.RegisterRoutes(identityGroup)
+
+	// Archive routes
+	// Note: In reality, these are protected by middleware.RequireAuth()
+	archiveGroup := api.Group("/archive")
+	archiveHandler.RegisterRoutes(archiveGroup)
+
+	// AI routes
+	aiGroup := api.Group("/ai")
+	aiHandler.RegisterRoutes(aiGroup)
 }
