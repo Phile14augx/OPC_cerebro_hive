@@ -35,7 +35,7 @@ const projects = [
 
 export const OpenSourceProjects = () => {
   return (
-    <section className="py-24 border-b border-white/5 bg-[#05070A]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
@@ -43,24 +43,24 @@ export const OpenSourceProjects = () => {
             <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block flex items-center gap-2">
               <Code2 size={14} /> Open Source
             </span>
-            <h2 className="text-3xl md:text-4xl font-space font-bold text-white mb-4">Building in the Open</h2>
+            <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-4">Building in the Open</h2>
             <p className="text-text-secondary font-inter max-w-2xl">
               We open-source our foundational tooling, datasets, and evaluation frameworks to accelerate the entire AI ecosystem.
             </p>
           </div>
-          <button className="px-6 py-3 bg-white/5 border border-white/10 text-white text-sm font-bold rounded-lg hover:bg-white hover:text-black transition-colors flex items-center gap-2">
+          <button className="px-6 py-3 bg-white/5 border border-border text-text-primary text-sm font-bold rounded-lg hover:bg-white hover:text-black transition-colors flex items-center gap-2">
             View GitHub Organization
           </button>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {projects.map((proj, i) => (
-            <div key={i} className="bg-surface border border-white/10 rounded-2xl p-6 hover:border-primary-accent/50 transition-colors flex flex-col h-full">
+            <div key={i} className="bg-surface border border-border rounded-2xl p-6 hover:border-primary-accent/50 transition-colors flex flex-col h-full">
               
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <TerminalSquare size={20} className="text-text-muted" />
-                  <h3 className="text-lg font-space font-bold text-white group-hover:text-primary-accent transition-colors">
+                  <h3 className="text-lg font-space font-bold text-text-primary group-hover:text-primary-accent transition-colors">
                     {proj.name}
                   </h3>
                 </div>
@@ -70,7 +70,7 @@ export const OpenSourceProjects = () => {
                 {proj.desc}
               </p>
 
-              <div className="flex items-center justify-between text-xs text-text-muted border-t border-white/5 pt-4">
+              <div className="flex items-center justify-between text-xs text-text-muted border-t border-border pt-4">
                 <div className="flex items-center gap-2">
                   <span className={`w-2 h-2 rounded-full ${proj.color}`} />
                   {proj.lang}

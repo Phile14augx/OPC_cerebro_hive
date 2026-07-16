@@ -53,12 +53,12 @@ export const AgentGallery = () => {
   const activeData = agents.find(a => a.id === activeAgent) || agents[0];
 
   return (
-    <section className="py-24 border-b border-border bg-[#0A0D14]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] mb-3 block">AgentOS Fleet</span>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">Autonomous Digital Workers</h2>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block">AgentOS Fleet</span>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Autonomous Digital Workers</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter">
             Deploy specialized AI agents that possess domain expertise, utilize enterprise tools, and execute end-to-end workflows autonomously.
           </p>
@@ -78,14 +78,14 @@ export const AgentGallery = () => {
                     "flex items-center justify-between p-4 rounded-xl border transition-all text-left group",
                     isActive 
                       ? "bg-[#00E5FF]/10 border-[#00E5FF]/50 shadow-[0_0_20px_rgba(0,229,255,0.1)]" 
-                      : "bg-surface border-white/5 hover:border-white/20"
+                      : "bg-surface border-border hover:border-white/20"
                   )}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={cn("p-2 rounded-lg", isActive ? "bg-[#00E5FF]/20 text-[#00E5FF]" : "bg-black/30 text-text-muted group-hover:text-white")}>
+                    <div className={cn("p-2 rounded-lg", isActive ? "bg-[#00E5FF]/20 text-accent-secondary" : "bg-black/30 text-text-muted group-hover:text-white")}>
                       <agent.icon size={20} />
                     </div>
-                    <span className={cn("font-space font-bold", isActive ? "text-white" : "text-text-muted group-hover:text-white")}>{agent.name}</span>
+                    <span className={cn("font-space font-bold", isActive ? "text-text-primary" : "text-text-muted group-hover:text-white")}>{agent.name}</span>
                   </div>
                   {isActive && (
                     <motion.div layoutId="agent-active" className="w-2 h-2 rounded-full bg-[#00E5FF]" />
@@ -108,13 +108,13 @@ export const AgentGallery = () => {
               >
                 
                 {/* Header */}
-                <div className="flex items-center gap-4 mb-8 pb-8 border-b border-white/5">
-                  <div className="w-16 h-16 rounded-2xl bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF] shadow-[0_0_30px_rgba(0,229,255,0.2)]">
+                <div className="flex items-center gap-4 mb-8 pb-8 border-b border-border">
+                  <div className="w-16 h-16 rounded-2xl bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-accent-secondary shadow-[0_0_30px_rgba(0,229,255,0.2)]">
                     <activeData.icon size={32} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-space font-bold text-white mb-1">{activeData.name}</h3>
-                    <div className="text-xs uppercase tracking-widest text-[#00E5FF] font-bold">Status: Online • Idle</div>
+                    <h3 className="text-2xl font-space font-bold text-text-primary mb-1">{activeData.name}</h3>
+                    <div className="text-xs uppercase tracking-widest text-accent-secondary font-bold">Status: Online • Idle</div>
                   </div>
                 </div>
 
@@ -122,29 +122,29 @@ export const AgentGallery = () => {
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
                   
                   {/* Workflow */}
-                  <div className="bg-black/20 border border-white/5 rounded-xl p-5">
+                  <div className="bg-black/20 border border-border rounded-xl p-5">
                     <div className="flex items-center gap-2 text-text-muted mb-3 text-xs uppercase tracking-widest font-bold">
                       <Network size={14} /> Standard Workflow
                     </div>
-                    <div className="text-sm text-white font-mono">{activeData.workflow}</div>
+                    <div className="text-sm text-text-primary font-mono">{activeData.workflow}</div>
                   </div>
 
                   {/* Memory */}
-                  <div className="bg-black/20 border border-white/5 rounded-xl p-5">
+                  <div className="bg-black/20 border border-border rounded-xl p-5">
                     <div className="flex items-center gap-2 text-text-muted mb-3 text-xs uppercase tracking-widest font-bold">
                       <BrainCircuit size={14} /> Contextual Memory
                     </div>
-                    <div className="text-sm text-white">{activeData.memory}</div>
+                    <div className="text-sm text-text-primary">{activeData.memory}</div>
                   </div>
 
                   {/* Tools */}
-                  <div className="bg-black/20 border border-white/5 rounded-xl p-5">
+                  <div className="bg-black/20 border border-border rounded-xl p-5">
                     <div className="flex items-center gap-2 text-text-muted mb-3 text-xs uppercase tracking-widest font-bold">
                       <Wrench size={14} /> Equipped Tools
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {activeData.tools.map((tool, i) => (
-                        <span key={i} className="px-2.5 py-1 bg-surface-elevated border border-white/10 rounded text-xs text-white">{tool}</span>
+                        <span key={i} className="px-2.5 py-1 bg-surface-elevated border border-border rounded text-xs text-text-primary">{tool}</span>
                       ))}
                     </div>
                   </div>
@@ -154,13 +154,13 @@ export const AgentGallery = () => {
                     <div className="flex items-center gap-2 text-text-muted mb-2 text-xs uppercase tracking-widest font-bold">
                       <Activity size={14} /> Expected ROI
                     </div>
-                    <div className="text-xl font-space font-bold text-[#00E5FF]">{activeData.roi}</div>
+                    <div className="text-xl font-space font-bold text-accent-secondary">{activeData.roi}</div>
                   </div>
 
                 </div>
 
                 {/* Reasoning Block */}
-                <div className="bg-[#0A0D14] border border-white/5 rounded-xl p-5 relative overflow-hidden">
+                <div className="bg-background border border-border rounded-xl p-5 relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-1 h-full bg-[#00E5FF]/50" />
                   <div className="flex items-center gap-2 text-text-muted mb-3 text-xs uppercase tracking-widest font-bold">
                     <LayoutTemplate size={14} /> Reasoning Trace

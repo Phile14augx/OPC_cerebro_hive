@@ -12,7 +12,7 @@ const roadmap = [
     duration: "Weeks 1-2",
     desc: "Evaluate current ERP limitations and map high-value manual workflows.",
     deliverable: "AI Maturity Matrix",
-    color: "text-[#00E5FF]",
+    color: "text-accent-secondary",
     bgColor: "bg-[#00E5FF]"
   },
   {
@@ -22,7 +22,7 @@ const roadmap = [
     duration: "Weeks 3-4",
     desc: "Architect the Knowledge Hub and design deterministic guardrails.",
     deliverable: "Platform Architecture Blueprint",
-    color: "text-[#FFB300]",
+    color: "text-warning",
     bgColor: "bg-[#FFB300]"
   },
   {
@@ -42,8 +42,8 @@ const roadmap = [
     duration: "Months 4-6",
     desc: "Integrate Quantiva ERP and shift employees to overseer roles.",
     deliverable: "Enterprise Go-Live",
-    color: "text-[#00F57A]",
-    bgColor: "bg-[#00F57A]"
+    color: "text-accent-primary",
+    bgColor: "bg-accent-primary"
   },
   {
     id: "scale",
@@ -52,7 +52,7 @@ const roadmap = [
     duration: "Month 6+",
     desc: "Expand agent swarms across adjacent business units automatically.",
     deliverable: "Autonomous Enterprise",
-    color: "text-white",
+    color: "text-text-primary",
     bgColor: "bg-white"
   }
 ];
@@ -61,11 +61,11 @@ export default function TransformationRoadmap() {
   const [activePhase, setActivePhase] = useState(roadmap[0]);
 
   return (
-    <section className="py-24 border-b border-white/5 bg-[#05070A] relative">
+    <section className="py-24 border-b border-border bg-background relative">
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-6">The Transformation Roadmap</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">The Transformation Roadmap</h2>
           <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
             How we guide organizations from manual operations to an AI-native architecture in six months.
           </p>
@@ -84,13 +84,13 @@ export default function TransformationRoadmap() {
                 <div key={phase.id} className="relative z-10 flex flex-row md:flex-col items-center gap-4 md:gap-4 mb-6 md:mb-0 cursor-pointer group" onClick={() => setActivePhase(phase)}>
                   <div className={`w-12 h-12 rounded-full border-4 flex items-center justify-center transition-colors ${
                     isActive ? `border-[#0A0D14] ${phase.bgColor} text-black` :
-                    isPast ? `border-[#0A0D14] bg-white/20 text-white` :
-                    "border-white/10 bg-[#0A0D14] text-text-muted group-hover:text-white group-hover:border-white/30"
+                    isPast ? `border-[#0A0D14] bg-white/20 text-text-primary` :
+                    "border-border bg-background text-text-muted group-hover:text-white group-hover:border-white/30"
                   }`}>
                     <phase.icon size={20} />
                   </div>
                   <div className="text-left md:text-center">
-                    <div className={`font-space font-bold text-sm transition-colors ${isActive ? "text-white" : "text-text-secondary"}`}>{phase.title}</div>
+                    <div className={`font-space font-bold text-sm transition-colors ${isActive ? "text-text-primary" : "text-text-secondary"}`}>{phase.title}</div>
                     <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold">{phase.duration}</div>
                   </div>
                 </div>
@@ -99,7 +99,7 @@ export default function TransformationRoadmap() {
           </div>
 
           {/* Active Phase Details */}
-          <div className="bg-surface border border-white/10 rounded-2xl p-8 md:p-12 relative overflow-hidden text-center">
+          <div className="bg-surface border border-border rounded-2xl p-8 md:p-12 relative overflow-hidden text-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activePhase.id}
@@ -112,13 +112,13 @@ export default function TransformationRoadmap() {
                 <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-6">
                   <activePhase.icon size={32} className={activePhase.color} />
                 </div>
-                <h3 className="text-3xl font-space font-bold text-white mb-4">{activePhase.title}</h3>
+                <h3 className="text-3xl font-space font-bold text-text-primary mb-4">{activePhase.title}</h3>
                 <p className="text-lg text-text-secondary leading-relaxed mb-8">
                   {activePhase.desc}
                 </p>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black border border-white/10">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface border border-border">
                   <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold">Key Deliverable:</span>
-                  <span className="text-sm font-bold text-white">{activePhase.deliverable}</span>
+                  <span className="text-sm font-bold text-text-primary">{activePhase.deliverable}</span>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -126,12 +126,12 @@ export default function TransformationRoadmap() {
 
           {/* CTA */}
           <div className="mt-16 text-center">
-            <h3 className="text-2xl font-space font-bold text-white mb-6">Ready to build the AI-Native Enterprise?</h3>
+            <h3 className="text-2xl font-space font-bold text-text-primary mb-6">Ready to build the AI-Native Enterprise?</h3>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="px-8 py-4 bg-white text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
                 Book Strategy Session <ArrowRight size={16} />
               </button>
-              <button className="px-8 py-4 bg-transparent border border-white/20 text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-white/5 transition-colors">
+              <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-white/5 transition-colors">
                 Explore Services
               </button>
             </div>

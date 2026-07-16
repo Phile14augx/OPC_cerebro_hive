@@ -6,13 +6,13 @@ import { BrainCircuit, BookOpen, FlaskConical, Code2, Network, ArrowRight } from
 import { cn, withBasePath } from "@/lib/utils";
 
 const graphNodes = [
-  { id: "reasoning", label: "Reasoning", x: 20, y: 30, color: "text-[#00E5FF]", border: "border-[#00E5FF]/30", glow: "shadow-[0_0_15px_#00E5FF]" },
-  { id: "agents", label: "Agents", x: 70, y: 15, color: "text-[#00F57A]", border: "border-[#00F57A]/30", glow: "shadow-[0_0_15px_#00F57A]" },
-  { id: "memory", label: "Memory", x: 85, y: 60, color: "text-[#FFB300]", border: "border-[#FFB300]/30", glow: "shadow-[0_0_15px_#FFB300]" },
+  { id: "reasoning", label: "Reasoning", x: 20, y: 30, color: "text-accent-secondary", border: "border-[#00E5FF]/30", glow: "shadow-[0_0_15px_#00E5FF]" },
+  { id: "agents", label: "Agents", x: 70, y: 15, color: "text-accent-primary", border: "border-accent-primary/30", glow: "shadow-[0_0_15px_#00F57A]" },
+  { id: "memory", label: "Memory", x: 85, y: 60, color: "text-warning", border: "border-[#FFB300]/30", glow: "shadow-[0_0_15px_#FFB300]" },
   { id: "planning", label: "Planning", x: 40, y: 75, color: "text-primary-accent", border: "border-primary-accent/30", glow: "shadow-[0_0_15px_rgba(0,245,122,0.5)]" },
-  { id: "enterprise", label: "Enterprise AI", x: 50, y: 45, color: "text-white", border: "border-white/30", glow: "shadow-[0_0_20px_rgba(255,255,255,0.5)]", scale: 1.2 },
-  { id: "automation", label: "Automation", x: 10, y: 70, color: "text-[#00E5FF]", border: "border-[#00E5FF]/30", glow: "" },
-  { id: "evaluation", label: "Evaluation", x: 75, y: 85, color: "text-[#00F57A]", border: "border-[#00F57A]/30", glow: "" },
+  { id: "enterprise", label: "Enterprise AI", x: 50, y: 45, color: "text-text-primary", border: "border-border", glow: "shadow-[0_0_20px_rgba(255,255,255,0.5)]", scale: 1.2 },
+  { id: "automation", label: "Automation", x: 10, y: 70, color: "text-accent-secondary", border: "border-[#00E5FF]/30", glow: "" },
+  { id: "evaluation", label: "Evaluation", x: 75, y: 85, color: "text-accent-primary", border: "border-accent-primary/30", glow: "" },
 ];
 
 const connections = [
@@ -28,10 +28,10 @@ export const ResearchHero = () => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <section className="min-h-[90vh] bg-[#0A0D14]" />;
+  if (!mounted) return <section className="min-h-[90vh] bg-background" />;
 
   return (
-    <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-white/5 bg-[#0A0D14] overflow-hidden flex flex-col justify-center">
+    <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-border bg-background overflow-hidden flex flex-col justify-center">
       
       {/* Background Ambience */}
       <div className="absolute inset-0 pointer-events-none z-0">
@@ -47,12 +47,12 @@ export const ResearchHero = () => {
         {/* Left Column: Messaging */}
         <div className="flex flex-col items-start text-left">
           
-          <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm">
-            <FlaskConical size={14} className="text-[#00E5FF]" />
+          <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/5 border border-border mb-8 backdrop-blur-sm">
+            <FlaskConical size={14} className="text-accent-secondary" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">CerebroHive Research Institute</span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-white tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
             Advancing <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-text-secondary to-text-muted">Enterprise Intelligence</span> <br/>
             Through Applied Research.
@@ -67,7 +67,7 @@ export const ResearchHero = () => {
               Explore Research
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="px-8 py-4 bg-transparent border border-white/20 text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+            <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
               <Code2 size={16} /> Developer Portal
             </button>
           </div>
@@ -133,14 +133,14 @@ export const ResearchHero = () => {
                 style={{ left: `${node.x}%`, top: `${node.y}%`, transform: 'translate(-50%, -50%)' }}
               >
                 <div className={cn(
-                  "w-10 h-10 rounded-full flex items-center justify-center bg-black border backdrop-blur-md transition-all duration-300",
+                  "w-10 h-10 rounded-full flex items-center justify-center bg-surface border backdrop-blur-md transition-all duration-300",
                   node.border, node.color,
                   "group-hover:scale-125 group-hover:bg-white/5",
                   node.glow
                 )}>
                   <Network size={16} />
                 </div>
-                <div className="absolute top-full mt-2 whitespace-nowrap text-[10px] uppercase tracking-widest font-bold text-text-muted group-hover:text-white transition-colors bg-black/50 px-2 py-0.5 rounded border border-white/10">
+                <div className="absolute top-full mt-2 whitespace-nowrap text-[10px] uppercase tracking-widest font-bold text-text-muted group-hover:text-white transition-colors bg-surface-secondary px-2 py-0.5 rounded border border-border">
                   {node.label}
                 </div>
               </motion.div>

@@ -39,7 +39,7 @@ export const OrgStatusBar = () => {
         <div className="text-[10px] font-mono text-text-muted">
           Selection: {selectedNode ? selectedNode.title : 'None'}
         </div>
-        <div className="text-[10px] font-mono text-white bg-white/10 px-2 py-0.5 rounded">
+        <div className="text-[10px] font-mono text-text-primary bg-white/10 px-2 py-0.5 rounded">
           {zoom}%
         </div>
       </div>

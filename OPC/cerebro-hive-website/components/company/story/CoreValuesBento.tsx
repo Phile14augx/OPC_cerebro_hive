@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 export const CoreValuesBento = () => {
   return (
-    <section id="culture-code" className="section-pad relative bg-background overflow-hidden border-t border-white/5">
+    <section id="culture-code" className="section-pad relative bg-background overflow-hidden border-t border-border">
       
       {/* 1. Ambient Background Layer */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -51,7 +51,7 @@ export const CoreValuesBento = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-space font-bold text-white tracking-tight leading-[1.1] mb-8"
+            className="text-4xl md:text-5xl lg:text-6xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-8"
           >
             Built Like an Engineering Organization, <br className="hidden md:block"/> 
             <span className="text-text-muted">Not a Consultancy.</span>

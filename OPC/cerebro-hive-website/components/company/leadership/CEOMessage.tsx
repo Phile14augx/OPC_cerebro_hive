@@ -13,7 +13,7 @@ export const CEOMessage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <section className="section-pad relative bg-[#020508] border-t border-white/5 overflow-hidden">
+    <section className="section-pad relative bg-[#020508] border-t border-border overflow-hidden">
       
       {/* Ambient Boardroom Environment */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -49,7 +49,7 @@ export const CEOMessage = () => {
             />
 
             {/* Premium Executive Portrait */}
-            <motion.div variants={motionPresets.fadeUp} className="group relative w-full aspect-[4/5] max-w-sm mx-auto lg:mx-0 rounded-2xl overflow-hidden mb-8 bg-[#0a0f12] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <motion.div variants={motionPresets.fadeUp} className="group relative w-full aspect-[4/5] max-w-sm mx-auto lg:mx-0 rounded-2xl overflow-hidden mb-8 bg-[#0a0f12] border border-border shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
               {/* Soft Edge Lighting / Vignette */}
               <div className="absolute inset-0 z-10 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)] pointer-events-none" />
               {/* Glass Frame Reflection */}
@@ -74,7 +74,7 @@ export const CEOMessage = () => {
                 </svg>
               </div>
               
-              <h3 className="text-3xl font-space font-bold text-white mb-2">
+              <h3 className="text-3xl font-space font-bold text-text-primary mb-2">
                 {executiveProfile.identity.name}
               </h3>
               <p className="text-sm font-space font-bold uppercase tracking-[0.2em] text-primary-accent mb-4">
@@ -98,14 +98,14 @@ export const CEOMessage = () => {
             {/* The Quote */}
             <motion.blockquote variants={motionPresets.fadeUp} className="relative mb-16 pl-8 lg:pl-12">
               <Quote size={64} className="absolute -top-6 -left-4 lg:-left-2 text-white/5 z-0" />
-              <p className="relative z-10 text-2xl md:text-3xl lg:text-4xl font-space font-bold text-white leading-[1.2] tracking-tight">
+              <p className="relative z-10 text-2xl md:text-3xl lg:text-4xl font-space font-bold text-text-primary leading-[1.2] tracking-tight">
                 "{executiveProfile.quote.text}"
               </p>
             </motion.blockquote>
 
             {/* Leadership Philosophy (Framework Layout) */}
             <motion.div variants={motionPresets.fadeUp} className="mb-16">
-              <h4 className="text-xs font-space font-bold uppercase tracking-[0.2em] text-text-muted mb-8 border-b border-white/10 pb-4">
+              <h4 className="text-xs font-space font-bold uppercase tracking-[0.2em] text-text-muted mb-8 border-b border-border pb-4">
                 Leadership Philosophy
               </h4>
               <div className="flex flex-col gap-6">
@@ -115,7 +115,7 @@ export const CEOMessage = () => {
                       {phil.step}
                     </div>
                     <div>
-                      <h5 className="text-sm font-space font-bold text-white uppercase tracking-wider mb-2 group-hover:text-primary-accent transition-colors">
+                      <h5 className="text-sm font-space font-bold text-text-primary uppercase tracking-wider mb-2 group-hover:text-primary-accent transition-colors">
                         {phil.title}
                       </h5>
                       <p className="text-text-secondary font-inter leading-relaxed">
@@ -128,7 +128,7 @@ export const CEOMessage = () => {
             </motion.div>
 
             {/* Strategic Focus & Commitments (2 Columns) */}
-            <motion.div variants={motionPresets.fadeUp} className="grid md:grid-cols-2 gap-12 mb-16 bg-[#070a0f] p-8 rounded-2xl border border-white/5">
+            <motion.div variants={motionPresets.fadeUp} className="grid md:grid-cols-2 gap-12 mb-16 bg-[#070a0f] p-8 rounded-2xl border border-border">
               
               {/* Strategic Focus */}
               <div>
@@ -137,7 +137,7 @@ export const CEOMessage = () => {
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {executiveProfile.strategicFocus.map((focus, i) => (
-                    <span key={i} className="text-[11px] font-mono text-text-secondary bg-white/5 border border-white/10 px-3 py-1.5 rounded-md hover:bg-white/10 transition-colors cursor-default">
+                    <span key={i} className="text-[11px] font-mono text-text-secondary bg-white/5 border border-border px-3 py-1.5 rounded-md hover:bg-white/10 transition-colors cursor-default">
                       {focus}
                     </span>
                   ))}
@@ -162,7 +162,7 @@ export const CEOMessage = () => {
             </motion.div>
 
             {/* Executive Letter Accordion */}
-            <motion.div variants={motionPresets.fadeUp} className="border-t border-white/10 pt-8">
+            <motion.div variants={motionPresets.fadeUp} className="border-t border-border pt-8">
               
               <AnimatePresence>
                 {isExpanded && (

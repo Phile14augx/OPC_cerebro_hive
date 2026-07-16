@@ -9,7 +9,7 @@ const panels = [
   { title: "RAG System", metric: "128 ms", sub: "Latency", pos: [-12, 5.5, -4] as [number, number, number] },
   { title: "AI Agents", metric: "24", sub: "Active", pos: [11.5, -6, -3] as [number, number, number] },
   { title: "Cloud Integration", metric: "AWS", sub: "Azure • GCP", pos: [-11, -6.5, -1] as [number, number, number] },
-  { title: "Knowledge Graph", metric: "12.4M", sub: "Entities", pos: [0, 0.5, -2] as [number, number, number], className: "opacity-30 bg-transparent border-white/5 backdrop-blur-sm shadow-none" },
+  { title: "Knowledge Graph", metric: "12.4M", sub: "Entities", pos: [0, 0.5, -2] as [number, number, number], className: "opacity-30 bg-transparent border-border backdrop-blur-sm shadow-none" },
 ];
 
 export function FloatingPanels() {

@@ -32,11 +32,11 @@ export const IndustryResearch = () => {
   const [active, setActive] = useState(industries[0].id);
 
   return (
-    <section className="py-24 border-b border-white/5 bg-[#0A0D14]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">Research by Industry</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Research by Industry</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter">
             We conduct targeted research to solve the specific bottlenecks holding back AI adoption in highly regulated sectors.
           </p>
@@ -53,7 +53,7 @@ export const IndustryResearch = () => {
                   "p-8 rounded-2xl border transition-all cursor-pointer h-full flex flex-col",
                   isActive 
                     ? "bg-surface border-primary-accent/50 shadow-[0_0_20px_rgba(0,245,122,0.1)]" 
-                    : "bg-surface border-white/5 hover:border-white/20"
+                    : "bg-surface border-border hover:border-white/20"
                 )}
               >
                 <div className="flex items-center gap-4 mb-4">
@@ -63,7 +63,7 @@ export const IndustryResearch = () => {
                   )}>
                     <ind.icon size={24} />
                   </div>
-                  <h3 className={cn("text-xl font-space font-bold transition-colors", isActive ? "text-white" : "text-text-secondary")}>
+                  <h3 className={cn("text-xl font-space font-bold transition-colors", isActive ? "text-text-primary" : "text-text-secondary")}>
                     {ind.label}
                   </h3>
                 </div>
@@ -73,9 +73,9 @@ export const IndustryResearch = () => {
                 </p>
 
                 <div className={cn("space-y-3 transition-opacity", isActive ? "opacity-100" : "opacity-50")}>
-                  <div className="text-[10px] uppercase tracking-widest text-[#00E5FF] font-bold">Key Papers</div>
+                  <div className="text-[10px] uppercase tracking-widest text-accent-secondary font-bold">Key Papers</div>
                   {ind.papers.map((paper, i) => (
-                    <div key={i} className="flex items-start gap-2 text-sm text-white hover:text-primary-accent transition-colors">
+                    <div key={i} className="flex items-start gap-2 text-sm text-text-primary hover:text-primary-accent transition-colors">
                       <BookOpen size={14} className="mt-0.5 shrink-0" />
                       <span>{paper}</span>
                     </div>

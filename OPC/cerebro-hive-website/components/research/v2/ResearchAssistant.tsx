@@ -46,17 +46,17 @@ export const ResearchAssistant = () => {
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            className="fixed bottom-6 right-6 w-[380px] h-[600px] max-h-[80vh] bg-surface-elevated border border-white/20 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
+            className="fixed bottom-6 right-6 w-[380px] h-[600px] max-h-[80vh] bg-surface-elevated border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
           >
             {/* Header */}
-            <div className="p-4 bg-black/50 border-b border-white/10 flex items-center justify-between">
+            <div className="p-4 bg-surface-secondary border-b border-border flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded bg-primary-accent/10 flex items-center justify-center">
                   <Bot size={18} className="text-primary-accent" />
                 </div>
                 <div>
-                  <h4 className="font-space font-bold text-white text-sm">Lab Copilot</h4>
-                  <div className="text-[10px] text-[#00E5FF] uppercase tracking-widest flex items-center gap-1">
+                  <h4 className="font-space font-bold text-text-primary text-sm">Lab Copilot</h4>
+                  <div className="text-[10px] text-accent-secondary uppercase tracking-widest flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse" /> Agent OS Active
                   </div>
                 </div>
@@ -73,7 +73,7 @@ export const ResearchAssistant = () => {
                   <div className={`max-w-[85%] rounded-2xl p-3 text-sm leading-relaxed ${
                     msg.role === 'user' 
                       ? 'bg-primary-accent text-black rounded-tr-sm font-medium' 
-                      : 'bg-white/5 border border-white/10 text-text-secondary rounded-tl-sm'
+                      : 'bg-white/5 border border-border text-text-secondary rounded-tl-sm'
                   }`}>
                     {msg.text}
                   </div>
@@ -85,7 +85,7 @@ export const ResearchAssistant = () => {
             {messages.length === 1 && (
               <div className="px-4 pb-4 flex flex-wrap gap-2">
                 {suggestedActions.map((action, i) => (
-                  <button key={i} onClick={() => setInput(action.label)} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-primary-accent/50 hover:text-primary-accent transition-colors text-xs text-text-muted">
+                  <button key={i} onClick={() => setInput(action.label)} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-border hover:border-primary-accent/50 hover:text-primary-accent transition-colors text-xs text-text-muted">
                     <action.icon size={12} /> {action.label}
                   </button>
                 ))}
@@ -93,14 +93,14 @@ export const ResearchAssistant = () => {
             )}
 
             {/* Input Area */}
-            <div className="p-4 bg-black/50 border-t border-white/10">
+            <div className="p-4 bg-surface-secondary border-t border-border">
               <form onSubmit={handleSend} className="relative">
                 <input 
                   type="text" 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask about our research..."
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-4 pr-12 text-sm text-white placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors"
+                  className="w-full bg-white/5 border border-border rounded-xl py-3 pl-4 pr-12 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors"
                 />
                 <button type="submit" disabled={!input.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-primary-accent text-black disabled:opacity-50 disabled:bg-white/10 disabled:text-text-muted transition-colors">
                   <Send size={14} />

@@ -16,13 +16,13 @@ export const TeamNode = ({ data, selected }: NodeProps<Node<OrganizationNodeData
   return (
     <div className={cn(
       "relative w-[180px] rounded-lg overflow-hidden transition-all duration-300",
-      "bg-surface border border-white/5 shadow-sm",
+      "bg-surface border border-border shadow-sm",
       selected ? "ring-1 ring-white/20 scale-[1.02]" : "hover:border-white/20 cursor-pointer hover:bg-surface-elevated"
     )}>
       <div className={cn("h-1 w-full bg-white/5", config.colorClass, "border-t")} />
       
       <div className="p-3">
-        <h5 className="text-xs font-space font-bold text-white mb-1 leading-tight">{data.title}</h5>
+        <h5 className="text-xs font-space font-bold text-text-primary mb-1 leading-tight">{data.title}</h5>
         <p className="text-[10px] text-text-muted font-inter mb-3 line-clamp-1">{data.subtitle}</p>
         
         {data.metrics && (
@@ -34,7 +34,7 @@ export const TeamNode = ({ data, selected }: NodeProps<Node<OrganizationNodeData
         )}
       </div>
 
-      <Handle type="target" position={Position.Top} className="w-2 h-2 !bg-background !border border-white/20" />
+      <Handle type="target" position={Position.Top} className="w-2 h-2 !bg-background !border border-border" />
     </div>
   );
 };

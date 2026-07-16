@@ -38,11 +38,11 @@ const capabilities = [
 
 export default function TeamExpertise() {
   return (
-    <section className="py-24 border-b border-white/5 bg-[#0A0D14]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="mb-16">
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-6">Our Capabilities</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Our Capabilities</h2>
           <p className="text-lg text-text-secondary max-w-2xl font-inter">
             We are not organized by traditional hierarchies. We are organized by the core disciplines required to build the AI-native enterprise.
           </p>
@@ -50,13 +50,13 @@ export default function TeamExpertise() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {capabilities.map((cap, i) => (
-            <div key={i} className="p-8 rounded-2xl bg-surface border border-white/10 group hover:border-white/30 transition-colors">
+            <div key={i} className="p-8 rounded-2xl bg-surface border border-border group hover:border-white/30 transition-colors">
               
-              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-white">
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-border flex items-center justify-center mb-6 text-text-primary">
                 <cap.icon size={20} />
               </div>
 
-              <h3 className="text-xl font-space font-bold text-white mb-3">{cap.title}</h3>
+              <h3 className="text-xl font-space font-bold text-text-primary mb-3">{cap.title}</h3>
               <p className="text-sm text-text-secondary leading-relaxed">{cap.desc}</p>
 
             </div>

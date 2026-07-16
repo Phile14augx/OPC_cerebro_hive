@@ -6,11 +6,11 @@ import { BrainCircuit, Cpu, Database, Network, Search, Zap } from "lucide-react"
 import { cn } from "@/lib/utils";
 
 const nodes = [
-  { id: "agentos", label: "AgentOS", role: "Autonomy Layer", icon: Cpu, color: "text-[#00E5FF]", border: "border-[#00E5FF]/30", bg: "bg-[#00E5FF]/5" },
-  { id: "knowledge", label: "Knowledge Hub", role: "Context Layer", icon: Search, color: "text-[#00F57A]", border: "border-[#00F57A]/30", bg: "bg-[#00F57A]/5" },
+  { id: "agentos", label: "AgentOS", role: "Autonomy Layer", icon: Cpu, color: "text-accent-secondary", border: "border-[#00E5FF]/30", bg: "bg-[#00E5FF]/5" },
+  { id: "knowledge", label: "Knowledge Hub", role: "Context Layer", icon: Search, color: "text-accent-primary", border: "border-accent-primary/30", bg: "bg-[#00F57A]/5" },
   { id: "core", label: "Cerebro AI", role: "Reasoning Engine", icon: BrainCircuit, color: "text-primary-accent", border: "border-primary-accent/50", bg: "bg-primary-accent/10" },
-  { id: "analytics", label: "Analytics", role: "Insight Layer", icon: Zap, color: "text-white", border: "border-white/20", bg: "bg-white/5" },
-  { id: "erp", label: "Quantiva ERP", role: "System of Record", icon: Database, color: "text-[#FFB300]", border: "border-[#FFB300]/30", bg: "bg-[#FFB300]/5" },
+  { id: "analytics", label: "Analytics", role: "Insight Layer", icon: Zap, color: "text-text-primary", border: "border-border", bg: "bg-white/5" },
+  { id: "erp", label: "Quantiva ERP", role: "System of Record", icon: Database, color: "text-warning", border: "border-[#FFB300]/30", bg: "bg-[#FFB300]/5" },
 ];
 
 const verbs = ["uses", "queries", "feeds", "updates"];
@@ -50,7 +50,7 @@ export const PlatformArchitecture = () => {
                   <div className={cn("mb-3 p-3 rounded-full bg-surface-elevated/50 shadow-inner", node.color)}>
                     <node.icon size={24} />
                   </div>
-                  <div className="text-xs font-space font-bold text-white mb-1">{node.label}</div>
+                  <div className="text-xs font-space font-bold text-text-primary mb-1">{node.label}</div>
                   <div className="text-[9px] uppercase tracking-wider text-text-muted">{node.role}</div>
                 </div>
               </motion.div>

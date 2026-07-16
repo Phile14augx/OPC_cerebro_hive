@@ -19,7 +19,7 @@ export default function AIDevelopmentPage() {
           </Link>
           
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[#00F57A]/10 text-[#00F57A] border border-[#00F57A]/20">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-accent-primary/10 text-accent-primary border border-[#00F57A]/20">
               <Code2 size={24} />
             </div>
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Enterprise Practice</span>
@@ -33,7 +33,7 @@ export default function AIDevelopmentPage() {
             Train domain-specific private models, build high-performance vector retrieval architectures, and deploy secure inference API microservices. This is true engineering-led product delivery — not prototyping.
           </p>
 
-          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#00F57A] text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
+          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-accent-primary text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
             Discuss Your Custom AI Build
           </Link>
         </div>
@@ -45,12 +45,12 @@ export default function AIDevelopmentPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div>
               <h3 className="text-2xl font-space font-bold text-text-primary mb-8 flex items-center gap-3">
-                <Target className="text-[#00F57A]" /> Key Outcomes
+                <Target className="text-accent-primary" /> Key Outcomes
               </h3>
               <ul className="space-y-4">
                 {["Launch proprietary AI products", "Maintain complete IP ownership and data privacy", "Deploy scalable, production-grade microservices", "Outperform generic models with fine-tuned accuracy"].map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-text-secondary">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#00F57A] mt-2 shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent-primary mt-2 shrink-0" />
                     <span className="leading-relaxed">{item}</span>
                   </li>
                 ))}
@@ -59,12 +59,12 @@ export default function AIDevelopmentPage() {
             
             <div>
               <h3 className="text-2xl font-space font-bold text-text-primary mb-8 flex items-center gap-3">
-                <ShieldCheck className="text-[#00F57A]" /> Deliverables
+                <ShieldCheck className="text-accent-primary" /> Deliverables
               </h3>
               <ul className="space-y-4">
                 {["Fine-tuned LLMs (PEFT/LoRA)", "Enterprise RAG Systems", "Secure Inference APIs", "Agent Frameworks (LangGraph)", "Dockerised AI Microservices"].map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-text-secondary">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#00F57A] mt-2 shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent-primary mt-2 shrink-0" />
                     <span className="leading-relaxed font-medium text-text-primary">{item}</span>
                   </li>
                 ))}
@@ -87,7 +87,7 @@ export default function AIDevelopmentPage() {
               { step: "Deployment", detail: "Kubernetes/Docker deployment, API wrapping, and 90-day SLA." }
             ].map((m, i) => (
               <div key={i} className="p-6 rounded-2xl bg-surface border border-border flex flex-col md:flex-row md:items-center gap-6 hover:border-[#00F57A]/40 transition-colors">
-                <div className="w-12 h-12 rounded-full bg-[#00F57A]/10 text-[#00F57A] flex items-center justify-center font-bold text-lg shrink-0">
+                <div className="w-12 h-12 rounded-full bg-accent-primary/10 text-accent-primary flex items-center justify-center font-bold text-lg shrink-0">
                   {i + 1}
                 </div>
                 <div>

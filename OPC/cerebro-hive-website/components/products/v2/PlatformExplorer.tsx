@@ -10,7 +10,7 @@ const products = [
     id: "agentos", 
     name: "AgentOS", 
     icon: Cpu, 
-    color: "text-[#00E5FF]", 
+    color: "text-accent-secondary", 
     bg: "bg-[#00E5FF]",
     business: {
       headline: "Autonomous Digital Workforce",
@@ -31,8 +31,8 @@ const products = [
     id: "knowledge", 
     name: "Knowledge Hub", 
     icon: Search, 
-    color: "text-[#00F57A]", 
-    bg: "bg-[#00F57A]",
+    color: "text-accent-primary", 
+    bg: "bg-accent-primary",
     business: {
       headline: "Enterprise Intelligence Foundation",
       problems: ["Lost organizational knowledge", "Time spent searching", "Inconsistent answers"],
@@ -73,7 +73,7 @@ const products = [
     id: "erp", 
     name: "Quantiva ERP", 
     icon: Database, 
-    color: "text-[#FFB300]", 
+    color: "text-warning", 
     bg: "bg-[#FFB300]",
     business: {
       headline: "Next-Gen System of Record",
@@ -138,11 +138,11 @@ export const PlatformExplorer = () => {
                 onClick={() => setActiveTab(p.id)}
                 className={cn(
                   "px-6 py-4 rounded-xl flex items-center gap-3 transition-all border whitespace-nowrap",
-                  isActive ? "bg-surface-elevated border-white/20 shadow-lg" : "bg-transparent border-transparent text-text-muted hover:bg-surface hover:text-white"
+                  isActive ? "bg-surface-elevated border-border shadow-lg" : "bg-transparent border-transparent text-text-muted hover:bg-surface hover:text-white"
                 )}
               >
                 <p.icon size={18} className={isActive ? p.color : "text-text-muted"} />
-                <span className={cn("font-space font-bold", isActive ? "text-white" : "")}>{p.name}</span>
+                <span className={cn("font-space font-bold", isActive ? "text-text-primary" : "")}>{p.name}</span>
               </button>
             );
           })}
@@ -164,7 +164,7 @@ export const PlatformExplorer = () => {
                 // Business View
                 <div className="h-full flex flex-col">
                   <div className="mb-10">
-                    <h3 className="text-3xl font-space font-bold text-white mb-2">{activeProduct.business.headline}</h3>
+                    <h3 className="text-3xl font-space font-bold text-text-primary mb-2">{activeProduct.business.headline}</h3>
                     <p className="text-primary-accent font-space font-bold text-lg">{activeProduct.business.roi}</p>
                   </div>
                   
@@ -174,7 +174,7 @@ export const PlatformExplorer = () => {
                       <ul className="space-y-3">
                         {activeProduct.business.problems.map((prob, i) => (
                           <li key={i} className="flex items-start gap-3 text-text-secondary text-sm">
-                            <CheckCircle2 size={16} className="text-[#00F57A] mt-0.5 shrink-0" /> {prob}
+                            <CheckCircle2 size={16} className="text-accent-primary mt-0.5 shrink-0" /> {prob}
                           </li>
                         ))}
                       </ul>
@@ -183,14 +183,14 @@ export const PlatformExplorer = () => {
                       <h4 className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2"><Building2 size={14} /> Key Departments</h4>
                       <div className="flex flex-wrap gap-2 mb-8">
                         {activeProduct.business.departments.map((dept, i) => (
-                          <span key={i} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-white">{dept}</span>
+                          <span key={i} className="px-3 py-1 bg-white/5 border border-border rounded-full text-xs font-bold text-text-primary">{dept}</span>
                         ))}
                       </div>
                       
                       <h4 className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4">Core KPIs</h4>
                       <div className="space-y-2">
                         {activeProduct.business.kpis.map((kpi, i) => (
-                          <div key={i} className="w-full bg-black/30 rounded-lg p-3 border border-white/5 text-sm font-space font-medium text-white flex justify-between items-center">
+                          <div key={i} className="w-full bg-black/30 rounded-lg p-3 border border-border text-sm font-space font-medium text-text-primary flex justify-between items-center">
                             {kpi} <TrendingUp size={14} className="text-primary-accent" />
                           </div>
                         ))}
@@ -202,7 +202,7 @@ export const PlatformExplorer = () => {
                 // Technical View
                 <div className="h-full flex flex-col">
                   <div className="mb-10">
-                    <h3 className="text-2xl font-space font-bold text-white mb-2 font-mono flex items-center gap-3">
+                    <h3 className="text-2xl font-space font-bold text-text-primary mb-2 font-mono flex items-center gap-3">
                       <Server className={activeProduct.color} /> {activeProduct.technical.architecture}
                     </h3>
                     <p className="text-text-secondary text-sm">Enterprise-grade architecture built for massive scale and compliance.</p>
@@ -220,7 +220,7 @@ export const PlatformExplorer = () => {
                       <h4 className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2"><Network size={14} /> Integrations</h4>
                       <div className="flex flex-wrap gap-2">
                         {activeProduct.technical.integrations.map((int, i) => (
-                          <span key={i} className="px-3 py-1 bg-white/5 border border-white/10 rounded text-xs font-bold text-white">{int}</span>
+                          <span key={i} className="px-3 py-1 bg-white/5 border border-border rounded text-xs font-bold text-text-primary">{int}</span>
                         ))}
                       </div>
                     </div>
@@ -229,7 +229,7 @@ export const PlatformExplorer = () => {
                       <h4 className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2"><Layers size={14} /> Supported Models / Tech</h4>
                       <ul className="space-y-2 mb-8">
                         {activeProduct.technical.models.map((model, i) => (
-                          <li key={i} className="flex items-center gap-3 text-white text-sm bg-black/20 p-2 rounded border border-white/5 font-mono">
+                          <li key={i} className="flex items-center gap-3 text-text-primary text-sm bg-black/20 p-2 rounded border border-border font-mono">
                             <span className="w-1.5 h-1.5 rounded-full bg-primary-accent" /> {model}
                           </li>
                         ))}
@@ -247,7 +247,7 @@ export const PlatformExplorer = () => {
           </AnimatePresence>
 
           {/* Right side visual (abstract representation of the product) */}
-          <div className="w-full md:w-1/3 bg-[#05070A] border-t md:border-t-0 md:border-l border-border relative overflow-hidden flex items-center justify-center min-h-[250px]">
+          <div className="w-full md:w-1/3 bg-background border-t md:border-t-0 md:border-l border-border relative overflow-hidden flex items-center justify-center min-h-[250px]">
             <motion.div 
               key={activeTab}
               initial={{ scale: 0.8, opacity: 0 }}

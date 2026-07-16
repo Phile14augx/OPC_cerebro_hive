@@ -41,7 +41,7 @@ export default function Navbar() {
         }}
         animate={hidden ? "hidden" : "visible"}
         transition={{ duration: 0.35, ease: "easeInOut" }}
-        className="fixed top-0 left-0 right-0 h-20 bg-background/95 backdrop-blur-sm border-b border-white/5 shadow-sm z-50 transition-colors duration-500"
+        className="fixed top-0 left-0 right-0 h-20 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm z-50 transition-colors duration-500"
       >
         <div className="container-wide h-full flex items-center justify-between">
           <div className="flex items-center gap-12">

@@ -7,14 +7,14 @@ import { cn } from "@/lib/utils";
 const phases = [
   {
     title: "Current Research",
-    color: "text-[#00F57A]",
+    color: "text-accent-primary",
     border: "border-[#00F57A]",
-    bg: "bg-[#00F57A]/10",
+    bg: "bg-accent-primary/10",
     items: ["Agentic Retrieval-Augmented Generation", "Multi-Agent Planning Protocols", "Knowledge Graph Construction"]
   },
   {
     title: "Validation",
-    color: "text-[#00E5FF]",
+    color: "text-accent-secondary",
     border: "border-[#00E5FF]",
     bg: "bg-[#00E5FF]/10",
     items: ["Deterministic Fact-Checking", "Cross-Domain Federation", "Edge Deployment Models"]
@@ -28,7 +28,7 @@ const phases = [
   },
   {
     title: "Platform Integration",
-    color: "text-white",
+    color: "text-text-primary",
     border: "border-white/50",
     bg: "bg-white/10",
     items: ["Autonomous Organizations", "World Simulation Models"]
@@ -37,11 +37,11 @@ const phases = [
 
 export const ResearchRoadmap = () => {
   return (
-    <section className="py-24 border-b border-white/5 bg-[#05070A]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide max-w-5xl">
         
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">Innovation Roadmap</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Innovation Roadmap</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter">
             How our research translates from theoretical concepts into validated enterprise platform integrations.
           </p>
@@ -52,7 +52,7 @@ export const ResearchRoadmap = () => {
             <div key={i} className="flex-1 flex flex-col relative group">
               
               <div className="mb-6 relative z-10 flex items-center justify-center">
-                <div className={cn("w-4 h-4 rounded-full border-4 bg-[#0A0D14]", phase.border)} />
+                <div className={cn("w-4 h-4 rounded-full border-4 bg-background", phase.border)} />
               </div>
               
               {/* Connector */}

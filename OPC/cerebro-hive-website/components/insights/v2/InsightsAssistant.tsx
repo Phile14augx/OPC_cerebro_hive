@@ -36,7 +36,7 @@ export const InsightsAssistant = () => {
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 w-14 h-14 bg-[#7B61FF] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(123,97,255,0.3)] hover:scale-110 transition-transform z-50 ${isOpen ? 'hidden' : 'flex'}`}
       >
-        <MessageSquare size={24} className="text-white" />
+        <MessageSquare size={24} className="text-text-primary" />
       </button>
 
       {/* Chat Window */}
@@ -46,17 +46,17 @@ export const InsightsAssistant = () => {
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            className="fixed bottom-6 right-6 w-[380px] h-[600px] max-h-[80vh] bg-surface-elevated border border-white/20 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
+            className="fixed bottom-6 right-6 w-[380px] h-[600px] max-h-[80vh] bg-surface-elevated border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50"
           >
             {/* Header */}
-            <div className="p-4 bg-black/50 border-b border-white/10 flex items-center justify-between">
+            <div className="p-4 bg-surface-secondary border-b border-border flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded bg-[#7B61FF]/10 flex items-center justify-center">
                   <Bot size={18} className="text-[#7B61FF]" />
                 </div>
                 <div>
-                  <h4 className="font-space font-bold text-white text-sm">Executive Assistant</h4>
-                  <div className="text-[10px] text-[#00E5FF] uppercase tracking-widest flex items-center gap-1">
+                  <h4 className="font-space font-bold text-text-primary text-sm">Executive Assistant</h4>
+                  <div className="text-[10px] text-accent-secondary uppercase tracking-widest flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse" /> Agent OS Active
                   </div>
                 </div>
@@ -72,8 +72,8 @@ export const InsightsAssistant = () => {
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[85%] rounded-2xl p-3 text-sm leading-relaxed ${
                     msg.role === 'user' 
-                      ? 'bg-[#7B61FF] text-white rounded-tr-sm font-medium' 
-                      : 'bg-white/5 border border-white/10 text-text-secondary rounded-tl-sm'
+                      ? 'bg-[#7B61FF] text-text-primary rounded-tr-sm font-medium' 
+                      : 'bg-white/5 border border-border text-text-secondary rounded-tl-sm'
                   }`}>
                     {msg.text}
                   </div>
@@ -85,7 +85,7 @@ export const InsightsAssistant = () => {
             {messages.length === 1 && (
               <div className="px-4 pb-4 flex flex-wrap gap-2">
                 {suggestedActions.map((action, i) => (
-                  <button key={i} onClick={() => setInput(action.label)} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-[#7B61FF]/50 hover:text-[#7B61FF] transition-colors text-xs text-text-muted">
+                  <button key={i} onClick={() => setInput(action.label)} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-border hover:border-[#7B61FF]/50 hover:text-[#7B61FF] transition-colors text-xs text-text-muted">
                     <action.icon size={12} /> {action.label}
                   </button>
                 ))}
@@ -93,16 +93,16 @@ export const InsightsAssistant = () => {
             )}
 
             {/* Input Area */}
-            <div className="p-4 bg-black/50 border-t border-white/10">
+            <div className="p-4 bg-surface-secondary border-t border-border">
               <form onSubmit={handleSend} className="relative">
                 <input 
                   type="text" 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask a strategic question..."
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-4 pr-12 text-sm text-white placeholder:text-text-muted focus:outline-none focus:border-[#7B61FF]/50 transition-colors"
+                  className="w-full bg-white/5 border border-border rounded-xl py-3 pl-4 pr-12 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[#7B61FF]/50 transition-colors"
                 />
-                <button type="submit" disabled={!input.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-[#7B61FF] text-white disabled:opacity-50 disabled:bg-white/10 disabled:text-text-muted transition-colors">
+                <button type="submit" disabled={!input.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-[#7B61FF] text-text-primary disabled:opacity-50 disabled:bg-white/10 disabled:text-text-muted transition-colors">
                   <Send size={14} />
                 </button>
               </form>

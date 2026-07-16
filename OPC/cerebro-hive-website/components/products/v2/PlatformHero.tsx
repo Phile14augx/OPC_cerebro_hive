@@ -16,10 +16,10 @@ const departments = [
 ];
 
 const platformNodes = [
-  { id: "knowledge", label: "Knowledge Hub", icon: BrainCircuit, color: "text-[#00F57A]" },
-  { id: "agents", label: "AgentOS", icon: Cpu, color: "text-[#00E5FF]" },
+  { id: "knowledge", label: "Knowledge Hub", icon: BrainCircuit, color: "text-accent-primary" },
+  { id: "agents", label: "AgentOS", icon: Cpu, color: "text-accent-secondary" },
   { id: "automation", label: "Automation Studio", icon: Cog, color: "text-primary-accent" },
-  { id: "erp", label: "Quantiva ERP", icon: Database, color: "text-[#FFB300]" },
+  { id: "erp", label: "Quantiva ERP", icon: Database, color: "text-warning" },
 ];
 
 import { Database } from "lucide-react";
@@ -65,7 +65,7 @@ export const PlatformHero = () => {
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Enterprise Digital Twin</span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-white tracking-tight leading-[1.05] mb-6 drop-shadow-2xl">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary tracking-tight leading-[1.05] mb-6 drop-shadow-2xl">
             One Enterprise Platform. <br/>
             Multiple AI Products. <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent via-[#00E5FF] to-primary-accent bg-[length:200%_auto] animate-gradient-shift">
@@ -82,7 +82,7 @@ export const PlatformHero = () => {
               Build My AI Platform
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="px-8 py-4 bg-surface border border-border text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/40 hover:bg-surface-elevated transition-all flex items-center justify-center">
+            <button className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/40 hover:bg-surface-elevated transition-all flex items-center justify-center">
               Generate Architecture
             </button>
           </div>
@@ -133,7 +133,7 @@ export const PlatformHero = () => {
                 className="relative z-10 px-6 py-4 bg-surface border border-primary-accent/30 rounded-xl backdrop-blur-md text-center max-w-[280px] shadow-[0_0_30px_rgba(0,245,122,0.15)]"
               >
                 <div className="text-primary-accent mb-2 flex justify-center"><BrainCircuit size={24} /></div>
-                <div className="text-xs font-bold text-white mb-1">Cerebro AI Platform</div>
+                <div className="text-xs font-bold text-text-primary mb-1">Cerebro AI Platform</div>
                 <div className="text-[11px] text-text-secondary leading-relaxed">{activeDeptData.desc}</div>
               </motion.div>
 
@@ -159,12 +159,12 @@ export const PlatformHero = () => {
                 </div>
                 <div className="w-px h-8 bg-border" />
                 <div className="flex flex-col items-center">
-                  <span className="text-[#00E5FF] font-space font-bold text-lg mb-1">10x</span>
+                  <span className="text-accent-secondary font-space font-bold text-lg mb-1">10x</span>
                   <span className="text-[9px] uppercase tracking-wider text-text-muted">Speed</span>
                 </div>
                 <div className="w-px h-8 bg-border" />
                 <div className="flex flex-col items-center">
-                  <span className="text-white font-space font-bold text-lg mb-1">99.9%</span>
+                  <span className="text-text-primary font-space font-bold text-lg mb-1">99.9%</span>
                   <span className="text-[9px] uppercase tracking-wider text-text-muted">Accuracy</span>
                 </div>
               </div>

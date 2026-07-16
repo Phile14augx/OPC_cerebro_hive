@@ -110,7 +110,7 @@ const DynamicHeadline = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.6 }}
-            className="text-4xl md:text-6xl font-space font-bold text-white tracking-tight text-center"
+            className="text-4xl md:text-6xl font-space font-bold text-text-primary tracking-tight text-center"
           >
             {headlines[index]}
           </motion.h3>
@@ -125,7 +125,7 @@ const DynamicHeadline = () => {
 // ============================================================================
 export const CTA = () => {
   return (
-    <section className="section-pad relative overflow-hidden bg-[#020306] pt-32 pb-48 border-t border-white/5">
+    <section className="section-pad relative overflow-hidden bg-[#020306] pt-32 pb-48 border-t border-border">
       <CommandCenterBackground />
       
       <div className="container-wide relative z-20 flex flex-col items-center">
@@ -167,7 +167,7 @@ export const CTA = () => {
             <AnimatedButton 
               variant="outline" 
               size="lg" 
-              className="w-full sm:w-auto text-sm font-space font-bold uppercase tracking-widest border-white/20 text-white hover:bg-white/5 backdrop-blur-md"
+              className="w-full sm:w-auto text-sm font-space font-bold uppercase tracking-widest border-border text-text-primary hover:bg-white/5 backdrop-blur-md"
             >
               Explore Delivery Framework
             </AnimatedButton>
@@ -187,7 +187,7 @@ export const CTA = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="flex flex-wrap justify-center gap-8 md:gap-16 pt-12 border-t border-white/5 w-full max-w-4xl"
+          className="flex flex-wrap justify-center gap-8 md:gap-16 pt-12 border-t border-border w-full max-w-4xl"
         >
           {["Enterprise AI", "Production Systems", "Software Engineering", "Applied Research"].map((outcome, i) => (
             <span key={i} className="text-[11px] font-space font-bold text-white/40 uppercase tracking-[0.2em]">

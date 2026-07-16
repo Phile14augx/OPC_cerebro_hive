@@ -15,14 +15,14 @@ const nodes = [
 
 export default function InnovationFlywheel() {
   return (
-    <section className="py-24 border-b border-white/5 bg-[#05070A] overflow-hidden">
+    <section className="py-24 border-b border-border bg-background overflow-hidden">
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase tracking-widest text-[#00E5FF] font-bold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-accent-secondary font-bold mb-6">
             <Repeat size={12} /> The Flywheel
           </div>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-6">How Knowledge Compounds</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">How Knowledge Compounds</h2>
           <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
             Our operating model is a continuous learning loop. Every deployment generates data that feeds back into our fundamental research.
           </p>
@@ -31,7 +31,7 @@ export default function InnovationFlywheel() {
         <div className="relative max-w-3xl mx-auto h-[400px] md:h-[500px] flex items-center justify-center">
           
           {/* Animated Circle Base */}
-          <div className="absolute inset-0 m-auto w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border border-white/10" />
+          <div className="absolute inset-0 m-auto w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border border-border" />
           <motion.div 
             animate={{ rotate: 360 }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -40,7 +40,7 @@ export default function InnovationFlywheel() {
 
           {/* Center Graphic */}
           <div className="w-24 h-24 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center shadow-[0_0_50px_rgba(0,229,255,0.2)] z-10">
-            <Repeat size={32} className="text-[#00E5FF]" />
+            <Repeat size={32} className="text-accent-secondary" />
           </div>
 
           {/* Nodes around the circle */}
@@ -55,10 +55,10 @@ export default function InnovationFlywheel() {
             return (
               <div 
                 key={i} 
-                className="absolute hidden md:flex items-center justify-center p-4 bg-surface border border-white/10 rounded-xl shadow-xl z-20 whitespace-nowrap"
+                className="absolute hidden md:flex items-center justify-center p-4 bg-surface border border-border rounded-xl shadow-xl z-20 whitespace-nowrap"
                 style={{ transform: `translate(${x}px, ${y}px)` }}
               >
-                <span className="font-space font-bold text-white text-sm">{node}</span>
+                <span className="font-space font-bold text-text-primary text-sm">{node}</span>
               </div>
             );
           })}
@@ -66,7 +66,7 @@ export default function InnovationFlywheel() {
           {/* Mobile list fallback */}
           <div className="md:hidden absolute inset-0 flex flex-col justify-between items-center py-4 z-20 pointer-events-none">
             {nodes.map((node, i) => (
-              <div key={i} className="bg-surface border border-white/10 rounded-xl px-4 py-2 text-xs font-space font-bold text-white pointer-events-auto shadow-lg">
+              <div key={i} className="bg-surface border border-border rounded-xl px-4 py-2 text-xs font-space font-bold text-text-primary pointer-events-auto shadow-lg">
                 {node}
               </div>
             ))}

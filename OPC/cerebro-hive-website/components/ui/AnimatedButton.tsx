@@ -47,7 +47,7 @@ export function AnimatedButton({
         {/* Text */}
         <span className={cn(
           variant === "primary" && "text-[#07090D]",
-          variant === "secondary" && "text-white",
+          variant === "secondary" && "text-text-primary",
           variant === "outline" && "text-text-primary",
           variant === "ghost" && "text-text-muted group-hover:text-text-primary"
         )}>
@@ -58,7 +58,7 @@ export function AnimatedButton({
         <span className={cn(
           "ml-3 flex items-center transition-transform duration-300 group-hover:translate-x-1",
           variant === "primary" && "text-[#07090D]",
-          variant === "secondary" && "text-white",
+          variant === "secondary" && "text-text-primary",
           variant === "outline" && "text-text-primary",
           variant === "ghost" && "text-text-muted group-hover:text-text-primary"
         )}>

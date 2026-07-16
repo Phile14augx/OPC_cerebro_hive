@@ -33,7 +33,7 @@ export default function CorporateTrainingPage() {
             Empower technical and business teams with structured cohort training, live workshops, and digital certification sharing. We close the AI skills gap inside your organization safely and securely.
           </p>
 
-          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#FF2ED1] text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
+          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#FF2ED1] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
             Upskill Your Workforce
           </Link>
         </div>

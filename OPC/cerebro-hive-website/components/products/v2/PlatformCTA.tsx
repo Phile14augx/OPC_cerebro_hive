@@ -6,7 +6,7 @@ import { withBasePath } from "@/lib/utils";
 
 export const PlatformCTA = () => {
   return (
-    <section className="relative py-32 border-b border-border bg-[#0A0D14] overflow-hidden">
+    <section className="relative py-32 border-b border-border bg-background overflow-hidden">
       
       {/* Background ambients */}
       <div className="absolute inset-0 z-0">
@@ -17,7 +17,7 @@ export const PlatformCTA = () => {
       </div>
 
       <div className="container-wide relative z-10">
-        <div className="max-w-4xl mx-auto bg-surface-elevated/80 backdrop-blur-xl border border-white/10 rounded-3xl p-12 md:p-20 text-center shadow-2xl relative overflow-hidden">
+        <div className="max-w-4xl mx-auto bg-surface-elevated/80 backdrop-blur-xl border border-border rounded-3xl p-12 md:p-20 text-center shadow-2xl relative overflow-hidden">
           
           {/* Top border glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-primary-accent to-transparent opacity-50" />
@@ -26,7 +26,7 @@ export const PlatformCTA = () => {
             <Terminal size={32} />
           </div>
 
-          <h2 className="text-4xl md:text-6xl font-space font-bold text-white tracking-tight mb-6 leading-tight">
+          <h2 className="text-4xl md:text-6xl font-space font-bold text-text-primary tracking-tight mb-6 leading-tight">
             Ready to initialize <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent via-[#00E5FF] to-primary-accent bg-[length:200%_auto] animate-gradient-shift">
               your AI operating system?
@@ -42,7 +42,7 @@ export const PlatformCTA = () => {
               Build My AI Platform
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/20 text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all flex items-center justify-center">
+            <button className="w-full sm:w-auto px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all flex items-center justify-center">
               View Documentation
             </button>
           </div>

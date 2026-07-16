@@ -23,28 +23,28 @@ export const ExperimentGallery = () => {
   const [activeExp, setActiveExp] = useState(experiments[0]);
 
   return (
-    <section className="py-24 border-b border-white/5 bg-[#0A0D14]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] mb-3 block flex items-center justify-center gap-2">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block flex items-center justify-center gap-2">
             <FlaskConical size={14} /> Open Science
           </span>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">Experiment Gallery</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Experiment Gallery</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter">
             We publish our methodology, results, and limitations. Transparency in applied research builds trust in production systems.
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto bg-surface border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="max-w-4xl mx-auto bg-surface border border-border rounded-2xl overflow-hidden shadow-2xl">
           
           {/* Header */}
-          <div className="p-8 border-b border-white/10 bg-black/20 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="p-8 border-b border-border bg-black/20 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <div className="text-xs uppercase tracking-widest text-[#00E5FF] font-bold mb-2">Experiment {activeExp.id}</div>
-              <h3 className="text-2xl font-space font-bold text-white leading-tight">{activeExp.title}</h3>
+              <div className="text-xs uppercase tracking-widest text-accent-secondary font-bold mb-2">Experiment {activeExp.id}</div>
+              <h3 className="text-2xl font-space font-bold text-text-primary leading-tight">{activeExp.title}</h3>
             </div>
-            <div className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-xs font-bold text-white uppercase tracking-widest shrink-0">
+            <div className="px-4 py-2 bg-white/5 border border-border rounded-lg text-xs font-bold text-text-primary uppercase tracking-widest shrink-0">
               {activeExp.status}
             </div>
           </div>
@@ -71,7 +71,7 @@ export const ExperimentGallery = () => {
                 <h4 className="flex items-center gap-2 text-xs uppercase tracking-widest text-text-muted font-bold mb-3">
                   <Database size={14} /> Dataset
                 </h4>
-                <div className="p-3 bg-black/40 border border-white/5 rounded-lg text-sm text-white font-mono">
+                <div className="p-3 bg-black/40 border border-border rounded-lg text-sm text-text-primary font-mono">
                   {activeExp.dataset}
                 </div>
               </div>
@@ -83,13 +83,13 @@ export const ExperimentGallery = () => {
                   <Activity size={14} /> Results & Evaluation
                 </h4>
                 <div className="p-4 bg-[#00E5FF]/5 border border-[#00E5FF]/20 rounded-xl mb-4">
-                  <p className="text-sm text-[#00E5FF] font-medium leading-relaxed">{activeExp.results}</p>
+                  <p className="text-sm text-accent-secondary font-medium leading-relaxed">{activeExp.results}</p>
                 </div>
                 <p className="text-sm text-text-secondary leading-relaxed">{activeExp.evaluation}</p>
               </div>
               
               <div>
-                <h4 className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#FFB300] font-bold mb-3">
+                <h4 className="flex items-center gap-2 text-xs uppercase tracking-widest text-warning font-bold mb-3">
                   <AlertTriangle size={14} /> Limitations
                 </h4>
                 <div className="p-4 bg-black/40 border border-[#FFB300]/20 border-l-2 border-l-[#FFB300] rounded-r-xl">
@@ -101,7 +101,7 @@ export const ExperimentGallery = () => {
           </div>
 
           {/* Footer Navigation */}
-          <div className="p-4 bg-black/20 border-t border-white/10 flex justify-between items-center text-sm text-text-muted">
+          <div className="p-4 bg-black/20 border-t border-border flex justify-between items-center text-sm text-text-muted">
             <button className="hover:text-white transition-colors">Previous Experiment</button>
             <button className="flex items-center gap-2 hover:text-white transition-colors">Next Experiment <ArrowRight size={16} /></button>
           </div>

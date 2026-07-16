@@ -147,7 +147,7 @@ export default function CerebroChat() {
         transition={{ duration: isGenerating ? 1 : 3, repeat: Infinity, ease: "easeInOut" }}
         className="absolute inset-2 bg-primary-accent blur-md rounded-full"
       />
-      <div className="relative z-10 p-1.5 rounded-full border border-white/20 bg-black text-primary-accent shadow-[0_0_15px_#00F57A]">
+      <div className="relative z-10 p-1.5 rounded-full border border-border bg-surface text-primary-accent shadow-[0_0_15px_#00F57A]">
         <BrainCircuit size={16} />
       </div>
     </div>
@@ -326,7 +326,7 @@ export default function CerebroChat() {
                         {!msg.isGenerating && msg.actions && (
                           <div className="flex flex-wrap gap-2 mt-2">
                             {msg.actions.map(action => (
-                              <button key={action.label} className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-gray-300 text-[11px] font-bold hover:bg-primary-accent hover:border-primary-accent hover:text-black transition-colors shadow-sm">
+                              <button key={action.label} className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-border text-gray-300 text-[11px] font-bold hover:bg-primary-accent hover:border-primary-accent hover:text-black transition-colors shadow-sm">
                                 <action.icon size={12} />
                                 {action.label}
                               </button>
@@ -344,7 +344,7 @@ export default function CerebroChat() {
                         <button 
                           key={prompt.id} 
                           onClick={() => handleSend(prompt.text)}
-                          className="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 hover:border-primary-accent/50 hover:bg-white/10 transition-all text-xs text-gray-300"
+                          className="px-3 py-1.5 rounded-full border border-border bg-white/5 hover:border-primary-accent/50 hover:bg-white/10 transition-all text-xs text-gray-300"
                         >
                           {prompt.text}
                         </button>
@@ -443,7 +443,7 @@ export default function CerebroChat() {
                           onMouseLeave={() => setHoveredNode(null)}
                           className={cn(
                             "absolute flex flex-col items-center justify-center p-3 rounded-lg border bg-[#050B14] cursor-help transition-all transform -translate-x-1/2 -translate-y-1/2 z-10 w-28 shadow-xl",
-                            hoveredNode === node.id ? "border-primary-accent scale-110" : "border-white/10 hover:border-white/30"
+                            hoveredNode === node.id ? "border-primary-accent scale-110" : "border-border hover:border-white/30"
                           )}
                           style={{ left: node.x, top: node.y }}
                         >
@@ -451,7 +451,7 @@ export default function CerebroChat() {
                           
                           <AnimatePresence>
                             {hoveredNode === node.id && (
-                              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="w-full flex flex-col gap-1 mt-2 pt-2 border-t border-white/10 overflow-hidden">
+                              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="w-full flex flex-col gap-1 mt-2 pt-2 border-t border-border overflow-hidden">
                                 <span className="text-[8px] text-gray-500 block truncate">{node.tech}</span>
                                 <span className="text-[9px] font-mono text-primary-accent">{node.latency}</span>
                               </motion.div>
@@ -470,7 +470,7 @@ export default function CerebroChat() {
                         <div className="absolute inset-0 bg-red-500/10 rounded-full blur-xl" />
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-white block mb-2">Zero Trust Boundary</span>
+                        <span className="text-sm font-bold text-text-primary block mb-2">Zero Trust Boundary</span>
                         <p className="text-xs text-gray-500">All agentic actions require role-based verification. Data is air-gapped before entering the LLM router.</p>
                       </div>
                     </motion.div>

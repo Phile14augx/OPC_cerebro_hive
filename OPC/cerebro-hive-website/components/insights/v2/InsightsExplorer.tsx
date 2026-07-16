@@ -37,17 +37,17 @@ export const InsightsExplorer = () => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   return (
-    <section className="py-24 border-b border-white/5 bg-[#0A0D14]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
           <div>
-            <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">Intelligence Archive</h2>
+            <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Intelligence Archive</h2>
             <p className="text-text-secondary max-w-2xl font-inter">
               Explore our complete library of strategic analysis. Choose your preferred depth of information.
             </p>
           </div>
-          <div className="flex bg-surface border border-white/10 rounded-lg p-1">
+          <div className="flex bg-surface border border-border rounded-lg p-1">
             {(["30s", "5m", "Full"] as const).map(level => (
               <button
                 key={level}
@@ -65,7 +65,7 @@ export const InsightsExplorer = () => {
 
         <div className="space-y-6">
           {insights.map(insight => (
-            <div key={insight.id} className="bg-surface border border-white/10 rounded-2xl p-6 md:p-8 hover:border-white/30 transition-colors">
+            <div key={insight.id} className="bg-surface border border-border rounded-2xl p-6 md:p-8 hover:border-white/30 transition-colors">
               
               <div className="flex flex-col md:flex-row justify-between gap-6 mb-6">
                 <div>
@@ -77,13 +77,13 @@ export const InsightsExplorer = () => {
                       <Clock size={12} /> {insight.date}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-space font-bold text-white leading-tight">{insight.title}</h3>
+                  <h3 className="text-2xl font-space font-bold text-text-primary leading-tight">{insight.title}</h3>
                 </div>
                 
                 <div className="shrink-0">
                   <button 
                     onClick={() => setExpandedId(expandedId === insight.id ? null : insight.id)}
-                    className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+                    className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-text-primary hover:bg-white/10 transition-colors"
                   >
                     <ChevronDown size={16} className={cn("transition-transform", expandedId === insight.id ? "rotate-180" : "")} />
                   </button>
@@ -97,7 +97,7 @@ export const InsightsExplorer = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="p-6 rounded-xl bg-black/50 border border-white/5"
+                  className="p-6 rounded-xl bg-surface-secondary border border-border"
                 >
                   <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-3 flex items-center gap-2">
                     {activeLevel === "30s" ? <Maximize2 size={12} /> : <FileText size={12} />} 
@@ -108,7 +108,7 @@ export const InsightsExplorer = () => {
                   </p>
                   
                   {activeLevel !== "Full" && (
-                    <button onClick={() => setActiveLevel(activeLevel === "30s" ? "5m" : "Full")} className="mt-4 text-xs font-bold text-[#00E5FF] hover:text-white transition-colors flex items-center gap-1">
+                    <button onClick={() => setActiveLevel(activeLevel === "30s" ? "5m" : "Full")} className="mt-4 text-xs font-bold text-accent-secondary hover:text-white transition-colors flex items-center gap-1">
                       Read {activeLevel === "30s" ? "5 Min Brief" : "Full Analysis"} <ArrowRight size={12} />
                     </button>
                   )}

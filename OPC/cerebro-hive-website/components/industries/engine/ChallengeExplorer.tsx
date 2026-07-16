@@ -32,7 +32,7 @@ const categoryConfig: Record<string, { color: string, icon: any }> = {
 
 const ArchitectureFlow = ({ color }: { color: string }) => {
   return (
-    <div className="w-full h-16 relative flex items-center justify-between px-2 mt-4 border border-white/5 rounded-lg bg-black/20">
+    <div className="w-full h-16 relative flex items-center justify-between px-2 mt-4 border border-border rounded-lg bg-black/20">
       <div className="flex flex-col items-center">
         <Database size={14} className="text-text-muted" />
         <span className="text-[9px] text-text-muted mt-1 uppercase tracking-widest">Data</span>
@@ -101,7 +101,7 @@ export function ChallengeExplorer({ challenges, config }: { challenges: Industry
                 transition={{ delay: i * 0.1, duration: 0.5 }}
                 onMouseEnter={() => setHoveredIndex(i)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                className="relative flex flex-col rounded-2xl bg-surface-elevated/40 backdrop-blur-xl border border-white/10 transition-all duration-500 overflow-hidden group cursor-default"
+                className="relative flex flex-col rounded-2xl bg-surface-elevated/40 backdrop-blur-xl border border-border transition-all duration-500 overflow-hidden group cursor-default"
                 style={{
                   minHeight: "320px",
                   boxShadow: isHovered ? `0 20px 40px -10px ${catConfig.color}20` : "none",
@@ -127,7 +127,7 @@ export function ChallengeExplorer({ challenges, config }: { challenges: Industry
                   {/* Header Row */}
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-black/20 border border-white/5 group-hover:rotate-12 transition-transform duration-500">
+                      <div className="p-2 rounded-lg bg-black/20 border border-border group-hover:rotate-12 transition-transform duration-500">
                         <Icon size={24} style={{ color: catConfig.color }} />
                       </div>
                       <h3 className="text-xl font-bold text-text-primary leading-tight group-hover:translate-x-1 transition-transform duration-300">
@@ -173,7 +173,7 @@ export function ChallengeExplorer({ challenges, config }: { challenges: Industry
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="flex flex-col gap-5 overflow-hidden border-t border-white/10 pt-4 mt-2"
+                        className="flex flex-col gap-5 overflow-hidden border-t border-border pt-4 mt-2"
                       >
                         {/* Architecture Flow */}
                         <div>
@@ -216,7 +216,7 @@ export function ChallengeExplorer({ challenges, config }: { challenges: Industry
                             <span className="text-xs uppercase tracking-widest text-text-muted font-bold block mb-2">Technologies</span>
                             <div className="flex flex-wrap gap-2">
                               {challenge.techStack.map((tech, idx) => (
-                                <span key={idx} className="text-xs px-2 py-1 rounded bg-black/30 text-text-secondary border border-white/5">
+                                <span key={idx} className="text-xs px-2 py-1 rounded bg-black/30 text-text-secondary border border-border">
                                   {tech}
                                 </span>
                               ))}
@@ -236,7 +236,7 @@ export function ChallengeExplorer({ challenges, config }: { challenges: Industry
 
                   {/* Readiness Bar (Always at bottom) */}
                   {challenge.readiness && (
-                    <motion.div layout className="mt-auto pt-6 border-t border-white/5 flex justify-between items-center text-[10px] uppercase tracking-widest font-bold">
+                    <motion.div layout className="mt-auto pt-6 border-t border-border flex justify-between items-center text-[10px] uppercase tracking-widest font-bold">
                       <div className="flex flex-col">
                         <span className="text-text-muted">Time</span>
                         <span className="text-text-primary">{challenge.readiness.implementation}</span>

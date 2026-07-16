@@ -12,16 +12,16 @@ const resources = [
 
 export const DeveloperResources = () => {
   return (
-    <section className="py-24 border-b border-white/5 bg-[#0A0D14]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
-        <div className="bg-gradient-to-br from-surface to-black border border-white/10 rounded-3xl p-8 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center gap-12">
+        <div className="bg-gradient-to-br from-surface to-black border border-border rounded-3xl p-8 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center gap-12">
           
           <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none" style={{ backgroundImage: `radial-gradient(circle at top right, #00E5FF, transparent)` }} />
 
           <div className="flex-1 relative z-10">
-            <span className="text-[10px] uppercase tracking-widest text-[#00E5FF] font-bold mb-4 block">Developer Portal</span>
-            <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-6">Build the Future.</h2>
+            <span className="text-[10px] uppercase tracking-widest text-accent-secondary font-bold mb-4 block">Developer Portal</span>
+            <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Build the Future.</h2>
             <p className="text-lg text-text-secondary mb-8 max-w-xl">
               Access the same tools our researchers use. From interactive API playgrounds to verified prompt libraries, everything you need to operationalize AI is here.
             </p>
@@ -32,9 +32,9 @@ export const DeveloperResources = () => {
 
           <div className="w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
             {resources.map((res, i) => (
-              <div key={i} className="p-6 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group cursor-pointer">
+              <div key={i} className="p-6 rounded-xl bg-white/5 border border-border hover:bg-white/10 transition-colors group cursor-pointer">
                 <res.icon size={24} className="text-text-muted group-hover:text-white transition-colors mb-4" />
-                <h3 className="text-white font-space font-bold mb-2">{res.title}</h3>
+                <h3 className="text-text-primary font-space font-bold mb-2">{res.title}</h3>
                 <p className="text-xs text-text-secondary">{res.desc}</p>
               </div>
             ))}

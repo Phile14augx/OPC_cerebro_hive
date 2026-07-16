@@ -17,7 +17,7 @@ export const DepartmentNode = ({ data, selected }: NodeProps<Node<OrganizationNo
   return (
     <div className={cn(
       "relative w-[240px] rounded-xl overflow-hidden transition-all duration-300",
-      "bg-[#0a0f12]/90 backdrop-blur-md border-t-2 border-b border-l border-r border-white/5",
+      "bg-[#0a0f12]/90 backdrop-blur-md border-t-2 border-b border-l border-r border-border",
       config.borderClass, config.shadowClass,
       selected ? "scale-[1.02] -translate-y-2 ring-1 ring-white/20" : "hover:-translate-y-2 cursor-pointer"
     )}>
@@ -27,7 +27,7 @@ export const DepartmentNode = ({ data, selected }: NodeProps<Node<OrganizationNo
             {config.icon}
           </div>
           <div>
-            <h4 className="text-sm font-space font-bold text-white">{data.title}</h4>
+            <h4 className="text-sm font-space font-bold text-text-primary">{data.title}</h4>
           </div>
         </div>
 
@@ -42,7 +42,7 @@ export const DepartmentNode = ({ data, selected }: NodeProps<Node<OrganizationNo
         )}
 
         {data.metrics && (
-          <div className="flex justify-between items-end border-t border-white/5 pt-3">
+          <div className="flex justify-between items-end border-t border-border pt-3">
             <span className="text-[10px] font-inter text-text-muted">{data.metrics.employees} Engineers • {data.metrics.projects} Products</span>
             {data.hasChildren && (
               <span className={cn("text-[10px] font-space font-bold uppercase", config.textClass)}>

@@ -33,7 +33,7 @@ export default function DataEngineeringPage() {
             Structure scattered business records and construct modern data lakes that securely feed LLMs, vector indexes, and BI tools. Clean data is the absolute prerequisite for every enterprise AI initiative.
           </p>
 
-          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#7B61FF] text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
+          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#7B61FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
             Discuss Your Data Infrastructure
           </Link>
         </div>

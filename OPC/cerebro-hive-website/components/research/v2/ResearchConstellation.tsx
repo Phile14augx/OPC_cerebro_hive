@@ -8,7 +8,7 @@ const layers = [
   {
     title: "Foundational Research",
     desc: "Advancing the core capabilities of artificial intelligence.",
-    color: "text-[#00E5FF]",
+    color: "text-accent-secondary",
     bg: "bg-[#00E5FF]/5",
     border: "border-[#00E5FF]/20",
     nodes: ["Reasoning", "Memory", "Planning", "Agents", "Evaluation"]
@@ -16,7 +16,7 @@ const layers = [
   {
     title: "Applied Research",
     desc: "Translating capabilities into domain-specific paradigms.",
-    color: "text-[#00F57A]",
+    color: "text-accent-primary",
     bg: "bg-[#00F57A]/5",
     border: "border-[#00F57A]/20",
     nodes: ["Healthcare AI", "Manufacturing AI", "Financial AI", "Legal AI"]
@@ -33,12 +33,12 @@ const layers = [
 
 export const ResearchConstellation = () => {
   return (
-    <section className="py-24 border-b border-white/5 bg-[#0A0D14] relative">
+    <section className="py-24 border-b border-border bg-background relative">
       <div className="container-wide max-w-5xl">
         
         <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] mb-3 block">Translation Pipeline</span>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">From Lab to Enterprise</h2>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block">Translation Pipeline</span>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">From Lab to Enterprise</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter">
             Our research architecture operates across three distinct layers, ensuring that theoretical breakthroughs become measurable business outcomes.
           </p>
@@ -58,7 +58,7 @@ export const ResearchConstellation = () => {
                 
                 <div className="flex-1 flex flex-wrap justify-center md:justify-end gap-3">
                   {layer.nodes.map((node, i) => (
-                    <span key={i} className={cn("px-4 py-2 rounded-lg border bg-black/50 text-sm font-medium text-white transition-colors hover:border-white/30", layer.border)}>
+                    <span key={i} className={cn("px-4 py-2 rounded-lg border bg-surface-secondary text-sm font-medium text-text-primary transition-colors hover:border-white/30", layer.border)}>
                       {node}
                     </span>
                   ))}

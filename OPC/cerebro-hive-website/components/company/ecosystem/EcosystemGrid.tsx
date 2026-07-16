@@ -26,7 +26,7 @@ export const EcosystemGrid = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
-              className="px-6 py-3 rounded-full bg-[#0a0d14] border border-white/10 flex items-center gap-2 hover:border-primary-accent/50 transition-colors"
+              className="px-6 py-3 rounded-full bg-[#0a0d14] border border-border flex items-center gap-2 hover:border-primary-accent/50 transition-colors"
             >
               <Database size={16} className="text-primary-accent" />
               <span className="font-space font-medium text-text-primary text-sm">{tech}</span>
@@ -39,9 +39,9 @@ export const EcosystemGrid = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: (partners.technology.length + index) * 0.05 }}
-              className="px-6 py-3 rounded-full bg-[#0a0d14] border border-white/10 flex items-center gap-2 hover:border-[#00E5FF]/50 transition-colors"
+              className="px-6 py-3 rounded-full bg-[#0a0d14] border border-border flex items-center gap-2 hover:border-[#00E5FF]/50 transition-colors"
             >
-              <Network size={16} className="text-[#00E5FF]" />
+              <Network size={16} className="text-accent-secondary" />
               <span className="font-space font-medium text-text-primary text-sm">{tech}</span>
             </motion.div>
           ))}

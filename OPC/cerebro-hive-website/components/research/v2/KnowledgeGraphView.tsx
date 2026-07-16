@@ -5,24 +5,24 @@ import { Network, Database, BrainCircuit, Box, Factory, TrendingUp } from "lucid
 import { cn } from "@/lib/utils";
 
 const graphPath = [
-  { step: "Research", icon: BrainCircuit, label: "Agentic RAG Paper", color: "text-[#00E5FF]", bg: "bg-[#00E5FF]/10", border: "border-[#00E5FF]/30" },
-  { step: "Framework", icon: Network, label: "Cerebro-RAG Core", color: "text-[#00F57A]", bg: "bg-[#00F57A]/10", border: "border-[#00F57A]/30" },
-  { step: "Architecture", icon: Database, label: "Distributed Graph-Vector Hybrid", color: "text-[#FFB300]", bg: "bg-[#FFB300]/10", border: "border-[#FFB300]/30" },
-  { step: "Products", icon: Box, label: "Knowledge Hub", color: "text-white", bg: "bg-white/10", border: "border-white/30" },
-  { step: "Industries", icon: Factory, label: "Healthcare & Finance", color: "text-text-secondary", bg: "bg-black/40", border: "border-white/10" },
+  { step: "Research", icon: BrainCircuit, label: "Agentic RAG Paper", color: "text-accent-secondary", bg: "bg-[#00E5FF]/10", border: "border-[#00E5FF]/30" },
+  { step: "Framework", icon: Network, label: "Cerebro-RAG Core", color: "text-accent-primary", bg: "bg-accent-primary/10", border: "border-accent-primary/30" },
+  { step: "Architecture", icon: Database, label: "Distributed Graph-Vector Hybrid", color: "text-warning", bg: "bg-[#FFB300]/10", border: "border-[#FFB300]/30" },
+  { step: "Products", icon: Box, label: "Knowledge Hub", color: "text-text-primary", bg: "bg-white/10", border: "border-border" },
+  { step: "Industries", icon: Factory, label: "Healthcare & Finance", color: "text-text-secondary", bg: "bg-black/40", border: "border-border" },
   { step: "Outcomes", icon: TrendingUp, label: "80% Faster Discovery", color: "text-primary-accent", bg: "bg-primary-accent/10", border: "border-primary-accent/30" }
 ];
 
 export const KnowledgeGraphView = () => {
   return (
-    <section className="py-24 border-b border-white/5 bg-[#05070A] overflow-hidden">
+    <section className="py-24 border-b border-border bg-background overflow-hidden">
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] mb-3 block flex items-center justify-center gap-2">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block flex items-center justify-center gap-2">
             <Network size={14} /> The Navigation System
           </span>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">Research Knowledge Graph</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Research Knowledge Graph</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter">
             Explore the connective tissue of our organization. See exactly how an abstract research paper propagates into a measurable business outcome.
           </p>
@@ -50,7 +50,7 @@ export const KnowledgeGraphView = () => {
                 </div>
 
                 <div className="mt-6 text-center">
-                  <div className="text-sm font-space font-bold text-white group-hover:text-[#00E5FF] transition-colors">{node.label}</div>
+                  <div className="text-sm font-space font-bold text-text-primary group-hover:text-[#00E5FF] transition-colors">{node.label}</div>
                 </div>
 
                 {/* Mobile connector */}

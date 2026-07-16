@@ -19,7 +19,7 @@ import { InsightsAssistant } from '@/components/insights/v2/InsightsAssistant';
 
 export default function InsightsLandingPage() {
   return (
-    <div className="bg-[#0A0D14] min-h-screen selection:bg-[#00E5FF]/30 selection:text-white">
+    <div className="bg-background min-h-screen selection:bg-[#00E5FF]/30 selection:text-white">
       
       <InsightsHero />
       <ExecutiveDashboard />

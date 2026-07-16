@@ -15,11 +15,11 @@ export default function LivingTimeline() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="py-24 border-b border-white/5 bg-[#05070A]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="text-center mb-24">
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-6">Our Trajectory</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Our Trajectory</h2>
           <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
             A living record of our research, our engineering, and where we are taking the enterprise next.
           </p>
@@ -35,11 +35,11 @@ export default function LivingTimeline() {
                 onClick={() => setActiveIndex(i)}
                 className="flex flex-col items-center gap-4 group w-32"
               >
-                <div className={`text-xs font-bold uppercase tracking-widest transition-colors ${activeIndex === i ? 'text-white' : 'text-text-muted group-hover:text-text-secondary'}`}>
+                <div className={`text-xs font-bold uppercase tracking-widest transition-colors ${activeIndex === i ? 'text-text-primary' : 'text-text-muted group-hover:text-text-secondary'}`}>
                   {m.year}
                 </div>
-                <div className={`w-4 h-4 rounded-full border-2 transition-all ${activeIndex === i ? 'bg-[#00E5FF] border-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.5)] scale-150' : 'bg-[#0A0D14] border-white/20 group-hover:border-white/50'}`} />
-                <div className={`text-xs font-bold uppercase tracking-widest transition-colors ${activeIndex === i ? 'text-[#00E5FF]' : 'text-transparent'}`}>
+                <div className={`w-4 h-4 rounded-full border-2 transition-all ${activeIndex === i ? 'bg-[#00E5FF] border-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.5)] scale-150' : 'bg-background border-border group-hover:border-white/50'}`} />
+                <div className={`text-xs font-bold uppercase tracking-widest transition-colors ${activeIndex === i ? 'text-accent-secondary' : 'text-transparent'}`}>
                   {m.label}
                 </div>
               </button>
@@ -49,7 +49,7 @@ export default function LivingTimeline() {
 
         {/* Display Area */}
         <div className="max-w-2xl mx-auto">
-          <div className="bg-surface border border-white/10 rounded-2xl p-8 md:p-12 min-h-[250px] relative overflow-hidden">
+          <div className="bg-surface border border-border rounded-2xl p-8 md:p-12 min-h-[250px] relative overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeIndex}
@@ -59,10 +59,10 @@ export default function LivingTimeline() {
                 transition={{ duration: 0.3 }}
                 className="relative z-10 text-center"
               >
-                <div className="text-xs font-bold uppercase tracking-widest text-[#00E5FF] mb-4">
+                <div className="text-xs font-bold uppercase tracking-widest text-accent-secondary mb-4">
                   {milestones[activeIndex].year} • {milestones[activeIndex].label}
                 </div>
-                <h3 className="text-2xl md:text-3xl font-space font-bold text-white mb-4">
+                <h3 className="text-2xl md:text-3xl font-space font-bold text-text-primary mb-4">
                   {milestones[activeIndex].title}
                 </h3>
                 <p className="text-lg text-text-secondary font-inter">

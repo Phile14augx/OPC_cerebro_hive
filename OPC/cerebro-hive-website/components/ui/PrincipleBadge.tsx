@@ -11,13 +11,13 @@ const colorMap = {
   cyan: {
     bg: "bg-[#00E5FF]/5",
     border: "border-[#00E5FF]/20",
-    text: "text-[#00E5FF]",
+    text: "text-accent-secondary",
     glow: "shadow-[0_0_15px_rgba(0,229,255,0.1)]",
   },
   green: {
     bg: "bg-[#00F57A]/5",
     border: "border-[#00F57A]/20",
-    text: "text-[#00F57A]",
+    text: "text-accent-primary",
     glow: "shadow-[0_0_15px_rgba(0,245,122,0.1)]",
   },
   blue: {

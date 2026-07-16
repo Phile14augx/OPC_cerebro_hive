@@ -102,24 +102,24 @@ export default function EnterpriseDashboardPage() {
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/5 pb-8 mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border pb-8 mb-12">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold uppercase tracking-wider mb-3">
               <Sparkles className="w-3.5 h-3.5 animate-pulse" /> Corporate Administration
             </div>
-            <h1 className="text-3xl font-bold font-display text-white">
+            <h1 className="text-3xl font-bold font-display text-text-primary">
               Apex Software Labs
             </h1>
             <p className="text-sm text-[#8892A4] mt-1 font-body">
-              Enterprise training contract: <strong className="text-white">COHORT-APEX-2026</strong>
+              Enterprise training contract: <strong className="text-text-primary">COHORT-APEX-2026</strong>
             </p>
           </div>
-          <div className="flex gap-4 bg-white/2 border border-white/5 rounded-xl px-5 py-3 text-sm">
+          <div className="flex gap-4 bg-white/2 border border-border rounded-xl px-5 py-3 text-sm">
             <div>
               <span className="text-xs text-[#8892A4] block uppercase">Class Room Seats</span>
-              <strong className="text-white text-base">{activeSeats} / {totalSeats} Used</strong>
+              <strong className="text-text-primary text-base">{activeSeats} / {totalSeats} Used</strong>
             </div>
-            <div className="border-l border-white/5 pl-4">
+            <div className="border-l border-border pl-4">
               <span className="text-xs text-[#8892A4] block uppercase">Verification Status</span>
               <strong className="text-amber-500 text-base flex items-center gap-1">50+ Certified <Award className="w-4 h-4 text-amber-500" /></strong>
             </div>
@@ -128,43 +128,43 @@ export default function EnterpriseDashboardPage() {
 
         {/* Quick Stats Bar */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-xl border border-white/5 p-6 flex items-center gap-4 shadow-md">
-            <div className="w-10 h-10 rounded-lg bg-[#00E5FF]/10 flex items-center justify-center text-[#00E5FF] flex-shrink-0">
+          <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-xl border border-border p-6 flex items-center gap-4 shadow-md">
+            <div className="w-10 h-10 rounded-lg bg-[#00E5FF]/10 flex items-center justify-center text-accent-secondary flex-shrink-0">
               <Users className="w-5 h-5" />
             </div>
             <div>
               <span className="text-xs text-[#8892A4] block uppercase leading-tight">Active Seats</span>
-              <strong className="text-white text-xl font-display mt-0.5 block">{activeSeats} Developers</strong>
+              <strong className="text-text-primary text-xl font-display mt-0.5 block">{activeSeats} Developers</strong>
             </div>
           </div>
 
-          <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-xl border border-white/5 p-6 flex items-center gap-4 shadow-md">
+          <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-xl border border-border p-6 flex items-center gap-4 shadow-md">
             <div className="w-10 h-10 rounded-lg bg-[#7B61FF]/10 flex items-center justify-center text-[#7B61FF] flex-shrink-0">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
               <span className="text-xs text-[#8892A4] block uppercase leading-tight">Avg Progress</span>
-              <strong className="text-white text-xl font-display mt-0.5 block">{avgProgress}% Complete</strong>
+              <strong className="text-text-primary text-xl font-display mt-0.5 block">{avgProgress}% Complete</strong>
             </div>
           </div>
 
-          <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-xl border border-white/5 p-6 flex items-center gap-4 shadow-md">
+          <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-xl border border-border p-6 flex items-center gap-4 shadow-md">
             <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500 flex-shrink-0">
               <Award className="w-5 h-5" />
             </div>
             <div>
               <span className="text-xs text-[#8892A4] block uppercase leading-tight">Certificates Unlocked</span>
-              <strong className="text-white text-xl font-display mt-0.5 block">{certifiedCount} Certified</strong>
+              <strong className="text-text-primary text-xl font-display mt-0.5 block">{certifiedCount} Certified</strong>
             </div>
           </div>
 
-          <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-xl border border-white/5 p-6 flex items-center gap-4 shadow-md">
+          <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-xl border border-border p-6 flex items-center gap-4 shadow-md">
             <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 flex-shrink-0">
               <LineChart className="w-5 h-5" />
             </div>
             <div>
               <span className="text-xs text-[#8892A4] block uppercase leading-tight">Avg Test Score</span>
-              <strong className="text-white text-xl font-display mt-0.5 block">{avgScore}% Accuracy</strong>
+              <strong className="text-text-primary text-xl font-display mt-0.5 block">{avgScore}% Accuracy</strong>
             </div>
           </div>
         </div>
@@ -172,16 +172,16 @@ export default function EnterpriseDashboardPage() {
         {/* Dashboard Workspace */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Left panel: Employee Progress Table */}
-          <div className="lg:col-span-2 space-y-8 bg-[#0D1325]/60 backdrop-blur-md rounded-2xl border border-white/5 p-8 sm:p-10 shadow-xl">
+          <div className="lg:col-span-2 space-y-8 bg-[#0D1325]/60 backdrop-blur-md rounded-2xl border border-border p-8 sm:p-10 shadow-xl">
             <div>
-              <h3 className="text-lg font-bold font-display text-white">Cohort Enrollment & Progress</h3>
+              <h3 className="text-lg font-bold font-display text-text-primary">Cohort Enrollment & Progress</h3>
               <p className="text-sm text-[#8892A4] mt-0.5">Real-time completion metrics for team training cohorts.</p>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-white/5 text-[#8892A4] font-bold text-xs uppercase tracking-wider">
+                  <tr className="border-b border-border text-[#8892A4] font-bold text-xs uppercase tracking-wider">
                     <th className="pb-3 pr-4">Developer</th>
                     <th className="pb-3 pr-4">Active Course</th>
                     <th className="pb-3 pr-4">Progress</th>
@@ -193,7 +193,7 @@ export default function EnterpriseDashboardPage() {
                   {employees.map((emp) => (
                     <tr key={emp.id} className="hover:bg-white/2 transition-colors">
                       <td className="py-4 pr-4">
-                        <strong className="text-white block">{emp.name}</strong>
+                        <strong className="text-text-primary block">{emp.name}</strong>
                         <span className="text-xs text-[#8892A4] block mt-0.5">{emp.email}</span>
                       </td>
                       <td className="py-4 pr-4 text-xs text-[#8892A4] max-w-[150px] truncate">{emp.course}</td>
@@ -202,7 +202,7 @@ export default function EnterpriseDashboardPage() {
                           <div className="h-1.5 flex-1 bg-white/5 rounded-full overflow-hidden">
                             <div className="h-full bg-[#7B61FF]" style={{ width: `${emp.progress}%` }} />
                           </div>
-                          <span className="text-xs font-bold text-white">{emp.progress}%</span>
+                          <span className="text-xs font-bold text-text-primary">{emp.progress}%</span>
                         </div>
                       </td>
                       <td className="py-4 pr-4">
@@ -213,7 +213,7 @@ export default function EnterpriseDashboardPage() {
                         ) : emp.progress === 0 ? (
                           <span className="text-[#8892A4] text-xs">Pending</span>
                         ) : (
-                          <span className="text-white font-semibold text-xs">{emp.score}%</span>
+                          <span className="text-text-primary font-semibold text-xs">{emp.score}%</span>
                         )}
                       </td>
                       <td className="py-4 text-right">
@@ -234,9 +234,9 @@ export default function EnterpriseDashboardPage() {
           {/* Right panel: Invite new members & SVG analytics */}
           <div className="space-y-10">
             {/* Invite Panel */}
-            <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-2xl border border-white/5 p-8 shadow-xl">
-              <h3 className="text-base font-bold font-display text-white mb-6 flex items-center gap-2">
-                <UserPlus className="w-4 h-4 text-[#00E5FF]" /> Invite Cohort Seat
+            <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-2xl border border-border p-8 shadow-xl">
+              <h3 className="text-base font-bold font-display text-text-primary mb-6 flex items-center gap-2">
+                <UserPlus className="w-4 h-4 text-accent-secondary" /> Invite Cohort Seat
               </h3>
 
               <form onSubmit={handleInviteUser} className="space-y-6">
@@ -248,7 +248,7 @@ export default function EnterpriseDashboardPage() {
                     placeholder="Marcus Dyson"
                     value={inviteName}
                     onChange={(e) => setInviteName(e.target.value)}
-                    className="w-full bg-white/5 border border-white/5 focus:border-[#00E5FF]/40 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/40 animate-none"
+                    className="w-full bg-white/5 border border-border focus:border-[#00E5FF]/40 rounded-lg px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/40 animate-none"
                   />
                 </div>
 
@@ -260,7 +260,7 @@ export default function EnterpriseDashboardPage() {
                     placeholder="marcus@apex.com"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
-                    className="w-full bg-white/5 border border-white/5 focus:border-[#00E5FF]/40 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/40 animate-none"
+                    className="w-full bg-white/5 border border-border focus:border-[#00E5FF]/40 rounded-lg px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/40 animate-none"
                   />
                 </div>
 
@@ -269,7 +269,7 @@ export default function EnterpriseDashboardPage() {
                   <select
                     value={inviteCourse}
                     onChange={(e) => setInviteCourse(e.target.value)}
-                    className="w-full bg-[#080B14] border border-white/5 focus:border-[#00E5FF]/40 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/40 cursor-pointer"
+                    className="w-full bg-[#080B14] border border-border focus:border-[#00E5FF]/40 rounded-lg px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/40 cursor-pointer"
                   >
                     <option value="Building AI Agents with LangChain">Building AI Agents with LangChain</option>
                     <option value="LLM Engineering & RAG Architecture">LLM Engineering & RAG Architecture</option>
@@ -294,7 +294,7 @@ export default function EnterpriseDashboardPage() {
             </div>
 
             {/* Custom SVG Learning Chart */}
-            <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-2xl border border-white/5 p-8 shadow-xl">
+            <div className="bg-[#0D1325]/60 backdrop-blur-md rounded-2xl border border-border p-8 shadow-xl">
               <span className="text-xs font-bold uppercase tracking-wider text-[#8892A4] block mb-6">Active Weekly Study Hours</span>
               <div className="flex justify-center">
                 <svg viewBox="0 0 200 100" className="w-full max-w-[180px] h-auto">

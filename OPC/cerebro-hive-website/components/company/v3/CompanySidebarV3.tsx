@@ -60,11 +60,11 @@ export function CompanySidebarV3() {
               >
                 <div className={cn(
                   "w-3 h-3 rounded-full border-2 bg-background transition-colors",
-                  isActive ? "border-primary-accent" : "border-white/20 group-hover:border-white/50"
+                  isActive ? "border-primary-accent" : "border-border group-hover:border-white/50"
                 )} />
                 <span className={cn(
                   "text-xs font-bold uppercase tracking-widest transition-colors",
-                  isActive ? "text-white" : "text-text-muted group-hover:text-text-secondary"
+                  isActive ? "text-text-primary" : "text-text-muted group-hover:text-text-secondary"
                 )}>
                   {chapter.label}
                 </span>

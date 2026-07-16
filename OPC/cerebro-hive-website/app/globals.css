@@ -3,12 +3,13 @@
 @theme {
   --color-background: var(--background);
   --color-surface: var(--surface);
-  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-secondary: var(--surface-secondary);
   --color-border: var(--border);
   
   --color-primary-accent: var(--accent-primary);
   --color-secondary-accent: var(--accent-secondary);
-  --color-warning: #FFC857;
+  --color-warning: var(--warning);
+  --color-success: var(--success);
   
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
@@ -34,28 +35,52 @@
 }
 
 /* ============================================================
-   CEREBRO HIVE — DESIGN TOKENS (Engineering Elegance)
+   CEREBRO HIVE — DESIGN TOKENS (Enterprise Systems)
    ============================================================ */
 :root {
-  /* LIGHT THEME (Apple + Stripe + Anthropic) */
-  --background: #F7F9FC;
+  /* LIGHT THEME (Executive Boardroom / Engineering Blueprint) */
+  --background: #F8FAFC;
   --surface: #FFFFFF;
-  --surface-elevated: #FCFCFD;
+  --surface-secondary: #F3F4F6;
   --border: #E5E7EB;
 
   --text-primary: #111827;
-  --text-secondary: #4B5563;
-  --text-muted: #6B7280;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
 
-  --accent-primary: #00E676; /* CerebroHive Green */
-  --accent-secondary: #00B8FF;
+  --accent-primary: #059669; /* Emerald */
+  --accent-secondary: #2563EB; /* Blue */
   
-  --glow-primary: 0 0 20px rgba(0, 230, 118, 0.2), 0 0 60px rgba(0, 230, 118, 0.05);
-  --glow-secondary: 0 0 20px rgba(0, 184, 255, 0.2), 0 0 60px rgba(0, 184, 255, 0.05);
+  --warning: #F59E0B;
+  --success: #10B981;
 
-  --glass-bg: rgba(255, 255, 255, 0.72);
-  --glass-border: rgba(0, 0, 0, 0.06);
-  --shadow-elevated: 0 12px 40px rgba(15,23,42,0.08);
+  /* Structural Tokens */
+  --radius-card: 16px;
+  --radius-button: 999px;
+  --radius-modal: 24px;
+  
+  /* Elevation & Glow */
+  --shadow-sm: 0 2px 4px rgba(15,23,42,0.02);
+  --shadow-md: 0 4px 12px rgba(15,23,42,0.04);
+  --shadow-xl: 0 20px 50px rgba(15,23,42,0.08);
+  
+  --glow-primary: none;
+  --glow-secondary: none;
+  
+  /* Texture & Opacity */
+  --grid-opacity: 0.03;
+  --particle-opacity: 0;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --mesh-density: 0.02;
+  
+  /* Motion Constants (Fast, precise, spring) */
+  --motion-duration: 250ms;
+  --motion-easing: cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Spring */
+  
+  /* Typography Scale Overrides (Light Mode feels crisper) */
+  --font-weight-heavy: 700;
+  --font-weight-normal: 400;
 
   /* Fluid Typography Tokens (Min, Target, Max) */
   --text-xs-fluid: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
@@ -72,25 +97,44 @@
 }
 
 .dark {
-  /* DARK THEME (Original Night Mode) */
-  --background: #050A0F;
-  --surface: #090D14;
-  --surface-elevated: #1A2332;
-  --border: rgba(255, 255, 255, 0.05);
+  /* DARK THEME (AI Mission Control) */
+  --background: #05070A;
+  --surface: #0A0D14;
+  --surface-secondary: #141A25;
+  --border: rgba(255, 255, 255, 0.1);
 
   --text-primary: #FFFFFF;
   --text-secondary: #9CA3AF;
   --text-muted: #6B7280;
 
-  --accent-primary: #00F57A;
-  --accent-secondary: #00C8FF;
+  --accent-primary: #00F57A; /* Neon Green */
+  --accent-secondary: #00E5FF; /* Cyan */
+  
+  --warning: #FFB300;
+  --success: #00F57A;
 
-  --glow-primary: 0 0 20px rgba(0, 245, 122, 0.35), 0 0 60px rgba(0, 245, 122, 0.1);
-  --glow-secondary: 0 0 20px rgba(0, 200, 255, 0.35), 0 0 60px rgba(0, 200, 255, 0.1);
+  /* Elevation & Glow */
+  --shadow-sm: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-md: 0 12px 24px rgba(0,0,0,0.7);
+  --shadow-xl: 0 24px 48px rgba(0,0,0,0.9);
+  
+  --glow-primary: 0 0 20px rgba(0, 245, 122, 0.25), 0 0 60px rgba(0, 245, 122, 0.1);
+  --glow-secondary: 0 0 20px rgba(0, 229, 255, 0.25), 0 0 60px rgba(0, 229, 255, 0.1);
+  
+  /* Texture & Opacity */
+  --grid-opacity: 0.05;
+  --particle-opacity: 0.8;
+  --glass-bg: rgba(10, 13, 20, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --mesh-density: 0.1;
 
-  --glass-bg: rgba(20, 27, 36, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --shadow-elevated: 0 12px 40px rgba(0,0,0,0.5);
+  /* Motion Constants (Slow, organic, ambient) */
+  --motion-duration: 500ms;
+  --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Typography Scale Overrides (Dark Mode feels bolder) */
+  --font-weight-heavy: 900;
+  --font-weight-normal: 500;
 }
 
 /* ============================================================
@@ -141,14 +185,48 @@ h1, h2, h3, h4, h5, h6 {
 p { font-family: var(--font-inter), sans-serif; }
 
 /* ============================================================
-   UTILITIES & COMPONENTS
+   THEME BEHAVIOR PRIMITIVES
    ============================================================ */
-.glass {
+.theme-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--motion-duration) var(--motion-easing);
+}
+.theme-card:hover {
+  box-shadow: var(--shadow-xl), var(--glow-primary);
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+}
+
+.theme-panel {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-glass {
   background: var(--glass-bg);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid var(--glass-border);
-  transition: background-color 500ms ease, border-color 500ms ease, box-shadow 500ms ease;
+  box-shadow: var(--shadow-md), var(--glow-secondary);
+  transition: all var(--motion-duration) var(--motion-easing);
+}
+
+.theme-button-primary {
+  background: var(--accent-primary);
+  color: var(--background); /* Invert text for contrast */
+  border-radius: var(--radius-button);
+  font-weight: var(--font-weight-heavy);
+  box-shadow: var(--shadow-sm), var(--glow-primary);
+  transition: all var(--motion-duration) var(--motion-easing);
+}
+.theme-button-primary:hover {
+  box-shadow: var(--shadow-md), var(--glow-primary);
+  transform: translateY(-1px);
 }
 
 /* Custom Scrollbar */
@@ -198,9 +276,9 @@ p { font-family: var(--font-inter), sans-serif; }
 
 /* Global Transitions for Theme Morphing */
 *, *::before, *::after {
-  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 500ms;
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform;
+  transition-timing-function: var(--motion-easing);
+  transition-duration: var(--motion-duration);
 }
 
 /* ============================================================

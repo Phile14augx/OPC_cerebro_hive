@@ -25,7 +25,7 @@ export const GlobalPresenceMap = () => {
             <span className="w-1.5 h-1.5 rounded-full bg-primary-accent animate-pulse" />
             Global Capability
           </h2>
-          <h3 className="text-4xl md:text-5xl font-space font-bold text-white tracking-tight mb-6">
+          <h3 className="text-4xl md:text-5xl font-space font-bold text-text-primary tracking-tight mb-6">
             Where We Operate
           </h3>
           <p className="text-lg text-text-secondary font-inter leading-relaxed max-w-xl mx-auto">
@@ -57,11 +57,11 @@ export const GlobalPresenceMap = () => {
                         : "bg-white/[0.02] border-border hover:border-white/30 opacity-50 hover:opacity-100 hover:scale-[1.01]"
                     )}
                   >
-                    <div className={cn("shrink-0", isActive ? (isOperational ? "text-primary-accent" : "text-[#00E5FF]") : "text-text-muted")}>
+                    <div className={cn("shrink-0", isActive ? (isOperational ? "text-primary-accent" : "text-accent-secondary") : "text-text-muted")}>
                       <MapPin size={20} />
                     </div>
                     <div className="text-left">
-                      <p className={cn("font-space font-bold text-sm transition-colors", isActive ? "text-white" : "text-text-secondary")}>
+                      <p className={cn("font-space font-bold text-sm transition-colors", isActive ? "text-text-primary" : "text-text-secondary")}>
                         {office.region}
                       </p>
                       <p className={cn("text-[10px] font-bold tracking-widest uppercase mt-0.5 transition-colors", isActive ? "text-white/70" : "text-text-muted")}>
@@ -91,13 +91,13 @@ export const GlobalPresenceMap = () => {
                   {/* Editorial Badge */}
                   <h4 className={cn(
                     "text-[11px] font-space font-bold tracking-[0.2em] uppercase mb-6",
-                    activeRegion.status === "Operational" ? "text-primary-accent" : "text-[#00E5FF]"
+                    activeRegion.status === "Operational" ? "text-primary-accent" : "text-accent-secondary"
                   )}>
                     {activeRegion.type}
                   </h4>
                   
                   {/* Title (Dominant Hierarchy) */}
-                  <h3 className="text-5xl lg:text-6xl font-space font-bold text-white tracking-tight mb-4 leading-none">
+                  <h3 className="text-5xl lg:text-6xl font-space font-bold text-text-primary tracking-tight mb-4 leading-none">
                     {activeRegion.region}
                   </h3>
                   
@@ -127,7 +127,7 @@ export const GlobalPresenceMap = () => {
                   <p className="text-[13px] font-space font-bold text-text-muted uppercase tracking-widest mb-3">
                     Primary Focus
                   </p>
-                  <p className="text-3xl font-space font-bold text-white leading-[1.2] max-w-sm">
+                  <p className="text-3xl font-space font-bold text-text-primary leading-[1.2] max-w-sm">
                     Enterprise Transformation & Delivery
                   </p>
                 </div>

@@ -55,7 +55,7 @@ export const EngineeringCulture = () => {
               version={engineeringFramework.narrative.metadata.version} 
             />
 
-            <motion.h3 variants={motionPresets.fadeUp} className="text-4xl md:text-5xl font-space font-bold text-white tracking-tight leading-[1.1] mb-6">
+            <motion.h3 variants={motionPresets.fadeUp} className="text-4xl md:text-5xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
               {engineeringFramework.narrative.headline}
             </motion.h3>
             
@@ -89,7 +89,7 @@ export const EngineeringCulture = () => {
                       {/* Node Label */}
                       <span className={cn(
                         "text-sm font-space font-bold tracking-[0.15em] uppercase transition-colors duration-300",
-                        isActive ? "text-white" : "text-text-muted group-hover:text-text-secondary"
+                        isActive ? "text-text-primary" : "text-text-muted group-hover:text-text-secondary"
                       )}>
                         {phase.label}
                       </span>

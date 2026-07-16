@@ -29,7 +29,7 @@ const getColorClasses = (color: string) => {
     case "gold": return "text-yellow-400 border-yellow-500/30 bg-yellow-500/10 group-hover:border-yellow-500/60";
     case "cyan": return "text-cyan-400 border-cyan-500/30 bg-cyan-500/10 group-hover:border-cyan-500/60";
     case "orange": return "text-orange-400 border-orange-500/30 bg-orange-500/10 group-hover:border-orange-500/60 shadow-[0_0_30px_rgba(249,115,22,0.15)]";
-    default: return "text-white border-white/30 bg-white/10";
+    default: return "text-text-primary border-border bg-white/10";
   }
 };
 
@@ -41,7 +41,7 @@ const getTextColorClass = (color: string) => {
     case "gold": return "text-yellow-400";
     case "cyan": return "text-cyan-400";
     case "orange": return "text-orange-400";
-    default: return "text-white";
+    default: return "text-text-primary";
   }
 };
 
@@ -63,14 +63,14 @@ const getGlowClass = (color: string) => {
 const ExecutiveScorecard = () => {
   const { trustScore, lastAudit, compliance, status } = trustCenter.executiveScorecard;
   return (
-    <div className="w-full lg:w-72 flex flex-col gap-4 p-6 rounded-2xl bg-surface-elevated/80 border border-white/10 backdrop-blur-xl z-30 shadow-2xl">
-      <h4 className="text-[10px] font-mono tracking-widest uppercase text-text-muted border-b border-white/10 pb-3">
+    <div className="w-full lg:w-72 flex flex-col gap-4 p-6 rounded-2xl bg-surface-elevated/80 border border-border backdrop-blur-xl z-30 shadow-2xl">
+      <h4 className="text-[10px] font-mono tracking-widest uppercase text-text-muted border-b border-border pb-3">
         Executive Overview
       </h4>
       <div className="flex justify-between items-end">
         <div>
           <span className="text-xs text-text-secondary font-inter block mb-1">Trust Score</span>
-          <span className="text-4xl font-space font-bold text-white leading-none">{trustScore.value}</span>
+          <span className="text-4xl font-space font-bold text-text-primary leading-none">{trustScore.value}</span>
         </div>
         <span className="text-xs font-mono text-primary-accent bg-primary-accent/10 px-2 py-1 rounded-md">
           {trustScore.trend}
@@ -80,15 +80,15 @@ const ExecutiveScorecard = () => {
       <div className="grid grid-cols-2 gap-3 mt-2">
         <div className="bg-white/5 rounded-lg p-3">
           <span className="text-[10px] text-text-muted font-mono uppercase block mb-1">Compliance</span>
-          <span className="text-sm font-space font-bold text-white">{compliance}</span>
+          <span className="text-sm font-space font-bold text-text-primary">{compliance}</span>
         </div>
         <div className="bg-white/5 rounded-lg p-3">
           <span className="text-[10px] text-text-muted font-mono uppercase block mb-1">Last Audit</span>
-          <span className="text-sm font-space font-bold text-white">{lastAudit}</span>
+          <span className="text-sm font-space font-bold text-text-primary">{lastAudit}</span>
         </div>
       </div>
       
-      <div className="flex items-center gap-2 mt-2 pt-4 border-t border-white/10">
+      <div className="flex items-center gap-2 mt-2 pt-4 border-t border-border">
         <div className="w-2 h-2 rounded-full bg-primary-accent animate-pulse shadow-[0_0_8px_rgba(0,245,122,0.8)]" />
         <span className="text-xs font-mono uppercase tracking-wider text-primary-accent">Status: {status}</span>
       </div>
@@ -169,10 +169,10 @@ const CapabilityNetwork = () => {
             <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center mb-4", getColorClasses(architecture.color))}>
               {React.createElement(getIcon(architecture.icon), { size: 28 })}
             </div>
-            <h3 className="text-2xl font-space font-bold text-white mb-2">{architecture.title}</h3>
+            <h3 className="text-2xl font-space font-bold text-text-primary mb-2">{architecture.title}</h3>
             <span className="text-[10px] font-mono uppercase text-orange-400 mb-4">{architecture.subtitle}</span>
             <p className="text-sm text-text-secondary font-inter leading-relaxed">{architecture.description}</p>
-            <div className="mt-6 pt-6 border-t border-white/5 w-full flex items-center justify-center gap-2">
+            <div className="mt-6 pt-6 border-t border-border w-full flex items-center justify-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
               <span className="text-[10px] font-mono tracking-widest text-text-muted uppercase">{architecture.metrics}</span>
             </div>
@@ -187,7 +187,7 @@ const CapabilityNetwork = () => {
             <motion.div 
               key={spoke.id}
               className={cn(
-                "w-full lg:w-72 p-6 rounded-2xl bg-surface-elevated/60 border border-white/5 backdrop-blur-md transition-all group hover:bg-surface-elevated hover:scale-105 cursor-default z-10 lg:absolute",
+                "w-full lg:w-72 p-6 rounded-2xl bg-surface-elevated/60 border border-border backdrop-blur-md transition-all group hover:bg-surface-elevated hover:scale-105 cursor-default z-10 lg:absolute",
                 positions[i],
                 getGlowClass(spoke.color)
               )}
@@ -201,14 +201,14 @@ const CapabilityNetwork = () => {
                   <Icon size={18} />
                 </div>
                 <div>
-                  <h4 className="text-base font-space font-bold text-white group-hover:text-white transition-colors leading-tight mb-1">{spoke.title}</h4>
+                  <h4 className="text-base font-space font-bold text-text-primary group-hover:text-white transition-colors leading-tight mb-1">{spoke.title}</h4>
                   <span className={cn("text-[10px] font-mono uppercase", getTextColorClass(spoke.color))}>{spoke.subtitle}</span>
                 </div>
               </div>
               
               <p className="text-xs text-text-secondary font-inter mb-5 line-clamp-2 leading-relaxed">{spoke.description}</p>
               
-              <div className="pt-4 border-t border-white/5">
+              <div className="pt-4 border-t border-border">
                 <div className="flex justify-between items-center mb-3">
                   <span className="text-[10px] font-mono text-text-muted uppercase">Key Controls</span>
                   <span className={cn("text-[10px] font-mono font-bold", getTextColorClass(spoke.color))}>{spoke.metrics}</span>
@@ -236,7 +236,7 @@ const CapabilityNetwork = () => {
 const DeploymentPipeline = () => {
   return (
     <div className="w-full max-w-6xl mx-auto py-16">
-      <h3 className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted mb-16 text-center border-b border-white/5 pb-4">
+      <h3 className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted mb-16 text-center border-b border-border pb-4">
         Enterprise Lifecycle Pipeline
       </h3>
       
@@ -266,7 +266,7 @@ const DeploymentPipeline = () => {
             )}
 
             {/* Node */}
-            <div className="w-12 h-12 rounded-full bg-surface-elevated border border-white/10 flex items-center justify-center group-hover:border-primary-accent/50 group-hover:shadow-[0_0_20px_rgba(0,245,122,0.15)] transition-all z-10 relative">
+            <div className="w-12 h-12 rounded-full bg-surface-elevated border border-border flex items-center justify-center group-hover:border-primary-accent/50 group-hover:shadow-[0_0_20px_rgba(0,245,122,0.15)] transition-all z-10 relative">
               <span className="text-[10px] font-mono text-text-muted group-hover:text-primary-accent transition-colors">
                 0{i + 1}
               </span>
@@ -274,7 +274,7 @@ const DeploymentPipeline = () => {
             
             {/* Label */}
             <div className="text-center">
-              <span className="block text-sm font-space font-bold text-white group-hover:text-primary-accent transition-colors">{step.label}</span>
+              <span className="block text-sm font-space font-bold text-text-primary group-hover:text-primary-accent transition-colors">{step.label}</span>
               <span className="block text-[10px] font-mono uppercase text-text-muted mt-1">{step.description}</span>
             </div>
           </motion.div>
@@ -314,7 +314,7 @@ export const EnterpriseTrustCenter = () => {
             <h2 className="text-[12px] font-mono tracking-widest uppercase text-primary-accent mb-6 flex items-center gap-3">
               <ShieldCheck size={16} /> Enterprise Trust Center
             </h2>
-            <h3 className="text-4xl md:text-5xl lg:text-6xl font-space font-bold text-white tracking-tight leading-[1.1] mb-8">
+            <h3 className="text-4xl md:text-5xl lg:text-6xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-8">
               Enterprise AI <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">begins with trust.</span>
             </h3>
@@ -330,7 +330,7 @@ export const EnterpriseTrustCenter = () => {
         <CapabilityNetwork />
 
         {/* DEPLOYMENT PIPELINE */}
-        <div className="mt-8 border-t border-white/5 pt-8">
+        <div className="mt-8 border-t border-border pt-8">
           <DeploymentPipeline />
         </div>
 

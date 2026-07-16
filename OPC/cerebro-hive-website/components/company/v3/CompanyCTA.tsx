@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function CompanyCTA() {
   return (
-    <section className="py-32 border-b border-white/5 bg-[#00F57A] relative overflow-hidden">
+    <section className="py-32 border-b border-border bg-accent-primary relative overflow-hidden">
       
       {/* Abstract Background */}
       <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '40px 40px' }} />
@@ -24,7 +24,7 @@ export default function CompanyCTA() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link 
               href="/contact" 
-              className="px-8 py-4 bg-black text-white rounded-full font-space font-bold text-lg hover:bg-black/80 transition-colors flex items-center gap-3 w-full sm:w-auto justify-center group"
+              className="px-8 py-4 bg-surface text-text-primary rounded-full font-space font-bold text-lg hover:bg-black/80 transition-colors flex items-center gap-3 w-full sm:w-auto justify-center group"
             >
               Partner with CerebroHive
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />

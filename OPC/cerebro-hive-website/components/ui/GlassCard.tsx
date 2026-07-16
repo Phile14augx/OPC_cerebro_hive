@@ -15,9 +15,9 @@ export function GlassCard({
   ...props
 }: GlassCardProps) {
   const intensityClasses = {
-    low: "bg-card/30 border-white/5 backdrop-blur-md",
-    medium: "bg-card/50 border-white/10 backdrop-blur-lg",
-    high: "bg-card/80 border-white/20 backdrop-blur-xl",
+    low: "bg-card/30 border-border backdrop-blur-md",
+    medium: "bg-card/50 border-border backdrop-blur-lg",
+    high: "bg-card/80 border-border backdrop-blur-xl",
   };
 
   return (

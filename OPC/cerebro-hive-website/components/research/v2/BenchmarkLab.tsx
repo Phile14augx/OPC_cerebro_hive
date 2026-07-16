@@ -13,23 +13,23 @@ const tasks = [
 ];
 
 const models = [
-  { name: "Cerebro-Enterprise-v2", color: "bg-[#00E5FF]", border: "border-[#00E5FF]", text: "text-[#00E5FF]", scores: { doc: 98, rag: 96, planning: 95, compliance: 99 } },
-  { name: "GPT-4o (Baseline)", color: "bg-white/20", border: "border-white/20", text: "text-white/50", scores: { doc: 94, rag: 88, planning: 82, compliance: 90 } },
-  { name: "Claude 3.5 Sonnet", color: "bg-[#FFB300]/50", border: "border-[#FFB300]/50", text: "text-[#FFB300]", scores: { doc: 96, rag: 91, planning: 89, compliance: 93 } }
+  { name: "Cerebro-Enterprise-v2", color: "bg-[#00E5FF]", border: "border-[#00E5FF]", text: "text-accent-secondary", scores: { doc: 98, rag: 96, planning: 95, compliance: 99 } },
+  { name: "GPT-4o (Baseline)", color: "bg-white/20", border: "border-border", text: "text-white/50", scores: { doc: 94, rag: 88, planning: 82, compliance: 90 } },
+  { name: "Claude 3.5 Sonnet", color: "bg-[#FFB300]/50", border: "border-[#FFB300]/50", text: "text-warning", scores: { doc: 96, rag: 91, planning: 89, compliance: 93 } }
 ];
 
 export const BenchmarkLab = () => {
   const [activeTask, setActiveTask] = useState(tasks[0].id);
 
   return (
-    <section className="py-24 border-b border-white/5 bg-[#0A0D14]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] mb-3 block flex items-center justify-center gap-2">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block flex items-center justify-center gap-2">
             <Activity size={14} /> Evaluation Lab
           </span>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">Enterprise Task Benchmarks</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Enterprise Task Benchmarks</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter">
             Generic LLM benchmarks (MMLU, HumanEval) don't reflect real business workflows. We evaluate models on actual enterprise tasks.
           </p>
@@ -50,12 +50,12 @@ export const BenchmarkLab = () => {
                     "p-4 rounded-xl border flex flex-col items-start text-left transition-all",
                     isActive 
                       ? "bg-[#00E5FF]/10 border-[#00E5FF]/50 shadow-[0_0_15px_rgba(0,229,255,0.1)]" 
-                      : "bg-surface border-white/5 hover:border-white/20"
+                      : "bg-surface border-border hover:border-white/20"
                   )}
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <task.icon size={16} className={isActive ? "text-[#00E5FF]" : "text-text-muted"} />
-                    <span className={cn("font-space font-bold text-sm", isActive ? "text-white" : "text-text-secondary")}>{task.label}</span>
+                    <task.icon size={16} className={isActive ? "text-accent-secondary" : "text-text-muted"} />
+                    <span className={cn("font-space font-bold text-sm", isActive ? "text-text-primary" : "text-text-secondary")}>{task.label}</span>
                   </div>
                   <div className="text-xs text-text-muted leading-relaxed pl-7">{task.desc}</div>
                 </button>
@@ -64,11 +64,11 @@ export const BenchmarkLab = () => {
           </div>
 
           {/* Right: Results Chart */}
-          <div className="lg:col-span-8 bg-surface border border-white/10 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-end min-h-[400px]">
+          <div className="lg:col-span-8 bg-surface border border-border rounded-2xl p-8 relative overflow-hidden flex flex-col justify-end min-h-[400px]">
             {/* Grid lines */}
             <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
             
-            <div className="relative z-10 w-full h-full flex items-end justify-around gap-4 pb-12 pt-20 border-b border-white/20">
+            <div className="relative z-10 w-full h-full flex items-end justify-around gap-4 pb-12 pt-20 border-b border-border">
               
               {/* Y-axis labels */}
               <div className="absolute left-0 top-0 bottom-12 w-10 flex flex-col justify-between text-[10px] text-text-muted font-mono py-2">
@@ -80,7 +80,7 @@ export const BenchmarkLab = () => {
 
               {/* Grid guide lines */}
               {[100, 75, 50, 25].map((val, i) => (
-                <div key={i} className="absolute left-8 right-0 border-t border-white/5 border-dashed" style={{ top: `${(100 - val)}%` }} />
+                <div key={i} className="absolute left-8 right-0 border-t border-border border-dashed" style={{ top: `${(100 - val)}%` }} />
               ))}
 
               {models.map((model, i) => {
@@ -93,7 +93,7 @@ export const BenchmarkLab = () => {
                       key={`${activeTask}-${model.name}`}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="absolute -top-12 bg-black/80 border border-white/10 text-white text-xs font-bold px-3 py-1.5 rounded"
+                      className="absolute -top-12 bg-surface-secondary border border-border text-text-primary text-xs font-bold px-3 py-1.5 rounded"
                     >
                       {score}%
                     </motion.div>

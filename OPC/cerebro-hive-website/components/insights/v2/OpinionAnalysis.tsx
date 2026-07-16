@@ -13,7 +13,7 @@ const opinions = [
     confidence: "85% (High)",
     assumption: "Assumes vector retrieval latency drops below 50ms.",
     color: "border-[#00E5FF] bg-[#00E5FF]/5",
-    iconColor: "text-[#00E5FF]"
+    iconColor: "text-accent-secondary"
   },
   {
     type: "Business Strategy",
@@ -23,17 +23,17 @@ const opinions = [
     confidence: "95% (Very High)",
     assumption: "Based on results from 12 enterprise pilot programs.",
     color: "border-[#00F57A] bg-[#00F57A]/5",
-    iconColor: "text-[#00F57A]"
+    iconColor: "text-accent-primary"
   }
 ];
 
 export const OpinionAnalysis = () => {
   return (
-    <section className="py-24 border-b border-white/5 bg-[#05070A]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="mb-12">
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">Strategic Forecasts & Opinion</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Strategic Forecasts & Opinion</h2>
           <p className="text-text-secondary max-w-2xl font-inter">
             Forward-looking analysis from CerebroHive leadership, complete with explicitly stated assumptions and confidence levels.
           </p>
@@ -44,13 +44,13 @@ export const OpinionAnalysis = () => {
             <div key={i} className={cn("p-8 rounded-2xl border transition-all hover:-translate-y-1 cursor-pointer group", op.color)}>
               
               <div className="flex items-center justify-between mb-6">
-                <span className={cn("px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest bg-black/50 border border-white/10", op.iconColor)}>
+                <span className={cn("px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest bg-surface-secondary border border-border", op.iconColor)}>
                   {op.type}
                 </span>
                 <ArrowRight size={20} className="text-text-muted group-hover:text-white transition-colors" />
               </div>
 
-              <h3 className="text-2xl font-space font-bold text-white mb-3 leading-tight">{op.title}</h3>
+              <h3 className="text-2xl font-space font-bold text-text-primary mb-3 leading-tight">{op.title}</h3>
               <div className="text-xs font-bold text-text-muted uppercase tracking-widest mb-6">By {op.author}</div>
               
               <p className="text-sm text-text-secondary leading-relaxed mb-8">
@@ -58,13 +58,13 @@ export const OpinionAnalysis = () => {
               </p>
 
               <div className="grid sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-black/40 border border-white/5">
+                <div className="p-4 rounded-xl bg-black/40 border border-border">
                   <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-1 flex items-center gap-1">
                     <Target size={12} /> Forecast Confidence
                   </div>
                   <div className={cn("text-sm font-bold", op.iconColor)}>{op.confidence}</div>
                 </div>
-                <div className="p-4 rounded-xl bg-black/40 border border-white/5">
+                <div className="p-4 rounded-xl bg-black/40 border border-border">
                   <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-1 flex items-center gap-1">
                     <Activity size={12} /> Key Assumption
                   </div>

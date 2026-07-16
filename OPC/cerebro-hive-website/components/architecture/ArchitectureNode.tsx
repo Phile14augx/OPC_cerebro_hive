@@ -19,7 +19,7 @@ export const ArchitectureNode = ({ data }: { data: any }) => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Healthy': return 'bg-[#00F57A] shadow-[0_0_10px_#00F57A]';
+      case 'Healthy': return 'bg-accent-primary shadow-[0_0_10px_#00F57A]';
       case 'Warning': return 'bg-[#FFB800] shadow-[0_0_10px_#FFB800]';
       case 'Offline': return 'bg-[#FF3366] shadow-[0_0_10px_#FF3366]';
       case 'Learning': return 'bg-[#00E5FF] shadow-[0_0_10px_#00E5FF] animate-pulse';

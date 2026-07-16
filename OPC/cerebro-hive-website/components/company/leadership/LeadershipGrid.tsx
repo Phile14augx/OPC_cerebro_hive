@@ -55,7 +55,7 @@ export const LeadershipGrid = () => {
                 <Image src={withBasePath(executive.portrait.image)} alt={executive.portrait.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-700" />
                 <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.8)] pointer-events-none" />
               </div>
-              <h3 className="text-3xl font-space font-bold text-white mb-2">{executive.title}</h3>
+              <h3 className="text-3xl font-space font-bold text-text-primary mb-2">{executive.title}</h3>
               <p className="text-sm font-inter text-text-secondary">{executive.subtitle}</p>
             </div>
 
@@ -72,7 +72,7 @@ export const LeadershipGrid = () => {
                     {executive.philosophy.framework.map((step, i) => (
                       <div key={i} className="flex items-center gap-4">
                         <span className="text-[10px] font-mono font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">{step.label}</span>
-                        <span className="text-sm font-space font-bold text-white">{step.title}</span>
+                        <span className="text-sm font-space font-bold text-text-primary">{step.title}</span>
                       </div>
                     ))}
                   </div>
@@ -126,7 +126,7 @@ export const LeadershipGrid = () => {
                   <Image src={withBasePath(engineering.portrait.image)} alt={engineering.portrait.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-space font-bold text-white">{engineering.title}</h3>
+                  <h3 className="text-2xl font-space font-bold text-text-primary">{engineering.title}</h3>
                   <p className="text-sm font-inter text-text-secondary">{engineering.subtitle}</p>
                 </div>
               </div>
@@ -144,7 +144,7 @@ export const LeadershipGrid = () => {
                   {engineering.philosophy.framework.map((step, i) => (
                     <div key={i} className="flex items-center gap-4 relative z-10">
                       <div className="w-6 h-6 rounded-full bg-[#0a0f12] border border-cyan-500/40 flex items-center justify-center text-[8px] font-mono font-bold text-cyan-500">{step.label}</div>
-                      <span className="text-sm font-space font-bold text-white uppercase tracking-wider">{step.title}</span>
+                      <span className="text-sm font-space font-bold text-text-primary uppercase tracking-wider">{step.title}</span>
                     </div>
                   ))}
                 </div>
@@ -195,7 +195,7 @@ export const LeadershipGrid = () => {
                   <Image src={withBasePath(research.portrait.image)} alt={research.portrait.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-space font-bold text-white">{research.title}</h3>
+                  <h3 className="text-xl font-space font-bold text-text-primary">{research.title}</h3>
                   <p className="text-xs font-inter text-text-secondary">{research.subtitle}</p>
                 </div>
               </div>
@@ -234,7 +234,7 @@ export const LeadershipGrid = () => {
                   {research.metrics?.map((m, i) => (
                     <div key={i} className="flex flex-col gap-1 p-2 rounded-lg bg-white/5 border border-border">
                       <span className="text-[10px] font-mono text-text-muted">{m.label}</span>
-                      <span className="text-xs font-space font-bold text-white">{m.value}</span>
+                      <span className="text-xs font-space font-bold text-text-primary">{m.value}</span>
                     </div>
                   ))}
                 </div>

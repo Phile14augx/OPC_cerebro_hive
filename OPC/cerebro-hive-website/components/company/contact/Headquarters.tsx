@@ -193,14 +193,14 @@ const AnimatedCampus = () => {
       </svg>
 
       {/* Floating UI Elements */}
-      <div className="absolute top-6 left-6 flex items-center gap-2 px-3 py-1.5 bg-white/5 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-mono text-white/70">
+      <div className="absolute top-6 left-6 flex items-center gap-2 px-3 py-1.5 bg-white/5 backdrop-blur-md border border-border rounded-full text-[10px] font-mono text-white/70">
         <Terminal size={12} className="text-primary-accent" />
         AI_CAMPUS_NODE_01
       </div>
       
       <div className="absolute bottom-6 right-6 px-4 py-2 bg-background/80 backdrop-blur-md border border-border rounded-lg text-right">
         <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest mb-1">Global Data Flow</p>
-        <p className="text-xs font-space font-bold text-white flex items-center justify-end gap-2">
+        <p className="text-xs font-space font-bold text-text-primary flex items-center justify-end gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-primary-accent animate-pulse" />
           Synchronized
         </p>
@@ -257,22 +257,22 @@ export const Headquarters = () => {
             <h2 className="text-xs font-space font-bold tracking-[0.2em] uppercase text-primary-accent mb-4 flex items-center gap-2">
               <Building2 size={16} /> Global Engineering Headquarters
             </h2>
-            <h3 className="text-4xl md:text-5xl font-space font-bold text-white tracking-tight mb-6 leading-tight">
+            <h3 className="text-4xl md:text-5xl font-space font-bold text-text-primary tracking-tight mb-6 leading-tight">
               Engineering the next generation of enterprise AI systems.
             </h3>
             
             {/* Bento Stats Grid */}
             <div className="grid grid-cols-2 gap-3 mb-10">
               <div className="bg-surface-elevated border border-border p-4 rounded-xl flex flex-col justify-center">
-                <span className="text-2xl font-space font-bold text-white mb-1">145</span>
+                <span className="text-2xl font-space font-bold text-text-primary mb-1">145</span>
                 <span className="text-[10px] font-mono uppercase text-text-muted">Engineers</span>
               </div>
               <div className="bg-surface-elevated border border-border p-4 rounded-xl flex flex-col justify-center">
-                <span className="text-2xl font-space font-bold text-white mb-1">12</span>
+                <span className="text-2xl font-space font-bold text-text-primary mb-1">12</span>
                 <span className="text-[10px] font-mono uppercase text-text-muted">Research Teams</span>
               </div>
               <div className="bg-surface-elevated border border-border p-4 rounded-xl flex flex-col justify-center">
-                <span className="text-2xl font-space font-bold text-white mb-1">8</span>
+                <span className="text-2xl font-space font-bold text-text-primary mb-1">8</span>
                 <span className="text-[10px] font-mono uppercase text-text-muted">Countries Served</span>
               </div>
               <div className="bg-surface-elevated border border-border p-4 rounded-xl flex flex-col justify-center">
@@ -284,7 +284,7 @@ export const Headquarters = () => {
             </div>
 
             {/* Rich Contact & Location Block */}
-            <div className="bg-[#04080f] border border-white/5 rounded-2xl p-6 md:p-8 mb-8 relative overflow-hidden group hover:border-primary-accent/30 transition-colors">
+            <div className="bg-[#04080f] border border-border rounded-2xl p-6 md:p-8 mb-8 relative overflow-hidden group hover:border-primary-accent/30 transition-colors">
               <div className="absolute inset-0 bg-gradient-to-br from-primary-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               
               <div className="relative z-10 flex flex-col sm:flex-row gap-8 justify-between">
@@ -293,7 +293,7 @@ export const Headquarters = () => {
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-3">
                     <MapPin size={16} className="text-text-muted" />
-                    <span className="text-sm font-space font-bold text-white">Bangalore, India</span>
+                    <span className="text-sm font-space font-bold text-text-primary">Bangalore, India</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Globe size={16} className="text-text-muted" />
@@ -308,12 +308,12 @@ export const Headquarters = () => {
                 </div>
 
                 {/* Direct Contact */}
-                <div className="flex flex-col gap-4 border-l border-white/10 pl-0 sm:pl-8 pt-6 sm:pt-0 border-t sm:border-t-0">
+                <div className="flex flex-col gap-4 border-l border-border pl-0 sm:pl-8 pt-6 sm:pt-0 border-t sm:border-t-0">
                   <div className="flex flex-col gap-1">
                     <span className="text-[10px] font-mono text-text-muted uppercase tracking-widest flex items-center gap-2">
                       <Mail size={12} /> Enterprise Inquiries
                     </span>
-                    <a href="mailto:enterprise@cerebrohive.com" className="text-sm font-space font-bold text-white hover:text-primary-accent transition-colors mt-1">
+                    <a href="mailto:enterprise@cerebrohive.com" className="text-sm font-space font-bold text-text-primary hover:text-primary-accent transition-colors mt-1">
                       enterprise@cerebrohive.com
                     </a>
                   </div>
@@ -344,8 +344,8 @@ export const Headquarters = () => {
             </div>
 
             {/* CTA */}
-            <button className="self-start flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-primary-accent/50 transition-all group">
-              <span className="text-sm font-space font-bold text-white uppercase tracking-wider">Explore Global Network</span>
+            <button className="self-start flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-border hover:bg-white/10 hover:border-primary-accent/50 transition-all group">
+              <span className="text-sm font-space font-bold text-text-primary uppercase tracking-wider">Explore Global Network</span>
               <ArrowRight size={16} className="text-primary-accent group-hover:translate-x-1 transition-transform" />
             </button>
 

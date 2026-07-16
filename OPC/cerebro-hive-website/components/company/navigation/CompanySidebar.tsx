@@ -290,7 +290,7 @@ export const CompanySidebar = () => {
             {/* Label */}
             <span className={cn(
               "text-[11px] font-space truncate transition-colors",
-              isActive ? "text-white font-bold" : (depth === 0 ? "text-white/80 font-bold tracking-widest uppercase text-[10px]" : "text-text-secondary group-hover:text-white")
+              isActive ? "text-text-primary font-bold" : (depth === 0 ? "text-text-secondary font-bold tracking-widest uppercase text-[10px]" : "text-text-secondary group-hover:text-white")
             )}>
               {node.label}
             </span>
@@ -315,7 +315,7 @@ export const CompanySidebar = () => {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="overflow-hidden border-l border-white/5 ml-[14px] mt-0.5"
+              className="overflow-hidden border-l border-border ml-[14px] mt-0.5"
             >
               {node.children.map(child => renderExplorerNode(child, depth + 1))}
             </motion.div>
@@ -348,14 +348,14 @@ export const CompanySidebar = () => {
         <div className="flex bg-surface-elevated border border-border rounded-lg p-1 mb-4 relative z-10">
           <button 
             onClick={() => setExplorerMode(false)} 
-            className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors relative", !explorerMode ? "text-white" : "text-text-muted hover:text-white")}
+            className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors relative", !explorerMode ? "text-text-primary" : "text-text-muted hover:text-white")}
           >
             {!explorerMode && <motion.div layoutId="modeToggle" className="absolute inset-0 bg-white/10 rounded-md" />}
             <span className="relative z-10">Story</span>
           </button>
           <button 
             onClick={() => setExplorerMode(true)} 
-            className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors relative", explorerMode ? "text-white" : "text-text-muted hover:text-white")}
+            className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors relative", explorerMode ? "text-text-primary" : "text-text-muted hover:text-white")}
           >
             {explorerMode && <motion.div layoutId="modeToggle" className="absolute inset-0 bg-white/10 rounded-md" />}
             <span className="relative z-10 flex items-center justify-center gap-1.5">
@@ -380,7 +380,7 @@ export const CompanySidebar = () => {
                 placeholder="Search handbook..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#05080c] border border-border rounded-lg py-2 pl-8 pr-3 text-xs font-inter text-white placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors"
+                className="w-full bg-[#05080c] border border-border rounded-lg py-2 pl-8 pr-3 text-xs font-inter text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors"
               />
             </motion.div>
           )}
@@ -454,7 +454,7 @@ export const CompanySidebar = () => {
                       <span className={cn(
                         "ml-3 text-sm font-space whitespace-nowrap transition-all duration-300",
                         isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100",
-                        isCurrent ? "text-white font-bold" : "text-text-secondary group-hover:text-white"
+                        isCurrent ? "text-text-primary font-bold" : "text-text-secondary group-hover:text-white"
                       )}>
                         {chapter.label}
                       </span>
@@ -495,11 +495,11 @@ export const CompanySidebar = () => {
             <div className="flex justify-between items-end mb-4">
               <div>
                 <span className="block text-[10px] font-mono text-text-muted uppercase mb-1">Progress</span>
-                <span className="block text-sm font-space font-bold text-white">Chapter {activeChapterIndex + 1} / {chapters.length}</span>
+                <span className="block text-sm font-space font-bold text-text-primary">Chapter {activeChapterIndex + 1} / {chapters.length}</span>
               </div>
               <div className="text-right">
                 <span className="block text-[10px] font-mono text-text-muted uppercase mb-1">Est. Time</span>
-                <span className="block text-sm font-space font-bold text-white">12 min remaining</span>
+                <span className="block text-sm font-space font-bold text-text-primary">12 min remaining</span>
               </div>
             </div>
             

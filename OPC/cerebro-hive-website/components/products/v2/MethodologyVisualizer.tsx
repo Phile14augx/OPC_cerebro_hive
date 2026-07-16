@@ -52,12 +52,12 @@ export const MethodologyVisualizer = () => {
   const [activePhase, setActivePhase] = useState(0);
 
   return (
-    <section className="py-24 border-b border-border bg-[#0A0D14] relative overflow-hidden">
+    <section className="py-24 border-b border-border bg-background relative overflow-hidden">
       <div className="container-wide relative z-10">
         
         <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] mb-3 block">Proven Methodology</span>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">How We Deliver</h2>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block">Proven Methodology</span>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">How We Deliver</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter">
             A deterministic engineering approach to enterprise AI transformation. Every phase produces a tangible, measurable deliverable.
           </p>
@@ -79,11 +79,11 @@ export const MethodologyVisualizer = () => {
                   <div className={cn(
                     "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 mb-4",
                     isActive ? "bg-[#00E5FF] text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] scale-125" : 
-                    isPast ? "bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/30" : "bg-surface border border-white/10 text-text-muted group-hover:border-white/30"
+                    isPast ? "bg-[#00E5FF]/20 text-accent-secondary border border-[#00E5FF]/30" : "bg-surface border border-border text-text-muted group-hover:border-white/30"
                   )}>
                     <phase.icon size={isActive ? 24 : 20} />
                   </div>
-                  <div className={cn("text-xs font-space font-bold uppercase tracking-widest text-center transition-colors", isActive ? "text-white" : "text-text-secondary")}>
+                  <div className={cn("text-xs font-space font-bold uppercase tracking-widest text-center transition-colors", isActive ? "text-text-primary" : "text-text-secondary")}>
                     {phase.label.split(". ")[1]}
                   </div>
                 </div>
@@ -92,7 +92,7 @@ export const MethodologyVisualizer = () => {
           </div>
 
           {/* Active Phase Details */}
-          <div className="bg-surface border border-white/10 rounded-2xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+          <div className="bg-surface border border-border rounded-2xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 h-full bg-[#00E5FF]" />
             
             <AnimatePresence mode="wait">
@@ -105,7 +105,7 @@ export const MethodologyVisualizer = () => {
                 className="flex flex-col md:flex-row gap-8 items-center md:items-start justify-between"
               >
                 <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-3xl font-space font-bold text-white mb-4">{phases[activePhase].label}</h3>
+                  <h3 className="text-3xl font-space font-bold text-text-primary mb-4">{phases[activePhase].label}</h3>
                   <p className="text-text-secondary text-lg mb-8 leading-relaxed max-w-lg">
                     {phases[activePhase].desc}
                   </p>
@@ -115,7 +115,7 @@ export const MethodologyVisualizer = () => {
                     <button 
                       onClick={() => setActivePhase(Math.max(0, activePhase - 1))}
                       disabled={activePhase === 0}
-                      className="p-2 border border-white/10 rounded-lg text-text-muted hover:text-white disabled:opacity-30"
+                      className="p-2 border border-border rounded-lg text-text-muted hover:text-white disabled:opacity-30"
                     >
                       <ArrowRight size={20} className="rotate-180" />
                     </button>
@@ -123,7 +123,7 @@ export const MethodologyVisualizer = () => {
                     <button 
                       onClick={() => setActivePhase(Math.min(phases.length - 1, activePhase + 1))}
                       disabled={activePhase === phases.length - 1}
-                      className="p-2 border border-white/10 rounded-lg text-text-muted hover:text-white disabled:opacity-30"
+                      className="p-2 border border-border rounded-lg text-text-muted hover:text-white disabled:opacity-30"
                     >
                       <ArrowRight size={20} />
                     </button>
@@ -133,13 +133,13 @@ export const MethodologyVisualizer = () => {
                 {/* The Deliverable */}
                 <div className="w-full md:w-auto">
                   <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3 text-center md:text-left">Phase Output</div>
-                  <div className="bg-black/40 border border-white/10 rounded-xl p-6 flex items-center gap-4 min-w-[280px] group hover:border-[#00E5FF]/50 transition-colors">
-                    <div className="w-12 h-12 rounded-lg bg-[#00E5FF]/10 text-[#00E5FF] flex items-center justify-center shrink-0">
+                  <div className="bg-black/40 border border-border rounded-xl p-6 flex items-center gap-4 min-w-[280px] group hover:border-[#00E5FF]/50 transition-colors">
+                    <div className="w-12 h-12 rounded-lg bg-[#00E5FF]/10 text-accent-secondary flex items-center justify-center shrink-0">
                       {React.createElement(phases[activePhase].deliverableIcon, { size: 24 })}
                     </div>
                     <div>
-                      <div className="text-xs font-mono text-[#00E5FF] mb-1">Generated Deliverable</div>
-                      <div className="font-space font-bold text-white group-hover:text-[#00E5FF] transition-colors">
+                      <div className="text-xs font-mono text-accent-secondary mb-1">Generated Deliverable</div>
+                      <div className="font-space font-bold text-text-primary group-hover:text-[#00E5FF] transition-colors">
                         {phases[activePhase].deliverable}
                       </div>
                     </div>

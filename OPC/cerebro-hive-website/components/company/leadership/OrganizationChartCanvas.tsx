@@ -114,7 +114,7 @@ const Flow = () => {
   }, [setSelectedNode]);
 
   return (
-    <div className="relative w-full h-[700px] bg-black">
+    <div className="relative w-full h-[700px] bg-surface">
       
       <div 
         className="absolute inset-4 overflow-hidden" 
@@ -147,7 +147,7 @@ const Flow = () => {
         >
           {/* Top Left Title (Floating inside canvas) */}
           <div className="absolute top-6 left-24 z-50 pointer-events-none">
-            <h1 className="text-base font-space font-bold uppercase tracking-widest text-white drop-shadow-md">Corporate Structure</h1>
+            <h1 className="text-base font-space font-bold uppercase tracking-widest text-text-primary drop-shadow-md">Corporate Structure</h1>
           </div>
 
           <InspectorPanel />

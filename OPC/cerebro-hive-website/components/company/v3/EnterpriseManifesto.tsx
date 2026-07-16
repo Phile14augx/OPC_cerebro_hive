@@ -20,7 +20,7 @@ export default function EnterpriseManifesto() {
   });
 
   return (
-    <section ref={containerRef} className="py-32 border-b border-white/5 bg-[#05070A] relative overflow-hidden">
+    <section ref={containerRef} className="py-32 border-b border-border bg-background relative overflow-hidden">
       
       {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -29,7 +29,7 @@ export default function EnterpriseManifesto() {
 
       <div className="container-wide relative z-10 text-center">
         
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase tracking-widest text-[#00F57A] font-bold mb-16">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-accent-primary font-bold mb-16">
           The Manifesto
         </div>
 
@@ -47,7 +47,7 @@ export default function EnterpriseManifesto() {
               <motion.div 
                 key={idx}
                 style={{ opacity, y }}
-                className="text-3xl md:text-5xl lg:text-6xl font-space font-bold text-white tracking-tighter"
+                className="text-3xl md:text-5xl lg:text-6xl font-space font-bold text-text-primary tracking-tighter"
               >
                 {statement}
               </motion.div>
@@ -60,7 +60,7 @@ export default function EnterpriseManifesto() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="mt-24 pt-12 border-t border-white/10 max-w-2xl mx-auto text-xl text-text-secondary font-inter"
+          className="mt-24 pt-12 border-t border-border max-w-2xl mx-auto text-xl text-text-secondary font-inter"
         >
           That future is what CerebroHive exists to build.
         </motion.div>

@@ -10,7 +10,7 @@ export default function CompanyHero() {
   };
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center border-b border-white/5 bg-[#05070A] overflow-hidden">
+    <section className="relative min-h-[90vh] flex items-center justify-center border-b border-border bg-background overflow-hidden">
       
       {/* Abstract Background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -26,7 +26,7 @@ export default function CompanyHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs uppercase tracking-[0.3em] text-[#00F57A] font-bold mb-8"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-border text-xs uppercase tracking-[0.3em] text-accent-primary font-bold mb-8"
         >
           CerebroHive
         </motion.div>
@@ -35,7 +35,7 @@ export default function CompanyHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-space font-bold text-white mb-8 tracking-tighter"
+          className="text-5xl md:text-7xl lg:text-8xl font-space font-bold text-text-primary mb-8 tracking-tighter"
         >
           Engineering the <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">Intelligent Enterprise.</span>
@@ -57,7 +57,7 @@ export default function CompanyHero() {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1 }}
         onClick={scrollToNext}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-colors"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full border border-border flex items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-colors"
       >
         <ArrowDown size={20} className="animate-bounce" />
       </motion.button>

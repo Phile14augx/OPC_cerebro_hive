@@ -19,7 +19,7 @@ export default function AIConsultingPage() {
           </Link>
           
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/20">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[#00E5FF]/10 text-accent-secondary border border-[#00E5FF]/20">
               <Brain size={24} />
             </div>
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Enterprise Practice</span>
@@ -45,7 +45,7 @@ export default function AIConsultingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div>
               <h3 className="text-2xl font-space font-bold text-text-primary mb-8 flex items-center gap-3">
-                <Target className="text-[#00E5FF]" /> Key Outcomes
+                <Target className="text-accent-secondary" /> Key Outcomes
               </h3>
               <ul className="space-y-4">
                 {["Align executive vision with technical reality", "Identify high-ROI automation opportunities", "Mitigate AI adoption risks and ensure compliance", "Accelerate enterprise time-to-market for AI"].map((item, i) => (
@@ -59,7 +59,7 @@ export default function AIConsultingPage() {
             
             <div>
               <h3 className="text-2xl font-space font-bold text-text-primary mb-8 flex items-center gap-3">
-                <ShieldCheck className="text-[#00E5FF]" /> Deliverables
+                <ShieldCheck className="text-accent-secondary" /> Deliverables
               </h3>
               <ul className="space-y-4">
                 {["AI Readiness Score Report", "90-Day Prioritized Roadmap", "ROI Forecast per Initiative", "Model Risk Register & Policy", "Vendor & Stack Recommendation"].map((item, i) => (
@@ -87,7 +87,7 @@ export default function AIConsultingPage() {
               { step: "Execution Plan", detail: "Executive board presentation with ROI justification and risk mitigation." }
             ].map((m, i) => (
               <div key={i} className="p-6 rounded-2xl bg-surface border border-border flex flex-col md:flex-row md:items-center gap-6 hover:border-[#00E5FF]/40 transition-colors">
-                <div className="w-12 h-12 rounded-full bg-[#00E5FF]/10 text-[#00E5FF] flex items-center justify-center font-bold text-lg shrink-0">
+                <div className="w-12 h-12 rounded-full bg-[#00E5FF]/10 text-accent-secondary flex items-center justify-center font-bold text-lg shrink-0">
                   {i + 1}
                 </div>
                 <div>

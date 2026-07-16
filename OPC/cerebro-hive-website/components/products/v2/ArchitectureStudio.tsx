@@ -41,7 +41,7 @@ export const ArchitectureStudio = () => {
   };
 
   return (
-    <section className="py-32 border-b border-border bg-[#05070A] relative overflow-hidden">
+    <section className="py-32 border-b border-border bg-background relative overflow-hidden">
       
       {/* Background Ambience */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
@@ -51,8 +51,8 @@ export const ArchitectureStudio = () => {
       <div className="container-wide relative z-10">
         
         <div className="text-center mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#00E5FF] mb-3 block">Interactive Configurator</span>
-          <h2 className="text-4xl md:text-6xl font-space font-bold text-white mb-4">Enterprise Architecture Studio</h2>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block">Interactive Configurator</span>
+          <h2 className="text-4xl md:text-6xl font-space font-bold text-text-primary mb-4">Enterprise Architecture Studio</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter text-lg">
             Every enterprise is unique. Input your constraints and instantly generate a customized AI platform architecture blueprint.
           </p>
@@ -70,7 +70,7 @@ export const ArchitectureStudio = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-surface border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden"
+                className="bg-surface border border-border rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden"
               >
                 
                 {/* Progress Indicators */}
@@ -86,10 +86,10 @@ export const ArchitectureStudio = () => {
                 </div>
 
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="p-3 rounded-xl bg-[#00E5FF]/10 text-[#00E5FF]">
+                  <div className="p-3 rounded-xl bg-[#00E5FF]/10 text-accent-secondary">
                     {React.createElement(steps[currentStep].icon, { size: 32 })}
                   </div>
-                  <h3 className="text-3xl font-space font-bold text-white">Select {steps[currentStep].label}</h3>
+                  <h3 className="text-3xl font-space font-bold text-text-primary">Select {steps[currentStep].label}</h3>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -97,9 +97,9 @@ export const ArchitectureStudio = () => {
                     <button
                       key={i}
                       onClick={() => handleSelect(option)}
-                      className="p-6 rounded-xl border border-white/10 bg-black/30 hover:bg-[#00E5FF]/5 hover:border-[#00E5FF]/30 text-left transition-all duration-300 group flex items-center justify-between"
+                      className="p-6 rounded-xl border border-border bg-black/30 hover:bg-[#00E5FF]/5 hover:border-[#00E5FF]/30 text-left transition-all duration-300 group flex items-center justify-between"
                     >
-                      <span className="text-lg font-medium text-white group-hover:text-[#00E5FF]">{option}</span>
+                      <span className="text-lg font-medium text-text-primary group-hover:text-[#00E5FF]">{option}</span>
                       <ArrowRight size={18} className="text-transparent group-hover:text-[#00E5FF] -translate-x-4 group-hover:translate-x-0 transition-all" />
                     </button>
                   ))}
@@ -121,10 +121,10 @@ export const ArchitectureStudio = () => {
                   <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }} className="absolute inset-0 rounded-full border-t-2 border-primary-accent" />
                   <motion.div animate={{ rotate: -360 }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }} className="absolute inset-4 rounded-full border-b-2 border-[#00E5FF]" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Loader2 size={32} className="text-white animate-spin" />
+                    <Loader2 size={32} className="text-text-primary animate-spin" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-space font-bold text-white mb-2">Compiling Architecture...</h3>
+                <h3 className="text-2xl font-space font-bold text-text-primary mb-2">Compiling Architecture...</h3>
                 <div className="text-text-muted font-mono text-sm flex flex-col items-center gap-1">
                   <motion.span animate={{ opacity: [0,1] }} transition={{ delay: 0.5 }}>Analyzing {selections.industry} workflows...</motion.span>
                   <motion.span animate={{ opacity: [0,1] }} transition={{ delay: 1.2 }}>Mapping {selections.erp} connectors...</motion.span>
@@ -148,11 +148,11 @@ export const ArchitectureStudio = () => {
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary-accent/20 border border-primary-accent/50 rounded-full text-[10px] font-bold text-primary-accent uppercase tracking-widest mb-3">
                       <CheckCircle2 size={12} /> Blueprint Generated
                     </div>
-                    <h3 className="text-2xl font-space font-bold text-white">Recommended Enterprise Stack</h3>
+                    <h3 className="text-2xl font-space font-bold text-text-primary">Recommended Enterprise Stack</h3>
                     <p className="text-sm text-text-secondary mt-1">Optimized for {selections.industry} • {selections.cloud} Deployment</p>
                   </div>
                   <div className="flex gap-3 w-full md:w-auto">
-                    <button className="flex-1 md:flex-none px-6 py-3 bg-surface-elevated border border-border text-white text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center gap-2 hover:bg-white hover:text-black transition-colors">
+                    <button className="flex-1 md:flex-none px-6 py-3 bg-surface-elevated border border-border text-text-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center gap-2 hover:bg-white hover:text-black transition-colors">
                       <Download size={14} /> PDF
                     </button>
                     <button className="flex-1 md:flex-none px-6 py-3 bg-primary-accent text-black text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center hover:bg-white transition-colors shadow-lg">
@@ -171,11 +171,11 @@ export const ArchitectureStudio = () => {
                     </h4>
                     <div className="space-y-3">
                       {["Knowledge Hub (RAG Base)", "AgentOS (Workflow Gen)", "Quantiva ERP Layer"].map((prod, i) => (
-                        <div key={i} className="p-4 rounded-xl border border-white/5 bg-black/30 flex items-center gap-4">
+                        <div key={i} className="p-4 rounded-xl border border-border bg-black/30 flex items-center gap-4">
                           <div className="w-8 h-8 rounded bg-primary-accent/20 text-primary-accent flex items-center justify-center shrink-0">
                             <CheckCircle2 size={16} />
                           </div>
-                          <span className="text-white font-medium">{prod}</span>
+                          <span className="text-text-primary font-medium">{prod}</span>
                         </div>
                       ))}
                     </div>
@@ -187,17 +187,17 @@ export const ArchitectureStudio = () => {
                       <h4 className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2">
                         <Network size={14} /> Deployment Topology
                       </h4>
-                      <div className="p-4 rounded-xl border border-[#00E5FF]/20 bg-[#00E5FF]/5 text-sm text-[#00E5FF]">
+                      <div className="p-4 rounded-xl border border-[#00E5FF]/20 bg-[#00E5FF]/5 text-sm text-accent-secondary">
                         Virtual Private Cloud peering with {selections.cloud}. Data rests entirely in your infrastructure enforcing {selections.compliance} standards.
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 rounded-xl border border-white/5 bg-black/30">
+                      <div className="p-4 rounded-xl border border-border bg-black/30">
                         <div className="text-text-muted text-[10px] uppercase tracking-widest font-bold mb-1 flex items-center gap-1"><Calendar size={12}/> Timeline</div>
-                        <div className="text-white font-space font-bold text-xl">90 Days</div>
+                        <div className="text-text-primary font-space font-bold text-xl">90 Days</div>
                       </div>
-                      <div className="p-4 rounded-xl border border-white/5 bg-black/30">
+                      <div className="p-4 rounded-xl border border-border bg-black/30">
                         <div className="text-text-muted text-[10px] uppercase tracking-widest font-bold mb-1 flex items-center gap-1"><DollarSign size={12}/> Expected ROI</div>
                         <div className="text-primary-accent font-space font-bold text-xl">250%+</div>
                       </div>

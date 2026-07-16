@@ -11,8 +11,8 @@ const articles = [
     summary: "How leading enterprises are moving from AI pilots to AI-native operations — and what separates the ones that succeed.",
     impact: "Provides a step-by-step roadmap for scaling AI from experimentation to production, reducing deployment risks.",
     readTime: "12 min read",
-    color: "bg-[#00F57A]",
-    text: "text-[#00F57A]",
+    color: "bg-accent-primary",
+    text: "text-accent-primary",
     type: "Read"
   },
   {
@@ -22,7 +22,7 @@ const articles = [
     impact: "Helps leaders avoid common pitfalls like over-indexing on models rather than data architecture.",
     readTime: "8 min read",
     color: "bg-[#00E5FF]",
-    text: "text-[#00E5FF]",
+    text: "text-accent-secondary",
     type: "Read"
   },
   {
@@ -32,19 +32,19 @@ const articles = [
     impact: "Shifts IT strategy from static storage to dynamic, real-time vector infrastructures.",
     readTime: "15 min video",
     color: "bg-[#FFB300]",
-    text: "text-[#FFB300]",
+    text: "text-warning",
     type: "Watch"
   }
 ];
 
 export const FeaturedIntelligence = () => {
   return (
-    <section className="py-24 border-b border-white/5 bg-[#05070A]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="flex items-end justify-between mb-12">
           <div>
-            <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">Featured Intelligence</h2>
+            <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Featured Intelligence</h2>
             <p className="text-text-secondary max-w-2xl font-inter">
               Curated strategic analysis to help you navigate the transition to an AI-first enterprise.
             </p>
@@ -53,7 +53,7 @@ export const FeaturedIntelligence = () => {
 
         <div className="grid lg:grid-cols-3 gap-6">
           {articles.map((article, i) => (
-            <div key={i} className="group bg-surface border border-white/10 rounded-2xl p-8 hover:border-white/30 transition-all flex flex-col cursor-pointer relative overflow-hidden h-full">
+            <div key={i} className="group bg-surface border border-border rounded-2xl p-8 hover:border-white/30 transition-all flex flex-col cursor-pointer relative overflow-hidden h-full">
               
               <div className={cn("absolute top-0 left-0 w-full h-1", article.color)} />
 
@@ -66,7 +66,7 @@ export const FeaturedIntelligence = () => {
                 </span>
               </div>
 
-              <h3 className="text-2xl font-space font-bold text-white leading-tight mb-4 group-hover:text-primary-accent transition-colors">
+              <h3 className="text-2xl font-space font-bold text-text-primary leading-tight mb-4 group-hover:text-primary-accent transition-colors">
                 {article.title}
               </h3>
               
@@ -74,12 +74,12 @@ export const FeaturedIntelligence = () => {
                 {article.summary}
               </p>
 
-              <div className="mt-auto p-4 rounded-xl bg-black/40 border border-white/5 mb-6">
+              <div className="mt-auto p-4 rounded-xl bg-black/40 border border-border mb-6">
                 <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-2">Why it matters</div>
-                <p className="text-xs text-white leading-relaxed">{article.impact}</p>
+                <p className="text-xs text-text-primary leading-relaxed">{article.impact}</p>
               </div>
 
-              <div className="flex items-center justify-between mt-2 pt-4 border-t border-white/5">
+              <div className="flex items-center justify-between mt-2 pt-4 border-t border-border">
                 <div className="text-xs font-bold uppercase tracking-widest text-text-muted flex items-center gap-2">
                   {article.type === "Read" ? <BookOpen size={14} /> : <PlayCircle size={14} />} {article.type}
                 </div>

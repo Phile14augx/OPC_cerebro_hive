@@ -5,12 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Database, BrainCircuit, Bot, Network, Lightbulb, Target } from "lucide-react";
 
 const stages = [
-  { id: "disconnected", title: "Disconnected Enterprise", icon: Database, color: "text-[#FFB300]" },
-  { id: "unified", title: "Unified Knowledge", icon: BrainCircuit, color: "text-[#00E5FF]" },
+  { id: "disconnected", title: "Disconnected Enterprise", icon: Database, color: "text-warning" },
+  { id: "unified", title: "Unified Knowledge", icon: BrainCircuit, color: "text-accent-secondary" },
   { id: "agents", title: "Intelligent Agents", icon: Bot, color: "text-[#7B61FF]" },
-  { id: "workflows", title: "Autonomous Workflows", icon: Network, color: "text-[#00F57A]" },
-  { id: "decisions", title: "Better Decisions", icon: Lightbulb, color: "text-[#FFB300]" },
-  { id: "outcomes", title: "Measurable Outcomes", icon: Target, color: "text-[#00E5FF]" }
+  { id: "workflows", title: "Autonomous Workflows", icon: Network, color: "text-accent-primary" },
+  { id: "decisions", title: "Better Decisions", icon: Lightbulb, color: "text-warning" },
+  { id: "outcomes", title: "Measurable Outcomes", icon: Target, color: "text-accent-secondary" }
 ];
 
 export default function HomeHero() {
@@ -24,10 +24,12 @@ export default function HomeHero() {
   }, []);
 
   return (
-    <section className="relative min-h-[90vh] flex items-center pt-24 pb-12 overflow-hidden bg-[#0A0D14]">
+    <section className="relative min-h-[90vh] flex items-center pt-24 pb-12 overflow-hidden bg-background">
       
-      {/* Dynamic Background Glow based on active stage */}
-      <div className="absolute inset-0 pointer-events-none transition-colors duration-1000 opacity-20"
+      {/* =========================================
+          DARK THEME BACKGROUND (Mission Control)
+          ========================================= */}
+      <div className="hidden dark:block absolute inset-0 pointer-events-none transition-colors duration-1000 opacity-20"
            style={{
              background: `radial-gradient(circle at center, ${
                activeStage === 0 ? '#FFB300' :
@@ -39,23 +41,38 @@ export default function HomeHero() {
              } 0%, transparent 60%)`
            }} 
       />
+      {/* Dark Grid Pattern */}
+      <div className="hidden dark:block absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
 
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+      {/* =========================================
+          LIGHT THEME BACKGROUND (Engineering Blueprint)
+          ========================================= */}
+      <div className="block dark:hidden absolute inset-0 pointer-events-none opacity-[0.05]" 
+           style={{ 
+             backgroundImage: `
+               linear-gradient(to right, #64748B 1px, transparent 1px),
+               linear-gradient(to bottom, #64748B 1px, transparent 1px)
+             `, 
+             backgroundSize: '40px 40px' 
+           }} 
+      />
+      {/* Topographic/Engineering Accents for Light Theme */}
+      <div className="block dark:hidden absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-transparent opacity-80" />
+      <div className="block dark:hidden absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent opacity-80" />
 
       <div className="container-wide relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
           {/* Left: Copy */}
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase tracking-widest text-text-muted font-bold mb-8">
-              <span className="w-2 h-2 rounded-full bg-[#00F57A] animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold mb-8">
+              <span className="w-2 h-2 rounded-full bg-accent-primary animate-pulse" />
               The Enterprise AI Operating System
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-space font-bold text-white leading-[1.1] mb-6">
+            <h1 className="text-5xl md:text-7xl font-space font-bold text-text-primary leading-[1.1] mb-6">
               Engineering the <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E5FF] to-[#00F57A]">AI-Native</span> Enterprise.
+              <span className="text-accent-secondary dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-[#00E5FF] dark:to-[#00F57A]">AI-Native</span> Enterprise.
             </h1>
             
             <p className="text-lg text-text-secondary max-w-xl font-inter mb-10 leading-relaxed">
@@ -63,10 +80,10 @@ export default function HomeHero() {
             </p>
             
             <div className="flex flex-wrap gap-4">
-              <button className="px-8 py-4 bg-white text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2">
-                Explore The Platform <ArrowRight size={16} />
+              <button className="theme-button-primary px-8 py-4 text-sm tracking-widest uppercase flex items-center gap-2 group">
+                Explore The Platform <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="px-8 py-4 bg-transparent border border-white/20 text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-white/5 transition-colors">
+              <button className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-full hover:bg-surface-secondary shadow-sm transition-all duration-250">
                 Read Research
               </button>
             </div>
@@ -75,8 +92,8 @@ export default function HomeHero() {
           {/* Right: The Transformation Animation */}
           <div className="relative h-[500px] flex items-center justify-center">
             
-            <div className="absolute inset-0 border border-white/5 rounded-full animate-[spin_60s_linear_infinite] opacity-50" />
-            <div className="absolute inset-8 border border-white/5 rounded-full animate-[spin_40s_linear_infinite_reverse] opacity-50" />
+            <div className="absolute inset-0 border border-border rounded-full animate-[spin_60s_linear_infinite] opacity-50" />
+            <div className="absolute inset-8 border border-border rounded-full animate-[spin_40s_linear_infinite_reverse] opacity-50" />
             
             <AnimatePresence mode="wait">
               <motion.div
@@ -91,7 +108,7 @@ export default function HomeHero() {
                   size: 80,
                   className: `mb-6 ${stages[activeStage].color} drop-shadow-[0_0_30px_currentColor]`
                 })}
-                <h3 className="text-3xl font-space font-bold text-white tracking-wide">
+                <h3 className="text-3xl font-space font-bold text-text-primary tracking-wide">
                   {stages[activeStage].title}
                 </h3>
               </motion.div>

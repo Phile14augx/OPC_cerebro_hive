@@ -69,10 +69,10 @@ export const PlatformDashboardPreview = () => {
         </div>
 
         {/* Dashboard Mockup */}
-        <div className="w-full bg-[#0A0D14] border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+        <div className="w-full bg-background border border-border rounded-2xl shadow-2xl overflow-hidden flex flex-col">
           
           {/* Top Bar */}
-          <div className="h-12 border-b border-white/5 flex items-center px-4 justify-between bg-black/20">
+          <div className="h-12 border-b border-border flex items-center px-4 justify-between bg-black/20">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500/50" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
@@ -86,7 +86,7 @@ export const PlatformDashboardPreview = () => {
           <div className="p-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             
             {/* Main Metric: Savings */}
-            <div className="md:col-span-2 lg:col-span-2 bg-surface/50 border border-white/5 rounded-xl p-6 relative overflow-hidden group">
+            <div className="md:col-span-2 lg:col-span-2 bg-surface/50 border border-border rounded-xl p-6 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-6 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform">
                 <DollarSign size={120} />
               </div>
@@ -94,7 +94,7 @@ export const PlatformDashboardPreview = () => {
                 <DollarSign size={16} />
                 <span className="text-xs uppercase font-bold tracking-widest">Real-time Cost Savings</span>
               </div>
-              <div className="text-5xl md:text-7xl text-white">
+              <div className="text-5xl md:text-7xl text-text-primary">
                 <AnimatedCounter value={metrics.savings} prefix="$" />
               </div>
               <div className="mt-4 flex items-center gap-2 text-primary-accent text-sm">
@@ -104,25 +104,25 @@ export const PlatformDashboardPreview = () => {
             </div>
 
             {/* Sub Metrics */}
-            <div className="bg-surface/50 border border-white/5 rounded-xl p-6 flex flex-col justify-between">
+            <div className="bg-surface/50 border border-border rounded-xl p-6 flex flex-col justify-between">
               <div className="flex items-center gap-3 text-text-muted mb-4">
                 <FileText size={16} />
                 <span className="text-xs uppercase font-bold tracking-widest">Invoices Processed</span>
               </div>
-              <div className="text-4xl text-white">
+              <div className="text-4xl text-text-primary">
                 <AnimatedCounter value={metrics.invoices} />
               </div>
-              <div className="mt-4 w-full bg-black/50 rounded-full h-1.5 overflow-hidden">
+              <div className="mt-4 w-full bg-surface-secondary rounded-full h-1.5 overflow-hidden">
                 <motion.div className="bg-[#00E5FF] h-full" animate={{ width: ["40%", "80%", "40%"] }} transition={{ duration: 5, repeat: Infinity }} />
               </div>
             </div>
 
-            <div className="bg-surface/50 border border-white/5 rounded-xl p-6 flex flex-col justify-between">
+            <div className="bg-surface/50 border border-border rounded-xl p-6 flex flex-col justify-between">
               <div className="flex items-center gap-3 text-text-muted mb-4">
                 <Bot size={16} />
                 <span className="text-xs uppercase font-bold tracking-widest">Active Agents</span>
               </div>
-              <div className="text-4xl text-[#00F57A]">
+              <div className="text-4xl text-accent-primary">
                 <AnimatedCounter value={metrics.agents} />
               </div>
               <div className="mt-4 text-xs text-text-secondary">
@@ -130,12 +130,12 @@ export const PlatformDashboardPreview = () => {
               </div>
             </div>
 
-            <div className="bg-surface/50 border border-white/5 rounded-xl p-6 flex flex-col justify-between">
+            <div className="bg-surface/50 border border-border rounded-xl p-6 flex flex-col justify-between">
               <div className="flex items-center gap-3 text-text-muted mb-4">
                 <Database size={16} />
                 <span className="text-xs uppercase font-bold tracking-widest">Docs Indexed</span>
               </div>
-              <div className="text-4xl text-white">
+              <div className="text-4xl text-text-primary">
                 <AnimatedCounter value={metrics.documents} />
               </div>
               <div className="mt-4 text-xs text-text-secondary flex items-center gap-2">
@@ -145,7 +145,7 @@ export const PlatformDashboardPreview = () => {
             </div>
 
             {/* Chart Area */}
-            <div className="md:col-span-2 lg:col-span-3 bg-surface/50 border border-white/5 rounded-xl p-6 h-48 flex items-end justify-between gap-2 overflow-hidden relative">
+            <div className="md:col-span-2 lg:col-span-3 bg-surface/50 border border-border rounded-xl p-6 h-48 flex items-end justify-between gap-2 overflow-hidden relative">
               <div className="absolute top-6 left-6 flex items-center gap-3 text-text-muted">
                 <BarChart3 size={16} />
                 <span className="text-xs uppercase font-bold tracking-widest">Task Throughput (Last 24h)</span>

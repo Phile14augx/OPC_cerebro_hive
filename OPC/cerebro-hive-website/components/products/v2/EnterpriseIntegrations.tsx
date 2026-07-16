@@ -86,7 +86,7 @@ export const EnterpriseIntegrations = () => {
                       <integration.icon size={20} />
                     </div>
                     <div>
-                      <div className={cn("font-space font-bold", isActive ? "text-white" : "text-text-secondary")}>
+                      <div className={cn("font-space font-bold", isActive ? "text-text-primary" : "text-text-secondary")}>
                         {integration.name}
                       </div>
                     </div>
@@ -106,7 +106,7 @@ export const EnterpriseIntegrations = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.3 }}
-                className="bg-[#0A0D14] border border-border rounded-2xl p-8 h-full shadow-2xl relative overflow-hidden"
+                className="bg-background border border-border rounded-2xl p-8 h-full shadow-2xl relative overflow-hidden"
               >
                 {/* Circuit board accent */}
                 <div className="absolute top-0 right-0 w-64 h-64 opacity-5 pointer-events-none" style={{ backgroundImage: `radial-gradient(circle at 100% 0%, #00F57A 0%, transparent 70%)` }} />
@@ -114,21 +114,21 @@ export const EnterpriseIntegrations = () => {
                 <div className="flex flex-col h-full">
                   
                   {/* Header */}
-                  <div className="flex items-start justify-between mb-10 pb-6 border-b border-white/10">
+                  <div className="flex items-start justify-between mb-10 pb-6 border-b border-border">
                     <div className="flex items-center gap-4">
                       <div className="w-16 h-16 rounded-xl bg-primary-accent/10 flex items-center justify-center text-primary-accent border border-primary-accent/20">
                         <activeData.icon size={32} />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-space font-bold text-white mb-1">{activeData.name} Connector</h3>
-                        <div className="flex items-center gap-2 text-xs font-bold text-[#00F57A] uppercase tracking-widest">
+                        <h3 className="text-2xl font-space font-bold text-text-primary mb-1">{activeData.name} Connector</h3>
+                        <div className="flex items-center gap-2 text-xs font-bold text-accent-primary uppercase tracking-widest">
                           <ShieldCheck size={14} /> {activeData.status}
                         </div>
                       </div>
                     </div>
                     
                     <div className="hidden md:flex flex-col items-end">
-                      <div className="text-3xl font-space font-bold text-white">{activeData.connectors}</div>
+                      <div className="text-3xl font-space font-bold text-text-primary">{activeData.connectors}</div>
                       <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold">API Endpoints</div>
                     </div>
                   </div>
@@ -142,7 +142,7 @@ export const EnterpriseIntegrations = () => {
                       </h4>
                       <ul className="space-y-3">
                         {activeData.modules.map((mod, i) => (
-                          <li key={i} className="flex items-center gap-3 text-sm text-white">
+                          <li key={i} className="flex items-center gap-3 text-sm text-text-primary">
                             <div className="w-1.5 h-1.5 rounded-full bg-primary-accent" /> {mod}
                           </li>
                         ))}
@@ -153,8 +153,8 @@ export const EnterpriseIntegrations = () => {
                       <h4 className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2">
                         <Activity size={14} /> Sync Capabilities
                       </h4>
-                      <div className="p-4 bg-surface-elevated border border-white/5 rounded-xl mb-6">
-                        <div className="text-sm font-space font-bold text-white">{activeData.sync}</div>
+                      <div className="p-4 bg-surface-elevated border border-border rounded-xl mb-6">
+                        <div className="text-sm font-space font-bold text-text-primary">{activeData.sync}</div>
                         <div className="text-xs text-text-secondary mt-1">Automatic schema detection and data mapping.</div>
                       </div>
 
@@ -162,9 +162,9 @@ export const EnterpriseIntegrations = () => {
                         <ShieldCheck size={14} /> Security
                       </h4>
                       <div className="flex flex-wrap gap-2">
-                        <span className="px-2 py-1 bg-black/50 border border-white/5 rounded text-[10px] uppercase font-bold text-text-secondary">OAuth 2.0</span>
-                        <span className="px-2 py-1 bg-black/50 border border-white/5 rounded text-[10px] uppercase font-bold text-text-secondary">TLS 1.3</span>
-                        <span className="px-2 py-1 bg-black/50 border border-white/5 rounded text-[10px] uppercase font-bold text-text-secondary">VPC Peering</span>
+                        <span className="px-2 py-1 bg-surface-secondary border border-border rounded text-[10px] uppercase font-bold text-text-secondary">OAuth 2.0</span>
+                        <span className="px-2 py-1 bg-surface-secondary border border-border rounded text-[10px] uppercase font-bold text-text-secondary">TLS 1.3</span>
+                        <span className="px-2 py-1 bg-surface-secondary border border-border rounded text-[10px] uppercase font-bold text-text-secondary">VPC Peering</span>
                       </div>
                     </div>
 

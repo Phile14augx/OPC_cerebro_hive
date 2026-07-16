@@ -126,12 +126,12 @@ export const CompanyHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-md shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-border mb-8 backdrop-blur-md shadow-sm">
             <Globe2 size={12} className="text-primary-accent" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Corporate Handbook</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-space font-bold text-white tracking-tight leading-[1.05] mb-6 drop-shadow-2xl">
+          <h1 className="text-5xl md:text-7xl font-space font-bold text-text-primary tracking-tight leading-[1.05] mb-6 drop-shadow-2xl">
             Intelligence. <br/>
             Connection. <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent via-[#00E5FF] to-primary-accent bg-[length:200%_auto] animate-gradient-shift">
@@ -148,7 +148,7 @@ export const CompanyHero = () => {
               See How We Deliver
               <ArrowDown size={16} className="transition-transform group-hover:translate-y-1" />
             </button>
-            <button className="px-8 py-4 bg-white/5 border border-white/10 text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/30 hover:bg-white/10 transition-all">
+            <button className="px-8 py-4 bg-white/5 border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/30 hover:bg-white/10 transition-all">
               Download Handbook
             </button>
           </div>

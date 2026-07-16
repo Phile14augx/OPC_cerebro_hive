@@ -53,7 +53,7 @@ export const CareersPreview = () => {
             <h2 className="text-xs font-space font-bold tracking-widest uppercase text-text-muted mb-6 flex items-center gap-2">
               <Briefcase size={14} /> Join The Mission
             </h2>
-            <h3 className="text-4xl md:text-5xl font-space font-bold text-white tracking-tight mb-8 leading-tight">
+            <h3 className="text-4xl md:text-5xl font-space font-bold text-text-primary tracking-tight mb-8 leading-tight">
               Build the systems that will define how enterprises adopt AI over the next decade.
             </h3>
             
@@ -77,20 +77,20 @@ export const CareersPreview = () => {
             {/* Employee Impact Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 py-6 border-t border-b border-border/50">
               <div className="flex flex-col">
-                <span className="text-2xl font-space font-bold text-white">145</span>
+                <span className="text-2xl font-space font-bold text-text-primary">145</span>
                 <span className="text-[10px] font-mono uppercase text-text-muted">Engineers</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-space font-bold text-white">12</span>
+                <span className="text-2xl font-space font-bold text-text-primary">12</span>
                 <span className="text-[10px] font-mono uppercase text-text-muted">R&D Teams</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-space font-bold text-white">34</span>
+                <span className="text-2xl font-space font-bold text-text-primary">34</span>
                 <span className="text-[10px] font-mono uppercase text-text-muted">AI Projects</span>
               </div>
             </div>
 
-            <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-primary-accent/50 transition-all text-sm font-space font-bold text-white uppercase tracking-wider group">
+            <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-border hover:bg-white/10 hover:border-primary-accent/50 transition-all text-sm font-space font-bold text-text-primary uppercase tracking-wider group">
               Explore Opportunities <ArrowRight size={16} className="text-primary-accent group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -148,7 +148,7 @@ export const CareersPreview = () => {
                       </div>
 
                       {/* Content */}
-                      <h4 className="text-2xl font-space font-bold text-white mb-2 group-hover:text-primary-accent transition-colors">
+                      <h4 className="text-2xl font-space font-bold text-text-primary mb-2 group-hover:text-primary-accent transition-colors">
                         {domain.domain}
                       </h4>
                       <p className="text-sm text-text-secondary font-inter mb-8 line-clamp-2">
@@ -160,11 +160,11 @@ export const CareersPreview = () => {
                         <div className="flex gap-4">
                           <div className="flex flex-col">
                             <span className="text-[10px] font-mono text-text-muted uppercase">Roles</span>
-                            <span className="text-sm font-space font-bold text-white">{domain.openRoles}</span>
+                            <span className="text-sm font-space font-bold text-text-primary">{domain.openRoles}</span>
                           </div>
                           <div className="flex flex-col">
                             <span className="text-[10px] font-mono text-text-muted uppercase">Level</span>
-                            <span className="text-sm font-space font-bold text-white truncate max-w-[100px]">{domain.seniority}</span>
+                            <span className="text-sm font-space font-bold text-text-primary truncate max-w-[100px]">{domain.seniority}</span>
                           </div>
                         </div>
                         
@@ -204,15 +204,15 @@ export const CareersPreview = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-full max-w-md bg-[#05080f] border-l border-white/10 z-50 overflow-y-auto custom-scrollbar shadow-2xl flex flex-col"
+              className="fixed top-0 right-0 bottom-0 w-full max-w-md bg-[#05080f] border-l border-border z-50 overflow-y-auto custom-scrollbar shadow-2xl flex flex-col"
             >
               {/* Inspector Header */}
-              <div className="sticky top-0 bg-[#05080f]/90 backdrop-blur-md border-b border-white/10 p-6 flex justify-between items-center z-10">
+              <div className="sticky top-0 bg-[#05080f]/90 backdrop-blur-md border-b border-border p-6 flex justify-between items-center z-10">
                 <div className="flex items-center gap-3">
                   <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center border", themeConfig[activeDomain.theme].bg, themeConfig[activeDomain.theme].border, themeConfig[activeDomain.theme].text)}>
                     {React.createElement(IconMap[activeDomain.iconName] || Briefcase, { size: 16 })}
                   </div>
-                  <h3 className="text-lg font-space font-bold text-white">{activeDomain.domain}</h3>
+                  <h3 className="text-lg font-space font-bold text-text-primary">{activeDomain.domain}</h3>
                 </div>
                 <button onClick={handleClose} className="p-2 rounded-full hover:bg-white/10 transition-colors text-text-muted hover:text-white">
                   <X size={20} />
@@ -224,20 +224,20 @@ export const CareersPreview = () => {
                 
                 {/* Meta */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/5 border border-white/5 p-3 rounded-lg flex flex-col gap-1">
+                  <div className="bg-white/5 border border-border p-3 rounded-lg flex flex-col gap-1">
                     <span className="text-[10px] font-mono uppercase text-text-muted flex items-center gap-1.5"><MapPin size={10}/> Location</span>
-                    <span className="text-sm font-space text-white">{activeDomain.location}</span>
+                    <span className="text-sm font-space text-text-primary">{activeDomain.location}</span>
                   </div>
-                  <div className="bg-white/5 border border-white/5 p-3 rounded-lg flex flex-col gap-1">
+                  <div className="bg-white/5 border border-border p-3 rounded-lg flex flex-col gap-1">
                     <span className="text-[10px] font-mono uppercase text-text-muted">Seniority</span>
-                    <span className="text-sm font-space text-white">{activeDomain.seniority}</span>
+                    <span className="text-sm font-space text-text-primary">{activeDomain.seniority}</span>
                   </div>
                 </div>
 
                 {/* What You'll Build */}
                 <section>
                   <h4 className="text-xs font-space font-bold uppercase tracking-widest text-primary-accent mb-3">What You'll Build</h4>
-                  <p className="text-sm text-text-secondary font-inter leading-relaxed bg-[#0a0f18] p-4 rounded-xl border border-white/5">
+                  <p className="text-sm text-text-secondary font-inter leading-relaxed bg-[#0a0f18] p-4 rounded-xl border border-border">
                     {activeDomain.impact}
                   </p>
                 </section>
@@ -262,7 +262,7 @@ export const CareersPreview = () => {
                     <div className="absolute left-[11px] top-2 bottom-2 w-[1px] bg-white/10" />
                     {activeDomain.careerPath.map((path, i) => (
                       <div key={i} className="flex items-center gap-4 py-2 relative z-10">
-                        <div className="w-2 h-2 rounded-full bg-[#05080f] border-2 border-white/30" />
+                        <div className="w-2 h-2 rounded-full bg-[#05080f] border-2 border-border" />
                         <span className={cn("text-sm font-space", i === activeDomain.careerPath.length - 1 ? "text-primary-accent font-bold" : "text-text-secondary")}>
                           {path}
                         </span>
@@ -276,7 +276,7 @@ export const CareersPreview = () => {
                   <h4 className="text-xs font-space font-bold uppercase tracking-widest text-text-muted mb-3">Technology Stack</h4>
                   <div className="flex flex-wrap gap-2">
                     {activeDomain.technologies.map((tech, i) => (
-                      <span key={i} className="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-xs font-mono text-white/80">
+                      <span key={i} className="px-3 py-1 rounded-md bg-white/5 border border-border text-xs font-mono text-text-secondary">
                         {tech}
                       </span>
                     ))}
@@ -286,7 +286,7 @@ export const CareersPreview = () => {
               </div>
 
               {/* Inspector Footer */}
-              <div className="mt-auto p-6 border-t border-white/10 bg-[#020306]">
+              <div className="mt-auto p-6 border-t border-border bg-[#020306]">
                 <button className={cn(
                   "w-full py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-space font-bold uppercase tracking-widest transition-colors border",
                   themeConfig[activeDomain.theme].bg, themeConfig[activeDomain.theme].border, themeConfig[activeDomain.theme].text, "hover:bg-white/10 hover:text-white"

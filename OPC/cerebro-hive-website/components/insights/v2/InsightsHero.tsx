@@ -6,14 +6,14 @@ import { BrainCircuit, TrendingUp, ArrowUpRight, ArrowRight, ShieldCheck, Activi
 import { cn, withBasePath } from "@/lib/utils";
 
 const dashboardMetrics = [
-  { label: "AI Adoption", value: "76%", trend: "+23%", icon: TrendingUp, color: "text-[#00F57A]" },
-  { label: "Enterprise Spending", value: "$14B", trend: "+41%", icon: ArrowUpRight, color: "text-[#00E5FF]" },
+  { label: "AI Adoption", value: "76%", trend: "+23%", icon: TrendingUp, color: "text-accent-primary" },
+  { label: "Enterprise Spending", value: "$14B", trend: "+41%", icon: ArrowUpRight, color: "text-accent-secondary" },
 ];
 
 const trendStatuses = [
-  { label: "Agentic AI", status: "Trending", color: "text-[#00E5FF]", border: "border-[#00E5FF]" },
-  { label: "RAG Systems", status: "Stable", color: "text-[#00F57A]", border: "border-[#00F57A]" },
-  { label: "Enterprise Reasoning", status: "Emerging", color: "text-[#FFB300]", border: "border-[#FFB300]" },
+  { label: "Agentic AI", status: "Trending", color: "text-accent-secondary", border: "border-[#00E5FF]" },
+  { label: "RAG Systems", status: "Stable", color: "text-accent-primary", border: "border-[#00F57A]" },
+  { label: "Enterprise Reasoning", status: "Emerging", color: "text-warning", border: "border-[#FFB300]" },
 ];
 
 export const InsightsHero = () => {
@@ -23,10 +23,10 @@ export const InsightsHero = () => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <section className="min-h-[90vh] bg-[#0A0D14]" />;
+  if (!mounted) return <section className="min-h-[90vh] bg-background" />;
 
   return (
-    <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-white/5 bg-[#0A0D14] overflow-hidden flex flex-col justify-center">
+    <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-border bg-background overflow-hidden flex flex-col justify-center">
       
       {/* Background Ambience */}
       <div className="absolute inset-0 pointer-events-none z-0">
@@ -40,12 +40,12 @@ export const InsightsHero = () => {
         {/* Left Column: Messaging */}
         <div className="flex flex-col items-start text-left">
           
-          <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm">
-            <BrainCircuit size={14} className="text-[#00E5FF]" />
+          <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/5 border border-border mb-8 backdrop-blur-sm">
+            <BrainCircuit size={14} className="text-accent-secondary" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Executive Intelligence Center</span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-white tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-6">
             Enterprise <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-text-secondary to-text-muted">AI Intelligence</span>
           </h1>
@@ -59,7 +59,7 @@ export const InsightsHero = () => {
               Read Weekly Brief
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="px-8 py-4 bg-transparent border border-white/20 text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+            <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
               <BarChart3 size={16} /> Explore Dashboards
             </button>
           </div>
@@ -69,16 +69,16 @@ export const InsightsHero = () => {
         {/* Right Column: Animated Intelligence Dashboard */}
         <div className="relative w-full aspect-square lg:aspect-[4/3] flex flex-col gap-4">
           
-          <div className="bg-surface/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl">
+          <div className="bg-surface/80 backdrop-blur-xl border border-border rounded-2xl p-6 shadow-2xl">
             <div className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2">
               <Activity size={14} /> Market Signals
             </div>
             <div className="grid grid-cols-2 gap-4">
               {dashboardMetrics.map((metric, i) => (
-                <div key={i} className="p-4 rounded-xl bg-black/50 border border-white/5">
+                <div key={i} className="p-4 rounded-xl bg-surface-secondary border border-border">
                   <div className="text-[10px] uppercase tracking-widest text-text-muted mb-2">{metric.label}</div>
                   <div className="flex items-end gap-2">
-                    <span className="text-2xl font-space font-bold text-white">{metric.value}</span>
+                    <span className="text-2xl font-space font-bold text-text-primary">{metric.value}</span>
                     <span className={cn("text-xs font-bold mb-1 flex items-center gap-1", metric.color)}>
                       <metric.icon size={12} /> {metric.trend}
                     </span>
@@ -88,7 +88,7 @@ export const InsightsHero = () => {
             </div>
           </div>
 
-          <div className="bg-surface/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl flex-1 relative overflow-hidden">
+          <div className="bg-surface/80 backdrop-blur-xl border border-border rounded-2xl p-6 shadow-2xl flex-1 relative overflow-hidden">
             
             {/* Animated scanning line */}
             <motion.div 
@@ -103,9 +103,9 @@ export const InsightsHero = () => {
 
             <div className="space-y-4 relative z-10">
               {trendStatuses.map((trend, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition-colors">
-                  <span className="text-sm font-bold text-white">{trend.label}</span>
-                  <div className={cn("px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest border bg-black/50", trend.color, trend.border)}>
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border bg-white/5 hover:bg-white/10 transition-colors">
+                  <span className="text-sm font-bold text-text-primary">{trend.label}</span>
+                  <div className={cn("px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest border bg-surface-secondary", trend.color, trend.border)}>
                     {trend.status}
                   </div>
                 </div>

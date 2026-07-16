@@ -6,11 +6,11 @@ import { Mail, ScanLine, Search, Cpu, Database, CheckCircle2, ArrowRight } from 
 import { cn } from "@/lib/utils";
 
 const steps = [
-  { id: "email", label: "Email Received", icon: Mail, detail: "Vendor Invoice PDF", color: "text-white" },
+  { id: "email", label: "Email Received", icon: Mail, detail: "Vendor Invoice PDF", color: "text-text-primary" },
   { id: "ocr", label: "OCR Extraction", icon: ScanLine, detail: "Digitizing contents", color: "text-primary-accent" },
-  { id: "knowledge", label: "Knowledge Match", icon: Search, detail: "Checking Vendor DB", color: "text-[#00F57A]" },
-  { id: "agent", label: "Agent Reasoner", icon: Cpu, detail: "Validating line items", color: "text-[#00E5FF]" },
-  { id: "erp", label: "ERP Entry", icon: Database, detail: "Posting to Quantiva", color: "text-[#FFB300]" }
+  { id: "knowledge", label: "Knowledge Match", icon: Search, detail: "Checking Vendor DB", color: "text-accent-primary" },
+  { id: "agent", label: "Agent Reasoner", icon: Cpu, detail: "Validating line items", color: "text-accent-secondary" },
+  { id: "erp", label: "ERP Entry", icon: Database, detail: "Posting to Quantiva", color: "text-warning" }
 ];
 
 export const PlatformActionDemo = () => {
@@ -36,7 +36,7 @@ export const PlatformActionDemo = () => {
         
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Live Execution</span>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">Platform in Action</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Platform in Action</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter">
             Watch how CerebroOS handles an unstructured invoice, applies reasoning, and updates your financial system autonomously.
           </p>
@@ -61,7 +61,7 @@ export const PlatformActionDemo = () => {
                   <div className={cn(
                     "w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 z-10",
                     isCurrent ? "bg-primary-accent/20 border-2 border-primary-accent shadow-[0_0_20px_rgba(0,245,122,0.3)] scale-110" : 
-                    isPast ? "bg-surface border-2 border-primary-accent/50" : "bg-black/50 border-2 border-white/10"
+                    isPast ? "bg-surface border-2 border-primary-accent/50" : "bg-surface-secondary border-2 border-border"
                   )}>
                     {isPast && !isCurrent ? (
                       <CheckCircle2 size={24} className="text-primary-accent" />
@@ -71,7 +71,7 @@ export const PlatformActionDemo = () => {
                   </div>
                   
                   <div className="mt-6 text-center">
-                    <div className={cn("text-sm font-space font-bold mb-1 transition-colors", isCurrent ? "text-white" : "text-text-secondary")}>
+                    <div className={cn("text-sm font-space font-bold mb-1 transition-colors", isCurrent ? "text-text-primary" : "text-text-secondary")}>
                       {step.label}
                     </div>
                     <div className={cn("text-[10px] uppercase tracking-widest transition-colors", isCurrent ? step.color : "text-text-muted")}>
@@ -112,7 +112,7 @@ export const PlatformActionDemo = () => {
                 <div className="w-20 h-20 bg-primary-accent/20 rounded-full flex items-center justify-center mb-6">
                   <CheckCircle2 size={40} className="text-primary-accent" />
                 </div>
-                <h3 className="text-3xl font-space font-bold text-white mb-2">Workflow Completed</h3>
+                <h3 className="text-3xl font-space font-bold text-text-primary mb-2">Workflow Completed</h3>
                 <p className="text-text-secondary">Time elapsed: 1.2 seconds</p>
                 <button 
                   onClick={() => setActiveStep(0)}

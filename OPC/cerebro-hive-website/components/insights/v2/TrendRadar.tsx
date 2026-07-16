@@ -17,11 +17,11 @@ export const TrendRadar = () => {
   const [activeTech, setActiveTech] = useState(technologies[2]);
 
   return (
-    <section className="py-24 border-b border-white/5 bg-[#0A0D14]">
+    <section className="py-24 border-b border-border bg-background">
       <div className="container-wide">
         
         <div className="mb-12">
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-white mb-4">AI Trend Radar</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">AI Trend Radar</h2>
           <p className="text-text-secondary max-w-2xl font-inter">
             A strategic mapping of AI technologies by maturity, enterprise adoption rate, and expected time to impact.
           </p>
@@ -30,7 +30,7 @@ export const TrendRadar = () => {
         <div className="grid lg:grid-cols-12 gap-8">
           
           {/* Radar Visualization */}
-          <div className="lg:col-span-8 bg-surface border border-white/10 rounded-2xl p-8 relative overflow-hidden flex items-center justify-center min-h-[500px]">
+          <div className="lg:col-span-8 bg-surface border border-border rounded-2xl p-8 relative overflow-hidden flex items-center justify-center min-h-[500px]">
             {/* Radar grid */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
               <div className="w-[80%] h-[80%] border border-white rounded-full absolute" />
@@ -41,9 +41,9 @@ export const TrendRadar = () => {
             </div>
 
             {/* Labels */}
-            <div className="absolute top-4 left-4 text-[10px] font-bold uppercase tracking-widest text-[#FFB300]">Emerging (Outer)</div>
-            <div className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-widest text-[#00E5FF]">Trending (Middle)</div>
-            <div className="absolute bottom-4 right-4 text-[10px] font-bold uppercase tracking-widest text-[#00F57A]">Stable (Inner)</div>
+            <div className="absolute top-4 left-4 text-[10px] font-bold uppercase tracking-widest text-warning">Emerging (Outer)</div>
+            <div className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-widest text-accent-secondary">Trending (Middle)</div>
+            <div className="absolute bottom-4 right-4 text-[10px] font-bold uppercase tracking-widest text-accent-primary">Stable (Inner)</div>
 
             {/* Points */}
             <div className="relative w-full h-full max-w-[400px] max-h-[400px]">
@@ -61,11 +61,11 @@ export const TrendRadar = () => {
                       "w-4 h-4 rounded-full border-2 transition-all shadow-[0_0_15px_rgba(255,255,255,0.2)]",
                       tech.category === "Emerging" ? "bg-[#FFB300] border-black" :
                       tech.category === "Trending" ? "bg-[#00E5FF] border-black" :
-                      "bg-[#00F57A] border-black",
+                      "bg-accent-primary border-black",
                       activeTech.id === tech.id ? "scale-125 ring-4 ring-white/20" : ""
                     )}
                   />
-                  <div className="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-bold text-white bg-black/80 px-2 py-1 rounded border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <div className="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-bold text-text-primary bg-surface-secondary px-2 py-1 rounded border border-border opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     {tech.name}
                   </div>
                 </button>
@@ -74,14 +74,14 @@ export const TrendRadar = () => {
           </div>
 
           {/* Details Panel */}
-          <div className="lg:col-span-4 bg-surface border border-white/10 rounded-2xl p-6 flex flex-col">
+          <div className="lg:col-span-4 bg-surface border border-border rounded-2xl p-6 flex flex-col">
             <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6 flex items-center gap-2">
               <Crosshair size={12} /> Technology Assessment
             </div>
             
-            <h3 className="text-2xl font-space font-bold text-white mb-2">{activeTech.name}</h3>
+            <h3 className="text-2xl font-space font-bold text-text-primary mb-2">{activeTech.name}</h3>
             
-            <div className="inline-flex px-2 py-1 rounded bg-white/5 border border-white/10 text-xs font-bold text-text-secondary uppercase tracking-widest mb-6 w-fit">
+            <div className="inline-flex px-2 py-1 rounded bg-white/5 border border-border text-xs font-bold text-text-secondary uppercase tracking-widest mb-6 w-fit">
               {activeTech.category}
             </div>
 
@@ -90,25 +90,25 @@ export const TrendRadar = () => {
             </p>
 
             <div className="space-y-4 mb-8">
-              <div className="flex justify-between items-center pb-2 border-b border-white/5">
+              <div className="flex justify-between items-center pb-2 border-b border-border">
                 <span className="text-xs text-text-muted uppercase tracking-widest">Adoption Rate</span>
-                <span className="text-sm font-bold text-white">{activeTech.adoption}</span>
+                <span className="text-sm font-bold text-text-primary">{activeTech.adoption}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b border-white/5">
+              <div className="flex justify-between items-center pb-2 border-b border-border">
                 <span className="text-xs text-text-muted uppercase tracking-widest">Expected Maturity</span>
-                <span className="text-sm font-bold text-white">{activeTech.maturity}</span>
+                <span className="text-sm font-bold text-text-primary">{activeTech.maturity}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b border-white/5">
+              <div className="flex justify-between items-center pb-2 border-b border-border">
                 <span className="text-xs text-text-muted uppercase tracking-widest">Forecast Confidence</span>
-                <span className="text-sm font-bold text-[#00E5FF]">{activeTech.confidence}</span>
+                <span className="text-sm font-bold text-accent-secondary">{activeTech.confidence}</span>
               </div>
             </div>
 
             <div className="mt-auto p-4 rounded-xl bg-[#00E5FF]/5 border border-[#00E5FF]/20">
-              <div className="text-[10px] uppercase tracking-widest text-[#00E5FF] font-bold mb-2 flex items-center gap-2">
+              <div className="text-[10px] uppercase tracking-widest text-accent-secondary font-bold mb-2 flex items-center gap-2">
                 <Navigation size={12} /> Enterprise Action
               </div>
-              <p className="text-xs text-white">
+              <p className="text-xs text-text-primary">
                 {activeTech.category === "Emerging" && "Monitor closely. Form a small skunkworks team to evaluate APIs."}
                 {activeTech.category === "Trending" && "Initiate pilots. Vendor landscape is solidifying enough for enterprise testing."}
                 {activeTech.category === "Stable" && "Deploy to production. This is now standard enterprise architecture."}

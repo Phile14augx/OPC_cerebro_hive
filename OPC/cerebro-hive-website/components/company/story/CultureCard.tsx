@@ -63,7 +63,7 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
       onMouseMove={handleMouseMove}
       className={cn(
         "group relative flex flex-col justify-between rounded-[2rem] p-8 overflow-hidden bg-[#0a0d14]",
-        "border border-white/5 transition-all duration-300 ease-out",
+        "border border-border transition-all duration-300 ease-out",
         "hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5),_0_60px_120px_rgba(0,0,0,0.3)]",
         "shadow-[0_4px_12px_rgba(0,0,0,0.15)]",
         className
@@ -132,7 +132,7 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
         {/* Bottom Section (Metrics & Tag) */}
         <div className="mt-auto">
           {/* Mini Dashboard */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6 p-4 rounded-xl bg-white/5 border border-white/5 backdrop-blur-md">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6 p-4 rounded-xl bg-white/5 border border-border backdrop-blur-md">
             {value.metrics.map((metric, i) => (
               <div key={i} className="flex flex-col">
                 <span className="text-[10px] text-text-muted font-space uppercase tracking-wider mb-1">{metric.label}</span>
@@ -143,7 +143,7 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
           </div>
 
           {/* Tag Footer */}
-          <div className="flex items-center justify-between border-t border-white/10 pt-4">
+          <div className="flex items-center justify-between border-t border-border pt-4">
             <span className="text-[10px] font-space font-bold uppercase tracking-widest flex items-center gap-2" style={{ color: value.color }}>
               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: value.color }} />
               {value.bottomTag}

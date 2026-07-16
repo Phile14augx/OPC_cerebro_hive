@@ -9,14 +9,14 @@ const metrics = [
     icon: Activity,
     value: "42%",
     label: "Process Automation",
-    color: "text-[#00F57A]"
+    color: "text-accent-primary"
   },
   {
     theme: "Knowledge Intelligence",
     icon: Database,
     value: "3.2M",
     label: "Documents Indexed",
-    color: "text-[#00E5FF]"
+    color: "text-accent-secondary"
   },
   {
     theme: "AI Workforce",
@@ -30,17 +30,17 @@ const metrics = [
     icon: DollarSign,
     value: "$4.2M",
     label: "Annual Savings",
-    color: "text-[#FFB300]"
+    color: "text-warning"
   }
 ];
 
 export default function EnterpriseDashboard() {
   return (
-    <section className="py-12 border-b border-white/5 bg-[#05070A] relative z-20 -mt-8">
+    <section className="py-12 border-b border-border bg-background relative z-20 -mt-8">
       <div className="container-wide">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {metrics.map((metric, i) => (
-            <div key={i} className="bg-surface border border-white/10 rounded-2xl p-6 flex flex-col items-center text-center group hover:border-white/30 transition-colors shadow-2xl relative overflow-hidden">
+            <div key={i} className="bg-surface border border-border rounded-2xl p-6 flex flex-col items-center text-center group hover:border-white/30 transition-colors shadow-2xl relative overflow-hidden">
               
               <div className="absolute top-0 left-0 w-full h-1 bg-white/5 group-hover:bg-white/10 transition-colors" />
 
@@ -48,7 +48,7 @@ export default function EnterpriseDashboard() {
                 <metric.icon size={12} className={metric.color} /> {metric.theme}
               </div>
               
-              <div className="text-4xl md:text-5xl font-space font-bold text-white mb-2">
+              <div className="text-4xl md:text-5xl font-space font-bold text-text-primary mb-2">
                 {metric.value}
               </div>
               
