@@ -173,6 +173,13 @@ p { font-family: var(--font-inter), sans-serif; }
    GLOBAL PANE PADDING — Prevent text/icons touching card borders
    ============================================================ */
 
+/* ACCESSIBILITY: Focus Visibility */
+:focus-visible {
+  outline: 2px solid var(--primary-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.2);
+}
+
 /*
   The core fix: any element that looks like a card/pane (has a border and 
   rounded corners) gets a guaranteed minimum internal padding of 20px.

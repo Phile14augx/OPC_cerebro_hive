@@ -1,12 +1,14 @@
 {
   "name": "cerebro-hive-website",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "analyze": "cross-env ANALYZE=true next build --webpack",
+    "test:e2e": "playwright test",
     "audit:enterprise": "npx tsx scripts/audit/audit-interactions.ts && npx tsx scripts/audit/audit-routes.ts && npx tsx scripts/audit/audit-assets.ts && npx tsx scripts/audit/audit-accessibility.ts && npx tsx scripts/audit/audit-seo.ts && npx tsx scripts/audit/audit-analytics.ts && npx tsx scripts/audit/audit-design-system.ts && npx tsx scripts/audit/generate-dashboard.ts"
   },
   "dependencies": {
@@ -34,12 +36,14 @@
     "three": "^0.184.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.2.10",
     "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4",
     "@types/dagre": "^0.7.54",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",

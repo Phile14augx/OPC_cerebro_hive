@@ -3,7 +3,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronRight, Play, Database, BrainCircuit, Bot, Network, Lightbulb, Target } from "lucide-react";
-import { BackgroundEngine } from "@/components/ui/BackgroundEngine";
+import dynamic from 'next/dynamic';
+
+const BackgroundEngine = dynamic(
+  () => import("@/components/ui/BackgroundEngine").then((mod) => mod.BackgroundEngine),
+  { ssr: false }
+);
 
 const stages = [
   { id: "disconnected", title: "Disconnected Enterprise", icon: Database, color: "text-warning" },

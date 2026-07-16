@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, HTMLMotionProps } from "framer-motion";
-import { useMotionConfig } from "../foundation/MotionProvider";
+import { useCerebroMotion } from "../foundation/MotionProvider";
 import { motionTokens } from "../foundation/tokens";
 
 export interface HoverCardProps extends HTMLMotionProps<"div"> {
@@ -20,8 +20,8 @@ export function HoverCard({
   className = "",
   ...props
 }: HoverCardProps) {
-  const { motionMode } = useMotionConfig();
-  const isStatic = motionMode === "static";
+  const { level } = useCerebroMotion();
+  const isStatic = level === "reduced";
 
   return (
     <motion.div

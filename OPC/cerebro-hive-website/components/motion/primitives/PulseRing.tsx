@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { useMotionConfig } from "../foundation/MotionProvider";
+import { useCerebroMotion } from "../foundation/MotionProvider";
 
 export interface PulseRingProps {
   color?: string;
@@ -19,9 +19,10 @@ export function PulseRing({
   duration = 3,
   className = ""
 }: PulseRingProps) {
-  const { motionMode } = useMotionConfig();
+  const { level } = useCerebroMotion();
+  const isStatic = level === "reduced";
   
-  if (motionMode === "static") return null;
+  if (isStatic) return null;
 
   const rings = Array.from({ length: count });
 

@@ -2,7 +2,7 @@
 
 import React, { useId } from "react";
 import { motion } from "framer-motion";
-import { useMotionConfig } from "../foundation/MotionProvider";
+import { useCerebroMotion } from "../foundation/MotionProvider";
 import { DataPacket } from "./DataPacket";
 
 export interface AnimatedConnectorProps {
@@ -36,7 +36,8 @@ export function AnimatedConnector({
   strokeWidth = 2,
   className = ""
 }: AnimatedConnectorProps) {
-  const { motionMode } = useMotionConfig();
+  const { level } = useCerebroMotion();
+  const isStatic = level === "reduced";
   const pathId = useId();
 
   // Determine path SVG data
@@ -53,7 +54,6 @@ export function AnimatedConnector({
     d = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`;
   }
 
-  const isStatic = motionMode === "static";
   const color = state === "idle" ? idleColor : state === "error" ? "var(--destructive)" : activeColor;
 
   return (

@@ -61,6 +61,7 @@ export const CEOMessage = () => {
                 fill 
                 className="object-cover grayscale brightness-90 contrast-125 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-1000 ease-out"
                 sizes="(max-width: 768px) 100vw, 400px"
+                priority
               />
             </motion.div>
 

@@ -4,7 +4,12 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Globe2 } from "lucide-react";
 import { withBasePath } from "@/lib/utils";
-import { BackgroundEngine } from "@/components/ui/BackgroundEngine";
+import dynamic from 'next/dynamic';
+
+const BackgroundEngine = dynamic(
+  () => import("@/components/ui/BackgroundEngine").then((mod) => mod.BackgroundEngine),
+  { ssr: false }
+);
 
 // Floating Particles
 const Particles = () => {

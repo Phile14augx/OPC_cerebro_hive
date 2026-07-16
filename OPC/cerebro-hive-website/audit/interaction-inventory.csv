@@ -1,4 +1,6 @@
 Component,File,Line,Element,Label,Destination,RouteStatus,Priority,RouteHealth
+global-error,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/global-error.tsx,25,button,[Empty],Handler: {() => reset()},Action,Medium,Action
+not-found,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/not-found.tsx,21,Link,[Empty],/,Valid,Low,OK
 ArchitectureCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/architecture/ArchitectureCanvas.tsx,171,button,[Icon/Image],Handler: {onDownloadPng},Action,Medium,Action
 ArchitectureCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/architecture/ArchitectureCanvas.tsx,174,button,[Icon/Image],Handler: {onDownloadSvg},Action,Medium,Action
 ArchitectureCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/architecture/ArchitectureCanvas.tsx,172,ImageIcon,[ImageIcon],,Missing,High,Unknown
@@ -179,7 +181,7 @@ SolutionPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/
 AnimatedButton,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/AnimatedButton.tsx,17,motion.button,[Icon/Image],,Missing,High,Unknown
 ThemeToggle,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/ThemeToggle.tsx,35,button,{dynamic} {dynamic},Handler: {() => setTheme(option.value)},Action,Medium,Action
 ThemeToggle,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/ThemeToggle.tsx,45,Icon,[Icon],,Missing,High,Unknown
-TrackedButton,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/TrackedButton.tsx,33,button,{dynamic},Handler: {handleClick},Action,Medium,Action
+TrackedButton,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/TrackedButton.tsx,32,button,{dynamic},Handler: {handleClick},Action,Medium,Action
 TrackedLink,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/TrackedLink.tsx,36,Link,{dynamic},[Dynamic: href],Valid,Low,Unknown
 page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/about/page.tsx,155,Link,[Icon/Image],/contact,Valid,Low,OK
 page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/about/page.tsx,156,Link,[Empty],/services,Valid,Low,OK
@@ -297,9 +299,9 @@ Headquarters,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/compon
 Headquarters,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/Headquarters.tsx,347,button,[Icon/Image],,Missing,High,Unknown
 EnterpriseTrustCenter,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/ecosystem/EnterpriseTrustCenter.tsx,201,Icon,[Icon],,Missing,High,Unknown
 GlobalPresenceMap,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/ecosystem/GlobalPresenceMap.tsx,48,button,[Icon/Image],Handler: {() => setActiveRegion(office)},Action,Medium,Action
-CompanyHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/hero/CompanyHero.tsx,132,button,[Icon/Image],,Missing,High,Unknown
-CompanyHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/hero/CompanyHero.tsx,136,button,[Empty],,Missing,High,Unknown
-CEOMessage,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/CEOMessage.tsx,186,button,[Icon/Image],Handler: {() => setIsExpanded(true)},Action,Medium,Action
+CompanyHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/hero/CompanyHero.tsx,137,button,[Icon/Image],,Missing,High,Unknown
+CompanyHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/hero/CompanyHero.tsx,141,button,[Empty],,Missing,High,Unknown
+CEOMessage,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/CEOMessage.tsx,187,button,[Icon/Image],Handler: {() => setIsExpanded(true)},Action,Medium,Action
 CompanySidebar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/navigation/CompanySidebar.tsx,266,button,{dynamic} {dynamic} {dynamic} {dynamic},Handler: {() => isFolder ? toggleFolder(node.id) : scrollToId(node.id)},Action,Medium,Action
 CompanySidebar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/navigation/CompanySidebar.tsx,349,button,{dynamic},Handler: {() => setExplorerMode(false)},Action,Medium,Action
 CompanySidebar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/navigation/CompanySidebar.tsx,356,button,{dynamic},Handler: {() => setExplorerMode(true)},Action,Medium,Action
@@ -336,8 +338,8 @@ EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website
 EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,141,button,[Icon/Image],,Missing,High,Unknown
 EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,184,button,[Icon/Image],,Missing,High,Unknown
 EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,187,button,[Empty],Handler: {() => { setGenerated(false); setStep(1); setSelections({ industry: ""  erp: ""  maturity: "" }); }},Action,Medium,Action
-HomeHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,89,button,[Icon/Image],,Missing,High,Unknown
-HomeHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,92,button,[Empty],,Missing,High,Unknown
+HomeHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,94,button,[Icon/Image],,Missing,High,Unknown
+HomeHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,97,button,[Empty],,Missing,High,Unknown
 HumanProof,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HumanProof.tsx,56,button,[Icon/Image],Handler: {() => setActiveCase(c)},Action,Medium,Action
 HumanProof,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HumanProof.tsx,126,button,[Icon/Image],,Missing,High,Unknown
 LivingArchitecture,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/LivingArchitecture.tsx,83,button,[Icon/Image],Handler: {() => setActiveLayer(layer.id)},Action,Medium,Action

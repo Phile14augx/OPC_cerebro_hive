@@ -31,7 +31,7 @@ D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/legal/ai-ethics
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/legal/privacy/page.tsx,Present,Static
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/legal/security/page.tsx,Present,Static
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/legal/terms/page.tsx,Present,Static
-D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/products/[slug]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/products/[slug]/page.tsx,Present,Dynamic
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/ai-tools-directory/page.tsx,Missing Metadata,None
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/blog/page.tsx,Missing Metadata,None
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/templates/page.tsx,Missing Metadata,None
@@ -41,7 +41,7 @@ D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/ai-con
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/ai-development/page.tsx,Missing Metadata,None
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/corporate-training/page.tsx,Missing Metadata,None
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/data-engineering/page.tsx,Missing Metadata,None
-D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/solutions/[slug]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/solutions/[slug]/page.tsx,Present,Dynamic
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/ai-readiness/page.tsx,Missing Metadata,None
 D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,Missing Metadata,None
-D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/research/[category]/[slug]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/research/[category]/[slug]/page.tsx,Present,Dynamic

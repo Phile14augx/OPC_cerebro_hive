@@ -1,4 +1,5 @@
 import { getResearchBySlug, allResearchData } from "@/lib/content/research";
+import { Metadata } from 'next';
 import { notFound } from "next/navigation";
 import { ResearchReader } from "@/components/research/ResearchReader";
 
@@ -10,15 +11,27 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function ResearchDetailRoute({ 
+export async function generateMetadata({ params }: { params: Promise<{ category: string, slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const pub = getResearchBySlug(slug);
+  if (!pub) return { title: 'Research Not Found' };
+  
+  return {
+    title: `${pub.title} | CerebroHive Research`,
+    description: pub.summary,
+  };
+}
+
+export default async function ResearchDetail({ 
   params 
 }: { 
-  params: { category: string; slug: string } 
+  params: Promise<{ category: string; slug: string }> 
 }) {
-  const publication = getResearchBySlug(params.slug);
-
-  // If not found or if the category in URL doesn't match the actual category
-  if (!publication || publication.category !== params.category) {
+  const { category, slug } = await params;
+  const publication = getResearchBySlug(slug);
+  
+  // 404 if not found or category mismatch
+  if (!publication || publication.category !== category) {
     notFound();
   }
 

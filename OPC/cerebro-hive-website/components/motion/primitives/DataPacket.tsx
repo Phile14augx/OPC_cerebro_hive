@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { useMotionConfig } from "../foundation/MotionProvider";
+import { useCerebroMotion } from "../foundation/MotionProvider";
 
 export interface DataPacketProps {
   color?: string;
@@ -25,10 +25,9 @@ export function DataPacket({
   pathLength = 1,
   repeat = true
 }: DataPacketProps) {
-  const { motionMode } = useMotionConfig();
+  const { level } = useCerebroMotion();
 
-  if (motionMode === "static") return null;
-  if (motionMode === "reduced") duration *= 1.5; // slow down for reduced motion
+  if (level === "reduced") return null;
 
   return (
     <motion.div

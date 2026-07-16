@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { motionTokens } from "../foundation/tokens";
-import { useMotionConfig } from "../foundation/MotionProvider";
+import { useCerebroMotion } from "../foundation/MotionProvider";
 import { NodeState } from "@/lib/data/industries/types";
 
 export interface IntelligentOrbProps {
@@ -23,8 +23,8 @@ export function IntelligentOrb({
   className = "",
   onClick
 }: IntelligentOrbProps) {
-  const { motionMode } = useMotionConfig();
-  const isStatic = motionMode === "static";
+  const { level } = useCerebroMotion();
+  const isStatic = level === "reduced";
 
   // Semantic Colors
   const getColor = () => {
