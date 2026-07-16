@@ -1,160 +1,131 @@
 "use client";
-import { GraduationCap, CheckCircle, ArrowRight, ArrowLeft, Zap, MapPin, Laptop, Shuffle } from "lucide-react";
+
+import React from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
-
-const formats = [
-  {
-    icon: MapPin,
-    color: "#00E5FF",
-    title: "On-Site Workshops",
-    tag: "INTENSIVE",
-    desc: "Interactive hands-on training sessions held directly at your corporate headquarters, tailored to your team's specific stack and business use cases.",
-    duration: "1-3 Days",
-    bullets: ["Direct architect instruction", "Interactive live-coding labs", "Custom team hackathons"],
-  },
-  {
-    icon: Laptop,
-    color: "#7B61FF",
-    title: "Virtual Cohorts",
-    tag: "FLEXIBLE",
-    desc: "Live online training sessions scheduled over multiple weeks to minimize work disruption while building robust, practical technical foundations.",
-    duration: "4-8 Weeks",
-    bullets: ["Weekly live code review", "Dedicated Slack learning channel", "Recorded sessions library"],
-  },
-  {
-    icon: Shuffle,
-    color: "#FF8A00",
-    title: "Blended Hybrid",
-    tag: "SCALABLE",
-    desc: "A hybrid model combining self-paced video modules on our platform with bi-weekly live workshops to scale up training across large departments.",
-    duration: "Custom",
-    bullets: ["Custom learning paths", "Verified certification pathways", "L&D metrics dashboard tracking"],
-  },
-];
-
-const stats = [
-  { label: "Students Certified", value: "10,000+" },
-  { label: "Corporate Partners", value: "50+" },
-  { label: "Avg. Productivity Gain", value: "40%" },
-];
+import { GraduationCap, ArrowRight, Target, ShieldCheck, Activity, Users, Clock, Building } from "lucide-react";
 
 export default function CorporateTrainingPage() {
   return (
-    <>
-      {/* Hero */}
-      <section style={{ paddingTop: "140px", paddingBottom: "60px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(123,97,255,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
-        <div className="container-wide" style={{ position: "relative" }}>
-          <Link href="/services" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px", transition: "color 0.2s" }}
-            onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-primary)"}
-            onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}>
-            <ArrowLeft size={14} /> Back to Services
+    <div className="bg-background min-h-screen pt-24 font-inter">
+      
+      {/* Hero Section */}
+      <section className="section-pad relative overflow-hidden border-b border-border">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#FF2ED1]/5 blur-[120px] rounded-full pointer-events-none" />
+        
+        <div className="container-wide relative z-10">
+          <Link href="/services" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-muted hover:text-primary-accent transition-colors mb-8">
+            <ArrowRight size={14} className="rotate-180" /> Back to Services
           </Link>
-          <div className="section-label" style={{ display: "inline-flex", marginBottom: "20px" }}>
-            <GraduationCap size={11} /> Enterprise L&D
+          
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[#FF2ED1]/10 text-[#FF2ED1] border border-[#FF2ED1]/20">
+              <GraduationCap size={24} />
+            </div>
+            <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Enterprise Practice</span>
           </div>
-          <h1 style={{ fontSize: "clamp(2.5rem, 5vw, 3.5rem)", marginBottom: "20px" }}>
-            Corporate <span className="gradient-text-full">AI Training</span>
+          
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-space font-bold text-text-primary leading-tight mb-6 max-w-4xl">
+            Corporate AI Education
           </h1>
-          <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "1.1rem", color: "var(--text-muted)", maxWidth: "600px", lineHeight: 1.7 }}>
-            Build an AI-ready workforce. Up-skill your software development teams, product managers, and executive leaders with practical, production-grade AI certifications.
+          
+          <p className="text-xl text-text-secondary leading-relaxed max-w-3xl mb-10">
+            Empower technical and business teams with structured cohort training, live workshops, and digital certification sharing. We close the AI skills gap inside your organization safely and securely.
           </p>
+
+          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#FF2ED1] text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
+            Upskill Your Workforce
+          </Link>
         </div>
       </section>
 
-      {/* Stats Row */}
-      <section style={{ paddingBottom: "40px" }}>
+      {/* Deliverables & Outcomes */}
+      <section className="section-pad bg-surface-elevated">
         <div className="container-wide">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
-            {stats.map((s, i) => (
-              <div key={i} className="card-glass" style={{ padding: "24px", textAlign: "center" }}>
-                <div style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1.5rem", fontWeight: 800, color: "var(--neural-blue)", marginBottom: "6px" }}>{s.value}</div>
-                <div style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.8rem", color: "var(--text-muted)" }}>{s.label}</div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div>
+              <h3 className="text-2xl font-space font-bold text-text-primary mb-8 flex items-center gap-3">
+                <Target className="text-[#FF2ED1]" /> Key Outcomes
+              </h3>
+              <ul className="space-y-4">
+                {["Upskill workforce for the AI era", "Standardize prompt engineering best practices", "Accelerate internal AI adoption and ideation", "Reduce shadow IT by teaching secure tool usage"].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-text-secondary">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#FF2ED1] mt-2 shrink-0" />
+                    <span className="leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-2xl font-space font-bold text-text-primary mb-8 flex items-center gap-3">
+                <ShieldCheck className="text-[#FF2ED1]" /> Deliverables
+              </h3>
+              <ul className="space-y-4">
+                {["Custom Industry Curriculum", "Actual Workflow Case Studies", "Proctored Assessments", "Digital Certification & Badges", "Post-programme Support SLA"].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-text-secondary">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#FF2ED1] mt-2 shrink-0" />
+                    <span className="leading-relaxed font-medium text-text-primary">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Methodology */}
+      <section className="section-pad bg-background border-y border-border">
+        <div className="container-wide max-w-4xl mx-auto">
+          <h2 className="text-3xl font-space font-bold text-text-primary mb-12 text-center">Engagement Methodology</h2>
+          
+          <div className="space-y-6">
+            {[
+              { step: "Curriculum", detail: "Tailor content to your specific industry and corporate tools." },
+              { step: "Workshops", detail: "Live, interactive sessions (virtual or on-site) with hands-on labs." },
+              { step: "Assessment", detail: "Proctored exams and practical workflow assignments." },
+              { step: "Certification", detail: "Issue verifiable digital badges via CerebroLearn LMS." }
+            ].map((m, i) => (
+              <div key={i} className="p-6 rounded-2xl bg-surface border border-border flex flex-col md:flex-row md:items-center gap-6 hover:border-[#FF2ED1]/40 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-[#FF2ED1]/10 text-[#FF2ED1] flex items-center justify-center font-bold text-lg shrink-0">
+                  {i + 1}
+                </div>
+                <div>
+                  <h4 className="text-lg font-space font-bold text-text-primary mb-1">{m.step}</h4>
+                  <p className="text-sm text-text-secondary">{m.detail}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Formats Grid */}
-      <section style={{ paddingBottom: "40px" }}>
-        <div className="container-wide">
-          <h2 style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1.4rem", fontWeight: 700, marginBottom: "28px" }}>Three training structures. Fully customized.</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
-            {formats.map((f) => {
-              const Icon = f.icon;
-              return (
-                <div key={f.title} className="card-glass" style={{ padding: "32px 28px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                    <div style={{ width: 44, height: 44, borderRadius: "10px", background: `${f.color}14`, border: `1px solid ${f.color}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Icon size={20} color={f.color} />
-                    </div>
-                    <span style={{ fontFamily: "Orbitron, sans-serif", fontSize: "0.6rem", fontWeight: 700, color: f.color, background: `${f.color}12`, border: `1px solid ${f.color}30`, padding: "3px 10px", borderRadius: "100px" }}>{f.tag}</span>
-                  </div>
-                  <h3 style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1rem", fontWeight: 700, marginBottom: "10px" }}>{f.title}</h3>
-                  <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.83rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "16px" }}>{f.desc}</p>
-                  <div style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: "16px" }}>
-                    Duration: <strong style={{ color: "var(--text-primary)" }}>{f.duration}</strong>
-                  </div>
-                  <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "16px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                    {f.bullets.map((b) => (
-                      <div key={b} style={{ display: "flex", gap: "8px", alignItems: "flex-start", fontFamily: "Exo 2, sans-serif", fontSize: "0.78rem", color: "var(--text-muted)" }}>
-                        <CheckCircle size={12} color={f.color} style={{ flexShrink: 0, marginTop: "2px" }} /> {b}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
+      {/* Engagement Model */}
+      <section className="section-pad bg-surface-elevated">
+        <div className="container-wide max-w-5xl mx-auto">
+          <div className="p-10 rounded-3xl bg-background border border-border shadow-elevated relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF2ED1]/5 blur-[80px] rounded-full pointer-events-none" />
+            
+            <h2 className="text-2xl font-space font-bold text-text-primary mb-8 border-b border-border pb-6">Engagement Profile</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2 block flex items-center gap-2"><Clock size={12}/> Typical Timeline</span>
+                <span className="text-lg font-medium text-text-primary">3 Days - 8 Weeks</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2 block flex items-center gap-2"><Users size={12}/> Team</span>
+                <span className="text-lg font-medium text-text-primary">AI Educator, Technical Lead</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2 block flex items-center gap-2"><Building size={12}/> Best For</span>
+                <span className="text-sm font-medium text-text-secondary leading-relaxed">Organizations experiencing inconsistent, insecure, or shadow IT usage of generative AI.</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Core Showcase */}
-      <section style={{ paddingBottom: "100px" }}>
-        <div className="container-wide">
-          <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "60px", alignItems: "center" }}>
-            <div>
-              <h2 style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1.5rem", fontWeight: 700, marginBottom: "20px" }}>
-                AI capability built from the inside.
-              </h2>
-              <p style={{ fontFamily: "Exo 2, sans-serif", color: "var(--text-muted)", fontSize: "0.95rem", lineHeight: 1.7, marginBottom: "28px" }}>
-                Traditional workshops talk about prompt engineering. We focus on production engineering: building autonomous multi-agent pipelines, configuring vector databases, monitoring system metrics, and securing corporate compliance frameworks. We don&apos;t just teach tool usage — we teach how to architect systems.
-              </p>
-              
-              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                {[
-                  "Tailored curricula based on your corporate stack",
-                  "Real-world project-based graduation tracks",
-                  "Enterprise seat manager and completion analytics",
-                  "Direct slack support channels with lead architects",
-                ].map((item) => (
-                  <div key={item} style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
-                    <CheckCircle size={15} color="var(--neural-blue)" style={{ flexShrink: 0, marginTop: "3px" }} />
-                    <span style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.875rem", color: "var(--text-muted)" }}>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* CTA Panel */}
-            <div className="card-glass" style={{ padding: "40px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
-                <Zap size={18} color="var(--neural-blue)" />
-                <h3 style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1rem", fontWeight: 700, color: "var(--neural-blue)" }}>
-                  Custom Program Intake
-                </h3>
-              </div>
-              <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "24px" }}>
-                Book a scoping meeting with our L&D team to review your objectives, estimate budget allocations, and outline a tailored curriculum path.
-              </p>
-              <Link href="/academy/corporate-programs" className="btn-primary" style={{ width: "100%", justifyContent: "center", display: "inline-flex", gap: "6px" }}>
-                Request Training Proposal <ArrowRight size={14} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+    </div>
   );
 }

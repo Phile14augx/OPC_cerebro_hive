@@ -1,152 +1,131 @@
 "use client";
-import { Database, CheckCircle, ArrowRight, ArrowLeft, Zap, Server, BarChart, Cpu, HardDrive, ShieldCheck } from "lucide-react";
+
+import React from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
-
-const offerings = [
-  { icon: Cpu, color: "#00E5FF", title: "ETL Pipeline Design & Build", desc: "Automate raw data ingestion, transformation, validation, and loading pipelines using custom scripts, Airflow, or dbt." },
-  { icon: Database, color: "#7B61FF", title: "Warehouse & Lake Architecture", desc: "Optimize modern data storage platforms like Snowflake, Google BigQuery, and AWS Redshift for analytics workflows." },
-  { icon: BarChart, color: "#FF8A00", title: "Analytics Platform Setup", desc: "Build real-time BI dashboards, custom analytics solutions, and integrate self-service tools like Metabase or Superset." },
-  { icon: Server, color: "#FF2ED1", title: "Real-Time Streaming Pipelines", desc: "Deploy message brokers and event-driven data streaming layers using Apache Kafka, RabbitMQ, and AWS Kinesis." },
-  { icon: ShieldCheck, color: "#00E5FF", title: "Data Governance & Quality", desc: "Establish schemas, continuous data validation checkpoints, audit logs, and cataloging for strict regulatory compliance." },
-  { icon: HardDrive, color: "#7B61FF", title: "Vector DB & RAG Infrastructure", desc: "Provision and tune Pinecone, PgVector, and Milvus instances optimized for low-latency agentic RAG searches." },
-];
-
-const stats = [
-  { label: "Pipelines Active", value: "120+" },
-  { label: "Data Sources Synced", value: "50+" },
-  { label: "Pipeline Uptime SLA", value: "99.99%" },
-];
+import { Database, ArrowRight, Target, ShieldCheck, Activity, Users, Clock, Building } from "lucide-react";
 
 export default function DataEngineeringPage() {
   return (
-    <>
-      {/* Hero */}
-      <section style={{ paddingTop: "140px", paddingBottom: "60px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0,229,255,0.05) 0%, transparent 70%)", pointerEvents: "none" }} />
-        <div className="container-wide" style={{ position: "relative" }}>
-          <Link href="/services" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px", transition: "color 0.2s" }}
-            onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-primary)"}
-            onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}>
-            <ArrowLeft size={14} /> Back to Services
+    <div className="bg-background min-h-screen pt-24 font-inter">
+      
+      {/* Hero Section */}
+      <section className="section-pad relative overflow-hidden border-b border-border">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#7B61FF]/5 blur-[120px] rounded-full pointer-events-none" />
+        
+        <div className="container-wide relative z-10">
+          <Link href="/services" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-muted hover:text-primary-accent transition-colors mb-8">
+            <ArrowRight size={14} className="rotate-180" /> Back to Services
           </Link>
-          <div className="section-label" style={{ display: "inline-flex", marginBottom: "20px" }}>
-            <Database size={11} /> Data & Infrastructure
+          
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[#7B61FF]/10 text-[#7B61FF] border border-[#7B61FF]/20">
+              <Database size={24} />
+            </div>
+            <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Enterprise Practice</span>
           </div>
-          <h1 style={{ fontSize: "clamp(2.5rem, 5vw, 3.5rem)", marginBottom: "20px" }}>
-            Data <span className="gradient-text-full">Engineering</span>
+          
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-space font-bold text-text-primary leading-tight mb-6 max-w-4xl">
+            Data Engineering & Platforms
           </h1>
-          <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "1.1rem", color: "var(--text-muted)", maxWidth: "600px", lineHeight: 1.7 }}>
-            Build structured, resilient data pipelines and enterprise analytics warehouses. Clean, high-throughput pipelines that fuel your AI systems, reports, and operational dashboards.
+          
+          <p className="text-xl text-text-secondary leading-relaxed max-w-3xl mb-10">
+            Structure scattered business records and construct modern data lakes that securely feed LLMs, vector indexes, and BI tools. Clean data is the absolute prerequisite for every enterprise AI initiative.
           </p>
+
+          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#7B61FF] text-white font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
+            Discuss Your Data Infrastructure
+          </Link>
         </div>
       </section>
 
-      {/* Stats Row */}
-      <section style={{ paddingBottom: "40px" }}>
+      {/* Deliverables & Outcomes */}
+      <section className="section-pad bg-surface-elevated">
         <div className="container-wide">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
-            {stats.map((s, i) => (
-              <div key={i} className="card-glass" style={{ padding: "24px", textAlign: "center" }}>
-                <div style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1.5rem", fontWeight: 800, color: "var(--neural-blue)", marginBottom: "6px" }}>{s.value}</div>
-                <div style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.8rem", color: "var(--text-muted)" }}>{s.label}</div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div>
+              <h3 className="text-2xl font-space font-bold text-text-primary mb-8 flex items-center gap-3">
+                <Target className="text-[#7B61FF]" /> Key Outcomes
+              </h3>
+              <ul className="space-y-4">
+                {["Break down organizational data silos", "Enable real-time analytics and decision making", "Construct a single source of truth", "Prepare proprietary data for secure RAG/LLM ingestion"].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-text-secondary">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#7B61FF] mt-2 shrink-0" />
+                    <span className="leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-2xl font-space font-bold text-text-primary mb-8 flex items-center gap-3">
+                <ShieldCheck className="text-[#7B61FF]" /> Deliverables
+              </h3>
+              <ul className="space-y-4">
+                {["Data Audit & Gap Analysis Report", "ETL Pipeline Architecture Design", "Deployed Data Lake / Warehouse", "Vector Embedding Pipeline", "Data Governance & Schema Policy"].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-text-secondary">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#7B61FF] mt-2 shrink-0" />
+                    <span className="leading-relaxed font-medium text-text-primary">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Methodology */}
+      <section className="section-pad bg-background border-y border-border">
+        <div className="container-wide max-w-4xl mx-auto">
+          <h2 className="text-3xl font-space font-bold text-text-primary mb-12 text-center">Engagement Methodology</h2>
+          
+          <div className="space-y-6">
+            {[
+              { step: "Audit", detail: "Evaluate data sources, quality, structure, and accessibility." },
+              { step: "Architecture", detail: "Design scalable lakehouse and vector database infrastructure." },
+              { step: "Ingestion", detail: "Build robust ETL pipelines extracting from SaaS, ERPs, and APIs." },
+              { step: "Transformation", detail: "Clean, normalize, and embed data for BI and AI consumption." }
+            ].map((m, i) => (
+              <div key={i} className="p-6 rounded-2xl bg-surface border border-border flex flex-col md:flex-row md:items-center gap-6 hover:border-[#7B61FF]/40 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-[#7B61FF]/10 text-[#7B61FF] flex items-center justify-center font-bold text-lg shrink-0">
+                  {i + 1}
+                </div>
+                <div>
+                  <h4 className="text-lg font-space font-bold text-text-primary mb-1">{m.step}</h4>
+                  <p className="text-sm text-text-secondary">{m.detail}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Core Showcase */}
-      <section style={{ paddingBottom: "40px" }}>
-        <div className="container-wide">
-          <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "60px", alignItems: "center" }}>
-            <div>
-              <h2 style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1.4rem", fontWeight: 700, marginBottom: "20px" }}>
-                Resilient pipelines. Pure schemas.
-              </h2>
-              <p style={{ fontFamily: "Exo 2, sans-serif", color: "var(--text-muted)", fontSize: "0.95rem", lineHeight: 1.7, marginBottom: "28px" }}>
-                AI models are only as good as the datasets they ingest. We engineer fault-tolerant ETL architectures with strict schemas and automated quality checkpoints to ensure your analytical platforms and LLM models read only clean, reliable, structured data.
-              </p>
-              
-              {/* Inline Pipeline SVG */}
-              <div style={{ padding: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "12px", marginBottom: "20px" }}>
-                <svg viewBox="0 0 500 120" style={{ width: "100%", height: "auto" }}>
-                  {/* Nodes */}
-                  <g>
-                    {/* Sources */}
-                    <circle cx="50" cy="60" r="16" fill="rgba(123,97,255,0.1)" stroke="#7B61FF" strokeWidth="1.5" />
-                    <text x="50" y="64" textAnchor="middle" fill="#FFF" fontSize="10" fontFamily="Orbitron">SRC</text>
-                    
-                    {/* ETL Engine */}
-                    <circle cx="200" cy="60" r="18" fill="rgba(0,229,255,0.1)" stroke="#00E5FF" strokeWidth="1.5" />
-                    <text x="200" y="64" textAnchor="middle" fill="#FFF" fontSize="10" fontFamily="Orbitron">ETL</text>
-                    
-                    {/* Warehouse */}
-                    <circle cx="350" cy="60" r="18" fill="rgba(255,138,0,0.1)" stroke="#FF8A00" strokeWidth="1.5" />
-                    <text x="350" y="64" textAnchor="middle" fill="#FFF" fontSize="10" fontFamily="Orbitron">DWH</text>
-                    
-                    {/* AI / BI */}
-                    <circle cx="450" cy="60" r="16" fill="rgba(255,46,209,0.1)" stroke="#FF2ED1" strokeWidth="1.5" />
-                    <text x="450" y="64" textAnchor="middle" fill="#FFF" fontSize="10" fontFamily="Orbitron">AI/BI</text>
-                  </g>
-                  
-                  {/* Edges */}
-                  <g strokeWidth="1.5" fill="none">
-                    <line x1="66" y1="60" x2="182" y2="60" stroke="#7B61FF" strokeDasharray="4 4" />
-                    <line x1="218" y1="60" x2="332" y2="60" stroke="#00E5FF" strokeDasharray="4 4" />
-                    <line x1="368" y1="60" x2="434" y2="60" stroke="#FF8A00" strokeDasharray="4 4" />
-                  </g>
-                </svg>
+      {/* Engagement Model */}
+      <section className="section-pad bg-surface-elevated">
+        <div className="container-wide max-w-5xl mx-auto">
+          <div className="p-10 rounded-3xl bg-background border border-border shadow-elevated relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#7B61FF]/5 blur-[80px] rounded-full pointer-events-none" />
+            
+            <h2 className="text-2xl font-space font-bold text-text-primary mb-8 border-b border-border pb-6">Engagement Profile</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2 block flex items-center gap-2"><Clock size={12}/> Typical Timeline</span>
+                <span className="text-lg font-medium text-text-primary">8 - 16 Weeks</span>
               </div>
-            </div>
-
-            {/* CTA Panel */}
-            <div className="card-glass" style={{ padding: "40px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
-                <Zap size={18} color="var(--neural-blue)" />
-                <h3 style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1rem", fontWeight: 700, color: "var(--neural-blue)" }}>
-                  Data Infrastructure Audit
-                </h3>
+              <div>
+                <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2 block flex items-center gap-2"><Users size={12}/> Team</span>
+                <span className="text-lg font-medium text-text-primary">Data Engineer, Cloud Architect</span>
               </div>
-              <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "24px" }}>
-                A deep assessment of your data pipeline latency, warehouse optimizations, schema validity, and vector storage indexing models.
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "28px" }}>
-                {["Scoping bottleneck analysis", "GCP/AWS cost optimization assessment", "Custom pipeline integration blueprint"].map((b) => (
-                  <div key={b} style={{ display: "flex", gap: "8px", alignItems: "flex-start", fontSize: "0.8rem", color: "var(--text-muted)", fontFamily: "Exo 2, sans-serif" }}>
-                    <CheckCircle size={13} color="var(--neural-blue)" style={{ flexShrink: 0, marginTop: "2px" }} /> {b}
-                  </div>
-                ))}
+              <div>
+                <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2 block flex items-center gap-2"><Building size={12}/> Best For</span>
+                <span className="text-sm font-medium text-text-secondary leading-relaxed">Enterprises with fragmented data silos seeking to prepare their infrastructure for AI adoption.</span>
               </div>
-              <Link href="/contact" className="btn-primary" style={{ width: "100%", justifyContent: "center", display: "inline-flex", gap: "6px" }}>
-                Book Technical Audit <ArrowRight size={14} />
-              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Offerings Grid */}
-      <section style={{ paddingBottom: "100px" }}>
-        <div className="container-wide">
-          <h2 style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1.3rem", fontWeight: 700, marginBottom: "28px" }}>
-            Data engineering capabilities
-          </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
-            {offerings.map((off) => {
-              const Icon = off.icon;
-              return (
-                <div key={off.title} className="card-glass" style={{ padding: "28px 24px" }}>
-                  <div style={{ width: 40, height: 40, borderRadius: "10px", background: `${off.color}14`, border: `1px solid ${off.color}28`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}>
-                    <Icon size={18} color={off.color} />
-                  </div>
-                  <h4 style={{ fontFamily: "Orbitron, sans-serif", fontSize: "0.88rem", fontWeight: 700, marginBottom: "8px" }}>{off.title}</h4>
-                  <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.6 }}>{off.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-    </>
+    </div>
   );
 }
