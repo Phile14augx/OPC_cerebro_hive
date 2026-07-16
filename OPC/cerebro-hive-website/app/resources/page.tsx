@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, FileText, BookOpen, Wrench, LayoutTemplate, ChevronRight } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 
 const hubs = [
   {
@@ -101,7 +101,7 @@ export default function ResourcesPage() {
                       {hub.cta} <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
-                </Link>
+                </TrackedLink>
               </motion.div>
             ))}
           </div>
@@ -128,7 +128,7 @@ export default function ResourcesPage() {
                     </div>
                   </div>
                   <ArrowRight size={16} className="text-text-muted group-hover:text-primary-accent group-hover:translate-x-1 transition-all shrink-0 ml-4" />
-                </Link>
+                </TrackedLink>
               </motion.div>
             ))}
           </div>
@@ -140,9 +140,9 @@ export default function ResourcesPage() {
         <div className="container-wide max-w-3xl mx-auto text-center">
           <h2 className="text-4xl font-space font-bold text-text-primary mb-4">Looking for Something Specific?</h2>
           <p className="text-text-secondary mb-8">Our team can create custom architecture assessments, solution briefs, and technical guides tailored to your initiative.</p>
-          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated">
+          <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Talk to an Architect — Resources" className="inline-flex items-center gap-3 px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated">
             Talk to an Architect <ArrowRight size={16} />
-          </Link>
+          </TrackedLink>
         </div>
       </section>
     </div>

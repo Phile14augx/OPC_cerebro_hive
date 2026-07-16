@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { Code2, ArrowRight, Target, ShieldCheck, Activity, Users, Clock, Building } from "lucide-react";
 
 export default function AIDevelopmentPage() {
@@ -14,9 +14,9 @@ export default function AIDevelopmentPage() {
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#00F57A]/5 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="container-wide relative z-10">
-          <Link href="/services" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-muted hover:text-primary-accent transition-colors mb-8">
+          <TrackedLink href="/services" analyticsEvent="nav_breadcrumb_click" analyticsCategory="navigation" analyticsLabel="Back to Services — AI Development" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-muted hover:text-primary-accent transition-colors mb-8">
             <ArrowRight size={14} className="rotate-180" /> Back to Services
-          </Link>
+          </TrackedLink>
           
           <div className="flex items-center gap-4 mb-6">
             <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-accent-primary/10 text-accent-primary border border-[#00F57A]/20">
@@ -33,9 +33,9 @@ export default function AIDevelopmentPage() {
             Train domain-specific private models, build high-performance vector retrieval architectures, and deploy secure inference API microservices. This is true engineering-led product delivery — not prototyping.
           </p>
 
-          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-accent-primary text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
+          <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Discuss Custom AI Build — AI Development" className="inline-flex items-center gap-3 px-8 py-4 bg-accent-primary text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
             Discuss Your Custom AI Build
-          </Link>
+          </TrackedLink>
         </div>
       </section>
 

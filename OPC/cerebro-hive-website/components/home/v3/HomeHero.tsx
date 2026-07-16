@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronRight, Play, Database, BrainCircuit, Bot, Network, Lightbulb, Target } from "lucide-react";
 import dynamic from 'next/dynamic';
+import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedButton } from "@/components/ui/TrackedButton";
 
 const BackgroundEngine = dynamic(
   () => import("@/components/ui/BackgroundEngine").then((mod) => mod.BackgroundEngine),
@@ -91,12 +93,16 @@ export default function HomeHero() {
               }}
               className="flex flex-wrap gap-4"
             >
-              <button className="theme-button-primary px-8 py-4 text-sm tracking-widest uppercase flex items-center gap-2 group">
-                Explore The Platform <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-full hover:bg-surface-secondary shadow-sm transition-all duration-250">
-                Read Research
-              </button>
+              <TrackedLink href="/products" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Explore The Platform — Hero">
+                <button className="theme-button-primary px-8 py-4 text-sm tracking-widest uppercase flex items-center gap-2 group">
+                  Explore The Platform <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+              </TrackedLink>
+              <TrackedLink href="/research" analyticsEvent="cta_click" analyticsCategory="engagement" analyticsLabel="Read Research — Hero">
+                <button className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-full hover:bg-surface-secondary shadow-sm transition-all duration-250">
+                  Read Research
+                </button>
+              </TrackedLink>
             </motion.div>
           </motion.div>
 

@@ -1,6 +1,6 @@
 "use client";
 import { BookOpen, Compass, GraduationCap, Award, ArrowRight, Zap, HelpCircle, Clock, CheckCircle, Star, Users, Code, BarChart2, Shield, Brain, Layers, Database, Cpu, FileCode } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { useState } from "react";
 
 const academyPaths = [
@@ -434,9 +434,9 @@ export default function AcademyPage() {
                                 </div>
                               </div>
                             </div>
-                            <Link href="/academy/courses" className="btn-primary" style={{ display: "inline-flex", gap: "6px", justifyContent: "center" }}>
+                            <TrackedLink href="/academy/courses" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Enroll Now — Academy Course" className="btn-primary" style={{ display: "inline-flex", gap: "6px", justifyContent: "center" }}>
                               Enroll Now <ArrowRight size={13} />
-                            </Link>
+                            </TrackedLink>
                           </div>
                         </div>
                       </div>
@@ -475,10 +475,10 @@ export default function AcademyPage() {
                       </div>
                     ))}
                   </div>
-                  <Link href={bc.price === "Custom" ? "/contact" : "/academy/courses"}
+                  <TrackedLink href={bc.price === "Custom" ? "/contact" : "/academy/courses"} analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel={bc.price === "Custom" ? "Request Proposal — Academy Pricing" : "Enroll Now — Academy Pricing"}
                     style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: bc.color, fontSize: "0.8rem", fontWeight: 600, textDecoration: "none", marginTop: "20px" }}>
                     {bc.price === "Custom" ? "Request Proposal" : "Enroll Now"} <ArrowRight size={13} />
-                  </Link>
+                  </TrackedLink>
                 </div>
               ))}
             </div>
@@ -644,12 +644,12 @@ export default function AcademyPage() {
               Browse all 10 courses or talk to our learning advisors to build a custom curriculum for your team.
             </p>
             <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="/academy/courses" className="btn-primary" style={{ gap: "6px" }}>
+              <TrackedLink href="/academy/courses" analyticsEvent="cta_click" analyticsCategory="engagement" analyticsLabel="Browse All Courses — Academy" className="btn-primary" style={{ gap: "6px" }}>
                 Browse All Courses <ArrowRight size={14} />
-              </Link>
-              <Link href="/contact" className="btn-ghost">
+              </TrackedLink>
+              <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Corporate Training Inquiry — Academy" className="btn-ghost">
                 Corporate Training Inquiry
-              </Link>
+              </TrackedLink>
             </div>
           </div>
         </div>

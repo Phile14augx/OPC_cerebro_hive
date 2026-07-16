@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { InteractiveSolutionExplorer } from "@/components/solutions/InteractiveSolutionExplorer";
 import { ROICalculator } from "@/components/solutions/ROICalculator";
 
@@ -47,9 +47,9 @@ export default function SolutionsIndexPage() {
             <a href="#operating-system" className="px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
               See The Architecture <ArrowRight size={16} />
             </a>
-            <Link href="/contact" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/40 hover:bg-surface-elevated transition-all flex items-center justify-center">
+            <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Book Strategy Workshop — Solutions Hero" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/40 hover:bg-surface-elevated transition-all flex items-center justify-center">
               Book Strategy Workshop
-            </Link>
+            </TrackedLink>
           </div>
 
         </motion.div>
@@ -121,9 +121,9 @@ export default function SolutionsIndexPage() {
           <h2 className="text-4xl md:text-5xl font-space font-bold text-text-primary mb-4">Start Your Transformation</h2>
           <p className="text-text-secondary mb-8 text-lg">Our principal architects will assess your enterprise and map a risk-mitigated journey to AI autonomy in a complimentary 45-minute workshop.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact" className="px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
+            <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Schedule Strategy Workshop — Solutions CTA" className="px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
               Schedule Strategy Workshop <ArrowRight size={16} />
-            </Link>
+            </TrackedLink>
           </div>
         </div>
       </section>

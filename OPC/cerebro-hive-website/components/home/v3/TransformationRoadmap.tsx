@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ArrowRight, FileSearch, PenTool, FlaskConical, Rocket, Network } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 
 const roadmap = [
   {
@@ -128,12 +129,16 @@ export default function TransformationRoadmap() {
           <div className="mt-16 text-center">
             <h3 className="text-2xl font-space font-bold text-text-primary mb-6">Ready to build the AI-Native Enterprise?</h3>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
-                Book Strategy Session <ArrowRight size={16} />
-              </button>
-              <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-surface transition-colors">
-                Explore Services
-              </button>
+              <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Book Strategy Session — Roadmap CTA">
+                <button className="px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                  Book Strategy Session <ArrowRight size={16} />
+                </button>
+              </TrackedLink>
+              <TrackedLink href="/services" analyticsEvent="cta_click" analyticsCategory="engagement" analyticsLabel="Explore Services — Roadmap CTA">
+                <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-surface transition-colors">
+                  Explore Services
+                </button>
+              </TrackedLink>
             </div>
           </div>
 

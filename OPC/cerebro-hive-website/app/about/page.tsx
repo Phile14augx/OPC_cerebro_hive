@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { ArrowRight, Target, Lightbulb, Users, Globe, Rocket, Shield } from "lucide-react";
 
 
@@ -152,8 +152,8 @@ export default function AboutPage() {
             Let&apos;s explore how CerebroHive can accelerate your AI journey.
           </p>
           <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/contact" className="btn-primary">Book Free Consultation <ArrowRight size={16} /></Link>
-            <Link href="/services" className="btn-ghost">Explore Services</Link>
+            <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Book Free Consultation — About" className="btn-primary">Book Free Consultation <ArrowRight size={16} /></TrackedLink>
+            <TrackedLink href="/services" analyticsEvent="cta_click" analyticsCategory="engagement" analyticsLabel="Explore Services — About" className="btn-ghost">Explore Services</TrackedLink>
           </div>
         </div>
       </section>

@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Clock, ArrowRight, CheckCircle2, Building2, Calendar, ChevronDown } from "lucide-react";
-import Link from "next/link";
+import { TrackedButton } from "@/components/ui/TrackedButton";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 
 const industries = ["Financial Services", "Healthcare & Life Sciences", "Manufacturing", "Retail & E-Commerce", "Technology", "Government & Public Sector", "Energy & Utilities", "Education", "Other"];
 const companyRanges = ["1–50", "51–200", "201–1,000", "1,001–10,000", "10,000+"];
@@ -158,10 +159,10 @@ export default function ContactPage() {
                     className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-text-primary font-inter text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none"
                   />
                 </div>
-                <button type="submit" disabled={isLoading} className="group relative mt-2 px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated disabled:opacity-60 disabled:cursor-not-allowed">
+                <TrackedButton type="submit" disabled={isLoading} analyticsEvent="form_submit" analyticsCategory="conversion" analyticsLabel="Submit Inquiry — Contact Form" className="group relative mt-2 px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated disabled:opacity-60 disabled:cursor-not-allowed">
                   {isLoading ? "Sending…" : "Submit Inquiry"}
                   {!isLoading && <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />}
-                </button>
+                </TrackedButton>
                 {error && <p className="text-red-400 text-xs text-center mt-1">{error}</p>}
                 <p className="text-[11px] text-text-muted text-center">We respect your privacy. Your information is never shared with third parties.</p>
               </form>
@@ -190,10 +191,10 @@ export default function ContactPage() {
                   </div>
                 ))}
               </div>
-              <a href="https://calendly.com/cerebro-hive" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform">
+              <TrackedLink href="https://calendly.com/cerebro-hive" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Schedule Meeting — Calendly" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform">
                 <Calendar size={16} />
                 Schedule Meeting
-              </a>
+              </TrackedLink>
             </div>
 
             {/* Office Info */}
@@ -218,7 +219,7 @@ export default function ContactPage() {
               <h3 className="text-xl font-space font-bold text-text-primary mb-5">Contact by Department</h3>
               <div className="flex flex-col gap-3">
                 {contactChannels.map((ch) => (
-                  <a key={ch.label} href={`mailto:${ch.email}`} className="flex items-center justify-between p-3 rounded-xl hover:bg-surface-elevated border border-transparent hover:border-border transition-all group">
+                  <TrackedLink key={ch.label} href={`mailto:${ch.email}`} analyticsEvent="contact_channel_click" analyticsCategory="engagement" analyticsLabel={`${ch.label} — ${ch.email}`} className="flex items-center justify-between p-3 rounded-xl hover:bg-surface-elevated border border-transparent hover:border-border transition-all group">
                     <div>
                       <div className="text-sm font-bold text-text-primary group-hover:text-primary-accent transition-colors">{ch.label}</div>
                       <div className="text-xs text-text-muted">{ch.desc}</div>
@@ -227,7 +228,7 @@ export default function ContactPage() {
                       <Mail size={12} />
                       <span>{ch.email}</span>
                     </div>
-                  </a>
+                  </TrackedLink>
                 ))}
               </div>
             </div>

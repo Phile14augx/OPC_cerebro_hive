@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence, useInView, animate } from "framer-motion";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { CheckCircle2, ChevronDown, ChevronRight, Globe, BookOpen, Quote } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -260,7 +260,7 @@ export default function Footer() {
                   <ul className="flex flex-col gap-3">
                     {links.map((link) => (
                       <li key={link.label}>
-                        <Link href={link.href} className="text-xs text-text-muted hover:text-text-primary transition-colors">{link.label}</Link>
+                        <TrackedLink href={link.href} analyticsEvent="footer_link_click" analyticsCategory="footer" analyticsLabel={`${category} — ${link.label}`} className="text-xs text-text-muted hover:text-text-primary transition-colors">{link.label}</TrackedLink>
                       </li>
                     ))}
                   </ul>
@@ -284,7 +284,7 @@ export default function Footer() {
                       <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
                         <ul className="flex flex-col gap-3 pb-4 pt-1">
                           {links.map((link) => (
-                            <li key={link.label}><Link href={link.href} className="text-xs text-text-muted hover:text-text-primary">{link.label}</Link></li>
+                            <li key={link.label}><TrackedLink href={link.href} analyticsEvent="footer_mobile_link_click" analyticsCategory="footer" analyticsLabel={`${category} — ${link.label}`} className="text-xs text-text-muted hover:text-text-primary">{link.label}</TrackedLink></li>
                           ))}
                         </ul>
                       </motion.div>
@@ -316,7 +316,7 @@ export default function Footer() {
              
              <div className="flex flex-col gap-3">
                {socialLinks.map(social => (
-                 <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between p-3 rounded-xl bg-surface border border-border hover:border-primary-accent/30 hover:-translate-y-1 transition-all shadow-sm hover:shadow-elevated">
+                 <TrackedLink key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" analyticsEvent="social_click" analyticsCategory="social" analyticsLabel={social.name} className="group flex items-center justify-between p-3 rounded-xl bg-surface border border-border hover:border-primary-accent/30 hover:-translate-y-1 transition-all shadow-sm hover:shadow-elevated">
                    <div className="flex items-center gap-3">
                      <social.icon size={16} className="text-text-muted group-hover:text-text-primary transition-colors" />
                      <span className="text-xs font-bold text-text-secondary group-hover:text-text-primary transition-colors">{social.name}</span>
@@ -325,7 +325,7 @@ export default function Footer() {
                      <span className="block text-xs font-mono font-bold text-text-primary">{social.stat}</span>
                      <span className="block text-[9px] uppercase tracking-widest text-text-muted">{social.label}</span>
                    </div>
-                 </a>
+                 </TrackedLink>
                ))}
              </div>
           </div>
@@ -395,7 +395,7 @@ export default function Footer() {
         <div className="border-t border-border pt-8 flex flex-col items-center gap-5">
           
           {/* Logo — centered */}
-          <Link href="/" className="flex items-center gap-3 group relative cursor-pointer">
+          <TrackedLink href="/" analyticsEvent="footer_logo_click" analyticsCategory="footer" analyticsLabel="CerebroHive Logo" className="flex items-center gap-3 group relative cursor-pointer">
             <div className="absolute inset-0 bg-primary-accent/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             <motion.div 
               animate={logoPulse ? { scale: [1, 1.2, 1], boxShadow: ["0px 0px 0px rgba(0,245,122,0)", "0px 0px 20px rgba(0,245,122,0.8)", "0px 0px 0px rgba(0,245,122,0)"] } : {}}
@@ -410,15 +410,15 @@ export default function Footer() {
               </span>
               <span className="text-[9px] text-text-muted font-bold uppercase tracking-widest">OPC Pvt Ltd</span>
             </div>
-          </Link>
+          </TrackedLink>
 
           {/* Legal Links */}
           <div className="flex flex-wrap justify-center gap-6 text-[10px] font-bold tracking-widest uppercase text-text-muted">
-            <Link href="/legal/privacy" className="hover:text-text-primary transition-colors">Privacy</Link>
-            <Link href="/legal/security" className="hover:text-text-primary transition-colors">Security</Link>
-            <Link href="/legal/terms" className="hover:text-text-primary transition-colors">Terms</Link>
-            <Link href="/legal/ai-ethics" className="hover:text-text-primary transition-colors">AI Ethics</Link>
-            <Link href="/sitemap.xml" className="hover:text-text-primary transition-colors">Sitemap</Link>
+            <TrackedLink href="/legal/privacy" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="Privacy" className="hover:text-text-primary transition-colors">Privacy</TrackedLink>
+            <TrackedLink href="/legal/security" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="Security" className="hover:text-text-primary transition-colors">Security</TrackedLink>
+            <TrackedLink href="/legal/terms" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="Terms" className="hover:text-text-primary transition-colors">Terms</TrackedLink>
+            <TrackedLink href="/legal/ai-ethics" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="AI Ethics" className="hover:text-text-primary transition-colors">AI Ethics</TrackedLink>
+            <TrackedLink href="/sitemap.xml" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="Sitemap" className="hover:text-text-primary transition-colors">Sitemap</TrackedLink>
           </div>
 
 

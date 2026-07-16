@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, TrendingUp, Clock, Building2, ChevronRight, BarChart3, Filter } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 
 const filters = ["All", "AI & Automation", "Sales Intelligence", "Enterprise Training", "Logistics"];
 
@@ -87,7 +87,7 @@ export default function CaseStudiesPage() {
           </p>
           <Link href="#studies" className="px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
             View Case Studies <ArrowRight size={16} />
-          </Link>
+          </TrackedLink>
         </motion.div>
         <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-text-muted">
           <span className="text-[10px] uppercase tracking-widest">Scroll</span>
@@ -153,7 +153,7 @@ export default function CaseStudiesPage() {
                       ))}
                     </div>
                   </div>
-                </Link>
+                </TrackedLink>
               </motion.div>
             ))}
           </div>
@@ -166,12 +166,12 @@ export default function CaseStudiesPage() {
           <h2 className="text-4xl font-space font-bold text-text-primary mb-4">Ready to Be Our Next Case Study?</h2>
           <p className="text-text-secondary mb-8">Join the organizations transforming their operations with AI-native engineering.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact" className="px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
+            <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Start Your Initiative — Case Studies" className="px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
               Start Your Initiative <ArrowRight size={16} />
-            </Link>
-            <Link href="/solutions" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/40 hover:bg-surface-elevated transition-all text-center">
+            </TrackedLink>
+            <TrackedLink href="/solutions" analyticsEvent="cta_click" analyticsCategory="engagement" analyticsLabel="Explore Solutions — Case Studies" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/40 hover:bg-surface-elevated transition-all text-center">
               Explore Solutions
-            </Link>
+            </TrackedLink>
           </div>
         </div>
       </section>

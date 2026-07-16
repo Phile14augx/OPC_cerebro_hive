@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { ServiceMorphBackground } from "@/components/services/ServiceMorphBackground";
 import { ArrowRight, Brain, Bot, Database, Code2, GraduationCap } from "lucide-react";
 import { ExecutiveSummary } from "@/components/services/ExecutiveSummary";
@@ -103,15 +103,15 @@ export default function ServicesPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 mb-16">
-              <Link href="/contact" className="group relative">
+              <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Schedule AI Strategy Workshop — Services Hero" className="group relative">
                 <div className="absolute inset-0 bg-primary-accent blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-300 rounded-lg" />
                 <button className="relative px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform duration-300 group-hover:-translate-y-1">
                   Schedule an AI Strategy Workshop
                 </button>
-              </Link>
-              <a href="#capabilities" className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/50 hover:bg-surface-elevated transition-all duration-300">
+              </TrackedLink>
+              <TrackedLink href="#capabilities" analyticsEvent="anchor_click" analyticsCategory="navigation" analyticsLabel="Explore Capabilities — Services Hero" className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/50 hover:bg-surface-elevated transition-all duration-300">
                 Explore Capabilities
-              </a>
+              </TrackedLink>
             </div>
           </motion.div>
         </div>
@@ -173,13 +173,13 @@ export default function ServicesPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-6 mb-16">
-              <Link href="/contact" className="group relative">
+              <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Request AI Maturity Assessment — Services CTA" className="group relative">
                 <div className="absolute inset-0 bg-primary-accent blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-300 rounded-lg" />
                 <button className="relative px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform duration-300 group-hover:-translate-y-1">
                   Request an AI Maturity Assessment
                   <ArrowRight size={16} />
                 </button>
-              </Link>
+              </TrackedLink>
             </div>
           </motion.div>
         </div>

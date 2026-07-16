@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Logo } from "@/components/ui/Logo";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
@@ -45,24 +45,27 @@ export default function Navbar() {
       >
         <div className="container-wide h-full flex items-center justify-between">
           <div className="flex items-center gap-12">
-            <Link href="/" className="flex items-center gap-3 group">
+            <TrackedLink href="/" analyticsEvent="nav_logo_click" analyticsCategory="navigation" analyticsLabel="CerebroHive Logo" className="flex items-center gap-3 group">
               <div className="w-10 h-12 flex items-center justify-center text-text-primary group-hover:text-primary-accent transition-colors">
                 <Logo className="w-full h-full" />
               </div>
               <span className="font-space font-bold text-xl tracking-tight text-text-primary">
                 Cerebro<span className="text-primary-accent">Hive</span>
               </span>
-            </Link>
+            </TrackedLink>
             
             <div className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
-                <Link 
-                  key={link.name} 
+                <TrackedLink
+                  key={link.name}
                   href={link.href}
+                  analyticsEvent="nav_link_click"
+                  analyticsCategory="navigation"
+                  analyticsLabel={link.name}
                   className="text-sm font-space font-medium text-text-muted hover:text-text-primary transition-colors"
                 >
                   {link.name}
-                </Link>
+                </TrackedLink>
               ))}
             </div>
           </div>
@@ -71,11 +74,11 @@ export default function Navbar() {
             <div className="flex items-center gap-4 border-r border-border pr-6">
               <ThemeToggle />
             </div>
-            <Link href="/contact">
+            <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Book Strategy Session — Navbar">
               <AnimatedButton variant="primary" size="sm">
                 Book Strategy Session
               </AnimatedButton>
-            </Link>
+            </TrackedLink>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -117,14 +120,17 @@ export default function Navbar() {
               
               <div className="flex-1 overflow-y-auto py-8 px-6 flex flex-col gap-6">
                 {navLinks.map((link) => (
-                  <Link 
-                    key={link.name} 
+                  <TrackedLink
+                    key={link.name}
                     href={link.href}
+                    analyticsEvent="nav_mobile_link_click"
+                    analyticsCategory="navigation"
+                    analyticsLabel={link.name}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="text-lg font-space font-bold text-text-primary hover:text-primary-accent transition-colors"
                   >
                     {link.name}
-                  </Link>
+                  </TrackedLink>
                 ))}
                 
                 <div className="mt-8 pt-8 border-t border-border flex flex-col gap-6">
@@ -132,9 +138,11 @@ export default function Navbar() {
                     <span className="text-sm font-bold text-text-muted">Theme</span>
                     <ThemeToggle />
                   </div>
-                  <AnimatedButton variant="primary" size="sm" className="w-full justify-center">
-                    Book Strategy Session
-                  </AnimatedButton>
+                  <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Book Strategy Session — Mobile Nav">
+                    <AnimatedButton variant="primary" size="sm" className="w-full justify-center">
+                      Book Strategy Session
+                    </AnimatedButton>
+                  </TrackedLink>
                 </div>
               </div>
             </motion.div>
