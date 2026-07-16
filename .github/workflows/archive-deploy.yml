@@ -1,0 +1,40 @@
+name: CerebroArchive Deploy
+
+on:
+  workflow_run:
+    workflows: ["CerebroArchive Release"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    environment: production
+    
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            # Pull latest code configuration (docker-compose)
+            cd /opt/cerebroarchive
+            git pull origin main
+            
+            # Authenticate with GHCR
+            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
+            # Pull latest image explicitly
+            docker compose pull api
+            
+            # Recreate containers with zero downtime (if multiple instances) or restart
+            docker compose up -d api
+            
+            # Prune dangling images
+            docker image prune -f
