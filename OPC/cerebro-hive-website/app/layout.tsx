@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import CerebroChat from "@/components/layout/CerebroChat";
 import { LanguageProvider } from "@/components/layout/LanguageContext";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { MotionProvider } from "@/components/motion/foundation/MotionProvider";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -65,19 +66,21 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${plexMono.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <body className="bg-background text-text-primary antialiased selection:bg-primary-accent selection:text-black transition-colors duration-500" suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange={false}
-        >
-          <LanguageProvider>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-            <CerebroChat />
-          </LanguageProvider>
-        </ThemeProvider>
+        <MotionProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange={false}
+          >
+            <LanguageProvider>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+              <CerebroChat />
+            </LanguageProvider>
+          </ThemeProvider>
+        </MotionProvider>
       </body>
     </html>
   );

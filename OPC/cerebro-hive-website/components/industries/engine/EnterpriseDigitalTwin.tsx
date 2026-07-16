@@ -3,8 +3,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DigitalTwinConfig, NodeState, TwinNode, TwinConnection, TwinEvent } from "@/lib/data/industries/types";
-import { Activity, Database, Server, Bot, Hexagon, Maximize2, Zap, LayoutDashboard, ChevronRight } from "lucide-react";
+import { Activity, Database, Server, Bot, Hexagon, Maximize2, Zap, LayoutDashboard } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { IntelligentOrb } from "@/components/motion/primitives/IntelligentOrb";
+import { HoverCard } from "@/components/motion/primitives/HoverCard";
+import { AnimatedConnector } from "@/components/motion/primitives/AnimatedConnector";
+import { PulseRing } from "@/components/motion/primitives/PulseRing";
 
 interface Props {
   config?: DigitalTwinConfig;
@@ -79,21 +83,21 @@ export function EnterpriseDigitalTwin({ config }: Props) {
 
   const getIcon = (type: TwinNode['type']) => {
     switch(type) {
-      case "agent": return <Bot size={24} />;
-      case "database": return <Database size={24} />;
-      case "system": return <Server size={24} />;
-      case "logic": return <Hexagon size={24} />;
-      default: return <Zap size={24} />;
+      case "agent": return Bot;
+      case "database": return Database;
+      case "system": return Server;
+      case "logic": return Hexagon;
+      default: return Zap;
     }
   };
 
-  const getStateColor = (state: NodeState = 'idle') => {
-    switch (state) {
-      case 'processing': return 'border-warning text-warning shadow-[0_0_15px_rgba(245,158,11,0.2)]';
-      case 'thinking': return 'border-accent-secondary text-accent-secondary shadow-[0_0_20px_rgba(37,99,235,0.4)] animate-pulse';
-      case 'executing': return 'border-accent-primary text-accent-primary shadow-[0_0_25px_rgba(5,150,105,0.5)]';
-      case 'completed': return 'border-success text-success shadow-[0_0_10px_rgba(16,185,129,0.2)]';
-      default: return 'border-border text-text-primary';
+  const getOrbVariant = (type: TwinNode['type']) => {
+    switch(type) {
+      case "agent": return "agent";
+      case "database": return "knowledge";
+      case "system": return "executive";
+      case "logic": return "reasoning";
+      default: return "default";
     }
   };
 
@@ -145,22 +149,22 @@ export function EnterpriseDigitalTwin({ config }: Props) {
                   <p className="text-xl text-text-secondary leading-relaxed mb-8">{config.overview.description}</p>
                   
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="theme-card p-6">
+                    <HoverCard className="p-6">
                       <div className="text-xs uppercase tracking-widest text-accent-primary font-bold mb-2">Integrations</div>
                       <div className="flex flex-wrap gap-2">
                         {config.integrations.map(int => (
                           <span key={int} className="px-2 py-1 bg-surface-secondary border border-border rounded text-xs text-text-secondary font-bold">{int}</span>
                         ))}
                       </div>
-                    </div>
-                    <div className="theme-card p-6">
+                    </HoverCard>
+                    <HoverCard className="p-6">
                       <div className="text-xs uppercase tracking-widest text-[#7B61FF] font-bold mb-2">Agent Swarm</div>
                       <div className="flex flex-col gap-2">
                         {config.agents.map(ag => (
                           <div key={ag.id} className="text-sm font-bold flex items-center gap-2 text-text-secondary"><Bot size={14}/> {ag.name}</div>
                         ))}
                       </div>
-                    </div>
+                    </HoverCard>
                   </div>
                 </motion.div>
               )}
@@ -180,10 +184,18 @@ export function EnterpriseDigitalTwin({ config }: Props) {
                               selectedNodeId === node.id ? 'scale-110' : 'hover:scale-105'
                             } ${selectedNodeId && selectedNodeId !== node.id ? 'opacity-40 grayscale' : 'opacity-100'}`}
                           >
-                            <div className={`w-16 h-16 rounded-2xl bg-surface flex items-center justify-center border-2 transition-all duration-500 ${getStateColor(nodeStates[node.id])}`}>
-                              {getIcon(node.type)}
+                            <div className="relative">
+                              {nodeStates[node.id] === 'completed' && <PulseRing size={80} count={1} duration={1.5} color="var(--success)" />}
+                              
+                              <IntelligentOrb 
+                                state={nodeStates[node.id]} 
+                                colorVariant={getOrbVariant(node.type)} 
+                                icon={getIcon(node.type)}
+                                size="lg"
+                              />
                             </div>
-                            <div className="text-center">
+                            
+                            <div className="text-center relative z-10 bg-background/80 backdrop-blur rounded px-2 py-1">
                               <div className="font-space font-bold text-sm">{node.label}</div>
                               
                               {/* Reasoning State Animation */}
@@ -201,11 +213,15 @@ export function EnterpriseDigitalTwin({ config }: Props) {
                               </div>
                             </div>
                             
-                            {/* Connection Arrows (Simplified flex layout representation) */}
+                            {/* Motion Design System Connector */}
                             {i < (currentNodes.length - 1) && (
-                              <div className="absolute top-8 -right-[3.5rem] md:-right-[5rem] -translate-y-1/2 flex items-center gap-1 z-0">
-                                <div className={`w-8 md:w-12 h-[2px] transition-colors duration-500 ${nodeStates[node.id] && nodeStates[node.id] !== 'idle' ? 'bg-accent-primary' : 'bg-border'}`} />
-                                <ChevronRight size={16} className={`transition-colors duration-500 ${nodeStates[node.id] && nodeStates[node.id] !== 'idle' ? 'text-accent-primary' : 'text-text-muted'}`} />
+                              <div className="absolute top-8 -right-[3.5rem] md:-right-[5rem] w-8 md:w-12 h-8 -translate-y-1/2 z-0">
+                                <AnimatedConnector
+                                  startX={0} startY={16} endX={48} endY={16}
+                                  variant="straight"
+                                  state={nodeStates[node.id] && nodeStates[node.id] !== 'idle' ? 'active' : 'idle'}
+                                  showPacket={true}
+                                />
                               </div>
                             )}
                           </button>
@@ -226,12 +242,12 @@ export function EnterpriseDigitalTwin({ config }: Props) {
                       const currentValue = isComplete ? metric.endValue : metric.startValue;
                       
                       return (
-                        <div key={metric.id} className="theme-card p-8 text-center flex flex-col items-center justify-center">
+                        <HoverCard key={metric.id} className="p-8 text-center flex flex-col items-center justify-center">
                           <div className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4">{metric.label}</div>
                           <div className={`text-6xl font-space font-bold transition-all duration-1000 ${isComplete ? 'text-accent-primary scale-110' : 'text-text-primary'}`}>
                             {metric.prefix}{currentValue}{metric.suffix}
                           </div>
-                        </div>
+                        </HoverCard>
                       )
                     })}
                   </div>
@@ -255,9 +271,7 @@ export function EnterpriseDigitalTwin({ config }: Props) {
               className="lg:col-span-4 theme-card flex flex-col h-full overflow-hidden"
             >
               <div className="p-6 border-b border-border bg-surface-secondary flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-surface border border-border flex items-center justify-center text-text-primary">
-                  {getIcon(selectedNode.type)}
-                </div>
+                <IntelligentOrb state="idle" colorVariant={getOrbVariant(selectedNode.type)} icon={getIcon(selectedNode.type)} size="sm" />
                 <div>
                   <h4 className="font-space font-bold text-lg text-text-primary">{selectedNode.label}</h4>
                   <div className="text-xs uppercase tracking-widest text-text-muted">{selectedNode.type}</div>
