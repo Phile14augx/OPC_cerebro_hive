@@ -14,32 +14,30 @@ export async function authenticate(formData: FormData) {
 
   try {
     // Proxy request to Go API
-    // const res = await fetch(`${API_URL}/identity/login`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email, password }),
-    // });
+    const res = await fetch(`${API_URL}/identity/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
     
-    // const data = await res.json();
+    const data = await res.json();
     
-    // if (!res.ok) {
-    //   return { error: data.error?.message || 'Invalid credentials.' };
-    // }
+    if (!res.ok) {
+      return { error: data.error?.message || 'Invalid credentials.' };
+    }
 
     // Set secure HttpOnly cookie with the access token returned by Go
-    // const cookieStore = cookies();
-    // cookieStore.set('access_token', data.data.access_token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === 'production',
-    //   sameSite: 'lax',
-    //   path: '/',
-    //   maxAge: 60 * 60 * 24 // 1 day
-    // });
+    const cookieStore = cookies();
+    cookieStore.set('access_token', data.data.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 // 1 day
+    });
 
-    // return { success: true };
-    
-    // Placeholder simulation
-    return { error: 'Backend integration pending.' };
+    return { success: true };
+
     
   } catch (error) {
     console.error('Authentication Error:', error);
@@ -62,18 +60,18 @@ export async function register(formData: FormData) {
 
   try {
     // Proxy request to Go API
-    // const res = await fetch(`${API_URL}/identity/register`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email, password, full_name: fullName }),
-    // });
+    const res = await fetch(`${API_URL}/identity/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, full_name: fullName }),
+    });
     
-    // const data = await res.json();
-    // if (!res.ok) {
-    //   return { error: data.error?.message || 'Registration failed.' };
-    // }
+    const data = await res.json();
+    if (!res.ok) {
+      return { error: data.error?.message || 'Registration failed.' };
+    }
     
-    return { error: 'Backend integration pending.' };
+    return { success: true };
   } catch (error) {
     console.error('Registration Error:', error);
     return { error: 'An unexpected error occurred. Please try again.' };

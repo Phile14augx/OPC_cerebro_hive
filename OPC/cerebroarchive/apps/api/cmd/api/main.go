@@ -5,6 +5,8 @@ import (
 	"log/slog"
 	"os"
 
+	"time"
+
 	"github.com/cerebro/cerebroarchive/apps/api/internal/ai"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/archive"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/common/validation"
@@ -33,18 +35,37 @@ func main() {
 
 	log.Info("Starting CerebroArchive API", "env", cfg.Environment)
 
-	// In a real scenario we parse connection URL from cfg.DatabaseURL
-	// Using a dummy pool initialization here for scaffolding purposes
-	var pool *pgxpool.Pool
-	// pool, err := pgxpool.New(context.Background(), cfg.DatabaseURL)
-	// if err != nil { log.Error("Failed to connect to DB", "err", err); os.Exit(1) }
-
 	app := &App{
 		Config: cfg,
 		Logger: log,
-		DB:     pool,
 		Fiber:  fiber.New(fiber.Config{DisableStartupMessage: true}),
 	}
+
+	app.Logger.Info("loaded configuration", "env", cfg.Environment)
+
+	// Database Connection with Retry
+	connString := "postgres://postgres:password@localhost:5432/cerebro?sslmode=disable"
+	var dbPool *pgxpool.Pool
+	var err error
+	for i := 0; i < 5; i++ {
+		dbPool, err = pgxpool.New(context.Background(), connString)
+		if err == nil {
+			err = dbPool.Ping(context.Background())
+			if err == nil {
+				break
+			}
+		}
+		app.Logger.Warn("database not ready, retrying...", "attempt", i+1)
+		time.Sleep(2 * time.Second)
+	}
+	if err != nil {
+		app.Logger.Error("failed to connect to database after retries", "error", err)
+		os.Exit(1)
+	}
+	defer dbPool.Close()
+
+	app.Logger.Info("successfully connected to database")
+	app.DB = dbPool
 
 	bootstrap(app)
 
@@ -68,7 +89,7 @@ func bootstrap(app *App) {
 
 	// Archive Domain
 	blobStorage := storage.NewS3Storage("cerebro-documents-bucket")
-	archiveRepo := archive.NewPostgresRepository(nil)
+	archiveRepo := archive.NewPostgresRepository(dbPool)
 	archiveService := archive.NewService(archiveRepo, blobStorage, app.Logger)
 	archiveHandler := archive.NewHandler(archiveService, validator)
 

@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: cerebro-api
+    env: docker
+    dockerContext: .
+    dockerfilePath: ./apps/api/Dockerfile
+    plan: starter
+    healthCheckPath: /api/v1/health/live
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: HTTP_PORT
+        value: 8080
+      - key: DB_URL
+        sync: false
+      - key: NATS_URL
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: PINECONE_API_KEY
+        sync: false
+
+  - type: worker
+    name: cerebro-worker
+    env: docker
+    dockerContext: .
+    dockerfilePath: ./apps/api/Dockerfile.worker
+    plan: starter
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DB_URL
+        sync: false
+      - key: NATS_URL
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: PINECONE_API_KEY
+        sync: false
