@@ -8,6 +8,7 @@ import { SectionHeading } from '../ui/SectionHeading';
 import { ArrowRight, BrainCircuit, Activity, Database, Server, User, Box, ArrowDownRight, Layers, FileText, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { AnimatedButton as Button } from '../ui/AnimatedButton';
+import { EnterpriseDigitalTwin } from './engine/EnterpriseDigitalTwin';
 
 // Icon mapping for architecture nodes
 const nodeIconMap: Record<string, any> = {
@@ -170,16 +171,10 @@ export function IndustryDetailView() {
           </div>
         )}
 
-        {/* 2. Reference Architecture */}
-        {industry.architecture && (
+        {/* 2. Enterprise Digital Twin Simulator */}
+        {industry.digitalTwin && (
           <div className="w-full">
-            <SectionHeading label="Reference Architecture" title="Enterprise AI Flow" />
-            <div className="mt-8 p-6 md:p-12 rounded-[2.5rem] bg-surface-elevated border border-border overflow-hidden relative">
-              {/* Background blueprint grid */}
-              <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
-              
-              <ArchitectureFlow architecture={industry.architecture} color={industry.color} />
-            </div>
+            <EnterpriseDigitalTwin config={industry.digitalTwin} />
           </div>
         )}
 

@@ -182,5 +182,71 @@ export const healthcare: Industry = {
     { title: "Healthcare AI Architecture Guide", type: "Whitepaper", link: "/research" },
     { title: "Apollo Hospitals Deployment", type: "Case Study", link: "/research" },
     { title: "Securing Medical LLMs", type: "Research Paper", link: "/research" }
-  ]
+  ],
+  
+  digitalTwin: {
+    overview: {
+      title: "Patient Care Transformation",
+      description: "End-to-end automation of clinical diagnostics and charting, reducing physician burden and accelerating time to treatment.",
+      primaryNodes: ["patient", "agent", "dashboard"]
+    },
+    workflow: {
+      nodes: [
+        { id: "patient", label: "Patient", type: "entity", icon: "user", purpose: "Patient arrival and symptom presentation" },
+        { id: "emr", label: "Medical Records", type: "database", purpose: "Retrieve historical patient data and labs" },
+        { id: "knowledge", label: "Knowledge Graph", type: "database", purpose: "Cross-reference symptoms with medical literature" },
+        { id: "reasoning", label: "Reasoning Engine", type: "logic", purpose: "Synthesize patient history with medical knowledge", processingTimeMs: 2500 },
+        { id: "agent", label: "Medical AI Agent", type: "agent", purpose: "Generate differential diagnosis and treatment plan" },
+        { id: "diagnosis", label: "Diagnosis Support", type: "system", purpose: "Present AI findings to attending physician" },
+        { id: "treatment", label: "Treatment Plan", type: "system", purpose: "Generate prescriptions and care plan" },
+        { id: "dashboard", label: "Hospital Dashboard", type: "system", purpose: "Update hospital metrics and capacity" }
+      ],
+      connections: [
+        { from: "patient", to: "emr", animated: true },
+        { from: "emr", to: "knowledge", animated: true },
+        { from: "knowledge", to: "reasoning", animated: true },
+        { from: "reasoning", to: "agent", animated: true },
+        { from: "agent", to: "diagnosis", animated: true },
+        { from: "diagnosis", to: "treatment", animated: true },
+        { from: "treatment", to: "dashboard", animated: true }
+      ]
+    },
+    architecture: {
+      nodes: [
+        { id: "fhir", label: "FHIR Gateway", type: "system", techStack: ["Azure APIs"] },
+        { id: "lake", label: "Data Lakehouse", type: "database", techStack: ["Databricks"] },
+        { id: "vector", label: "Vector Store", type: "database", techStack: ["Pinecone"] },
+        { id: "llm", label: "Medical LLM", type: "ai", techStack: ["Med-PaLM 2"] },
+        { id: "orchestrator", label: "AgentOS", type: "system", techStack: ["LangChain"] }
+      ],
+      connections: [
+        { from: "fhir", to: "lake" },
+        { from: "lake", to: "vector" },
+        { from: "vector", to: "llm" },
+        { from: "llm", to: "orchestrator" }
+      ]
+    },
+    agents: [
+      { id: "diag_agent", name: "Clinical Agent", role: "Diagnostics" },
+      { id: "scribe_agent", name: "Scribe Agent", role: "Documentation" }
+    ],
+    metrics: [
+      { id: "patients", label: "Patients Processed", startValue: 248, endValue: 250, format: "number" },
+      { id: "confidence", label: "Confidence", startValue: 97, endValue: 98, format: "percentage", suffix: "%" },
+      { id: "automation", label: "Automation", startValue: 78, endValue: 79, format: "percentage", suffix: "%" },
+      { id: "latency", label: "Latency", startValue: 1200, endValue: 450, format: "time", suffix: "ms" }
+    ],
+    events: [
+      { timeOffset: 0, nodeId: "patient", state: "processing", message: "Patient Registered" },
+      { timeOffset: 1500, nodeId: "emr", state: "processing", message: "Records Retrieved" },
+      { timeOffset: 3000, nodeId: "knowledge", state: "processing", message: "Literature Searched" },
+      { timeOffset: 4500, nodeId: "reasoning", state: "thinking", message: "Synthesizing Context..." },
+      { timeOffset: 7000, nodeId: "reasoning", state: "completed", message: "Reasoning Completed" },
+      { timeOffset: 7500, nodeId: "agent", state: "executing", message: "Drafting Diagnosis" },
+      { timeOffset: 9000, nodeId: "diagnosis", state: "completed", message: "Diagnosis Ready" },
+      { timeOffset: 10500, nodeId: "treatment", state: "completed", message: "Plan Generated" },
+      { timeOffset: 12000, nodeId: "dashboard", state: "completed", message: "Metrics Updated" }
+    ],
+    integrations: ["Epic", "Cerner", "Azure", "FHIR"]
+  }
 };
