@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import React from 'react';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: "Sign In — CerebroHive",
+  description: "Sign in to your CerebroHive account to access your enterprise AI workspace, dashboards, and learning progress.",
+};
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
