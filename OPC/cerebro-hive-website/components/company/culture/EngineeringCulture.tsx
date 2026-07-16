@@ -65,7 +65,7 @@ export const EngineeringCulture = () => {
 
             {/* Interactive Engineering Framework Timeline */}
             <motion.div variants={motionPresets.fadeUp} className="relative mb-16">
-              <div className="absolute left-[15px] top-6 bottom-6 w-[2px] bg-white/5" />
+              <div className="absolute left-[15px] top-6 bottom-6 w-[2px] bg-surface" />
               
               <div className="flex flex-col gap-6">
                 {engineeringFramework.framework.map((phase) => {
@@ -100,7 +100,7 @@ export const EngineeringCulture = () => {
             </motion.div>
 
             {/* Engineering Proof (Built Around) */}
-            <motion.div variants={motionPresets.fadeUp} className="mt-auto bg-white/5 border border-border rounded-2xl p-6 backdrop-blur-md">
+            <motion.div variants={motionPresets.fadeUp} className="mt-auto bg-surface border border-border rounded-2xl p-6 backdrop-blur-md">
               <h4 className="text-[10px] font-space uppercase tracking-widest text-text-muted mb-4">
                 Built Around
               </h4>
@@ -123,7 +123,7 @@ export const EngineeringCulture = () => {
             <div className="relative w-full h-[600px] lg:h-full min-h-[600px] bg-[#070a0f] border border-border rounded-3xl overflow-hidden shadow-2xl flex flex-col group">
               
               {/* Glass Header */}
-              <div className="h-12 border-b border-border bg-white/[0.02] backdrop-blur-md flex items-center px-6 justify-between shrink-0">
+              <div className="h-12 border-b border-border bg-surface-elevated backdrop-blur-md flex items-center px-6 justify-between shrink-0">
                 <div className="flex gap-2">
                   <div className="w-3 h-3 rounded-full bg-error/80" />
                   <div className="w-3 h-3 rounded-full bg-warning/80" />

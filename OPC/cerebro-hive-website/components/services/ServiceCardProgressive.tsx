@@ -92,7 +92,7 @@ export function ServiceCardProgressive({ service, index }: { service: Progressiv
           <span className="text-sm font-bold tracking-widest uppercase text-text-primary group-hover/btn:text-primary-accent transition-colors">
             Explore Engagement
           </span>
-          <div className="w-10 h-10 rounded-full bg-surface border border-border flex items-center justify-center group-hover/btn:bg-primary-accent group-hover/btn:text-black group-hover/btn:border-primary-accent transition-all duration-300">
+          <div className="w-10 h-10 rounded-full bg-surface border border-border flex items-center justify-center group-hover/btn:bg-primary-accent group-hover/btn:text-text-primary group-hover/btn:border-primary-accent transition-all duration-300">
             <ArrowRight size={18} className="group-hover/btn:-rotate-45 transition-transform duration-300" />
           </div>
         </Link>

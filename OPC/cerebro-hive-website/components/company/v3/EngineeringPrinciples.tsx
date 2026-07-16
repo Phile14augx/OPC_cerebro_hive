@@ -62,13 +62,13 @@ export default function EngineeringPrinciples() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {principles.map((p, i) => (
-            <div key={i} className={`p-8 rounded-2xl bg-surface border ${p.borderColor} hover:bg-white/5 transition-colors relative overflow-hidden group`}>
+            <div key={i} className={`p-8 rounded-2xl bg-surface border ${p.borderColor} hover:bg-surface-elevated transition-colors relative overflow-hidden group`}>
               
               <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
                 <p.icon size={64} className={p.color} />
               </div>
 
-              <div className={`w-12 h-12 rounded-xl bg-white/5 border border-border flex items-center justify-center mb-6 relative z-10 ${p.color}`}>
+              <div className={`w-12 h-12 rounded-xl bg-surface-elevated border border-border flex items-center justify-center mb-6 relative z-10 ${p.color}`}>
                 <p.icon size={20} />
               </div>
 

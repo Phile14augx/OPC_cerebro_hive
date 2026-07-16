@@ -45,7 +45,7 @@ export function ResearchInnovation() {
               We don't just implement AI; we push its boundaries. Our dedicated research arm continuously evaluates frontier models, publishes architecture patterns, and contributes to the open-source community to ensure our clients always receive state-of-the-art solutions.
             </p>
             
-            <Link href="/research" className="inline-flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-primary-accent hover:text-white transition-colors group">
+            <Link href="/research" className="inline-flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-primary-accent hover:text-text-primary transition-colors group">
               Explore Our Research <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>

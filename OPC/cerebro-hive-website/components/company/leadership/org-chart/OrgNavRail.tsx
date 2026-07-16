@@ -29,7 +29,7 @@ export const OrgNavRail = () => {
     <div className="absolute top-0 left-0 bottom-0 w-16 bg-[#030608] border-r border-border flex flex-col items-center py-6 z-40">
       
       {/* Monogram */}
-      <div className="w-10 h-10 rounded-xl bg-white/5 border border-border flex items-center justify-center text-text-primary font-space font-bold text-sm mb-8 shadow-inner cursor-pointer" onClick={() => handleNavClick('ceo')}>
+      <div className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center text-text-primary font-space font-bold text-sm mb-8 shadow-inner cursor-pointer" onClick={() => handleNavClick('ceo')}>
         CH
       </div>
 
@@ -56,10 +56,10 @@ export const OrgNavRail = () => {
       </div>
 
       <div className="flex flex-col gap-4 w-full px-3 pt-6 border-t border-border">
-        <button className="w-10 h-10 rounded-lg flex items-center justify-center text-text-muted hover:text-white hover:bg-white/5 transition-all">
+        <button className="w-10 h-10 rounded-lg flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface transition-all">
           <Search size={18} />
         </button>
-        <button className="w-10 h-10 rounded-lg flex items-center justify-center text-text-muted hover:text-white hover:bg-white/5 transition-all">
+        <button className="w-10 h-10 rounded-lg flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface transition-all">
           <Settings size={18} />
         </button>
       </div>

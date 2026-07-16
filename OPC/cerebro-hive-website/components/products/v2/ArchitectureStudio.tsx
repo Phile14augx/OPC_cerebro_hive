@@ -77,7 +77,7 @@ export const ArchitectureStudio = () => {
                 <div className="flex justify-between items-center mb-12">
                   <div className="flex items-center gap-2">
                     {steps.map((_, i) => (
-                      <div key={i} className={cn("w-8 h-1.5 rounded-full transition-colors duration-300", i <= currentStep ? "bg-[#00E5FF]" : "bg-white/10")} />
+                      <div key={i} className={cn("w-8 h-1.5 rounded-full transition-colors duration-300", i <= currentStep ? "bg-[#00E5FF]" : "bg-surface-elevated")} />
                     ))}
                   </div>
                   <div className="text-xs font-bold text-text-muted uppercase tracking-widest">
@@ -152,10 +152,10 @@ export const ArchitectureStudio = () => {
                     <p className="text-sm text-text-secondary mt-1">Optimized for {selections.industry} • {selections.cloud} Deployment</p>
                   </div>
                   <div className="flex gap-3 w-full md:w-auto">
-                    <button className="flex-1 md:flex-none px-6 py-3 bg-surface-elevated border border-border text-text-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center gap-2 hover:bg-white hover:text-black transition-colors">
+                    <button className="flex-1 md:flex-none px-6 py-3 bg-surface-elevated border border-border text-text-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center gap-2 hover:bg-surface hover:text-text-primary transition-colors">
                       <Download size={14} /> PDF
                     </button>
-                    <button className="flex-1 md:flex-none px-6 py-3 bg-primary-accent text-black text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center hover:bg-white transition-colors shadow-lg">
+                    <button className="flex-1 md:flex-none px-6 py-3 bg-primary-accent text-text-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center hover:bg-surface transition-colors shadow-lg">
                       Book Strategy
                     </button>
                   </div>
@@ -208,7 +208,7 @@ export const ArchitectureStudio = () => {
 
                 {/* Reset */}
                 <div className="p-4 border-t border-border bg-black/20 text-center">
-                  <button onClick={reset} className="text-xs text-text-muted hover:text-white transition-colors underline underline-offset-4">
+                  <button onClick={reset} className="text-xs text-text-muted hover:text-text-primary transition-colors underline underline-offset-4">
                     Reconfigure Architecture
                   </button>
                 </div>

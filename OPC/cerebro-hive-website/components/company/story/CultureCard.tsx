@@ -113,11 +113,11 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
             </div>
           </div>
 
-          <h3 className="text-xl md:text-2xl font-space font-bold text-text-primary mb-2 transition-colors duration-300 group-hover:text-white">
+          <h3 className="text-xl md:text-2xl font-space font-bold text-text-primary mb-2 transition-colors duration-300 group-hover:text-text-primary">
             {value.title}
           </h3>
           
-          <div className="h-[1px] w-12 bg-white/10 mb-4 transition-all duration-500 group-hover:w-full group-hover:bg-gradient-to-r" 
+          <div className="h-[1px] w-12 bg-surface-elevated mb-4 transition-all duration-500 group-hover:w-full group-hover:bg-gradient-to-r" 
                style={{ backgroundImage: `linear-gradient(to right, ${value.color}80, transparent)` }} />
 
           <p className="text-sm font-bold text-text-primary mb-3 font-inter">
@@ -132,7 +132,7 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
         {/* Bottom Section (Metrics & Tag) */}
         <div className="mt-auto">
           {/* Mini Dashboard */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6 p-4 rounded-xl bg-white/5 border border-border backdrop-blur-md">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6 p-4 rounded-xl bg-surface border border-border backdrop-blur-md">
             {value.metrics.map((metric, i) => (
               <div key={i} className="flex flex-col">
                 <span className="text-[10px] text-text-muted font-space uppercase tracking-wider mb-1">{metric.label}</span>

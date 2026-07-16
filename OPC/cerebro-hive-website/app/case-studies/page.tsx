@@ -85,7 +85,7 @@ export default function CaseStudiesPage() {
           <p className="text-lg md:text-xl text-text-secondary font-inter max-w-2xl leading-relaxed mb-10">
             Real implementations. Real organizations. Real results — measured, documented, and independently verifiable.
           </p>
-          <Link href="#studies" className="px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
+          <Link href="#studies" className="px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
             View Case Studies <ArrowRight size={16} />
           </Link>
         </motion.div>
@@ -117,7 +117,7 @@ export default function CaseStudiesPage() {
             {filters.map((f) => (
               <button key={f} onClick={() => setActiveFilter(f)}
                 className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
-                  activeFilter === f ? "bg-primary-accent text-black" : "bg-surface border border-border text-text-muted hover:border-primary-accent/40 hover:text-text-primary"
+                  activeFilter === f ? "bg-primary-accent text-text-primary" : "bg-surface border border-border text-text-muted hover:border-primary-accent/40 hover:text-text-primary"
                 }`}>
                 {f}
               </button>
@@ -166,7 +166,7 @@ export default function CaseStudiesPage() {
           <h2 className="text-4xl font-space font-bold text-text-primary mb-4">Ready to Be Our Next Case Study?</h2>
           <p className="text-text-secondary mb-8">Join the organizations transforming their operations with AI-native engineering.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact" className="px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
+            <Link href="/contact" className="px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
               Start Your Initiative <ArrowRight size={16} />
             </Link>
             <Link href="/solutions" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/40 hover:bg-surface-elevated transition-all text-center">

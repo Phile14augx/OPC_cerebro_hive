@@ -127,7 +127,7 @@ export function SolutionConfigurator() {
                   <button 
                     disabled={!selections.size}
                     onClick={handleGenerate} 
-                    className="w-full py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-elevated transition-all flex items-center justify-center gap-2"
+                    className="w-full py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-elevated transition-all flex items-center justify-center gap-2"
                   >
                     Generate Reference Architecture <ArrowRight size={16} />
                   </button>
@@ -207,7 +207,7 @@ export function SolutionConfigurator() {
 
                   {/* Actions */}
                   <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-                    <button className="flex-1 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:shadow-elevated transition-all flex items-center justify-center gap-2">
+                    <button className="flex-1 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:shadow-elevated transition-all flex items-center justify-center gap-2">
                       Schedule Deep Dive <ArrowRight size={16} />
                     </button>
                     <button className="flex-1 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/50 hover:bg-surface-elevated transition-all flex items-center justify-center gap-2">

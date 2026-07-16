@@ -73,7 +73,7 @@ export const ResearchHero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4 pt-8">
-             <Link href="#publications" className="px-8 py-4 bg-white text-black font-space font-bold text-sm rounded-sm transition-transform hover:-translate-y-1 flex items-center justify-center gap-2">
+             <Link href="#publications" className="px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm rounded-sm transition-transform hover:-translate-y-1 flex items-center justify-center gap-2">
                Explore Publications <ArrowRight size={16} />
              </Link>
              <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm rounded-sm transition-colors hover:bg-surface flex items-center justify-center gap-2">

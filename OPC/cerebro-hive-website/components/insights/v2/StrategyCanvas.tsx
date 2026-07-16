@@ -31,7 +31,7 @@ export const StrategyCanvas = () => {
           <div className="flex justify-center">
             <button 
               onClick={handleGenerate}
-              className="px-10 py-5 bg-white text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform hover:scale-105 shadow-xl"
+              className="px-10 py-5 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform hover:scale-105 shadow-xl"
             >
               <FileDown size={20} /> Generate Executive Deliverable
             </button>
@@ -90,17 +90,17 @@ export const StrategyCanvas = () => {
                 <h4 className="font-space font-bold text-text-primary text-lg border-b border-border pb-2">Implementation Phases</h4>
                 
                 <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1 bg-white/5 border border-border p-5 rounded-xl">
+                  <div className="flex-1 bg-surface border border-border p-5 rounded-xl">
                     <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-2">Phase 1: 0-3 Months</div>
                     <div className="font-bold text-text-primary mb-2 flex items-center gap-2"><Layers size={14} className="text-accent-secondary" /> Knowledge Hub</div>
                     <p className="text-xs text-text-secondary">Deploy vector infrastructure and ground models in enterprise data.</p>
                   </div>
-                  <div className="flex-1 bg-white/5 border border-border p-5 rounded-xl border-[#7B61FF]/30">
+                  <div className="flex-1 bg-surface border border-border p-5 rounded-xl border-[#7B61FF]/30">
                     <div className="text-[10px] uppercase tracking-widest text-[#7B61FF] font-bold mb-2">Phase 2: 3-9 Months</div>
                     <div className="font-bold text-text-primary mb-2 flex items-center gap-2"><Bot size={14} className="text-[#7B61FF]" /> Agent Pilot</div>
                     <p className="text-xs text-text-secondary">Introduce autonomous agents to handle repetitive compliance workflows.</p>
                   </div>
-                  <div className="flex-1 bg-white/5 border border-border p-5 rounded-xl">
+                  <div className="flex-1 bg-surface border border-border p-5 rounded-xl">
                     <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-2">Phase 3: 9-18 Months</div>
                     <div className="font-bold text-text-primary mb-2 flex items-center gap-2"><Network size={14} className="text-accent-primary" /> Swarm Scaling</div>
                     <p className="text-xs text-text-secondary">Deploy multi-agent swarms across adjacent business units.</p>

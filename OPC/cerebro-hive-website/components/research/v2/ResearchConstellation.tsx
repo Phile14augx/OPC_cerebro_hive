@@ -48,7 +48,7 @@ export const ResearchConstellation = () => {
           {layers.map((layer, index) => (
             <React.Fragment key={index}>
               <div className={cn(
-                "w-full rounded-2xl border p-8 flex flex-col md:flex-row items-center justify-between gap-8 transition-all hover:bg-white/5",
+                "w-full rounded-2xl border p-8 flex flex-col md:flex-row items-center justify-between gap-8 transition-all hover:bg-surface",
                 layer.bg, layer.border
               )}>
                 <div className="text-center md:text-left md:w-1/3">
@@ -58,7 +58,7 @@ export const ResearchConstellation = () => {
                 
                 <div className="flex-1 flex flex-wrap justify-center md:justify-end gap-3">
                   {layer.nodes.map((node, i) => (
-                    <span key={i} className={cn("px-4 py-2 rounded-lg border bg-surface-secondary text-sm font-medium text-text-primary transition-colors hover:border-white/30", layer.border)}>
+                    <span key={i} className={cn("px-4 py-2 rounded-lg border bg-surface-secondary text-sm font-medium text-text-primary transition-colors hover:border-border-strong", layer.border)}>
                       {node}
                     </span>
                   ))}

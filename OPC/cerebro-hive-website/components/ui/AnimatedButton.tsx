@@ -38,7 +38,7 @@ export function AnimatedButton({
       >
         {/* Shine effect for primary/secondary */}
         {(variant === "primary" || variant === "secondary") && (
-          <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12" />
+          <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-border-subtle to-transparent skew-x-12" />
         )}
       </div>
       

@@ -48,7 +48,7 @@ export function CompanySidebarV3() {
         <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-8">Table of Contents</h4>
         <nav className="flex flex-col gap-4 relative">
           
-          <div className="absolute left-1.5 top-2 bottom-2 w-px bg-white/5 z-0" />
+          <div className="absolute left-1.5 top-2 bottom-2 w-px bg-surface z-0" />
 
           {chapters.map((chapter, i) => {
             const isActive = activeId === chapter.id || (!activeId && i === 0);
@@ -60,7 +60,7 @@ export function CompanySidebarV3() {
               >
                 <div className={cn(
                   "w-3 h-3 rounded-full border-2 bg-background transition-colors",
-                  isActive ? "border-primary-accent" : "border-border group-hover:border-white/50"
+                  isActive ? "border-primary-accent" : "border-border group-hover:border-border-default"
                 )} />
                 <span className={cn(
                   "text-xs font-bold uppercase tracking-widest transition-colors",

@@ -53,12 +53,12 @@ export const FeaturedIntelligence = () => {
 
         <div className="grid lg:grid-cols-3 gap-6">
           {articles.map((article, i) => (
-            <div key={i} className="group bg-surface border border-border rounded-2xl p-8 hover:border-white/30 transition-all flex flex-col cursor-pointer relative overflow-hidden h-full">
+            <div key={i} className="group bg-surface border border-border rounded-2xl p-8 hover:border-border-strong transition-all flex flex-col cursor-pointer relative overflow-hidden h-full">
               
               <div className={cn("absolute top-0 left-0 w-full h-1", article.color)} />
 
               <div className="flex items-center gap-3 mb-6">
-                <span className={cn("px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/5", article.text)}>
+                <span className={cn("px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-surface", article.text)}>
                   {article.tag}
                 </span>
                 <span className="text-[10px] uppercase tracking-widest text-text-muted flex items-center gap-1">

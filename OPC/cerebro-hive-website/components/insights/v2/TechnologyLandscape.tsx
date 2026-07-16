@@ -49,9 +49,9 @@ export const TechnologyLandscape = () => {
         <div className="flex flex-col gap-4">
           {landscape.map((layer, i) => (
             <React.Fragment key={i}>
-              <div className="bg-surface border border-border rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-center hover:border-white/30 transition-colors">
+              <div className="bg-surface border border-border rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-center hover:border-border-strong transition-colors">
                 
-                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-border flex items-center justify-center shrink-0">
+                <div className="w-16 h-16 rounded-2xl bg-surface border border-border flex items-center justify-center shrink-0">
                   <layer.icon size={24} className="text-accent-secondary" />
                 </div>
 

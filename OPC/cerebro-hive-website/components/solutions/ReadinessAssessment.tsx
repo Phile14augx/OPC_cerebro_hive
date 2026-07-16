@@ -170,7 +170,7 @@ export function ReadinessAssessment() {
                 </div>
 
                 <div className="flex flex-col w-full gap-3">
-                  <button className="w-full py-3 bg-primary-accent text-black font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:shadow-elevated transition-all">
+                  <button className="w-full py-3 bg-primary-accent text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:shadow-elevated transition-all">
                     Download Detailed Report
                   </button>
                   <button onClick={() => { setCurrentQ(0); setAnswers([]); setIsFinished(false); }} className="text-xs text-text-muted hover:text-text-primary underline">

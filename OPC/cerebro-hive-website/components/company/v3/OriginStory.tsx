@@ -65,7 +65,7 @@ export default function OriginStory() {
           
           {/* Timeline Selector */}
           <div className="lg:col-span-5 relative">
-            <div className="absolute left-6 top-8 bottom-8 w-px bg-white/10" />
+            <div className="absolute left-6 top-8 bottom-8 w-px bg-surface-elevated" />
             <div className="flex flex-col gap-6">
               {storySteps.map((step, idx) => {
                 const isActive = activeStep === idx;
@@ -79,12 +79,12 @@ export default function OriginStory() {
                   >
                     <div className={`w-12 h-12 rounded-full border-4 flex items-center justify-center shrink-0 transition-colors ${
                       isActive ? `border-[#0A0D14] ${step.bgColor} text-black` :
-                      isPast ? `border-[#0A0D14] bg-white/10 text-text-primary` :
-                      `border-border bg-background text-text-muted group-hover:text-white group-hover:border-white/30`
+                      isPast ? `border-[#0A0D14] bg-surface-elevated text-text-primary` :
+                      `border-border bg-background text-text-muted group-hover:text-text-primary group-hover:border-border-strong`
                     }`}>
                       <step.icon size={20} />
                     </div>
-                    <div className={`text-lg font-space font-bold transition-colors ${isActive ? 'text-text-primary' : 'text-text-secondary group-hover:text-white'}`}>
+                    <div className={`text-lg font-space font-bold transition-colors ${isActive ? 'text-text-primary' : 'text-text-secondary group-hover:text-text-primary'}`}>
                       {step.title}
                     </div>
                   </button>
@@ -105,7 +105,7 @@ export default function OriginStory() {
                   transition={{ duration: 0.3 }}
                   className="relative z-10"
                 >
-                  <div className={`w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-8 border border-border ${storySteps[activeStep].color}`}>
+                  <div className={`w-16 h-16 rounded-2xl bg-surface-elevated flex items-center justify-center mb-8 border border-border ${storySteps[activeStep].color}`}>
                     {React.createElement(storySteps[activeStep].icon, { size: 32 })}
                   </div>
                   <h4 className="text-2xl font-space font-bold text-text-primary mb-6">{storySteps[activeStep].title}</h4>

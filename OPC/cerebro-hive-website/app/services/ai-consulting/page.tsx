@@ -33,7 +33,7 @@ export default function AIConsultingPage() {
             We align executive boards, audit operational bottlenecks, and design a 90-day execution roadmap for secure model deployments. This is a strategy-first engagement before a single line of code is written.
           </p>
 
-          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#00E5FF] text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
+          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#00E5FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
             Schedule a Strategy Workshop
           </Link>
         </div>

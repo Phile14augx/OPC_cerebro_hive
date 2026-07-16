@@ -29,7 +29,7 @@ export default function EnterpriseManifesto() {
 
       <div className="container-wide relative z-10 text-center">
         
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-accent-primary font-bold mb-16">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-accent-primary font-bold mb-16">
           The Manifesto
         </div>
 

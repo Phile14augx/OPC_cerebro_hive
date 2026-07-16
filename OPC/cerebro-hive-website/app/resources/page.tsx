@@ -140,7 +140,7 @@ export default function ResourcesPage() {
         <div className="container-wide max-w-3xl mx-auto text-center">
           <h2 className="text-4xl font-space font-bold text-text-primary mb-4">Looking for Something Specific?</h2>
           <p className="text-text-secondary mb-8">Our team can create custom architecture assessments, solution briefs, and technical guides tailored to your initiative.</p>
-          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated">
+          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated">
             Talk to an Architect <ArrowRight size={16} />
           </Link>
         </div>

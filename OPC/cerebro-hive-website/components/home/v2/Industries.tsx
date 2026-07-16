@@ -449,7 +449,7 @@ export default function Industries() {
                         {/* CTA */}
                         <motion.button 
                           initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.4 }}
-                          className="shrink-0 px-8 py-4 lg:px-12 lg:py-5 bg-white text-black font-bold font-space text-sm flex items-center justify-center gap-3 hover:bg-primary-accent transition-colors rounded-xl group max-w-full"
+                          className="shrink-0 px-8 py-4 lg:px-12 lg:py-5 bg-surface text-text-primary font-bold font-space text-sm flex items-center justify-center gap-3 hover:bg-primary-accent transition-colors rounded-xl group max-w-full"
                         >
                           <span className="truncate">{ind.cta}</span>
                           <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform shrink-0" />

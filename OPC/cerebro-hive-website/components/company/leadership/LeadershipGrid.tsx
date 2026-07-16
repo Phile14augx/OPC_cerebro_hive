@@ -61,7 +61,7 @@ export const LeadershipGrid = () => {
 
             {/* Narrative */}
             <div className="lg:w-[65%] relative z-10 flex flex-col">
-              <p className="text-2xl md:text-3xl font-space font-bold text-white/90 leading-tight mb-12 pl-6 border-l-2 border-amber-500/30">
+              <p className="text-2xl md:text-3xl font-space font-bold text-text-primary leading-tight mb-12 pl-6 border-l-2 border-amber-500/30">
                 "{executive.philosophy.quote}"
               </p>
               
@@ -93,7 +93,7 @@ export const LeadershipGrid = () => {
                     <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-4">Strategic Focus</h4>
                     <div className="flex flex-wrap gap-2">
                       {executive.priorities.map((p, i) => (
-                        <span key={i} className="text-[10px] font-mono text-text-muted bg-white/5 border border-border px-2 py-1 rounded cursor-default hover:bg-white/10">{p}</span>
+                        <span key={i} className="text-[10px] font-mono text-text-muted bg-surface border border-border px-2 py-1 rounded cursor-default hover:bg-surface-elevated">{p}</span>
                       ))}
                     </div>
                   </div>
@@ -140,7 +140,7 @@ export const LeadershipGrid = () => {
               <div>
                 <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-6">Engineering Framework</h4>
                 <div className="flex flex-col gap-3 relative">
-                  <div className="absolute left-[11px] top-4 bottom-4 w-[1px] bg-white/10" />
+                  <div className="absolute left-[11px] top-4 bottom-4 w-[1px] bg-surface-elevated" />
                   {engineering.philosophy.framework.map((step, i) => (
                     <div key={i} className="flex items-center gap-4 relative z-10">
                       <div className="w-6 h-6 rounded-full bg-[#0a0f12] border border-cyan-500/40 flex items-center justify-center text-[8px] font-mono font-bold text-cyan-500">{step.label}</div>
@@ -213,7 +213,7 @@ export const LeadershipGrid = () => {
                   {research.philosophy.framework.map((step, i) => (
                     <div key={i} className="flex items-center gap-2">
                       <span className="text-[10px] font-mono font-bold text-purple-500 uppercase">{step.title}</span>
-                      {i < research.philosophy.framework.length - 1 && <Workflow size={10} className="text-white/20" />}
+                      {i < research.philosophy.framework.length - 1 && <Workflow size={10} className="text-text-muted" />}
                     </div>
                   ))}
                 </div>
@@ -232,7 +232,7 @@ export const LeadershipGrid = () => {
                 <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-4">Ecosystem Value</h4>
                 <div className="flex flex-col gap-2">
                   {research.metrics?.map((m, i) => (
-                    <div key={i} className="flex flex-col gap-1 p-2 rounded-lg bg-white/5 border border-border">
+                    <div key={i} className="flex flex-col gap-1 p-2 rounded-lg bg-surface border border-border">
                       <span className="text-[10px] font-mono text-text-muted">{m.label}</span>
                       <span className="text-xs font-space font-bold text-text-primary">{m.value}</span>
                     </div>

@@ -55,7 +55,7 @@ export default function LivingArchitecture() {
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6">
             <Server size={12} /> Living Architecture
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">How AI-Native Systems Work</h2>
@@ -70,7 +70,7 @@ export default function LivingArchitecture() {
           <div className="lg:col-span-5 flex flex-col gap-2 relative">
             
             {/* Animated Data Flow line */}
-            <div className="absolute left-[39px] top-8 bottom-8 w-[2px] bg-white/10 z-0">
+            <div className="absolute left-[39px] top-8 bottom-8 w-[2px] bg-surface-elevated z-0">
               <motion.div 
                 className="w-full h-1/4 bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent"
                 animate={{ top: ["-20%", "120%"] }}
@@ -84,7 +84,7 @@ export default function LivingArchitecture() {
                 key={layer.id}
                 onClick={() => setActiveLayer(layer.id)}
                 className={`flex items-center gap-6 p-4 rounded-xl transition-all relative z-10 ${
-                  activeLayer === layer.id ? "bg-white/10 border border-border" : "hover:bg-white/5 border border-transparent"
+                  activeLayer === layer.id ? "bg-surface-elevated border border-border" : "hover:bg-surface border border-transparent"
                 }`}
               >
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 border ${
@@ -147,7 +147,7 @@ export default function LivingArchitecture() {
                       <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-1">CerebroHive Implementation</div>
                       <div className="font-bold text-accent-secondary">{layer.products}</div>
                     </div>
-                    <button className="px-4 py-2 border border-border rounded text-xs font-bold uppercase tracking-widest text-text-primary hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+                    <button className="px-4 py-2 border border-border rounded text-xs font-bold uppercase tracking-widest text-text-primary hover:bg-black/5 dark:hover:bg-surface-elevated transition-colors">
                       View Documentation
                     </button>
                   </div>

@@ -50,9 +50,9 @@ export default function TeamExpertise() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {capabilities.map((cap, i) => (
-            <div key={i} className="p-8 rounded-2xl bg-surface border border-border group hover:border-white/30 transition-colors">
+            <div key={i} className="p-8 rounded-2xl bg-surface border border-border group hover:border-border-strong transition-colors">
               
-              <div className="w-12 h-12 rounded-xl bg-white/5 border border-border flex items-center justify-center mb-6 text-text-primary">
+              <div className="w-12 h-12 rounded-xl bg-surface border border-border flex items-center justify-center mb-6 text-text-primary">
                 <cap.icon size={20} />
               </div>
 

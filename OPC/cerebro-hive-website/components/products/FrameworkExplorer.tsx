@@ -77,7 +77,7 @@ export const FrameworkExplorer = () => {
                     <p className="text-sm text-text-secondary max-w-xl leading-relaxed">{activeFramework.description}</p>
                   </div>
                   <Link href={`/products/${activeFramework.slug}`}>
-                    <div className="w-12 h-12 rounded-full bg-primary-accent text-black flex items-center justify-center hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-full bg-primary-accent text-text-primary flex items-center justify-center hover:scale-110 transition-transform">
                       <ArrowRight size={20} />
                     </div>
                   </Link>

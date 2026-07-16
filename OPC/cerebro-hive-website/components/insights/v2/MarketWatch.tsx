@@ -50,7 +50,7 @@ export const MarketWatch = () => {
 
         <div className="space-y-6">
           {marketUpdates.map((update, i) => (
-            <div key={i} className="bg-surface border border-border rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 hover:border-white/30 transition-colors">
+            <div key={i} className="bg-surface border border-border rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 hover:border-border-strong transition-colors">
               
               <div className="w-full md:w-48 shrink-0">
                 <div className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest ${update.bg} ${update.color} mb-3`}>
@@ -63,13 +63,13 @@ export const MarketWatch = () => {
                 <h3 className="text-xl font-space font-bold text-text-primary mb-3">{update.title}</h3>
                 <p className="text-sm text-text-secondary leading-relaxed mb-6">{update.desc}</p>
                 
-                <div className="p-4 rounded-xl bg-white/5 border border-border">
+                <div className="p-4 rounded-xl bg-surface border border-border">
                   <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-2">Business Impact</div>
                   <p className="text-xs text-text-primary leading-relaxed">{update.impact}</p>
                 </div>
               </div>
               
-              <div className="flex items-center justify-center w-12 shrink-0 border-l border-border hidden md:flex cursor-pointer hover:bg-white/5 transition-colors rounded-r-2xl -my-8 -mr-8 ml-4">
+              <div className="flex items-center justify-center w-12 shrink-0 border-l border-border hidden md:flex cursor-pointer hover:bg-surface transition-colors rounded-r-2xl -my-8 -mr-8 ml-4">
                 <ArrowRight size={20} className="text-text-muted" />
               </div>
 

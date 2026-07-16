@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Globe2 } from "lucide-react";
 import { withBasePath } from "@/lib/utils";
+import { HeroBackground } from "@/components/ui/HeroBackground";
 
 // Floating Particles
 const Particles = () => {
@@ -17,7 +18,7 @@ const Particles = () => {
       {[...Array(20)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 bg-white rounded-full opacity-20"
+          className="absolute w-1 h-1 bg-surface rounded-full opacity-20"
           initial={{
             x: Math.random() * 100 + "%",
             y: Math.random() * 100 + "%",
@@ -98,24 +99,8 @@ export const CompanyHero = () => {
       ref={containerRef}
       className="relative min-h-screen pt-32 pb-32 flex flex-col justify-center overflow-hidden bg-background"
     >
-      {/* Immersive Ambient Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <motion.div 
-          className="absolute -top-1/4 -right-1/4 w-[1200px] h-[1200px] bg-primary-accent/10 rounded-full blur-[200px] mix-blend-screen"
-          animate={{ x: [0, -100, 0], y: [0, 50, 0], scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div 
-          className="absolute top-1/4 -left-1/4 w-[1000px] h-[1000px] bg-[#00E5FF]/10 rounded-full blur-[150px] mix-blend-screen"
-          animate={{ x: [0, 100, 0], y: [0, -50, 0], scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut", delay: 5 }}
-        />
-        <div className="absolute inset-0 opacity-[0.04]" 
-             style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`, backgroundSize: '40px 40px' }} 
-        />
-        <Particles />
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: `url('${withBasePath('/images/noise.png')}')` }} />
-      </div>
+      {/* Immersive Theme-Aware Ambient Background */}
+      <HeroBackground />
 
       <div className="container-wide relative z-10 grid lg:grid-cols-2 gap-12 items-center h-full">
         {/* Left: Content */}
@@ -126,7 +111,7 @@ export const CompanyHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-border mb-8 backdrop-blur-md shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-md shadow-sm">
             <Globe2 size={12} className="text-primary-accent" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Corporate Handbook</span>
           </div>
@@ -144,11 +129,11 @@ export const CompanyHero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="group px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-white hover:shadow-[0_0_30px_rgba(0,245,122,0.4)]">
+            <button className="group px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-surface hover:shadow-[0_0_30px_rgba(0,245,122,0.4)]">
               See How We Deliver
               <ArrowDown size={16} className="transition-transform group-hover:translate-y-1" />
             </button>
-            <button className="px-8 py-4 bg-white/5 border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/30 hover:bg-white/10 transition-all">
+            <button className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-border-strong hover:bg-surface-elevated transition-all">
               Download Handbook
             </button>
           </div>

@@ -65,7 +65,7 @@ export const CompanyStoryTimeline = () => {
                       </span>
                     ) : (
                       <div className="w-full max-w-md pr-16 text-right">
-                        <div className="p-8 bg-[#0a0d14] border border-white/8 rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
+                        <div className="p-8 bg-[#0a0d14] border border-border-default rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
                           <h4 className="text-xl font-space font-bold text-text-primary mb-3">
                             {event.title}
                           </h4>
@@ -95,7 +95,7 @@ export const CompanyStoryTimeline = () => {
                   <div className="flex-1 md:w-full md:flex md:justify-start items-center">
                     {isEven ? (
                       <div className="w-full max-w-md md:pl-16 text-left">
-                        <div className="p-6 md:p-8 bg-[#0a0d14] border border-white/8 rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
+                        <div className="p-6 md:p-8 bg-[#0a0d14] border border-border-default rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
                           <span className="md:hidden text-sm font-space font-bold text-primary-accent mb-2 block">
                             {event.year}
                           </span>
@@ -115,7 +115,7 @@ export const CompanyStoryTimeline = () => {
                         </span>
                         {/* Mobile Card */}
                         <div className="md:hidden w-full text-left">
-                          <div className="p-6 md:p-8 bg-[#0a0d14] border border-white/8 rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
+                          <div className="p-6 md:p-8 bg-[#0a0d14] border border-border-default rounded-2xl hover:border-primary-accent/30 transition-colors duration-300">
                             <span className="md:hidden text-sm font-space font-bold text-primary-accent mb-2 block">
                               {event.year}
                             </span>

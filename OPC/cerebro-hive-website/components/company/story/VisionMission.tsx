@@ -21,7 +21,7 @@ const getThemeColors = (theme: string) => {
     case "purple": return { text: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/20", glow: "hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]", line: "bg-purple-500" };
     case "gold": return { text: "text-yellow-400", bg: "bg-yellow-500/10", border: "border-yellow-500/20", glow: "hover:shadow-[0_0_30px_rgba(234,179,8,0.15)]", line: "bg-yellow-500" };
     case "cyan": return { text: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/20", glow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]", line: "bg-cyan-500" };
-    default: return { text: "text-text-primary", bg: "bg-white/10", border: "border-border", glow: "hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]", line: "bg-white" };
+    default: return { text: "text-text-primary", bg: "bg-surface-elevated", border: "border-border", glow: "hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]", line: "bg-surface" };
   }
 };
 
@@ -73,7 +73,7 @@ const NarrativeBeam = () => {
   
   return (
     <div className="w-full flex flex-col items-center justify-center py-32 relative">
-      <div className="w-[1px] h-48 md:h-64 bg-white/5 relative flex justify-center">
+      <div className="w-[1px] h-48 md:h-64 bg-surface relative flex justify-center">
         {!prefersReducedMotion && (
           <motion.div 
             className="absolute top-0 w-full bg-gradient-to-b from-blue-500 via-emerald-500 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.5)]"
@@ -134,8 +134,8 @@ export const VisionMission = () => {
               {visionMission.purpose.description}
             </p>
 
-            <div className="bg-white/[0.02] border border-border p-8 rounded-2xl relative overflow-hidden">
-              <Quote size={120} className="absolute -top-6 -left-6 text-white/5 -rotate-12" aria-hidden="true" />
+            <div className="bg-surface-elevated border border-border p-8 rounded-2xl relative overflow-hidden">
+              <Quote size={120} className="absolute -top-6 -left-6 text-text-muted -rotate-12" aria-hidden="true" />
               <p className="relative z-10 text-lg font-space italic text-text-primary leading-relaxed">
                 "Our goal is not merely to deploy AI models. It is to fundamentally transform how entire enterprise divisions operate, measure, and scale."
               </p>
@@ -153,7 +153,7 @@ export const VisionMission = () => {
               </div>
               
               <div className="relative z-10 flex flex-col gap-0">
-                <div className="absolute left-[15px] top-[24px] bottom-[24px] w-[2px] bg-white/5 rounded-full overflow-hidden">
+                <div className="absolute left-[15px] top-[24px] bottom-[24px] w-[2px] bg-surface rounded-full overflow-hidden">
                   <motion.div 
                     className="w-full bg-primary-accent rounded-full"
                     style={{ height: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) }}
@@ -176,7 +176,7 @@ export const VisionMission = () => {
                       <div className="flex items-center gap-4 py-4">
                         <div className="z-10 bg-[#040d1a] rounded-full shrink-0">
                           <NeuralOrb size="sm" color="green" state={isActive ? "active" : "idle"}>
-                            <div className={cn("transition-colors duration-300", isActive ? "text-primary-accent" : "text-text-muted group-hover:text-white")}>
+                            <div className={cn("transition-colors duration-300", isActive ? "text-primary-accent" : "text-text-muted group-hover:text-text-primary")}>
                               {frameworkIcons[node.id] || <User size={14} aria-hidden="true" />}
                             </div>
                           </NeuralOrb>
@@ -219,7 +219,7 @@ export const VisionMission = () => {
             B. SECTION HEADER (Our Foundation)
            ========================================== */}
         <div className="w-full flex items-center justify-center mt-24 md:mt-32 opacity-60">
-          <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/20" />
+          <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-transparent" />
           <div className="px-8 text-center">
             <div className="text-[12px] font-space font-bold tracking-[0.2em] uppercase text-text-muted mb-2">
               {visionMission.sectionMetadata.label}
@@ -228,7 +228,7 @@ export const VisionMission = () => {
               {visionMission.sectionMetadata.preamble}
             </div>
           </div>
-          <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-white/20" />
+          <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-transparent" />
         </div>
 
         {/* ==========================================
@@ -266,7 +266,7 @@ export const VisionMission = () => {
                 </span>
                 <div className="grid grid-cols-2 gap-y-4 gap-x-6">
                   {visionMission.vision.content.focusAreas.map((area, i) => (
-                    <div key={i} className="flex items-center gap-3 text-sm font-inter text-text-secondary group-hover:text-white transition-colors">
+                    <div key={i} className="flex items-center gap-3 text-sm font-inter text-text-secondary group-hover:text-text-primary transition-colors">
                       <div className="w-1.5 h-1.5 bg-blue-500/60 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.6)]" /> {area}
                     </div>
                   ))}
@@ -275,12 +275,12 @@ export const VisionMission = () => {
             </div>
 
             {/* Strategic Roadmap */}
-            <div className="lg:col-span-5 lg:border-l lg:border-white/10 lg:pl-16 flex flex-col justify-center">
+            <div className="lg:col-span-5 lg:border-l lg:border-border-default lg:pl-16 flex flex-col justify-center">
               <span className="text-[10px] font-mono text-blue-400/80 uppercase tracking-widest mb-10 block">Strategic Roadmap</span>
               <div className="relative border-l border-border ml-2 space-y-12">
                 {visionMission.vision.content.roadmap.map((step, i) => (
                   <div key={i} className="relative pl-8 group/step">
-                    <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-white/20 border border-border transition-all duration-300 group-hover/step:bg-blue-500 group-hover/step:border-blue-400 group-hover/step:shadow-[0_0_12px_rgba(59,130,246,0.8)]" />
+                    <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-surface-elevated border border-border transition-all duration-300 group-hover/step:bg-blue-500 group-hover/step:border-blue-400 group-hover/step:shadow-[0_0_12px_rgba(59,130,246,0.8)]" />
                     <div className="text-sm font-space font-bold text-text-primary mb-1 transition-colors">{step.year}</div>
                     <div className="text-xs font-mono text-text-secondary group-hover/step:text-blue-300 transition-colors">{step.milestone}</div>
                   </div>
@@ -326,8 +326,8 @@ export const VisionMission = () => {
                 <motion.div 
                   key={principle.id}
                   className={cn(
-                    "group relative p-8 rounded-3xl bg-white/[0.02] border border-border overflow-hidden transition-all duration-300",
-                    theme.glow, "hover:bg-surface-elevated hover:border-white/10 cursor-default"
+                    "group relative p-8 rounded-3xl bg-surface-elevated border border-border overflow-hidden transition-all duration-300",
+                    theme.glow, "hover:bg-surface-elevated hover:border-border-default cursor-default"
                   )}
                   initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                   whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
@@ -336,7 +336,7 @@ export const VisionMission = () => {
                   tabIndex={0}
                 >
                   {/* Light Glass Reflection Top Edge */}
-                  <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-border-subtle to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   
                   <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-8 transition-colors", theme.bg, theme.border, "border")}>
                     <Icon size={20} className={theme.text} aria-hidden="true" />
@@ -355,7 +355,7 @@ export const VisionMission = () => {
                   {/* Hover Reveal (The teaching moment) */}
                   <div className="absolute inset-0 bg-[#040d1a]/98 backdrop-blur-xl p-8 flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
                     <h4 className={cn("text-[10px] font-space font-bold uppercase tracking-[0.2em] mb-4", theme.text)}>{principle.title} Philosophy</h4>
-                    <p className="text-sm font-inter text-white/90 leading-relaxed border-l-2 border-border pl-4">
+                    <p className="text-sm font-inter text-text-primary leading-relaxed border-l-2 border-border pl-4">
                       {principle.hoverDescription}
                     </p>
                   </div>
@@ -385,13 +385,13 @@ export const VisionMission = () => {
           </div>
 
           {/* Expected Outcome */}
-          <div className="lg:border-l lg:border-white/10 lg:pl-16">
+          <div className="lg:border-l lg:border-border-default lg:pl-16">
             <span className="text-[10px] font-space font-bold uppercase tracking-[0.2em] text-emerald-400 block mb-8">
               {visionMission.expectedOutcome.headline}
             </span>
             <div className="flex flex-wrap gap-4">
               {visionMission.expectedOutcome.traits.map((trait, i) => (
-                <div key={i} className="px-5 py-2.5 rounded-full bg-white/5 border border-border text-xs font-mono text-white/90 hover:bg-white/10 hover:border-white/20 transition-colors cursor-default">
+                <div key={i} className="px-5 py-2.5 rounded-full bg-surface border border-border text-xs font-mono text-text-primary hover:bg-surface-elevated hover:border-border-strong transition-colors cursor-default">
                   {trait}
                 </div>
               ))}

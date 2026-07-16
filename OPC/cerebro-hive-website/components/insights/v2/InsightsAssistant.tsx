@@ -61,7 +61,7 @@ export const InsightsAssistant = () => {
                   </div>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="text-text-muted hover:text-white transition-colors">
+              <button onClick={() => setIsOpen(false)} className="text-text-muted hover:text-text-primary transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -73,7 +73,7 @@ export const InsightsAssistant = () => {
                   <div className={`max-w-[85%] rounded-2xl p-3 text-sm leading-relaxed ${
                     msg.role === 'user' 
                       ? 'bg-[#7B61FF] text-text-primary rounded-tr-sm font-medium' 
-                      : 'bg-white/5 border border-border text-text-secondary rounded-tl-sm'
+                      : 'bg-surface border border-border text-text-secondary rounded-tl-sm'
                   }`}>
                     {msg.text}
                   </div>
@@ -85,7 +85,7 @@ export const InsightsAssistant = () => {
             {messages.length === 1 && (
               <div className="px-4 pb-4 flex flex-wrap gap-2">
                 {suggestedActions.map((action, i) => (
-                  <button key={i} onClick={() => setInput(action.label)} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-border hover:border-[#7B61FF]/50 hover:text-[#7B61FF] transition-colors text-xs text-text-muted">
+                  <button key={i} onClick={() => setInput(action.label)} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border hover:border-[#7B61FF]/50 hover:text-[#7B61FF] transition-colors text-xs text-text-muted">
                     <action.icon size={12} /> {action.label}
                   </button>
                 ))}
@@ -100,9 +100,9 @@ export const InsightsAssistant = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask a strategic question..."
-                  className="w-full bg-white/5 border border-border rounded-xl py-3 pl-4 pr-12 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[#7B61FF]/50 transition-colors"
+                  className="w-full bg-surface border border-border rounded-xl py-3 pl-4 pr-12 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[#7B61FF]/50 transition-colors"
                 />
-                <button type="submit" disabled={!input.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-[#7B61FF] text-text-primary disabled:opacity-50 disabled:bg-white/10 disabled:text-text-muted transition-colors">
+                <button type="submit" disabled={!input.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-[#7B61FF] text-text-primary disabled:opacity-50 disabled:bg-surface-elevated disabled:text-text-muted transition-colors">
                   <Send size={14} />
                 </button>
               </form>

@@ -13,7 +13,7 @@ export const CEOExecutiveNode = ({ data, selected }: NodeProps<Node<Organization
       selected ? "border-amber-500 shadow-[0_0_40px_rgba(245,158,11,0.2)] scale-[1.02] -translate-y-2" : "border-border hover:border-amber-500/50 hover:shadow-[0_0_30px_rgba(245,158,11,0.15)] hover:-translate-y-2 cursor-pointer"
     )}>
       {/* Premium Glass reflection */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-border-subtle to-transparent pointer-events-none" />
       
       <div className="p-6">
         <div className="flex items-center justify-between mb-6 border-b border-border pb-4">
@@ -35,7 +35,7 @@ export const CEOExecutiveNode = ({ data, selected }: NodeProps<Node<Organization
 
         <div className="flex gap-2 flex-wrap mb-4">
           {data.capabilities?.map((cap, i) => (
-            <span key={i} className="text-[10px] font-mono text-text-muted bg-white/5 border border-border px-2 py-1 rounded">
+            <span key={i} className="text-[10px] font-mono text-text-muted bg-surface border border-border px-2 py-1 rounded">
               {cap}
             </span>
           ))}

@@ -39,7 +39,7 @@ const ArchitectureFlow = ({ color }: { color: string }) => {
       </div>
       
       {/* Animated Path */}
-      <div className="flex-1 relative mx-2 h-0.5 bg-white/10 overflow-hidden">
+      <div className="flex-1 relative mx-2 h-0.5 bg-surface-elevated overflow-hidden">
         <motion.div 
           className="absolute inset-y-0 left-0 w-1/3 blur-sm"
           style={{ backgroundColor: color }}
@@ -54,7 +54,7 @@ const ArchitectureFlow = ({ color }: { color: string }) => {
       </div>
 
       {/* Animated Path */}
-      <div className="flex-1 relative mx-2 h-0.5 bg-white/10 overflow-hidden">
+      <div className="flex-1 relative mx-2 h-0.5 bg-surface-elevated overflow-hidden">
         <motion.div 
           className="absolute inset-y-0 left-0 w-1/3 blur-sm"
           style={{ backgroundColor: color }}

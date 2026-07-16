@@ -53,7 +53,7 @@ export const CEOMessage = () => {
               {/* Soft Edge Lighting / Vignette */}
               <div className="absolute inset-0 z-10 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)] pointer-events-none" />
               {/* Glass Frame Reflection */}
-              <div className="absolute inset-0 z-20 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+              <div className="absolute inset-0 z-20 bg-gradient-to-tr from-border-subtle to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
               
               <Image 
                 src={withBasePath(executiveProfile.identity.image)} 
@@ -84,7 +84,7 @@ export const CEOMessage = () => {
               {/* Executive Metadata */}
               <div className="flex items-center gap-3 text-[10px] font-mono text-text-muted uppercase tracking-wider">
                 <span>Since {executiveProfile.identity.since}</span>
-                <div className="w-1 h-1 rounded-full bg-white/20" />
+                <div className="w-1 h-1 rounded-full bg-surface-elevated" />
                 <span>{executiveProfile.identity.office}</span>
               </div>
             </motion.div>
@@ -97,7 +97,7 @@ export const CEOMessage = () => {
             
             {/* The Quote */}
             <motion.blockquote variants={motionPresets.fadeUp} className="relative mb-16 pl-8 lg:pl-12">
-              <Quote size={64} className="absolute -top-6 -left-4 lg:-left-2 text-white/5 z-0" />
+              <Quote size={64} className="absolute -top-6 -left-4 lg:-left-2 text-text-muted z-0" />
               <p className="relative z-10 text-2xl md:text-3xl lg:text-4xl font-space font-bold text-text-primary leading-[1.2] tracking-tight">
                 "{executiveProfile.quote.text}"
               </p>
@@ -137,7 +137,7 @@ export const CEOMessage = () => {
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {executiveProfile.strategicFocus.map((focus, i) => (
-                    <span key={i} className="text-[11px] font-mono text-text-secondary bg-white/5 border border-border px-3 py-1.5 rounded-md hover:bg-white/10 transition-colors cursor-default">
+                    <span key={i} className="text-[11px] font-mono text-text-secondary bg-surface border border-border px-3 py-1.5 rounded-md hover:bg-surface-elevated transition-colors cursor-default">
                       {focus}
                     </span>
                   ))}

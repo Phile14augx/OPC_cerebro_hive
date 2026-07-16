@@ -37,7 +37,7 @@ export const GlobalPresenceMap = () => {
           
           {/* Left: Map Visualization */}
           <div className="lg:col-span-7 bg-[#05070a]/80 backdrop-blur-xl border border-border rounded-3xl p-8 aspect-square md:aspect-video lg:aspect-square relative flex items-center justify-center overflow-hidden shadow-2xl">
-            <Globe size={500} className="text-white/5 absolute" />
+            <Globe size={500} className="text-text-muted absolute" />
             
             <div className="relative z-10 w-full h-full flex flex-wrap gap-4 items-center justify-center content-center">
               {globalPresence.map((office) => {
@@ -54,7 +54,7 @@ export const GlobalPresenceMap = () => {
                         ? (isOperational 
                             ? "bg-primary-accent/10 border-primary-accent/50 shadow-[0_0_30px_rgba(0,245,122,0.15)] scale-[1.02]" 
                             : "bg-[#00E5FF]/10 border-[#00E5FF]/50 shadow-[0_0_30px_rgba(0,229,255,0.15)] scale-[1.02]")
-                        : "bg-white/[0.02] border-border hover:border-white/30 opacity-50 hover:opacity-100 hover:scale-[1.01]"
+                        : "bg-surface-elevated border-border hover:border-border-strong opacity-50 hover:opacity-100 hover:scale-[1.01]"
                     )}
                   >
                     <div className={cn("shrink-0", isActive ? (isOperational ? "text-primary-accent" : "text-accent-secondary") : "text-text-muted")}>
@@ -64,7 +64,7 @@ export const GlobalPresenceMap = () => {
                       <p className={cn("font-space font-bold text-sm transition-colors", isActive ? "text-text-primary" : "text-text-secondary")}>
                         {office.region}
                       </p>
-                      <p className={cn("text-[10px] font-bold tracking-widest uppercase mt-0.5 transition-colors", isActive ? "text-white/70" : "text-text-muted")}>
+                      <p className={cn("text-[10px] font-bold tracking-widest uppercase mt-0.5 transition-colors", isActive ? "text-text-secondary" : "text-text-muted")}>
                         {office.status}
                       </p>
                     </div>
@@ -108,14 +108,14 @@ export const GlobalPresenceMap = () => {
                     </p>
                     <p className="text-sm font-mono text-text-muted flex items-center gap-2">
                       {activeRegion.status === "Operational" ? "Active Operations" : "Priority Market"}
-                      <span className="text-white/20">•</span> 
+                      <span className="text-text-muted">•</span> 
                       {activeRegion.status === "Operational" ? "Established 2024" : "2027–2028"}
                     </p>
                   </div>
                 </div>
                 
                 {/* 2. Editorial Divider */}
-                <div className="w-full h-px bg-white/10 mb-10 relative">
+                <div className="w-full h-px bg-surface-elevated mb-10 relative">
                   <div className={cn(
                     "absolute left-0 top-0 h-full w-1/4",
                     activeRegion.status === "Operational" ? "bg-primary-accent/50" : "bg-[#00E5FF]/50"

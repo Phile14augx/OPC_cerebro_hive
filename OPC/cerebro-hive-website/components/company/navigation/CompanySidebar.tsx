@@ -267,7 +267,7 @@ export const CompanySidebar = () => {
           onClick={() => isFolder ? toggleFolder(node.id) : scrollToId(node.id)}
           className={cn(
             "w-full flex items-center justify-between text-left py-1.5 px-2 rounded-md transition-all duration-200 group relative",
-            isActive ? "bg-primary-accent/10" : "hover:bg-white/[0.04]",
+            isActive ? "bg-primary-accent/10" : "hover:bg-surface-elevated",
             depth === 0 ? "mt-3 first:mt-0" : ""
           )}
           style={{ paddingLeft: `${depth * 12 + 8}px` }}
@@ -279,7 +279,7 @@ export const CompanySidebar = () => {
 
           <div className="flex items-center gap-2 overflow-hidden">
             {/* Icon / Chevron */}
-            <div className={cn("shrink-0 transition-colors", isActive ? "text-primary-accent" : "text-text-muted group-hover:text-white")}>
+            <div className={cn("shrink-0 transition-colors", isActive ? "text-primary-accent" : "text-text-muted group-hover:text-text-primary")}>
               {isFolder ? (
                 <ChevronRight size={14} className={cn("transition-transform duration-200", isExpanded && "rotate-90")} />
               ) : (
@@ -290,7 +290,7 @@ export const CompanySidebar = () => {
             {/* Label */}
             <span className={cn(
               "text-[11px] font-space truncate transition-colors",
-              isActive ? "text-text-primary font-bold" : (depth === 0 ? "text-text-secondary font-bold tracking-widest uppercase text-[10px]" : "text-text-secondary group-hover:text-white")
+              isActive ? "text-text-primary font-bold" : (depth === 0 ? "text-text-secondary font-bold tracking-widest uppercase text-[10px]" : "text-text-secondary group-hover:text-text-primary")
             )}>
               {node.label}
             </span>
@@ -300,7 +300,7 @@ export const CompanySidebar = () => {
           {node.metadata && !isFolder && (
             <span className={cn(
               "shrink-0 text-[9px] font-mono px-1.5 py-0.5 rounded transition-colors",
-              isActive ? "bg-primary-accent/20 text-primary-accent" : "bg-white/5 text-text-muted"
+              isActive ? "bg-primary-accent/20 text-primary-accent" : "bg-surface text-text-muted"
             )}>
               {node.metadata}
             </span>
@@ -348,18 +348,18 @@ export const CompanySidebar = () => {
         <div className="flex bg-surface-elevated border border-border rounded-lg p-1 mb-4 relative z-10">
           <button 
             onClick={() => setExplorerMode(false)} 
-            className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors relative", !explorerMode ? "text-text-primary" : "text-text-muted hover:text-white")}
+            className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors relative", !explorerMode ? "text-text-primary" : "text-text-muted hover:text-text-primary")}
           >
-            {!explorerMode && <motion.div layoutId="modeToggle" className="absolute inset-0 bg-white/10 rounded-md" />}
+            {!explorerMode && <motion.div layoutId="modeToggle" className="absolute inset-0 bg-surface-elevated rounded-md" />}
             <span className="relative z-10">Story</span>
           </button>
           <button 
             onClick={() => setExplorerMode(true)} 
-            className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors relative", explorerMode ? "text-text-primary" : "text-text-muted hover:text-white")}
+            className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors relative", explorerMode ? "text-text-primary" : "text-text-muted hover:text-text-primary")}
           >
-            {explorerMode && <motion.div layoutId="modeToggle" className="absolute inset-0 bg-white/10 rounded-md" />}
+            {explorerMode && <motion.div layoutId="modeToggle" className="absolute inset-0 bg-surface-elevated rounded-md" />}
             <span className="relative z-10 flex items-center justify-center gap-1.5">
-              Explorer <span className="hidden xl:inline-block text-[8px] font-mono bg-white/10 px-1 rounded opacity-50">⌘K</span>
+              Explorer <span className="hidden xl:inline-block text-[8px] font-mono bg-surface-elevated px-1 rounded opacity-50">⌘K</span>
             </span>
           </button>
         </div>
@@ -421,7 +421,7 @@ export const CompanySidebar = () => {
                       {isCurrent && !isCollapsed && (
                         <motion.div 
                           layoutId="activeChapterBg"
-                          className="absolute inset-0 bg-white/5 rounded-lg z-0"
+                          className="absolute inset-0 bg-surface rounded-lg z-0"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
@@ -434,7 +434,7 @@ export const CompanySidebar = () => {
                       onClick={() => scrollToId(chapter.id)}
                       className={cn(
                         "relative z-10 w-full text-left py-2.5 px-3 rounded-lg flex items-center transition-all duration-200 overflow-hidden",
-                        isCurrent ? "translate-x-1" : "hover:bg-white/[0.02]"
+                        isCurrent ? "translate-x-1" : "hover:bg-surface-elevated"
                       )}
                     >
                       <div className="flex-shrink-0 flex items-center justify-center w-6 h-6">
@@ -445,7 +445,7 @@ export const CompanySidebar = () => {
                             state={isCurrent ? "active" : isCompleted ? "completed" : "upcoming"} 
                           />
                         ) : (
-                          <div className={cn("transition-colors", isCurrent ? "text-primary-accent" : "text-text-muted hover:text-white")}>
+                          <div className={cn("transition-colors", isCurrent ? "text-primary-accent" : "text-text-muted hover:text-text-primary")}>
                             {chapter.icon}
                           </div>
                         )}
@@ -454,7 +454,7 @@ export const CompanySidebar = () => {
                       <span className={cn(
                         "ml-3 text-sm font-space whitespace-nowrap transition-all duration-300",
                         isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100",
-                        isCurrent ? "text-text-primary font-bold" : "text-text-secondary group-hover:text-white"
+                        isCurrent ? "text-text-primary font-bold" : "text-text-secondary group-hover:text-text-primary"
                       )}>
                         {chapter.label}
                       </span>

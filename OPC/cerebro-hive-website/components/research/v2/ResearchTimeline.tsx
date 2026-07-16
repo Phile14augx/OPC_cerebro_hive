@@ -34,7 +34,7 @@ export const ResearchTimeline = () => {
                     <span className="text-sm font-space font-bold text-text-primary">{item.research}</span>
                   </div>
                   {/* Connector down to timeline */}
-                  <div className="w-px h-6 bg-white/20 mt-2" />
+                  <div className="w-px h-6 bg-surface-elevated mt-2" />
                 </div>
               ))}
             </div>
@@ -42,7 +42,7 @@ export const ResearchTimeline = () => {
             {/* Timeline Axis */}
             <div className="flex items-center relative py-2">
               <div className="w-32 shrink-0" />
-              <div className="absolute left-32 right-0 h-0.5 bg-gradient-to-r from-white/10 via-white/20 to-white/10" />
+              <div className="absolute left-32 right-0 h-0.5 bg-gradient-to-r from-border-subtle via-border-subtle to-transparent" />
               {timeline.map((item, i) => (
                 <div key={i} className="flex-1 flex justify-center relative z-10">
                   <div className="w-16 py-1 bg-background border border-border rounded-full text-center text-xs font-bold text-text-primary shadow-[0_0_15px_rgba(255,255,255,0.1)]">
@@ -58,7 +58,7 @@ export const ResearchTimeline = () => {
               {timeline.map((item, i) => (
                 <div key={i} className="flex-1 flex flex-col items-center px-4 relative z-10 group cursor-pointer">
                   {/* Connector up to timeline */}
-                  <div className="w-px h-6 bg-white/20 mb-2" />
+                  <div className="w-px h-6 bg-surface-elevated mb-2" />
                   <div className="bg-surface border border-border rounded-lg p-4 w-full text-center hover:border-[#00F57A]/50 transition-colors">
                     <span className="text-sm font-space font-bold text-text-primary">{item.product}</span>
                   </div>

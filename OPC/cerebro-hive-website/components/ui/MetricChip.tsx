@@ -41,7 +41,7 @@ export const MetricChip = ({ label, initialValue, status = "success", simulateUp
     success: { border: "border-success/30", text: "text-success", bg: "bg-success/10", dot: "bg-success" },
     warning: { border: "border-warning/30", text: "text-warning", bg: "bg-warning/10", dot: "bg-warning" },
     error: { border: "border-error/30", text: "text-error", bg: "bg-error/10", dot: "bg-error" },
-    neutral: { border: "border-border", text: "text-text-primary", bg: "bg-white/5", dot: "bg-white/50" }
+    neutral: { border: "border-border", text: "text-text-primary", bg: "bg-surface", dot: "bg-surface-elevated" }
   };
 
   const currentColors = colors[status];

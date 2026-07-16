@@ -67,7 +67,7 @@ export const MethodologyVisualizer = () => {
           
           {/* Desktop Timeline */}
           <div className="hidden lg:flex justify-between relative mb-12">
-            <div className="absolute top-6 left-12 right-12 h-1 bg-white/5" />
+            <div className="absolute top-6 left-12 right-12 h-1 bg-surface" />
             <div className="absolute top-6 left-12 h-1 bg-[#00E5FF] transition-all duration-500 ease-in-out" style={{ width: `calc(${(activePhase / (phases.length - 1)) * 100}% - 3rem)` }} />
             
             {phases.map((phase, i) => {
@@ -78,8 +78,8 @@ export const MethodologyVisualizer = () => {
                 <div key={phase.id} className="relative z-10 flex flex-col items-center cursor-pointer group w-1/5" onClick={() => setActivePhase(i)}>
                   <div className={cn(
                     "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 mb-4",
-                    isActive ? "bg-[#00E5FF] text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] scale-125" : 
-                    isPast ? "bg-[#00E5FF]/20 text-accent-secondary border border-[#00E5FF]/30" : "bg-surface border border-border text-text-muted group-hover:border-white/30"
+                    isActive ? "bg-[#00E5FF] text-text-primary shadow-[0_0_20px_rgba(0,229,255,0.4)] scale-125" : 
+                    isPast ? "bg-[#00E5FF]/20 text-accent-secondary border border-[#00E5FF]/30" : "bg-surface border border-border text-text-muted group-hover:border-border-strong"
                   )}>
                     <phase.icon size={isActive ? 24 : 20} />
                   </div>
@@ -115,7 +115,7 @@ export const MethodologyVisualizer = () => {
                     <button 
                       onClick={() => setActivePhase(Math.max(0, activePhase - 1))}
                       disabled={activePhase === 0}
-                      className="p-2 border border-border rounded-lg text-text-muted hover:text-white disabled:opacity-30"
+                      className="p-2 border border-border rounded-lg text-text-muted hover:text-text-primary disabled:opacity-30"
                     >
                       <ArrowRight size={20} className="rotate-180" />
                     </button>
@@ -123,7 +123,7 @@ export const MethodologyVisualizer = () => {
                     <button 
                       onClick={() => setActivePhase(Math.min(phases.length - 1, activePhase + 1))}
                       disabled={activePhase === phases.length - 1}
-                      className="p-2 border border-border rounded-lg text-text-muted hover:text-white disabled:opacity-30"
+                      className="p-2 border border-border rounded-lg text-text-muted hover:text-text-primary disabled:opacity-30"
                     >
                       <ArrowRight size={20} />
                     </button>

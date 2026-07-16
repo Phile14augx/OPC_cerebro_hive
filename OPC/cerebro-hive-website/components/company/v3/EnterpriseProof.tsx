@@ -35,7 +35,7 @@ export default function EnterpriseProof() {
               onClick={() => setActiveCategory(cat.id)}
               className={cn(
                 "p-4 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-3",
-                activeCategory === cat.id ? "bg-white/10 border-border shadow-[0_0_20px_rgba(255,255,255,0.05)] scale-105" : "bg-surface border-border hover:border-white/20"
+                activeCategory === cat.id ? "bg-surface-elevated border-border shadow-[0_0_20px_rgba(255,255,255,0.05)] scale-105" : "bg-surface border-border hover:border-border-strong"
               )}
             >
               <cat.icon size={24} className={activeCategory === cat.id ? "text-text-primary" : "text-text-muted"} />
@@ -61,7 +61,7 @@ export default function EnterpriseProof() {
                 <div className="text-xl md:text-2xl text-text-secondary font-inter">
                   {cat.subtitle}
                 </div>
-                <button className="mt-8 px-6 py-3 border border-border rounded-lg text-xs font-bold uppercase tracking-widest text-text-primary hover:bg-white/5 transition-colors">
+                <button className="mt-8 px-6 py-3 border border-border rounded-lg text-xs font-bold uppercase tracking-widest text-text-primary hover:bg-surface transition-colors">
                   Explore {cat.label}
                 </button>
               </motion.div>

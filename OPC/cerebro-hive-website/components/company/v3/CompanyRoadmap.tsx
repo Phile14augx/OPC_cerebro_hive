@@ -26,7 +26,7 @@ export default function CompanyRoadmap() {
               </p>
             </div>
 
-            <div className="hidden md:flex items-center justify-center text-white/20 shrink-0">
+            <div className="hidden md:flex items-center justify-center text-text-muted shrink-0">
               <ArrowRight size={24} />
             </div>
 
@@ -38,7 +38,7 @@ export default function CompanyRoadmap() {
               </p>
             </div>
 
-            <div className="hidden md:flex items-center justify-center text-white/20 shrink-0">
+            <div className="hidden md:flex items-center justify-center text-text-muted shrink-0">
               <ArrowRight size={24} />
             </div>
 

@@ -30,28 +30,28 @@ export default function ResponsibleAI() {
           <div className="flex-1 w-full grid sm:grid-cols-2 gap-4">
             
             <div className="p-6 bg-surface border border-border rounded-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 text-white/5"><Eye size={64} /></div>
+              <div className="absolute top-0 right-0 p-4 text-text-muted"><Eye size={64} /></div>
               <Eye size={20} className="text-accent-secondary mb-4 relative z-10" />
               <h3 className="font-space font-bold text-text-primary mb-2 relative z-10">Human Oversight</h3>
               <p className="text-xs text-text-secondary relative z-10">High-stakes workflows always route to human decision-makers. AI recommends, humans approve.</p>
             </div>
 
             <div className="p-6 bg-surface border border-border rounded-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 text-white/5"><Lock size={64} /></div>
+              <div className="absolute top-0 right-0 p-4 text-text-muted"><Lock size={64} /></div>
               <Lock size={20} className="text-warning mb-4 relative z-10" />
               <h3 className="font-space font-bold text-text-primary mb-2 relative z-10">Data Privacy</h3>
               <p className="text-xs text-text-secondary relative z-10">Zero data retention by LLMs. Your private data never leaves your secure tenant environment.</p>
             </div>
 
             <div className="p-6 bg-surface border border-border rounded-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 text-white/5"><ShieldAlert size={64} /></div>
+              <div className="absolute top-0 right-0 p-4 text-text-muted"><ShieldAlert size={64} /></div>
               <ShieldAlert size={20} className="text-red-400 mb-4 relative z-10" />
               <h3 className="font-space font-bold text-text-primary mb-2 relative z-10">Security</h3>
               <p className="text-xs text-text-secondary relative z-10">Multi-layered security controls, RBAC, and deterministic guardrails prevent prompt injection.</p>
             </div>
 
             <div className="p-6 bg-surface border border-border rounded-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 text-white/5"><FileSignature size={64} /></div>
+              <div className="absolute top-0 right-0 p-4 text-text-muted"><FileSignature size={64} /></div>
               <FileSignature size={20} className="text-[#7B61FF] mb-4 relative z-10" />
               <h3 className="font-space font-bold text-text-primary mb-2 relative z-10">Transparency</h3>
               <p className="text-xs text-text-secondary relative z-10">Full audit trails. Every agentic action is logged, explainable, and compliant with enterprise reporting.</p>

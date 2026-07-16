@@ -40,14 +40,14 @@ export const ResearchTeam = () => {
               The engineers and scientists building the CerebroHive platform.
             </p>
           </div>
-          <button className="text-sm font-bold text-primary-accent hover:text-white transition-colors flex items-center gap-2">
+          <button className="text-sm font-bold text-primary-accent hover:text-text-primary transition-colors flex items-center gap-2">
             View All Staff <ExternalLink size={16} />
           </button>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {researchers.map((person, i) => (
-            <div key={i} className="bg-surface border border-border rounded-2xl p-6 hover:border-white/20 transition-colors">
+            <div key={i} className="bg-surface border border-border rounded-2xl p-6 hover:border-border-strong transition-colors">
               
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full bg-surface-secondary border border-border overflow-hidden flex items-center justify-center shrink-0">
@@ -68,7 +68,7 @@ export const ResearchTeam = () => {
                 <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-2">Research Interests</div>
                 <div className="flex flex-wrap gap-2">
                   {person.interests.map((interest, j) => (
-                    <span key={j} className="px-2 py-1 rounded bg-white/5 border border-border text-xs text-text-secondary">
+                    <span key={j} className="px-2 py-1 rounded bg-surface border border-border text-xs text-text-secondary">
                       {interest}
                     </span>
                   ))}
@@ -91,10 +91,10 @@ export const ResearchTeam = () => {
               </div>
 
               <div className="flex items-center gap-3 pt-4 border-t border-border">
-                <button className="p-2 rounded-lg bg-white/5 text-text-secondary hover:bg-white hover:text-black transition-colors">
+                <button className="p-2 rounded-lg bg-surface text-text-secondary hover:bg-surface hover:text-text-primary transition-colors">
                   <Code2 size={16} />
                 </button>
-                <button className="p-2 rounded-lg bg-white/5 text-text-secondary hover:bg-[#0077b5] hover:text-white transition-colors">
+                <button className="p-2 rounded-lg bg-surface text-text-secondary hover:bg-[#0077b5] hover:text-text-primary transition-colors">
                   <Users size={16} />
                 </button>
               </div>

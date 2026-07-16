@@ -36,7 +36,7 @@ export default function EnterpriseSimulator() {
       <div className="container-wide">
         
         <div className="text-center mb-16 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-accent-secondary font-bold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-accent-secondary font-bold mb-6">
             <Settings size={12} /> Interactive Blueprint
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Enterprise Transformation Simulator</h2>
@@ -52,11 +52,11 @@ export default function EnterpriseSimulator() {
               
               {/* Progress */}
               <div className="flex items-center justify-between mb-12 relative max-w-lg mx-auto">
-                <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px bg-white/10 z-0" />
+                <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px bg-surface-elevated z-0" />
                 {[1, 2, 3].map(num => (
                   <div key={num} className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold relative z-10 transition-colors ${
-                    step === num ? "bg-[#00E5FF] text-black border-4 border-[#0A0D14]" :
-                    step > num ? "bg-accent-primary text-black border-4 border-[#0A0D14]" :
+                    step === num ? "bg-[#00E5FF] text-text-primary border-4 border-[#0A0D14]" :
+                    step > num ? "bg-accent-primary text-text-primary border-4 border-[#0A0D14]" :
                     "bg-surface text-text-muted border border-border"
                   }`}>
                     {step > num ? <CheckCircle2 size={16} /> : num}
@@ -73,7 +73,7 @@ export default function EnterpriseSimulator() {
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
                       {["Finance", "Healthcare", "Manufacturing", "Retail"].map(ind => (
-                        <button key={ind} onClick={() => handleSelect('industry', ind)} className="p-4 rounded-xl border border-border bg-white/5 font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
+                        <button key={ind} onClick={() => handleSelect('industry', ind)} className="p-4 rounded-xl border border-border bg-surface font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
                           {ind}
                         </button>
                       ))}
@@ -89,7 +89,7 @@ export default function EnterpriseSimulator() {
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
                       {["SAP", "Oracle", "Workday", "Custom/Legacy"].map(erp => (
-                        <button key={erp} onClick={() => handleSelect('erp', erp)} className="p-4 rounded-xl border border-border bg-white/5 font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
+                        <button key={erp} onClick={() => handleSelect('erp', erp)} className="p-4 rounded-xl border border-border bg-surface font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
                           {erp}
                         </button>
                       ))}
@@ -105,7 +105,7 @@ export default function EnterpriseSimulator() {
                     </div>
                     <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
                       {["Exploration (Pilots)", "Isolated (Copilots)", "Integrated (APIs)"].map(mat => (
-                        <button key={mat} onClick={() => handleSelect('maturity', mat)} className="p-4 rounded-xl border border-border bg-white/5 font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
+                        <button key={mat} onClick={() => handleSelect('maturity', mat)} className="p-4 rounded-xl border border-border bg-surface font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
                           {mat}
                         </button>
                       ))}
@@ -138,7 +138,7 @@ export default function EnterpriseSimulator() {
                         {selections.industry} • {selections.erp} Environment
                       </p>
                     </div>
-                    <button className="px-6 py-3 bg-[#00E5FF] text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                    <button className="px-6 py-3 bg-[#00E5FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
                       <FileDown size={16} /> Download PDF
                     </button>
                   </div>
@@ -163,17 +163,17 @@ export default function EnterpriseSimulator() {
 
                   <h4 className="font-space font-bold text-text-primary text-xl mb-6">Recommended Architecture Path</h4>
                   <div className="grid md:grid-cols-3 gap-4 mb-8">
-                    <div className="p-5 bg-white/5 border border-border rounded-xl relative">
+                    <div className="p-5 bg-surface border border-border rounded-xl relative">
                       <Layers size={20} className="text-text-muted mb-4" />
                       <h5 className="font-bold text-text-primary mb-2">1. Knowledge Layer</h5>
                       <p className="text-xs text-text-secondary">Vectorize {selections.erp} data using Cerebro Knowledge Hub.</p>
                     </div>
-                    <div className="p-5 bg-white/5 border border-border rounded-xl relative border-[#00E5FF]/30">
+                    <div className="p-5 bg-surface border border-border rounded-xl relative border-[#00E5FF]/30">
                       <Bot size={20} className="text-accent-secondary mb-4" />
                       <h5 className="font-bold text-text-primary mb-2">2. Agent Network</h5>
                       <p className="text-xs text-text-secondary">Deploy specific AgentOS skills mapped to departmental bottlenecks.</p>
                     </div>
-                    <div className="p-5 bg-white/5 border border-border rounded-xl relative">
+                    <div className="p-5 bg-surface border border-border rounded-xl relative">
                       <Network size={20} className="text-text-muted mb-4" />
                       <h5 className="font-bold text-text-primary mb-2">3. Decision Engine</h5>
                       <p className="text-xs text-text-secondary">Integrate Quantiva ERP for full multi-agent orchestration.</p>
@@ -181,12 +181,12 @@ export default function EnterpriseSimulator() {
                   </div>
 
                   <div className="text-center pt-8 border-t border-border">
-                    <button className="px-8 py-4 bg-white text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-gray-200 transition-colors inline-flex items-center gap-2">
+                    <button className="px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-gray-200 transition-colors inline-flex items-center gap-2">
                       Book Strategy Session <ArrowRight size={16} />
                     </button>
                     <button 
                       onClick={() => { setGenerated(false); setStep(1); setSelections({ industry: "", erp: "", maturity: "" }); }}
-                      className="block mx-auto mt-4 text-xs font-bold uppercase tracking-widest text-text-muted hover:text-white"
+                      className="block mx-auto mt-4 text-xs font-bold uppercase tracking-widest text-text-muted hover:text-text-primary"
                     >
                       Reset Simulator
                     </button>

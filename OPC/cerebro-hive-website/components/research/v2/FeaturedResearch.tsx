@@ -26,7 +26,7 @@ export const FeaturedResearch = () => {
         
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-2xl md:text-3xl font-space font-bold text-text-primary">Editorial Curation</h2>
-          <button className="text-sm font-bold text-primary-accent hover:text-white transition-colors flex items-center gap-2">
+          <button className="text-sm font-bold text-primary-accent hover:text-text-primary transition-colors flex items-center gap-2">
             View All Publications <ArrowRight size={16} />
           </button>
         </div>
@@ -42,7 +42,7 @@ export const FeaturedResearch = () => {
               <div className="absolute inset-0 opacity-20 group-hover:scale-105 transition-transform duration-700" style={{ backgroundImage: `radial-gradient(circle at 50% 0%, #00F57A 0%, transparent 70%)` }} />
               
               <div className="relative z-20">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold text-text-primary uppercase tracking-widest mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface-elevated rounded-full text-[10px] font-bold text-text-primary uppercase tracking-widest mb-6">
                   {featured.category}
                 </div>
                 <h3 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4 leading-tight group-hover:text-primary-accent transition-colors">
@@ -69,7 +69,7 @@ export const FeaturedResearch = () => {
             </div>
             
             {trending.map((item, i) => (
-              <div key={i} className="bg-surface border border-border rounded-xl p-6 group cursor-pointer hover:bg-white/5 transition-colors flex flex-col justify-between h-full">
+              <div key={i} className="bg-surface border border-border rounded-xl p-6 group cursor-pointer hover:bg-surface transition-colors flex flex-col justify-between h-full">
                 <div>
                   <div className="text-[10px] text-text-muted uppercase tracking-widest font-bold mb-3">{item.category}</div>
                   <h4 className="text-lg font-space font-bold text-text-primary mb-2 leading-snug group-hover:text-[#00E5FF] transition-colors">{item.title}</h4>

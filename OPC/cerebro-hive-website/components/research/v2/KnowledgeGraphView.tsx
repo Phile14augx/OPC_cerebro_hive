@@ -8,7 +8,7 @@ const graphPath = [
   { step: "Research", icon: BrainCircuit, label: "Agentic RAG Paper", color: "text-accent-secondary", bg: "bg-[#00E5FF]/10", border: "border-[#00E5FF]/30" },
   { step: "Framework", icon: Network, label: "Cerebro-RAG Core", color: "text-accent-primary", bg: "bg-accent-primary/10", border: "border-accent-primary/30" },
   { step: "Architecture", icon: Database, label: "Distributed Graph-Vector Hybrid", color: "text-warning", bg: "bg-[#FFB300]/10", border: "border-[#FFB300]/30" },
-  { step: "Products", icon: Box, label: "Knowledge Hub", color: "text-text-primary", bg: "bg-white/10", border: "border-border" },
+  { step: "Products", icon: Box, label: "Knowledge Hub", color: "text-text-primary", bg: "bg-surface-elevated", border: "border-border" },
   { step: "Industries", icon: Factory, label: "Healthcare & Finance", color: "text-text-secondary", bg: "bg-black/40", border: "border-border" },
   { step: "Outcomes", icon: TrendingUp, label: "80% Faster Discovery", color: "text-primary-accent", bg: "bg-primary-accent/10", border: "border-primary-accent/30" }
 ];
@@ -55,7 +55,7 @@ export const KnowledgeGraphView = () => {
 
                 {/* Mobile connector */}
                 {i < graphPath.length - 1 && (
-                  <div className="lg:hidden h-8 w-px bg-white/10 my-2" />
+                  <div className="lg:hidden h-8 w-px bg-surface-elevated my-2" />
                 )}
 
               </div>

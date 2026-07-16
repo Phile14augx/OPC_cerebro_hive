@@ -61,7 +61,7 @@ export const PublicationCard = ({ pub }: { pub: ResearchPublication }) => {
           <span className="text-xs font-bold text-text-secondary">{pub.authors[0]?.name}</span>
         </div>
         
-        <div className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center group-hover:bg-primary-accent group-hover:text-black transition-all">
+        <div className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center group-hover:bg-primary-accent group-hover:text-text-primary transition-all">
           <ArrowRight size={14} />
         </div>
       </div>

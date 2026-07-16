@@ -123,7 +123,7 @@ export function IndustryTopology({ segments, config }: { segments: string[], con
                 className={`relative flex items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300
                   ${isHovered 
                     ? 'bg-surface shadow-[0_0_20px_rgba(255,255,255,0.1)] w-3 h-3' 
-                    : 'w-2 h-2 bg-surface/50 border-border hover:border-white/50'
+                    : 'w-2 h-2 bg-surface/50 border-border hover:border-border-default'
                   }`}
                 style={{ borderColor: isHovered ? config.primaryColor : undefined }}
               />

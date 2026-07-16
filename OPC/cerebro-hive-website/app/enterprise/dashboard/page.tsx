@@ -114,7 +114,7 @@ export default function EnterpriseDashboardPage() {
               Enterprise training contract: <strong className="text-text-primary">COHORT-APEX-2026</strong>
             </p>
           </div>
-          <div className="flex gap-4 bg-white/2 border border-border rounded-xl px-5 py-3 text-sm">
+          <div className="flex gap-4 bg-surface-elevated border border-border rounded-xl px-5 py-3 text-sm">
             <div>
               <span className="text-xs text-[#8892A4] block uppercase">Class Room Seats</span>
               <strong className="text-text-primary text-base">{activeSeats} / {totalSeats} Used</strong>
@@ -191,7 +191,7 @@ export default function EnterpriseDashboardPage() {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {employees.map((emp) => (
-                    <tr key={emp.id} className="hover:bg-white/2 transition-colors">
+                    <tr key={emp.id} className="hover:bg-surface-elevated transition-colors">
                       <td className="py-4 pr-4">
                         <strong className="text-text-primary block">{emp.name}</strong>
                         <span className="text-xs text-[#8892A4] block mt-0.5">{emp.email}</span>
@@ -199,7 +199,7 @@ export default function EnterpriseDashboardPage() {
                       <td className="py-4 pr-4 text-xs text-[#8892A4] max-w-[150px] truncate">{emp.course}</td>
                       <td className="py-4 pr-4 min-w-[100px]">
                         <div className="flex items-center gap-2">
-                          <div className="h-1.5 flex-1 bg-white/5 rounded-full overflow-hidden">
+                          <div className="h-1.5 flex-1 bg-surface rounded-full overflow-hidden">
                             <div className="h-full bg-[#7B61FF]" style={{ width: `${emp.progress}%` }} />
                           </div>
                           <span className="text-xs font-bold text-text-primary">{emp.progress}%</span>
@@ -219,7 +219,7 @@ export default function EnterpriseDashboardPage() {
                       <td className="py-4 text-right">
                         <button
                           onClick={() => handleRevokeSeat(emp.id)}
-                          className="text-[#8892A4] hover:text-red-400 transition-all cursor-pointer p-1.5 rounded hover:bg-white/5"
+                          className="text-[#8892A4] hover:text-red-400 transition-all cursor-pointer p-1.5 rounded hover:bg-surface"
                         >
                           <Trash2 className="w-4 h-4 ml-auto" />
                         </button>
@@ -248,7 +248,7 @@ export default function EnterpriseDashboardPage() {
                     placeholder="Marcus Dyson"
                     value={inviteName}
                     onChange={(e) => setInviteName(e.target.value)}
-                    className="w-full bg-white/5 border border-border focus:border-[#00E5FF]/40 rounded-lg px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/40 animate-none"
+                    className="w-full bg-surface border border-border focus:border-[#00E5FF]/40 rounded-lg px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/40 animate-none"
                   />
                 </div>
 
@@ -260,7 +260,7 @@ export default function EnterpriseDashboardPage() {
                     placeholder="marcus@apex.com"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
-                    className="w-full bg-white/5 border border-border focus:border-[#00E5FF]/40 rounded-lg px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/40 animate-none"
+                    className="w-full bg-surface border border-border focus:border-[#00E5FF]/40 rounded-lg px-3.5 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-1 focus:ring-[#00E5FF]/40 animate-none"
                   />
                 </div>
 
@@ -280,7 +280,7 @@ export default function EnterpriseDashboardPage() {
                 <button
                   type="submit"
                   disabled={remainingSeats <= 0}
-                  className="w-full mt-6 py-2.5 bg-[#00E5FF] text-black font-bold rounded-lg text-xs uppercase tracking-widest hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.15)]"
+                  className="w-full mt-6 py-2.5 bg-[#00E5FF] text-text-primary font-bold rounded-lg text-xs uppercase tracking-widest hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.15)]"
                 >
                   Allocate Seat ({remainingSeats} Left)
                 </button>

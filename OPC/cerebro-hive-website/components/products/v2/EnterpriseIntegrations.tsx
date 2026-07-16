@@ -78,7 +78,7 @@ export const EnterpriseIntegrations = () => {
                     "p-4 rounded-xl border flex items-center justify-between transition-all duration-300 text-left",
                     isActive 
                       ? "bg-surface-elevated border-primary-accent/50 shadow-[0_0_15px_rgba(0,245,122,0.1)]" 
-                      : "bg-surface border-border hover:border-white/20 hover:bg-surface-elevated/50"
+                      : "bg-surface border-border hover:border-border-strong hover:bg-surface-elevated/50"
                   )}
                 >
                   <div className="flex items-center gap-4">

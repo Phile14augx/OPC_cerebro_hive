@@ -142,11 +142,11 @@ export default function Footer() {
               <circle cx="80" cy="80" r="2" fill="#fff" />
               <circle cx="20" cy="80" r="2" fill="#fff" />
               <circle cx="80" cy="20" r="2" fill="#fff" />
-              <line x1="20" y1="20" x2="80" y2="20" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-white" />
-              <line x1="20" y1="80" x2="80" y2="80" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-white" />
-              <line x1="20" y1="20" x2="20" y2="80" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-white" />
-              <line x1="80" y1="20" x2="80" y2="80" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-white" />
-              <line x1="20" y1="20" x2="80" y2="80" stroke="currentColor" strokeWidth="0.2" className="text-text-muted opacity-20 dark:opacity-100 dark:text-white" />
+              <line x1="20" y1="20" x2="80" y2="20" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-text-primary" />
+              <line x1="20" y1="80" x2="80" y2="80" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-text-primary" />
+              <line x1="20" y1="20" x2="20" y2="80" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-text-primary" />
+              <line x1="80" y1="20" x2="80" y2="80" stroke="currentColor" strokeWidth="0.5" className="text-text-muted opacity-20 dark:opacity-100 dark:text-text-primary" />
+              <line x1="20" y1="20" x2="80" y2="80" stroke="currentColor" strokeWidth="0.2" className="text-text-muted opacity-20 dark:opacity-100 dark:text-text-primary" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#neural-grid)" />
@@ -355,7 +355,7 @@ export default function Footer() {
 
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-accent to-secondary-accent flex items-center justify-center shrink-0">
-                    <span className="text-background dark:text-black text-xs font-black">P</span>
+                    <span className="text-background dark:text-text-primary text-xs font-black">P</span>
                   </div>
                   <div>
                     <span className="block text-sm font-bold font-space text-text-primary">{mottos[mottoIdx].author}</span>
@@ -408,12 +408,12 @@ export default function Footer() {
               <span className="font-space font-bold text-lg tracking-tight text-text-primary leading-none relative z-10">
                 Cerebro<span className="text-primary-accent">Hive</span>
               </span>
-              <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">OPC Pvt Ltd</span>
+              <span className="text-[9px] text-text-muted font-bold uppercase tracking-widest">OPC Pvt Ltd</span>
             </div>
           </Link>
 
           {/* Legal Links */}
-          <div className="flex flex-wrap justify-center gap-6 text-[10px] font-bold tracking-widest uppercase text-gray-500">
+          <div className="flex flex-wrap justify-center gap-6 text-[10px] font-bold tracking-widest uppercase text-text-muted">
             <Link href="/legal/privacy" className="hover:text-text-primary transition-colors">Privacy</Link>
             <Link href="/legal/security" className="hover:text-text-primary transition-colors">Security</Link>
             <Link href="/legal/terms" className="hover:text-text-primary transition-colors">Terms</Link>
@@ -423,7 +423,7 @@ export default function Footer() {
 
 
           {/* Copyright */}
-          <p className="text-[11px] text-gray-600 text-center">
+          <p className="text-[11px] text-text-muted text-center">
             © {new Date().getFullYear()} CerebroHive OPC Pvt. Ltd. · Engineering the Future of Intelligent Enterprises.
           </p>
 

@@ -25,7 +25,7 @@ export const WeeklyBrief = () => {
             <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6 leading-tight">
               The Shift from Chat to Autonomous Agent Swarms
             </h2>
-            <div className="bg-white/5 border border-border rounded-xl p-6">
+            <div className="bg-surface border border-border rounded-xl p-6">
               <div className="text-[10px] uppercase tracking-widest text-accent-secondary font-bold mb-2 flex items-center gap-2">
                 <BookOpen size={12} /> Executive Summary
               </div>
@@ -82,7 +82,7 @@ export const WeeklyBrief = () => {
                 </li>
               </ul>
               
-              <button className="w-full py-3 bg-[#00E5FF]/10 text-accent-secondary border border-[#00E5FF]/30 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-[#00E5FF] hover:text-black transition-colors flex items-center justify-center gap-2">
+              <button className="w-full py-3 bg-[#00E5FF]/10 text-accent-secondary border border-[#00E5FF]/30 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-[#00E5FF] hover:text-text-primary transition-colors flex items-center justify-center gap-2">
                 Subscribe to Briefing <ArrowRight size={14} />
               </button>
             </div>

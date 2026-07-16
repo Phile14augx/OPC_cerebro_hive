@@ -61,7 +61,7 @@ const JourneyPipeline = () => {
 
             {/* Connecting Line */}
             {i < stages.length - 1 && (
-              <div className="flex-1 h-[1px] bg-white/5 relative mx-2 sm:mx-4 -mt-6 sm:-mt-8">
+              <div className="flex-1 h-[1px] bg-surface relative mx-2 sm:mx-4 -mt-6 sm:-mt-8">
                 <motion.div 
                   className="absolute inset-y-0 left-0 bg-primary-accent/50"
                   initial={{ width: "0%" }}
@@ -159,7 +159,7 @@ export const CTA = () => {
             <AnimatedButton 
               variant="primary" 
               size="lg" 
-              className="w-full sm:w-auto text-sm font-space font-bold uppercase tracking-widest bg-primary-accent hover:bg-[#00E5FF] text-black shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_40px_rgba(0,229,255,0.4)] transition-all group"
+              className="w-full sm:w-auto text-sm font-space font-bold uppercase tracking-widest bg-primary-accent hover:bg-[#00E5FF] text-text-primary shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_40px_rgba(0,229,255,0.4)] transition-all group"
             >
               Start AI Transformation <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </AnimatedButton>
@@ -167,7 +167,7 @@ export const CTA = () => {
             <AnimatedButton 
               variant="outline" 
               size="lg" 
-              className="w-full sm:w-auto text-sm font-space font-bold uppercase tracking-widest border-border text-text-primary hover:bg-white/5 backdrop-blur-md"
+              className="w-full sm:w-auto text-sm font-space font-bold uppercase tracking-widest border-border text-text-primary hover:bg-surface backdrop-blur-md"
             >
               Explore Delivery Framework
             </AnimatedButton>
@@ -190,7 +190,7 @@ export const CTA = () => {
           className="flex flex-wrap justify-center gap-8 md:gap-16 pt-12 border-t border-border w-full max-w-4xl"
         >
           {["Enterprise AI", "Production Systems", "Software Engineering", "Applied Research"].map((outcome, i) => (
-            <span key={i} className="text-[11px] font-space font-bold text-white/40 uppercase tracking-[0.2em]">
+            <span key={i} className="text-[11px] font-space font-bold text-text-disabled uppercase tracking-[0.2em]">
               {outcome}
             </span>
           ))}

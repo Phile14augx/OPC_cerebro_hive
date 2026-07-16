@@ -74,7 +74,7 @@ export const SoftwarePlatformsBento = () => {
                       </span>
                     )}
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center group-hover:bg-primary-accent group-hover:text-black transition-all transform group-hover:translate-x-2">
+                  <div className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center group-hover:bg-primary-accent group-hover:text-text-primary transition-all transform group-hover:translate-x-2">
                     <ArrowRight size={14} />
                   </div>
                 </div>

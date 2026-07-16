@@ -193,7 +193,7 @@ const AnimatedCampus = () => {
       </svg>
 
       {/* Floating UI Elements */}
-      <div className="absolute top-6 left-6 flex items-center gap-2 px-3 py-1.5 bg-white/5 backdrop-blur-md border border-border rounded-full text-[10px] font-mono text-white/70">
+      <div className="absolute top-6 left-6 flex items-center gap-2 px-3 py-1.5 bg-surface backdrop-blur-md border border-border rounded-full text-[10px] font-mono text-text-secondary">
         <Terminal size={12} className="text-primary-accent" />
         AI_CAMPUS_NODE_01
       </div>
@@ -326,15 +326,15 @@ export const Headquarters = () => {
                     <div className="flex gap-4">
                       <div className="flex flex-col">
                         <span className="text-[9px] text-text-muted uppercase">IST</span>
-                        <span className="text-xs font-mono text-white/90">{times.ist}</span>
+                        <span className="text-xs font-mono text-text-primary">{times.ist}</span>
                       </div>
                       <div className="flex flex-col">
                         <span className="text-[9px] text-text-muted uppercase">EST</span>
-                        <span className="text-xs font-mono text-white/90">{times.est}</span>
+                        <span className="text-xs font-mono text-text-primary">{times.est}</span>
                       </div>
                       <div className="flex flex-col">
                         <span className="text-[9px] text-text-muted uppercase">BST</span>
-                        <span className="text-xs font-mono text-white/90">{times.bst}</span>
+                        <span className="text-xs font-mono text-text-primary">{times.bst}</span>
                       </div>
                     </div>
                   </div>
@@ -344,7 +344,7 @@ export const Headquarters = () => {
             </div>
 
             {/* CTA */}
-            <button className="self-start flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-border hover:bg-white/10 hover:border-primary-accent/50 transition-all group">
+            <button className="self-start flex items-center gap-3 px-6 py-3 rounded-full bg-surface border border-border hover:bg-surface-elevated hover:border-primary-accent/50 transition-all group">
               <span className="text-sm font-space font-bold text-text-primary uppercase tracking-wider">Explore Global Network</span>
               <ArrowRight size={16} className="text-primary-accent group-hover:translate-x-1 transition-transform" />
             </button>

@@ -51,7 +51,7 @@ export function EnterpriseAIOperatingSystem() {
                   <div className="w-0.5 h-full absolute left-6 top-6 bg-border -z-10 group-last:hidden" />
                   <div className={cn(
                     "w-12 h-12 rounded-xl border flex items-center justify-center transition-all duration-500",
-                    isActive ? "bg-primary-accent text-black border-primary-accent shadow-[0_0_20px_rgba(0,245,122,0.3)]" : "bg-surface border-border text-text-muted"
+                    isActive ? "bg-primary-accent text-text-primary border-primary-accent shadow-[0_0_20px_rgba(0,245,122,0.3)]" : "bg-surface border-border text-text-muted"
                   )}>
                     <node.icon size={20} />
                   </div>

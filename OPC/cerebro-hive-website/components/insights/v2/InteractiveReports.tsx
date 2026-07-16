@@ -46,14 +46,14 @@ export const InteractiveReports = () => {
                   "p-5 rounded-xl border transition-all cursor-pointer",
                   activeReport.title === report.title 
                     ? "bg-surface border-border shadow-lg" 
-                    : "bg-surface/50 border-border hover:border-white/10"
+                    : "bg-surface/50 border-border hover:border-border-default"
                 )}
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="w-8 h-8 rounded bg-[#00E5FF]/10 text-accent-secondary flex items-center justify-center">
                     <FileText size={16} />
                   </div>
-                  <span className="px-2 py-1 rounded bg-white/5 text-[10px] font-bold uppercase tracking-widest text-text-muted">
+                  <span className="px-2 py-1 rounded bg-surface text-[10px] font-bold uppercase tracking-widest text-text-muted">
                     {report.status}
                   </span>
                 </div>
@@ -72,7 +72,7 @@ export const InteractiveReports = () => {
               <div>
                 <h3 className="text-xl font-space font-bold text-text-primary">{activeReport.title}</h3>
               </div>
-              <button className="flex items-center gap-2 text-xs font-bold text-text-muted hover:text-white transition-colors">
+              <button className="flex items-center gap-2 text-xs font-bold text-text-muted hover:text-text-primary transition-colors">
                 <Download size={14} /> Download PDF
               </button>
             </div>
@@ -88,7 +88,7 @@ export const InteractiveReports = () => {
                       "w-full text-left px-3 py-2 rounded text-xs font-bold transition-colors flex justify-between items-center",
                       activeSection === sec 
                         ? "bg-[#00E5FF]/10 text-accent-secondary" 
-                        : "text-text-muted hover:text-white hover:bg-white/5"
+                        : "text-text-muted hover:text-text-primary hover:bg-surface"
                     )}
                   >
                     {sec}
@@ -112,7 +112,7 @@ export const InteractiveReports = () => {
                     <p className="text-sm text-text-secondary leading-relaxed">
                       The transition to AI-native operations requires a fundamental architectural shift. Organizations that attempt to bolt LLMs onto legacy data warehouses are seeing 3x higher failure rates than those implementing vector-first knowledge hubs.
                     </p>
-                    <div className="p-5 rounded-xl bg-white/5 border border-border mt-6">
+                    <div className="p-5 rounded-xl bg-surface border border-border mt-6">
                       <h4 className="text-text-primary font-bold text-sm mb-2">Key Finding</h4>
                       <p className="text-sm text-text-secondary">Agentic workflows are outperforming human-in-the-loop copilot systems by 45% in complex ERP routing tasks.</p>
                     </div>
@@ -124,7 +124,7 @@ export const InteractiveReports = () => {
                     <p className="text-sm text-text-secondary max-w-sm mb-6">
                       Sign in to your Executive Intelligence account to interact with the full dataset and architecture diagrams.
                     </p>
-                    <button className="px-6 py-3 bg-white text-black font-space font-bold text-xs uppercase tracking-widest rounded flex items-center gap-2">
+                    <button className="px-6 py-3 bg-surface text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded flex items-center gap-2">
                       Sign In to Access
                     </button>
                   </div>

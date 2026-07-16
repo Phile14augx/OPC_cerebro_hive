@@ -53,13 +53,13 @@ export const IndustryResearch = () => {
                   "p-8 rounded-2xl border transition-all cursor-pointer h-full flex flex-col",
                   isActive 
                     ? "bg-surface border-primary-accent/50 shadow-[0_0_20px_rgba(0,245,122,0.1)]" 
-                    : "bg-surface border-border hover:border-white/20"
+                    : "bg-surface border-border hover:border-border-strong"
                 )}
               >
                 <div className="flex items-center gap-4 mb-4">
                   <div className={cn(
                     "w-12 h-12 rounded-full flex items-center justify-center transition-colors",
-                    isActive ? "bg-primary-accent/10 text-primary-accent" : "bg-white/5 text-text-muted"
+                    isActive ? "bg-primary-accent/10 text-primary-accent" : "bg-surface text-text-muted"
                   )}>
                     <ind.icon size={24} />
                   </div>
@@ -80,7 +80,7 @@ export const IndustryResearch = () => {
                       <span>{paper}</span>
                     </div>
                   ))}
-                  <button className="mt-4 text-xs font-bold text-primary-accent flex items-center gap-2 hover:text-white transition-colors">
+                  <button className="mt-4 text-xs font-bold text-primary-accent flex items-center gap-2 hover:text-text-primary transition-colors">
                     Explore Industry <ArrowRight size={14} />
                   </button>
                 </div>

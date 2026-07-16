@@ -22,7 +22,7 @@ export default function OperatingPhilosophy() {
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-warning font-bold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-warning font-bold mb-6">
             <Scale size={12} /> Operating Philosophy
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">The principles that guide every decision we make.</h2>
@@ -52,9 +52,9 @@ export default function OperatingPhilosophy() {
             <h3 className="text-xs font-bold uppercase tracking-widest text-text-muted mb-6">Our Absolutes</h3>
             <div className="flex flex-col gap-6 h-full">
               {absolutes.map((abs, i) => (
-                <div key={i} className="flex-1 p-8 rounded-2xl bg-surface-secondary border border-border relative overflow-hidden flex items-center gap-6 group hover:bg-white/5 transition-colors">
-                  <div className="absolute top-0 left-0 w-1 h-full bg-white/10 group-hover:bg-white/30 transition-colors" />
-                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                <div key={i} className="flex-1 p-8 rounded-2xl bg-surface-secondary border border-border relative overflow-hidden flex items-center gap-6 group hover:bg-surface transition-colors">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-surface-elevated group-hover:bg-surface-elevated transition-colors" />
+                  <div className="w-12 h-12 rounded-full bg-surface flex items-center justify-center shrink-0">
                     <Check size={20} className="text-accent-secondary" />
                   </div>
                   <div className="text-xl font-space font-bold text-text-primary leading-tight">

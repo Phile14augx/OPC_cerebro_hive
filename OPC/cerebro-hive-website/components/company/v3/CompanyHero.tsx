@@ -26,7 +26,7 @@ export default function CompanyHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-border text-xs uppercase tracking-[0.3em] text-accent-primary font-bold mb-8"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface border border-border text-xs uppercase tracking-[0.3em] text-accent-primary font-bold mb-8"
         >
           CerebroHive
         </motion.div>
@@ -38,7 +38,7 @@ export default function CompanyHero() {
           className="text-5xl md:text-7xl lg:text-8xl font-space font-bold text-text-primary mb-8 tracking-tighter"
         >
           Engineering the <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">Intelligent Enterprise.</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-transparent">Intelligent Enterprise.</span>
         </motion.h1>
         
         <motion.p 
@@ -57,7 +57,7 @@ export default function CompanyHero() {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1 }}
         onClick={scrollToNext}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full border border-border flex items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-colors"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full border border-border flex items-center justify-center text-text-muted hover:text-text-primary hover:border-border-default transition-colors"
       >
         <ArrowDown size={20} className="animate-bounce" />
       </motion.button>

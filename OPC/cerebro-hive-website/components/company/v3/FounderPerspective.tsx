@@ -14,7 +14,7 @@ export default function FounderPerspective() {
           <div className="relative">
             <div className="aspect-[4/5] rounded-3xl bg-surface border border-border overflow-hidden relative">
               <div className="absolute inset-0 bg-gradient-to-tr from-[#00F57A]/10 to-transparent" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-white/20">
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-text-muted">
                 {/* Replace with actual CEO image */}
                 <div className="w-32 h-32 rounded-full border border-border flex items-center justify-center mb-4">
                   <span className="text-4xl font-space font-bold">P</span>
@@ -29,7 +29,7 @@ export default function FounderPerspective() {
 
           {/* Letter */}
           <div className="relative">
-            <Quote size={64} className="text-white/5 absolute -top-8 -left-8" />
+            <Quote size={64} className="text-text-muted absolute -top-8 -left-8" />
             
             <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted mb-8">The Founder Perspective</h2>
             
@@ -50,7 +50,7 @@ export default function FounderPerspective() {
 
             <div className="mt-12 flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00F57A] to-[#00E5FF] flex items-center justify-center shrink-0">
-                <span className="text-black text-lg font-black">P</span>
+                <span className="text-text-primary text-lg font-black">P</span>
               </div>
               <div>
                 <span className="block font-space font-bold text-text-primary text-lg">Philemon V. Nath</span>

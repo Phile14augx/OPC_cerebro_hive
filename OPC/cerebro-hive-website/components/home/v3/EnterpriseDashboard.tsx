@@ -40,9 +40,9 @@ export default function EnterpriseDashboard() {
       <div className="container-wide">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {metrics.map((metric, i) => (
-            <div key={i} className="bg-surface border border-border rounded-2xl p-6 flex flex-col items-center text-center group hover:border-white/30 transition-colors shadow-2xl relative overflow-hidden">
+            <div key={i} className="bg-surface border border-border rounded-2xl p-6 flex flex-col items-center text-center group hover:border-border-strong transition-colors shadow-2xl relative overflow-hidden">
               
-              <div className="absolute top-0 left-0 w-full h-1 bg-white/5 group-hover:bg-white/10 transition-colors" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-surface group-hover:bg-surface-elevated transition-colors" />
 
               <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-1">
                 <metric.icon size={12} className={metric.color} /> {metric.theme}

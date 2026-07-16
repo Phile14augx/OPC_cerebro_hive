@@ -78,14 +78,14 @@ export const AgentGallery = () => {
                     "flex items-center justify-between p-4 rounded-xl border transition-all text-left group",
                     isActive 
                       ? "bg-[#00E5FF]/10 border-[#00E5FF]/50 shadow-[0_0_20px_rgba(0,229,255,0.1)]" 
-                      : "bg-surface border-border hover:border-white/20"
+                      : "bg-surface border-border hover:border-border-strong"
                   )}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={cn("p-2 rounded-lg", isActive ? "bg-[#00E5FF]/20 text-accent-secondary" : "bg-black/30 text-text-muted group-hover:text-white")}>
+                    <div className={cn("p-2 rounded-lg", isActive ? "bg-[#00E5FF]/20 text-accent-secondary" : "bg-black/30 text-text-muted group-hover:text-text-primary")}>
                       <agent.icon size={20} />
                     </div>
-                    <span className={cn("font-space font-bold", isActive ? "text-text-primary" : "text-text-muted group-hover:text-white")}>{agent.name}</span>
+                    <span className={cn("font-space font-bold", isActive ? "text-text-primary" : "text-text-muted group-hover:text-text-primary")}>{agent.name}</span>
                   </div>
                   {isActive && (
                     <motion.div layoutId="agent-active" className="w-2 h-2 rounded-full bg-[#00E5FF]" />

@@ -271,7 +271,7 @@ export default function TechStack() {
                 {/* Visual Data Link to next layer */}
                 {!isLast && (
                   <div className="flex justify-center py-2 opacity-30">
-                    <ArrowDown size={14} className={isActive ? "text-primary-accent animate-bounce" : "text-gray-600"} />
+                    <ArrowDown size={14} className={isActive ? "text-primary-accent animate-bounce" : "text-text-muted"} />
                   </div>
                 )}
               </motion.div>

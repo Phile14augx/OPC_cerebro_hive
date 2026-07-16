@@ -55,7 +55,7 @@ export const HeroEcosystem = () => {
             From AI-powered ERP to autonomous enterprise agents, discover the proprietary platforms and frameworks transforming modern organizations.
           </p>
           <div className="flex justify-center gap-4 pt-4">
-             <button className="px-8 py-3 bg-white text-black font-space font-bold text-sm rounded-full transition-transform hover:scale-105 hover:bg-gray-100">
+             <button className="px-8 py-3 bg-surface text-text-primary font-space font-bold text-sm rounded-full transition-transform hover:scale-105 hover:bg-gray-100">
                Explore Products
              </button>
              <button className="px-8 py-3 bg-surface border border-border text-text-primary font-space font-bold text-sm rounded-full transition-colors hover:bg-surface-elevated backdrop-blur-md">
@@ -118,7 +118,7 @@ export const HeroEcosystem = () => {
                  transition={{ duration: 2 + (node.angle % 3), repeat: Infinity, ease: "linear", delay: node.angle % 2 }}
                  className={cn(
                    "absolute w-1.5 h-1.5 rounded-full z-10 -ml-[3px] -mt-[3px] pointer-events-none transition-colors duration-500",
-                   isHovered ? "bg-primary-accent shadow-[0_0_10px_#00F57A]" : "bg-white/20"
+                   isHovered ? "bg-primary-accent shadow-[0_0_10px_#00F57A]" : "bg-surface-elevated"
                  )}
                />
              );

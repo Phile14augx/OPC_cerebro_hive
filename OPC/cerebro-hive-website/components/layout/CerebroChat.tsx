@@ -206,21 +206,21 @@ export default function CerebroChat() {
             </div>
 
             {/* Header */}
-            <div className="h-14 border-b border-border dark:border-white/10 flex items-center justify-between px-6 bg-surface/40 dark:bg-black/40 relative z-10 shrink-0">
+            <div className="h-14 border-b border-border dark:border-border-default flex items-center justify-between px-6 bg-surface/40 dark:bg-black/40 relative z-10 shrink-0">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-sm font-space font-bold text-text-primary tracking-wide">
                   <div className="w-2 h-2 rounded-full bg-primary-accent shadow-[0_0_8px_#00F57A] animate-pulse" />
                   Cerebro AI
                 </div>
-                <div className="w-px h-4 bg-white/20" />
-                <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold hidden md:block">
+                <div className="w-px h-4 bg-surface-elevated" />
+                <span className="text-[10px] uppercase tracking-widest text-text-secondary font-bold hidden md:block">
                   Enterprise Intelligence OS <span className="text-primary-accent ml-2">v3.2 [Live]</span>
                 </span>
               </div>
               <div className="flex items-center gap-6">
-                <div className="hidden md:flex gap-6 text-[9px] uppercase tracking-widest text-gray-500 font-mono">
-                  <span>Knowledge Base: <strong className="text-gray-300">12,420</strong></span>
-                  <span>Research: <strong className="text-gray-300">356</strong></span>
+                <div className="hidden md:flex gap-6 text-[9px] uppercase tracking-widest text-text-muted font-mono">
+                  <span>Knowledge Base: <strong className="text-text-secondary">12,420</strong></span>
+                  <span>Research: <strong className="text-text-secondary">356</strong></span>
                 </div>
                 <button onClick={() => setIsOpen(false)} className="text-text-muted hover:text-text-primary transition-colors">
                   <X size={20} />
@@ -232,7 +232,7 @@ export default function CerebroChat() {
             <div className="flex-1 grid grid-cols-1 md:grid-cols-12 min-h-0 relative z-10">
               
               {/* Left Panel: Navigator */}
-              <div className="chat-navigator hidden md:flex flex-col border-r border-border dark:border-white/10 col-span-3 bg-surface/40 dark:bg-[#050B14]/40 overflow-y-auto">
+              <div className="chat-navigator hidden md:flex flex-col border-r border-border dark:border-border-default col-span-3 bg-surface/40 dark:bg-[#050B14]/40 overflow-y-auto">
                 <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6">Navigator</span>
                 <div className="flex flex-col gap-2">
                   {navigatorItems.map(item => (
@@ -262,7 +262,7 @@ export default function CerebroChat() {
                         
                         {/* Sender Label */}
                         {msg.sender === "bot" && (
-                          <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1 ml-1">
+                          <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-text-muted font-bold mb-1 ml-1">
                             <span>Cerebro</span>
                             <span className="w-1 h-1 bg-gray-600 rounded-full"/>
                             <span className="text-primary-accent">Enterprise Architect</span>
@@ -273,8 +273,8 @@ export default function CerebroChat() {
                         <div className={cn(
                           "p-5 rounded-2xl text-[13px] leading-relaxed relative overflow-hidden border",
                           msg.sender === "user" 
-                            ? "bg-[#F1F5F9] text-text-primary dark:bg-white/10 dark:text-white rounded-tr-sm border-border dark:border-white/10" 
-                            : "bg-[#ECFDF5] text-text-primary dark:bg-[#0A121E] dark:text-gray-300 rounded-tl-sm border-primary-accent/20 dark:border-white/5 shadow-lg"
+                            ? "bg-[#F1F5F9] text-text-primary dark:bg-surface-elevated dark:text-text-primary rounded-tr-sm border-border dark:border-border-default" 
+                            : "bg-[#ECFDF5] text-text-primary dark:bg-[#0A121E] dark:text-text-secondary rounded-tl-sm border-primary-accent/20 dark:border-border-subtle shadow-lg"
                         )}>
                           {msg.isGenerating && generationStage ? (
                             <div className="flex flex-col gap-5 min-w-[280px]">
@@ -286,11 +286,11 @@ export default function CerebroChat() {
                               <div className="flex flex-col gap-3">
                                 {["Research Agent", "Architecture Agent", "Security Agent"].map((agent, i) => (
                                   <div key={agent} className="flex flex-col gap-1.5">
-                                    <div className="flex justify-between text-[9px] text-gray-500 uppercase tracking-widest font-bold">
+                                    <div className="flex justify-between text-[9px] text-text-muted uppercase tracking-widest font-bold">
                                       <span>{agent}</span>
                                       <span>Processing</span>
                                     </div>
-                                    <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                    <div className="h-1 bg-surface rounded-full overflow-hidden">
                                       <motion.div 
                                         initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ duration: 1.5 + (i * 0.5), ease: "easeOut" }}
                                         className="h-full bg-primary-accent"
@@ -313,7 +313,7 @@ export default function CerebroChat() {
                              </span>
                              <div className="grid grid-cols-4 gap-4">
                                {Object.entries(msg.businessImpact).map(([k, v]) => (
-                                 <div key={k} className="flex flex-col gap-1 border-l border-border dark:border-white/10 pl-3">
+                                 <div key={k} className="flex flex-col gap-1 border-l border-border dark:border-border-default pl-3">
                                    <span className="text-[9px] uppercase tracking-widest text-text-muted">{k}</span>
                                    <span className="text-sm font-mono font-bold text-text-primary">{v}</span>
                                  </div>
@@ -326,7 +326,7 @@ export default function CerebroChat() {
                         {!msg.isGenerating && msg.actions && (
                           <div className="flex flex-wrap gap-2 mt-2">
                             {msg.actions.map(action => (
-                              <button key={action.label} className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-border text-gray-300 text-[11px] font-bold hover:bg-primary-accent hover:border-primary-accent hover:text-black transition-colors shadow-sm">
+                              <button key={action.label} className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface border border-border text-text-secondary text-[11px] font-bold hover:bg-primary-accent hover:border-primary-accent hover:text-text-primary transition-colors shadow-sm">
                                 <action.icon size={12} />
                                 {action.label}
                               </button>
@@ -344,7 +344,7 @@ export default function CerebroChat() {
                         <button 
                           key={prompt.id} 
                           onClick={() => handleSend(prompt.text)}
-                          className="px-3 py-1.5 rounded-full border border-border bg-white/5 hover:border-primary-accent/50 hover:bg-white/10 transition-all text-xs text-gray-300"
+                          className="px-3 py-1.5 rounded-full border border-border bg-surface hover:border-primary-accent/50 hover:bg-surface-elevated transition-all text-xs text-text-secondary"
                         >
                           {prompt.text}
                         </button>
@@ -357,8 +357,8 @@ export default function CerebroChat() {
 
                 {/* IDE-Style Input Area */}
                 <div className="chat-input-bar shrink-0">
-                  <div className="flex flex-col bg-surface dark:bg-[#0A121E] border border-border dark:border-white/10 rounded-xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.5)] focus-within:border-primary-accent/50 transition-colors">
-                    <div className="flex items-center px-4 py-3 border-b border-border dark:border-white/5">
+                  <div className="flex flex-col bg-surface dark:bg-[#0A121E] border border-border dark:border-border-default rounded-xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.5)] focus-within:border-primary-accent/50 transition-colors">
+                    <div className="flex items-center px-4 py-3 border-b border-border dark:border-border-subtle">
                        <span className="text-[10px] text-text-muted font-mono">⌘ Command Mode ready (type /)</span>
                     </div>
                     <textarea 
@@ -379,7 +379,7 @@ export default function CerebroChat() {
                       <button 
                         onClick={() => handleSend(input)}
                         disabled={!input.trim()}
-                        className="px-6 py-2 bg-primary-accent text-black text-sm font-bold rounded flex items-center gap-3 hover:bg-white transition-colors disabled:opacity-50"
+                        className="px-6 py-2 bg-primary-accent text-text-primary text-sm font-bold rounded flex items-center gap-3 hover:bg-surface transition-colors disabled:opacity-50"
                       >
                         Send <Send size={14} />
                       </button>
@@ -389,10 +389,10 @@ export default function CerebroChat() {
               </div>
 
               {/* Right Panel: Intelligence Hub (Digital Twin) */}
-              <div className="hidden md:flex flex-col border-l border-border dark:border-white/10 col-span-4 bg-surface dark:bg-[#010204] overflow-hidden">
+              <div className="hidden md:flex flex-col border-l border-border dark:border-border-default col-span-4 bg-surface dark:bg-[#010204] overflow-hidden">
                 
                 {/* Tabs */}
-                <div className="flex items-center gap-6 px-6 pt-6 border-b border-border dark:border-white/5">
+                <div className="flex items-center gap-6 px-6 pt-6 border-b border-border dark:border-border-subtle">
                    {[
                      { id: "architecture", label: "Architecture" },
                      { id: "workflow", label: "Workflow" },
@@ -404,7 +404,7 @@ export default function CerebroChat() {
                        onClick={() => setActiveTab(tab.id as any)}
                        className={cn(
                          "pb-3 text-[10px] uppercase tracking-widest font-bold transition-colors relative", 
-                         activeTab === tab.id ? "text-primary-accent" : "text-gray-500 hover:text-gray-300"
+                         activeTab === tab.id ? "text-primary-accent" : "text-text-muted hover:text-text-secondary"
                        )}
                      >
                        {tab.label}
@@ -443,16 +443,16 @@ export default function CerebroChat() {
                           onMouseLeave={() => setHoveredNode(null)}
                           className={cn(
                             "absolute flex flex-col items-center justify-center p-3 rounded-lg border bg-[#050B14] cursor-help transition-all transform -translate-x-1/2 -translate-y-1/2 z-10 w-28 shadow-xl",
-                            hoveredNode === node.id ? "border-primary-accent scale-110" : "border-border hover:border-white/30"
+                            hoveredNode === node.id ? "border-primary-accent scale-110" : "border-border hover:border-border-strong"
                           )}
                           style={{ left: node.x, top: node.y }}
                         >
-                          <span className="text-[9px] font-bold text-gray-300 text-center leading-tight">{node.label}</span>
+                          <span className="text-[9px] font-bold text-text-secondary text-center leading-tight">{node.label}</span>
                           
                           <AnimatePresence>
                             {hoveredNode === node.id && (
                               <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="w-full flex flex-col gap-1 mt-2 pt-2 border-t border-border overflow-hidden">
-                                <span className="text-[8px] text-gray-500 block truncate">{node.tech}</span>
+                                <span className="text-[8px] text-text-muted block truncate">{node.tech}</span>
                                 <span className="text-[9px] font-mono text-primary-accent">{node.latency}</span>
                               </motion.div>
                             )}
@@ -471,21 +471,21 @@ export default function CerebroChat() {
                       </div>
                       <div>
                         <span className="text-sm font-bold text-text-primary block mb-2">Zero Trust Boundary</span>
-                        <p className="text-xs text-gray-500">All agentic actions require role-based verification. Data is air-gapped before entering the LLM router.</p>
+                        <p className="text-xs text-text-muted">All agentic actions require role-based verification. Data is air-gapped before entering the LLM router.</p>
                       </div>
                     </motion.div>
                   )}
 
                   {activeTab === "deployment" && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 flex items-center justify-center">
-                      <p className="text-xs text-gray-500">Azure Multi-Region Topology Active</p>
+                      <p className="text-xs text-text-muted">Azure Multi-Region Topology Active</p>
                     </motion.div>
                   )}
 
                 </div>
 
                 {/* Dynamic Knowledge Sidebar (Bottom) */}
-                <div className="h-56 border-t border-border dark:border-white/5 bg-surface-elevated dark:bg-[#03060A] shrink-0" style={{ padding: '24px' }}>
+                <div className="h-56 border-t border-border dark:border-border-subtle bg-surface-elevated dark:bg-[#03060A] shrink-0" style={{ padding: '24px' }}>
                    <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold block mb-4">Referenced Knowledge</span>
                    <div className="flex flex-col gap-2 overflow-y-auto">
                      {["SAP Integration Guide", "Knowledge Graph Architecture", "Agentic Patterns", "Azure Deployment Specs"].map(doc => (

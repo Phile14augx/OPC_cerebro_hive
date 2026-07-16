@@ -9,7 +9,7 @@ const nodes = [
   { id: "agentos", label: "AgentOS", role: "Autonomy Layer", icon: Cpu, color: "text-accent-secondary", border: "border-[#00E5FF]/30", bg: "bg-[#00E5FF]/5" },
   { id: "knowledge", label: "Knowledge Hub", role: "Context Layer", icon: Search, color: "text-accent-primary", border: "border-accent-primary/30", bg: "bg-[#00F57A]/5" },
   { id: "core", label: "Cerebro AI", role: "Reasoning Engine", icon: BrainCircuit, color: "text-primary-accent", border: "border-primary-accent/50", bg: "bg-primary-accent/10" },
-  { id: "analytics", label: "Analytics", role: "Insight Layer", icon: Zap, color: "text-text-primary", border: "border-border", bg: "bg-white/5" },
+  { id: "analytics", label: "Analytics", role: "Insight Layer", icon: Zap, color: "text-text-primary", border: "border-border", bg: "bg-surface" },
   { id: "erp", label: "Quantiva ERP", role: "System of Record", icon: Database, color: "text-warning", border: "border-[#FFB300]/30", bg: "bg-[#FFB300]/5" },
 ];
 

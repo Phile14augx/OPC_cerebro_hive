@@ -81,7 +81,7 @@ export default function CareersPage() {
             We are assembling a team of exceptional engineers, researchers, architects, and consultants who are obsessed with building enterprise AI systems that actually work.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <a href="#apply" className="px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
+            <a href="#apply" className="px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
               Join Our Talent Network <ArrowRight size={16} />
             </a>
             <a href="#domains" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/40 hover:bg-surface-elevated transition-all">
@@ -211,7 +211,7 @@ export default function CareersPage() {
                 <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted">Tell Us About Yourself *</label>
                 <textarea required rows={5} value={form.message} onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))} placeholder="What are you working on? What kind of problems excite you? What are you looking for in your next role?" className="px-4 py-3 bg-surface border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none" />
               </div>
-              <button type="submit" disabled={isLoading} className="flex items-center justify-center gap-3 px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated mt-2 disabled:opacity-60 disabled:cursor-not-allowed">
+              <button type="submit" disabled={isLoading} className="flex items-center justify-center gap-3 px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated mt-2 disabled:opacity-60 disabled:cursor-not-allowed">
                 <Send size={16} />
                 {isLoading ? "Sending…" : "Submit Profile"}
               </button>

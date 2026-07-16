@@ -15,7 +15,7 @@ import { PlatformCTA } from '@/components/products/v2/PlatformCTA';
 
 export default function ProductsLandingPage() {
   return (
-    <div className="bg-background min-h-screen selection:bg-primary-accent/30 selection:text-black">
+    <div className="bg-background min-h-screen selection:bg-primary-accent/30 selection:text-text-primary">
       
       {/* 1. What the platform is */}
       <PlatformHero />

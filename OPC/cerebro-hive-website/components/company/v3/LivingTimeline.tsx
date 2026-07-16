@@ -27,7 +27,7 @@ export default function LivingTimeline() {
 
         {/* Timeline Desktop */}
         <div className="hidden md:block relative max-w-5xl mx-auto mb-16">
-          <div className="absolute top-1/2 left-0 right-0 h-px bg-white/10 -translate-y-1/2" />
+          <div className="absolute top-1/2 left-0 right-0 h-px bg-surface-elevated -translate-y-1/2" />
           <div className="flex justify-between relative z-10">
             {milestones.map((m, i) => (
               <button 
@@ -38,7 +38,7 @@ export default function LivingTimeline() {
                 <div className={`text-xs font-bold uppercase tracking-widest transition-colors ${activeIndex === i ? 'text-text-primary' : 'text-text-muted group-hover:text-text-secondary'}`}>
                   {m.year}
                 </div>
-                <div className={`w-4 h-4 rounded-full border-2 transition-all ${activeIndex === i ? 'bg-[#00E5FF] border-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.5)] scale-150' : 'bg-background border-border group-hover:border-white/50'}`} />
+                <div className={`w-4 h-4 rounded-full border-2 transition-all ${activeIndex === i ? 'bg-[#00E5FF] border-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.5)] scale-150' : 'bg-background border-border group-hover:border-border-default'}`} />
                 <div className={`text-xs font-bold uppercase tracking-widest transition-colors ${activeIndex === i ? 'text-accent-secondary' : 'text-transparent'}`}>
                   {m.label}
                 </div>
@@ -79,7 +79,7 @@ export default function LivingTimeline() {
             <button
               key={i}
               onClick={() => setActiveIndex(i)}
-              className={`w-2 h-2 rounded-full transition-colors ${activeIndex === i ? 'bg-[#00E5FF]' : 'bg-white/20'}`}
+              className={`w-2 h-2 rounded-full transition-colors ${activeIndex === i ? 'bg-[#00E5FF]' : 'bg-surface-elevated'}`}
             />
           ))}
         </div>

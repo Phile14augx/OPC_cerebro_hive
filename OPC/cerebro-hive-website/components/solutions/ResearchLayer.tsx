@@ -84,7 +84,7 @@ export function ResearchLayer() {
              <p className="text-xs text-text-secondary mb-4">Get our weekly technical breakdown of AI research and architecture patterns.</p>
              <div className="flex w-full gap-2">
                <input type="email" placeholder="Enter work email" className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-xs text-text-primary focus:outline-none focus:border-primary-accent" />
-               <button className="bg-primary-accent text-black px-4 py-2 rounded-lg text-xs font-bold hover:shadow-elevated transition-shadow">Subscribe</button>
+               <button className="bg-primary-accent text-text-primary px-4 py-2 rounded-lg text-xs font-bold hover:shadow-elevated transition-shadow">Subscribe</button>
              </div>
           </div>
         </div>

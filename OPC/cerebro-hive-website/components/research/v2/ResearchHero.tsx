@@ -47,7 +47,7 @@ export const ResearchHero = () => {
         {/* Left Column: Messaging */}
         <div className="flex flex-col items-start text-left">
           
-          <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/5 border border-border mb-8 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm">
             <FlaskConical size={14} className="text-accent-secondary" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">CerebroHive Research Institute</span>
           </div>
@@ -63,11 +63,11 @@ export const ResearchHero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <button className="group px-8 py-4 bg-white text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-primary-accent shadow-lg">
+            <button className="group px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-primary-accent shadow-lg">
               Explore Research
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+            <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-border-default hover:bg-surface transition-all flex items-center justify-center gap-2">
               <Code2 size={16} /> Developer Portal
             </button>
           </div>
@@ -135,12 +135,12 @@ export const ResearchHero = () => {
                 <div className={cn(
                   "w-10 h-10 rounded-full flex items-center justify-center bg-surface border backdrop-blur-md transition-all duration-300",
                   node.border, node.color,
-                  "group-hover:scale-125 group-hover:bg-white/5",
+                  "group-hover:scale-125 group-hover:bg-surface",
                   node.glow
                 )}>
                   <Network size={16} />
                 </div>
-                <div className="absolute top-full mt-2 whitespace-nowrap text-[10px] uppercase tracking-widest font-bold text-text-muted group-hover:text-white transition-colors bg-surface-secondary px-2 py-0.5 rounded border border-border">
+                <div className="absolute top-full mt-2 whitespace-nowrap text-[10px] uppercase tracking-widest font-bold text-text-muted group-hover:text-text-primary transition-colors bg-surface-secondary px-2 py-0.5 rounded border border-border">
                   {node.label}
                 </div>
               </motion.div>

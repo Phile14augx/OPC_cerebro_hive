@@ -33,7 +33,7 @@ export default function AIAutomationPage() {
             Build recursive LLM orchestration pipelines using LangGraph and n8n to automate complex support, CRM enrichment, and outreach workflows. We replace manual, rule-based processes with adaptive, reasoning agents.
           </p>
 
-          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#FF8A00] text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
+          <Link href="/contact" className="inline-flex items-center gap-3 px-8 py-4 bg-[#FF8A00] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:-translate-y-1 transition-transform shadow-sm">
             Discuss Your Automation Needs
           </Link>
         </div>

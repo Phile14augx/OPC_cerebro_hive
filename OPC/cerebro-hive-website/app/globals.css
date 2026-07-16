@@ -1,141 +1,11 @@
 @import "tailwindcss";
 
-@theme {
-  --color-background: var(--background);
-  --color-surface: var(--surface);
-  --color-surface-secondary: var(--surface-secondary);
-  --color-border: var(--border);
-  
-  --color-primary-accent: var(--accent-primary);
-  --color-secondary-accent: var(--accent-secondary);
-  --color-warning: var(--warning);
-  --color-success: var(--success);
-  
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
-
-  --font-space: var(--font-space), sans-serif;
-  --font-inter: var(--font-inter), sans-serif;
-  --font-plex: var(--font-plex), monospace;
-  --font-jetbrains: var(--font-jetbrains), monospace;
-
-  /* Fluid Typography overrides for Tailwind v4 */
-  --text-xs: var(--text-xs-fluid);
-  --text-sm: var(--text-sm-fluid);
-  --text-base: var(--text-base-fluid);
-  --text-lg: var(--text-lg-fluid);
-  --text-xl: var(--text-xl-fluid);
-  --text-2xl: var(--text-2xl-fluid);
-  --text-3xl: var(--text-3xl-fluid);
-  --text-4xl: var(--text-4xl-fluid);
-  --text-5xl: var(--text-5xl-fluid);
-  --text-6xl: var(--text-6xl-fluid);
-  --text-7xl: var(--text-7xl-fluid);
-}
-
-/* ============================================================
-   CEREBRO HIVE — DESIGN TOKENS (Enterprise Systems)
-   ============================================================ */
-:root {
-  /* LIGHT THEME (Executive Boardroom / Engineering Blueprint) */
-  --background: #F8FAFC;
-  --surface: #FFFFFF;
-  --surface-secondary: #F3F4F6;
-  --border: #E5E7EB;
-
-  --text-primary: #111827;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-
-  --accent-primary: #059669; /* Emerald */
-  --accent-secondary: #2563EB; /* Blue */
-  
-  --warning: #F59E0B;
-  --success: #10B981;
-
-  /* Structural Tokens */
-  --radius-card: 16px;
-  --radius-button: 999px;
-  --radius-modal: 24px;
-  
-  /* Elevation & Glow */
-  --shadow-sm: 0 2px 4px rgba(15,23,42,0.02);
-  --shadow-md: 0 4px 12px rgba(15,23,42,0.04);
-  --shadow-xl: 0 20px 50px rgba(15,23,42,0.08);
-  
-  --glow-primary: none;
-  --glow-secondary: none;
-  
-  /* Texture & Opacity */
-  --grid-opacity: 0.03;
-  --particle-opacity: 0;
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(15, 23, 42, 0.08);
-  --mesh-density: 0.02;
-  
-  /* Motion Constants (Fast, precise, spring) */
-  --motion-duration: 250ms;
-  --motion-easing: cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Spring */
-  
-  /* Typography Scale Overrides (Light Mode feels crisper) */
-  --font-weight-heavy: 700;
-  --font-weight-normal: 400;
-
-  /* Fluid Typography Tokens (Min, Target, Max) */
-  --text-xs-fluid: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  --text-sm-fluid: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
-  --text-base-fluid: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-lg-fluid: clamp(1.125rem, 1.05rem + 0.38vw, 1.25rem);
-  --text-xl-fluid: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
-  --text-2xl-fluid: clamp(1.5rem, 1.3rem + 1vw, 2rem);
-  --text-3xl-fluid: clamp(1.875rem, 1.5rem + 1.88vw, 2.25rem);
-  --text-4xl-fluid: clamp(2.25rem, 1.75rem + 2.5vw, 3rem);
-  --text-5xl-fluid: clamp(3rem, 2.25rem + 3.75vw, 4rem);
-  --text-6xl-fluid: clamp(3.75rem, 2.5rem + 6.25vw, 6rem);
-  --text-7xl-fluid: clamp(4.5rem, 3.25rem + 6.25vw, 7rem);
-}
-
-.dark {
-  /* DARK THEME (AI Mission Control) */
-  --background: #05070A;
-  --surface: #0A0D14;
-  --surface-secondary: #141A25;
-  --border: rgba(255, 255, 255, 0.1);
-
-  --text-primary: #FFFFFF;
-  --text-secondary: #9CA3AF;
-  --text-muted: #6B7280;
-
-  --accent-primary: #00F57A; /* Neon Green */
-  --accent-secondary: #00E5FF; /* Cyan */
-  
-  --warning: #FFB300;
-  --success: #00F57A;
-
-  /* Elevation & Glow */
-  --shadow-sm: 0 4px 12px rgba(0,0,0,0.5);
-  --shadow-md: 0 12px 24px rgba(0,0,0,0.7);
-  --shadow-xl: 0 24px 48px rgba(0,0,0,0.9);
-  
-  --glow-primary: 0 0 20px rgba(0, 245, 122, 0.25), 0 0 60px rgba(0, 245, 122, 0.1);
-  --glow-secondary: 0 0 20px rgba(0, 229, 255, 0.25), 0 0 60px rgba(0, 229, 255, 0.1);
-  
-  /* Texture & Opacity */
-  --grid-opacity: 0.05;
-  --particle-opacity: 0.8;
-  --glass-bg: rgba(10, 13, 20, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --mesh-density: 0.1;
-
-  /* Motion Constants (Slow, organic, ambient) */
-  --motion-duration: 500ms;
-  --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
-  
-  /* Typography Scale Overrides (Dark Mode feels bolder) */
-  --font-weight-heavy: 900;
-  --font-weight-normal: 500;
-}
+@import "./theme/colors.css";
+@import "./theme/typography.css";
+@import "./theme/elevation.css";
+@import "./theme/motion.css";
+@import "./theme/charts.css";
+@import "./theme/icons.css";
 
 /* ============================================================
    RESET & BASE
@@ -153,11 +23,11 @@ html {
 }
 
 body {
-  background-color: var(--background);
+  background-color: var(--bg-page);
   color: var(--text-primary);
   font-family: var(--font-inter), system-ui, sans-serif;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: var(--line-height-body);
   overflow-x: hidden;
 }
 
@@ -176,10 +46,10 @@ main {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-space), sans-serif;
-  font-weight: 700;
+  font-weight: var(--font-weight-heading);
   line-height: 1.2;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: var(--letter-spacing-heading);
 }
 
 p { font-family: var(--font-inter), sans-serif; }
@@ -188,44 +58,45 @@ p { font-family: var(--font-inter), sans-serif; }
    THEME BEHAVIOR PRIMITIVES
    ============================================================ */
 .theme-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--motion-duration) var(--motion-easing);
+  box-shadow: var(--shadow-elevation-raised);
+  transition: all var(--motion-duration) var(--motion-easing-default);
 }
 .theme-card:hover {
-  box-shadow: var(--shadow-xl), var(--glow-primary);
+  box-shadow: var(--shadow-elevation-popover), var(--shadow-glow-primary);
   transform: translateY(-2px);
-  border-color: var(--accent-primary);
+  border-color: var(--text-accent);
 }
 
 .theme-panel {
-  background: var(--surface-secondary);
-  border: 1px solid var(--border);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-modal);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-elevation-floating);
 }
 
 .theme-glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
   border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-md), var(--glow-secondary);
-  transition: all var(--motion-duration) var(--motion-easing);
+  box-shadow: var(--shadow-elevation-floating), var(--shadow-glow-secondary);
+  transition: all var(--motion-duration) var(--motion-easing-default);
 }
 
 .theme-button-primary {
-  background: var(--accent-primary);
-  color: var(--background); /* Invert text for contrast */
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
   border-radius: var(--radius-button);
   font-weight: var(--font-weight-heavy);
-  box-shadow: var(--shadow-sm), var(--glow-primary);
-  transition: all var(--motion-duration) var(--motion-easing);
+  box-shadow: var(--shadow-elevation-raised), var(--shadow-glow-primary);
+  transition: all var(--motion-duration) var(--motion-easing-default);
 }
 .theme-button-primary:hover {
-  box-shadow: var(--shadow-md), var(--glow-primary);
+  background: var(--btn-primary-hover);
+  box-shadow: var(--shadow-elevation-floating), var(--shadow-glow-primary);
   transform: translateY(-1px);
 }
 

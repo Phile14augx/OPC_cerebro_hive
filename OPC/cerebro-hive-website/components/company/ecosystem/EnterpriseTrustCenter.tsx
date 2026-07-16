@@ -29,7 +29,7 @@ const getColorClasses = (color: string) => {
     case "gold": return "text-yellow-400 border-yellow-500/30 bg-yellow-500/10 group-hover:border-yellow-500/60";
     case "cyan": return "text-cyan-400 border-cyan-500/30 bg-cyan-500/10 group-hover:border-cyan-500/60";
     case "orange": return "text-orange-400 border-orange-500/30 bg-orange-500/10 group-hover:border-orange-500/60 shadow-[0_0_30px_rgba(249,115,22,0.15)]";
-    default: return "text-text-primary border-border bg-white/10";
+    default: return "text-text-primary border-border bg-surface-elevated";
   }
 };
 
@@ -78,11 +78,11 @@ const ExecutiveScorecard = () => {
       </div>
       
       <div className="grid grid-cols-2 gap-3 mt-2">
-        <div className="bg-white/5 rounded-lg p-3">
+        <div className="bg-surface rounded-lg p-3">
           <span className="text-[10px] text-text-muted font-mono uppercase block mb-1">Compliance</span>
           <span className="text-sm font-space font-bold text-text-primary">{compliance}</span>
         </div>
-        <div className="bg-white/5 rounded-lg p-3">
+        <div className="bg-surface rounded-lg p-3">
           <span className="text-[10px] text-text-muted font-mono uppercase block mb-1">Last Audit</span>
           <span className="text-sm font-space font-bold text-text-primary">{lastAudit}</span>
         </div>
@@ -201,7 +201,7 @@ const CapabilityNetwork = () => {
                   <Icon size={18} />
                 </div>
                 <div>
-                  <h4 className="text-base font-space font-bold text-text-primary group-hover:text-white transition-colors leading-tight mb-1">{spoke.title}</h4>
+                  <h4 className="text-base font-space font-bold text-text-primary group-hover:text-text-primary transition-colors leading-tight mb-1">{spoke.title}</h4>
                   <span className={cn("text-[10px] font-mono uppercase", getTextColorClass(spoke.color))}>{spoke.subtitle}</span>
                 </div>
               </div>
@@ -215,7 +215,7 @@ const CapabilityNetwork = () => {
                 </div>
                 <ul className="flex flex-col gap-2">
                   {spoke.controls.map((control, j) => (
-                    <li key={j} className="flex items-center gap-2 text-[11px] font-inter text-text-secondary group-hover:text-white/80 transition-colors">
+                    <li key={j} className="flex items-center gap-2 text-[11px] font-inter text-text-secondary group-hover:text-text-secondary transition-colors">
                       <CheckCircle size={10} className={cn("shrink-0", getTextColorClass(spoke.color))} style={{ opacity: 0.6 }} /> {control}
                     </li>
                   ))}
@@ -242,7 +242,7 @@ const DeploymentPipeline = () => {
       
       <div className="relative flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
         {/* Background Track */}
-        <div className="hidden md:block absolute top-6 left-[8%] right-[8%] h-[2px] bg-white/5 z-0" />
+        <div className="hidden md:block absolute top-6 left-[8%] right-[8%] h-[2px] bg-surface z-0" />
         
         {/* Active Pulse Traversal */}
         <motion.div 
@@ -262,7 +262,7 @@ const DeploymentPipeline = () => {
           >
             {/* Connection Line to Center for Mobile */}
             {i !== trustCenter.pipeline.length - 1 && (
-              <div className="md:hidden absolute top-[48px] bottom-[-32px] w-[2px] bg-white/5 z-0" />
+              <div className="md:hidden absolute top-[48px] bottom-[-32px] w-[2px] bg-surface z-0" />
             )}
 
             {/* Node */}
@@ -316,7 +316,7 @@ export const EnterpriseTrustCenter = () => {
             </h2>
             <h3 className="text-4xl md:text-5xl lg:text-6xl font-space font-bold text-text-primary tracking-tight leading-[1.1] mb-8">
               Enterprise AI <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">begins with trust.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-transparent">begins with trust.</span>
             </h3>
             <p className="text-base md:text-lg text-text-secondary font-inter max-w-xl leading-relaxed mb-8">
               A comprehensive operating model where architecture orchestration coordinates security, privacy, and compliance across the entire deployment lifecycle.

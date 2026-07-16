@@ -25,15 +25,15 @@ export const DeveloperResources = () => {
             <p className="text-lg text-text-secondary mb-8 max-w-xl">
               Access the same tools our researchers use. From interactive API playgrounds to verified prompt libraries, everything you need to operationalize AI is here.
             </p>
-            <button className="px-8 py-4 bg-[#00E5FF] text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform hover:scale-105 shadow-[0_0_20px_rgba(0,229,255,0.3)]">
+            <button className="px-8 py-4 bg-[#00E5FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform hover:scale-105 shadow-[0_0_20px_rgba(0,229,255,0.3)]">
               Access Portal <ArrowRight size={16} />
             </button>
           </div>
 
           <div className="w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
             {resources.map((res, i) => (
-              <div key={i} className="p-6 rounded-xl bg-white/5 border border-border hover:bg-white/10 transition-colors group cursor-pointer">
-                <res.icon size={24} className="text-text-muted group-hover:text-white transition-colors mb-4" />
+              <div key={i} className="p-6 rounded-xl bg-surface border border-border hover:bg-surface-elevated transition-colors group cursor-pointer">
+                <res.icon size={24} className="text-text-muted group-hover:text-text-primary transition-colors mb-4" />
                 <h3 className="text-text-primary font-space font-bold mb-2">{res.title}</h3>
                 <p className="text-xs text-text-secondary">{res.desc}</p>
               </div>

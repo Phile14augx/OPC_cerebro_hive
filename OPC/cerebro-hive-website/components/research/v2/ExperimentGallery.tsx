@@ -44,7 +44,7 @@ export const ExperimentGallery = () => {
               <div className="text-xs uppercase tracking-widest text-accent-secondary font-bold mb-2">Experiment {activeExp.id}</div>
               <h3 className="text-2xl font-space font-bold text-text-primary leading-tight">{activeExp.title}</h3>
             </div>
-            <div className="px-4 py-2 bg-white/5 border border-border rounded-lg text-xs font-bold text-text-primary uppercase tracking-widest shrink-0">
+            <div className="px-4 py-2 bg-surface border border-border rounded-lg text-xs font-bold text-text-primary uppercase tracking-widest shrink-0">
               {activeExp.status}
             </div>
           </div>
@@ -102,8 +102,8 @@ export const ExperimentGallery = () => {
 
           {/* Footer Navigation */}
           <div className="p-4 bg-black/20 border-t border-border flex justify-between items-center text-sm text-text-muted">
-            <button className="hover:text-white transition-colors">Previous Experiment</button>
-            <button className="flex items-center gap-2 hover:text-white transition-colors">Next Experiment <ArrowRight size={16} /></button>
+            <button className="hover:text-text-primary transition-colors">Previous Experiment</button>
+            <button className="flex items-center gap-2 hover:text-text-primary transition-colors">Next Experiment <ArrowRight size={16} /></button>
           </div>
 
         </div>

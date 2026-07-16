@@ -23,7 +23,7 @@ export const DepartmentNode = ({ data, selected }: NodeProps<Node<OrganizationNo
     )}>
       <div className="p-5">
         <div className="flex items-center gap-3 mb-4">
-          <div className={cn("w-8 h-8 rounded bg-white/5 flex items-center justify-center", config.textClass)}>
+          <div className={cn("w-8 h-8 rounded bg-surface flex items-center justify-center", config.textClass)}>
             {config.icon}
           </div>
           <div>
@@ -53,7 +53,7 @@ export const DepartmentNode = ({ data, selected }: NodeProps<Node<OrganizationNo
         )}
       </div>
 
-      <Handle type="target" position={Position.Top} className="w-3 h-3 !bg-background !border-2 !border-white/20" />
+      <Handle type="target" position={Position.Top} className="w-3 h-3 !bg-background !border-2 !border-border-default" />
       <Handle type="source" position={Position.Bottom} className={cn("w-3 h-3 !border-2 !border-black", config.textClass.replace('text-', '!bg-'))} />
     </div>
   );

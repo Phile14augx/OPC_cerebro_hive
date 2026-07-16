@@ -105,7 +105,7 @@ export default function ServicesPage() {
             <div className="flex flex-col sm:flex-row items-center gap-4 mb-16">
               <Link href="/contact" className="group relative">
                 <div className="absolute inset-0 bg-primary-accent blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-300 rounded-lg" />
-                <button className="relative px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform duration-300 group-hover:-translate-y-1">
+                <button className="relative px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform duration-300 group-hover:-translate-y-1">
                   Schedule an AI Strategy Workshop
                 </button>
               </Link>
@@ -175,7 +175,7 @@ export default function ServicesPage() {
             <div className="flex flex-col sm:flex-row items-center gap-6 mb-16">
               <Link href="/contact" className="group relative">
                 <div className="absolute inset-0 bg-primary-accent blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-300 rounded-lg" />
-                <button className="relative px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform duration-300 group-hover:-translate-y-1">
+                <button className="relative px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform duration-300 group-hover:-translate-y-1">
                   Request an AI Maturity Assessment
                   <ArrowRight size={16} />
                 </button>

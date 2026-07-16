@@ -33,11 +33,11 @@ export const TrendRadar = () => {
           <div className="lg:col-span-8 bg-surface border border-border rounded-2xl p-8 relative overflow-hidden flex items-center justify-center min-h-[500px]">
             {/* Radar grid */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
-              <div className="w-[80%] h-[80%] border border-white rounded-full absolute" />
-              <div className="w-[50%] h-[50%] border border-white rounded-full absolute" />
-              <div className="w-[20%] h-[20%] border border-white rounded-full absolute" />
-              <div className="w-full h-px bg-white absolute" />
-              <div className="h-full w-px bg-white absolute" />
+              <div className="w-[80%] h-[80%] border border-border-default rounded-full absolute" />
+              <div className="w-[50%] h-[50%] border border-border-default rounded-full absolute" />
+              <div className="w-[20%] h-[20%] border border-border-default rounded-full absolute" />
+              <div className="w-full h-px bg-surface absolute" />
+              <div className="h-full w-px bg-surface absolute" />
             </div>
 
             {/* Labels */}
@@ -59,9 +59,9 @@ export const TrendRadar = () => {
                     transition={{ duration: 1, repeat: activeTech.id === tech.id ? Infinity : 0 }}
                     className={cn(
                       "w-4 h-4 rounded-full border-2 transition-all shadow-[0_0_15px_rgba(255,255,255,0.2)]",
-                      tech.category === "Emerging" ? "bg-[#FFB300] border-black" :
-                      tech.category === "Trending" ? "bg-[#00E5FF] border-black" :
-                      "bg-accent-primary border-black",
+                      tech.category === "Emerging" ? "bg-[#FFB300] border-border-default" :
+                      tech.category === "Trending" ? "bg-[#00E5FF] border-border-default" :
+                      "bg-accent-primary border-border-default",
                       activeTech.id === tech.id ? "scale-125 ring-4 ring-white/20" : ""
                     )}
                   />
@@ -81,7 +81,7 @@ export const TrendRadar = () => {
             
             <h3 className="text-2xl font-space font-bold text-text-primary mb-2">{activeTech.name}</h3>
             
-            <div className="inline-flex px-2 py-1 rounded bg-white/5 border border-border text-xs font-bold text-text-secondary uppercase tracking-widest mb-6 w-fit">
+            <div className="inline-flex px-2 py-1 rounded bg-surface border border-border text-xs font-bold text-text-secondary uppercase tracking-widest mb-6 w-fit">
               {activeTech.category}
             </div>
 

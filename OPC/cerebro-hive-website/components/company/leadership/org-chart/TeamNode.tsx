@@ -17,9 +17,9 @@ export const TeamNode = ({ data, selected }: NodeProps<Node<OrganizationNodeData
     <div className={cn(
       "relative w-[180px] rounded-lg overflow-hidden transition-all duration-300",
       "bg-surface border border-border shadow-sm",
-      selected ? "ring-1 ring-white/20 scale-[1.02]" : "hover:border-white/20 cursor-pointer hover:bg-surface-elevated"
+      selected ? "ring-1 ring-white/20 scale-[1.02]" : "hover:border-border-strong cursor-pointer hover:bg-surface-elevated"
     )}>
-      <div className={cn("h-1 w-full bg-white/5", config.colorClass, "border-t")} />
+      <div className={cn("h-1 w-full bg-surface", config.colorClass, "border-t")} />
       
       <div className="p-3">
         <h5 className="text-xs font-space font-bold text-text-primary mb-1 leading-tight">{data.title}</h5>

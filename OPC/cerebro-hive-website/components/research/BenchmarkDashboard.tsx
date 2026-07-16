@@ -87,7 +87,7 @@ export const BenchmarkDashboard = () => {
                         </div>
                       </div>
                     </div>
-                    <Link href={`/research/benchmarks/${activeBenchmark.slug}`} className="shrink-0 p-3 bg-background border border-border rounded-full hover:bg-primary-accent hover:text-black transition-colors">
+                    <Link href={`/research/benchmarks/${activeBenchmark.slug}`} className="shrink-0 p-3 bg-background border border-border rounded-full hover:bg-primary-accent hover:text-text-primary transition-colors">
                       <ArrowRight size={18} />
                     </Link>
                   </div>

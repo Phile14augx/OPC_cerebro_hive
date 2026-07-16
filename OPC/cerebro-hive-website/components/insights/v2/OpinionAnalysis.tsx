@@ -47,7 +47,7 @@ export const OpinionAnalysis = () => {
                 <span className={cn("px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest bg-surface-secondary border border-border", op.iconColor)}>
                   {op.type}
                 </span>
-                <ArrowRight size={20} className="text-text-muted group-hover:text-white transition-colors" />
+                <ArrowRight size={20} className="text-text-muted group-hover:text-text-primary transition-colors" />
               </div>
 
               <h3 className="text-2xl font-space font-bold text-text-primary mb-3 leading-tight">{op.title}</h3>

@@ -78,7 +78,7 @@ export const PlatformHero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <button className="group px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-white shadow-[0_0_20px_rgba(0,245,122,0.2)]">
+            <button className="group px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-surface shadow-[0_0_20px_rgba(0,245,122,0.2)]">
               Build My AI Platform
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>

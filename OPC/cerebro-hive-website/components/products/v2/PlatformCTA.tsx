@@ -38,11 +38,11 @@ export const PlatformCTA = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="w-full sm:w-auto group px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-white shadow-[0_0_20px_rgba(0,245,122,0.2)]">
+            <button className="w-full sm:w-auto group px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-surface shadow-[0_0_20px_rgba(0,245,122,0.2)]">
               Build My AI Platform
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="w-full sm:w-auto px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all flex items-center justify-center">
+            <button className="w-full sm:w-auto px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-border-default hover:bg-surface transition-all flex items-center justify-center">
               View Documentation
             </button>
           </div>

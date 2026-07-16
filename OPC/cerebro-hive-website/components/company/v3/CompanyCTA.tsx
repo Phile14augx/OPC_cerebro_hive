@@ -14,7 +14,7 @@ export default function CompanyCTA() {
       <div className="container-wide relative z-10">
         
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-space font-bold text-black mb-8 tracking-tighter leading-none">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary mb-8 tracking-tighter leading-none">
             Build the Future of Enterprise AI Together.
           </h2>
           <p className="text-xl md:text-2xl text-black/70 max-w-2xl mx-auto font-inter font-medium mb-12">
@@ -24,7 +24,7 @@ export default function CompanyCTA() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link 
               href="/contact" 
-              className="px-8 py-4 bg-surface text-text-primary rounded-full font-space font-bold text-lg hover:bg-black/80 transition-colors flex items-center gap-3 w-full sm:w-auto justify-center group"
+              className="px-8 py-4 bg-surface text-text-primary rounded-full font-space font-bold text-lg hover:bg-overlay transition-colors flex items-center gap-3 w-full sm:w-auto justify-center group"
             >
               Partner with CerebroHive
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -32,7 +32,7 @@ export default function CompanyCTA() {
             
             <Link 
               href="/careers" 
-              className="px-8 py-4 bg-transparent border-2 border-black text-black rounded-full font-space font-bold text-lg hover:bg-black/5 transition-colors flex items-center gap-3 w-full sm:w-auto justify-center"
+              className="px-8 py-4 bg-transparent border-2 border-border-default text-text-primary rounded-full font-space font-bold text-lg hover:bg-black/5 transition-colors flex items-center gap-3 w-full sm:w-auto justify-center"
             >
               View Open Roles
             </Link>

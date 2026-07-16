@@ -40,7 +40,7 @@ export const InsightsHero = () => {
         {/* Left Column: Messaging */}
         <div className="flex flex-col items-start text-left">
           
-          <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/5 border border-border mb-8 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm">
             <BrainCircuit size={14} className="text-accent-secondary" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Executive Intelligence Center</span>
           </div>
@@ -55,11 +55,11 @@ export const InsightsHero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <button className="group px-8 py-4 bg-white text-black font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-primary-accent shadow-lg">
+            <button className="group px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-primary-accent shadow-lg">
               Read Weekly Brief
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
-            <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-white/50 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+            <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-border-default hover:bg-surface transition-all flex items-center justify-center gap-2">
               <BarChart3 size={16} /> Explore Dashboards
             </button>
           </div>
@@ -103,7 +103,7 @@ export const InsightsHero = () => {
 
             <div className="space-y-4 relative z-10">
               {trendStatuses.map((trend, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border bg-white/5 hover:bg-white/10 transition-colors">
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border bg-surface hover:bg-surface-elevated transition-colors">
                   <span className="text-sm font-bold text-text-primary">{trend.label}</span>
                   <div className={cn("px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest border bg-surface-secondary", trend.color, trend.border)}>
                     {trend.status}

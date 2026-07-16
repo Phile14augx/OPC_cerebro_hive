@@ -18,7 +18,7 @@ export const NewsletterCTA = () => {
           {/* Subtle gradient bar top */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#00E5FF] via-[#00F57A] to-[#7B61FF]" />
 
-          <div className="w-16 h-16 rounded-full bg-white/5 border border-border flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 rounded-full bg-surface border border-border flex items-center justify-center mx-auto mb-6">
             <Mail size={24} className="text-accent-secondary" />
           </div>
 
@@ -48,7 +48,7 @@ export const NewsletterCTA = () => {
             />
             <button 
               type="submit" 
-              className="px-8 py-4 bg-[#00E5FF] text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform flex items-center justify-center gap-2 whitespace-nowrap"
+              className="px-8 py-4 bg-[#00E5FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform flex items-center justify-center gap-2 whitespace-nowrap"
             >
               Subscribe <ArrowRight size={16} />
             </button>

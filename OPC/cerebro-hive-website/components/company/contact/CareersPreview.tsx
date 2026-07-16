@@ -90,7 +90,7 @@ export const CareersPreview = () => {
               </div>
             </div>
 
-            <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-border hover:bg-white/10 hover:border-primary-accent/50 transition-all text-sm font-space font-bold text-text-primary uppercase tracking-wider group">
+            <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-surface border border-border hover:bg-surface-elevated hover:border-primary-accent/50 transition-all text-sm font-space font-bold text-text-primary uppercase tracking-wider group">
               Explore Opportunities <ArrowRight size={16} className="text-primary-accent group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -168,7 +168,7 @@ export const CareersPreview = () => {
                           </div>
                         </div>
                         
-                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary-accent group-hover:text-black transition-colors">
+                        <div className="w-8 h-8 rounded-full bg-surface flex items-center justify-center group-hover:bg-primary-accent group-hover:text-text-primary transition-colors">
                           <ArrowRight size={14} className={cn("transition-transform", isSelected ? "rotate-45" : "-rotate-45")} />
                         </div>
                       </div>
@@ -214,7 +214,7 @@ export const CareersPreview = () => {
                   </div>
                   <h3 className="text-lg font-space font-bold text-text-primary">{activeDomain.domain}</h3>
                 </div>
-                <button onClick={handleClose} className="p-2 rounded-full hover:bg-white/10 transition-colors text-text-muted hover:text-white">
+                <button onClick={handleClose} className="p-2 rounded-full hover:bg-surface-elevated transition-colors text-text-muted hover:text-text-primary">
                   <X size={20} />
                 </button>
               </div>
@@ -224,11 +224,11 @@ export const CareersPreview = () => {
                 
                 {/* Meta */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/5 border border-border p-3 rounded-lg flex flex-col gap-1">
+                  <div className="bg-surface border border-border p-3 rounded-lg flex flex-col gap-1">
                     <span className="text-[10px] font-mono uppercase text-text-muted flex items-center gap-1.5"><MapPin size={10}/> Location</span>
                     <span className="text-sm font-space text-text-primary">{activeDomain.location}</span>
                   </div>
-                  <div className="bg-white/5 border border-border p-3 rounded-lg flex flex-col gap-1">
+                  <div className="bg-surface border border-border p-3 rounded-lg flex flex-col gap-1">
                     <span className="text-[10px] font-mono uppercase text-text-muted">Seniority</span>
                     <span className="text-sm font-space text-text-primary">{activeDomain.seniority}</span>
                   </div>
@@ -247,7 +247,7 @@ export const CareersPreview = () => {
                   <h4 className="text-xs font-space font-bold uppercase tracking-widest text-text-muted mb-3">Problems We're Solving</h4>
                   <ul className="flex flex-col gap-2">
                     {activeDomain.problems.map((problem, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-white/90">
+                      <li key={i} className="flex items-start gap-2 text-sm text-text-primary">
                         <ChevronRight size={16} className="text-primary-accent shrink-0 mt-0.5" />
                         {problem}
                       </li>
@@ -259,7 +259,7 @@ export const CareersPreview = () => {
                 <section>
                   <h4 className="text-xs font-space font-bold uppercase tracking-widest text-text-muted mb-4">Career Trajectory</h4>
                   <div className="flex flex-col relative pl-2">
-                    <div className="absolute left-[11px] top-2 bottom-2 w-[1px] bg-white/10" />
+                    <div className="absolute left-[11px] top-2 bottom-2 w-[1px] bg-surface-elevated" />
                     {activeDomain.careerPath.map((path, i) => (
                       <div key={i} className="flex items-center gap-4 py-2 relative z-10">
                         <div className="w-2 h-2 rounded-full bg-[#05080f] border-2 border-border" />
@@ -276,7 +276,7 @@ export const CareersPreview = () => {
                   <h4 className="text-xs font-space font-bold uppercase tracking-widest text-text-muted mb-3">Technology Stack</h4>
                   <div className="flex flex-wrap gap-2">
                     {activeDomain.technologies.map((tech, i) => (
-                      <span key={i} className="px-3 py-1 rounded-md bg-white/5 border border-border text-xs font-mono text-text-secondary">
+                      <span key={i} className="px-3 py-1 rounded-md bg-surface border border-border text-xs font-mono text-text-secondary">
                         {tech}
                       </span>
                     ))}
@@ -289,7 +289,7 @@ export const CareersPreview = () => {
               <div className="mt-auto p-6 border-t border-border bg-[#020306]">
                 <button className={cn(
                   "w-full py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-space font-bold uppercase tracking-widest transition-colors border",
-                  themeConfig[activeDomain.theme].bg, themeConfig[activeDomain.theme].border, themeConfig[activeDomain.theme].text, "hover:bg-white/10 hover:text-white"
+                  themeConfig[activeDomain.theme].bg, themeConfig[activeDomain.theme].border, themeConfig[activeDomain.theme].text, "hover:bg-surface-elevated hover:text-text-primary"
                 )}>
                   View {activeDomain.openRoles} Open Roles <ArrowRight size={16} />
                 </button>

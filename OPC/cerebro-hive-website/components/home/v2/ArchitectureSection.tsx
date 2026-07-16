@@ -434,7 +434,7 @@ export default function ArchitectureSection() {
                         style={{ background: `linear-gradient(to right, ${step.color}, ${pipelineSteps[idx+1].color})` }}
                       />
                       {/* Animated packet loop */}
-                      <div className="absolute top-0 w-4 h-full bg-white blur-[2px] animate-data-flow" />
+                      <div className="absolute top-0 w-4 h-full bg-surface blur-[2px] animate-data-flow" />
                     </div>
                   </div>
                 )}

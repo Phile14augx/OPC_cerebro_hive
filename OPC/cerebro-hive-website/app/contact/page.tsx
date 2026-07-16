@@ -158,7 +158,7 @@ export default function ContactPage() {
                     className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-text-primary font-inter text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none"
                   />
                 </div>
-                <button type="submit" disabled={isLoading} className="group relative mt-2 px-8 py-4 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated disabled:opacity-60 disabled:cursor-not-allowed">
+                <button type="submit" disabled={isLoading} className="group relative mt-2 px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated disabled:opacity-60 disabled:cursor-not-allowed">
                   {isLoading ? "Sending…" : "Submit Inquiry"}
                   {!isLoading && <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />}
                 </button>
@@ -190,7 +190,7 @@ export default function ContactPage() {
                   </div>
                 ))}
               </div>
-              <a href="https://calendly.com/cerebro-hive" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-primary-accent text-black font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform">
+              <a href="https://calendly.com/cerebro-hive" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform">
                 <Calendar size={16} />
                 Schedule Meeting
               </a>

@@ -23,7 +23,7 @@ export default function EnterpriseReadiness() {
           <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#00F57A]/5 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="max-w-xl relative z-10 text-center md:text-left">
-            <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-6 mx-auto md:mx-0 border border-border">
+            <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center mb-6 mx-auto md:mx-0 border border-border">
               <ShieldCheck size={32} className="text-accent-primary" />
             </div>
             <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-4">Enterprise Grade by Default.</h2>
@@ -34,7 +34,7 @@ export default function EnterpriseReadiness() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10 w-full max-w-2xl">
             {features.map((feature, i) => (
-              <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-border">
+              <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-surface border border-border">
                 <CheckCircle2 size={16} className="text-accent-primary shrink-0" />
                 <span className="text-sm font-bold text-text-primary">{feature}</span>
               </div>

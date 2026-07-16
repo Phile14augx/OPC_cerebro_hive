@@ -54,7 +54,7 @@ export const InsightsExplorer = () => {
                 onClick={() => setActiveLevel(level)}
                 className={cn(
                   "px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-md transition-colors",
-                  activeLevel === level ? "bg-[#00E5FF] text-black" : "text-text-muted hover:text-white"
+                  activeLevel === level ? "bg-[#00E5FF] text-text-primary" : "text-text-muted hover:text-text-primary"
                 )}
               >
                 {level === "30s" ? "30 Sec Summary" : level === "5m" ? "5 Min Brief" : "Full Analysis"}
@@ -65,12 +65,12 @@ export const InsightsExplorer = () => {
 
         <div className="space-y-6">
           {insights.map(insight => (
-            <div key={insight.id} className="bg-surface border border-border rounded-2xl p-6 md:p-8 hover:border-white/30 transition-colors">
+            <div key={insight.id} className="bg-surface border border-border rounded-2xl p-6 md:p-8 hover:border-border-strong transition-colors">
               
               <div className="flex flex-col md:flex-row justify-between gap-6 mb-6">
                 <div>
                   <div className="flex items-center gap-3 mb-4">
-                    <span className={cn("px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest text-black", insight.color)}>
+                    <span className={cn("px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest text-text-primary", insight.color)}>
                       {insight.category}
                     </span>
                     <span className="text-[10px] uppercase tracking-widest text-text-muted flex items-center gap-1">
@@ -83,7 +83,7 @@ export const InsightsExplorer = () => {
                 <div className="shrink-0">
                   <button 
                     onClick={() => setExpandedId(expandedId === insight.id ? null : insight.id)}
-                    className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-text-primary hover:bg-white/10 transition-colors"
+                    className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-text-primary hover:bg-surface-elevated transition-colors"
                   >
                     <ChevronDown size={16} className={cn("transition-transform", expandedId === insight.id ? "rotate-180" : "")} />
                   </button>
@@ -108,7 +108,7 @@ export const InsightsExplorer = () => {
                   </p>
                   
                   {activeLevel !== "Full" && (
-                    <button onClick={() => setActiveLevel(activeLevel === "30s" ? "5m" : "Full")} className="mt-4 text-xs font-bold text-accent-secondary hover:text-white transition-colors flex items-center gap-1">
+                    <button onClick={() => setActiveLevel(activeLevel === "30s" ? "5m" : "Full")} className="mt-4 text-xs font-bold text-accent-secondary hover:text-text-primary transition-colors flex items-center gap-1">
                       Read {activeLevel === "30s" ? "5 Min Brief" : "Full Analysis"} <ArrowRight size={12} />
                     </button>
                   )}

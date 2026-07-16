@@ -36,7 +36,7 @@ export const ResearchAssistant = () => {
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 w-14 h-14 bg-primary-accent rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,245,122,0.3)] hover:scale-110 transition-transform z-50 ${isOpen ? 'hidden' : 'flex'}`}
       >
-        <MessageSquare size={24} className="text-black" />
+        <MessageSquare size={24} className="text-text-primary" />
       </button>
 
       {/* Chat Window */}
@@ -61,7 +61,7 @@ export const ResearchAssistant = () => {
                   </div>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="text-text-muted hover:text-white transition-colors">
+              <button onClick={() => setIsOpen(false)} className="text-text-muted hover:text-text-primary transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -72,8 +72,8 @@ export const ResearchAssistant = () => {
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[85%] rounded-2xl p-3 text-sm leading-relaxed ${
                     msg.role === 'user' 
-                      ? 'bg-primary-accent text-black rounded-tr-sm font-medium' 
-                      : 'bg-white/5 border border-border text-text-secondary rounded-tl-sm'
+                      ? 'bg-primary-accent text-text-primary rounded-tr-sm font-medium' 
+                      : 'bg-surface border border-border text-text-secondary rounded-tl-sm'
                   }`}>
                     {msg.text}
                   </div>
@@ -85,7 +85,7 @@ export const ResearchAssistant = () => {
             {messages.length === 1 && (
               <div className="px-4 pb-4 flex flex-wrap gap-2">
                 {suggestedActions.map((action, i) => (
-                  <button key={i} onClick={() => setInput(action.label)} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-border hover:border-primary-accent/50 hover:text-primary-accent transition-colors text-xs text-text-muted">
+                  <button key={i} onClick={() => setInput(action.label)} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border hover:border-primary-accent/50 hover:text-primary-accent transition-colors text-xs text-text-muted">
                     <action.icon size={12} /> {action.label}
                   </button>
                 ))}
@@ -100,9 +100,9 @@ export const ResearchAssistant = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask about our research..."
-                  className="w-full bg-white/5 border border-border rounded-xl py-3 pl-4 pr-12 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors"
+                  className="w-full bg-surface border border-border rounded-xl py-3 pl-4 pr-12 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors"
                 />
-                <button type="submit" disabled={!input.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-primary-accent text-black disabled:opacity-50 disabled:bg-white/10 disabled:text-text-muted transition-colors">
+                <button type="submit" disabled={!input.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-primary-accent text-text-primary disabled:opacity-50 disabled:bg-surface-elevated disabled:text-text-muted transition-colors">
                   <Send size={14} />
                 </button>
               </form>

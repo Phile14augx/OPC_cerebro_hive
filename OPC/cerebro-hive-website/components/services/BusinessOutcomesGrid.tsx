@@ -67,7 +67,7 @@ export function BusinessOutcomesGrid() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="p-8 rounded-2xl bg-background border border-border hover:border-white/20 transition-all duration-300 group"
+              className="p-8 rounded-2xl bg-background border border-border hover:border-border-strong transition-all duration-300 group"
             >
               <div 
                 className="w-12 h-12 rounded-xl mb-6 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"

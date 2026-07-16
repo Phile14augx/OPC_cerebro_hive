@@ -29,11 +29,11 @@ export default function WhyCerebroHive() {
 
             <div className="flex flex-col items-center gap-2">
               <div className="w-full p-4 rounded-lg bg-surface-secondary border border-border text-center text-sm text-text-secondary font-bold">Discover</div>
-              <ArrowDown size={16} className="text-white/20" />
+              <ArrowDown size={16} className="text-text-muted" />
               <div className="w-full p-4 rounded-lg bg-surface-secondary border border-border text-center text-sm text-text-secondary font-bold">Design</div>
-              <ArrowDown size={16} className="text-white/20" />
+              <ArrowDown size={16} className="text-text-muted" />
               <div className="w-full p-4 rounded-lg bg-surface-secondary border border-border text-center text-sm text-text-secondary font-bold">Deliver Project</div>
-              <ArrowDown size={16} className="text-white/20" />
+              <ArrowDown size={16} className="text-text-muted" />
               <div className="w-full p-4 rounded-lg bg-red-400/10 border border-red-400/20 text-center text-sm text-red-400 font-bold">Leave</div>
             </div>
           </div>

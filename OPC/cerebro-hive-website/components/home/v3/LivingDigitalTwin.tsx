@@ -40,7 +40,7 @@ export default function LivingDigitalTwin() {
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-[#7B61FF] font-bold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-[#7B61FF] font-bold mb-6">
             <Zap size={12} /> Living Digital Twin
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">The Automation Impact</h2>
@@ -60,7 +60,7 @@ export default function LivingDigitalTwin() {
                 className={`p-6 rounded-2xl border text-left transition-all ${
                   activeId === wf.id 
                     ? "bg-surface border-border shadow-lg scale-105" 
-                    : "bg-surface/50 border-border hover:border-white/10"
+                    : "bg-surface/50 border-border hover:border-border-default"
                 }`}
               >
                 <div className="font-space font-bold text-text-primary mb-2">{wf.label}</div>
@@ -108,14 +108,14 @@ export default function LivingDigitalTwin() {
 
                   {/* Transition */}
                   <div className="flex flex-col items-center justify-center gap-2 shrink-0">
-                    <div className="h-10 w-px bg-white/20 md:hidden" />
+                    <div className="h-10 w-px bg-surface-elevated md:hidden" />
                     <ArrowRight size={24} className="text-accent-secondary hidden md:block" />
-                    <div className="h-10 w-px bg-white/20 md:hidden" />
+                    <div className="h-10 w-px bg-surface-elevated md:hidden" />
                   </div>
 
                   {/* After */}
                   <div className="flex-1 w-full theme-card border-accent-secondary/50 p-6 relative shadow-lg dark:shadow-[0_0_30px_rgba(0,229,255,0.1)]">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-3 py-1 bg-accent-secondary rounded-full text-[10px] font-bold uppercase tracking-widest text-white shadow-lg">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-3 py-1 bg-accent-secondary rounded-full text-[10px] font-bold uppercase tracking-widest text-text-primary shadow-lg">
                       After
                     </div>
                     <div className="flex items-center gap-3 mb-4 mt-2">

@@ -68,12 +68,12 @@ export const IndustryIntelligence = () => {
                     "flex items-center gap-4 p-4 rounded-xl border transition-all text-left group",
                     isActive 
                       ? "bg-surface border-[#00E5FF]/50 shadow-[0_0_15px_rgba(0,229,255,0.1)]" 
-                      : "bg-surface/50 border-border hover:border-white/20"
+                      : "bg-surface/50 border-border hover:border-border-strong"
                   )}
                 >
                   <div className={cn(
                     "w-10 h-10 rounded-lg flex items-center justify-center transition-colors shrink-0",
-                    isActive ? "bg-[#00E5FF]/10 text-accent-secondary" : "bg-surface text-text-muted group-hover:text-white"
+                    isActive ? "bg-[#00E5FF]/10 text-accent-secondary" : "bg-surface text-text-muted group-hover:text-text-primary"
                   )}>
                     <ind.icon size={20} />
                   </div>
@@ -129,7 +129,7 @@ export const IndustryIntelligence = () => {
                     </div>
                     <ul className="space-y-3">
                       {ind.research.map((r, i) => (
-                        <li key={i} className="text-sm text-accent-secondary hover:text-white cursor-pointer transition-colors flex items-start gap-2">
+                        <li key={i} className="text-sm text-accent-secondary hover:text-text-primary cursor-pointer transition-colors flex items-start gap-2">
                           <span className="mt-1 opacity-50">-</span> {r}
                         </li>
                       ))}
@@ -141,7 +141,7 @@ export const IndustryIntelligence = () => {
                     </div>
                     <ul className="space-y-3">
                       {ind.products.map((p, i) => (
-                        <li key={i} className="text-sm text-accent-primary hover:text-white cursor-pointer transition-colors flex items-start gap-2">
+                        <li key={i} className="text-sm text-accent-primary hover:text-text-primary cursor-pointer transition-colors flex items-start gap-2">
                           <span className="mt-1 opacity-50">-</span> {p}
                         </li>
                       ))}

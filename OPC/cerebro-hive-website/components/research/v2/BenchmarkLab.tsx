@@ -14,7 +14,7 @@ const tasks = [
 
 const models = [
   { name: "Cerebro-Enterprise-v2", color: "bg-[#00E5FF]", border: "border-[#00E5FF]", text: "text-accent-secondary", scores: { doc: 98, rag: 96, planning: 95, compliance: 99 } },
-  { name: "GPT-4o (Baseline)", color: "bg-white/20", border: "border-border", text: "text-white/50", scores: { doc: 94, rag: 88, planning: 82, compliance: 90 } },
+  { name: "GPT-4o (Baseline)", color: "bg-surface-elevated", border: "border-border", text: "text-text-muted", scores: { doc: 94, rag: 88, planning: 82, compliance: 90 } },
   { name: "Claude 3.5 Sonnet", color: "bg-[#FFB300]/50", border: "border-[#FFB300]/50", text: "text-warning", scores: { doc: 96, rag: 91, planning: 89, compliance: 93 } }
 ];
 
@@ -50,7 +50,7 @@ export const BenchmarkLab = () => {
                     "p-4 rounded-xl border flex flex-col items-start text-left transition-all",
                     isActive 
                       ? "bg-[#00E5FF]/10 border-[#00E5FF]/50 shadow-[0_0_15px_rgba(0,229,255,0.1)]" 
-                      : "bg-surface border-border hover:border-white/20"
+                      : "bg-surface border-border hover:border-border-strong"
                   )}
                 >
                   <div className="flex items-center gap-3 mb-2">

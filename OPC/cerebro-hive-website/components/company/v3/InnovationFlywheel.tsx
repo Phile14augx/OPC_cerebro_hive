@@ -19,7 +19,7 @@ export default function InnovationFlywheel() {
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-accent-secondary font-bold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-accent-secondary font-bold mb-6">
             <Repeat size={12} /> The Flywheel
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">How Knowledge Compounds</h2>

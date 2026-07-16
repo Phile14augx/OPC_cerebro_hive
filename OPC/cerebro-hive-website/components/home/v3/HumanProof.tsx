@@ -39,7 +39,7 @@ export default function HumanProof() {
       <div className="container-wide">
         
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-accent-primary font-bold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-accent-primary font-bold mb-6">
             <Users size={12} /> Enterprise Evidence
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Proven in production.</h2>
@@ -59,7 +59,7 @@ export default function HumanProof() {
                 className={`p-6 rounded-2xl border text-left transition-all ${
                   activeCase.id === c.id 
                     ? "bg-surface border-border shadow-lg" 
-                    : "bg-surface/50 border-border hover:border-white/10"
+                    : "bg-surface/50 border-border hover:border-border-default"
                 }`}
               >
                 <div className="flex items-center gap-3 mb-2">
@@ -114,7 +114,7 @@ export default function HumanProof() {
                     <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-2">Timeline</div>
                     <div className="text-sm font-bold text-text-primary">{activeCase.timeline}</div>
                   </div>
-                  <div className="p-4 rounded-xl bg-white/5 border border-border relative overflow-hidden">
+                  <div className="p-4 rounded-xl bg-surface border border-border relative overflow-hidden">
                     <div className={`absolute top-0 left-0 w-1 h-full ${activeCase.color}`} />
                     <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-2 ml-2">Business Outcome</div>
                     <div className="text-3xl font-space font-bold text-text-primary ml-2">{activeCase.metric}</div>

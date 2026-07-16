@@ -28,8 +28,8 @@ export default function HowWeThink() {
           {steps.map((step, i) => (
             <div key={i} className="flex flex-col items-center">
               
-              <div className="w-full bg-surface border border-border rounded-2xl p-6 flex flex-col sm:flex-row items-center sm:items-start gap-6 group hover:border-white/30 transition-colors">
-                <div className={`w-14 h-14 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-border ${step.color}`}>
+              <div className="w-full bg-surface border border-border rounded-2xl p-6 flex flex-col sm:flex-row items-center sm:items-start gap-6 group hover:border-border-strong transition-colors">
+                <div className={`w-14 h-14 rounded-full bg-surface-elevated flex items-center justify-center shrink-0 border border-border ${step.color}`}>
                   <step.icon size={24} />
                 </div>
                 <div className="text-center sm:text-left">
@@ -41,7 +41,7 @@ export default function HowWeThink() {
               {/* Connector */}
               {i < steps.length - 1 && (
                 <div className="py-4">
-                  <ArrowDown size={20} className="text-white/20" />
+                  <ArrowDown size={20} className="text-text-muted" />
                 </div>
               )}
 

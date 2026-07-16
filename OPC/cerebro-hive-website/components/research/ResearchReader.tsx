@@ -15,7 +15,7 @@ export const ResearchReader = ({ publication }: { publication: ResearchPublicati
   });
 
   return (
-    <div className="bg-background min-h-screen pt-24 pb-32 selection:bg-primary-accent/30 selection:text-black">
+    <div className="bg-background min-h-screen pt-24 pb-32 selection:bg-primary-accent/30 selection:text-text-primary">
       <div className="container-wide">
         
         {/* Breadcrumbs */}
@@ -137,7 +137,7 @@ export const ResearchReader = ({ publication }: { publication: ResearchPublicati
             
             {/* Actions */}
             <div className="bg-surface border border-border rounded-xl p-5 shadow-sm flex flex-col gap-3">
-              <button className="w-full py-3 bg-primary-accent text-black font-space font-bold text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-[#00F57A]/90 transition-colors">
+              <button className="w-full py-3 bg-primary-accent text-text-primary font-space font-bold text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-[#00F57A]/90 transition-colors">
                 <Download size={16} /> Download PDF
               </button>
               <div className="flex gap-2">

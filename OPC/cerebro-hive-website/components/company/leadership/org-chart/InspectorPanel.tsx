@@ -15,7 +15,7 @@ const themeColors: Record<string, string> = {
   research: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
   consulting: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20',
   business: 'bg-orange-500/10 text-orange-500 border-orange-500/20',
-  default: 'bg-gray-500/10 text-gray-500 border-gray-500/20'
+  default: 'bg-gray-500/10 text-text-muted border-gray-500/20'
 };
 
 export const InspectorPanel = () => {
@@ -33,7 +33,7 @@ export const InspectorPanel = () => {
           /* ACTIVE STATE: Node Selected */
           <div className="flex flex-col h-full max-h-[500px]">
             {/* Header */}
-            <div className="flex items-start justify-between p-5 border-b border-border bg-white/[0.02]">
+            <div className="flex items-start justify-between p-5 border-b border-border bg-surface-elevated">
               <div>
                 <div className={cn("inline-block px-2 py-1 rounded text-[9px] font-mono uppercase tracking-widest mb-2 border", themeColors[node.theme] || themeColors.default)}>
                   {node.type}
@@ -41,7 +41,7 @@ export const InspectorPanel = () => {
                 <h2 className="text-lg font-space font-bold text-text-primary mb-0.5 leading-tight">{node.title}</h2>
                 <p className="text-[11px] text-text-secondary font-inter line-clamp-1">{node.subtitle}</p>
               </div>
-              <button onClick={() => setSelectedNode(null)} className="p-1.5 text-text-muted hover:text-white hover:bg-white/10 rounded-md transition-colors">
+              <button onClick={() => setSelectedNode(null)} className="p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-elevated rounded-md transition-colors">
                 <X size={16} />
               </button>
             </div>
@@ -83,7 +83,7 @@ export const InspectorPanel = () => {
                   <ul className="flex flex-col gap-1.5">
                     {node.capabilities.map((cap, i) => (
                       <li key={i} className="text-[11px] font-inter text-text-secondary flex items-start gap-2">
-                        <span className="text-white/20 mt-0.5">•</span> {cap}
+                        <span className="text-text-muted mt-0.5">•</span> {cap}
                       </li>
                     ))}
                   </ul>
@@ -92,7 +92,7 @@ export const InspectorPanel = () => {
             </div>
             
             <div className="p-3 border-t border-border">
-              <button className="w-full py-2 bg-white/5 hover:bg-white/10 border border-border rounded-lg text-[11px] font-space font-bold text-text-primary transition-colors flex items-center justify-center gap-2">
+              <button className="w-full py-2 bg-surface hover:bg-surface-elevated border border-border rounded-lg text-[11px] font-space font-bold text-text-primary transition-colors flex items-center justify-center gap-2">
                 Open Full Dashboard <ExternalLink size={12} />
               </button>
             </div>
@@ -100,8 +100,8 @@ export const InspectorPanel = () => {
         ) : (
           /* IDLE STATE: Company Overview */
           <div className="flex flex-col">
-            <div className="p-5 border-b border-border bg-white/[0.02]">
-              <div className="inline-block px-2 py-1 rounded text-[9px] font-mono uppercase tracking-widest mb-2 border border-border text-text-muted bg-white/5">
+            <div className="p-5 border-b border-border bg-surface-elevated">
+              <div className="inline-block px-2 py-1 rounded text-[9px] font-mono uppercase tracking-widest mb-2 border border-border text-text-muted bg-surface">
                 Global Network
               </div>
               <h2 className="text-lg font-space font-bold text-text-primary mb-0.5">Company Overview</h2>
@@ -131,18 +131,18 @@ export const InspectorPanel = () => {
 
       {/* Tools & MiniMap Card */}
       <div className="w-[340px] bg-background/80 backdrop-blur-2xl border border-border rounded-2xl shadow-xl flex flex-col overflow-hidden pointer-events-auto">
-        <div className="p-2 border-b border-border flex justify-between gap-1 bg-white/[0.02]">
-          <button onClick={() => fitView({ padding: 0.2, duration: 800 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-white hover:bg-white/5 rounded transition-colors" title="Fit View">
+        <div className="p-2 border-b border-border flex justify-between gap-1 bg-surface-elevated">
+          <button onClick={() => fitView({ padding: 0.2, duration: 800 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors" title="Fit View">
             <Maximize2 size={14} />
           </button>
-          <button onClick={() => zoomIn({ duration: 400 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-white hover:bg-white/5 rounded transition-colors" title="Zoom In">
+          <button onClick={() => zoomIn({ duration: 400 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors" title="Zoom In">
             <ZoomIn size={14} />
           </button>
-          <button onClick={() => zoomOut({ duration: 400 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-white hover:bg-white/5 rounded transition-colors" title="Zoom Out">
+          <button onClick={() => zoomOut({ duration: 400 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors" title="Zoom Out">
             <ZoomOut size={14} />
           </button>
-          <div className="w-px bg-white/10 mx-1" />
-          <button className="flex-[2] py-1.5 flex justify-center items-center gap-1.5 text-text-muted hover:text-white hover:bg-white/5 rounded transition-colors text-[10px] font-space uppercase font-bold" title="Export">
+          <div className="w-px bg-surface-elevated mx-1" />
+          <button className="flex-[2] py-1.5 flex justify-center items-center gap-1.5 text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors text-[10px] font-space uppercase font-bold" title="Export">
             <Download size={12} /> Export
           </button>
         </div>

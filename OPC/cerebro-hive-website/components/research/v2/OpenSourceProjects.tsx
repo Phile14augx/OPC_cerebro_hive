@@ -48,7 +48,7 @@ export const OpenSourceProjects = () => {
               We open-source our foundational tooling, datasets, and evaluation frameworks to accelerate the entire AI ecosystem.
             </p>
           </div>
-          <button className="px-6 py-3 bg-white/5 border border-border text-text-primary text-sm font-bold rounded-lg hover:bg-white hover:text-black transition-colors flex items-center gap-2">
+          <button className="px-6 py-3 bg-surface border border-border text-text-primary text-sm font-bold rounded-lg hover:bg-surface hover:text-text-primary transition-colors flex items-center gap-2">
             View GitHub Organization
           </button>
         </div>
@@ -77,7 +77,7 @@ export const OpenSourceProjects = () => {
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="flex items-center gap-1 hover:text-[#FFB300] transition-colors cursor-pointer"><Star size={14} /> {proj.stars}</span>
-                  <span className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer"><GitFork size={14} /> {proj.forks}</span>
+                  <span className="flex items-center gap-1 hover:text-text-primary transition-colors cursor-pointer"><GitFork size={14} /> {proj.forks}</span>
                   <span className="flex items-center gap-1 hover:text-[#00E5FF] transition-colors cursor-pointer"><Download size={14} /> {proj.dl}</span>
                 </div>
               </div>

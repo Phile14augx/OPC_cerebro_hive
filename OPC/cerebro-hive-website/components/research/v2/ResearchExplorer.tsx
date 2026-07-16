@@ -72,7 +72,7 @@ export const ResearchExplorer = () => {
                   "px-4 py-2 rounded-full text-xs font-bold transition-all shrink-0 border",
                   activePersona === persona 
                     ? "bg-[#00E5FF]/10 text-accent-secondary border-[#00E5FF]/30" 
-                    : "bg-surface border-border text-text-muted hover:text-white"
+                    : "bg-surface border-border text-text-muted hover:text-text-primary"
                 )}
               >
                 {persona}
@@ -83,7 +83,7 @@ export const ResearchExplorer = () => {
 
         <div className="grid grid-cols-1 gap-4">
           {filteredPapers.map((paper, i) => (
-            <div key={i} className="bg-surface border border-border rounded-2xl p-6 hover:bg-white/5 hover:border-white/20 transition-all group flex flex-col md:flex-row gap-6 items-start">
+            <div key={i} className="bg-surface border border-border rounded-2xl p-6 hover:bg-surface hover:border-border-strong transition-all group flex flex-col md:flex-row gap-6 items-start">
               
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-3">
@@ -105,16 +105,16 @@ export const ResearchExplorer = () => {
               </div>
 
               <div className="flex flex-row md:flex-col gap-2 shrink-0 w-full md:w-auto">
-                <button className="flex-1 md:flex-none px-4 py-2.5 bg-white/5 border border-border rounded-lg text-xs font-bold text-text-primary hover:bg-primary-accent hover:text-black hover:border-primary-accent transition-colors flex items-center justify-center gap-2">
+                <button className="flex-1 md:flex-none px-4 py-2.5 bg-surface border border-border rounded-lg text-xs font-bold text-text-primary hover:bg-primary-accent hover:text-text-primary hover:border-primary-accent transition-colors flex items-center justify-center gap-2">
                   <FileText size={14} /> Read Paper
                 </button>
                 {paper.github && (
-                  <button className="flex-1 md:flex-none px-4 py-2.5 bg-surface-secondary border border-border rounded-lg text-xs font-bold text-text-secondary hover:text-white transition-colors flex items-center justify-center gap-2">
+                  <button className="flex-1 md:flex-none px-4 py-2.5 bg-surface-secondary border border-border rounded-lg text-xs font-bold text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center gap-2">
                     <Code2 size={14} /> Code
                   </button>
                 )}
                 {paper.dataset && (
-                  <button className="flex-1 md:flex-none px-4 py-2.5 bg-surface-secondary border border-border rounded-lg text-xs font-bold text-text-secondary hover:text-white transition-colors flex items-center justify-center gap-2">
+                  <button className="flex-1 md:flex-none px-4 py-2.5 bg-surface-secondary border border-border rounded-lg text-xs font-bold text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center gap-2">
                     <Database size={14} /> Dataset
                   </button>
                 )}

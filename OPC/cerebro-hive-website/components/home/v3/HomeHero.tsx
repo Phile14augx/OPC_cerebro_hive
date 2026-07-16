@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Database, BrainCircuit, Bot, Network, Lightbulb, Target } from "lucide-react";
+import { ArrowRight, ChevronRight, Play, Database, BrainCircuit, Bot, Network, Lightbulb, Target } from "lucide-react";
+import { HeroBackground } from "@/components/ui/HeroBackground";
 
 const stages = [
   { id: "disconnected", title: "Disconnected Enterprise", icon: Database, color: "text-warning" },
@@ -15,6 +16,7 @@ const stages = [
 
 export default function HomeHero() {
   const [activeStage, setActiveStage] = useState(0);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,48 +26,17 @@ export default function HomeHero() {
   }, []);
 
   return (
-    <section className="relative min-h-[90vh] flex items-center pt-24 pb-12 overflow-hidden bg-background">
+    <section ref={containerRef} className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden bg-background">
       
-      {/* =========================================
-          DARK THEME BACKGROUND (Mission Control)
-          ========================================= */}
-      <div className="hidden dark:block absolute inset-0 pointer-events-none transition-colors duration-1000 opacity-20"
-           style={{
-             background: `radial-gradient(circle at center, ${
-               activeStage === 0 ? '#FFB300' :
-               activeStage === 1 ? '#00E5FF' :
-               activeStage === 2 ? '#7B61FF' :
-               activeStage === 3 ? '#00F57A' :
-               activeStage === 4 ? '#FFB300' :
-               '#00E5FF'
-             } 0%, transparent 60%)`
-           }} 
-      />
-      {/* Dark Grid Pattern */}
-      <div className="hidden dark:block absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+      {/* Immersive Theme-Aware Ambient Background */}
+      <HeroBackground />
 
-      {/* =========================================
-          LIGHT THEME BACKGROUND (Engineering Blueprint)
-          ========================================= */}
-      <div className="block dark:hidden absolute inset-0 pointer-events-none opacity-[0.05]" 
-           style={{ 
-             backgroundImage: `
-               linear-gradient(to right, #64748B 1px, transparent 1px),
-               linear-gradient(to bottom, #64748B 1px, transparent 1px)
-             `, 
-             backgroundSize: '40px 40px' 
-           }} 
-      />
-      {/* Topographic/Engineering Accents for Light Theme */}
-      <div className="block dark:hidden absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-transparent opacity-80" />
-      <div className="block dark:hidden absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent opacity-80" />
-
-      <div className="container-wide relative z-10">
+      <div className="container-wide relative z-10 pt-32 pb-20">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
           {/* Left: Copy */}
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold mb-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold mb-8">
               <span className="w-2 h-2 rounded-full bg-accent-primary animate-pulse" />
               The Enterprise AI Operating System
             </div>
@@ -119,7 +90,7 @@ export default function HomeHero() {
               {stages.map((stage, i) => (
                 <div 
                   key={i}
-                  className={`h-1 transition-all duration-500 rounded-full ${i === activeStage ? 'w-8 bg-white' : 'w-2 bg-white/20'}`}
+                  className={`h-1 transition-all duration-500 rounded-full ${i === activeStage ? 'w-8 bg-surface' : 'w-2 bg-surface-elevated'}`}
                 />
               ))}
             </div>

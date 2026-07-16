@@ -115,13 +115,13 @@ export const PlatformExplorer = () => {
           <div className="flex bg-surface-elevated border border-border rounded-lg p-1">
             <button 
               onClick={() => setViewMode("business")}
-              className={cn("px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2", viewMode === "business" ? "bg-primary-accent text-black" : "text-text-muted hover:text-white")}
+              className={cn("px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2", viewMode === "business" ? "bg-primary-accent text-text-primary" : "text-text-muted hover:text-text-primary")}
             >
               <Building2 size={14} /> Business View
             </button>
             <button 
               onClick={() => setViewMode("technical")}
-              className={cn("px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2", viewMode === "technical" ? "bg-white text-black" : "text-text-muted hover:text-white")}
+              className={cn("px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2", viewMode === "technical" ? "bg-surface text-text-primary" : "text-text-muted hover:text-text-primary")}
             >
               <Code2 size={14} /> Technical View
             </button>
@@ -138,7 +138,7 @@ export const PlatformExplorer = () => {
                 onClick={() => setActiveTab(p.id)}
                 className={cn(
                   "px-6 py-4 rounded-xl flex items-center gap-3 transition-all border whitespace-nowrap",
-                  isActive ? "bg-surface-elevated border-border shadow-lg" : "bg-transparent border-transparent text-text-muted hover:bg-surface hover:text-white"
+                  isActive ? "bg-surface-elevated border-border shadow-lg" : "bg-transparent border-transparent text-text-muted hover:bg-surface hover:text-text-primary"
                 )}
               >
                 <p.icon size={18} className={isActive ? p.color : "text-text-muted"} />
@@ -183,7 +183,7 @@ export const PlatformExplorer = () => {
                       <h4 className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2"><Building2 size={14} /> Key Departments</h4>
                       <div className="flex flex-wrap gap-2 mb-8">
                         {activeProduct.business.departments.map((dept, i) => (
-                          <span key={i} className="px-3 py-1 bg-white/5 border border-border rounded-full text-xs font-bold text-text-primary">{dept}</span>
+                          <span key={i} className="px-3 py-1 bg-surface border border-border rounded-full text-xs font-bold text-text-primary">{dept}</span>
                         ))}
                       </div>
                       
@@ -220,7 +220,7 @@ export const PlatformExplorer = () => {
                       <h4 className="text-xs uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2"><Network size={14} /> Integrations</h4>
                       <div className="flex flex-wrap gap-2">
                         {activeProduct.technical.integrations.map((int, i) => (
-                          <span key={i} className="px-3 py-1 bg-white/5 border border-border rounded text-xs font-bold text-text-primary">{int}</span>
+                          <span key={i} className="px-3 py-1 bg-surface border border-border rounded text-xs font-bold text-text-primary">{int}</span>
                         ))}
                       </div>
                     </div>

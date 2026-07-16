@@ -29,8 +29,8 @@ const phases = [
   {
     title: "Platform Integration",
     color: "text-text-primary",
-    border: "border-white/50",
-    bg: "bg-white/10",
+    border: "border-border-default",
+    bg: "bg-surface-elevated",
     items: ["Autonomous Organizations", "World Simulation Models"]
   }
 ];
@@ -57,10 +57,10 @@ export const ResearchRoadmap = () => {
               
               {/* Connector */}
               {i < phases.length - 1 && (
-                <div className="hidden md:block absolute top-2 left-1/2 right-[-50%] h-0.5 bg-white/10" />
+                <div className="hidden md:block absolute top-2 left-1/2 right-[-50%] h-0.5 bg-surface-elevated" />
               )}
               {i < phases.length - 1 && (
-                <div className="md:hidden absolute top-4 bottom-[-100%] left-1/2 w-0.5 -translate-x-1/2 bg-white/10" />
+                <div className="md:hidden absolute top-4 bottom-[-100%] left-1/2 w-0.5 -translate-x-1/2 bg-surface-elevated" />
               )}
 
               <div className={cn("bg-surface border rounded-xl p-6 h-full transition-colors", phase.bg.replace('/10', '/5'), phase.border.replace('border-', 'border-').replace(/\]$/, ']/20'))}>

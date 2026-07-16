@@ -36,12 +36,12 @@ export const ExecutiveDecisionCenter = () => {
           
           {/* Progress Indicator */}
           <div className="flex items-center justify-between mb-12 relative">
-            <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px bg-white/10 z-0" />
+            <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px bg-surface-elevated z-0" />
             {[1, 2, 3].map(num => (
               <div key={num} className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold relative z-10 transition-colors",
                 step === num ? "bg-[#7B61FF] text-text-primary border-4 border-[#0A0D14]" :
-                step > num ? "bg-accent-primary text-black border-4 border-[#0A0D14]" :
+                step > num ? "bg-accent-primary text-text-primary border-4 border-[#0A0D14]" :
                 "bg-surface text-text-muted border border-border"
               )}>
                 {step > num ? <CheckCircle2 size={14} /> : num}
@@ -59,7 +59,7 @@ export const ExecutiveDecisionCenter = () => {
                   </div>
                   <div className="flex flex-wrap gap-4 justify-center">
                     {roles.map(role => (
-                      <button key={role} onClick={() => handleSelect('role', role)} className="px-6 py-3 rounded-xl border border-border bg-white/5 text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
+                      <button key={role} onClick={() => handleSelect('role', role)} className="px-6 py-3 rounded-xl border border-border bg-surface text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
                         {role}
                       </button>
                     ))}
@@ -75,7 +75,7 @@ export const ExecutiveDecisionCenter = () => {
                   </div>
                   <div className="flex flex-wrap gap-4 justify-center">
                     {industries.map(ind => (
-                      <button key={ind} onClick={() => handleSelect('industry', ind)} className="px-6 py-3 rounded-xl border border-border bg-white/5 text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
+                      <button key={ind} onClick={() => handleSelect('industry', ind)} className="px-6 py-3 rounded-xl border border-border bg-surface text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
                         {ind}
                       </button>
                     ))}
@@ -91,7 +91,7 @@ export const ExecutiveDecisionCenter = () => {
                   </div>
                   <div className="flex flex-wrap gap-4 justify-center">
                     {priorities.map(pri => (
-                      <button key={pri} onClick={() => handleSelect('priority', pri)} className="px-6 py-3 rounded-xl border border-border bg-white/5 text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
+                      <button key={pri} onClick={() => handleSelect('priority', pri)} className="px-6 py-3 rounded-xl border border-border bg-surface text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
                         {pri}
                       </button>
                     ))}
@@ -121,7 +121,7 @@ export const ExecutiveDecisionCenter = () => {
                     <button className="px-8 py-4 bg-[#7B61FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity inline-flex items-center gap-2">
                       Generate Strategy Canvas <ArrowRight size={16} />
                     </button>
-                    <button onClick={() => { setStep(1); setSelections({ role: "", industry: "", priority: "" }); }} className="block mx-auto mt-4 text-xs text-text-muted hover:text-white transition-colors uppercase tracking-widest">
+                    <button onClick={() => { setStep(1); setSelections({ role: "", industry: "", priority: "" }); }} className="block mx-auto mt-4 text-xs text-text-muted hover:text-text-primary transition-colors uppercase tracking-widest">
                       Reset Configuration
                     </button>
                   </div>
