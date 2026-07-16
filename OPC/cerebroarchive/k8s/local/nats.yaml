@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nats
+spec:
+  serviceName: "nats-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats
+  template:
+    metadata:
+      labels:
+        app: nats
+    spec:
+      containers:
+      - name: nats
+        image: nats:2.9-alpine
+        args: ["-js"] # Enable JetStream
+        ports:
+        - containerPort: 4222
+        - containerPort: 8222 # Monitor port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-service
+spec:
+  ports:
+  - port: 4222
+    name: client
+  - port: 8222
+    name: monitor
+  selector:
+    app: nats

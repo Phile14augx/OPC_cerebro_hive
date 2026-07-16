@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cerebro-worker
+spec:
+  replicas: 2 # Scale independently based on NATS queue depth
+  selector:
+    matchLabels:
+      app: cerebro-worker
+  template:
+    metadata:
+      labels:
+        app: cerebro-worker
+    spec:
+      containers:
+      - name: cerebro-worker
+        image: cerebroarchive-worker:latest
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: cerebro-config
+        - secretRef:
+            name: cerebro-secrets
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
