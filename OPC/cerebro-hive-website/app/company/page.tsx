@@ -1,97 +1,93 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import { CompanySidebar } from '@/components/company/navigation/CompanySidebar';
 import { ForceDarkTheme } from '@/components/company/ForceDarkTheme';
+import { CompanySidebarV3 } from '@/components/company/v3/CompanySidebarV3';
 
-// Load immediately (Above the fold & critical content)
-import { CompanyHero } from '@/components/company/hero/CompanyHero';
-import { VisionMission } from '@/components/company/story/VisionMission';
+// Load Hero Immediately
+import CompanyHero from '@/components/company/v3/CompanyHero';
 
-// Lazy load heavy components
-const CompanyStoryTimeline = dynamic(() => import('@/components/company/story/CompanyStoryTimeline').then(mod => mod.CompanyStoryTimeline), { 
-  loading: () => <div className="h-96 flex items-center justify-center text-text-muted">Loading Timeline...</div> 
-});
-const CoreValuesBento = dynamic(() => import('@/components/company/story/CoreValuesBento').then(mod => mod.CoreValuesBento));
-const LeadershipGrid = dynamic(() => import('@/components/company/leadership/LeadershipGrid').then(mod => mod.LeadershipGrid));
-import { OrganizationChartWrapper } from '@/components/company/leadership/OrganizationChartWrapper';
-const CompanyMetrics = dynamic(() => import('@/components/company/culture/CompanyMetrics').then(mod => mod.CompanyMetrics));
-const GlobalPresenceMap = dynamic(() => import('@/components/company/ecosystem/GlobalPresenceMap').then(mod => mod.GlobalPresenceMap));
-const EcosystemGrid = dynamic(() => import('@/components/company/ecosystem/EcosystemGrid').then(mod => mod.EcosystemGrid));
-const EnterpriseTrustCenter = dynamic(() => import('@/components/company/ecosystem/EnterpriseTrustCenter').then(mod => mod.EnterpriseTrustCenter));
-const EngineeringCulture = dynamic(() => import('@/components/company/culture/EngineeringCulture').then(mod => mod.EngineeringCulture));
-const Headquarters = dynamic(() => import('@/components/company/contact/Headquarters').then(mod => mod.Headquarters));
-const CareersPreview = dynamic(() => import('@/components/company/contact/CareersPreview').then(mod => mod.CareersPreview));
-const CTA = dynamic(() => import('@/components/company/contact/CTA').then(mod => mod.CTA));
+// Chapter 1
+const OriginStory = dynamic(() => import('@/components/company/v3/OriginStory'));
+const EnterpriseManifesto = dynamic(() => import('@/components/company/v3/EnterpriseManifesto'));
+
+// Chapter 2
+const OperatingPhilosophy = dynamic(() => import('@/components/company/v3/OperatingPhilosophy'));
+const EngineeringPrinciples = dynamic(() => import('@/components/company/v3/EngineeringPrinciples'));
+const HowWeThink = dynamic(() => import('@/components/company/v3/HowWeThink'));
+const InnovationFlywheel = dynamic(() => import('@/components/company/v3/InnovationFlywheel'));
+
+// Chapter 3
+const WhyCerebroHive = dynamic(() => import('@/components/company/v3/WhyCerebroHive'));
+const EngineeringCulture = dynamic(() => import('@/components/company/v3/EngineeringCulture'));
+const ResponsibleAI = dynamic(() => import('@/components/company/v3/ResponsibleAI'));
+const EnterpriseProof = dynamic(() => import('@/components/company/v3/EnterpriseProof'));
+
+// Chapter 4
+const FounderPerspective = dynamic(() => import('@/components/company/v3/FounderPerspective'));
+const TeamExpertise = dynamic(() => import('@/components/company/v3/TeamExpertise'));
+
+// Chapter 5
+const LivingTimeline = dynamic(() => import('@/components/company/v3/LivingTimeline'));
+const CompanyRoadmap = dynamic(() => import('@/components/company/v3/CompanyRoadmap'));
+const GlobalOperatingModel = dynamic(() => import('@/components/company/v3/GlobalOperatingModel'));
+
+// Chapter 6
+const CompanyCTA = dynamic(() => import('@/components/company/v3/CompanyCTA'));
 
 export const metadata: Metadata = {
-  title: 'Company Headquarters | CerebroHive',
-  description: 'The definitive AI-native enterprise transformation partner. Explore our vision, leadership, and global presence.',
+  title: 'Company | CerebroHive',
+  description: 'We combine applied AI research, enterprise architecture, engineering discipline, and production platforms to help organizations become AI-native.',
 };
-
-
 
 export default function CompanyPage() {
   return (
     <div className="min-h-screen bg-background relative selection:bg-primary-accent/30 selection:text-white">
       <ForceDarkTheme />
-      <div id="hero">
-        <CompanyHero />
-      </div>
+      
+      <CompanyHero />
       
       <div className="flex">
-        {/* Sidebar Navigation */}
-        <CompanySidebar />
+        {/* Sticky Sidebar Navigation */}
+        <CompanySidebarV3 />
         
         {/* Main Content */}
         <div className="flex-1 min-w-0">
-          <div id="vision">
-            <VisionMission />
+          
+          <div id="chapter-1" className="scroll-mt-24">
+            <OriginStory />
+            <EnterpriseManifesto />
           </div>
 
-          <div id="story">
-            <CompanyStoryTimeline />
+          <div id="chapter-2" className="scroll-mt-24">
+            <OperatingPhilosophy />
+            <EngineeringPrinciples />
+            <HowWeThink />
+            <InnovationFlywheel />
           </div>
 
-          <div id="culture">
+          <div id="chapter-3" className="scroll-mt-24">
+            <WhyCerebroHive />
             <EngineeringCulture />
-            <CoreValuesBento />
+            <ResponsibleAI />
+            <EnterpriseProof />
           </div>
 
-          <div id="leadership">
-            <LeadershipGrid />
+          <div id="chapter-4" className="scroll-mt-24">
+            <FounderPerspective />
+            <TeamExpertise />
           </div>
 
-          <div id="org-chart" className="py-24 md:py-32 bg-background border-t border-border">
-            <div className="container-wide">
-              <div className="max-w-3xl mb-12">
-                <h2 className="text-sm font-space font-bold tracking-widest uppercase text-text-muted mb-4">
-                  Organizational Architecture
-                </h2>
-                <h3 className="text-4xl md:text-5xl font-space font-bold text-text-primary tracking-tight">
-                  Designed for Scale.
-                </h3>
-              </div>
-              <OrganizationChartWrapper />
-            </div>
-          </div>
-
-          <div id="metrics">
-            <CompanyMetrics />
-          </div>
-
-          <div id="ecosystem">
-            <EcosystemGrid />
-            <EnterpriseTrustCenter />
-          </div>
-
-          <div id="presence">
-            <GlobalPresenceMap />
-            <Headquarters />
-            <CareersPreview />
+          <div id="chapter-5" className="scroll-mt-24">
+            <LivingTimeline />
+            <CompanyRoadmap />
+            <GlobalOperatingModel />
           </div>
           
-          <CTA />
+          <div id="chapter-6" className="scroll-mt-24">
+            <CompanyCTA />
+          </div>
+
         </div>
       </div>
 
