@@ -85,26 +85,33 @@ const MissionControl = () => (
     />
     
     {/* Floating Particles */}
-    {[...Array(15)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute w-1 h-1 bg-primary-accent rounded-full opacity-30 shadow-[0_0_10px_rgba(0,245,122,0.8)]"
-        initial={{
-          x: Math.random() * 100 + "%",
-          y: Math.random() * 100 + "%",
-          scale: Math.random() * 2,
-        }}
-        animate={{
-          y: [null, `${Math.random() * 100}%`],
-          opacity: [0.1, 0.6, 0.1],
-        }}
-        transition={{
-          duration: Math.random() * 20 + 20,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      />
-    ))}
+    {[...Array(15)].map((_, i) => {
+      // Deterministic pseudo-random based on index to satisfy react-hooks/purity
+      const rand = (seed: number) => {
+        const x = Math.sin(seed + 1) * 10000;
+        return x - Math.floor(x);
+      };
+      return (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-primary-accent rounded-full opacity-30 shadow-[0_0_10px_rgba(0,245,122,0.8)]"
+          initial={{
+            x: rand(i * 1) * 100 + "%",
+            y: rand(i * 2) * 100 + "%",
+            scale: rand(i * 3) * 2,
+          }}
+          animate={{
+            y: [null, `${rand(i * 4) * 100}%`],
+            opacity: [0.1, 0.6, 0.1],
+          }}
+          transition={{
+            duration: rand(i * 5) * 20 + 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      );
+    })}
   </div>
 );
 
