@@ -1,0 +1,473 @@
+Component,File,Line,Element,Label,Destination,RouteStatus,Priority,RouteHealth
+ArchitectureCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/architecture/ArchitectureCanvas.tsx,171,button,[Icon/Image],Handler: {onDownloadPng},Action,Medium,Action
+ArchitectureCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/architecture/ArchitectureCanvas.tsx,174,button,[Icon/Image],Handler: {onDownloadSvg},Action,Medium,Action
+ArchitectureCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/architecture/ArchitectureCanvas.tsx,172,ImageIcon,[ImageIcon],,Missing,High,Unknown
+AuthGate,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/AuthGate.tsx,233,button,[Icon/Image],,Missing,High,Unknown
+AuthGate,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/AuthGate.tsx,241,button,[Empty],Handler: {() => setStep("login")},Action,Medium,Action
+AuthGate,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/AuthGate.tsx,407,button,{dynamic},,Missing,High,Unknown
+AuthGate,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/AuthGate.tsx,512,button,[Icon/Image],,Missing,High,Unknown
+AuthGate,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/AuthGate.tsx,257,CreditCard,[CreditCard],,Missing,High,Unknown
+AuthGate,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/AuthGate.tsx,317,CreditCard,[CreditCard],,Missing,High,Unknown
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,574,button,[Empty],Handler: {() => setActiveSandbox(s.id)},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,607,button,[Empty],Handler: {() => setActiveSandbox(s.id)},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,640,button,[Empty],Handler: {() => setActiveSandbox(s.id)},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,661,button,[Icon/Image],Handler: {() => {               setActiveSandbox(null);               setMatchAudited(false);               setMatchResult(null);               setQuizStep(0);               setQuizAnswers({});               setReadinessStep(0);               setReadinessAnswers({});               setSupportOutput(null);               setRagAnswer("");               setRagSteps([]);               setHrCandidates([]);             }},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,692,button,[Empty],Handler: {() => addFlowNode("Trigger"  "Webhook API Received"  "var(--hive-orange)")},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,693,button,[Empty],Handler: {() => addFlowNode("AI Node"  "Sentiment Router"  "var(--neural-blue)")},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,694,button,[Empty],Handler: {() => addFlowNode("Action"  "Slack Alerts Node"  "var(--violet)")},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,695,button,[Empty],Handler: {clearFlowCanvas},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,701,button,{dynamic},Handler: {runFlowSimulation},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,757,button,{dynamic},Handler: {runAgentSimulation},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,822,button,[Empty],Handler: {() => setQuizStep(1)},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,836,button,[Empty],Handler: {() => {                             setQuizAnswers(prev => ({ ...prev  [question.id]: opt.key }));                             if (quizStep < 3) {                               setQuizStep(quizStep + 1);                             } else {                               submitQuizAnswers();                             }                           }},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,883,button,[Empty],Handler: {handleDownloadCert},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,886,button,[Empty],Handler: {() => setQuizStep(0)},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,898,button,[Empty],Handler: {() => { setQuizStep(0); setQuizAnswers({}); }},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,948,button,[Empty],Handler: {() => auditAction(row.id  "approve")},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,949,button,[Empty],Handler: {() => auditAction(row.id  "flag")},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,983,button,[Empty],Handler: {() => setReadinessStep(1)},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,996,button,[Empty],Handler: {() => {                             setReadinessAnswers(prev => ({ ...prev  [question.id]: opt.score }));                             if (readinessStep < 4) {                               setReadinessStep(readinessStep + 1);                             } else {                               setReadinessStep(5);                             }                           }},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1032,button,[Empty],Handler: {downloadReadinessReport},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1035,button,[Empty],Handler: {() => { setReadinessStep(0); setReadinessAnswers({}); }},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1116,button,{dynamic},Handler: {() => setSupportText(t.text)},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1130,button,{dynamic},Handler: {runSupportSimulation},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1184,button,[Empty],Handler: {() => setRagQuery("What are the database backup rules?")},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1185,button,[Empty],Handler: {() => setRagQuery("What encryption protocols govern API nodes?")},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1186,button,[Empty],Handler: {() => setRagQuery("Who maintains access keys for production storage?")},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1189,button,{dynamic},Handler: {runRagSimulation},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1243,button,{dynamic},Handler: {runHrSimulation},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1266,button,[Empty],Handler: {() => hrAction(c.name  "Shortlisted")},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1267,button,[Empty],Handler: {() => hrAction(c.name  "Rejected")},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1331,button,[Empty],Handler: {runMatchAudit},Action,Medium,Action
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,1340,button,[Empty],,Missing,High,Unknown
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,566,Icon,[Icon],,Missing,High,Unknown
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,599,Icon,[Icon],,Missing,High,Unknown
+FreeTierDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/dashboard/FreeTierDashboard.tsx,632,Icon,[Icon],,Missing,High,Unknown
+CaseStudiesPreview,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/CaseStudiesPreview.tsx,63,Link,[Empty],/case-studies,Valid,Low,OK
+CaseStudiesPreview,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/CaseStudiesPreview.tsx,150,Link,[Icon/Image],[Dynamic: cs.href],Valid,Low,Unknown
+FinalCTA,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/FinalCTA.tsx,103,Link,{dynamic},/contact,Valid,Low,OK
+FinalCTA,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/FinalCTA.tsx,107,Link,{dynamic},/tools/ai-readiness,Valid,Low,OK
+HeroSection,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/HeroSection.tsx,141,Link,{dynamic},/contact,Valid,Low,OK
+HeroSection,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/HeroSection.tsx,144,Link,{dynamic},/solutions,Valid,Low,OK
+ServicesOverview,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/ServicesOverview.tsx,160,Link,{dynamic} {dynamic},[Dynamic: service.href],Valid,Low,Unknown
+ServicesOverview,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/ServicesOverview.tsx,136,Icon,[Icon],,Missing,High,Unknown
+SolutionRecommenderTeaser,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/SolutionRecommenderTeaser.tsx,66,button,{dynamic},Handler: {() => handleSelect(i)},Action,Medium,Action
+SolutionRecommenderTeaser,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/SolutionRecommenderTeaser.tsx,111,button,[Icon/Image],Handler: {() => router.push("/tools/solution-finder")},Action,Medium,Action
+SolutionsGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/SolutionsGrid.tsx,169,Link,{dynamic},[Dynamic: sol.href],Valid,Low,Unknown
+SolutionsGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/SolutionsGrid.tsx,193,Link,{dynamic},/solutions,Valid,Low,OK
+SolutionsGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/SolutionsGrid.tsx,126,Icon,[Icon],,Missing,High,Unknown
+IndustryDetailView,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/IndustryDetailView.tsx,216,Link,[Icon/Image],/products,Valid,Low,OK
+IndustryDetailView,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/IndustryDetailView.tsx,233,Link,[Icon/Image],[Dynamic: res.link],Valid,Low,Unknown
+IndustryDetailView,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/IndustryDetailView.tsx,254,Link,[Icon/Image],[Dynamic: `/industries/${rel}`],Valid,Low,Unknown
+IndustryDetailView,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/IndustryDetailView.tsx,293,Button,[Empty],,Missing,High,Unknown
+IndustryDetailView,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/IndustryDetailView.tsx,294,Button,[Empty],,Missing,High,Unknown
+IndustryDetailView,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/IndustryDetailView.tsx,69,Icon,[Icon],,Missing,High,Unknown
+IndustryPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/IndustryPageLayout.tsx,21,Link,{dynamic} {dynamic},[Dynamic: `/industries/${s.slug}`],Valid,Low,Unknown
+IndustryPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/IndustryPageLayout.tsx,85,button,{dynamic},,Missing,High,Unknown
+InteractiveIndustryExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/InteractiveIndustryExplorer.tsx,64,button,[Icon/Image],Handler: {() => toggleCategory(cat)},Action,Medium,Action
+InteractiveIndustryExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/InteractiveIndustryExplorer.tsx,86,Link,{dynamic},[Dynamic: `/industries/${ind.slug}`],Valid,Low,Unknown
+InteractiveIndustryExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/InteractiveIndustryExplorer.tsx,140,Link,[Empty],[Dynamic: `/industries/${ind.slug}`],Valid,Low,Unknown
+InteractiveIndustryGlobe,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/InteractiveIndustryGlobe.tsx,174,motion.div,{dynamic} {dynamic},Handler: {() => {                 // All 15 industries are now fully built engines  navigate directly to them                 router.push(`/industries/${node.slug}`);               }},Action,Medium,Action
+InteractiveIndustryGlobe,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/InteractiveIndustryGlobe.tsx,200,Icon,[Icon],,Missing,High,Unknown
+CerebroChat,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/CerebroChat.tsx,170,motion.button,[Icon/Image],Handler: {() => setIsOpen(true)},Action,Medium,Action
+CerebroChat,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/CerebroChat.tsx,225,button,[Icon/Image],Handler: {() => setIsOpen(false)},Action,Medium,Action
+CerebroChat,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/CerebroChat.tsx,239,button,[Icon/Image],,Missing,High,Unknown
+CerebroChat,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/CerebroChat.tsx,329,button,{dynamic},,Missing,High,Unknown
+CerebroChat,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/CerebroChat.tsx,344,button,{dynamic},Handler: {() => handleSend(prompt.text)},Action,Medium,Action
+CerebroChat,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/CerebroChat.tsx,375,button,[Icon/Image],,Missing,High,Unknown
+CerebroChat,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/CerebroChat.tsx,376,button,[Icon/Image],,Missing,High,Unknown
+CerebroChat,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/CerebroChat.tsx,377,button,[Icon/Image],,Missing,High,Unknown
+CerebroChat,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/CerebroChat.tsx,379,button,[Icon/Image],Handler: {() => handleSend(input)},Action,Medium,Action
+CerebroChat,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/CerebroChat.tsx,402,button,{dynamic} {dynamic},Handler: {() => setActiveTab(tab.id as any)},Action,Medium,Action
+Footer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Footer.tsx,263,Link,{dynamic},[Dynamic: link.href],Valid,Low,Unknown
+Footer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Footer.tsx,275,button,{dynamic},Handler: {() => setOpenAccordion(openAccordion === category ? null : category)},Action,Medium,Action
+Footer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Footer.tsx,287,Link,{dynamic},[Dynamic: link.href],Valid,Low,Unknown
+Footer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Footer.tsx,319,a,[Icon/Image],[Dynamic: social.href],Valid,Low,Unknown
+Footer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Footer.tsx,398,Link,[Icon/Image],/,Valid,Low,OK
+Footer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Footer.tsx,417,Link,[Empty],/legal/privacy,Valid,Low,OK
+Footer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Footer.tsx,418,Link,[Empty],/legal/security,Valid,Low,OK
+Footer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Footer.tsx,419,Link,[Empty],/legal/terms,Valid,Low,OK
+Footer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Footer.tsx,420,Link,[Empty],/legal/ai-ethics,Valid,Low,OK
+Footer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Footer.tsx,421,Link,[Empty],/sitemap.xml,Valid,Low,Broken (404)
+Navbar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Navbar.tsx,48,Link,[Icon/Image],/,Valid,Low,OK
+Navbar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Navbar.tsx,59,Link,{dynamic},[Dynamic: link.href],Valid,Low,Unknown
+Navbar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Navbar.tsx,74,Link,[Empty],/contact,Valid,Low,OK
+Navbar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Navbar.tsx,75,AnimatedButton,[Empty],,Missing,High,Unknown
+Navbar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Navbar.tsx,82,button,[Icon/Image],Handler: {() => setIsMobileMenuOpen(true)},Action,Medium,Action
+Navbar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Navbar.tsx,110,button,[Icon/Image],Handler: {() => setIsMobileMenuOpen(false)},Action,Medium,Action
+Navbar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Navbar.tsx,120,Link,{dynamic},[Dynamic: link.href],Valid,Low,Unknown
+Navbar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Navbar.tsx,135,AnimatedButton,[Empty],,Missing,High,Unknown
+Navbar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/layout/Navbar.tsx,95,motion.div,[motion.div],Handler: {() => setIsMobileMenuOpen(false)},Action,Medium,Action
+FrameworkExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/FrameworkExplorer.tsx,39,button,[Empty],Handler: {() => setActiveSlug(fw.slug)},Action,Medium,Action
+FrameworkExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/FrameworkExplorer.tsx,79,Link,[Icon/Image],[Dynamic: `/products/${activeFramework.slug}`],Valid,Low,Unknown
+FrameworkExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/FrameworkExplorer.tsx,160,Link,[Icon/Image],[Dynamic: `/products/${activeFramework.slug}`],Valid,Low,Unknown
+HeroEcosystem,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/HeroEcosystem.tsx,58,button,[Empty],,Missing,High,Unknown
+HeroEcosystem,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/HeroEcosystem.tsx,61,button,[Empty],,Missing,High,Unknown
+ProductComparisonCard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/ProductComparisonCard.tsx,53,button,{dynamic},Handler: {() => setActiveCompetitorIdx(idx)},Action,Medium,Action
+ProductPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/ProductPageLayout.tsx,47,button,{dynamic},,Missing,High,Unknown
+ProductPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/ProductPageLayout.tsx,85,ProductComparisonCard,[ProductComparisonCard],,Missing,High,Unknown
+SoftwarePlatformsBento,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/SoftwarePlatformsBento.tsx,43,Link,{dynamic} {dynamic} {dynamic},[Dynamic: `/products/${platform.slug}`],Valid,Low,Unknown
+SoftwarePlatformsBento,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/SoftwarePlatformsBento.tsx,56,Icon,[Icon],,Missing,High,Unknown
+BenchmarkDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/BenchmarkDashboard.tsx,45,button,[Empty],Handler: {() => setActiveBenchmarkId(b.id)},Action,Medium,Action
+BenchmarkDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/BenchmarkDashboard.tsx,90,Link,[Icon/Image],[Dynamic: `/research/benchmarks/${activeBenchmark.slug}`],Valid,Low,Unknown
+BenchmarkDashboard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/BenchmarkDashboard.tsx,120,Link,[Empty],[Dynamic: `/research/benchmarks/${activeBenchmark.slug}`],Valid,Low,Unknown
+PublicationCard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/PublicationCard.tsx,29,Link,[Icon/Image],[Dynamic: `/research/${pub.category}/${pub.slug}`],Valid,Low,Unknown
+PublicationCard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/PublicationCard.tsx,16,NetworkIcon,[NetworkIcon],,Missing,High,Unknown
+PublicationCard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/PublicationCard.tsx,17,BarChartIcon,[BarChartIcon],,Missing,High,Unknown
+PublicationGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/PublicationGrid.tsx,75,button,[Icon/Image],Handler: {() => setSearchQuery('')},Action,Medium,Action
+PublicationGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/PublicationGrid.tsx,94,button,[Empty],Handler: {() => setSelectedDomain(null)},Action,Medium,Action
+PublicationGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/PublicationGrid.tsx,101,button,{dynamic},Handler: {() => setSelectedDomain(domain)},Action,Medium,Action
+PublicationGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/PublicationGrid.tsx,117,button,[Empty],Handler: {() => setSelectedCategory(null)},Action,Medium,Action
+PublicationGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/PublicationGrid.tsx,124,button,{dynamic},Handler: {() => setSelectedCategory(cat)},Action,Medium,Action
+PublicationGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/PublicationGrid.tsx,141,button,[Empty],Handler: {() => {                     setSearchQuery('');                     setSelectedCategory(null);                     setSelectedDomain(null);                   }},Action,Medium,Action
+PublicationGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/PublicationGrid.tsx,157,PublicationCard,[PublicationCard],,Missing,High,Unknown
+ResearchArchitectureCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchArchitectureCanvas.tsx,91,button,[Icon/Image],,Missing,High,Unknown
+ResearchArchitectureCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchArchitectureCanvas.tsx,94,button,[Icon/Image],,Missing,High,Unknown
+ResearchArchitectureCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchArchitectureCanvas.tsx,97,button,[Icon/Image],,Missing,High,Unknown
+ResearchDomains,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchDomains.tsx,63,Link,{dynamic},[Dynamic: `/research?domain=${encodeURIComponent(domain.name)}`],Valid,Low,Unknown
+ResearchHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchHero.tsx,76,Link,[Icon/Image],#publications,Valid,Low,Placeholder
+ResearchHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchHero.tsx,79,button,[Icon/Image],,Missing,High,Unknown
+ResearchReader,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchReader.tsx,23,Link,[Empty],/research,Valid,Low,OK
+ResearchReader,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchReader.tsx,25,Link,{dynamic},[Dynamic: `/research?category=${publication.category}`],Valid,Low,Unknown
+ResearchReader,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchReader.tsx,140,button,[Icon/Image],,Missing,High,Unknown
+ResearchReader,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchReader.tsx,144,button,[Icon/Image],,Missing,High,Unknown
+ResearchReader,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchReader.tsx,147,button,[Icon/Image],,Missing,High,Unknown
+ResearchReader,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/ResearchReader.tsx,165,button,[Icon/Image],,Missing,High,Unknown
+GatedDownloadModal,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/resources/GatedDownloadModal.tsx,55,button,[Icon/Image],Handler: {onClose},Action,Medium,Action
+GatedDownloadModal,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/resources/GatedDownloadModal.tsx,82,a,[Icon/Image],[Dynamic: `/whitepapers/${title.toLowerCase().replace(/\s+/g  "-")}.pdf`],Valid,Low,Unknown
+GatedDownloadModal,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/resources/GatedDownloadModal.tsx,139,button,[Empty],,Missing,High,Unknown
+IndustryMapping,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/services/IndustryMapping.tsx,82,Link,{dynamic},[Dynamic: industry.link],Valid,Low,Unknown
+InteractiveCapabilityMap,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/services/InteractiveCapabilityMap.tsx,105,button,{dynamic},Handler: {() => setActiveScenarioId(scenario.id)},Action,Medium,Action
+ResearchInnovation,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/services/ResearchInnovation.tsx,48,Link,[Icon/Image],/research,Valid,Low,OK
+ResearchInnovation,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/services/ResearchInnovation.tsx,63,Link,[Icon/Image],[Dynamic: item.link],Valid,Low,Unknown
+ServiceCardProgressive,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/services/ServiceCardProgressive.tsx,88,Link,[Icon/Image],[Dynamic: service.link],Valid,Low,Unknown
+BusinessFunctionMap,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/BusinessFunctionMap.tsx,81,button,{dynamic},Handler: {() => setActiveFunc(func.id)},Action,Medium,Action
+EnterpriseArchitecture,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/EnterpriseArchitecture.tsx,77,button,[Icon/Image],Handler: {() => setActiveView(view.id)},Action,Medium,Action
+EnterpriseArchitecture,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/EnterpriseArchitecture.tsx,128,button,[Icon/Image],,Missing,High,Unknown
+ExecutivePriorities,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/ExecutivePriorities.tsx,64,button,[Icon/Image],Handler: {() => setActiveTab(p.id)},Action,Medium,Action
+ExecutivePriorities,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/ExecutivePriorities.tsx,98,Link,[Icon/Image],[Dynamic: `/solutions/${sol.slug}`],Valid,Low,Unknown
+ExecutiveResources,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/ExecutiveResources.tsx,52,button,[Icon/Image],,Missing,High,Unknown
+InteractiveSolutionExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/InteractiveSolutionExplorer.tsx,128,SolutionMarketplaceCard,[SolutionMarketplaceCard],Handler: {() => setOverlaySlug(sol.slug)},Action,Medium,Action
+MarketplaceFilter,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/MarketplaceFilter.tsx,19,button,{dynamic},Handler: {() => onSelect(cat.id)},Action,Medium,Action
+ReadinessAssessment,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/ReadinessAssessment.tsx,137,button,{dynamic},Handler: {() => handleAnswer(opt.score)},Action,Medium,Action
+ReadinessAssessment,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/ReadinessAssessment.tsx,173,button,[Empty],,Missing,High,Unknown
+ReadinessAssessment,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/ReadinessAssessment.tsx,176,button,[Empty],Handler: {() => { setCurrentQ(0); setAnswers([]); setIsFinished(false); }},Action,Medium,Action
+ResearchLayer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/ResearchLayer.tsx,53,Link,[Icon/Image],/research,Valid,Low,OK
+ResearchLayer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/ResearchLayer.tsx,87,button,[Empty],,Missing,High,Unknown
+ROICalculator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/ROICalculator.tsx,185,AnimatedButton,[Icon/Image],,Missing,High,Unknown
+ROICalculator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/ROICalculator.tsx,189,button,[Icon/Image],,Missing,High,Unknown
+SolutionConfigurator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionConfigurator.tsx,80,button,{dynamic},Handler: {() => handleSelect("industry"  ind)},Action,Medium,Action
+SolutionConfigurator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionConfigurator.tsx,92,button,[Empty],Handler: {() => setStep(1)},Action,Medium,Action
+SolutionConfigurator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionConfigurator.tsx,100,button,{dynamic},Handler: {() => handleSelect("problem"  prob)},Action,Medium,Action
+SolutionConfigurator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionConfigurator.tsx,120,button,{dynamic},Handler: {() => setSelections({...selections  size})},Action,Medium,Action
+SolutionConfigurator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionConfigurator.tsx,127,button,[Icon/Image],Handler: {handleGenerate},Action,Medium,Action
+SolutionConfigurator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionConfigurator.tsx,160,button,[Empty],Handler: {reset},Action,Medium,Action
+SolutionConfigurator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionConfigurator.tsx,210,button,[Icon/Image],,Missing,High,Unknown
+SolutionConfigurator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionConfigurator.tsx,213,button,[Icon/Image],,Missing,High,Unknown
+SolutionMarketplaceCard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionMarketplaceCard.tsx,56,motion.button,{dynamic},Handler: {onClick},Action,Medium,Action
+SolutionOverlay,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionOverlay.tsx,58,button,[Icon/Image],Handler: {onPrev},Action,Medium,Action
+SolutionOverlay,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionOverlay.tsx,65,button,[Icon/Image],Handler: {onNext},Action,Medium,Action
+SolutionOverlay,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionOverlay.tsx,74,button,[Icon/Image],Handler: {onClose},Action,Medium,Action
+SolutionOverlay,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionOverlay.tsx,112,Link,[Icon/Image],[Dynamic: `/solutions/${solution.slug}`],Valid,Low,Unknown
+SolutionOverlay,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionOverlay.tsx,113,button,[Icon/Image],,Missing,High,Unknown
+SolutionOverlay,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionOverlay.tsx,117,Link,[Empty],/contact,Valid,Low,OK
+SolutionOverlay,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionOverlay.tsx,118,button,[Empty],,Missing,High,Unknown
+SolutionOverlay,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionOverlay.tsx,39,motion.div,[motion.div],Handler: {onClose},Action,Medium,Action
+SolutionPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionPageLayout.tsx,44,button,{dynamic},,Missing,High,Unknown
+SolutionPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionPageLayout.tsx,47,button,{dynamic},,Missing,High,Unknown
+SolutionPageLayout,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/solutions/SolutionPageLayout.tsx,138,Link,[Icon/Image],[Dynamic: res.link],Valid,Low,Unknown
+AnimatedButton,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/AnimatedButton.tsx,18,button,{dynamic} {dynamic},,Missing,High,Unknown
+ThemeToggle,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/ThemeToggle.tsx,35,button,{dynamic} {dynamic},Handler: {() => setTheme(option.value)},Action,Medium,Action
+ThemeToggle,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/ThemeToggle.tsx,45,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/about/page.tsx,155,Link,[Icon/Image],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/about/page.tsx,156,Link,[Empty],/services,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/about/page.tsx,107,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,317,Link,[Icon/Image],[Dynamic: path.href],Valid,Low,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,359,button,{dynamic},Handler: {() => setActiveTab(tab)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,377,div,{dynamic},Handler: {() => setExpandedCourse(isExpanded ? null : course.id)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,404,div,[Icon/Image],Handler: {(e) => e.stopPropagation()},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,437,Link,[Icon/Image],/academy/courses,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,478,Link,{dynamic},[Dynamic: bc.price === "Custom" ? "/contact" : "/academy/courses"],Valid,Low,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,544,button,{dynamic},Handler: {() => handleQuizAnswer("role"  opt.val)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,562,button,{dynamic},Handler: {() => handleQuizAnswer("exp"  opt.val)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,580,button,{dynamic},Handler: {() => handleQuizAnswer("obj"  opt.val)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,611,Link,[Icon/Image],/academy/learning-paths,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,614,button,[Empty],Handler: {resetQuiz},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,647,Link,[Icon/Image],/academy/courses,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,650,Link,[Empty],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,321,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/page.tsx,382,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/careers/page.tsx,84,a,[Icon/Image],#apply,Valid,Low,Placeholder
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/careers/page.tsx,87,a,[Empty],#domains,Valid,Low,Placeholder
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/careers/page.tsx,214,button,{dynamic},,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/page.tsx,88,Link,[Icon/Image],#studies,Valid,Low,Placeholder
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/page.tsx,118,button,{dynamic},Handler: {() => setActiveFilter(f)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/page.tsx,131,Link,[Icon/Image],[Dynamic: cs.href],Valid,Low,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/page.tsx,169,Link,[Icon/Image],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/page.tsx,172,Link,[Empty],/solutions,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/community/page.tsx,108,a,{dynamic},[Dynamic: chan.href],Valid,Low,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/community/page.tsx,143,Link,[Icon/Image],/academy,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/community/page.tsx,169,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/community/page.tsx,102,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/contact/page.tsx,161,button,{dynamic} {dynamic},,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/contact/page.tsx,193,a,[Icon/Image],https://calendly.com/cerebro-hive,Valid,Low,External
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/contact/page.tsx,221,a,[Icon/Image],[Dynamic: `mailto:${ch.email}`],Valid,Low,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/dashboard/page.tsx,270,button,[Icon/Image],Handler: {() => setWorkspaceMode("enterprise")},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/dashboard/page.tsx,290,button,[Icon/Image],Handler: {() => setWorkspaceMode("free")},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/dashboard/page.tsx,327,button,[Icon/Image],Handler: {handleSignOut},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/dashboard/page.tsx,369,button,[Icon/Image],Handler: {handleSignOut},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/dashboard/page.tsx,417,button,[Icon/Image],Handler: {() => setActiveTab(tab.id as "projects" | "invoices" | "documents" | "support" | "reporting")},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/dashboard/page.tsx,573,button,[Icon/Image],Handler: {() => handleDownloadInvoice(inv.id)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/dashboard/page.tsx,605,button,[Icon/Image],Handler: {() => handleDownloadDocument(doc.name)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/dashboard/page.tsx,678,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/dashboard/page.tsx,439,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,115,button,[Icon/Image],Handler: {() => setSidebarOpen(!sidebarOpen)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,118,button,{dynamic},Handler: {() => setStoryMode(!storyMode)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,119,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,125,button,[Icon/Image],Handler: {() => setSidebarOpen(false)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,128,button,{dynamic} {dynamic},Handler: {() => select(section.id)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,130,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,130,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,136,button,{dynamic},Handler: {() => select(result.id)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,139,button,[Icon/Image],Handler: {() => document.getElementById("chapter-content")?.scrollIntoView({ behavior: "smooth" })},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,139,button,{dynamic},Handler: {toggleSaved},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,144,button,[Empty],Handler: {() => select(item.id)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,146,button,[Icon/Image],Handler: {() => select(storyIds[activeIndex - 1])},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,146,button,[Icon/Image],Handler: {() => select(storyIds[activeIndex + 1])},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,150,a,{dynamic},#chapter-content,Valid,Low,Placeholder
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,152,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,128,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/handbook/page.tsx,132,button,[button],Handler: {() => setSidebarOpen(false)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/learn/page.tsx,129,button,[Icon/Image],Handler: {handleReset},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/learn/page.tsx,191,button,[Icon/Image],Handler: {() => setActiveCertificate(course)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/learn/page.tsx,202,a,[Icon/Image],/academy/courses,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/learn/page.tsx,259,Link,[Icon/Image],/academy/learning-paths,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/learn/page.tsx,285,button,[Icon/Image],Handler: {() => setActiveCertificate(null)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/learn/page.tsx,154,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/page.tsx,88,Link,[Icon/Image],[Dynamic: hub.href],Valid,Low,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/page.tsx,122,Link,[Icon/Image],[Dynamic: f.href],Valid,Low,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/page.tsx,143,Link,[Icon/Image],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/page.tsx,106,Link,[Icon/Image],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/page.tsx,108,button,[Empty],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/page.tsx,112,a,[Empty],#capabilities,Valid,Low,Placeholder
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/page.tsx,176,Link,[Icon/Image],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/page.tsx,178,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/page.tsx,140,ServiceCardProgressive,[ServiceCardProgressive],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/solutions/page.tsx,47,a,[Icon/Image],#operating-system,Valid,Low,Placeholder
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/solutions/page.tsx,50,Link,[Empty],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/solutions/page.tsx,124,Link,[Icon/Image],/contact,Valid,Low,OK
+ExecutiveDecisionCenter,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/ExecutiveDecisionCenter.tsx,62,button,{dynamic},Handler: {() => handleSelect('role'  role)},Action,Medium,Action
+ExecutiveDecisionCenter,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/ExecutiveDecisionCenter.tsx,78,button,{dynamic},Handler: {() => handleSelect('industry'  ind)},Action,Medium,Action
+ExecutiveDecisionCenter,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/ExecutiveDecisionCenter.tsx,94,button,{dynamic},Handler: {() => handleSelect('priority'  pri)},Action,Medium,Action
+ExecutiveDecisionCenter,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/ExecutiveDecisionCenter.tsx,121,button,[Icon/Image],,Missing,High,Unknown
+ExecutiveDecisionCenter,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/ExecutiveDecisionCenter.tsx,124,button,[Empty],Handler: {() => { setStep(1); setSelections({ role: ""  industry: ""  priority: "" }); }},Action,Medium,Action
+IndustryIntelligence,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/IndustryIntelligence.tsx,64,button,[Icon/Image],Handler: {() => setActive(ind.id)},Action,Medium,Action
+InsightsAssistant,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InsightsAssistant.tsx,35,button,[Icon/Image],Handler: {() => setIsOpen(true)},Action,Medium,Action
+InsightsAssistant,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InsightsAssistant.tsx,64,button,[Icon/Image],Handler: {() => setIsOpen(false)},Action,Medium,Action
+InsightsAssistant,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InsightsAssistant.tsx,88,button,{dynamic},Handler: {() => setInput(action.label)},Action,Medium,Action
+InsightsAssistant,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InsightsAssistant.tsx,105,button,[Icon/Image],,Missing,High,Unknown
+InsightsExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InsightsExplorer.tsx,52,button,{dynamic},Handler: {() => setActiveLevel(level)},Action,Medium,Action
+InsightsExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InsightsExplorer.tsx,84,button,[Icon/Image],Handler: {() => setExpandedId(expandedId === insight.id ? null : insight.id)},Action,Medium,Action
+InsightsExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InsightsExplorer.tsx,111,button,{dynamic},Handler: {() => setActiveLevel(activeLevel === "30s" ? "5m" : "Full")},Action,Medium,Action
+InsightsHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InsightsHero.tsx,58,button,[Icon/Image],,Missing,High,Unknown
+InsightsHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InsightsHero.tsx,62,button,[Icon/Image],,Missing,High,Unknown
+InteractiveReports,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InteractiveReports.tsx,42,div,[Icon/Image],Handler: {() => { setActiveReport(report); setActiveSection(report.sections[0]); }},Action,Medium,Action
+InteractiveReports,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InteractiveReports.tsx,75,button,[Icon/Image],,Missing,High,Unknown
+InteractiveReports,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InteractiveReports.tsx,84,button,{dynamic} {dynamic},Handler: {() => setActiveSection(sec)},Action,Medium,Action
+InteractiveReports,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/InteractiveReports.tsx,127,button,[Empty],,Missing,High,Unknown
+NewsletterCTA,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/NewsletterCTA.tsx,49,button,[Icon/Image],,Missing,High,Unknown
+StrategyCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/StrategyCanvas.tsx,32,button,[Icon/Image],Handler: {handleGenerate},Action,Medium,Action
+StrategyCanvas,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/StrategyCanvas.tsx,63,button,[Icon/Image],,Missing,High,Unknown
+TrendRadar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/TrendRadar.tsx,51,button,[Icon/Image],Handler: {() => setActiveTech(tech)},Action,Medium,Action
+WeeklyBrief,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/insights/v2/WeeklyBrief.tsx,85,button,[Icon/Image],,Missing,High,Unknown
+IntelligentOrb,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/motion/primitives/IntelligentOrb.tsx,90,motion.button,{dynamic},Handler: {onClick},Action,Medium,Action
+IntelligentOrb,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/motion/primitives/IntelligentOrb.tsx,99,Icon,[Icon],,Missing,High,Unknown
+CareersPreview,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/CareersPreview.tsx,93,button,[Icon/Image],,Missing,High,Unknown
+CareersPreview,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/CareersPreview.tsx,109,motion.div,{dynamic},Handler: {() => setActiveDomain(domain)},Action,Medium,Action
+CareersPreview,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/CareersPreview.tsx,217,button,[Icon/Image],Handler: {handleClose},Action,Medium,Action
+CareersPreview,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/CareersPreview.tsx,290,button,{dynamic},,Missing,High,Unknown
+CareersPreview,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/CareersPreview.tsx,130,Icon,[Icon],,Missing,High,Unknown
+CareersPreview,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/CareersPreview.tsx,193,motion.div,[motion.div],Handler: {handleClose},Action,Medium,Action
+CTA,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/CTA.tsx,159,AnimatedButton,[Icon/Image],,Missing,High,Unknown
+CTA,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/CTA.tsx,167,AnimatedButton,[Empty],,Missing,High,Unknown
+CTA,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/CTA.tsx,129,CommandCenterBackground,[CommandCenterBackground],,Missing,High,Unknown
+Headquarters,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/Headquarters.tsx,316,a,[Empty],mailto:enterprise@cerebrohive.com,Valid,Low,External
+Headquarters,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/contact/Headquarters.tsx,347,button,[Icon/Image],,Missing,High,Unknown
+EnterpriseTrustCenter,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/ecosystem/EnterpriseTrustCenter.tsx,201,Icon,[Icon],,Missing,High,Unknown
+GlobalPresenceMap,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/ecosystem/GlobalPresenceMap.tsx,48,button,[Icon/Image],Handler: {() => setActiveRegion(office)},Action,Medium,Action
+CompanyHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/hero/CompanyHero.tsx,132,button,[Icon/Image],,Missing,High,Unknown
+CompanyHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/hero/CompanyHero.tsx,136,button,[Empty],,Missing,High,Unknown
+CEOMessage,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/CEOMessage.tsx,186,button,[Icon/Image],Handler: {() => setIsExpanded(true)},Action,Medium,Action
+CompanySidebar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/navigation/CompanySidebar.tsx,266,button,{dynamic} {dynamic} {dynamic} {dynamic},Handler: {() => isFolder ? toggleFolder(node.id) : scrollToId(node.id)},Action,Medium,Action
+CompanySidebar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/navigation/CompanySidebar.tsx,349,button,{dynamic},Handler: {() => setExplorerMode(false)},Action,Medium,Action
+CompanySidebar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/navigation/CompanySidebar.tsx,356,button,{dynamic},Handler: {() => setExplorerMode(true)},Action,Medium,Action
+CompanySidebar,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/navigation/CompanySidebar.tsx,433,button,[Icon/Image],Handler: {() => scrollToId(chapter.id)},Action,Medium,Action
+CoreValuesBento,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/story/CoreValuesBento.tsx,117,CultureCard,[CultureCard],,Missing,High,Unknown
+CultureCard,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/story/CultureCard.tsx,112,Icon,[Icon],,Missing,High,Unknown
+VisionMission,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/story/VisionMission.tsx,342,Icon,[Icon],,Missing,High,Unknown
+CompanyCTA,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/v3/CompanyCTA.tsx,25,Link,[Icon/Image],/contact,Valid,Low,OK
+CompanyCTA,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/v3/CompanyCTA.tsx,33,Link,[Empty],/careers,Valid,Low,OK
+CompanyHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/v3/CompanyHero.tsx,55,motion.button,[Icon/Image],Handler: {scrollToNext},Action,Medium,Action
+CompanySidebarV3,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/v3/CompanySidebarV3.tsx,56,button,[Icon/Image],Handler: {() => scrollTo(chapter.id)},Action,Medium,Action
+EnterpriseProof,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/v3/EnterpriseProof.tsx,33,button,[Icon/Image],Handler: {() => setActiveCategory(cat.id)},Action,Medium,Action
+EnterpriseProof,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/v3/EnterpriseProof.tsx,64,button,{dynamic},,Missing,High,Unknown
+LivingTimeline,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/v3/LivingTimeline.tsx,33,button,[Icon/Image],Handler: {() => setActiveIndex(i)},Action,Medium,Action
+LivingTimeline,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/v3/LivingTimeline.tsx,79,button,[button],Handler: {() => setActiveIndex(i)},Action,Medium,Action
+OriginStory,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/v3/OriginStory.tsx,75,button,[Icon/Image],Handler: {() => setActiveStep(idx)},Action,Medium,Action
+AIAgentShowcase,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/AIAgentShowcase.tsx,80,button,{dynamic},Handler: {() => setActiveIndustry(ind)},Action,Medium,Action
+AICapabilityGrid,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/AICapabilityGrid.tsx,34,GlassCard,[Empty],,Missing,High,Unknown
+ArchitectureSection,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/ArchitectureSection.tsx,411,tech.Icon,[tech.Icon],,Missing,High,Unknown
+HeroSection,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/HeroSection.tsx,39,AnimatedButton,[Empty],,Missing,High,Unknown
+HeroSection,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/HeroSection.tsx,42,AnimatedButton,[Empty],,Missing,High,Unknown
+Industries,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/Industries.tsx,255,motion.div,{dynamic} {dynamic},Handler: {() => !isFocused && setFocusedId(ind.id)},Action,Medium,Action
+Industries,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/Industries.tsx,310,button,[Icon/Image],Handler: {(e) => { e.stopPropagation(); setFocusedId(null); }},Action,Medium,Action
+Industries,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/Industries.tsx,450,motion.button,[Icon/Image],,Missing,High,Unknown
+ResearchSection,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/ResearchSection.tsx,23,AnimatedButton,[Empty],,Missing,High,Unknown
+Services,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/Services.tsx,194,svc.TitleIcon,[svc.TitleIcon],,Missing,High,Unknown
+Services,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/Services.tsx,220,svc.FooterIcon,[svc.FooterIcon],,Missing,High,Unknown
+TechStack,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/TechStack.tsx,159,button,{dynamic},Handler: {() => { setActiveFilter(filter); setSearchQuery(""); }},Action,Medium,Action
+WhyCerebroHive,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/WhyCerebroHive.tsx,179,div,{dynamic} {dynamic},Handler: {() => {                       document.getElementById(`stage-${stage.id}`)?.scrollIntoView({ behavior: "smooth"  block: "center" });                     }},Action,Medium,Action
+WhyCerebroHive,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v2/WhyCerebroHive.tsx,292,button,[Icon/Image],,Missing,High,Unknown
+EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,76,button,{dynamic},Handler: {() => handleSelect('industry'  ind)},Action,Medium,Action
+EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,92,button,{dynamic},Handler: {() => handleSelect('erp'  erp)},Action,Medium,Action
+EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,108,button,{dynamic},Handler: {() => handleSelect('maturity'  mat)},Action,Medium,Action
+EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,141,button,[Icon/Image],,Missing,High,Unknown
+EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,184,button,[Icon/Image],,Missing,High,Unknown
+EnterpriseSimulator,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/EnterpriseSimulator.tsx,187,button,[Empty],Handler: {() => { setGenerated(false); setStep(1); setSelections({ industry: ""  erp: ""  maturity: "" }); }},Action,Medium,Action
+HomeHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,54,button,[Icon/Image],,Missing,High,Unknown
+HomeHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HomeHero.tsx,57,button,[Empty],,Missing,High,Unknown
+HumanProof,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HumanProof.tsx,56,button,[Icon/Image],Handler: {() => setActiveCase(c)},Action,Medium,Action
+HumanProof,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/HumanProof.tsx,126,button,[Icon/Image],,Missing,High,Unknown
+LivingArchitecture,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/LivingArchitecture.tsx,83,button,[Icon/Image],Handler: {() => setActiveLayer(layer.id)},Action,Medium,Action
+LivingArchitecture,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/LivingArchitecture.tsx,150,button,[Empty],,Missing,High,Unknown
+LivingDigitalTwin,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/LivingDigitalTwin.tsx,57,button,[Empty],Handler: {() => setActiveId(wf.id)},Action,Medium,Action
+ResearchHighlights,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/ResearchHighlights.tsx,40,button,[Empty],,Missing,High,Unknown
+ResearchHighlights,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/ResearchHighlights.tsx,74,item.productIcon,[item.productIcon],,Missing,High,Unknown
+TransformationRoadmap,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/TransformationRoadmap.tsx,84,div,[Icon/Image],Handler: {() => setActivePhase(phase)},Action,Medium,Action
+TransformationRoadmap,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/TransformationRoadmap.tsx,131,button,[Icon/Image],,Missing,High,Unknown
+TransformationRoadmap,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/home/v3/TransformationRoadmap.tsx,134,button,[Empty],,Missing,High,Unknown
+AgentEcosystem,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/AgentEcosystem.tsx,45,motion.div,[Empty],Handler: {() => setSelectedAgent(agent)},Action,Medium,Action
+AgentEcosystem,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/AgentEcosystem.tsx,90,button,[Icon/Image],Handler: {() => setSelectedAgent(null)},Action,Medium,Action
+ArchitectureViewer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/ArchitectureViewer.tsx,93,Icon,[Icon],,Missing,High,Unknown
+ChallengeExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/ChallengeExplorer.tsx,229,button,[Icon/Image],,Missing,High,Unknown
+ChallengeExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/ChallengeExplorer.tsx,131,Icon,[Icon],,Missing,High,Unknown
+ComplianceEngine,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/ComplianceEngine.tsx,21,HoverCard,{dynamic} {dynamic},,Missing,High,Unknown
+EnterpriseDigitalTwin,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/EnterpriseDigitalTwin.tsx,117,button,[Icon/Image],Handler: {() => {                   setViewMode(view.id);                   setSelectedNodeId(null);                 }},Action,Medium,Action
+EnterpriseDigitalTwin,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/EnterpriseDigitalTwin.tsx,152,HoverCard,[Empty],,Missing,High,Unknown
+EnterpriseDigitalTwin,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/EnterpriseDigitalTwin.tsx,160,HoverCard,[Icon/Image],,Missing,High,Unknown
+EnterpriseDigitalTwin,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/EnterpriseDigitalTwin.tsx,181,button,{dynamic} {dynamic},Handler: {() => setSelectedNodeId(node.id === selectedNodeId ? null : node.id)},Action,Medium,Action
+EnterpriseDigitalTwin,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/EnterpriseDigitalTwin.tsx,245,HoverCard,[Empty],,Missing,High,Unknown
+IndustryHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/IndustryHero.tsx,58,AnimatedButton,{dynamic},,Missing,High,Unknown
+IndustryHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/IndustryHero.tsx,59,AnimatedButton,{dynamic},,Missing,High,Unknown
+SolutionExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/industries/engine/SolutionExplorer.tsx,28,button,{dynamic},Handler: {() => setActiveSolution(i)},Action,Medium,Action
+AgentGallery,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/AgentGallery.tsx,74,button,{dynamic},Handler: {() => setActiveAgent(agent.id)},Action,Medium,Action
+ArchitectureStudio,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/ArchitectureStudio.tsx,97,button,[Icon/Image],Handler: {() => handleSelect(option)},Action,Medium,Action
+ArchitectureStudio,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/ArchitectureStudio.tsx,155,button,[Icon/Image],,Missing,High,Unknown
+ArchitectureStudio,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/ArchitectureStudio.tsx,158,button,[Empty],,Missing,High,Unknown
+ArchitectureStudio,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/ArchitectureStudio.tsx,211,button,[Empty],Handler: {reset},Action,Medium,Action
+EnterpriseIntegrations,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/EnterpriseIntegrations.tsx,74,button,{dynamic},Handler: {() => setActiveIntegration(integration.id)},Action,Medium,Action
+MethodologyVisualizer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/MethodologyVisualizer.tsx,78,div,[Icon/Image],Handler: {() => setActivePhase(i)},Action,Medium,Action
+MethodologyVisualizer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/MethodologyVisualizer.tsx,115,button,[Icon/Image],Handler: {() => setActivePhase(Math.max(0  activePhase - 1))},Action,Medium,Action
+MethodologyVisualizer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/MethodologyVisualizer.tsx,123,button,[Icon/Image],Handler: {() => setActivePhase(Math.min(phases.length - 1  activePhase + 1))},Action,Medium,Action
+PlatformActionDemo,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/PlatformActionDemo.tsx,117,button,[Empty],Handler: {() => setActiveStep(0)},Action,Medium,Action
+PlatformCTA,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/PlatformCTA.tsx,41,button,[Icon/Image],,Missing,High,Unknown
+PlatformCTA,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/PlatformCTA.tsx,45,button,[Empty],,Missing,High,Unknown
+PlatformExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/PlatformExplorer.tsx,116,button,[Icon/Image],Handler: {() => setViewMode("business")},Action,Medium,Action
+PlatformExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/PlatformExplorer.tsx,122,button,[Icon/Image],Handler: {() => setViewMode("technical")},Action,Medium,Action
+PlatformExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/PlatformExplorer.tsx,136,button,[Icon/Image],Handler: {() => setActiveTab(p.id)},Action,Medium,Action
+PlatformHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/PlatformHero.tsx,81,button,[Icon/Image],,Missing,High,Unknown
+PlatformHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/PlatformHero.tsx,85,button,[Empty],,Missing,High,Unknown
+PlatformHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/products/v2/PlatformHero.tsx,105,button,[Icon/Image],Handler: {() => setActiveDept(dept.id)},Action,Medium,Action
+BenchmarkLab,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/BenchmarkLab.tsx,46,button,[Icon/Image],Handler: {() => setActiveTask(task.id)},Action,Medium,Action
+DeveloperResources,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/DeveloperResources.tsx,28,button,[Icon/Image],,Missing,High,Unknown
+ExperimentGallery,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ExperimentGallery.tsx,105,button,[Empty],,Missing,High,Unknown
+ExperimentGallery,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ExperimentGallery.tsx,106,button,[Icon/Image],,Missing,High,Unknown
+FeaturedResearch,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/FeaturedResearch.tsx,29,button,[Icon/Image],,Missing,High,Unknown
+IndustryResearch,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/IndustryResearch.tsx,83,button,[Icon/Image],,Missing,High,Unknown
+OpenSourceProjects,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/OpenSourceProjects.tsx,51,button,[Empty],,Missing,High,Unknown
+ResearchAssistant,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchAssistant.tsx,35,button,[Icon/Image],Handler: {() => setIsOpen(true)},Action,Medium,Action
+ResearchAssistant,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchAssistant.tsx,64,button,[Icon/Image],Handler: {() => setIsOpen(false)},Action,Medium,Action
+ResearchAssistant,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchAssistant.tsx,88,button,{dynamic},Handler: {() => setInput(action.label)},Action,Medium,Action
+ResearchAssistant,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchAssistant.tsx,105,button,[Icon/Image],,Missing,High,Unknown
+ResearchExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchExplorer.tsx,68,button,{dynamic},Handler: {() => setActivePersona(persona)},Action,Medium,Action
+ResearchExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchExplorer.tsx,108,button,[Icon/Image],,Missing,High,Unknown
+ResearchExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchExplorer.tsx,112,button,[Icon/Image],,Missing,High,Unknown
+ResearchExplorer,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchExplorer.tsx,117,button,[Icon/Image],,Missing,High,Unknown
+ResearchHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchHero.tsx,66,button,[Icon/Image],,Missing,High,Unknown
+ResearchHero,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchHero.tsx,70,button,[Icon/Image],,Missing,High,Unknown
+ResearchTeam,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchTeam.tsx,43,button,[Icon/Image],,Missing,High,Unknown
+ResearchTeam,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchTeam.tsx,94,button,[Icon/Image],,Missing,High,Unknown
+ResearchTeam,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/research/v2/ResearchTeam.tsx,97,button,[Icon/Image],,Missing,High,Unknown
+index,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/ui/NeuralOrb/index.tsx,68,div,{dynamic} {dynamic} {dynamic} {dynamic} {dynamic} {dynamic} {dynamic} {dynamic} {dynamic},Handler: {onClick},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/corporate-programs/page.tsx,33,Link,[Icon/Image],/academy/courses,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/corporate-programs/page.tsx,211,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/corporate-programs/page.tsx,80,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/courses/page.tsx,127,Link,[Icon/Image],/learn,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/courses/page.tsx,151,button,{dynamic},Handler: {() => setSelectedCat(cat)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/courses/page.tsx,227,button,[Empty],Handler: {() => handleEnroll(course.id  course.title)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/learning-paths/page.tsx,62,Link,[Icon/Image],/academy/courses,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/learning-paths/page.tsx,125,Link,[Icon/Image],/academy/courses,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/referral/page.tsx,28,Link,[Empty],/academy,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/referral/page.tsx,158,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/academy/referral/page.tsx,56,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/corporate-ai-training/page.tsx,41,Link,[Icon/Image],/case-studies,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/corporate-ai-training/page.tsx,171,button,{dynamic},Handler: {() => setBooked(true)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/corporate-ai-training/page.tsx,120,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/logistics-support-automation/page.tsx,41,Link,[Icon/Image],/case-studies,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/logistics-support-automation/page.tsx,171,button,{dynamic},Handler: {() => setBooked(true)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/logistics-support-automation/page.tsx,120,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/sales-pipeline-automation/page.tsx,41,Link,[Icon/Image],/case-studies,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/sales-pipeline-automation/page.tsx,171,button,{dynamic},Handler: {() => setBooked(true)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/case-studies/sales-pipeline-automation/page.tsx,120,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/enterprise/dashboard/page.tsx,220,button,[Icon/Image],Handler: {() => handleRevokeSeat(emp.id)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/enterprise/dashboard/page.tsx,280,button,{dynamic},,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/legal/ai-ethics/page.tsx,40,a,[Empty],mailto:ethics@cerebro-hive.com,Valid,Low,External
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/ai-tools-directory/page.tsx,99,Link,[Icon/Image],/resources/blog,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/ai-tools-directory/page.tsx,133,button,{dynamic},Handler: {() => setSelectedCat(cat)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/ai-tools-directory/page.tsx,196,a,[Icon/Image],[Dynamic: tool.link],Valid,Low,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/blog/page.tsx,121,Link,[Icon/Image],[Dynamic: featuredArticle.slug],Valid,Low,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/blog/page.tsx,159,button,{dynamic},Handler: {() => setActiveCategory(cat)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/blog/page.tsx,183,Link,[Icon/Image],[Dynamic: article.slug],Valid,Low,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/blog/page.tsx,233,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/templates/page.tsx,227,button,[Icon/Image],Handler: {() => setActiveTemplate(tmpl)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/templates/page.tsx,212,Icon,[Icon],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/whitepapers/page.tsx,71,button,[Icon/Image],Handler: {onClose},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/whitepapers/page.tsx,97,button,[Icon/Image],,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/whitepapers/page.tsx,109,button,[Empty],Handler: {onClose},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/resources/whitepapers/page.tsx,187,button,[Icon/Image],Handler: {() => setSelectedPaper(paper)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/ai-automation/page.tsx,17,Link,[Icon/Image],/services,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/ai-automation/page.tsx,36,Link,[Empty],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/ai-consulting/page.tsx,17,Link,[Icon/Image],/services,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/ai-consulting/page.tsx,36,Link,[Empty],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/ai-development/page.tsx,17,Link,[Icon/Image],/services,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/ai-development/page.tsx,36,Link,[Empty],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/corporate-training/page.tsx,17,Link,[Icon/Image],/services,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/corporate-training/page.tsx,36,Link,[Empty],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/data-engineering/page.tsx,17,Link,[Icon/Image],/services,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/services/data-engineering/page.tsx,36,Link,[Empty],/contact,Valid,Low,OK
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/ai-readiness/page.tsx,447,button,[Icon/Image],Handler: {() => handleSelectOption(currentQuestion.id  opt.score)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/ai-readiness/page.tsx,486,button,[Icon/Image],Handler: {handleBack},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/ai-readiness/page.tsx,606,button,{dynamic},,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/ai-readiness/page.tsx,651,button,{dynamic},Handler: {handleDownloadReport},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/ai-readiness/page.tsx,856,button,[Icon/Image],Handler: {() => {                     setCurrentIdx(0);                     setAnswers({});                     setShowResult(false);                   }},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,196,button,{dynamic},Handler: {() => setIndustry(ind)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,242,button,{dynamic},Handler: {() => setTeamSize(size)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,300,button,{dynamic},Handler: {() => toggleGoal(goal)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,353,button,[Empty],Handler: {() => setMaturity(item.title)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,400,button,{dynamic},Handler: {() => setBudget(range)},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,440,button,[Icon/Image],Handler: {prevStep},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,477,button,{dynamic},Handler: {nextStep},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,578,button,{dynamic},,Missing,High,Unknown
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,608,button,{dynamic},Handler: {handleDownloadReport},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,707,button,{dynamic},Handler: {handleBookMeeting},Action,Medium,Action
+page,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/app/tools/solution-finder/page.tsx,751,button,[Empty],Handler: {() => {                   setStep(1);                   setIndustry("");                   setTeamSize("");                   setGoals([]);                   setMaturity("");                   setBudget("");                   setShowReport(false);                   setBookedMeeting(false);                 }},Action,Medium,Action
+InspectorPanel,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/org-chart/InspectorPanel.tsx,44,button,[Icon/Image],Handler: {() => setSelectedNode(null)},Action,Medium,Action
+InspectorPanel,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/org-chart/InspectorPanel.tsx,95,button,[Icon/Image],,Missing,High,Unknown
+InspectorPanel,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/org-chart/InspectorPanel.tsx,135,button,[Icon/Image],Handler: {() => fitView({ padding: 0.2  duration: 800 })},Action,Medium,Action
+InspectorPanel,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/org-chart/InspectorPanel.tsx,138,button,[Icon/Image],Handler: {() => zoomIn({ duration: 400 })},Action,Medium,Action
+InspectorPanel,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/org-chart/InspectorPanel.tsx,141,button,[Icon/Image],Handler: {() => zoomOut({ duration: 400 })},Action,Medium,Action
+InspectorPanel,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/org-chart/InspectorPanel.tsx,145,button,[Icon/Image],,Missing,High,Unknown
+OrgNavRail,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/org-chart/OrgNavRail.tsx,32,div,[Empty],Handler: {() => handleNavClick('ceo')},Action,Medium,Action
+OrgNavRail,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/org-chart/OrgNavRail.tsx,38,button,{dynamic} {dynamic},Handler: {() => handleNavClick(item.id)},Action,Medium,Action
+OrgNavRail,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/org-chart/OrgNavRail.tsx,59,button,[Icon/Image],,Missing,High,Unknown
+OrgNavRail,D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/components/company/leadership/org-chart/OrgNavRail.tsx,62,button,[Icon/Image],,Missing,High,Unknown

@@ -1,0 +1,46 @@
+Route,Owner,Status
+/about,Growth Team,Active
+/academy/corporate-programs,Growth Team,Active
+/academy/courses,Growth Team,Active
+/academy/learning-paths,Growth Team,Active
+/academy,Growth Team,Active
+/academy/referral,Growth Team,Active
+/careers,Growth Team,Active
+/case-studies/corporate-ai-training,Growth Team,Active
+/case-studies/logistics-support-automation,Growth Team,Active
+/case-studies,Growth Team,Active
+/case-studies/sales-pipeline-automation,Growth Team,Active
+/community,Growth Team,Active
+/company,Growth Team,Active
+/contact,Growth Team,Active
+/dashboard,Core App Team,Active
+/enterprise/dashboard,Core App Team,Active
+/handbook,Growth Team,Active
+/industries,Enterprise Solutions,Active
+/industries/[slug],Enterprise Solutions,Active
+/insights,Growth Team,Active
+/learn,Growth Team,Active
+/legal/ai-ethics,Legal & Compliance,Active
+/legal/privacy,Legal & Compliance,Active
+/legal/security,Legal & Compliance,Active
+/legal/terms,Legal & Compliance,Active
+/,Marketing Team,Active
+/products,Product Team,Active
+/products/[slug],Product Team,Active
+/research,Growth Team,Active
+/research/[category]/[slug],Growth Team,Active
+/resources/ai-tools-directory,Growth Team,Active
+/resources/blog,Growth Team,Active
+/resources,Growth Team,Active
+/resources/templates,Growth Team,Active
+/resources/whitepapers,Growth Team,Active
+/services/ai-automation,Growth Team,Active
+/services/ai-consulting,Growth Team,Active
+/services/ai-development,Growth Team,Active
+/services/corporate-training,Growth Team,Active
+/services/data-engineering,Growth Team,Active
+/services,Growth Team,Active
+/solutions,Growth Team,Active
+/solutions/[slug],Growth Team,Active
+/tools/ai-readiness,Growth Team,Active
+/tools/solution-finder,Growth Team,Active

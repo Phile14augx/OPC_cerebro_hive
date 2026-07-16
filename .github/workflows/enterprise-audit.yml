@@ -1,0 +1,47 @@
+name: Enterprise Audit Governance
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      working-directory: ./OPC/cerebro-hive-website
+      run: npm ci
+
+    - name: Run Enterprise Navigation & UI Audit
+      working-directory: ./OPC/cerebro-hive-website
+      run: npm run audit:enterprise
+
+    - name: Validate Enterprise Score
+      working-directory: ./OPC/cerebro-hive-website
+      run: |
+        SCORE=$(node -e "const fs = require('fs'); const s = JSON.parse(fs.readFileSync('audit/scores.json')); console.log(s.accessibility)")
+        if [ "$SCORE" -lt 90 ]; then
+          echo "Accessibility score ($SCORE%) is below the required 90% threshold."
+          exit 1
+        fi
+        
+        # In a real environment, you might fail the build if there are broken links.
+        # We can extract the broken links count from route-coverage-matrix.csv if needed.
+
+    - name: Upload Audit Dashboard
+      uses: actions/upload-artifact@v4
+      with:
+        name: enterprise-executive-dashboard
+        path: OPC/cerebro-hive-website/audit/executive-dashboard.md

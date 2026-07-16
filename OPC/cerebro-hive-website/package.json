@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "audit:enterprise": "npx tsx scripts/audit/audit-interactions.ts && npx tsx scripts/audit/audit-routes.ts && npx tsx scripts/audit/audit-assets.ts && npx tsx scripts/audit/audit-accessibility.ts && npx tsx scripts/audit/audit-seo.ts && npx tsx scripts/audit/audit-analytics.ts && npx tsx scripts/audit/audit-design-system.ts && npx tsx scripts/audit/generate-dashboard.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
