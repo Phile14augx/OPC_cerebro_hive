@@ -10,7 +10,7 @@ import { useServiceAnimation } from './ServiceAnimationContext';
 const BlueprintLayer = () => {
   return (
     <div className="absolute inset-0 z-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] animate-data-flow" />
+      <div className="absolute inset-0 bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] animate-data-flow" />
       <svg className="w-full h-full absolute inset-0" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="blueprint-grid" width="40" height="40" patternUnits="userSpaceOnUse">

@@ -335,3 +335,5 @@ p { font-family: var(--font-inter), sans-serif; }
 .animate-comet-head {
   animation: cometHead 4s linear infinite;
 }
+
+/* Cache bust 1 */

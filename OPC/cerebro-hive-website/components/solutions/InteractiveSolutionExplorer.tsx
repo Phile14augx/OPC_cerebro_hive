@@ -85,7 +85,7 @@ export const InteractiveSolutionExplorer = () => {
           style={{ backgroundColor: ambientColor }}
         />
         {/* Subtle grid pattern overlay */}
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
+        <div className="absolute inset-0 opacity-[0.03]" />
       </div>
 
       <div className="container-wide relative z-10">
