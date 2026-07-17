@@ -1,7 +1,10 @@
 package archive
 
 import (
-	"github.com/cerebro/cerebroarchive/apps/api/internal/common/errors"
+	"net/http"
+	"strconv"
+
+	apierrors "github.com/cerebro/cerebroarchive/apps/api/internal/common/errors"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/common/validation"
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,59 +15,97 @@ type Handler struct {
 }
 
 func NewHandler(service *Service, validator *validation.Validator) *Handler {
-	return &Handler{
-		service:   service,
-		validator: validator,
-	}
+	return &Handler{service: service, validator: validator}
 }
 
 func (h *Handler) RegisterRoutes(router fiber.Router) {
-	// Protected by RequireAuth and RequireWorkspace middlewares
 	router.Post("/documents", h.ingestDocument)
+	router.Get("/documents", h.listDocuments)
+	router.Get("/dashboard/stats", h.dashboardStats)
 }
 
-// ingestDocument handles multipart form uploads
+// ingestDocument handles multipart form uploads.
 func (h *Handler) ingestDocument(c *fiber.Ctx) error {
-	// 1. Strict File Size Validation (e.g. 20MB limit enforced at Fiber level before parsing)
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": errors.APIError{Code: "missing_file", Message: "A file is required for ingestion"},
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"error": apierrors.APIError{Code: "missing_file", Message: "A file is required for ingestion"},
+		})
+	}
+	if fileHeader.Size > 20*1024*1024 {
+		return c.Status(http.StatusRequestEntityTooLarge).JSON(fiber.Map{
+			"error": apierrors.APIError{Code: "file_too_large", Message: "Maximum file size is 20MB"},
 		})
 	}
 
-	if fileHeader.Size > 20*1024*1024 { // 20 MB
-		return c.Status(fiber.StatusPayloadTooLarge).JSON(fiber.Map{
-			"error": errors.APIError{Code: "file_too_large", Message: "Maximum file size is 20MB"},
-		})
-	}
-
-	// 2. Parse DTO
 	req := IngestDocumentRequest{
 		Title: c.FormValue("title"),
 		File:  fileHeader,
 	}
-
-	// 3. Validate DTO
 	if valErrs := h.validator.ValidateStruct(req); valErrs != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": errors.APIError{Code: "validation_failed", Details: map[string]any{"fields": valErrs}},
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"error": apierrors.APIError{Code: "validation_failed", Details: map[string]any{"fields": valErrs}},
 		})
 	}
 
-	// 4. Extract Identity Context (Tenant/Workspace/User)
-	// identityCtx := c.Locals("identity").(middleware.IdentityContext)
-	tenantID := "dummy-tenant"
-	workspaceID := "dummy-workspace"
-	userID := "dummy-user"
+	// TODO: Extract from JWT middleware once wired.
+	tenantID := c.Locals("tenant_id").(string)
+	if tenantID == "" { tenantID = "default-tenant" }
+	workspaceID := c.Locals("workspace_id").(string)
+	if workspaceID == "" { workspaceID = "default-workspace" }
+	userID := c.Locals("user_id").(string)
+	if userID == "" { userID = "default-user" }
 
-	// 5. Execute Service logic
 	doc, err := h.service.IngestDocument(c.Context(), tenantID, workspaceID, userID, req)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": errors.APIError{Code: "ingestion_failed", Message: "Failed to ingest document"},
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"error": apierrors.APIError{Code: "ingestion_failed", Message: "Failed to ingest document"},
 		})
 	}
 
-	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{"data": doc})
+	return c.Status(http.StatusAccepted).JSON(fiber.Map{"data": doc})
+}
+
+// listDocuments returns paginated documents for the authenticated workspace.
+func (h *Handler) listDocuments(c *fiber.Ctx) error {
+	workspaceID, _ := c.Locals("workspace_id").(string)
+	if workspaceID == "" {
+		workspaceID = c.Query("workspace_id", "default-workspace")
+	}
+
+	page, _ := strconv.Atoi(c.Query("page", "1"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size", "20"))
+
+	docs, total, err := h.service.ListDocuments(c.Context(), workspaceID, page, pageSize)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"error": apierrors.APIError{Code: "list_failed", Message: "Failed to fetch documents"},
+		})
+	}
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"data": ListDocumentsResponse{
+			Documents: docs,
+			Total:     total,
+			Page:      page,
+			PageSize:  pageSize,
+		},
+	})
+}
+
+// dashboardStats returns document counts by status for the overview page.
+func (h *Handler) dashboardStats(c *fiber.Ctx) error {
+	workspaceID, _ := c.Locals("workspace_id").(string)
+	if workspaceID == "" {
+		workspaceID = c.Query("workspace_id", "default-workspace")
+	}
+
+	stats, err := h.service.GetDashboardStats(c.Context(), workspaceID)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"error": apierrors.APIError{Code: "stats_failed", Message: "Failed to fetch stats"},
+		})
+	}
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{"data": stats})
 }

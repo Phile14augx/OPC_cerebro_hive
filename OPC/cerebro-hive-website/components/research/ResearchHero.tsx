@@ -27,7 +27,7 @@ export const ResearchHero = () => {
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full min-h-[90vh] flex flex-col items-center justify-center bg-background overflow-hidden border-b border-border"
+      className="relative w-full min-h-[90vh] flex flex-col items-center justify-center bg-background border-b border-border"
     >
       {/* Abstract Blueprint / Mathematical SVG Background */}
       <div className="absolute inset-0 pointer-events-none opacity-20">

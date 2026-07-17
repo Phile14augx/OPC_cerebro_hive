@@ -76,14 +76,7 @@ export default function SolutionsIndexPage() {
       <BusinessFunctionMap />
 
       {/* 6. Industry Solution Explorer */}
-      <section className="py-24 border-b border-border">
-        <div className="container-wide text-center mb-12">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Industry Applications</span>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Industry Solution Explorer</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto">Explore reference architectures and AI solutions tailored to your specific sector and compliance requirements.</p>
-        </div>
-        <InteractiveSolutionExplorer />
-      </section>
+      <InteractiveSolutionExplorer />
 
       {/* 7. Solution Configurator */}
       <SolutionConfigurator />
@@ -95,16 +88,7 @@ export default function SolutionsIndexPage() {
       <ResearchLayer />
 
       {/* 10. ROI Calculator */}
-      <section className="py-24 border-b border-border bg-surface-elevated">
-        <div className="container-wide text-center mb-12">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Business Impact</span>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Interactive ROI Calculator</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto">
-            These estimates are illustrative and based on standardized assumptions. For a precise assessment, schedule a strategy workshop.
-          </p>
-        </div>
-        <ROICalculator />
-      </section>
+      <ROICalculator />
 
       {/* 11. Readiness Assessment */}
       <ReadinessAssessment />

@@ -66,7 +66,7 @@ export default function IndustryPageLayout({ industry }: { industry: Industry })
         <div className={cn("absolute inset-0 pointer-events-none z-0 bg-gradient-to-b opacity-50", bgGradient)} />
 
         {/* Hero Section */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden z-10">
+        <section className="relative min-h-screen flex flex-col items-center justify-center z-10">
           <div className="container-wide flex flex-col items-center">
              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">
                 <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: industry.color }} />

@@ -1,5 +1,6 @@
 "use client";
 import { BookOpen, Compass, GraduationCap, Award, ArrowRight, Zap, HelpCircle, Clock, CheckCircle, Star, Users, Code, BarChart2, Shield, Brain, Layers, Database, Cpu, FileCode } from "lucide-react";
+import Link from "next/link";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { useState } from "react";
 

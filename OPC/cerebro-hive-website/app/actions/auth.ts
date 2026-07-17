@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1';
 
 export async function authenticate(formData: FormData) {
   const email = formData.get('email');
@@ -27,7 +27,7 @@ export async function authenticate(formData: FormData) {
     }
 
     // Set secure HttpOnly cookie with the access token returned by Go
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     cookieStore.set('access_token', data.data.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 
 export function IndustryHero({ hero, config }: { hero: IHero, config: EngineConfig }) {
   return (
-    <section className="relative min-h-screen flex flex-col items-start justify-center pt-32 pb-16 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-start justify-center pt-32 pb-16">
       <div className="container-wide relative z-10 w-full lg:w-1/2 flex flex-col items-start">
         
         <motion.div 

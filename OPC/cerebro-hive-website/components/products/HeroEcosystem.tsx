@@ -33,10 +33,10 @@ export const HeroEcosystem = () => {
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full min-h-screen flex flex-col items-center justify-center bg-background overflow-hidden perspective-[1000px]"
+      className="relative w-full min-h-screen flex flex-col items-center justify-center bg-background perspective-[1000px]"
     >
       {/* Background ambient lighting */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-accent/10 rounded-full blur-[120px]" />
         <div className="absolute inset-0 opacity-[0.03] mix-blend-screen scale-150" style={{ backgroundImage: `url('${withBasePath('/images/noise.png')}')` }} />
       </div>

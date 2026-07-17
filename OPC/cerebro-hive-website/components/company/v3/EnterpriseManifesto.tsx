@@ -39,7 +39,7 @@ export default function EnterpriseManifesto() {
             const start = idx * 0.1;
             const end = start + 0.3;
             // eslint-disable-next-line react-hooks/rules-of-hooks
-            const opacity = useTransform(scrollYProgress, [start, end], [0.1, 1]);
+            const opacity = useTransform(scrollYProgress, [start, end], [0.35, 1]);
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const y = useTransform(scrollYProgress, [start, end], [20, 0]);
 

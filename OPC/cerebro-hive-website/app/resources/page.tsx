@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, FileText, BookOpen, Wrench, LayoutTemplate, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 
 const hubs = [
@@ -101,7 +102,7 @@ export default function ResourcesPage() {
                       {hub.cta} <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
-                </TrackedLink>
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -128,7 +129,7 @@ export default function ResourcesPage() {
                     </div>
                   </div>
                   <ArrowRight size={16} className="text-text-muted group-hover:text-primary-accent group-hover:translate-x-1 transition-all shrink-0 ml-4" />
-                </TrackedLink>
+                </Link>
               </motion.div>
             ))}
           </div>

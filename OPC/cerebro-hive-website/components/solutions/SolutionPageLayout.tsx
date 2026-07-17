@@ -25,7 +25,7 @@ export default function SolutionPageLayout({ solution }: { solution: Solution })
         <div className="absolute inset-0 pointer-events-none z-0 bg-gradient-to-b opacity-50 from-primary-accent/5 via-transparent to-primary-accent/5" />
 
         {/* Hero Section */}
-        <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden z-10 border-b border-border">
+        <section className="relative min-h-screen flex flex-col items-center justify-center z-10 border-b border-border">
           <div className="container-wide flex flex-col items-center">
              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">
                 <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: solution.color }} />

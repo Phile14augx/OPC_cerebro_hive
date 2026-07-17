@@ -4,14 +4,14 @@ import (
 	"context"
 	"log/slog"
 	"os"
-
 	"time"
 
-	"github.com/cerebro/cerebroarchive/apps/api/internal/ai"
+	domain_ai "github.com/cerebro/cerebroarchive/apps/api/internal/ai"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/archive"
+	"github.com/cerebro/cerebroarchive/apps/api/internal/common/auth"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/common/validation"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/identity"
-	"github.com/cerebro/cerebroarchive/apps/api/internal/platform/ai"
+	platform_ai "github.com/cerebro/cerebroarchive/apps/api/internal/platform/ai"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/platform/config"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/platform/logger"
 	"github.com/cerebro/cerebroarchive/apps/api/internal/platform/storage"
@@ -77,27 +77,28 @@ func main() {
 }
 
 func bootstrap(app *App) {
-	// Initialize Repositories (will inject SQLC Queries instance here)
-	identityRepo := identity.NewRepository(app.DB)
 	validator := validation.NewValidator()
 
-	// Initialize Services
-	app.IdentityService = identity.NewService(identityRepo, app.Logger)
+	// Auth primitives
+	hasher := auth.NewBcryptHasher(0) // 0 = bcrypt.DefaultCost
+	tokenProvider := auth.NewJWTProvider(app.Config.JWTSecret, "cerebro-archive")
 
-	// Initialize Handlers
+	// Identity Domain
+	identityRepo := identity.NewRepository(app.DB)
+	app.IdentityService = identity.NewService(identityRepo, app.Logger, hasher, tokenProvider)
 	identityHandler := identity.NewHandler(app.IdentityService, validator)
 
 	// Archive Domain
 	blobStorage := storage.NewS3Storage("cerebro-documents-bucket")
-	archiveRepo := archive.NewPostgresRepository(dbPool)
+	archiveRepo := archive.NewPostgresRepository(app.DB)
 	archiveService := archive.NewService(archiveRepo, blobStorage, app.Logger)
 	archiveHandler := archive.NewHandler(archiveService, validator)
 
 	// AI Domain
 	pineconeStore := vector.NewPineconeStore("cerebro-index")
-	openAIClient := platformai.NewOpenAIClient() // implements Embedder & Generator
-	aiService := ai.NewService(openAIClient, pineconeStore, openAIClient, app.Logger)
-	aiHandler := ai.NewHandler(aiService, validator)
+	openAIClient := platform_ai.NewOpenAIClient()
+	aiService := domain_ai.NewService(openAIClient, pineconeStore, openAIClient, app.Logger)
+	aiHandler := domain_ai.NewHandler(aiService, validator)
 
 	// Mount Routes
 	api := app.Fiber.Group("/api/v1")
@@ -105,9 +106,11 @@ func bootstrap(app *App) {
 	// Health check endpoints (Kubernetes friendly)
 	health := api.Group("/health")
 	health.Get("/live", func(c *fiber.Ctx) error { return c.SendString("OK") })
-	health.Get("/ready", func(c *fiber.Ctx) error { 
-		// DB check logic goes here
-		return c.SendString("READY") 
+	health.Get("/ready", func(c *fiber.Ctx) error {
+		if err := app.DB.Ping(context.Background()); err != nil {
+			return c.Status(fiber.StatusServiceUnavailable).SendString("DB UNHEALTHY")
+		}
+		return c.SendString("READY")
 	})
 
 	api.Get("/version", func(c *fiber.Ctx) error { return c.JSON(fiber.Map{"version": "1.0.0"}) })
@@ -117,7 +120,6 @@ func bootstrap(app *App) {
 	identityHandler.RegisterRoutes(identityGroup)
 
 	// Archive routes
-	// Note: In reality, these are protected by middleware.RequireAuth()
 	archiveGroup := api.Group("/archive")
 	archiveHandler.RegisterRoutes(archiveGroup)
 

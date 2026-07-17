@@ -31,10 +31,10 @@ export const ResearchHero = () => {
   if (!mounted) return <section className="min-h-[90vh] bg-background" />;
 
   return (
-    <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-border bg-background overflow-hidden flex flex-col justify-center">
+    <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-border bg-background flex flex-col justify-center">
       
       {/* Background Ambience */}
-      <div className="absolute inset-0 pointer-events-none z-0">
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-[#00E5FF]/5 rounded-full blur-[120px] mix-blend-screen" />
         <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-primary-accent/5 rounded-full blur-[120px] mix-blend-screen" />
         <div className="absolute inset-0 opacity-[0.02] mix-blend-screen" style={{ backgroundImage: `url('${withBasePath('/images/noise.png')}')` }} />

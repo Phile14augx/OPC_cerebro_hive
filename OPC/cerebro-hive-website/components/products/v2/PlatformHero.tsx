@@ -45,9 +45,9 @@ export const PlatformHero = () => {
   if (!mounted) return <section className="min-h-screen pt-32 pb-20 border-b border-border bg-background" />;
 
   return (
-    <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-border bg-background overflow-hidden flex flex-col justify-center">
+    <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-border bg-background flex flex-col justify-center">
       {/* Background Ambience */}
-      <div className="absolute inset-0 pointer-events-none z-0">
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         <motion.div 
           className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary-accent/5 rounded-full blur-[150px] mix-blend-screen"
           animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}

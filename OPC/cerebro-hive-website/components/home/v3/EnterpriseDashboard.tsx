@@ -38,7 +38,7 @@ export default function EnterpriseDashboard() {
   return (
     <section className="py-12 border-b border-border bg-background relative z-20 -mt-8">
       <div className="container-wide">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {metrics.map((metric, i) => (
             <div key={i} className="bg-surface border border-border rounded-2xl p-6 flex flex-col items-center text-center group hover:border-border-strong transition-colors shadow-2xl relative overflow-hidden">
               

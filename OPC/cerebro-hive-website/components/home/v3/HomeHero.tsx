@@ -33,7 +33,7 @@ export default function HomeHero() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden bg-background">
+    <section ref={containerRef} className="relative min-h-[100svh] flex flex-col justify-center bg-background">
       
       {/* Immersive Theme-Aware Ambient Background */}
       <BackgroundEngine type="hero" />

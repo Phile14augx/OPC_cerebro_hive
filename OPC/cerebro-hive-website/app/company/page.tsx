@@ -1,7 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import { ForceDarkTheme } from '@/components/company/ForceDarkTheme';
 import { CompanySidebarV3 } from '@/components/company/v3/CompanySidebarV3';
 
 // Load Hero Immediately
@@ -43,8 +42,6 @@ export const metadata: Metadata = {
 export default function CompanyPage() {
   return (
     <div className="min-h-screen bg-background relative selection:bg-primary-accent/30 selection:text-text-primary">
-      <ForceDarkTheme />
-      
       <CompanyHero />
       
       <div className="flex">

@@ -10,7 +10,7 @@ export default function CompanyHero() {
   };
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center border-b border-border bg-background overflow-hidden">
+    <section className="relative min-h-[90vh] flex items-center justify-center border-b border-border bg-background">
       
       {/* Abstract Background */}
       <div className="absolute inset-0 pointer-events-none">

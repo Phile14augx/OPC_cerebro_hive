@@ -118,6 +118,7 @@ export default function ChatPage() {
                 </div>
               )}
             </div>
+          ))}
           {isLoading && (
             <div className="flex gap-4 animate-fade-in-up">
               <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20">

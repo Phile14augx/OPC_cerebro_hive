@@ -102,7 +102,7 @@ export const CompanyHero = () => {
   return (
     <section 
       ref={containerRef}
-      className="relative min-h-screen pt-32 pb-32 flex flex-col justify-center overflow-hidden bg-background"
+      className="relative min-h-screen pt-32 pb-32 flex flex-col justify-center bg-background"
     >
       {/* Immersive Theme-Aware Ambient Background */}
       <BackgroundEngine type="hero" />

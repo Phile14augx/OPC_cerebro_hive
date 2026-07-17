@@ -16,7 +16,7 @@ export default function HeroSection() {
   return (
     <section 
       ref={containerRef}
-      className="relative min-h-[100svh] w-full flex flex-col items-center justify-center overflow-hidden"
+      className="relative min-h-[100svh] w-full flex flex-col items-center justify-center"
     >
       {/* 3D Background */}
       <div className="absolute inset-0 z-0">
