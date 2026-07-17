@@ -47,7 +47,7 @@ export default function HomeHero() {
             initial="hidden"
             animate="visible"
             variants={{
-              hidden: { opacity: 0 },
+              hidden: { opacity: 0.4 },
               visible: {
                 opacity: 1,
                 transition: { staggerChildren: 0.15, delayChildren: 0.2 }
@@ -56,7 +56,7 @@ export default function HomeHero() {
           >
             <motion.div 
               variants={{
-                hidden: { opacity: 0, y: 20 },
+                hidden: { opacity: 0.4, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
               }}
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold mb-8"
@@ -67,7 +67,7 @@ export default function HomeHero() {
             
             <motion.h1 
               variants={{
-                hidden: { opacity: 0, y: 30 },
+                hidden: { opacity: 0.4, y: 30 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
               }}
               className="text-5xl md:text-7xl font-space font-bold text-text-primary leading-[1.1] mb-6"
@@ -78,7 +78,7 @@ export default function HomeHero() {
             
             <motion.p 
               variants={{
-                hidden: { opacity: 0, y: 20 },
+                hidden: { opacity: 0.4, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
               }}
               className="text-lg text-text-secondary max-w-xl font-inter mb-10 leading-relaxed"
@@ -88,7 +88,7 @@ export default function HomeHero() {
             
             <motion.div 
               variants={{
-                hidden: { opacity: 0, y: 20 },
+                hidden: { opacity: 0.4, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
               }}
               className="flex flex-wrap gap-4"
@@ -115,7 +115,7 @@ export default function HomeHero() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeStage}
-                initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+                initial={{ opacity: 0.4, scale: 0.8, filter: "blur(10px)" }}
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
                 transition={{ duration: 0.5 }}

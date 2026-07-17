@@ -41,7 +41,7 @@ export function DataPacket({
         marginLeft: -size/2,
         marginTop: -size/2
       }}
-      initial={{ offsetDistance: "0%", opacity: 0 }}
+      initial={{ offsetDistance: "0%", opacity: 0.4 }}
       animate={{ 
         offsetDistance: `${pathLength * 100}%`,
         opacity: [0, 1, 1, 0] // Fade in at start, fade out at end

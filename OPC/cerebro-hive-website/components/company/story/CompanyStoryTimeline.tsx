@@ -51,7 +51,7 @@ export const CompanyStoryTimeline = () => {
                 <motion.div 
                   key={`${event.year}-${index}`}
                   id={`timeline-event-${event.year.replace('+', '')}-${index}`}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0.4, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.6 }}

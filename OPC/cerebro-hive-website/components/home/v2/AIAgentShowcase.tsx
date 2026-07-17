@@ -147,7 +147,7 @@ export default function AIAgentShowcase() {
           return (
             <motion.div
               key={`packet-${activeWorkflowIdx}-${agent.id}`}
-              initial={{ x: startParams.x, y: startParams.y, opacity: 0 }}
+              initial={{ x: startParams.x, y: startParams.y, opacity: 0.4 }}
               animate={{ x: endParams.x, y: endParams.y, opacity: [0, 1, 1, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
               className="absolute w-2 h-2 bg-primary-accent rounded-full shadow-[0_0_15px_#00F57A] z-10 -ml-1 -mt-1 pointer-events-none"
@@ -190,7 +190,7 @@ export default function AIAgentShowcase() {
           return (
             <motion.div
               key={`wrapper-${agent.id}`}
-              initial={{ opacity: 0, x: x - 100, y: y - 30 }}
+              initial={{ opacity: 0.4, x: x - 100, y: y - 30 }}
               animate={{ opacity: 1, x: x - 100, y: y - 30 }}
               transition={{ duration: 0.5 }}
               className="absolute"
@@ -232,7 +232,7 @@ export default function AIAgentShowcase() {
               {/* Hover Expansion */}
               <AnimatePresence>
                 {isHovered && (
-                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="pt-2 mt-1 border-t border-border flex flex-col gap-3">
+                  <motion.div initial={{ opacity: 0.4, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="pt-2 mt-1 border-t border-border flex flex-col gap-3">
                      
                      <div className="grid grid-cols-2 gap-2">
                        <div className="flex flex-col bg-background/40 p-1.5 rounded border border-border">
@@ -271,7 +271,7 @@ export default function AIAgentShowcase() {
          <div className="flex flex-col gap-3">
             <AnimatePresence>
               {timelineLogs.map((log, i) => (
-                <motion.div key={`${log.time}-${i}`} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-0.5 border-l border-border pl-2">
+                <motion.div key={`${log.time}-${i}`} initial={{ opacity: 0.4, x: -10 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-0.5 border-l border-border pl-2">
                   <span className="text-[9px] font-mono text-text-muted">{log.time}</span>
                   <span className="text-xs text-text-secondary truncate">{log.msg}</span>
                 </motion.div>

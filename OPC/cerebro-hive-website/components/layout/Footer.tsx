@@ -25,37 +25,36 @@ const YoutubeIcon = ({ size = 20, className = "" }: any) => (
 
 const footerLinks: Record<string, { label: string; href: string }[]> = {
   "PLATFORM": [
-    { label: "AgentOS", href: "/products/agent-os" },
-    { label: "Quantiva ERP", href: "/products/quantiva" },
+    { label: "AgentOS", href: "/products/agentos" },
+    { label: "Quantiva ERP", href: "/products/quantiva-erp" },
     { label: "Knowledge Hub", href: "/products/knowledge-hub" },
-    { label: "Architecture Docs", href: "/architecture" },
-    { label: "API Reference", href: "/api" },
     { label: "Enterprise Status", href: "/status" },
   ],
-  "SERVICES": [
-    { label: "AI Consulting", href: "/services/ai-consulting" },
-    { label: "AI Automation", href: "/services/ai-automation" },
-    { label: "Data Engineering", href: "/services/data-engineering" },
-    { label: "Corporate Training", href: "/services/corporate-training" },
-  ],
-  "INDUSTRIES": [
-    { label: "Technology", href: "/industries/technology" },
-    { label: "Financial Services", href: "/industries/financial-services" },
-    { label: "Healthcare", href: "/industries/healthcare" },
-    { label: "Manufacturing", href: "/industries/manufacturing" },
-  ],
-  "RESOURCES": [
-    { label: "Research Institute", href: "/research" },
-    { label: "Executive Insights", href: "/insights" },
-    { label: "Developer Portal", href: "/developers" },
-    { label: "Roadmap", href: "/roadmap" },
-    { label: "Release Notes", href: "/releases" },
-    { label: "Changelog", href: "/changelog" },
+  "DEVELOPERS": [
+    { label: "Getting Started", href: "/developers" },
+    { label: "Architecture", href: "/developers/architecture" },
+    { label: "API Reference", href: "/developers/api" },
+    { label: "Release Notes", href: "/developers/releases" },
+    { label: "Changelog", href: "/developers/changelog" },
+    { label: "Roadmap", href: "/developers/roadmap" },
   ],
   "COMPANY": [
     { label: "About Us", href: "/company" },
     { label: "Careers", href: "/careers" },
     { label: "Contact", href: "/contact" },
+    { label: "Client Portal", href: "/client-portal" },
+  ],
+  "RESOURCES": [
+    { label: "Research Institute", href: "/research" },
+    { label: "Executive Insights", href: "/insights" },
+    { label: "Case Studies", href: "/case-studies" },
+    { label: "Academy", href: "/academy" },
+  ],
+  "LEGAL": [
+    { label: "Privacy Policy", href: "/legal/privacy" },
+    { label: "Security", href: "/legal/security" },
+    { label: "Terms of Service", href: "/legal/terms" },
+    { label: "AI Ethics", href: "/legal/ai-ethics" },
   ],
 };
 
@@ -154,7 +153,7 @@ export default function Footer() {
           {/* Animated Traveling Packet */}
           <motion.circle 
             r="3" fill="#00F57A"
-            initial={{ cx: "0%", cy: "100%", opacity: 0 }}
+            initial={{ cx: "0%", cy: "100%", opacity: 0.4 }}
             animate={{ 
               cx: ["0%", "50%", "100%", "50%", "0%"], 
               cy: ["100%", "50%", "0%", "100%", "100%"],
@@ -171,7 +170,7 @@ export default function Footer() {
         {/* Header Message */}
         <div className="text-center mb-16 border-b border-border pb-12">
           <span className="text-[10px] uppercase tracking-[0.3em] text-primary-accent font-bold mb-4 block">Thank You For Exploring CerebroHive</span>
-          <h2 className="text-lg md:text-2xl font-space font-bold text-text-primary text-center whitespace-nowrap">
+          <h2 className="text-lg md:text-2xl font-space font-bold text-text-primary text-center max-w-2xl mx-auto">
             Engineering Intelligent Enterprises Through AI-Native Innovation
           </h2>
         </div>
@@ -253,8 +252,8 @@ export default function Footer() {
           <div className="lg:col-span-5 flex flex-col gap-8">
             
             {/* Nav Links (Desktop Grid / Mobile Accordion) */}
-            <div className="hidden md:grid grid-cols-4 gap-8">
-              {Object.entries(footerLinks).slice(0, 4).map(([category, links]) => (
+            <div className="hidden md:grid grid-cols-5 gap-6">
+              {Object.entries(footerLinks).map(([category, links]) => (
                 <div key={category}>
                   <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-6">{category}</h4>
                   <ul className="flex flex-col gap-3">
@@ -339,7 +338,7 @@ export default function Footer() {
               /* CEO Featured Quote — Rich Blockquote */
               <motion.div
                 key={mottoIdx}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0.4, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.6 }}
@@ -370,7 +369,7 @@ export default function Footer() {
               /* Short Motto — Inline Quote Style */
               <motion.div
                 key={mottoIdx}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0.4, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.5 }}
@@ -414,10 +413,6 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div className="flex flex-wrap justify-center gap-6 text-[10px] font-bold tracking-widest uppercase text-text-muted">
-            <TrackedLink href="/legal/privacy" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="Privacy" className="hover:text-text-primary transition-colors">Privacy</TrackedLink>
-            <TrackedLink href="/legal/security" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="Security" className="hover:text-text-primary transition-colors">Security</TrackedLink>
-            <TrackedLink href="/legal/terms" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="Terms" className="hover:text-text-primary transition-colors">Terms</TrackedLink>
-            <TrackedLink href="/legal/ai-ethics" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="AI Ethics" className="hover:text-text-primary transition-colors">AI Ethics</TrackedLink>
             <TrackedLink href="/sitemap.xml" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="Sitemap" className="hover:text-text-primary transition-colors">Sitemap</TrackedLink>
           </div>
 

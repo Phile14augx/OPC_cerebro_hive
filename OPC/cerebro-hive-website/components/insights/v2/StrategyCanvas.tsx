@@ -49,7 +49,7 @@ export const StrategyCanvas = () => {
         <AnimatePresence>
           {generated && (
             <motion.div 
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0.4, y: 20 }} animate={{ opacity: 1, y: 0 }}
               className="bg-surface/50 border border-border rounded-2xl p-6 md:p-10 relative overflow-hidden"
             >
               

@@ -19,7 +19,7 @@ const OpportunityBar = ({ label, value, color, delay }: { label: string, value: 
         {Array.from({ length: 10 }).map((_, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0.4, scale: 0.8 }}
             whileInView={{ opacity: i < value ? 1 : 0.1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: delay + (i * 0.05), duration: 0.3 }}

@@ -82,7 +82,7 @@ export function ArchitectureViewer({ architecture, config }: { architecture: { n
                   key={node.id}
                   className="absolute flex flex-col items-center justify-center gap-3 z-10 w-32"
                   style={{ left: node.position.x - minX, top: node.position.y - minY }}
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0.4, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}

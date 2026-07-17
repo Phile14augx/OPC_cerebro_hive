@@ -77,7 +77,7 @@ export const ProductComparisonCard: React.FC<ProductComparisonCardProps> = ({ pl
           <AnimatePresence mode="wait">
             <motion.span
               key={activeCompetitor.competitor}
-              initial={{ opacity: 0, y: -5 }}
+              initial={{ opacity: 0.4, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 5 }}
             >
@@ -105,7 +105,7 @@ export const ProductComparisonCard: React.FC<ProductComparisonCardProps> = ({ pl
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`${activeCompetitor.competitor}-${feature}`}
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0.4, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     className="flex items-center gap-3"

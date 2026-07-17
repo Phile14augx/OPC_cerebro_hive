@@ -9,7 +9,7 @@ export function ExecutiveSummary() {
     <section className="section-pad-sm relative z-10 border-b border-border bg-background">
       <div className="container-wide max-w-5xl mx-auto">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.4, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}

@@ -67,7 +67,7 @@ const AnimatedCampus = () => {
             stroke="#00F57A" 
             strokeWidth="2" 
             filter="url(#glow)"
-            initial={{ pathLength: 0, opacity: 0 }}
+            initial={{ pathLength: 0, opacity: 0.4 }}
             animate={{ pathLength: 1, opacity: [0, 1, 0.5, 1] }}
             transition={{ duration: 2, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
           />
@@ -129,7 +129,7 @@ const AnimatedCampus = () => {
               stroke="#00F57A" 
               strokeWidth="1.5"
               filter="url(#glow)"
-              initial={{ pathLength: 0, opacity: 0 }}
+              initial={{ pathLength: 0, opacity: 0.4 }}
               animate={{ pathLength: 1, opacity: [0, 1, 0] }}
               transition={{ duration: 2.5, repeat: Infinity, delay: 0 }}
             />
@@ -146,7 +146,7 @@ const AnimatedCampus = () => {
               stroke="#00E5FF" 
               strokeWidth="1.5"
               filter="url(#glow)"
-              initial={{ pathLength: 0, opacity: 0 }}
+              initial={{ pathLength: 0, opacity: 0.4 }}
               animate={{ pathLength: 1, opacity: [0, 1, 0] }}
               transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
             />
@@ -163,7 +163,7 @@ const AnimatedCampus = () => {
               stroke="#9D00FF" 
               strokeWidth="1.5"
               filter="url(#glow)"
-              initial={{ pathLength: 0, opacity: 0 }}
+              initial={{ pathLength: 0, opacity: 0.4 }}
               animate={{ pathLength: 1, opacity: [0, 1, 0] }}
               transition={{ duration: 2.2, repeat: Infinity, delay: 1 }}
             />
@@ -180,7 +180,7 @@ const AnimatedCampus = () => {
               stroke="#F5A623" 
               strokeWidth="1.5"
               filter="url(#glow)"
-              initial={{ pathLength: 0, opacity: 0 }}
+              initial={{ pathLength: 0, opacity: 0.4 }}
               animate={{ pathLength: 1, opacity: [0, 1, 0] }}
               transition={{ duration: 2.8, repeat: Infinity, delay: 1.5 }}
             />
@@ -247,7 +247,7 @@ export const Headquarters = () => {
               LEFT: INFORMATION HIERARCHY
              ========================================== */}
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0.4, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
@@ -355,7 +355,7 @@ export const Headquarters = () => {
               RIGHT: SVG ANIMATION CAMPUS
              ========================================== */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0.4, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}

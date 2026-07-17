@@ -79,7 +79,7 @@ export const GlobalPresenceMap = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeRegion.region}
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0.4, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}

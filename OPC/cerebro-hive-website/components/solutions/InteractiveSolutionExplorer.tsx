@@ -114,7 +114,7 @@ export const InteractiveSolutionExplorer = () => {
               <motion.div
                 key={sol.slug}
                 layout
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                initial={{ opacity: 0.4, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
                 transition={{ duration: 0.4, delay: i * 0.05 }}

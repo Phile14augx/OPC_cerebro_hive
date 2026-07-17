@@ -104,7 +104,7 @@ export const PlatformActionDemo = () => {
           <AnimatePresence>
             {activeStep >= steps.length && (
               <motion.div 
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0.4, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 className="absolute inset-0 bg-surface/90 backdrop-blur-sm flex flex-col items-center justify-center z-20"

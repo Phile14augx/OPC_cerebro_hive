@@ -72,7 +72,7 @@ export function SolutionConfigurator() {
               
               {/* Step 1: Industry */}
               {!result && !isGenerating && step === 1 && (
-                <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <motion.div key="step1" initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                   <h3 className="text-2xl font-space font-bold text-text-primary mb-2">What is your industry?</h3>
                   <p className="text-text-muted mb-8 text-sm">This determines the compliance baseline and regulatory requirements of your architecture.</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -87,7 +87,7 @@ export function SolutionConfigurator() {
 
               {/* Step 2: Problem */}
               {!result && !isGenerating && step === 2 && (
-                <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <motion.div key="step2" initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                    <div className="flex items-center gap-2 mb-2">
                     <button onClick={() => setStep(1)} className="text-xs text-text-muted hover:text-text-primary">Industry</button>
                     <ChevronRight size={12} className="text-text-muted" />
@@ -107,7 +107,7 @@ export function SolutionConfigurator() {
 
               {/* Step 3: Size */}
               {!result && !isGenerating && step === 3 && (
-                <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <motion.div key="step3" initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs text-text-muted">Challenge</span>
                     <ChevronRight size={12} className="text-text-muted" />
@@ -136,7 +136,7 @@ export function SolutionConfigurator() {
 
               {/* Generating Animation */}
               {isGenerating && (
-                <motion.div key="generating" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center py-12 text-center">
+                <motion.div key="generating" initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center py-12 text-center">
                   <div className="relative w-24 h-24 mb-8 flex items-center justify-center">
                     <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 4, ease: "linear" }} className="absolute inset-0 rounded-full border-t-2 border-primary-accent" />
                     <motion.div animate={{ rotate: -360 }} transition={{ repeat: Infinity, duration: 3, ease: "linear" }} className="absolute inset-2 rounded-full border-b-2 border-[#00E5FF]" />
@@ -149,7 +149,7 @@ export function SolutionConfigurator() {
 
               {/* Result Dashboard */}
               {result && !isGenerating && (
-                <motion.div key="result" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col h-full">
+                <motion.div key="result" initial={{ opacity: 0.4, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col h-full">
                   
                   <div className="flex items-start justify-between border-b border-border pb-6 mb-6">
                     <div>

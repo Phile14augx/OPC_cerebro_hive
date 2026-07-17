@@ -124,7 +124,7 @@ export function ReadinessAssessment() {
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentQ}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0.4, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.2 }}
@@ -148,7 +148,7 @@ export function ReadinessAssessment() {
               </div>
             ) : (
               <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0.4, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="p-8 flex-1 flex flex-col justify-center items-center text-center relative overflow-hidden"
               >

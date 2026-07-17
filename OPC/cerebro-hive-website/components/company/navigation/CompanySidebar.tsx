@@ -311,7 +311,7 @@ export const CompanySidebar = () => {
         <AnimatePresence>
           {isFolder && isExpanded && node.children && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
+              initial={{ height: 0, opacity: 0.4 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
@@ -368,7 +368,7 @@ export const CompanySidebar = () => {
         <AnimatePresence>
           {explorerMode && (
             <motion.div 
-              initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+              initial={{ height: 0, opacity: 0.4, marginBottom: 0 }}
               animate={{ height: "auto", opacity: 1, marginBottom: 16 }}
               exit={{ height: 0, opacity: 0, marginBottom: 0 }}
               className="relative overflow-hidden"
@@ -391,7 +391,7 @@ export const CompanySidebar = () => {
       <AnimatePresence>
         {isCollapsed && (
           <motion.div 
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0.4 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute top-6 left-0 right-0 flex justify-center text-text-muted"
@@ -422,7 +422,7 @@ export const CompanySidebar = () => {
                         <motion.div 
                           layoutId="activeChapterBg"
                           className="absolute inset-0 bg-surface rounded-lg z-0"
-                          initial={{ opacity: 0 }}
+                          initial={{ opacity: 0.4 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.2 }}
@@ -487,7 +487,7 @@ export const CompanySidebar = () => {
       <AnimatePresence>
         {!explorerMode && (
           <motion.div 
-            initial={{ height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0.4 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             className={cn("p-6 pt-4 border-t border-border/40 whitespace-nowrap transition-opacity duration-300", isCollapsed ? "opacity-0" : "opacity-100")}

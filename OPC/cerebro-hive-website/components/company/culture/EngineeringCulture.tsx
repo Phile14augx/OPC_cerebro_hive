@@ -140,7 +140,7 @@ export const EngineeringCulture = () => {
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activePhase.id}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0.4, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
@@ -160,7 +160,7 @@ export const EngineeringCulture = () => {
                   {activePhase.telemetry.map((metric, i) => (
                     <motion.div
                       key={`${activePhase.id}-${i}`}
-                      initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                      initial={{ opacity: 0.4, scale: 0.95, y: 10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95, y: -10 }}
                       transition={{ duration: 0.3, delay: i * 0.1 }}

@@ -65,7 +65,7 @@ export default function ResourcesPage() {
       <section className="relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(0,245,122,0.05),transparent)]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] dark:block hidden" style={{ backgroundSize: '48px 48px' }} />
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="container-wide flex flex-col items-center text-center relative z-10">
+        <motion.div initial={{ opacity: 0.4, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="container-wide flex flex-col items-center text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 shadow-sm">
             <span className="w-2 h-2 rounded-full bg-primary-accent animate-pulse" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Knowledge Library</span>
@@ -85,7 +85,7 @@ export default function ResourcesPage() {
         <div className="container-wide">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {hubs.map((hub, i) => (
-              <motion.div key={hub.href} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }}>
+              <motion.div key={hub.href} initial={{ opacity: 0.4, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }}>
                 <Link href={hub.href} className="group block h-full">
                   <div className="h-full flex flex-col p-8 rounded-2xl bg-surface border border-border hover:border-primary-accent/40 transition-all hover:-translate-y-1 overflow-hidden relative">
                     <div className="absolute top-0 left-0 w-full h-1" style={{ backgroundColor: hub.color }} />
@@ -119,7 +119,7 @@ export default function ResourcesPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {featured.map((f, i) => (
-              <motion.div key={f.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.07 }}>
+              <motion.div key={f.title} initial={{ opacity: 0.4, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.07 }}>
                 <Link href={f.href} className="group flex items-center justify-between p-5 rounded-xl bg-background border border-border hover:border-primary-accent/40 transition-all hover:-translate-y-0.5">
                   <div className="flex items-center gap-4">
                     <div className="w-2 h-10 rounded-full" style={{ backgroundColor: f.color }} />

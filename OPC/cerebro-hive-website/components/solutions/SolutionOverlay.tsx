@@ -37,7 +37,7 @@ export const SolutionOverlay: React.FC<SolutionOverlayProps> = ({ solution, onCl
         <div className="fixed inset-0 z-50 flex justify-end">
           {/* Backdrop */}
           <motion.div 
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0.4 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
@@ -91,7 +91,7 @@ export const SolutionOverlay: React.FC<SolutionOverlayProps> = ({ solution, onCl
               <AnimatePresence mode="wait">
                 <motion.div
                   key={solution.slug} // Re-animate when solution changes via Prev/Next
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0.4, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}

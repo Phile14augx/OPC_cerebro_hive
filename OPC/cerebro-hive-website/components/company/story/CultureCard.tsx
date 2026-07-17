@@ -56,7 +56,7 @@ export const CultureCard = React.memo(({ value, index, className }: CultureCardP
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0.4, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, delay: index * 0.07, ease: [0.21, 0.47, 0.32, 0.98] }}

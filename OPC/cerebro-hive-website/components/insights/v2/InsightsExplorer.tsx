@@ -93,7 +93,7 @@ export const InsightsExplorer = () => {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeLevel}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0.4, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}

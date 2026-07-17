@@ -93,7 +93,7 @@ export default function ContactPage() {
       <section className="relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,122,0.05),transparent_70%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] dark:block hidden" style={{ backgroundSize: '40px 40px' }} />
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="container-wide flex flex-col items-center text-center relative z-10">
+        <motion.div initial={{ opacity: 0.4, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="container-wide flex flex-col items-center text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 shadow-sm">
             <span className="w-2 h-2 rounded-full bg-primary-accent animate-pulse" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Enterprise Engagement</span>
@@ -113,7 +113,7 @@ export default function ContactPage() {
         <div className="container-wide grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-start">
 
           {/* LEFT: Enterprise Contact Form */}
-          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }}>
+          <motion.div initial={{ opacity: 0.4, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }}>
             <div className="mb-8">
               <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Enterprise Contact Form</span>
               <h2 className="text-3xl font-space font-bold text-text-primary mb-3">Tell Us About Your Initiative</h2>
@@ -121,7 +121,7 @@ export default function ContactPage() {
             </div>
 
             {submitted ? (
-              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-10 rounded-2xl bg-primary-accent/10 border border-primary-accent/30 flex flex-col items-center justify-center text-center gap-4 min-h-[400px]">
+              <motion.div initial={{ opacity: 0.4, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-10 rounded-2xl bg-primary-accent/10 border border-primary-accent/30 flex flex-col items-center justify-center text-center gap-4 min-h-[400px]">
                 <CheckCircle2 size={48} className="text-primary-accent" />
                 <h3 className="text-2xl font-space font-bold text-text-primary">Inquiry Received</h3>
                 <p className="text-text-secondary max-w-sm">Our team will review your initiative and respond within one business day. Expect a detailed response from a senior architect.</p>
@@ -159,10 +159,10 @@ export default function ContactPage() {
                     className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-text-primary font-inter text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none"
                   />
                 </div>
-                <TrackedButton type="submit" disabled={isLoading} analyticsEvent="form_submit" analyticsCategory="conversion" analyticsLabel="Submit Inquiry — Contact Form" className="group relative mt-2 px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated disabled:opacity-60 disabled:cursor-not-allowed">
-                  {isLoading ? "Sending…" : "Submit Inquiry"}
-                  {!isLoading && <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />}
-                </TrackedButton>
+                  <TrackedButton type="submit" disabled={isLoading} eventAction="form_submit" eventCategory="conversion" eventLabel="Submit Contact Form" className="w-full py-4 bg-primary-accent hover:bg-[#00D065] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center justify-center gap-3 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed">
+                    {isLoading ? "Sending..." : "Submit Inquiry"}
+                    {!isLoading && <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />}
+                  </TrackedButton>
                 {error && <p className="text-red-400 text-xs text-center mt-1">{error}</p>}
                 <p className="text-[11px] text-text-muted text-center">We respect your privacy. Your information is never shared with third parties.</p>
               </form>
@@ -171,7 +171,7 @@ export default function ContactPage() {
           </motion.div>
 
           {/* RIGHT: Booking + Contacts */}
-          <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.1 }} className="flex flex-col gap-8">
+          <motion.div initial={{ opacity: 0.4, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.1 }} className="flex flex-col gap-8">
 
             {/* Strategy Call Booking */}
             <div className="p-8 rounded-2xl bg-surface border border-border shadow-elevated">

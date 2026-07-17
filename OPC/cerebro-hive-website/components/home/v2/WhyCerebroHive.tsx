@@ -138,13 +138,13 @@ export default function WhyCerebroHive() {
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         <AnimatePresence mode="wait">
            {activeStage === "digital" && (
-             <motion.div key="bg-1" initial={{ opacity: 0 }} animate={{ opacity: 0.03 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+             <motion.div key="bg-1" initial={{ opacity: 0.4 }} animate={{ opacity: 0.03 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
            )}
            {activeStage === "generative" && (
-             <motion.div key="bg-2" initial={{ opacity: 0 }} animate={{ opacity: 0.05 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-background to-background" />
+             <motion.div key="bg-2" initial={{ opacity: 0.4 }} animate={{ opacity: 0.05 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-background to-background" />
            )}
            {(activeStage === "agentic" || activeStage === "autonomous") && (
-             <motion.div key="bg-3" initial={{ opacity: 0 }} animate={{ opacity: 0.08 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/10 via-background to-background" />
+             <motion.div key="bg-3" initial={{ opacity: 0.4 }} animate={{ opacity: 0.08 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-accent/10 via-background to-background" />
            )}
         </AnimatePresence>
       </div>
@@ -208,7 +208,7 @@ export default function WhyCerebroHive() {
                       <AnimatePresence>
                         {isActive && (
                           <motion.div 
-                            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                            initial={{ opacity: 0.4, height: 0, marginTop: 0 }}
                             animate={{ opacity: 1, height: "auto", marginTop: 16 }}
                             exit={{ opacity: 0, height: 0, marginTop: 0 }}
                             className="overflow-hidden"
@@ -231,7 +231,7 @@ export default function WhyCerebroHive() {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeStage}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0.4, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}

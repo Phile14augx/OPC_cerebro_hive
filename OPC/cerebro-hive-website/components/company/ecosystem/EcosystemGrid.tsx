@@ -22,7 +22,7 @@ export const EcosystemGrid = () => {
           {partners.technology.map((tech, index) => (
             <motion.div
               key={tech}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0.4, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
@@ -35,7 +35,7 @@ export const EcosystemGrid = () => {
           {partners.research.map((tech, index) => (
             <motion.div
               key={tech}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0.4, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: (partners.technology.length + index) * 0.05 }}

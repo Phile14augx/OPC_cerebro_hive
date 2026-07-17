@@ -46,7 +46,7 @@ export function AgentEcosystem({ agents, config }: { agents: AI_Agent[], config:
                     key={i}
                     className="absolute top-1/2 left-1/2 flex items-center justify-center cursor-pointer group"
                     style={{ x, y, originX: "-50%", originY: "-50%" }}
-                    initial={{ x, y, opacity: 0 }}
+                    initial={{ x, y, opacity: 0.4 }}
                     whileInView={{ opacity: 1 }}
                     transition={{ delay: i * 0.1 }}
                     onClick={() => setSelectedAgent(agent)}
@@ -78,7 +78,7 @@ export function AgentEcosystem({ agents, config }: { agents: AI_Agent[], config:
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={selectedAgent.name}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0.4, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     className="h-full flex flex-col relative z-10"

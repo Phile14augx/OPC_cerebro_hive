@@ -41,7 +41,7 @@ export const PlatformArchitecture = () => {
             <React.Fragment key={node.id}>
               {/* Node Card */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0.4, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                 transition={{ duration: 0.6, delay: i * 0.2 }}
                 className="relative z-10 w-full md:w-40 flex-shrink-0"
@@ -61,7 +61,7 @@ export const PlatformArchitecture = () => {
                   
                   {/* Label */}
                   <motion.div
-                    initial={{ opacity: 0 }}
+                    initial={{ opacity: 0.4 }}
                     animate={isInView ? { opacity: 1 } : { opacity: 0 }}
                     transition={{ duration: 0.5, delay: i * 0.2 + 0.3 }}
                     className="absolute -top-6 md:-top-8 text-[10px] uppercase font-bold tracking-widest text-text-muted"

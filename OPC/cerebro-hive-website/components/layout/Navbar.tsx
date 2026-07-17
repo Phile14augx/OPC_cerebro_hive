@@ -96,7 +96,7 @@ export default function Navbar() {
         {isMobileMenuOpen && (
           <>
             <motion.div 
-              initial={{ opacity: 0 }}
+              initial={{ opacity: 0.4 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}

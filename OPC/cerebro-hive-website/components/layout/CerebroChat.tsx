@@ -168,7 +168,7 @@ export default function CerebroChat() {
       <AnimatePresence>
         {!isOpen && (
           <motion.button
-            initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }}
+            initial={{ scale: 0, opacity: 0.4 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }}
             onClick={() => setIsOpen(true)}
             className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#050B14] border border-primary-accent/30 shadow-[0_0_30px_rgba(0,245,122,0.2)] flex items-center justify-center group z-50 overflow-hidden"
           >
@@ -184,7 +184,7 @@ export default function CerebroChat() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.98, y: 10 }}
+            initial={{ opacity: 0.4, scale: 0.98, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: 10 }}
             transition={{ duration: 0.2 }}
@@ -307,7 +307,7 @@ export default function CerebroChat() {
 
                         {/* Executive Business Impact Card */}
                         {!msg.isGenerating && msg.businessImpact && (
-                          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-2 w-full p-4 rounded-xl border border-primary-accent/20 bg-primary-accent/5 flex flex-col gap-4">
+                          <motion.div initial={{ opacity: 0.4, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-2 w-full p-4 rounded-xl border border-primary-accent/20 bg-primary-accent/5 flex flex-col gap-4">
                              <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold flex items-center gap-2">
                                <LineChart size={12}/> Business Impact
                              </span>
@@ -417,7 +417,7 @@ export default function CerebroChat() {
                 <div className="flex-1 relative overflow-hidden bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent">
                   
                   {activeTab === "architecture" && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0">
+                    <motion.div initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} className="absolute inset-0">
                       
                       {/* Connection Lines */}
                       <svg className="absolute inset-0 w-full h-full pointer-events-none">
@@ -431,7 +431,7 @@ export default function CerebroChat() {
 
                       {/* Animated Packets */}
                       <motion.div 
-                        initial={{ top: "15%", opacity: 0 }} animate={{ top: "25%", opacity: [0, 1, 1, 0] }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        initial={{ top: "15%", opacity: 0.4 }} animate={{ top: "25%", opacity: [0, 1, 1, 0] }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                         className="absolute left-[50%] w-1.5 h-4 bg-primary-accent rounded-full -translate-x-1/2 z-0 shadow-[0_0_10px_#00F57A]"
                       />
 
@@ -451,7 +451,7 @@ export default function CerebroChat() {
                           
                           <AnimatePresence>
                             {hoveredNode === node.id && (
-                              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="w-full flex flex-col gap-1 mt-2 pt-2 border-t border-border overflow-hidden">
+                              <motion.div initial={{ opacity: 0.4, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="w-full flex flex-col gap-1 mt-2 pt-2 border-t border-border overflow-hidden">
                                 <span className="text-[8px] text-text-muted block truncate">{node.tech}</span>
                                 <span className="text-[9px] font-mono text-primary-accent">{node.latency}</span>
                               </motion.div>
@@ -464,7 +464,7 @@ export default function CerebroChat() {
                   )}
 
                   {activeTab === "security" && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 flex flex-col items-center justify-center gap-8 p-10 text-center">
+                    <motion.div initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} className="absolute inset-0 flex flex-col items-center justify-center gap-8 p-10 text-center">
                       <div className="w-20 h-20 rounded-full border-2 border-dashed border-red-500/30 flex items-center justify-center text-red-500 relative">
                         <Lock size={32} />
                         <div className="absolute inset-0 bg-red-500/10 rounded-full blur-xl" />
@@ -477,7 +477,7 @@ export default function CerebroChat() {
                   )}
 
                   {activeTab === "deployment" && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 flex items-center justify-center">
+                    <motion.div initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} className="absolute inset-0 flex items-center justify-center">
                       <p className="text-xs text-text-muted">Azure Multi-Region Topology Active</p>
                     </motion.div>
                   )}

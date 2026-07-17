@@ -95,7 +95,7 @@ export function ChallengeExplorer({ challenges, config }: { challenges: Industry
               <motion.div
                 key={i}
                 layout
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0.4, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
@@ -169,7 +169,7 @@ export function ChallengeExplorer({ challenges, config }: { challenges: Industry
                   <AnimatePresence>
                     {isHovered && (
                       <motion.div
-                        initial={{ opacity: 0, height: 0 }}
+                        initial={{ opacity: 0.4, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3 }}

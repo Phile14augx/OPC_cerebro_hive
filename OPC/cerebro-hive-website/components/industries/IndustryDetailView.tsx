@@ -60,7 +60,7 @@ const ArchitectureFlow = ({ architecture, color }: { architecture: any, color: s
           return (
             <div key={node.id} className="relative z-10 flex flex-col items-center gap-3">
               <motion.div 
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0.4, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
                 viewport={{ once: true }}
@@ -99,7 +99,7 @@ export function IndustryDetailView() {
     <AnimatePresence mode="wait">
       <motion.div
         key={industry.slug}
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0.4, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5 }}
@@ -132,7 +132,7 @@ export function IndustryDetailView() {
                 {industry.challenges.map((challenge, i) => (
                   <motion.div 
                     key={i}
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0.4, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}

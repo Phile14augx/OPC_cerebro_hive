@@ -23,7 +23,7 @@ export function AnimatedIndustryBackground({ config }: { config: EngineConfig })
             stroke={config.secondaryColor}
             strokeWidth="1"
             strokeOpacity="0.4"
-            initial={{ pathLength: 0, opacity: 0 }}
+            initial={{ pathLength: 0, opacity: 0.4 }}
             animate={{ pathLength: 1, opacity: 0.4 }}
             transition={{ duration: 3, ease: "easeInOut" }}
           />
@@ -33,7 +33,7 @@ export function AnimatedIndustryBackground({ config }: { config: EngineConfig })
             stroke={config.accentColor}
             strokeWidth="1"
             strokeOpacity="0.2"
-            initial={{ pathLength: 0, opacity: 0 }}
+            initial={{ pathLength: 0, opacity: 0.4 }}
             animate={{ pathLength: 1, opacity: 0.2 }}
             transition={{ duration: 4, ease: "easeInOut", delay: 0.5 }}
           />

@@ -23,7 +23,7 @@ export default function CompanyHero() {
       <div className="container-wide relative z-10 text-center">
         
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.4, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface border border-border text-xs uppercase tracking-[0.3em] text-accent-primary font-bold mb-8"
@@ -32,7 +32,7 @@ export default function CompanyHero() {
         </motion.div>
         
         <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.4, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
           className="text-5xl md:text-7xl lg:text-8xl font-space font-bold text-text-primary mb-8 tracking-tighter"
@@ -42,7 +42,7 @@ export default function CompanyHero() {
         </motion.h1>
         
         <motion.p 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.4, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto font-inter font-light"
@@ -53,7 +53,7 @@ export default function CompanyHero() {
       </div>
 
       <motion.button 
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 0.4 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1 }}
         onClick={scrollToNext}

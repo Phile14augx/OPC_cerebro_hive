@@ -14,7 +14,7 @@ export function Metrics({ overview, config }: { overview: any, config: EngineCon
           {overview.statistics.map((stat: any, i: number) => (
             <motion.div 
               key={i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0.4, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}

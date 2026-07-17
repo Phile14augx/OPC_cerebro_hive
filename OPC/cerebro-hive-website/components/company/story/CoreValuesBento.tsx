@@ -34,7 +34,7 @@ export const CoreValuesBento = () => {
         {/* 2. Dramatic Section Header */}
         <div className="max-w-4xl mb-20 md:mb-28">
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.4, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
@@ -47,7 +47,7 @@ export const CoreValuesBento = () => {
           </motion.div>
           
           <motion.h3 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.4, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -58,7 +58,7 @@ export const CoreValuesBento = () => {
           </motion.h3>
           
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.4, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}

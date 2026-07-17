@@ -77,7 +77,7 @@ const NarrativeBeam = () => {
         {!prefersReducedMotion && (
           <motion.div 
             className="absolute top-0 w-full bg-gradient-to-b from-blue-500 via-emerald-500 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.5)]"
-            initial={{ height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0.4 }}
             whileInView={{ height: "100%", opacity: 1 }}
             viewport={{ once: true, margin: "-20%" }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
@@ -189,7 +189,7 @@ export const VisionMission = () => {
                       <AnimatePresence>
                         {isActive && (
                           <motion.div
-                            initial={{ height: 0, opacity: 0 }}
+                            initial={{ height: 0, opacity: 0.4 }}
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.25, ease: "easeOut" }}

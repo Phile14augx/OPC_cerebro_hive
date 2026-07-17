@@ -20,7 +20,7 @@ export function IndustryERPIntegration({ erp, config }: { erp: string[], config:
             {erp.map((module, idx) => (
               <React.Fragment key={idx}>
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0.4, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1 }}
@@ -34,7 +34,7 @@ export function IndustryERPIntegration({ erp, config }: { erp: string[], config:
                 
                 {idx < erp.length - 1 && (
                   <motion.div
-                    initial={{ opacity: 0 }}
+                    initial={{ opacity: 0.4 }}
                     whileInView={{ opacity: 1 }}
                     transition={{ delay: idx * 0.1 + 0.1 }}
                     className="h-6 flex items-center justify-center"

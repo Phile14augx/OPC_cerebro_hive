@@ -52,7 +52,7 @@ export const ExecutiveDecisionCenter = () => {
           <div className="min-h-[250px]">
             <AnimatePresence mode="wait">
               {step === 1 && (
-                <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <motion.div key="step1" initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                   <div className="text-center mb-8">
                     <User size={24} className="text-[#7B61FF] mx-auto mb-2" />
                     <h3 className="text-xl font-space font-bold text-text-primary">What is your role?</h3>
@@ -68,7 +68,7 @@ export const ExecutiveDecisionCenter = () => {
               )}
 
               {step === 2 && (
-                <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <motion.div key="step2" initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                   <div className="text-center mb-8">
                     <Building2 size={24} className="text-[#7B61FF] mx-auto mb-2" />
                     <h3 className="text-xl font-space font-bold text-text-primary">What is your industry?</h3>
@@ -84,7 +84,7 @@ export const ExecutiveDecisionCenter = () => {
               )}
 
               {step === 3 && !selections.priority && (
-                <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                <motion.div key="step3" initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                   <div className="text-center mb-8">
                     <Target size={24} className="text-[#7B61FF] mx-auto mb-2" />
                     <h3 className="text-xl font-space font-bold text-text-primary">Primary AI Objective?</h3>
@@ -100,7 +100,7 @@ export const ExecutiveDecisionCenter = () => {
               )}
 
               {selections.priority && (
-                <motion.div key="result" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+                <motion.div key="result" initial={{ opacity: 0.4, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
                   <div className="bg-[#7B61FF]/10 border border-[#7B61FF]/30 rounded-xl p-6 text-center mb-8">
                     <h3 className="text-2xl font-space font-bold text-text-primary mb-2">Analysis Complete</h3>
                     <p className="text-sm text-text-secondary">Profile: {selections.role} • {selections.industry} • {selections.priority}</p>

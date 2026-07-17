@@ -80,8 +80,8 @@ const AnimatedGlobe = () => {
         <motion.div className="absolute top-[40%] left-[60%] w-2 h-2 bg-[#00E5FF] rounded-full" animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 3, repeat: Infinity, delay: 1 }} />
         <motion.div className="absolute top-[70%] left-[85%] w-2 h-2 bg-[#00E5FF] rounded-full" animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 2.2, repeat: Infinity, delay: 1.5 }} />
         <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 400">
-          <motion.path d="M 100 120 Q 140 80 180 100" fill="none" stroke="rgba(0, 229, 255, 0.5)" strokeWidth="1.5" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }} />
-          <motion.path d="M 180 100 Q 210 140 240 160" fill="none" stroke="rgba(0, 245, 122, 0.5)" strokeWidth="1.5" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse", delay: 0.5 }} />
+          <motion.path d="M 100 120 Q 140 80 180 100" fill="none" stroke="rgba(0, 229, 255, 0.5)" strokeWidth="1.5" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0.4 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }} />
+          <motion.path d="M 180 100 Q 210 140 240 160" fill="none" stroke="rgba(0, 245, 122, 0.5)" strokeWidth="1.5" strokeDasharray="4 4" initial={{ pathLength: 0, opacity: 0.4 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse", delay: 0.5 }} />
         </svg>
       </div>
     </div>
@@ -112,7 +112,7 @@ export const CompanyHero = () => {
         <motion.div 
           style={{ y: yPos, opacity, scale }} 
           className="flex flex-col items-start text-left max-w-2xl"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0.4, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
@@ -147,7 +147,7 @@ export const CompanyHero = () => {
         {/* Right: SVG Globe Animation */}
         <motion.div
           style={{ y: yPos, opacity, scale }}
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0.4, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.2 }}
           className="relative lg:h-[600px] flex items-center justify-center hidden lg:flex"

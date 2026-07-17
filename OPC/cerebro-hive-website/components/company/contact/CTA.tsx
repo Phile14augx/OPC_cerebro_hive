@@ -45,7 +45,7 @@ const JourneyPipeline = () => {
           <React.Fragment key={stage}>
             {/* Stage Node */}
             <motion.div 
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0.4, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
@@ -106,7 +106,7 @@ const DynamicHeadline = () => {
         <AnimatePresence mode="wait">
           <motion.h3
             key={index}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0.4, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.6 }}
@@ -138,7 +138,7 @@ export const CTA = () => {
 
         {/* Narrative Conclusion Copy */}
         <motion.p 
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 0.4 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -149,7 +149,7 @@ export const CTA = () => {
         
         {/* Action Buttons */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.4, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -183,7 +183,7 @@ export const CTA = () => {
 
         {/* Executive Outcomes */}
         <motion.div 
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 0.4 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.8 }}

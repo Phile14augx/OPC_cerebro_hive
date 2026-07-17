@@ -66,7 +66,7 @@ export default function EnterpriseSimulator() {
 
               <AnimatePresence mode="wait">
                 {step === 1 && (
-                  <motion.div key="1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                  <motion.div key="1" initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                     <div className="text-center mb-8">
                       <Building2 size={32} className="text-accent-secondary mx-auto mb-4" />
                       <h3 className="text-2xl font-space font-bold text-text-primary">Select Industry</h3>
@@ -82,7 +82,7 @@ export default function EnterpriseSimulator() {
                 )}
 
                 {step === 2 && (
-                  <motion.div key="2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                  <motion.div key="2" initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                     <div className="text-center mb-8">
                       <Server size={32} className="text-accent-secondary mx-auto mb-4" />
                       <h3 className="text-2xl font-space font-bold text-text-primary">Primary ERP / System</h3>
@@ -98,7 +98,7 @@ export default function EnterpriseSimulator() {
                 )}
 
                 {step === 3 && (
-                  <motion.div key="3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                  <motion.div key="3" initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                     <div className="text-center mb-8">
                       <Target size={32} className="text-accent-secondary mx-auto mb-4" />
                       <h3 className="text-2xl font-space font-bold text-text-primary">Current AI Maturity</h3>
@@ -126,7 +126,7 @@ export default function EnterpriseSimulator() {
 
           <AnimatePresence>
             {generated && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-surface border border-border rounded-2xl overflow-hidden shadow-2xl">
+              <motion.div initial={{ opacity: 0.4, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-surface border border-border rounded-2xl overflow-hidden shadow-2xl">
                 
                 <div className="h-2 w-full bg-gradient-to-r from-[#00E5FF] via-[#00F57A] to-[#7B61FF]" />
                 

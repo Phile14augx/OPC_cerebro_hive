@@ -113,7 +113,7 @@ export const HeroEcosystem = () => {
              return (
                <motion.div
                  key={`packet-${node.id}`}
-                 initial={{ left: startLeft, top: startTop, opacity: 0 }}
+                 initial={{ left: startLeft, top: startTop, opacity: 0.4 }}
                  animate={{ left: endLeft, top: endTop, opacity: [0, 1, 1, 0] }}
                  transition={{ duration: 2 + (node.angle % 3), repeat: Infinity, ease: "linear", delay: node.angle % 2 }}
                  className={cn(

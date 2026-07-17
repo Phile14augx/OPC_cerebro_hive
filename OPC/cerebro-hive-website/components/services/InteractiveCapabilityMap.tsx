@@ -135,7 +135,7 @@ export function InteractiveCapabilityMap() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeScenario.id}
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0.4, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.05 }}
                 transition={{ duration: 0.5 }}
@@ -156,7 +156,7 @@ export function InteractiveCapabilityMap() {
                     
                     {/* The Node */}
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0.4, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: i * 0.2 }}
                       className="relative z-10 flex flex-col items-center group cursor-default"

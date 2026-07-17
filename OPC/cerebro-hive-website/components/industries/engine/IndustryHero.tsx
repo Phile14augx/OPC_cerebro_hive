@@ -11,7 +11,7 @@ export function IndustryHero({ hero, config }: { hero: IHero, config: EngineConf
       <div className="container-wide relative z-10 w-full lg:w-1/2 flex flex-col items-start">
         
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.4, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm"
@@ -21,7 +21,7 @@ export function IndustryHero({ hero, config }: { hero: IHero, config: EngineConf
         </motion.div>
         
         <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.4, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary leading-[1.1] tracking-tight mb-6"
@@ -41,7 +41,7 @@ export function IndustryHero({ hero, config }: { hero: IHero, config: EngineConf
         </motion.h1>
         
         <motion.p 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.4, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-lg text-text-secondary font-inter max-w-lg leading-relaxed mb-10"
@@ -50,7 +50,7 @@ export function IndustryHero({ hero, config }: { hero: IHero, config: EngineConf
         </motion.p>
         
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.4, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"

@@ -154,7 +154,7 @@ export const PlatformExplorer = () => {
           <AnimatePresence mode="wait">
             <motion.div 
               key={`${activeTab}-${viewMode}`}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0.4, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
@@ -250,7 +250,7 @@ export const PlatformExplorer = () => {
           <div className="w-full md:w-1/3 bg-background border-t md:border-t-0 md:border-l border-border relative overflow-hidden flex items-center justify-center min-h-[250px]">
             <motion.div 
               key={activeTab}
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.8, opacity: 0.4 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
               className="relative w-48 h-48"

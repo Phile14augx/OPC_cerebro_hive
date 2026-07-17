@@ -18,7 +18,7 @@ export const ProductPageLayout = ({ product }: { product: ProductData }) => {
     <AnimatePresence mode="wait">
       <motion.div
         key={product.slug}
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 0.4 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}

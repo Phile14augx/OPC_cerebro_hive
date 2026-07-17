@@ -90,7 +90,7 @@ export const ResearchHero = () => {
                     stroke="rgba(255,255,255,0.1)"
                     strokeWidth="1"
                     strokeDasharray="4 4"
-                    initial={{ pathLength: 0, opacity: 0 }}
+                    initial={{ pathLength: 0, opacity: 0.4 }}
                     animate={{ pathLength: 1, opacity: 1 }}
                     transition={{ duration: 2, delay: i * 0.1, ease: "easeInOut" }}
                   />
@@ -126,7 +126,7 @@ export const ResearchHero = () => {
             {graphNodes.map((node, i) => (
               <motion.div
                 key={node.id}
-                initial={{ opacity: 0, scale: 0 }}
+                initial={{ opacity: 0.4, scale: 0 }}
                 animate={{ opacity: 1, scale: node.scale || 1 }}
                 transition={{ duration: 0.5, delay: 1 + (i * 0.1), type: "spring" }}
                 className="absolute flex flex-col items-center justify-center group"

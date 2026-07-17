@@ -68,7 +68,7 @@ export default function CareersPage() {
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(0,245,122,0.07),transparent)]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] dark:block hidden" style={{ backgroundSize: '48px 48px' }} />
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="container-wide flex flex-col items-center text-center relative z-10">
+        <motion.div initial={{ opacity: 0.4, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="container-wide flex flex-col items-center text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 shadow-sm">
             <span className="w-2 h-2 rounded-full bg-primary-accent animate-pulse" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Join the Team</span>
@@ -116,7 +116,7 @@ export default function CareersPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cultureValues.map((v, i) => (
-              <motion.div key={v.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }}
+              <motion.div key={v.title} initial={{ opacity: 0.4, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }}
                 className="p-8 rounded-2xl bg-surface border border-border hover:border-primary-accent/40 transition-all group">
                 <v.icon size={32} className="text-primary-accent mb-5" strokeWidth={1.5} />
                 <h3 className="font-space font-bold text-text-primary text-lg mb-3 group-hover:text-primary-accent transition-colors">{v.title}</h3>
@@ -137,7 +137,7 @@ export default function CareersPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {domains.map((d, i) => (
-              <motion.div key={d.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }}
+              <motion.div key={d.title} initial={{ opacity: 0.4, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }}
                 className="flex items-start gap-5 p-7 rounded-2xl bg-background border border-border hover:border-primary-accent/40 transition-all group">
                 <div className="w-12 h-12 rounded-xl bg-primary-accent/10 border border-primary-accent/20 flex items-center justify-center shrink-0 group-hover:bg-primary-accent/20 transition-colors">
                   <d.icon size={22} className="text-primary-accent" strokeWidth={1.5} />
@@ -161,7 +161,7 @@ export default function CareersPage() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {benefits.map((b, i) => (
-              <motion.div key={b.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.06 }}
+              <motion.div key={b.label} initial={{ opacity: 0.4, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.06 }}
                 className="flex flex-col items-center text-center p-6 rounded-2xl bg-surface border border-border hover:border-primary-accent/40 transition-all">
                 <b.icon size={28} className="text-primary-accent mb-4" strokeWidth={1.5} />
                 <div className="font-space font-bold text-text-primary text-sm mb-2">{b.label}</div>
@@ -182,7 +182,7 @@ export default function CareersPage() {
           </div>
 
           {submitted ? (
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-12 rounded-2xl bg-primary-accent/10 border border-primary-accent/30 flex flex-col items-center text-center gap-4">
+            <motion.div initial={{ opacity: 0.4, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-12 rounded-2xl bg-primary-accent/10 border border-primary-accent/30 flex flex-col items-center text-center gap-4">
               <CheckCircle2 size={48} className="text-primary-accent" />
               <h3 className="text-2xl font-space font-bold text-text-primary">Profile Received</h3>
               <p className="text-text-secondary max-w-sm">We've added your profile to our talent network. We review submissions quarterly and will reach out if we see a strong match.</p>

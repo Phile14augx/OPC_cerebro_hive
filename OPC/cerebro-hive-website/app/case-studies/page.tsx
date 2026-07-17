@@ -74,7 +74,7 @@ export default function CaseStudiesPage() {
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(0,245,122,0.06),transparent)]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] dark:block hidden" style={{ backgroundSize: '48px 48px' }} />
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="container-wide flex flex-col items-center text-center relative z-10">
+        <motion.div initial={{ opacity: 0.4, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="container-wide flex flex-col items-center text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 shadow-sm">
             <span className="w-2 h-2 rounded-full bg-primary-accent animate-pulse" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Measurable Enterprise Impact</span>
@@ -100,7 +100,7 @@ export default function CaseStudiesPage() {
       <section className="section-pad-sm border-b border-border bg-surface-elevated">
         <div className="container-wide grid grid-cols-2 md:grid-cols-4 gap-8">
           {globalStats.map((s, i) => (
-            <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }} className="flex flex-col items-center text-center">
+            <motion.div key={s.label} initial={{ opacity: 0.4, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }} className="flex flex-col items-center text-center">
               <s.icon size={28} className="text-primary-accent mb-3" strokeWidth={1.5} />
               <span className="text-4xl font-space font-bold text-text-primary mb-1">{s.value}</span>
               <span className="text-xs uppercase tracking-widest text-text-muted font-bold">{s.label}</span>
@@ -128,7 +128,7 @@ export default function CaseStudiesPage() {
           {/* Cards */}
           <div className="flex flex-col gap-8">
             {filtered.map((cs, i) => (
-              <motion.div key={cs.href} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }}>
+              <motion.div key={cs.href} initial={{ opacity: 0.4, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }}>
                 <Link href={cs.href} className="group block">
                   <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 p-8 md:p-10 rounded-2xl bg-surface border border-border hover:border-primary-accent/40 transition-all hover:-translate-y-1 overflow-hidden relative">
                     <div className="absolute top-0 left-0 w-1 h-full rounded-l-2xl" style={{ backgroundColor: cs.color }} />

@@ -84,7 +84,7 @@ export const ResearchDomains = () => {
                 <AnimatePresence>
                   {isHovered && latest && (
                     <motion.div 
-                      initial={{ opacity: 0, height: 0 }}
+                      initial={{ opacity: 0.4, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       className="w-full pt-4 mt-2 border-t border-border overflow-hidden"

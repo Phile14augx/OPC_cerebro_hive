@@ -36,7 +36,7 @@ export function TransformationJourney({ roadmap, config }: { roadmap: RoadmapPha
                   {/* Content Card */}
                   <div className={`w-full md:w-1/2 pl-16 md:pl-0 ${isEven ? 'md:pr-12 md:text-right' : 'md:pl-12 text-left'}`}>
                     <motion.div
-                      initial={{ opacity: 0, x: isEven ? -20 : 20 }}
+                      initial={{ opacity: 0.4, x: isEven ? -20 : 20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: idx * 0.1 }}

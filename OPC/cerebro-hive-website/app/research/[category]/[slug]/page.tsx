@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   
   return {
     title: `${pub.title} | CerebroHive Research`,
-    description: pub.summary,
+    description: pub.abstract,
   };
 }
 

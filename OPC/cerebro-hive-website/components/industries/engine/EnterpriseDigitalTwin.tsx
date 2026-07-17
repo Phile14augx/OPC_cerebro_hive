@@ -144,7 +144,7 @@ export function EnterpriseDigitalTwin({ config }: Props) {
 
             <AnimatePresence mode="wait">
               {viewMode === "overview" && (
-                <motion.div key="overview" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex-1 flex flex-col justify-center max-w-2xl">
+                <motion.div key="overview" initial={{ opacity: 0.4, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex-1 flex flex-col justify-center max-w-2xl">
                   <h3 className="text-4xl font-space font-bold mb-6">{config.overview.title}</h3>
                   <p className="text-xl text-text-secondary leading-relaxed mb-8">{config.overview.description}</p>
                   
@@ -170,7 +170,7 @@ export function EnterpriseDigitalTwin({ config }: Props) {
               )}
 
               {(viewMode === "workflow" || viewMode === "architecture") && (
-                <motion.div key={viewMode} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="flex-1 relative">
+                <motion.div key={viewMode} initial={{ opacity: 0.4, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="flex-1 relative">
                   
                   {/* Semantic Node Grid Layout */}
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -203,7 +203,7 @@ export function EnterpriseDigitalTwin({ config }: Props) {
                                 <AnimatePresence mode="wait">
                                   {nodeStates[node.id] && nodeStates[node.id] !== 'idle' && (
                                     <motion.div 
-                                      initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 5 }}
+                                      initial={{ opacity: 0.4, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 5 }}
                                       className="text-[10px] uppercase tracking-widest text-accent-secondary font-bold"
                                     >
                                       {nodeMessages[node.id]}
@@ -234,7 +234,7 @@ export function EnterpriseDigitalTwin({ config }: Props) {
               )}
 
               {viewMode === "metrics" && (
-                <motion.div key="metrics" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex-1 flex flex-col justify-center items-center">
+                <motion.div key="metrics" initial={{ opacity: 0.4, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex-1 flex flex-col justify-center items-center">
                   <div className="grid grid-cols-2 gap-8 w-full max-w-2xl">
                     {config.metrics.map(metric => {
                       // Animate metric value based on simulation progress (completed state triggers change)
@@ -267,7 +267,7 @@ export function EnterpriseDigitalTwin({ config }: Props) {
           {/* Right-Hand Inspector Panel */}
           {selectedNode && (viewMode === 'workflow' || viewMode === 'architecture') && (
             <motion.div 
-              initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
               className="lg:col-span-4 theme-card flex flex-col h-full overflow-hidden"
             >
               <div className="p-6 border-b border-border bg-surface-secondary flex items-center gap-4">

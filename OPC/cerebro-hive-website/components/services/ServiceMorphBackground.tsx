@@ -76,7 +76,7 @@ const AIOrbitLayer = () => {
 
   return (
     <motion.div 
-      initial={{ scale: 0, opacity: 0 }}
+      initial={{ scale: 0, opacity: 0.4 }}
       animate={{ 
         scale: isVisible ? 1 : 0, 
         opacity: isVisible ? 1 : 0 
@@ -174,7 +174,7 @@ const NeuralNetworkLayer = () => {
                 strokeWidth="1.5"
                 strokeDasharray="4 4"
                 fill="none"
-                initial={{ pathLength: 0, opacity: 0 }}
+                initial={{ pathLength: 0, opacity: 0.4 }}
                 animate={{ 
                   pathLength: showConnections ? 1 : 0, 
                   opacity: showConnections ? 1 : 0 
@@ -187,7 +187,7 @@ const NeuralNetworkLayer = () => {
                 <motion.circle 
                   r="3" 
                   fill={node.color}
-                  initial={{ opacity: 0 }}
+                  initial={{ opacity: 0.4 }}
                   animate={{ opacity: [0, 1, 0] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: Math.random() * 2 }}
                 >
@@ -218,7 +218,7 @@ const NeuralNetworkLayer = () => {
               strokeWidth="1"
               strokeDasharray="6 6"
               fill="none"
-              initial={{ pathLength: 0, opacity: 0 }}
+              initial={{ pathLength: 0, opacity: 0.4 }}
               animate={{ 
                 pathLength: isAutonomous ? 1 : 0, 
                 opacity: isAutonomous ? 0.3 : 0 
@@ -247,7 +247,7 @@ const NeuralNetworkLayer = () => {
           return (
             <motion.div
               key={node.id}
-              initial={{ opacity: 0, scale: 0 }}
+              initial={{ opacity: 0.4, scale: 0 }}
               animate={{ opacity: isFaded ? 0.2 : 1, scale: isHighlighted ? 1.2 : 1 }}
               exit={{ opacity: 0, scale: 0 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}

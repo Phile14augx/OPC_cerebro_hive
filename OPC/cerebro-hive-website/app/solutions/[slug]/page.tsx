@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!solution) return { title: 'Solution Not Found' };
   
   return {
-    title: `${solution.title} | CerebroHive`,
-    description: solution.description,
+    title: `${solution.name} | CerebroHive`,
+    description: solution.hero.description,
   };
 }
 

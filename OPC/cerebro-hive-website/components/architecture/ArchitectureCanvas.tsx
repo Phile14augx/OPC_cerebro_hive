@@ -17,6 +17,7 @@ import '@xyflow/react/dist/style.css';
 import dagre from 'dagre';
 import { toPng, toSvg } from 'html-to-image';
 import { ArchitectureNode } from './ArchitectureNode';
+import { SolutionFlowNode } from './SolutionFlowNode';
 import { AnimatedEdge } from './AnimatedEdge';
 import { Download, Maximize, Search, Image as ImageIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
@@ -24,6 +25,7 @@ import { cn } from '@/lib/utils';
 
 const nodeTypes = {
   architectureNode: ArchitectureNode,
+  solutionFlowNode: SolutionFlowNode,
 };
 
 const edgeTypes = {
@@ -33,12 +35,17 @@ const edgeTypes = {
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
+const getNodeDimensions = (node: Node) => {
+  if (node.type === 'solutionFlowNode') return { width: 280, height: 170 };
+  return { width: 200, height: 80 };
+};
+
 const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => {
   const isHorizontal = direction === 'LR';
   dagreGraph.setGraph({ rankdir: direction, ranksep: 80, nodesep: 100 });
 
   nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: 200, height: 80 });
+    dagreGraph.setNode(node.id, getNodeDimensions(node));
   });
 
   edges.forEach((edge) => {
@@ -49,12 +56,13 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => 
 
   const layoutedNodes = nodes.map((node) => {
     const nodeWithPosition = dagreGraph.node(node.id);
+    const { width, height } = getNodeDimensions(node);
     const newNode = { ...node };
     newNode.targetPosition = isHorizontal ? 'left' : 'top' as any;
     newNode.sourcePosition = isHorizontal ? 'right' : 'bottom' as any;
     newNode.position = {
-      x: nodeWithPosition.x - 200 / 2,
-      y: nodeWithPosition.y - 80 / 2,
+      x: nodeWithPosition.x - width / 2,
+      y: nodeWithPosition.y - height / 2,
     };
     return newNode;
   });
@@ -72,11 +80,11 @@ interface ArchitectureCanvasProps {
 const Flow = ({ initialNodes, initialEdges, direction = 'LR' }: ArchitectureCanvasProps) => {
   const { theme } = useTheme();
   
-  // Convert standard nodes to our custom node type
+  // Convert standard nodes to our custom node type, honoring an explicit per-node type if provided
   const processedNodes = useMemo(() => {
     return initialNodes.map(node => ({
       ...node,
-      type: 'architectureNode'
+      type: node.type || 'architectureNode'
     }));
   }, [initialNodes]);
 

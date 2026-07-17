@@ -62,7 +62,7 @@ export const FrameworkExplorer = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeFramework.slug}
-                initial={{ opacity: 0, scale: 0.98 }}
+                initial={{ opacity: 0.4, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.02 }}
                 transition={{ duration: 0.3 }}
@@ -126,7 +126,7 @@ export const FrameworkExplorer = () => {
                        {activeFramework.phases.map((phase, i) => (
                          <React.Fragment key={i}>
                            <motion.div 
-                             initial={{ opacity: 0, y: 10 }}
+                             initial={{ opacity: 0.4, y: 10 }}
                              animate={{ opacity: 1, y: 0 }}
                              transition={{ delay: i * 0.1 }}
                              className="w-full bg-surface border border-border p-2 rounded text-center text-xs font-bold text-text-primary group-hover:border-primary-accent/30 transition-colors"

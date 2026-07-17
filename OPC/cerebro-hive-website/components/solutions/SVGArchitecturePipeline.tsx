@@ -86,7 +86,7 @@ export const SVGArchitecturePipeline: React.FC<SVGArchitecturePipelineProps> = (
                   r="3"
                   fill={color}
                   filter="url(#glow)"
-                  initial={{ cx: startX, cy: node.centerY, opacity: 0 }}
+                  initial={{ cx: startX, cy: node.centerY, opacity: 0.4 }}
                   animate={{ 
                     cx: [startX, endX], 
                     opacity: [0, 1, 1, 0] 
@@ -109,7 +109,7 @@ export const SVGArchitecturePipeline: React.FC<SVGArchitecturePipelineProps> = (
             {nodes.map((node, index) => (
               <motion.div
                 key={node.id}
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                initial={{ opacity: 0.4, scale: 0.8, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}

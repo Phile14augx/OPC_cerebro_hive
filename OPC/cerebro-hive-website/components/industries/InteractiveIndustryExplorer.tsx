@@ -74,7 +74,7 @@ export function InteractiveIndustryExplorer() {
                 <AnimatePresence>
                   {isExpanded && (
                     <motion.div 
-                      initial={{ height: 0, opacity: 0 }}
+                      initial={{ height: 0, opacity: 0.4 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden pl-6 flex flex-col gap-1 mt-1"
@@ -111,7 +111,7 @@ export function InteractiveIndustryExplorer() {
         {activeNode ? (
           <motion.div 
             key={activeNode}
-            initial={{ scale: 0.9, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0.4 }}
             animate={{ scale: 1, opacity: 1 }}
             className="flex flex-col items-center justify-center relative z-10"
           >

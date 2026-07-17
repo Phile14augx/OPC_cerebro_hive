@@ -190,7 +190,7 @@ export default function TechStack() {
             return (
               <motion.div 
                 key={layer.id}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0.4, y: 50 }}
                 whileInView={{ opacity: isActive ? 1 : 0.2, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, delay: layer.delay, ease: "easeOut" }}
@@ -239,7 +239,7 @@ export default function TechStack() {
                           <AnimatePresence>
                             {isHovered && techMatch && (
                               <motion.div 
-                                initial={{ opacity: 0, height: 0 }} 
+                                initial={{ opacity: 0.4, height: 0 }} 
                                 animate={{ opacity: 1, height: "auto" }} 
                                 exit={{ opacity: 0, height: 0 }} 
                                 style={{ paddingTop: '12px', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: '12px' }}
@@ -281,7 +281,7 @@ export default function TechStack() {
 
         {/* Enterprise Metrics Footer */}
         <motion.div 
-          initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 1.2 }}
+          initial={{ opacity: 0.4, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 1.2 }}
           className="max-w-4xl mx-auto mt-8 border-t border-border pt-8 flex flex-wrap justify-around gap-6"
         >
           <div className="flex flex-col items-center text-center">

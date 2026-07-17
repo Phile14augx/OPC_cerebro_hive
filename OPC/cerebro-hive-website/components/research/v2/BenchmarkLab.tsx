@@ -91,7 +91,7 @@ export const BenchmarkLab = () => {
                     {/* Tooltip */}
                     <motion.div 
                       key={`${activeTask}-${model.name}`}
-                      initial={{ opacity: 0, y: 10 }}
+                      initial={{ opacity: 0.4, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="absolute -top-12 bg-surface-secondary border border-border text-text-primary text-xs font-bold px-3 py-1.5 rounded"
                     >

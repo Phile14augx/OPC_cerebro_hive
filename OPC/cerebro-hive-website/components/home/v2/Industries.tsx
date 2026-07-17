@@ -210,7 +210,7 @@ export default function Industries() {
       {/* Animated Data Packet */}
       {isFocused && (
         <motion.div 
-          initial={{ top: 0, opacity: 0 }}
+          initial={{ top: 0, opacity: 0.4 }}
           animate={{ top: "100%", opacity: [0, 1, 1, 0] }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           className="absolute left-3 w-1.5 h-6 bg-primary-accent rounded-full shadow-[0_0_10px_#00F57A] z-20"
@@ -219,7 +219,7 @@ export default function Industries() {
       {nodes.map((node, i) => (
         <motion.div 
           key={node} 
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0.4, x: -20 }}
           animate={isFocused ? { opacity: 1, x: 0 } : {}}
           transition={{ delay: 0.5 + (i * 0.1) }}
           className="flex items-center gap-4 relative z-10"
@@ -301,7 +301,7 @@ export default function Industries() {
                 <AnimatePresence>
                   {isFocused && (
                     <motion.div 
-                      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                      initial={{ opacity: 0.4, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                       transition={{ delay: 0.2, duration: 0.5 }}
                       className="relative z-20 w-full"
                     >
@@ -323,7 +323,7 @@ export default function Industries() {
                               <div className="flex flex-wrap gap-2">
                                 {ind.capabilityBadges.map((badge, i) => (
                                   <motion.span 
-                                    key={badge} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 + (i * 0.05) }}
+                                    key={badge} initial={{ opacity: 0.4, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 + (i * 0.05) }}
                                     className="px-3 py-1 bg-surface-elevated border border-border rounded-full text-[10px] uppercase tracking-widest text-text-secondary font-bold whitespace-nowrap"
                                   >
                                     {badge}
@@ -346,7 +346,7 @@ export default function Industries() {
                               <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-2"><AlertTriangle size={14}/> Critical Challenges</span>
                               <div className="flex flex-col gap-3 min-w-0">
                                 {ind.challenges.map((c, i) => (
-                                  <motion.div key={c} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 + (i*0.1) }} className="flex items-center gap-3 p-3 rounded-lg bg-red-500/5 border border-red-500/10 min-w-0">
+                                  <motion.div key={c} initial={{ opacity: 0.4, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 + (i*0.1) }} className="flex items-center gap-3 p-3 rounded-lg bg-red-500/5 border border-red-500/10 min-w-0">
                                     <AlertTriangle size={14} className="text-red-400 shrink-0" />
                                     <span className="text-sm font-medium text-red-200/70 truncate">{c}</span>
                                   </motion.div>
@@ -358,7 +358,7 @@ export default function Industries() {
                               <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold mb-4 flex items-center gap-2"><CheckCircle2 size={14}/> AI Solutions</span>
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-0">
                                 {ind.solutions.map((s, i) => (
-                                  <motion.div key={s.name} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 + (i*0.1) }} className="p-3 rounded-lg bg-surface-elevated border border-border flex flex-col justify-between group hover:bg-primary-accent/5 hover:border-primary-accent/30 transition-colors overflow-hidden min-w-0">
+                                  <motion.div key={s.name} initial={{ opacity: 0.4, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 + (i*0.1) }} className="p-3 rounded-lg bg-surface-elevated border border-border flex flex-col justify-between group hover:bg-primary-accent/5 hover:border-primary-accent/30 transition-colors overflow-hidden min-w-0">
                                     <span className="text-[10px] font-bold text-text-muted mb-3 truncate">{s.name}</span>
                                     <div className="flex items-baseline gap-1 truncate">
                                       <span className="text-lg font-mono font-bold text-text-primary">{s.stat}</span>
@@ -409,7 +409,7 @@ export default function Industries() {
                             <span className="text-[10px] uppercase tracking-widest text-secondary-accent font-bold mb-4 flex items-center gap-2"><LineChart size={14}/> Business Outcomes</span>
                             <div className="flex flex-col gap-6 min-w-0">
                               {ind.businessOutcomes.map((out, i) => (
-                                <motion.div key={out.desc} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8 + (i*0.1) }} className="flex gap-4 items-start min-w-0">
+                                <motion.div key={out.desc} initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8 + (i*0.1) }} className="flex gap-4 items-start min-w-0">
                                   <span className="text-2xl font-mono font-bold text-text-primary shrink-0">{out.value}</span>
                                   <span className="text-xs text-text-secondary mt-1 leading-relaxed truncate">{out.desc}</span>
                                 </motion.div>
@@ -429,7 +429,7 @@ export default function Industries() {
                            <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6 block">Core Technology Stack</span>
                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 xl:gap-6 min-w-0">
                              {ind.techStack.map((group, i) => (
-                               <motion.div key={group.category} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 + (i*0.1) }} className="min-w-0">
+                               <motion.div key={group.category} initial={{ opacity: 0.4, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 + (i*0.1) }} className="min-w-0">
                                  <div className="flex items-center gap-2 mb-3 border-b border-border pb-2 min-w-0">
                                    {group.category === "AI Models" ? <BrainCircuit size={12} className="text-text-muted shrink-0"/> : group.category === "Infrastructure" ? <Server size={12} className="text-text-muted shrink-0"/> : <Database size={12} className="text-text-muted shrink-0"/>}
                                    <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest truncate">{group.category}</span>
@@ -448,7 +448,7 @@ export default function Industries() {
 
                         {/* CTA */}
                         <motion.button 
-                          initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.4 }}
+                          initial={{ opacity: 0.4, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.4 }}
                           className="shrink-0 px-8 py-4 lg:px-12 lg:py-5 bg-surface text-text-primary font-bold font-space text-sm flex items-center justify-center gap-3 hover:bg-primary-accent transition-colors rounded-xl group max-w-full"
                         >
                           <span className="truncate">{ind.cta}</span>

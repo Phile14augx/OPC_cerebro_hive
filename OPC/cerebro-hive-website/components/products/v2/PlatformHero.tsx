@@ -127,7 +127,7 @@ export const PlatformHero = () => {
               
               <motion.div 
                 key={activeDept}
-                initial={{ opacity: 0, y: -20, scale: 0.8 }}
+                initial={{ opacity: 0.4, y: -20, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.8 }}
                 className="relative z-10 px-6 py-4 bg-surface border border-primary-accent/30 rounded-xl backdrop-blur-md text-center max-w-[280px] shadow-[0_0_30px_rgba(0,245,122,0.15)]"
@@ -142,7 +142,7 @@ export const PlatformHero = () => {
                 <motion.div
                   key={i}
                   className="absolute w-1.5 h-1.5 bg-primary-accent rounded-full shadow-[0_0_8px_#00F57A]"
-                  initial={{ top: "10%", left: "50%", opacity: 0 }}
+                  initial={{ top: "10%", left: "50%", opacity: 0.4 }}
                   animate={{ top: "90%", opacity: [0, 1, 1, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.5, ease: "linear" }}
                 />

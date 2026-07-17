@@ -48,7 +48,7 @@ export const MiniArchitecture: React.FC<MiniArchitectureProps> = ({ pipeline, co
                   <motion.circle
                     r="2"
                     fill={color}
-                    initial={{ cx: startX, cy: startY, opacity: 0 }}
+                    initial={{ cx: startX, cy: startY, opacity: 0.4 }}
                     animate={{ 
                       cx: [startX, endX], 
                       opacity: [0, 1, 1, 0] 

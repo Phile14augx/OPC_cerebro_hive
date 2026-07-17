@@ -141,7 +141,7 @@ export const NeuralOrb = ({
             }}
             animate={{ rotate: 360 }}
             transition={{ duration: 20, ease: "linear", repeat: Infinity }}
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0.4, scale: 0.9 }}
             exit={{ opacity: 0, scale: 0.9 }}
           >
             {/* Inner cutout — transparent so core shows through */}

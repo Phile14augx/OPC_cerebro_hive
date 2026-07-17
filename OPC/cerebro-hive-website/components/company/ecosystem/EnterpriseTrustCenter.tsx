@@ -146,7 +146,7 @@ const CapabilityNetwork = () => {
                 d={getCoordinates(i)} 
                 stroke="rgba(249,115,22,0.6)" 
                 strokeWidth="2" 
-                initial={{ pathLength: 0, opacity: 0 }} 
+                initial={{ pathLength: 0, opacity: 0.4 }} 
                 whileInView={{ pathLength: [0, 1], opacity: [0, 1, 0] }} 
                 viewport={{ once: true }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.8 }} 
@@ -162,7 +162,7 @@ const CapabilityNetwork = () => {
         {architecture && (
           <motion.div 
             className={cn("lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 w-full lg:w-80 p-8 rounded-3xl bg-surface-elevated/90 border backdrop-blur-xl flex flex-col items-center text-center z-20 transition-all", getColorClasses(architecture.color))}
-            initial={{ scale: 0.9, opacity: 0 }} 
+            initial={{ scale: 0.9, opacity: 0.4 }} 
             whileInView={{ scale: 1, opacity: 1 }} 
             viewport={{ once: true }}
           >
@@ -191,7 +191,7 @@ const CapabilityNetwork = () => {
                 positions[i],
                 getGlowClass(spoke.color)
               )}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0.4, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 + i * 0.1 }}
@@ -255,7 +255,7 @@ const DeploymentPipeline = () => {
           <motion.div 
             key={step.id} 
             className="relative z-10 flex flex-col items-center gap-4 flex-1 group cursor-default"
-            initial={{ opacity: 0, y: 10 }} 
+            initial={{ opacity: 0.4, y: 10 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             transition={{ delay: i * 0.1 }} 
             viewport={{ once: true }}
