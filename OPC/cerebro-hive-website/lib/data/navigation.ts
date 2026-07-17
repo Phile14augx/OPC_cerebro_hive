@@ -12,6 +12,7 @@ export const mainNavigation: NavItem[] = [
       { label: "Overview", href: "/platform" },
       { label: "Architecture", href: "/platform/architecture" },
       { label: "Capabilities", href: "/platform#capabilities" },
+      { label: "Live Runtime", href: "/products/agentos/live-runtime" },
     ]
   },
   {
@@ -36,12 +37,33 @@ export const mainNavigation: NavItem[] = [
     ]
   },
   {
+    label: "Industries",
+    href: "/industries",
+    children: [
+      { label: "All Industries", href: "/industries" },
+      { label: "Healthcare", href: "/industries/healthcare" },
+      { label: "Financial Services", href: "/industries/financial-services" },
+      { label: "Manufacturing", href: "/industries/manufacturing" },
+      { label: "Retail", href: "/industries/retail" },
+    ]
+  },
+  {
     label: "Research",
     href: "/research",
     children: [
       { label: "CerebroHive Labs", href: "/research" },
       { label: "Agent Architectures", href: "/research/agent-architectures" },
       { label: "AI Safety", href: "/research/ai-safety" },
+    ]
+  },
+  {
+    label: "Insights",
+    href: "/insights",
+    children: [
+      { label: "All Insights", href: "/insights" },
+      { label: "Executive Briefings", href: "/insights#briefings" },
+      { label: "Market Trends", href: "/insights#trends" },
+      { label: "Technical Deep Dives", href: "/insights#technical" },
     ]
   },
   {
@@ -61,6 +83,7 @@ export const footerNavigation = {
     { label: "Memory Fabric™", href: "/platform/memory-fabric" },
     { label: "Knowledge Fabric™", href: "/platform/knowledge-fabric" },
     { label: "Reasoning Engine™", href: "/platform/reasoning-engine" },
+    { label: "Live Runtime →", href: "/products/agentos/live-runtime" },
   ],
   products: [
     { label: "CerebroArchive™", href: "/products/cerebro-archive" },

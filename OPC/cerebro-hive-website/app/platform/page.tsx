@@ -69,7 +69,12 @@ export default function PlatformOverviewPage() {
                     {caps.map(cap => {
                       const Icon = getIcon(cap.iconName || "Settings");
                       return (
-                        <Link key={cap.id} href={`/platform/${cap.slug}`} className="group p-6 rounded-2xl bg-background border border-border shadow-sm flex flex-col hover:border-primary-accent/50 hover:shadow-md transition-all">
+                        <Link key={cap.id} href={`/platform/${cap.slug}`} className="group p-6 rounded-2xl bg-background border border-border shadow-sm flex flex-col hover:border-primary-accent/50 hover:shadow-md transition-all relative">
+                          {cap.liveDemoUrl && (
+                            <span className="absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-full bg-primary-accent/10 border border-primary-accent/30 text-[9px] font-bold uppercase tracking-widest text-primary-accent">
+                              <span className="w-1.5 h-1.5 rounded-full bg-primary-accent animate-pulse" /> Live Demo
+                            </span>
+                          )}
                           <div className="w-12 h-12 rounded-xl bg-surface-elevated border border-border flex items-center justify-center text-text-primary group-hover:text-primary-accent transition-colors mb-6">
                             <Icon size={24} />
                           </div>

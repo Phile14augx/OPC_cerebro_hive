@@ -4,27 +4,32 @@ import React from "react";
 import { Database, Bot, Zap, ArrowRight, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import Link from "next/link";
+
 const products = [
   {
     title: "Knowledge Hub",
     icon: Database,
     desc: "The foundational vector engine. It ingests your legacy databases and documents, transforming them into a semantic graph that agents can read.",
     color: "bg-[#00E5FF]",
-    textColor: "text-accent-secondary"
+    textColor: "text-accent-secondary",
+    href: "/products/cerebro-archive"
   },
   {
     title: "AgentOS",
     icon: Bot,
     desc: "The orchestration layer. Deploy specialized agents to handle finance, HR, or operations workflows autonomously.",
     color: "bg-[#7B61FF]",
-    textColor: "text-[#7B61FF]"
+    textColor: "text-[#7B61FF]",
+    href: "/platform/agentos"
   },
   {
     title: "Quantiva ERP",
     icon: Layers,
     desc: "The first AI-native ERP. Designed from the ground up to be operated by agents rather than human data-entry clerks.",
     color: "bg-accent-primary",
-    textColor: "text-accent-primary"
+    textColor: "text-accent-primary",
+    href: "/products"
   }
 ];
 
@@ -45,7 +50,11 @@ export default function IntegratedPlatform() {
 
         <div className="grid lg:grid-cols-3 gap-6">
           {products.map((prod, i) => (
-            <div key={i} className="group bg-surface border border-border rounded-2xl p-8 hover:border-border-strong transition-all flex flex-col relative overflow-hidden h-full cursor-pointer">
+            <Link 
+              key={i} 
+              href={prod.href}
+              className="group bg-surface border border-border rounded-2xl p-8 hover:border-border-strong transition-all flex flex-col relative overflow-hidden h-full cursor-pointer"
+            >
               
               <div className={cn("absolute top-0 left-0 w-full h-1", prod.color)} />
 
@@ -63,7 +72,7 @@ export default function IntegratedPlatform() {
                 <ArrowRight size={16} className={cn("transition-transform group-hover:translate-x-1", prod.textColor)} />
               </div>
               
-            </div>
+            </Link>
           ))}
         </div>
 

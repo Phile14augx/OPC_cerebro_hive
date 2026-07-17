@@ -39,6 +39,11 @@ export interface BaseEntity {
 export interface PlatformCapability extends BaseEntity {
   group: "AI Runtime" | "Knowledge" | "Infrastructure" | "Developer" | "Core";
   features: string[];
+  // If set, this capability has a real, working implementation reachable on
+  // the site (not just marketing copy) — e.g. the AgentOS live runtime page.
+  // Only populate this for capabilities that are genuinely demoable.
+  liveDemoUrl?: string;
+  liveDemoLabel?: string;
 }
 
 export type ProductSectionId = 

@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { BrainCircuit, Cpu, Database, LayoutTemplate, Network, Search, Zap } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";
+import Link from "next/link";
 
 // Nodes in the ecosystem
 const nodes = [
@@ -55,12 +56,12 @@ export const HeroEcosystem = () => {
             From AI-powered ERP to autonomous enterprise agents, discover the proprietary platforms and frameworks transforming modern organizations.
           </p>
           <div className="flex justify-center gap-4 pt-4">
-             <button className="px-8 py-3 bg-surface text-text-primary font-space font-bold text-sm rounded-full transition-transform hover:scale-105 hover:bg-gray-100">
+             <Link href="/products" className="px-8 py-3 bg-surface text-text-primary font-space font-bold text-sm rounded-full transition-transform hover:scale-105 hover:bg-gray-100">
                Explore Products
-             </button>
-             <button className="px-8 py-3 bg-surface border border-border text-text-primary font-space font-bold text-sm rounded-full transition-colors hover:bg-surface-elevated backdrop-blur-md">
+             </Link>
+             <Link href="/contact" className="px-8 py-3 bg-surface border border-border text-text-primary font-space font-bold text-sm rounded-full transition-colors hover:bg-surface-elevated backdrop-blur-md">
                Schedule Demo
-             </button>
+             </Link>
           </div>
         </div>
 

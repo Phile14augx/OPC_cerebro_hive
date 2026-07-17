@@ -9,7 +9,8 @@ const chapters = [
   { id: "chapter-3", label: "How We Build" },
   { id: "chapter-4", label: "Who We Are" },
   { id: "chapter-5", label: "Where We're Going" },
-  { id: "chapter-6", label: "Join the Journey" },
+  { id: "chapter-6", label: "Our Ecosystem" },
+  { id: "chapter-7", label: "Join the Journey" },
 ];
 
 export function CompanySidebarV3() {

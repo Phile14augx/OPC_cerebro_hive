@@ -32,6 +32,11 @@ const CompanyRoadmap = dynamic(() => import('@/components/company/v3/CompanyRoad
 const GlobalOperatingModel = dynamic(() => import('@/components/company/v3/GlobalOperatingModel'));
 
 // Chapter 6
+const LivingArchitecture = dynamic(() => import('@/components/home/v3/LivingArchitecture'));
+const IntegratedPlatform = dynamic(() => import('@/components/home/v3/IntegratedPlatform'));
+const ServicesOverview = dynamic(() => import('@/components/home/ServicesOverview'));
+
+// Chapter 7
 const CompanyCTA = dynamic(() => import('@/components/company/v3/CompanyCTA'));
 
 export const metadata: Metadata = {
@@ -82,6 +87,12 @@ export default function CompanyPage() {
           </div>
           
           <div id="chapter-6" className="scroll-mt-24">
+            <LivingArchitecture />
+            <IntegratedPlatform />
+            <ServicesOverview />
+          </div>
+          
+          <div id="chapter-7" className="scroll-mt-24">
             <CompanyCTA />
           </div>
 
