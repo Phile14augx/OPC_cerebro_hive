@@ -1,7 +1,22 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routers import agents, auth, governance, knowledge, marketplace, memory, observability, runtime, skills, tools, workflows
+from app.api.routers import (
+    agents,
+    auth,
+    context,
+    cortex,
+    governance,
+    knowledge,
+    marketplace,
+    memory,
+    observability,
+    runtime,
+    simulator,
+    skills,
+    tools,
+    workflows,
+)
 from app.db import init_db
 
 app = FastAPI(
@@ -43,9 +58,12 @@ def root() -> dict:
             "tools",
             "skills",
             "knowledge",
+            "context_engine",
             "workflows",
             "governance",
             "observability",
+            "cortex",
+            "simulator",
             "marketplace",
         ],
     }
@@ -63,7 +81,10 @@ app.include_router(memory.router)
 app.include_router(tools.router)
 app.include_router(skills.router)
 app.include_router(knowledge.router)
+app.include_router(context.router)
 app.include_router(workflows.router)
 app.include_router(governance.router)
 app.include_router(observability.router)
+app.include_router(cortex.router)
+app.include_router(simulator.router)
 app.include_router(marketplace.router)

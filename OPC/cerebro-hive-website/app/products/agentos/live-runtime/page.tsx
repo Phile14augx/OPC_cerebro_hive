@@ -6,6 +6,7 @@ import { ArrowLeft, Cpu, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AgentOSLiveRuntime } from "@/components/products/agentos/AgentOSLiveRuntime";
 import { AgentOSBackendConsole } from "@/components/products/agentos/AgentOSBackendConsole";
+import { AgentOSPlatformConsole } from "@/components/products/agentos/AgentOSPlatformConsole";
 
 type Mode = "in-browser" | "backend";
 
@@ -53,6 +54,7 @@ export default function AgentOSLiveRuntimeRoute() {
         <div className="section-pad">
           <div className="container-wide">
             <AgentOSBackendConsole />
+            <AgentOSPlatformConsole />
           </div>
         </div>
       )}

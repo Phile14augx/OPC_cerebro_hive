@@ -16,7 +16,8 @@ Every bounded context from the architecture spec has a real, working slice:
 | Identity & Auth | ✅ API-key issuance + bearer auth dependency |
 | Agent Runtime (boot → plan → execute → reflect → store) | ✅ Real state machine |
 | Planner (goal → task graph → execution) | ✅ Chain-of-thought decomposition; ToT/GoT strategy hooks stubbed |
-| Multi-Agent Collaboration | ✅ Delegation between agents via runtime; voting/consensus stubbed |
+| Multi-Agent Collaboration (Agent Mesh) | ✅ Real delegation (`agent` workflow node calls another agent's full runtime, including its own governance/planning/tools) and real consensus (`agent_vote` node runs multiple agents independently, then picks the answer with highest average embedding-similarity agreement across the group, recording dissenters) |
+| Context Engine | ✅ `context_engine.assemble()` fuses Memory + Knowledge retrieval into one ranked bundle plus the governance policies actually in scope for the agent; this is what the runtime's reasoning step calls (`GET /context/assemble` to preview it directly) |
 | Tool Framework | ✅ Permissioned tool registry + built-in tools (filesystem, http, python_eval, web_search stub) |
 | Skills | ✅ Versioned, installable skill packages |
 | Knowledge System (RAG) | ✅ Chunk + embed + retrieve + cite (naive local embeddings by default, pluggable for real embedding APIs) |
@@ -24,8 +25,10 @@ Every bounded context from the architecture spec has a real, working slice:
 | Workflow Engine | ✅ DAG executor with retries, timeouts, human approval nodes; Temporal adapter documented as the production swap-in |
 | Communication Bus | ✅ In-process async pub/sub; NATS adapter documented as the production swap-in |
 | Event System | ✅ Append-only event log, event-sourced |
-| Observability | ✅ Structured traces + metrics tables and query API; OpenTelemetry export hook |
-| Governance | ✅ Policy-as-code engine (declarative YAML rules), audit log |
+| Observability | ✅ Structured traces + metrics tables and query API, plus `GET /observability/summary` — real latency percentiles (p50/p95/p99), error rate, cost/token totals, and a per-agent rollup computed from stored spans, not sampled; OpenTelemetry export hook |
+| Governance | ✅ Policy-as-code engine (declarative YAML rules incl. numeric thresholds `>`/`<`/`>=`/`<=`), audit log now covers agent CRUD, policy creation, run blocks, and approval decisions (`GET /governance/audit-log`) |
+| Cortex (decision engine) | ✅ Real least-squares forecasting (`POST /cortex/forecast`) and exact 0/1-knapsack optimization (`POST /cortex/optimize`) — provably optimal, not heuristic |
+| Simulator (digital twin) | ✅ Seeded Monte Carlo queue simulation (`POST /simulator/run`) — Poisson arrivals, exponential service times, multi-trial wait/backlog/utilization stats for "what if we staffed N agents" analysis |
 | Prompt Management | ✅ Versioned prompt templates with render + diff |
 | LLM Gateway | ✅ Multi-provider routing (Anthropic / OpenAI / Ollama) with fallback to a deterministic mock provider so the whole system runs offline, zero API keys required |
 | Human-in-the-Loop | ✅ Approval queue, pause/resume execution |

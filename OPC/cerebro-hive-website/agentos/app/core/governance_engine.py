@@ -22,6 +22,12 @@ _OPS = {
     "!=": lambda a, b: a != b,
     "in": lambda a, b: a in b,
     "contains": lambda a, b: b in a if isinstance(a, str) else b in (a or []),
+    # Numeric thresholds — e.g. {"field": "cost_usd", "op": ">", "value": 5} to
+    # require approval on any run whose running cost context crosses a limit.
+    ">": lambda a, b: float(a) > float(b),
+    "<": lambda a, b: float(a) < float(b),
+    ">=": lambda a, b: float(a) >= float(b),
+    "<=": lambda a, b: float(a) <= float(b),
 }
 
 
@@ -48,7 +54,7 @@ def evaluate(db: Session, context: dict) -> list[PolicyDecision]:
             continue
         try:
             fired = matcher(actual, expected)
-        except TypeError:
+        except (TypeError, ValueError):
             fired = False
 
         if fired:

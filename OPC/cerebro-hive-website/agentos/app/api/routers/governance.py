@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.core import governance_engine
 from app.core import runtime as runtime_core
 from app.core import workflow_engine
 from app.db import get_db
@@ -58,14 +59,47 @@ def list_policies(db: Session = Depends(get_db), _key: APIKey = Depends(get_curr
 
 
 @router.post("/policies", response_model=PolicyOut, status_code=201)
-def create_policy(payload: PolicyCreate, db: Session = Depends(get_db), _key: APIKey = Depends(get_current_api_key)) -> Policy:
+def create_policy(payload: PolicyCreate, db: Session = Depends(get_db), key: APIKey = Depends(get_current_api_key)) -> Policy:
     if db.query(Policy).filter(Policy.name == payload.name).first():
         raise HTTPException(409, f"policy '{payload.name}' already exists")
+
+    op = payload.rule.get("if", {}).get("op", "==")
+    if op not in governance_engine._OPS:
+        raise HTTPException(400, f"unsupported operator '{op}' — valid ops: {sorted(governance_engine._OPS)}")
+
     policy = Policy(**payload.model_dump())
     db.add(policy)
     db.commit()
     db.refresh(policy)
+
+    db.add(AuditLog(actor=key.owner, action="policy.created", target=policy.name, meta={"rule": policy.rule}))
+    db.commit()
     return policy
+
+
+class AuditLogOut(BaseModel):
+    id: str
+    actor: str
+    action: str
+    target: str
+    meta: dict
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+@router.get("/audit-log", response_model=list[AuditLogOut])
+def list_audit_log(
+    action: str | None = None,
+    limit: int = 200,
+    db: Session = Depends(get_db),
+    _key: APIKey = Depends(get_current_api_key),
+) -> list[AuditLog]:
+    query = db.query(AuditLog)
+    if action:
+        query = query.filter(AuditLog.action == action)
+    return query.order_by(AuditLog.created_at.desc()).limit(min(limit, 1000)).all()
 
 
 @router.get("/approvals", response_model=list[ApprovalOut])
@@ -116,6 +150,19 @@ def decide_approval(
         run = db.query(Run).filter(Run.id == approval.run_id).first()
         if run is not None and run.status == "pending_approval":
             runtime_core.resume_after_approval(db, run)
+
+            # This Run may itself have been dispatched by an `agent` or
+            # `agent_vote` workflow node (Agent Mesh delegation) — if some
+            # paused WorkflowRun is sitting at that node waiting on exactly
+            # this sub-run, re-step it now instead of leaving it stuck.
+            # There's no direct foreign key from WorkflowRun -> Run for a
+            # mesh delegation (it's recorded as a `{node_id}_run_id` context
+            # entry), so this scans paused workflows for a context value that
+            # matches — fine at MVP scale, worth a real join if this becomes
+            # a hot path.
+            for workflow_run in db.query(WorkflowRun).filter(WorkflowRun.status == "paused").all():
+                if run.id in workflow_run.context.values():
+                    workflow_engine.step(db, workflow_run)
         else:
             workflow_run = db.query(WorkflowRun).filter(WorkflowRun.id == approval.run_id).first()
             if workflow_run is not None and workflow_run.status == "paused":

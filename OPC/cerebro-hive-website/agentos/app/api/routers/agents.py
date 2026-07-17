@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.db import get_db
+from app.models.governance import AuditLog
 from app.models.identity import APIKey
 from app.models.registry import Agent
 from app.security import get_current_api_key
@@ -64,7 +65,7 @@ def get_agent(slug: str, db: Session = Depends(get_db), _key: APIKey = Depends(g
 
 
 @router.post("", response_model=AgentOut, status_code=201)
-def create_agent(payload: AgentCreate, db: Session = Depends(get_db), _key: APIKey = Depends(get_current_api_key)) -> Agent:
+def create_agent(payload: AgentCreate, db: Session = Depends(get_db), key: APIKey = Depends(get_current_api_key)) -> Agent:
     if db.query(Agent).filter(Agent.slug == payload.slug).first():
         raise HTTPException(409, f"agent '{payload.slug}' already exists")
 
@@ -72,11 +73,14 @@ def create_agent(payload: AgentCreate, db: Session = Depends(get_db), _key: APIK
     db.add(agent)
     db.commit()
     db.refresh(agent)
+
+    db.add(AuditLog(actor=key.owner, action="agent.created", target=agent.slug, meta={"category": agent.category}))
+    db.commit()
     return agent
 
 
 @router.patch("/{slug}/status", response_model=AgentOut)
-def set_agent_status(slug: str, status: str, db: Session = Depends(get_db), _key: APIKey = Depends(get_current_api_key)) -> Agent:
+def set_agent_status(slug: str, status: str, db: Session = Depends(get_db), key: APIKey = Depends(get_current_api_key)) -> Agent:
     agent = db.query(Agent).filter(Agent.slug == slug).first()
     if agent is None:
         raise HTTPException(404, "agent not found")
@@ -85,13 +89,19 @@ def set_agent_status(slug: str, status: str, db: Session = Depends(get_db), _key
     agent.status = status
     db.commit()
     db.refresh(agent)
+
+    db.add(AuditLog(actor=key.owner, action=f"agent.status.{status}", target=agent.slug, meta={}))
+    db.commit()
     return agent
 
 
 @router.delete("/{slug}", status_code=204)
-def delete_agent(slug: str, db: Session = Depends(get_db), _key: APIKey = Depends(get_current_api_key)) -> None:
+def delete_agent(slug: str, db: Session = Depends(get_db), key: APIKey = Depends(get_current_api_key)) -> None:
     agent = db.query(Agent).filter(Agent.slug == slug).first()
     if agent is None:
         raise HTTPException(404, "agent not found")
     db.delete(agent)
+    db.commit()
+
+    db.add(AuditLog(actor=key.owner, action="agent.deleted", target=slug, meta={}))
     db.commit()

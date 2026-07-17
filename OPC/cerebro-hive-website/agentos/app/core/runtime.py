@@ -9,10 +9,10 @@ a human approval never calls a tool or an LLM until it's been signed off.
 
 from __future__ import annotations
 
-from app.core import evaluation, governance_engine, llm_gateway, memory_engine, observability, planner, tool_framework
+from app.core import context_engine, evaluation, governance_engine, llm_gateway, memory_engine, observability, planner, tool_framework
 from app.core.event_bus import bus
 from app.models.execution import Run
-from app.models.governance import Approval
+from app.models.governance import Approval, AuditLog
 from app.models.observability import MetricEvent, TraceSpan
 from app.models.registry import Agent
 
@@ -38,6 +38,8 @@ def execute(db, agent: Agent, goal: str) -> Run:
         agent.lifecycle_state = "failed"
         db.commit()
         bus.publish(db, "run.blocked", {"policy": blocking[0].policy_name}, run_id=run.id)
+        db.add(AuditLog(actor=agent.slug, action="run.blocked", target=run.id, meta={"policy_name": blocking[0].policy_name, "reason": blocking[0].reason}))
+        db.commit()
         return run
 
     if approvals_needed:
@@ -102,10 +104,12 @@ def _execute_steps(db, agent: Agent, run: Run, goal: str) -> Run:
         else:
             agent.lifecycle_state = "thinking"
             db.commit()
-            memories = memory_engine.retrieve(db, agent.id, goal, k=3)
-            context_text = " ".join(item.content for item, _ in memories)
+            with observability.span(db, run.id, "context_engine", {"step": pstep.id}):
+                bundle = context_engine.assemble(db, agent, goal)
+            if bundle.applicable_policies:
+                observability.record_metric(db, "context_policies_in_scope", len(bundle.applicable_policies), run_id=run.id)
             system_prompt = f"You are {agent.name}, an AgentOS agent. {agent.description}".strip()
-            user_prompt = f"Step: {pstep.description}\nGoal: {goal}\nContext so far: {context_text}"
+            user_prompt = f"Step: {pstep.description}\nGoal: {goal}\nContext so far: {bundle.assembled_text}"
 
             with observability.span(db, run.id, f"llm:{pstep.id}", {"step": pstep.id}):
                 response = llm_gateway.gateway.complete(
