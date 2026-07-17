@@ -1,4 +1,3 @@
-﻿export const dynamic = "force-static";
 import { NextResponse } from "next/server";
 import { insertItem } from "@/lib/db";
 

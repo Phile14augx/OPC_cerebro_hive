@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCollection, insertItem } from "@/lib/db";
 
-export const dynamic = "force-static";
-
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);

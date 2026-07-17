@@ -4,9 +4,13 @@ import { notFound } from "next/navigation";
 import { ProductPageLayout } from "@/components/products/ProductPageLayout";
 
 export async function generateStaticParams() {
-  return allProductsData.map((p) => ({
-    slug: p.slug,
-  }));
+  // "agentos" has a dedicated static route at app/products/agentos/page.tsx —
+  // exclude it here so the two routes don't resolve to the same path.
+  return allProductsData
+    .filter((p) => p.slug !== "agentos")
+    .map((p) => ({
+      slug: p.slug,
+    }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { Terminal, Code2, Zap, ArrowRight, ShieldCheck, Database, FileJson, Blocks } from "lucide-react";
-import { PageHeader } from "@/components/layout/PageHeader";
 
 export default function DevelopersPage() {
   return (
