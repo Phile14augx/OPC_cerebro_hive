@@ -14,61 +14,20 @@ import { TechStackShowcase } from "@/components/services/TechStackShowcase";
 import { ConsultingProcessTimeline } from "@/components/services/ConsultingProcessTimeline";
 import { ResearchInnovation } from "@/components/services/ResearchInnovation";
 import { ServiceCardProgressive, ProgressiveServiceProps } from "@/components/services/ServiceCardProgressive";
-
 import { ServiceAnimationProvider } from "@/components/services/ServiceAnimationContext";
+import { services } from "@/lib/data/services";
 
-const servicesData: ProgressiveServiceProps[] = [
-  {
-    id: "ai-consulting",
-    title: "AI Consulting & Strategy",
-    color: "#00E5FF",
-    icon: Brain,
-    problem: "Organizations struggle to identify high-ROI AI use cases amidst vendor hype, resulting in fragmented pilots that fail to scale.",
-    outcome: "A prioritized, board-approved 90-day roadmap with clear ROI forecasts and risk mitigation strategies.",
-    methodology: "Workflow audits, readiness scoring, and executive alignment workshops.",
-    link: "/services/ai-consulting"
-  },
-  {
-    id: "ai-automation",
-    title: "AI Automation & Agents",
-    color: "#FF8A00",
-    icon: Bot,
-    problem: "Operational teams are overwhelmed by repetitive, manual knowledge-work tasks, leading to high error rates and slow response times.",
-    outcome: "Multi-agent systems deployed into production, reducing operational costs by 40-60%.",
-    methodology: "Process mining, LangGraph/n8n orchestration, and human-in-the-loop deployment.",
-    link: "/services/ai-automation"
-  },
-  {
-    id: "data-engineering",
-    title: "Data Engineering",
-    color: "#7B61FF",
-    icon: Database,
-    problem: "Customer and operational data is scattered across legacy silos, preventing real-time analytics and secure LLM ingestion.",
-    outcome: "Modern, secure data lakehouses and vector embeddings ready for generative AI.",
-    methodology: "ETL pipeline construction, schema normalization, and strict RBAC governance.",
-    link: "/services/data-engineering"
-  },
-  {
-    id: "ai-development",
-    title: "Custom AI Development",
-    color: "#00F57A",
-    icon: Code2,
-    problem: "Generic public models compromise data privacy and lack the domain-specific accuracy required for enterprise applications.",
-    outcome: "Proprietary, fine-tuned AI microservices with 100% intellectual property ownership.",
-    methodology: "Dataset curation, private model training, and scalable Kubernetes deployment.",
-    link: "/services/ai-development"
-  },
-  {
-    id: "corporate-education",
-    title: "Corporate AI Education",
-    color: "#FF2ED1",
-    icon: GraduationCap,
-    problem: "Shadow IT usage of generative AI introduces security risks, while technical teams lack standard prompt engineering skills.",
-    outcome: "A certified, upskilled workforce practicing secure, standardized AI workflows.",
-    methodology: "Custom industry curriculum, live proctored workshops, and digital credentialing.",
-    link: "/services/corporate-training"
-  }
-];
+// Map the new data model to the existing progressive service props
+const servicesData: ProgressiveServiceProps[] = services.map(s => ({
+  id: s.slug,
+  title: s.title,
+  color: s.id === "ai-strategy" ? "#00E5FF" : s.id === "intelligence-modernization" ? "#FF8A00" : "#7B61FF",
+  icon: Brain, // We use a default icon here, ideally we should import icons or map them dynamically
+  problem: s.summary,
+  outcome: s.deliverables.join(", "),
+  methodology: s.engagementModel,
+  link: `/services/${s.slug}`
+}));
 
 export default function ServicesPage() {
   const scrollContainerRef = useRef<HTMLElement>(null);

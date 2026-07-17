@@ -1,32 +1,7 @@
-import { getSolutionBySlug, solutionsData } from "@/lib/data/solutions";
-import { Metadata } from 'next';
-import { notFound } from "next/navigation";
-import SolutionPageLayout from "@/components/solutions/SolutionPageLayout";
+import { redirect } from "next/navigation";
 
-export async function generateStaticParams() {
-  return solutionsData.map((sol) => ({
-    slug: sol.slug,
-  }));
-}
-
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  const solution = getSolutionBySlug(slug);
-  if (!solution) return { title: 'Solution Not Found' };
-  
-  return {
-    title: `${solution.name} | CerebroHive`,
-    description: solution.hero.description,
-  };
-}
-
-export default async function SolutionPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const solution = getSolutionBySlug(slug);
-
-  if (!solution) {
-    notFound();
-  }
-
-  return <SolutionPageLayout solution={solution} />;
+// Solutions have been merged into the Enterprise Services pillar.
+// All pages now route through /services/[slug] using the Service Experience Framework.
+export default function SolutionSlugRedirect() {
+  redirect("/services");
 }

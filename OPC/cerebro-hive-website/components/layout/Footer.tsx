@@ -23,41 +23,12 @@ const YoutubeIcon = ({ size = 20, className = "" }: any) => (
   <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
 );
 
-const footerLinks: Record<string, { label: string; href: string }[]> = {
-  "PLATFORM": [
-    { label: "AgentOS", href: "/products/agentos" },
-    { label: "Quantiva ERP", href: "/products/quantiva-erp" },
-    { label: "Knowledge Hub", href: "/products/knowledge-hub" },
-    { label: "Enterprise Status", href: "/status" },
-  ],
-  "DEVELOPERS": [
-    { label: "Getting Started", href: "/developers" },
-    { label: "Architecture", href: "/developers/architecture" },
-    { label: "API Reference", href: "/developers/api" },
-    { label: "Release Notes", href: "/developers/releases" },
-    { label: "Changelog", href: "/developers/changelog" },
-    { label: "Roadmap", href: "/developers/roadmap" },
-  ],
-  "COMPANY": [
-    { label: "About Us", href: "/company" },
-    { label: "Careers", href: "/careers" },
-    { label: "Contact", href: "/contact" },
-    { label: "Client Portal", href: "/client-portal" },
-  ],
-  "RESOURCES": [
-    { label: "Research Institute", href: "/research" },
-    { label: "Executive Insights", href: "/insights" },
-    { label: "Case Studies", href: "/case-studies" },
-    { label: "Academy", href: "/academy" },
-  ],
-  "LEGAL": [
-    { label: "Privacy Policy", href: "/legal/privacy" },
-    { label: "Security", href: "/legal/security" },
-    { label: "Terms of Service", href: "/legal/terms" },
-    { label: "AI Ethics", href: "/legal/ai-ethics" },
-  ],
-};
+import { footerNavigation } from "@/lib/data/navigation";
 
+// Map the lowercase keys from footerNavigation to uppercase for display
+const footerLinks: Record<string, { label: string; href: string }[]> = Object.fromEntries(
+  Object.entries(footerNavigation).map(([key, value]) => [key.toUpperCase(), value])
+);
 const socialLinks = [
   { icon: LinkedinIcon, name: "LinkedIn", stat: "10k+", label: "Followers", href: "https://linkedin.com/company/cerebro-hive" },
   { icon: GithubIcon, name: "GitHub", stat: "120+", label: "Repositories", href: "https://github.com/Phile14augx" },

@@ -8,15 +8,7 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { Menu, X } from "lucide-react";
 
-const navLinks = [
-  { name: "Services", href: "/services" },
-  { name: "Solutions", href: "/solutions" },
-  { name: "Industries", href: "/industries" },
-  { name: "Platform", href: "/products" },
-  { name: "Research", href: "/research" },
-  { name: "Insights", href: "/insights" },
-  { name: "Company", href: "/company" },
-];
+import { mainNavigation } from "@/lib/data/navigation";
 
 export default function Navbar() {
   const [hidden, setHidden] = useState(false);
@@ -55,16 +47,16 @@ export default function Navbar() {
             </TrackedLink>
             
             <div className="hidden lg:flex items-center gap-8">
-              {navLinks.map((link) => (
+              {mainNavigation.map((link) => (
                 <TrackedLink
-                  key={link.name}
+                  key={link.label}
                   href={link.href}
                   analyticsEvent="nav_link_click"
                   analyticsCategory="navigation"
-                  analyticsLabel={link.name}
+                  analyticsLabel={link.label}
                   className="text-sm font-space font-medium text-text-muted hover:text-text-primary transition-colors"
                 >
-                  {link.name}
+                  {link.label}
                 </TrackedLink>
               ))}
             </div>
@@ -119,17 +111,17 @@ export default function Navbar() {
               </div>
               
               <div className="flex-1 overflow-y-auto py-8 px-6 flex flex-col gap-6">
-                {navLinks.map((link) => (
+                {mainNavigation.map((link) => (
                   <TrackedLink
-                    key={link.name}
+                    key={link.label}
                     href={link.href}
                     analyticsEvent="nav_mobile_link_click"
                     analyticsCategory="navigation"
-                    analyticsLabel={link.name}
+                    analyticsLabel={link.label}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="text-lg font-space font-bold text-text-primary hover:text-primary-accent transition-colors"
                   >
-                    {link.name}
+                    {link.label}
                   </TrackedLink>
                 ))}
                 

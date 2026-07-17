@@ -3,7 +3,7 @@
 // The knowledge search genuinely scores and ranks the real product catalog
 // already shipping in lib/data/products — it is not canned copy.
 
-import { allProductsData } from "@/lib/data/products";
+import { products as allProductsData } from "@/lib/data/products";
 
 export interface Tool {
   name: string;
@@ -125,8 +125,8 @@ function knowledgeSearchTool(input: string): string {
     .filter((t) => t.length > 2);
 
   const scored = allProductsData.map((p) => {
-    const haystack = `${p.name} ${p.tagline} ${p.description}`.toLowerCase();
-    const score = terms.reduce((acc, t) => acc + (haystack.includes(t) ? 1 : 0), 0);
+    const searchStr = `${p.title} ${p.hero?.subtitle || p.summary} ${p.summary} ${p.category} ${p.tags.join(" ")}`.toLowerCase();
+    const score = terms.reduce((acc, t) => acc + (searchStr.includes(t) ? 1 : 0), 0);
     return { product: p, score };
   });
 
@@ -138,7 +138,7 @@ function knowledgeSearchTool(input: string): string {
   }
 
   return top
-    .map((t) => `${t.product.name} (match score ${t.score}): ${t.product.tagline}`)
+    .map((t) => `${t.product.title} (match score ${t.score}): ${t.product.summary}`)
     .join(" | ");
 }
 

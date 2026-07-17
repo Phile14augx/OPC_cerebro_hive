@@ -1,12 +1,7 @@
-import { Metadata } from "next";
-import { agentos } from "@/lib/data/products/agentos";
-import { AgentOSPage } from "@/components/products/agentos/AgentOSPage";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: `${agentos.name} | CerebroHive`,
-  description: agentos.description,
-};
-
-export default function AgentOSRoute() {
-  return <AgentOSPage />;
+// The standalone AgentOS page has been deprecated.
+// AgentOS is now rendered via the configuration-driven ProductRenderer at /products/[slug].
+export default function AgentOSRedirect() {
+  redirect("/products/cerebro-studio");
 }

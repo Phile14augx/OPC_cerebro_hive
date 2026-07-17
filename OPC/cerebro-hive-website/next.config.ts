@@ -19,6 +19,16 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
+  async redirects() {
+    return [
+      {
+        source: '/solutions/:path*',
+        destination: '/archive/solutions/:path*',
+        permanent: true,
+      },
+      // specific old products could be redirected here, but let's just handle it via the archive data layer
+    ];
+  },
 };
 
 export default withBundleAnalyzer(nextConfig);

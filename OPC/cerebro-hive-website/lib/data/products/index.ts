@@ -1,44 +1,29 @@
-import { quantiva_erp } from "./quantiva-erp";
-import { cerebro_ai_enterprise } from "./cerebro-ai-enterprise";
-import { agentos } from "./agentos";
-import { automation_studio } from "./automation-studio";
-import { knowledge_hub } from "./knowledge-hub";
-import { cerebro_analytics } from "./cerebro-analytics";
-import { cerebrosphere } from "./cerebrosphere";
-import { hivematrix } from "./hivematrix";
-import { neuroflow } from "./neuroflow";
-import { synapsex } from "./synapsex";
-import { agentforge } from "./agentforge";
-import { quantiva_integration_framework } from "./quantiva-integration-framework";
-import { cortexops } from "./cortexops";
-import { hivescore } from "./hivescore";
-import { decisiondna } from "./decisiondna";
-import { ai_value_canvas } from "./ai-value-canvas";
+import { PackagedProduct } from "../types";
 
-export const softwarePlatformsData = [
-  quantiva_erp,
-  cerebro_ai_enterprise,
-  agentos,
-  automation_studio,
-  knowledge_hub,
-  cerebro_analytics
+import { cerebroArchiveProduct } from "./cerebro-archive";
+import { cerebroStudioProduct } from "./cerebro-studio";
+import { cerebroFlowProduct } from "./cerebro-flow";
+import { cerebroInsightProduct } from "./cerebro-insight";
+import { cerebroCopilotProduct } from "./cerebro-copilot";
+import { cerebroResearchProduct } from "./cerebro-research";
+import { cerebroLearnProduct } from "./cerebro-learn";
+import { hiveShieldProduct } from "./hive-shield";
+import { hiveOpsProduct } from "./hive-ops";
+import { cerebroSphereProduct } from "./cerebro-sphere";
+
+export const products: PackagedProduct[] = [
+  cerebroArchiveProduct,
+  cerebroStudioProduct,
+  cerebroFlowProduct,
+  cerebroInsightProduct,
+  cerebroCopilotProduct,
+  cerebroResearchProduct,
+  cerebroLearnProduct,
+  hiveShieldProduct,
+  hiveOpsProduct,
+  cerebroSphereProduct
 ];
-
-export const proprietaryFrameworksData = [
-  cerebrosphere,
-  hivematrix,
-  neuroflow,
-  synapsex,
-  agentforge,
-  quantiva_integration_framework,
-  cortexops,
-  hivescore,
-  decisiondna,
-  ai_value_canvas
-];
-
-export const allProductsData = [...softwarePlatformsData, ...proprietaryFrameworksData];
 
 export const getProductBySlug = (slug: string) => {
-  return allProductsData.find((p) => p.slug === slug);
+  return products.find(p => p.slug === slug);
 };

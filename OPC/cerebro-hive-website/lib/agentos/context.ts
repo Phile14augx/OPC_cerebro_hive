@@ -7,7 +7,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
-import { allProductsData } from "@/lib/data/products";
+import { products as allProductsData } from "@/lib/data/products";
 
 const DB_PATH = path.join(process.cwd(), "data", "db.json");
 
@@ -93,10 +93,10 @@ export async function assembleContext(input: string): Promise<AssembledContext> 
   }
 
   for (const prod of allProductsData) {
-    const haystack = `${prod.name} ${prod.tagline} ${prod.description}`;
+    const haystack = `${prod.title} ${prod.summary} ${prod.hero?.description ?? ""}`;
     const s = score(haystack, qTerms);
     if (s > 0) {
-      items.push({ source: "product", label: `Product: ${prod.name}`, detail: prod.tagline, score: s });
+      items.push({ source: "product", label: `Product: ${prod.title}`, detail: prod.summary, score: s });
     }
   }
 

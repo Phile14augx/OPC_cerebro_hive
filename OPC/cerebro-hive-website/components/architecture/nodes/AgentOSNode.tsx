@@ -4,7 +4,8 @@ import { Brain, Cpu, Database, Network } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const AgentOSNode = ({ data, isConnectable }: NodeProps) => {
-  const isBrainMode = data?.isBrainMode;
+  const nodeData = data as { isBrainMode?: boolean; [key: string]: unknown };
+  const isBrainMode = nodeData?.isBrainMode;
 
   return (
     <motion.div 

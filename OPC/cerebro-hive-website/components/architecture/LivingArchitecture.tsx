@@ -97,7 +97,7 @@ export function LivingArchitecture() {
           ...edge.data,
           isBrainMode: mode === 'brain',
           hidePacket: mode === 'topology',
-          duration: mode === 'live' ? (parseFloat(edge.data.duration as string) * 0.7) + 's' : edge.data.duration
+          duration: mode === 'live' ? (parseFloat((edge.data?.duration ?? '1') as string) * 0.7) + 's' : edge.data?.duration
         }
       }))
     );
