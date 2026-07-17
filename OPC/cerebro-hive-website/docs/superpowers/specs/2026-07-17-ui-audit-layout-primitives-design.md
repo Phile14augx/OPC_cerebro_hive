@@ -72,7 +72,7 @@ Each page phase: (a) migrate hand-rolled container/section/card markup to the ne
 
 **Phase 9 — Heading standardization.** Migrate the ~99 hand-rolled heading blocks to `SectionHeading` across all 8 sections, as its own dedicated pass. Kept separate from Phases 1–8 because heading markup changes produce much larger visual diffs than padding/container swaps, and bundling them would make each page phase harder to review and to isolate if something regresses. Not a blanket find-replace — some hand-rolled headings may have legitimate one-off needs `SectionHeading` doesn't cover; those are left as-is and noted.
 
-**Phase 10 — Regression guardrail.** Add a scoped ESLint rule flagging raw `py-24`, `p-6`/`p-8` card padding, and `max-w-[...]` container widths outside `components/ui/primitives/`, so the codebase doesn't drift back to hand-rolled spacing after this migration. Added last, once the primitives are the established pattern across all 8 sections — enforcing it earlier would flag legitimate not-yet-migrated code.
+**Phase 10 — Regression guardrail.** This repo already has a `ts-morph`-based audit script for exactly this purpose — `scripts/audit/audit-design-system.ts` scans all `components/**/*.tsx` and `app/**/*.tsx` files, currently flagging legacy color tokens (`bg-white`, `text-black`, etc.) and hardcoded motion props, and writes a `designSystem` score into `audit/scores.json` (consumed by `scripts/audit/generate-dashboard.ts`). Extend that script's existing violation-scanning pattern with a new check for raw `py-24`, `p-6`/`p-8` card padding, and `max-w-[...]` container widths outside `components/ui/primitives/`, following its existing regex-and-`file.getFilePath().includes(...)`-exemption structure (the script already exempts the `primitives`/`registry` directories for its motion check). This follows established project convention instead of introducing a new tool (ESLint custom rule) the codebase doesn't otherwise use for this purpose. Added last, once the primitives are the established pattern across all 8 sections — enforcing it earlier would flag legitimate not-yet-migrated code.
 
 ### Principles
 
@@ -93,7 +93,7 @@ No visual regression tooling exists in this project. Each phase is verified by s
 
 At each breakpoint, check: no horizontal overflow, section vertical rhythm looks intentional, card alignment/padding is even, CTA button alignment, footer spacing, icon alignment. This follows the project's own standing guidance to test UI changes visually rather than relying on typecheck/build alone.
 
-A formal migration-progress dashboard (per-page/per-primitive completion percentages) was considered and declined: at 9 phases across 8 pages, the phase-by-phase plan itself (one phase = one page, marked complete when done) already gives equivalent binary progress visibility without building and maintaining a separate tracking artifact.
+A *new* formal migration-progress dashboard (per-page/per-primitive completion percentages) was considered and declined as a standalone artifact — but note this project already has `audit/scores.json` + `scripts/audit/generate-dashboard.ts` (see Phase 10). Once Phase 10 lands, `npm run audit:enterprise` gives a real `designSystem` score for free; a separate bespoke migration tracker on top of that would be redundant. Until Phase 10 lands, the phase-by-phase plan itself (one phase = one page, marked complete when done) gives equivalent binary progress visibility.
 
 ### Risks / open questions
 
