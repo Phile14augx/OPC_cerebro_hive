@@ -1,8 +1,9 @@
 "use client";
 
+import { BrainCircuit } from "lucide-react";
 import { ecosystemIntegrations } from "@/lib/config/ecosystem";
-import { Node } from "./Node"; // Reusing Phase 1 primitive
-import { Edge } from "./Edge"; // Reusing Phase 1 primitive
+import { Node } from "@/components/ui/visualization/Node";
+import { Edge } from "@/components/ui/visualization/Edge";
 
 export function IntegrationIntelligence() {
   const categories = Array.from(new Set(ecosystemIntegrations.map((i) => i.category)));
@@ -24,7 +25,7 @@ export function IntegrationIntelligence() {
           
           {/* Central Cerebro OS Node */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-            <Node label="Cerebro OS" status="processing" size="lg" />
+            <Node icon={<BrainCircuit />} label="Cerebro OS" isActive size="lg" />
           </div>
 
           {/* Render Categories in an orbit-like structure */}
@@ -33,8 +34,8 @@ export function IntegrationIntelligence() {
               // Calculate positions on a circle
               const angle = (index / categories.length) * Math.PI * 2;
               const radius = 40; // Percentage of container
-              const top = \`\${50 + Math.sin(angle) * radius}%\`;
-              const left = \`\${50 + Math.cos(angle) * radius}%\`;
+              const top = `${50 + Math.sin(angle) * radius}%`;
+              const left = `${50 + Math.cos(angle) * radius}%`;
               
               const integrations = ecosystemIntegrations.filter(i => i.category === category);
 
@@ -68,7 +69,7 @@ export function IntegrationIntelligence() {
                const y2 = 50 + Math.sin(angle) * 30;
                return (
                  <g key={index}>
-                   <line x1="50%" y1="50%" x2={\`\${x2}%\`} y2={\`\${y2}%\`} stroke="url(#gradient)" strokeWidth="2" strokeDasharray="5,5" className="animate-pulse" />
+                   <line x1="50%" y1="50%" x2={`${x2}%`} y2={`${y2}%`} stroke="url(#gradient)" strokeWidth="2" strokeDasharray="5,5" className="animate-pulse" />
                  </g>
                )
             })}

@@ -30,11 +30,11 @@ export function EnterpriseTransformation() {
               <button
                 key={transform.id}
                 onClick={() => setActiveIndex(idx)}
-                className={\`text-left px-6 py-4 rounded-xl transition-all duration-300 \${
+                className={`text-left px-6 py-4 rounded-xl transition-all duration-300 ${
                   activeIndex === idx
                     ? "bg-white/10 border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
                     : "hover:bg-white/5 border border-transparent text-gray-400 hover:text-white"
-                }\`}
+                }`}
               >
                 <h3 className="text-lg font-semibold">{transform.industry}</h3>
               </button>

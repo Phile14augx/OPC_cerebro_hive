@@ -18,7 +18,7 @@ export default function SprintProgressWidget({ metrics }: { metrics: SprintProgr
         <div className="w-full bg-black/50 h-3 rounded-full overflow-hidden border border-white/5">
           <div 
             className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full rounded-full transition-all duration-1000 ease-out"
-            style={{ width: \`\${metrics.completionPercentage}%\` }}
+            style={{ width: `${metrics.completionPercentage}%` }}
           />
         </div>
         

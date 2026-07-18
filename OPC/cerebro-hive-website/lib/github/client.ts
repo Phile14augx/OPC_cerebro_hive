@@ -76,15 +76,15 @@ export async function createDocumentationPR(
   const { data: refData } = await octokit.rest.git.getRef({
     owner,
     repo,
-    ref: \`heads/\${defaultBranch}\`,
+    ref: `heads/${defaultBranch}`,
   });
 
   // 2. Create new branch
-  const branchName = \`\${branchPrefix}-\${Date.now()}\`;
+  const branchName = `${branchPrefix}-${Date.now()}`;
   await octokit.rest.git.createRef({
     owner,
     repo,
-    ref: \`refs/heads/\${branchName}\`,
+    ref: `refs/heads/${branchName}`,
     sha: refData.object.sha,
   });
 
@@ -94,7 +94,7 @@ export async function createDocumentationPR(
     owner,
     repo,
     path: filePath,
-    message: \`docs: Auto-generate \${title}\`,
+    message: `docs: Auto-generate ${title}`,
     content: contentEncoded,
     branch: branchName,
   });
@@ -103,7 +103,7 @@ export async function createDocumentationPR(
   await octokit.rest.pulls.create({
     owner,
     repo,
-    title: \`docs: \${title}\`,
+    title: `docs: ${title}`,
     head: branchName,
     base: defaultBranch,
     body: "🤖 **Cerebro PM Agent** generated this documentation. Please review and merge.",

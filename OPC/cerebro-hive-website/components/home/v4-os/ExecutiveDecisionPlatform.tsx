@@ -33,11 +33,11 @@ export function ExecutiveDecisionPlatform() {
                 {pathway.actions.map((action, idx) => (
                   <button 
                     key={idx}
-                    className={\`w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-300 \${
-                      action.primary 
-                        ? "bg-white text-black font-semibold hover:bg-gray-200" 
+                    className={`w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-300 ${
+                      action.primary
+                        ? "bg-white text-black font-semibold hover:bg-gray-200"
                         : "bg-white/5 text-gray-300 border border-white/10 hover:bg-white/10"
-                    }\`}
+                    }`}
                   >
                     <div className="flex justify-between items-center">
                       <span>{action.label}</span>

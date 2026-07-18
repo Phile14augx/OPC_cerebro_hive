@@ -33,7 +33,7 @@ export async function decomposeEpic(
       requestId,
       model: "gpt-4o",
       durationMs: Date.now() - startTime,
-      tokens: usage.totalTokens,
+      tokens: usage.totalTokens ?? 0,
       success: true,
     });
 
