@@ -6,6 +6,7 @@ import { ArrowRight, ChevronRight, Play, Database, BrainCircuit, Bot, Network, L
 import dynamic from 'next/dynamic';
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { TrackedButton } from "@/components/ui/TrackedButton";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
 
 const BackgroundEngine = dynamic(
   () => import("@/components/ui/BackgroundEngine").then((mod) => mod.BackgroundEngine),
@@ -34,13 +35,13 @@ export default function HomeHero() {
 
   return (
     <section ref={containerRef} className="relative min-h-[100svh] flex flex-col justify-center bg-background">
-      
+
       {/* Immersive Theme-Aware Ambient Background */}
       <BackgroundEngine type="hero" />
 
-      <div className="container-wide relative z-10 pt-32 pb-20">
+      <PageContainer className="relative z-10 pt-32 pb-20">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          
+
           {/* Left: Copy */}
           {/* Left: Copy */}
           <motion.div
@@ -54,7 +55,7 @@ export default function HomeHero() {
               }
             }}
           >
-            <motion.div 
+            <motion.div
               variants={{
                 hidden: { opacity: 0.4, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
@@ -64,8 +65,8 @@ export default function HomeHero() {
               <span className="w-2 h-2 rounded-full bg-accent-primary animate-pulse" />
               The Enterprise AI Operating System
             </motion.div>
-            
-            <motion.h1 
+
+            <motion.h1
               variants={{
                 hidden: { opacity: 0.4, y: 30 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
@@ -75,8 +76,8 @@ export default function HomeHero() {
               Engineering the <br />
               <span className="text-accent-secondary dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-[#00E5FF] dark:to-[#00F57A]">AI-Native</span> Enterprise.
             </motion.h1>
-            
-            <motion.p 
+
+            <motion.p
               variants={{
                 hidden: { opacity: 0.4, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
@@ -85,8 +86,8 @@ export default function HomeHero() {
             >
               We architect enterprise AI systems, build production software, and deploy intelligent agent swarms that transform disconnected data into autonomous business outcomes.
             </motion.p>
-            
-            <motion.div 
+
+            <motion.div
               variants={{
                 hidden: { opacity: 0.4, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
@@ -108,10 +109,10 @@ export default function HomeHero() {
 
           {/* Right: The Transformation Animation */}
           <div className="relative h-[500px] flex items-center justify-center">
-            
+
             <div className="absolute inset-0 border border-border rounded-full animate-[spin_60s_linear_infinite] opacity-50" />
             <div className="absolute inset-8 border border-border rounded-full animate-[spin_40s_linear_infinite_reverse] opacity-50" />
-            
+
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeStage}
@@ -134,7 +135,7 @@ export default function HomeHero() {
             {/* Stage Indicators */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center gap-2">
               {stages.map((stage, i) => (
-                <div 
+                <div
                   key={i}
                   className={`h-1 transition-all duration-500 rounded-full ${i === activeStage ? 'w-8 bg-surface' : 'w-2 bg-surface-elevated'}`}
                 />
@@ -144,7 +145,7 @@ export default function HomeHero() {
           </div>
 
         </div>
-      </div>
+      </PageContainer>
     </section>
   );
 }
