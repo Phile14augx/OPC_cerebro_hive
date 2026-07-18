@@ -4,6 +4,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { TrendingDown, Bot, Rocket, Settings2, ShieldCheck, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
+import { cardVariants } from "@/components/ui/primitives/Card";
 
 const outcomes = [
   {
@@ -46,17 +50,17 @@ const outcomes = [
 
 export function BusinessOutcomesGrid() {
   return (
-    <section className="section-pad bg-surface relative z-10 overflow-hidden">
-      <div className="container-wide">
+    <Section size="default" className="bg-surface relative z-10 overflow-hidden">
+      <PageContainer>
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-text-primary leading-tight mb-6">
+          <Stack gap="md" className="max-w-2xl">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-text-primary leading-tight">
               Driving Strategic <br /> Business Outcomes
             </h2>
             <p className="text-lg text-text-secondary font-inter">
               Executives invest in outcomes, not technologies. We architect AI solutions that deliver measurable impact across the enterprise value chain.
             </p>
-          </div>
+          </Stack>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -67,9 +71,9 @@ export function BusinessOutcomesGrid() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="p-8 rounded-2xl bg-background border border-border hover:border-border-strong transition-all duration-300 group"
+              className={cn(cardVariants({ size: "lg" }), "hover:border-border-strong transition-all duration-300 group")}
             >
-              <div 
+              <div
                 className="w-12 h-12 rounded-xl mb-6 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
                 style={{ backgroundColor: `${outcome.color}15`, color: outcome.color }}
               >
@@ -84,7 +88,7 @@ export function BusinessOutcomesGrid() {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
