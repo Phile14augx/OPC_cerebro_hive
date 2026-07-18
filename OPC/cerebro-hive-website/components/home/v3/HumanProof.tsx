@@ -3,6 +3,11 @@
 import React, { useState } from "react";
 import { Users, Building, Target, Zap, CheckCircle2, Bot, Layers, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
+import { cardVariants } from "@/components/ui/primitives/Card";
 
 const cases = [
   {
@@ -35,30 +40,30 @@ export default function HumanProof() {
   const [activeCase, setActiveCase] = useState(cases[0]);
 
   return (
-    <section className="py-24 border-b border-border bg-background">
-      <div className="container-wide">
-        
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-accent-primary font-bold mb-6">
+    <Section size="default" className="border-b border-border bg-background">
+      <PageContainer>
+
+        <Stack gap="md" className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-accent-primary font-bold w-fit mx-auto">
             <Users size={12} /> Enterprise Evidence
           </div>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Proven in production.</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">Proven in production.</h2>
           <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
             See how Fortune 500 companies use CerebroHive to transition from legacy operations to autonomous execution.
           </p>
-        </div>
+        </Stack>
 
         <div className="grid lg:grid-cols-12 gap-8 max-w-6xl mx-auto">
-          
+
           {/* Customer Selector */}
           <div className="lg:col-span-4 flex flex-col gap-4">
             {cases.map(c => (
-              <button 
+              <button
                 key={c.id}
                 onClick={() => setActiveCase(c)}
                 className={`p-6 rounded-2xl border text-left transition-all ${
-                  activeCase.id === c.id 
-                    ? "bg-surface border-border shadow-lg" 
+                  activeCase.id === c.id
+                    ? "bg-surface border-border shadow-lg"
                     : "bg-surface/50 border-border hover:border-border-default"
                 }`}
               >
@@ -74,7 +79,7 @@ export default function HumanProof() {
           </div>
 
           {/* Case Study Details */}
-          <div className="lg:col-span-8 bg-surface border border-border rounded-2xl p-8 md:p-12 relative overflow-hidden">
+          <div className={cn("lg:col-span-8", cardVariants({ size: "lg" }), "md:p-12 relative overflow-hidden")}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeCase.id}
@@ -83,7 +88,7 @@ export default function HumanProof() {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
               >
-                
+
                 <div className="flex flex-col md:flex-row gap-8 mb-10">
                   <div className="flex-1">
                     <div className="text-[10px] uppercase tracking-widest text-warning font-bold mb-3 flex items-center gap-2">
@@ -134,7 +139,7 @@ export default function HumanProof() {
 
         </div>
 
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
