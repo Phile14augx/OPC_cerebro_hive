@@ -2,6 +2,8 @@
 
 import React from "react";
 import { ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
 
 const features = [
   "Multi-Region Deployment",
@@ -16,10 +18,10 @@ const features = [
 
 export default function EnterpriseReadiness() {
   return (
-    <section className="py-24 border-b border-border bg-background">
-      <div className="container-wide">
+    <Section size="default" className="border-b border-border bg-background">
+      <PageContainer>
         <div className="bg-background border border-border rounded-3xl p-12 md:p-16 relative overflow-hidden flex flex-col md:flex-row gap-12 items-center justify-between shadow-2xl">
-          
+
           <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#00F57A]/5 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="max-w-xl relative z-10 text-center md:text-left">
@@ -42,7 +44,7 @@ export default function EnterpriseReadiness() {
           </div>
 
         </div>
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
