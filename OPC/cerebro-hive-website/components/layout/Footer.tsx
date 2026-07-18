@@ -384,7 +384,7 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div className="flex flex-wrap justify-center gap-6 text-[10px] font-bold tracking-widest uppercase text-text-muted">
-            <TrackedLink href="/sitemap.xml" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="Sitemap" className="hover:text-text-primary transition-colors">Sitemap</TrackedLink>
+            <TrackedLink href="/sitemap" analyticsEvent="footer_legal_click" analyticsCategory="footer" analyticsLabel="Sitemap" className="hover:text-text-primary transition-colors">Sitemap</TrackedLink>
           </div>
 
 

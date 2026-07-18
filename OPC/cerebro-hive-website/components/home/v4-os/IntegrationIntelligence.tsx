@@ -34,8 +34,10 @@ export function IntegrationIntelligence() {
               // Calculate positions on a circle
               const angle = (index / categories.length) * Math.PI * 2;
               const radius = 40; // Percentage of container
-              const top = `${50 + Math.sin(angle) * radius}%`;
-              const left = `${50 + Math.cos(angle) * radius}%`;
+              const topVal = (50 + Math.sin(angle) * radius).toFixed(4);
+              const leftVal = (50 + Math.cos(angle) * radius).toFixed(4);
+              const top = `${topVal}%`;
+              const left = `${leftVal}%`;
               
               const integrations = ecosystemIntegrations.filter(i => i.category === category);
 
@@ -44,6 +46,7 @@ export function IntegrationIntelligence() {
                   key={category} 
                   className="absolute -translate-x-1/2 -translate-y-1/2"
                   style={{ top, left }}
+                  suppressHydrationWarning
                 >
                   <div className="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm shadow-xl pointer-events-auto">
                     <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 text-center">{category}</h3>
@@ -65,11 +68,11 @@ export function IntegrationIntelligence() {
             {categories.map((_, index) => {
                const angle = (index / categories.length) * Math.PI * 2;
                // SVG coordinates (0-100% equivalent)
-               const x2 = 50 + Math.cos(angle) * 30; // Shorter radius to hit the box edge
-               const y2 = 50 + Math.sin(angle) * 30;
+               const x2 = (50 + Math.cos(angle) * 30).toFixed(4); // Shorter radius to hit the box edge
+               const y2 = (50 + Math.sin(angle) * 30).toFixed(4);
                return (
-                 <g key={index}>
-                   <line x1="50%" y1="50%" x2={`${x2}%`} y2={`${y2}%`} stroke="url(#gradient)" strokeWidth="2" strokeDasharray="5,5" className="animate-pulse" />
+                 <g key={index} suppressHydrationWarning>
+                   <line x1="50%" y1="50%" x2={`${x2}%`} y2={`${y2}%`} stroke="url(#gradient)" strokeWidth="2" strokeDasharray="5,5" className="animate-pulse" suppressHydrationWarning />
                  </g>
                )
             })}
