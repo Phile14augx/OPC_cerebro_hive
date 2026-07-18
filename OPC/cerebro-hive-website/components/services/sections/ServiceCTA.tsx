@@ -5,13 +5,15 @@ import { motion } from "framer-motion";
 import { EnterpriseService } from "@/lib/data/types";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { TrackedLink } from "@/components/ui/TrackedLink";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
 
 export const ServiceCTA = ({ service }: { service: EnterpriseService }) => {
   return (
-    <section className="py-24 bg-background relative overflow-hidden">
+    <Section size="default" className="bg-background relative overflow-hidden">
       <div className="absolute inset-0 bg-primary-accent/5 pointer-events-none" />
-      
-      <div className="container-narrow text-center relative z-10">
+
+      <PageContainer size="narrow" className="text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -26,7 +28,7 @@ export const ServiceCTA = ({ service }: { service: EnterpriseService }) => {
           <p className="text-text-secondary mb-10 max-w-xl mx-auto font-inter">
             Schedule a strategy session with our principal architects to discuss your specific business context and evaluate the ROI of this engagement.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="service_cta" analyticsLabel="Book Strategy Session">
               <AnimatedButton variant="primary" size="lg">
@@ -35,7 +37,7 @@ export const ServiceCTA = ({ service }: { service: EnterpriseService }) => {
             </TrackedLink>
           </div>
         </motion.div>
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 };
