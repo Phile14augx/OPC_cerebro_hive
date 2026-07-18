@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import { Settings, FileDown, Target, Building2, Server, CheckCircle2, Bot, Network, Layers, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
 
 export default function EnterpriseSimulator() {
   const [step, setStep] = useState(1);
@@ -28,28 +31,28 @@ export default function EnterpriseSimulator() {
   };
 
   return (
-    <section className="py-24 border-b border-border bg-background relative overflow-hidden">
-      
+    <Section size="default" className="border-b border-border bg-background relative overflow-hidden">
+
       {/* Background Accent */}
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[600px] h-[600px] bg-[#00E5FF]/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="container-wide">
-        
-        <div className="text-center mb-16 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-accent-secondary font-bold mb-6">
+      <PageContainer>
+
+        <Stack gap="md" className="text-center mb-16 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-accent-secondary font-bold w-fit mx-auto">
             <Settings size={12} /> Interactive Blueprint
           </div>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Enterprise Transformation Simulator</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">Enterprise Transformation Simulator</h2>
           <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
             Configure your organizational parameters to instantly generate a personalized AI blueprint, architecture, and estimated ROI model.
           </p>
-        </div>
+        </Stack>
 
         <div className="max-w-5xl mx-auto relative z-10">
-          
+
           {!generated && !generating && (
             <div className="bg-surface/80 backdrop-blur-xl border border-border rounded-2xl p-8 md:p-12 shadow-2xl">
-              
+
               {/* Progress */}
               <div className="flex items-center justify-between mb-12 relative max-w-lg mx-auto">
                 <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-px bg-surface-elevated z-0" />
@@ -127,9 +130,9 @@ export default function EnterpriseSimulator() {
           <AnimatePresence>
             {generated && (
               <motion.div initial={{ opacity: 0.4, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-surface border border-border rounded-2xl overflow-hidden shadow-2xl">
-                
+
                 <div className="h-2 w-full bg-gradient-to-r from-[#00E5FF] via-[#00F57A] to-[#7B61FF]" />
-                
+
                 <div className="p-8 md:p-12">
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
                     <div>
@@ -184,7 +187,7 @@ export default function EnterpriseSimulator() {
                     <button className="px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-gray-200 transition-colors inline-flex items-center gap-2">
                       Book Strategy Session <ArrowRight size={16} />
                     </button>
-                    <button 
+                    <button
                       onClick={() => { setGenerated(false); setStep(1); setSelections({ industry: "", erp: "", maturity: "" }); }}
                       className="block mx-auto mt-4 text-xs font-bold uppercase tracking-widest text-text-muted hover:text-text-primary"
                     >
@@ -198,7 +201,7 @@ export default function EnterpriseSimulator() {
           </AnimatePresence>
 
         </div>
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
