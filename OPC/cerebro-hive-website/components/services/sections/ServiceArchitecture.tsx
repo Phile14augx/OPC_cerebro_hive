@@ -8,6 +8,8 @@ import { products } from "@/lib/data/products";
 import { platformCapabilities } from "@/lib/data/platform/capabilities";
 import { ArrowRight, Cpu, Layers } from "lucide-react";
 import { TrackedLink } from "@/components/ui/TrackedLink";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
 
 export const ServiceArchitecture = ({ service }: { service: EnterpriseService }) => {
   // Resolve references
@@ -17,16 +19,16 @@ export const ServiceArchitecture = ({ service }: { service: EnterpriseService })
   if (usedProducts.length === 0 && usedCapabilities.length === 0) return null;
 
   return (
-    <section className="section-pad bg-surface-elevated border-b border-border overflow-hidden">
-      <div className="container-wide">
-        <SectionHeading 
-          label="Technology Stack" 
-          title="Powered by CerebroHive" 
+    <Section size="default" className="bg-surface-elevated border-b border-border overflow-hidden">
+      <PageContainer>
+        <SectionHeading
+          label="Technology Stack"
+          title="Powered by CerebroHive"
           description="This service leverages our proprietary platform and products to accelerate delivery."
         />
 
         <div className="mt-16 grid lg:grid-cols-2 gap-12">
-          
+
           {/* Products Column */}
           {usedProducts.length > 0 && (
             <div>
@@ -36,8 +38,8 @@ export const ServiceArchitecture = ({ service }: { service: EnterpriseService })
               </div>
               <div className="flex flex-col gap-4">
                 {usedProducts.map((prod, i) => (
-                  <TrackedLink 
-                    key={prod.id} 
+                  <TrackedLink
+                    key={prod.id}
                     href={`/products/${prod.slug}`}
                     analyticsEvent="service_product_click"
                     analyticsCategory="service_architecture"
@@ -65,8 +67,8 @@ export const ServiceArchitecture = ({ service }: { service: EnterpriseService })
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {usedCapabilities.map((cap, i) => (
-                  <TrackedLink 
-                    key={cap.id} 
+                  <TrackedLink
+                    key={cap.id}
                     href={`/platform/${cap.slug}`}
                     analyticsEvent="service_platform_click"
                     analyticsCategory="service_architecture"
@@ -84,7 +86,7 @@ export const ServiceArchitecture = ({ service }: { service: EnterpriseService })
           )}
 
         </div>
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 };
