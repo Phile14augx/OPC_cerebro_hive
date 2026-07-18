@@ -3,8 +3,11 @@
 import React from "react";
 import { Database, Bot, Zap, ArrowRight, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
-
 import Link from "next/link";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
+import { cardVariants } from "@/components/ui/primitives/Card";
 
 const products = [
   {
@@ -35,27 +38,28 @@ const products = [
 
 export default function IntegratedPlatform() {
   return (
-    <section className="py-24 border-b border-border bg-background">
-      <div className="container-wide">
-        
-        <div className="mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-accent-primary font-bold mb-6">
+    <Section size="default" className="border-b border-border bg-background">
+      <PageContainer>
+        <Stack gap="md" className="mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-accent-primary font-bold w-fit">
             <Zap size={12} /> The Platform
           </div>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Built to work together.</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">Built to work together.</h2>
           <p className="text-lg text-text-secondary max-w-2xl font-inter">
-            We don't sell disconnected tools. CerebroHive is an integrated suite designed to move your enterprise from static data to autonomous execution.
+            We don&apos;t sell disconnected tools. CerebroHive is an integrated suite designed to move your enterprise from static data to autonomous execution.
           </p>
-        </div>
+        </Stack>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {products.map((prod, i) => (
-            <Link 
-              key={i} 
+            <Link
+              key={i}
               href={prod.href}
-              className="group bg-surface border border-border rounded-2xl p-8 hover:border-border-strong transition-all flex flex-col relative overflow-hidden h-full cursor-pointer"
+              className={cn(
+                cardVariants({ size: "lg" }),
+                "group hover:border-border-strong transition-all flex flex-col relative overflow-hidden h-full cursor-pointer"
+              )}
             >
-              
               <div className={cn("absolute top-0 left-0 w-full h-1", prod.color)} />
 
               <div className={cn("w-12 h-12 rounded-xl bg-surface flex items-center justify-center mb-6", prod.textColor)}>
@@ -71,12 +75,10 @@ export default function IntegratedPlatform() {
                 </span>
                 <ArrowRight size={16} className={cn("transition-transform group-hover:translate-x-1", prod.textColor)} />
               </div>
-              
             </Link>
           ))}
         </div>
-
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
