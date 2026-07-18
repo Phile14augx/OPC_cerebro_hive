@@ -4,6 +4,11 @@ import React, { useState } from "react";
 import { ArrowRight, FileSearch, PenTool, FlaskConical, Rocket, Network } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrackedLink } from "@/components/ui/TrackedLink";
+import { cn } from "@/lib/utils";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
+import { cardVariants } from "@/components/ui/primitives/Card";
 
 const roadmap = [
   {
@@ -62,25 +67,25 @@ export default function TransformationRoadmap() {
   const [activePhase, setActivePhase] = useState(roadmap[0]);
 
   return (
-    <section className="py-24 border-b border-border bg-background relative">
-      <div className="container-wide">
-        
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">The Transformation Roadmap</h2>
+    <Section size="default" className="border-b border-border bg-background relative">
+      <PageContainer>
+
+        <Stack gap="md" className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">The Transformation Roadmap</h2>
           <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
             How we guide organizations from manual operations to an AI-native architecture in six months.
           </p>
-        </div>
+        </Stack>
 
         <div className="max-w-5xl mx-auto">
-          
+
           {/* Timeline Tracker */}
           <div className="flex flex-col md:flex-row justify-between mb-12 relative">
             <div className="hidden md:block absolute top-6 left-0 right-0 h-px bg-surface-elevated z-0" />
             {roadmap.map((phase, i) => {
               const isActive = activePhase.id === phase.id;
               const isPast = roadmap.findIndex(r => r.id === activePhase.id) > i;
-              
+
               return (
                 <div key={phase.id} className="relative z-10 flex flex-row md:flex-col items-center gap-4 md:gap-4 mb-6 md:mb-0 cursor-pointer group" onClick={() => setActivePhase(phase)}>
                   <div className={`w-12 h-12 rounded-full border-4 flex items-center justify-center transition-colors ${
@@ -100,7 +105,7 @@ export default function TransformationRoadmap() {
           </div>
 
           {/* Active Phase Details */}
-          <div className="bg-surface border border-border rounded-2xl p-8 md:p-12 relative overflow-hidden text-center">
+          <div className={cn(cardVariants({ size: "lg" }), "md:p-12 relative overflow-hidden text-center")}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={activePhase.id}
@@ -144,7 +149,7 @@ export default function TransformationRoadmap() {
 
         </div>
 
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
