@@ -26,87 +26,62 @@ jobs:
       working-directory: ./OPC/cerebro-hive-website
       run: npm ci
 
-    - name: Build (standalone)
+    - name: Build standalone
       working-directory: ./OPC/cerebro-hive-website
       run: npm run build
       env:
         IS_FTP_DEPLOY: "true"
 
-    - name: Prepare standalone bundle
+    - name: Prepare bundle
       working-directory: ./OPC/cerebro-hive-website
       run: |
         cp -R public .next/standalone/
         cp -R .next/static .next/standalone/.next/
 
-    - name: Setup SSH key
+    - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
+        printf '%s\n' "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
         chmod 600 ~/.ssh/deploy_key
-        ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
 
-    - name: Bootstrap VPS (first run)
-      run: |
-        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'BOOTSTRAP'
-          set -e
-          if ! command -v node &>/dev/null; then
-            curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-            apt-get install -y nodejs
-          fi
-          if ! command -v pm2 &>/dev/null; then
-            npm install -g pm2
-            pm2 startup systemd -u root --hp /root | tail -1 | bash
-          fi
-          if ! command -v nginx &>/dev/null; then
-            apt-get install -y nginx
-            systemctl enable nginx
-          fi
-          mkdir -p /var/www/cerebro-hive
-        BOOTSTRAP
+    - name: Bootstrap VPS
+      run: >
+        ssh -i ~/.ssh/deploy_key
+        -o StrictHostKeyChecking=no
+        ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+        "
+        command -v node || (curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs);
+        command -v pm2 || npm install -g pm2;
+        command -v nginx || (apt-get install -y nginx && systemctl enable nginx);
+        mkdir -p /var/www/cerebro-hive
+        "
 
-    - name: Upload build to VPS
+    - name: Upload build
       run: |
         rsync -az --delete \
           -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
           ./OPC/cerebro-hive-website/.next/standalone/ \
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/cerebro-hive/
 
-    - name: Start / restart app with PM2
-      run: |
-        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'RESTART'
-          set -e
-          cd /var/www/cerebro-hive
-          if pm2 describe cerebro-hive > /dev/null 2>&1; then
-            pm2 restart cerebro-hive
-          else
-            pm2 start server.js --name cerebro-hive --env production
-            pm2 save
-          fi
-        RESTART
+    - name: Restart app with PM2
+      run: >
+        ssh -i ~/.ssh/deploy_key
+        -o StrictHostKeyChecking=no
+        ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+        "
+        cd /var/www/cerebro-hive &&
+        (pm2 describe cerebro-hive > /dev/null 2>&1 && pm2 restart cerebro-hive || (pm2 start server.js --name cerebro-hive && pm2 save))
+        "
 
-    - name: Configure Nginx reverse proxy
-      run: |
-        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'NGINX'
-          set -e
-          cat > /etc/nginx/sites-available/cerebro-hive << 'EOF'
-server {
-    listen 80;
-    server_name cerebropchive.org www.cerebropchive.org _;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-EOF
-          ln -sf /etc/nginx/sites-available/cerebro-hive /etc/nginx/sites-enabled/cerebro-hive
-          rm -f /etc/nginx/sites-enabled/default
-          nginx -t && systemctl reload nginx
-        NGINX
+    - name: Configure Nginx
+      run: >
+        ssh -i ~/.ssh/deploy_key
+        -o StrictHostKeyChecking=no
+        ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+        "
+        printf 'server {\n  listen 80;\n  server_name cerebropchive.org www.cerebropchive.org _;\n  location / {\n    proxy_pass http://localhost:3000;\n    proxy_http_version 1.1;\n    proxy_set_header Upgrade \$http_upgrade;\n    proxy_set_header Connection upgrade;\n    proxy_set_header Host \$host;\n    proxy_set_header X-Real-IP \$remote_addr;\n    proxy_cache_bypass \$http_upgrade;\n  }\n}\n' > /etc/nginx/sites-available/cerebro-hive &&
+        ln -sf /etc/nginx/sites-available/cerebro-hive /etc/nginx/sites-enabled/cerebro-hive &&
+        rm -f /etc/nginx/sites-enabled/default &&
+        nginx -t && systemctl reload nginx
+        "
