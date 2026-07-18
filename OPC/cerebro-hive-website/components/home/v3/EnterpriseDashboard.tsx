@@ -2,6 +2,10 @@
 
 import React from "react";
 import { Activity, Database, Bot, DollarSign } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { cardVariants } from "@/components/ui/primitives/Card";
 
 const metrics = [
   {
@@ -36,22 +40,28 @@ const metrics = [
 
 export default function EnterpriseDashboard() {
   return (
-    <section className="py-12 border-b border-border bg-background relative z-20 -mt-8">
-      <div className="container-wide">
+    <Section size="tight" className="border-b border-border bg-background relative z-20 -mt-8">
+      <PageContainer>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {metrics.map((metric, i) => (
-            <div key={i} className="bg-surface border border-border rounded-2xl p-6 flex flex-col items-center text-center group hover:border-border-strong transition-colors shadow-2xl relative overflow-hidden">
-              
+            <div
+              key={i}
+              className={cn(
+                cardVariants({ size: "md" }),
+                "flex flex-col items-center text-center group hover:border-border-strong transition-colors shadow-2xl relative overflow-hidden"
+              )}
+            >
+
               <div className="absolute top-0 left-0 w-full h-1 bg-surface group-hover:bg-surface-elevated transition-colors" />
 
               <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-4 flex items-center gap-1">
                 <metric.icon size={12} className={metric.color} /> {metric.theme}
               </div>
-              
+
               <div className="text-4xl md:text-5xl font-space font-bold text-text-primary mb-2">
                 {metric.value}
               </div>
-              
+
               <div className="text-sm font-bold text-text-secondary">
                 {metric.label}
               </div>
@@ -59,7 +69,7 @@ export default function EnterpriseDashboard() {
             </div>
           ))}
         </div>
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
