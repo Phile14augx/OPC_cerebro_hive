@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import { Database, BrainCircuit, Bot, Building2, Server, ArrowDown, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
 
 const layers = [
   {
@@ -51,27 +54,27 @@ export default function LivingArchitecture() {
   const [activeLayer, setActiveLayer] = useState(layers[2].id);
 
   return (
-    <section className="py-24 border-b border-border bg-background relative overflow-hidden">
-      <div className="container-wide">
-        
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6">
+    <Section size="default" className="border-b border-border bg-background relative overflow-hidden">
+      <PageContainer>
+
+        <Stack gap="md" className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold w-fit mx-auto">
             <Server size={12} /> Living Architecture
           </div>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">How AI-Native Systems Work</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">How AI-Native Systems Work</h2>
           <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
             Explore the architecture required to transition from legacy silos to autonomous agent swarms.
           </p>
-        </div>
+        </Stack>
 
         <div className="grid lg:grid-cols-12 gap-12 max-w-6xl mx-auto items-start">
-          
+
           {/* Architecture Diagram */}
           <div className="lg:col-span-5 flex flex-col gap-2 relative">
-            
+
             {/* Animated Data Flow line */}
             <div className="absolute left-[39px] top-8 bottom-8 w-[2px] bg-surface-elevated z-0">
-              <motion.div 
+              <motion.div
                 className="w-full h-1/4 bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent"
                 animate={{ top: ["-20%", "120%"] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
@@ -80,7 +83,7 @@ export default function LivingArchitecture() {
             </div>
 
             {layers.map((layer) => (
-              <button 
+              <button
                 key={layer.id}
                 onClick={() => setActiveLayer(layer.id)}
                 className={`flex items-center gap-6 p-4 rounded-xl transition-all relative z-10 ${
@@ -104,8 +107,8 @@ export default function LivingArchitecture() {
           {/* Details Panel */}
           <div className="lg:col-span-7 theme-panel p-8 relative min-h-[400px]">
             {/* Blueprint Grid for Light Mode */}
-            <div className="block dark:hidden absolute inset-0 pointer-events-none opacity-5 rounded-2xl overflow-hidden" 
-                 style={{ backgroundImage: 'linear-gradient(to right, #64748B 1px, transparent 1px), linear-gradient(to bottom, #64748B 1px, transparent 1px)', backgroundSize: '20px 20px' }} 
+            <div className="block dark:hidden absolute inset-0 pointer-events-none opacity-5 rounded-2xl overflow-hidden"
+                 style={{ backgroundImage: 'linear-gradient(to right, #64748B 1px, transparent 1px), linear-gradient(to bottom, #64748B 1px, transparent 1px)', backgroundSize: '20px 20px' }}
             />
 
             <AnimatePresence mode="wait">
@@ -159,7 +162,7 @@ export default function LivingArchitecture() {
 
         </div>
 
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
