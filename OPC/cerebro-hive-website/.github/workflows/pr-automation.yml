@@ -1,0 +1,37 @@
+name: PR Automation
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, closed]
+
+jobs:
+  update_pr_status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-label PR on open
+        if: github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'ready_for_review'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['status: in-review']
+            })
+            
+      - name: Remove labels on close/merge
+        if: github.event.action == 'closed'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            try {
+              await github.rest.issues.removeLabel({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: 'status: in-review'
+              });
+            } catch (error) {
+              console.log('Label "status: in-review" not found or could not be removed.');
+            }

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: CerebroHive System Architecture
+    url: https://cerebro-hive.com/architecture
+    about: Please review the Cerebro OS architecture before proposing major structural changes.

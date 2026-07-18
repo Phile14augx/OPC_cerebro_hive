@@ -1,0 +1,38 @@
+name: Epic
+description: Create a large architectural milestone or major feature group.
+title: "[EPIC]: "
+labels: ["epic", "status: backlog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to outline a new epic for CerebroHive. Please provide as much architectural detail as possible.
+  - type: textarea
+    id: overview
+    attributes:
+      label: Executive Summary
+      description: What is the business outcome or technical goal of this Epic?
+      placeholder: "This Epic will transform..."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What conditions must be met for this Epic to be considered complete?
+      value: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+    validations:
+      required: true
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domain
+      options:
+        - Frontend (UI/UX/Motion)
+        - Backend (API/DB)
+        - AI / Agents
+        - DevOps / Infrastructure
+    validations:
+      required: true

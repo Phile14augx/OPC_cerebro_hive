@@ -17,6 +17,8 @@ on:
 
 permissions:
   contents: read
+  issues: write
+  pull-requests: write
 
 jobs:
   npm-audit:
@@ -59,3 +61,20 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  report-status:
+    name: Report Status
+    needs: [npm-audit, pip-audit, secret-scan]
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post Security Status
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "🛡️ **Security Scan Passed:** NPM Audit, PIP Audit, and Gitleaks checks completed successfully with no critical vulnerabilities."
+            })

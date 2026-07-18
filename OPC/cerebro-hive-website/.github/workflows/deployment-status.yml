@@ -1,0 +1,33 @@
+name: Deployment Status Reporting
+
+on:
+  deployment_status:
+
+jobs:
+  report-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report Deployment to Issue/PR
+        if: github.event.deployment_status.state == 'success'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            // Attempt to find an associated PR for this deployment
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `${context.repo.owner}:${github.event.deployment.ref}`
+            });
+
+            if (prs.data.length > 0) {
+              const prNumber = prs.data[0].number;
+              await github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🚀 **Deployment Successful!**\n\nThe changes in this PR have been deployed to the \`${github.event.deployment.environment}\` environment.\n\n🔗 [View Deployment](${github.event.deployment_status.target_url})`
+              });
+            } else {
+              console.log("No associated open PR found for this deployment.");
+            }
