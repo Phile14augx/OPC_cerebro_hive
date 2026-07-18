@@ -5,20 +5,21 @@ import { motion } from "framer-motion";
 import { EnterpriseService } from "@/lib/data/types";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { TrackedLink } from "@/components/ui/TrackedLink";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
 
 export const ServiceHero = ({ service }: { service: EnterpriseService }) => {
   return (
     <section className="relative min-h-[70vh] flex flex-col items-center justify-center z-10 border-b border-border text-center overflow-hidden">
       {/* Background ambient lighting based on category */}
       <div className="absolute inset-0 bg-gradient-to-b opacity-50 from-primary-accent/5 via-transparent to-transparent pointer-events-none" />
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
-        className="absolute top-0 w-full h-[500px] bg-primary-accent/5 blur-[120px] rounded-full pointer-events-none" 
+        className="absolute top-0 w-full h-[500px] bg-primary-accent/5 blur-[120px] rounded-full pointer-events-none"
       />
 
-      <div className="container-wide flex flex-col items-center relative z-10 pt-20 pb-10">
+      <PageContainer className="flex flex-col items-center relative z-10 pt-20 pb-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -61,7 +62,7 @@ export const ServiceHero = ({ service }: { service: EnterpriseService }) => {
         </motion.div>
 
         {/* Floating tags */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
@@ -73,7 +74,7 @@ export const ServiceHero = ({ service }: { service: EnterpriseService }) => {
             </span>
           ))}
         </motion.div>
-      </div>
+      </PageContainer>
     </section>
   );
 };
