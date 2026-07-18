@@ -16,6 +16,9 @@ import { ResearchInnovation } from "@/components/services/ResearchInnovation";
 import { ServiceCardProgressive, ProgressiveServiceProps } from "@/components/services/ServiceCardProgressive";
 import { ServiceAnimationProvider } from "@/components/services/ServiceAnimationContext";
 import { services } from "@/lib/data/services";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
 
 // Map the new data model to the existing progressive service props
 const servicesData: ProgressiveServiceProps[] = services.map(s => ({
@@ -31,17 +34,17 @@ const servicesData: ProgressiveServiceProps[] = services.map(s => ({
 
 export default function ServicesPage() {
   const scrollContainerRef = useRef<HTMLElement>(null);
-  
+
   return (
     <ServiceAnimationProvider>
       <div className="bg-background min-h-screen selection:bg-primary-accent/30 transition-colors duration-500">
-      
+
       {/* Premium Hero Section */}
       <section ref={scrollContainerRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
         <ServiceMorphBackground scrollContainerRef={scrollContainerRef} />
-        
-        <div className="container-wide relative z-10 flex flex-col items-center text-center mt-20">
-          <motion.div 
+
+        <PageContainer className="relative z-10 flex flex-col items-center text-center mt-20">
+          <motion.div
             initial={{ opacity: 0.4, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -51,12 +54,12 @@ export default function ServicesPage() {
               <span className="w-2 h-2 rounded-full bg-[#00E5FF] animate-pulse" />
               <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">Enterprise AI Consulting</span>
             </div>
-            
+
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary leading-[1.1] tracking-tight mb-6">
               Engineering Your <br className="hidden md:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E5FF] to-[#00F57A]">Intelligent Future</span>
             </h1>
-            
+
             <p className="text-lg md:text-xl text-text-secondary font-inter max-w-2xl leading-relaxed mb-10">
               We help enterprises design AI strategy, build production-grade AI systems, automate operations, and create measurable business value—from executive vision to deployment.
             </p>
@@ -73,7 +76,7 @@ export default function ServicesPage() {
               </TrackedLink>
             </div>
           </motion.div>
-        </div>
+        </PageContainer>
       </section>
 
       {/* New Modular Sections Flow */}
@@ -83,24 +86,24 @@ export default function ServicesPage() {
       <InteractiveCapabilityMap />
 
       {/* Service Capabilities (Progressive Disclosure) */}
-      <section id="capabilities" className="section-pad bg-background relative z-10 scroll-mt-20">
-        <div className="container-wide">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-6">
+      <Section id="capabilities" size="default" className="bg-background relative z-10 scroll-mt-20">
+        <PageContainer>
+          <Stack gap="md" className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary">
               Core Consulting Capabilities
             </h2>
             <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
               Specialized practices combining deep domain expertise with world-class engineering execution.
             </p>
-          </div>
+          </Stack>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
             {servicesData.map((service, index) => (
               <ServiceCardProgressive key={service.id} service={service} index={index} />
             ))}
           </div>
-        </div>
-      </section>
+        </PageContainer>
+      </Section>
 
       <TechStackShowcase />
       <ConsultingCapabilityMatrix />
@@ -108,13 +111,13 @@ export default function ServicesPage() {
       <ResearchInnovation />
 
       {/* Final Premium CTA Section */}
-      <section className="section-pad relative overflow-hidden bg-surface-elevated border-t border-border z-10">
+      <Section size="default" className="relative overflow-hidden bg-surface-elevated border-t border-border z-10">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(128,128,128,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(128,128,128,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-t from-surface-elevated via-transparent to-surface-elevated" />
-        
+
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary-accent/10 blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="container-wide relative z-10">
+        <PageContainer className="relative z-10">
           <motion.div
             initial={{ opacity: 0.4, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -126,7 +129,7 @@ export default function ServicesPage() {
               Ready to Architect Your <br className="hidden lg:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-[#00E5FF]">AI Transformation?</span>
             </h2>
-            
+
             <p className="text-lg text-text-secondary font-inter max-w-[700px] mx-auto leading-relaxed mb-12">
               Speak with a Principal Solutions Architect today to discuss your enterprise requirements and explore our engagement models.
             </p>
@@ -141,8 +144,8 @@ export default function ServicesPage() {
               </TrackedLink>
             </div>
           </motion.div>
-        </div>
-      </section>
+        </PageContainer>
+      </Section>
     </div>
     </ServiceAnimationProvider>
   );
