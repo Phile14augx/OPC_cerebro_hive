@@ -4,6 +4,10 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Network, ArrowRight, ShieldCheck, Database, Bot, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
+import { cardVariants } from "@/components/ui/primitives/Card";
 
 type MapNode = {
   id: string;
@@ -65,7 +69,7 @@ export function InteractiveCapabilityMap() {
   const activeScenario = scenarios.find(s => s.id === activeScenarioId)!;
 
   return (
-    <section className="section-pad bg-background relative overflow-hidden border-b border-border">
+    <Section size="default" className="bg-background relative overflow-hidden border-b border-border">
       {/* Background Neural Elements */}
       <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -78,24 +82,24 @@ export function InteractiveCapabilityMap() {
         </svg>
       </div>
 
-      <div className="container-wide relative z-10">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-6">
+      <PageContainer className="relative z-10">
+        <Stack gap="md" className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border w-fit mx-auto">
             <Network size={14} className="text-primary-accent" />
             <span className="text-[10px] font-bold tracking-widest uppercase text-text-secondary">
               Enterprise AI Capability Map
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-text-primary mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-text-primary">
             Explore AI Value Chains
           </h2>
           <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
             See how we connect industry challenges to AI capabilities, architecting end-to-end solutions that drive enterprise value.
           </p>
-        </div>
+        </Stack>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
-          
+
           {/* Sidebar / Filters */}
           <div className="w-full lg:w-1/3 flex flex-col gap-4">
             <h4 className="text-[11px] font-bold tracking-widest uppercase text-text-muted mb-2">Select Industry Scenario</h4>
@@ -107,8 +111,8 @@ export function InteractiveCapabilityMap() {
                   onClick={() => setActiveScenarioId(scenario.id)}
                   className={cn(
                     "p-5 rounded-xl border text-left transition-all duration-300 relative overflow-hidden group",
-                    isActive 
-                      ? "bg-surface-elevated border-primary-accent/50 shadow-md" 
+                    isActive
+                      ? "bg-surface-elevated border-primary-accent/50 shadow-md"
                       : "bg-surface border-border hover:border-text-muted/30"
                   )}
                 >
@@ -130,8 +134,8 @@ export function InteractiveCapabilityMap() {
           </div>
 
           {/* Interactive Map Area */}
-          <div className="w-full lg:w-2/3 min-h-[400px] bg-surface rounded-2xl border border-border p-8 md:p-12 relative flex items-center justify-center">
-            
+          <div className={cn(cardVariants({ size: "lg" }), "w-full lg:w-2/3 min-h-[400px] md:p-12 relative flex items-center justify-center")}>
+
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeScenario.id}
@@ -141,10 +145,10 @@ export function InteractiveCapabilityMap() {
                 transition={{ duration: 0.5 }}
                 className="w-full flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0 relative z-10"
               >
-                
+
                 {/* Connecting Lines (Desktop only) */}
                 <div className="hidden md:block absolute top-1/2 left-0 w-full h-[2px] bg-border -translate-y-1/2 z-0" />
-                <motion.div 
+                <motion.div
                   className="hidden md:block absolute top-1/2 left-0 h-[2px] bg-primary-accent/50 -translate-y-1/2 z-0"
                   initial={{ width: "0%" }}
                   animate={{ width: "100%" }}
@@ -153,7 +157,7 @@ export function InteractiveCapabilityMap() {
 
                 {activeScenario.nodes.map((node, i) => (
                   <React.Fragment key={node.id}>
-                    
+
                     {/* The Node */}
                     <motion.div
                       initial={{ opacity: 0.4, y: 20 }}
@@ -161,7 +165,7 @@ export function InteractiveCapabilityMap() {
                       transition={{ duration: 0.4, delay: i * 0.2 }}
                       className="relative z-10 flex flex-col items-center group cursor-default"
                     >
-                      <div 
+                      <div
                         className={cn(
                           "w-16 h-16 rounded-2xl flex items-center justify-center border bg-background shadow-sm transition-transform duration-300 group-hover:-translate-y-2",
                           node.type === "layer" ? "rounded-full" : ""
@@ -174,7 +178,7 @@ export function InteractiveCapabilityMap() {
                           <span className="text-xs font-bold text-text-primary uppercase">{i + 1}</span>
                         )}
                       </div>
-                      
+
                       <div className="mt-4 text-center w-24">
                         <span className="block text-[9px] uppercase tracking-widest font-bold text-text-muted mb-1">
                           {node.type}
@@ -198,7 +202,7 @@ export function InteractiveCapabilityMap() {
 
           </div>
         </div>
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
