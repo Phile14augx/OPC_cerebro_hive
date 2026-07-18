@@ -10,8 +10,8 @@ const repo = "OPC_cerebro_hive";
 const basePath = isGithubPages ? `/${repo}` : "";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
-  poweredByHeader: false, // don't advertise "X-Powered-By: Next.js" to scanners
+  output: isGithubPages ? "export" : "standalone",
+  poweredByHeader: false,
   images: {
     unoptimized: true,
   },
@@ -21,16 +21,17 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
-  async redirects() {
-    return [
-      {
-        source: '/solutions/:path*',
-        destination: '/archive/solutions/:path*',
-        permanent: true,
-      },
-      // specific old products could be redirected here, but let's just handle it via the archive data layer
-    ];
-  },
+  ...(!isGithubPages && {
+    async redirects() {
+      return [
+        {
+          source: '/solutions/:path*',
+          destination: '/archive/solutions/:path*',
+          permanent: true,
+        },
+      ];
+    },
+  }),
 };
 
 export default withBundleAnalyzer(nextConfig);

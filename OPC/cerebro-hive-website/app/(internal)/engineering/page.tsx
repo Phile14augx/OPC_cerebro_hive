@@ -2,8 +2,6 @@ import { GitHubMetricsProvider } from "@/lib/metrics/github-provider";
 import EngineeringHealthWidget from "@/components/dashboard/widgets/EngineeringHealth";
 import SprintProgressWidget from "@/components/dashboard/widgets/SprintProgress";
 
-export const dynamic = 'force-dynamic';
-
 export default async function DashboardPage() {
   const provider = new GitHubMetricsProvider("CerebroHive", "cerebro-hive-website");
   
