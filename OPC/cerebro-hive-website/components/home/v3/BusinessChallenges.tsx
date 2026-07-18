@@ -2,29 +2,33 @@
 
 import React from "react";
 import { AlertCircle, ArrowRight, XCircle, CheckCircle2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
+import { cardVariants } from "@/components/ui/primitives/Card";
 
 export default function BusinessChallenges() {
   return (
-    <section className="py-24 border-b border-border bg-background">
-      <div className="container-wide">
-        
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6">
+    <Section size="default" className="border-b border-border bg-background">
+      <PageContainer>
+        <Stack gap="md" className="max-w-4xl mx-auto text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-text-muted font-bold w-fit mx-auto">
             The Enterprise Reality
           </div>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6 leading-tight">
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary leading-tight">
             Data is abundant. <br />
             <span className="text-text-muted">Execution is paralyzed.</span>
           </h2>
           <p className="text-lg text-text-secondary font-inter">
-            Enterprises don't need more dashboards or chat interfaces. They need autonomous systems that can reason over private data and execute complex workflows.
+            Enterprises don&apos;t need more dashboards or chat interfaces. They need autonomous systems that can reason over private data and execute complex workflows.
           </p>
-        </div>
+        </Stack>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          
+
           {/* The Problem */}
-          <div className="bg-surface border border-border rounded-2xl p-8 md:p-10 relative overflow-hidden">
+          <div className={cn(cardVariants({ size: "lg" }), "md:p-10 relative overflow-hidden")}>
             <div className="absolute top-0 left-0 w-full h-1 bg-[#FFB300]" />
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-full bg-[#FFB300]/10 flex items-center justify-center text-warning">
@@ -32,7 +36,7 @@ export default function BusinessChallenges() {
               </div>
               <h3 className="text-2xl font-space font-bold text-text-primary">Legacy Operations</h3>
             </div>
-            
+
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <AlertCircle size={16} className="text-warning mt-0.5 shrink-0" />
@@ -44,13 +48,13 @@ export default function BusinessChallenges() {
               </li>
               <li className="flex items-start gap-3">
                 <AlertCircle size={16} className="text-warning mt-0.5 shrink-0" />
-                <p className="text-sm text-text-secondary">AI initiatives are limited to standalone "copilots" that still require human operation.</p>
+                <p className="text-sm text-text-secondary">AI initiatives are limited to standalone &quot;copilots&quot; that still require human operation.</p>
               </li>
             </ul>
           </div>
 
           {/* The Opportunity */}
-          <div className="bg-surface border border-border rounded-2xl p-8 md:p-10 relative overflow-hidden">
+          <div className={cn(cardVariants({ size: "lg" }), "md:p-10 relative overflow-hidden")}>
             <div className="absolute top-0 left-0 w-full h-1 bg-[#00E5FF]" />
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-full bg-[#00E5FF]/10 flex items-center justify-center text-accent-secondary">
@@ -58,7 +62,7 @@ export default function BusinessChallenges() {
               </div>
               <h3 className="text-2xl font-space font-bold text-text-primary">AI-Native Enterprise</h3>
             </div>
-            
+
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <ArrowRight size={16} className="text-accent-secondary mt-0.5 shrink-0" />
@@ -76,7 +80,7 @@ export default function BusinessChallenges() {
           </div>
 
         </div>
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
