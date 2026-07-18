@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import { UserX, Bot, ArrowRight, Zap, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
 
 const workflows = [
   {
@@ -36,30 +39,30 @@ export default function LivingDigitalTwin() {
   const activeFlow = workflows.find(w => w.id === activeId)!;
 
   return (
-    <section className="py-24 border-b border-border bg-background">
-      <div className="container-wide">
-        
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-[#7B61FF] font-bold mb-6">
+    <Section size="default" className="border-b border-border bg-background">
+      <PageContainer>
+
+        <Stack gap="md" className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-[10px] uppercase tracking-widest text-[#7B61FF] font-bold w-fit mx-auto">
             <Zap size={12} /> Living Digital Twin
           </div>
-          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">The Automation Impact</h2>
+          <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">The Automation Impact</h2>
           <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
             Watch how agentic workflows fundamentally rewire departmental efficiency, shifting humans from operators to overseers.
           </p>
-        </div>
+        </Stack>
 
         <div className="grid lg:grid-cols-12 gap-8 max-w-6xl mx-auto">
-          
+
           {/* Selector */}
           <div className="lg:col-span-4 flex flex-col gap-4">
             {workflows.map(wf => (
-              <button 
+              <button
                 key={wf.id}
                 onClick={() => setActiveId(wf.id)}
                 className={`p-6 rounded-2xl border text-left transition-all ${
-                  activeId === wf.id 
-                    ? "bg-surface border-border shadow-lg scale-105" 
+                  activeId === wf.id
+                    ? "bg-surface border-border shadow-lg scale-105"
                     : "bg-surface/50 border-border hover:border-border-default"
                 }`}
               >
@@ -71,10 +74,10 @@ export default function LivingDigitalTwin() {
 
           {/* Visualization */}
           <div className="lg:col-span-8 theme-panel p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[400px]">
-            
+
             {/* Blueprint Grid for Light Mode */}
-            <div className="block dark:hidden absolute inset-0 pointer-events-none opacity-[0.03]" 
-                 style={{ backgroundImage: 'linear-gradient(to right, #2563EB 1px, transparent 1px), linear-gradient(to bottom, #2563EB 1px, transparent 1px)', backgroundSize: '30px 30px' }} 
+            <div className="block dark:hidden absolute inset-0 pointer-events-none opacity-[0.03]"
+                 style={{ backgroundImage: 'linear-gradient(to right, #2563EB 1px, transparent 1px), linear-gradient(to bottom, #2563EB 1px, transparent 1px)', backgroundSize: '30px 30px' }}
             />
             <AnimatePresence mode="wait">
               <motion.div
@@ -85,9 +88,9 @@ export default function LivingDigitalTwin() {
                 transition={{ duration: 0.3 }}
                 className="w-full"
               >
-                
+
                 <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                  
+
                   {/* Before */}
                   <div className="flex-1 w-full theme-card bg-surface-secondary opacity-70 p-6 relative">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-3 py-1 bg-surface border border-border rounded-full text-[10px] font-bold uppercase tracking-widest text-text-muted">
@@ -146,7 +149,7 @@ export default function LivingDigitalTwin() {
 
         </div>
 
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
