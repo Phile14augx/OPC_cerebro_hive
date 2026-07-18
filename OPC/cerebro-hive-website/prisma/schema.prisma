@@ -1,0 +1,195 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector"), pgcrypto]
+}
+
+// -----------------------------------------------------------------------------
+// IDENTITY & ACCESS (Multi-Tenant Core)
+// -----------------------------------------------------------------------------
+
+model Organization {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  slug        String      @unique
+  billingPlan String      @default("free")
+  
+  workspaces  Workspace[]
+  users       User[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Workspace {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  name           String
+  slug           String       @unique
+  
+  projects       Project[]
+  apiKeys        APIKey[]
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId])
+}
+
+model User {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String?       @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  
+  email          String        @unique
+  name           String?
+  role           Role          @default(USER)
+
+  auditEvents    AuditEvent[]
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([organizationId])
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+  USER
+}
+
+model APIKey {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String    @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  name        String
+  keyHash     String    @unique // Hashed for security
+  expiresAt   DateTime?
+  
+  createdAt   DateTime  @default(now())
+
+  @@index([workspaceId])
+}
+
+// -----------------------------------------------------------------------------
+// PLATFORM ENTITIES
+// -----------------------------------------------------------------------------
+
+model Project {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String      @db.Uuid
+  workspace   Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  name        String
+  description String?
+  status      String      @default("active")
+  
+  agents      Agent[]
+  documents   KnowledgeDocument[]
+  workflows   Workflow[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([workspaceId])
+}
+
+model Agent {
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId     String         @db.Uuid
+  project       Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  name          String
+  model         String         @default("gpt-4o")
+  systemPrompt  String?        @db.Text
+  
+  conversations Conversation[]
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([projectId])
+}
+
+model Conversation {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agentId   String   @db.Uuid
+  agent     Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  
+  messages  Json     // Structured array of conversational messages
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([agentId])
+}
+
+model KnowledgeDocument {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId String   @db.Uuid
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  title     String
+  content   String   @db.Text
+  metadata  Json?
+  
+  // vector embedding placeholder for pgvector (once Prisma formally supports it natively without raw queries in preview)
+  // embedding Unsupported("vector(1536)")?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+model Workflow {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId String   @db.Uuid
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  name      String
+  trigger   String
+  actions   Json     // Definition of automated steps
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+model Integration {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  provider  String   // e.g. "github", "jira", "slack"
+  config    Json     // Encrypted tokens or metadata
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// OBSERVABILITY & AUDIT
+// -----------------------------------------------------------------------------
+
+model AuditEvent {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String?  @db.Uuid
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  action    String
+  resource  String
+  metadata  Json?
+  
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
