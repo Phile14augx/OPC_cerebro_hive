@@ -1,0 +1,19 @@
+title = "CerebroHive gitleaks config"
+
+# Extends gitleaks' built-in default ruleset (API key/token patterns for the
+# major providers, private key blocks, etc.) rather than replacing it.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Known-safe patterns that would otherwise false-positive"
+regexes = [
+  # Placeholder/example values that live in tracked *.example files by design.
+  '''aos_[A-Za-z0-9_-]{0,10}\.\.\.''',
+]
+paths = [
+  '''\.env\.example$''',
+  '''agentos/\.env\.example$''',
+  '''node_modules/''',
+  '''\.next/''',
+]
