@@ -5,6 +5,10 @@ import { motion, useInView } from "framer-motion";
 import { EnterpriseService } from "@/lib/data/types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AlertTriangle, TrendingDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { cardVariants } from "@/components/ui/primitives/Card";
 
 export const ServiceBusinessChallenges = ({ service }: { service: EnterpriseService }) => {
   const containerRef = useRef(null);
@@ -26,14 +30,14 @@ export const ServiceBusinessChallenges = ({ service }: { service: EnterpriseServ
   };
 
   return (
-    <section className="section-pad bg-surface border-b border-border">
-      <div className="container-wide">
-        
+    <Section size="default" className="bg-surface border-b border-border">
+      <PageContainer>
+
         {/* Executive Summary Block */}
         <div className="max-w-4xl mb-24">
-          <SectionHeading 
-            label="Executive Summary" 
-            title="The Cost of Inaction" 
+          <SectionHeading
+            label="Executive Summary"
+            title="The Cost of Inaction"
             align="left"
           />
           <div className="mt-8 grid md:grid-cols-2 gap-8">
@@ -60,23 +64,23 @@ export const ServiceBusinessChallenges = ({ service }: { service: EnterpriseServ
 
         {/* Specific Challenges */}
         <div ref={containerRef}>
-          <SectionHeading 
-            label="Current State" 
-            title="Common Enterprise Frictions" 
+          <SectionHeading
+            label="Current State"
+            title="Common Enterprise Frictions"
             description="The systemic issues this engagement resolves."
           />
-          
-          <motion.div 
+
+          <motion.div
             variants={containerVariants}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16"
           >
             {service.businessChallenges.map((challenge, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
                 variants={itemVariants}
-                className="p-8 bg-surface-elevated border border-border rounded-2xl shadow-sm hover:border-primary-accent/30 transition-colors"
+                className={cn(cardVariants({ size: "lg" }), "bg-surface-elevated shadow-sm hover:border-primary-accent/30 transition-colors")}
               >
                 <div className="text-4xl font-space font-black text-border mb-6">0{i + 1}</div>
                 <h4 className="text-xl font-space font-bold text-text-primary mb-4">{challenge.title}</h4>
@@ -86,7 +90,7 @@ export const ServiceBusinessChallenges = ({ service }: { service: EnterpriseServ
           </motion.div>
         </div>
 
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 };
