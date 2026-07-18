@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
 from app.db import get_db
@@ -24,7 +24,9 @@ class TemplateOut(BaseModel):
 
 
 class InstallRequest(BaseModel):
-    as_slug: str | None = None
+    model_config = ConfigDict(extra="forbid")
+
+    as_slug: str | None = Field(default=None, max_length=100)
 
 
 @router.get("/templates", response_model=list[TemplateOut])

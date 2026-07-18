@@ -11,6 +11,7 @@ const basePath = isGithubPages ? `/${repo}` : "";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  poweredByHeader: false, // don't advertise "X-Powered-By: Next.js" to scanners
   images: {
     unoptimized: true,
   },

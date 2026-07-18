@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.core import cortex_engine
 from app.models.identity import APIKey
@@ -9,8 +9,10 @@ router = APIRouter(prefix="/cortex", tags=["cortex"])
 
 
 class ForecastRequest(BaseModel):
-    values: list[float]
-    periods_ahead: int = 3
+    model_config = ConfigDict(extra="forbid")
+
+    values: list[float] = Field(min_length=1, max_length=100_000)
+    periods_ahead: int = Field(default=3, gt=0, le=10_000)
 
 
 class ForecastResponse(BaseModel):
@@ -30,14 +32,20 @@ def run_forecast(payload: ForecastRequest, _key: APIKey = Depends(get_current_ap
 
 
 class OptimizeItem(BaseModel):
-    name: str
-    cost: int
-    value: float
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1, max_length=200)
+    cost: int = Field(ge=0, le=20_000)
+    value: float = Field(ge=0)
 
 
+# The knapsack DP is O(items * budget) — both capped so a single request can't
+# force a multi-minute (or multi-GB) dynamic-programming table.
 class OptimizeRequest(BaseModel):
-    budget: int
-    items: list[OptimizeItem]
+    model_config = ConfigDict(extra="forbid")
+
+    budget: int = Field(ge=0, le=20_000)
+    items: list[OptimizeItem] = Field(min_length=1, max_length=200)
 
 
 class OptimizeResponse(BaseModel):

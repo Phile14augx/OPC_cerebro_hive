@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
 from app.core import governance_engine
@@ -17,8 +17,10 @@ router = APIRouter(prefix="/governance", tags=["governance"])
 
 
 class PolicyCreate(BaseModel):
-    name: str
-    description: str = ""
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1, max_length=200)
+    description: str = Field(default="", max_length=2000)
     rule: dict  # {"if": {"field": ..., "op": "==", "value": ...}, "then": "require_approval"|"block"}
 
 
@@ -48,9 +50,11 @@ class ApprovalOut(BaseModel):
 
 
 class DecideRequest(BaseModel):
-    decision: str  # "approve" | "reject"
-    decided_by: str = "unknown"
-    note: str = ""
+    model_config = ConfigDict(extra="forbid")
+
+    decision: str = Field(max_length=20)  # "approve" | "reject"
+    decided_by: str = Field(default="unknown", max_length=200)
+    note: str = Field(default="", max_length=2000)
 
 
 @router.get("/policies", response_model=list[PolicyOut])

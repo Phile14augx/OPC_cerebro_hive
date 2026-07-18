@@ -17,7 +17,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Orchestration", "Agents", "Runtime"],
     features: ["Multi-agent runtime", "Scheduler", "Planner", "Tool registry"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "Run the Real Kernel — Live"
   },
   {
@@ -36,7 +36,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Memory", "Vector DB", "Context"],
     features: ["Episodic memory", "Semantic memory", "Organizational graph"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "See Memory Fabric persist live"
   },
   {
@@ -55,7 +55,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["GraphRAG", "Search", "Knowledge Graph"],
     features: ["GraphRAG", "Hybrid Search", "Citation Engine"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "Query the real knowledge search"
   },
   {
@@ -74,7 +74,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Reasoning", "Planning", "Execution"],
     features: ["Chain of Thought", "Tree of Thoughts", "Debate & Reflection"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "Watch it pick a strategy live"
   },
   {
@@ -93,7 +93,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Context", "Prompting"],
     features: ["Context Assembly", "Dynamic Prompting"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "Preview an assembled context live"
   },
   {
@@ -112,7 +112,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Communication", "Mesh", "Swarms"],
     features: ["Discovery", "Message Routing", "Consensus"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "Run a real multi-agent vote"
   },
   {
@@ -165,7 +165,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Security", "RBAC", "Governance"],
     features: ["Prompt Injection Defense", "PII Redaction", "RBAC"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "Try to break it — live Guard demo"
   },
   {
@@ -184,7 +184,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Evaluation", "Metrics", "Testing"],
     features: ["Accuracy Scoring", "Hallucination Detection", "Cost Tracking"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "See a real Eval scorecard"
   },
   {
@@ -203,7 +203,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Observability", "Tracing"],
     features: ["Distributed Tracing", "Workflow Graphs", "Token Usage"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "Open the real Observatory dashboard"
   },
   {
@@ -222,7 +222,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Decisions", "Optimization"],
     features: ["Forecasting", "Recommendations", "Simulation"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "Run a real forecast & optimizer"
   },
   {
@@ -241,7 +241,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Simulation", "Digital Twin"],
     features: ["What-If Analysis", "Agent Simulation", "Network Modeling"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "Run a real Monte Carlo simulation"
   },
   {
@@ -277,7 +277,7 @@ export const platformCapabilities: PlatformCapability[] = [
     status: "production",
     tags: ["Compliance", "Audit", "Governance"],
     features: ["SOC 2 Controls", "Audit Logs", "Policy Management"],
-    liveDemoUrl: "/products/agentos/live-runtime",
+    liveDemoUrl: "/platform/live-runtime",
     liveDemoLabel: "Create a real policy & see the audit log"
   }
 ];

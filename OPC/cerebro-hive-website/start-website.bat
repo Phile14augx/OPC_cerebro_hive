@@ -11,4 +11,4 @@ echo Starting CerebroHive website on http://localhost:3000 ...
 start "CerebroHive Website" cmd /k "npm run dev"
 
 timeout /t 6 /nobreak >nul
-start "" "http://localhost:3000/products/agentos/live-runtime"
+start "" "http://localhost:3000/platform/live-runtime"

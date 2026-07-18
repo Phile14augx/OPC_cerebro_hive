@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException, Request
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
 from app.core import runtime as runtime_core
@@ -9,14 +9,17 @@ from app.db import get_db
 from app.models.identity import APIKey
 from app.models.execution import Run
 from app.models.registry import Agent
+from app.rate_limit import limiter
 from app.security import get_current_api_key
 
 router = APIRouter(prefix="/runtime", tags=["runtime"])
 
 
 class ExecuteRequest(BaseModel):
-    agent_slug: str
-    goal: str
+    model_config = ConfigDict(extra="forbid")
+
+    agent_slug: str = Field(min_length=1, max_length=200)
+    goal: str = Field(min_length=1, max_length=4000)
 
 
 class RunOut(BaseModel):
@@ -36,7 +39,8 @@ class RunOut(BaseModel):
 
 
 @router.post("/execute", response_model=RunOut)
-def execute(payload: ExecuteRequest, db: Session = Depends(get_db), _key: APIKey = Depends(get_current_api_key)) -> Run:
+@limiter.limit("30/minute")
+def execute(request: Request, payload: ExecuteRequest, db: Session = Depends(get_db), _key: APIKey = Depends(get_current_api_key)) -> Run:
     agent = db.query(Agent).filter(Agent.slug == payload.agent_slug).first()
     if agent is None:
         raise HTTPException(404, f"agent '{payload.agent_slug}' not found")

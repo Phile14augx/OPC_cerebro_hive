@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
 from app.core import memory_engine
@@ -13,10 +13,12 @@ router = APIRouter(prefix="/memory", tags=["memory"])
 
 
 class RememberRequest(BaseModel):
-    agent_id: str
-    content: str
-    tier: str = "working"
-    meta: dict = {}
+    model_config = ConfigDict(extra="forbid")
+
+    agent_id: str = Field(min_length=1, max_length=100)
+    content: str = Field(min_length=1, max_length=50_000)
+    tier: str = Field(default="working", max_length=50)
+    meta: dict = Field(default_factory=dict)
 
 
 class MemoryOut(BaseModel):

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
 from app.core import knowledge_engine
@@ -11,10 +11,12 @@ router = APIRouter(prefix="/knowledge", tags=["knowledge"])
 
 
 class IngestRequest(BaseModel):
-    title: str
-    content: str
-    source: str = "upload"
-    meta: dict = {}
+    model_config = ConfigDict(extra="forbid")
+
+    title: str = Field(min_length=1, max_length=500)
+    content: str = Field(min_length=1, max_length=500_000)
+    source: str = Field(default="upload", max_length=200)
+    meta: dict = Field(default_factory=dict)
 
 
 class IngestResponse(BaseModel):

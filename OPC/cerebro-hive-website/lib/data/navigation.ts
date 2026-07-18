@@ -12,7 +12,7 @@ export const mainNavigation: NavItem[] = [
       { label: "Overview", href: "/platform" },
       { label: "Architecture", href: "/platform/architecture" },
       { label: "Capabilities", href: "/platform#capabilities" },
-      { label: "Live Runtime", href: "/products/agentos/live-runtime" },
+      { label: "Live Runtime", href: "/platform/live-runtime" },
     ]
   },
   {
@@ -83,7 +83,7 @@ export const footerNavigation = {
     { label: "Memory Fabric™", href: "/platform/memory-fabric" },
     { label: "Knowledge Fabric™", href: "/platform/knowledge-fabric" },
     { label: "Reasoning Engine™", href: "/platform/reasoning-engine" },
-    { label: "Live Runtime →", href: "/products/agentos/live-runtime" },
+    { label: "Live Runtime →", href: "/platform/live-runtime" },
   ],
   products: [
     { label: "CerebroArchive™", href: "/products/cerebro-archive" },

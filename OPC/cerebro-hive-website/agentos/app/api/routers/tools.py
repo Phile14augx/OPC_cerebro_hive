@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
 from app.core import tool_framework
@@ -14,11 +14,13 @@ router = APIRouter(prefix="/tools", tags=["tools"])
 
 
 class ToolCreate(BaseModel):
-    name: str
-    description: str = ""
-    kind: str = "builtin"
-    input_schema: dict = {}
-    permissions: list[str] = ["execute"]
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1, max_length=200)
+    description: str = Field(default="", max_length=2000)
+    kind: str = Field(default="builtin", max_length=100)
+    input_schema: dict = Field(default_factory=dict)
+    permissions: list[str] = Field(default_factory=lambda: ["execute"], max_length=50)
 
 
 class ToolOut(BaseModel):
@@ -49,7 +51,9 @@ class ToolOut(BaseModel):
 
 
 class InvokeRequest(BaseModel):
-    args: dict = {}
+    model_config = ConfigDict(extra="forbid")
+
+    args: dict = Field(default_factory=dict)
 
 
 @router.get("", response_model=list[ToolOut])

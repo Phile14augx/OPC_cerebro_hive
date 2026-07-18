@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
 from app.core import skills as skills_core
@@ -14,10 +14,12 @@ router = APIRouter(prefix="/skills", tags=["skills"])
 
 
 class SkillInstallRequest(BaseModel):
-    name: str
-    version: str = "1.0.0"
-    description: str = ""
-    config: dict = {}
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1, max_length=200)
+    version: str = Field(default="1.0.0", max_length=50)
+    description: str = Field(default="", max_length=2000)
+    config: dict = Field(default_factory=dict)
 
 
 class SkillOut(BaseModel):

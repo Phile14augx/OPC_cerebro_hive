@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { getCollection, insertItem } from "@/lib/db";
+import { guardMutatingRequest, guardReadRequest, parseJsonBody } from "@/lib/security/guard";
+import { ticketSchema } from "@/lib/security/schemas";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const guard = await guardReadRequest(request, { routeName: "tickets:get", limit: 60, windowMs: 60_000 });
+  if (!guard.ok) return guard.response;
+
   try {
     const tickets = await getCollection("tickets");
     return NextResponse.json({ tickets });
@@ -12,21 +17,25 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const guard = await guardMutatingRequest(request, { routeName: "tickets:post", limit: 10, windowMs: 60_000 });
+  if (!guard.ok) return guard.response;
+
+  const parsedBody = await parseJsonBody(request);
+  if (!parsedBody.ok) return parsedBody.response;
+
+  const parsed = ticketSchema.safeParse(parsedBody.body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+  }
+
   try {
-    const body = await request.json();
-    const { subject, message } = body;
-
-    if (!subject || !message) {
-      return NextResponse.json({ error: "Subject and message are required" }, { status: 400 });
-    }
-
     const ticketId = `TKT-${Math.floor(1000 + Math.random() * 9000)}`;
     const newTicket = await insertItem("tickets", {
       id: ticketId,
-      subject,
-      message,
+      subject: parsed.data.subject,
+      message: parsed.data.message,
       status: "Open",
-      date: new Date().toLocaleDateString("en-US", { month: "long", day: "2-digit", year: "numeric" })
+      date: new Date().toLocaleDateString("en-US", { month: "long", day: "2-digit", year: "numeric" }),
     });
 
     return NextResponse.json({ ticket: newTicket }, { status: 201 });

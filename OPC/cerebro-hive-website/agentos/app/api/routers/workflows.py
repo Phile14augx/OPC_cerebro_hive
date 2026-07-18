@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
 from app.core import workflow_engine
@@ -14,9 +14,11 @@ router = APIRouter(prefix="/workflows", tags=["workflows"])
 
 
 class WorkflowCreate(BaseModel):
-    name: str
-    definition: dict  # {"start": "n1", "nodes": {...}}
-    context: dict = {}
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1, max_length=200)
+    definition: dict  # {"start": "n1", "nodes": {...}} — bounded by the global request-size cap (RequestGuardMiddleware)
+    context: dict = Field(default_factory=dict)
 
 
 class WorkflowOut(BaseModel):

@@ -1,7 +1,9 @@
 from datetime import datetime
 
+import re
+
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from sqlalchemy.orm import Session
 
 from app.db import get_db
@@ -12,22 +14,33 @@ from app.security import get_current_api_key
 
 router = APIRouter(prefix="/agents", tags=["agents"])
 
+_SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,98}[a-z0-9]$|^[a-z0-9]$")
+
 
 class AgentCreate(BaseModel):
-    slug: str
-    name: str
-    description: str = ""
-    category: str = "general"
-    capabilities: list[str] = []
-    permissions: dict = {}
-    tools: list[str] = []
-    skills: list[str] = []
-    llm_provider: str = "mock"
-    llm_model: str = "mock-1"
-    temperature: float = 0.3
-    reasoning_profile: str = "chain_of_thought"
-    memory_profile: str = "standard"
-    deployment_target: str = "local"
+    model_config = ConfigDict(extra="forbid")
+
+    slug: str = Field(min_length=1, max_length=100)
+    name: str = Field(min_length=1, max_length=200)
+    description: str = Field(default="", max_length=2000)
+    category: str = Field(default="general", max_length=100)
+    capabilities: list[str] = Field(default_factory=list, max_length=50)
+    permissions: dict = Field(default_factory=dict)
+    tools: list[str] = Field(default_factory=list, max_length=50)
+    skills: list[str] = Field(default_factory=list, max_length=50)
+    llm_provider: str = Field(default="mock", max_length=100)
+    llm_model: str = Field(default="mock-1", max_length=100)
+    temperature: float = Field(default=0.3, ge=0.0, le=2.0)
+    reasoning_profile: str = Field(default="chain_of_thought", max_length=100)
+    memory_profile: str = Field(default="standard", max_length=100)
+    deployment_target: str = Field(default="local", max_length=100)
+
+    @field_validator("slug")
+    @classmethod
+    def validate_slug(cls, value: str) -> str:
+        if not _SLUG_RE.match(value):
+            raise ValueError("slug must be lowercase alphanumeric with hyphens")
+        return value
 
 
 class AgentOut(BaseModel):

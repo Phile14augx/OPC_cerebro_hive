@@ -71,9 +71,14 @@ def test_simulator_more_agents_reduces_wait_time(client, auth_headers):
 
 
 def test_simulator_rejects_bad_params(client, auth_headers):
+    # num_agents=0 now fails Pydantic schema validation directly (Field(gt=0)
+    # on SimulateRequest, added as part of the DoS-hardening pass — see
+    # app/api/routers/simulator.py) rather than reaching simulator_engine's
+    # own ValueError check, so this is a 422 (schema violation) rather than
+    # the 400 (business-logic rejection) it used to be.
     resp = client.post(
         "/simulator/run",
         json={"arrival_rate_per_hour": 10, "num_agents": 0, "mean_service_minutes": 5},
         headers=auth_headers,
     )
-    assert resp.status_code == 400
+    assert resp.status_code == 422

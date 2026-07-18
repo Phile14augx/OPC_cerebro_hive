@@ -35,8 +35,8 @@ jobs:
     - name: 📦 Prepare Standalone Directory
       working-directory: ./OPC/cerebro-hive-website
       run: |
-        cp -R public .next/standalone/public
-        cp -R .next/static .next/standalone/.next/static
+        cp -R public .next/standalone/
+        cp -R .next/static .next/standalone/.next/
       
     - name: 📂 Sync files to Hostinger
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -49,3 +49,4 @@ jobs:
         exclude: |
           **/.git*
           **/.git*/**
+          **/node_modules/**
