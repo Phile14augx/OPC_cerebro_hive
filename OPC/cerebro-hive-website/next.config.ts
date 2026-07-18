@@ -10,6 +10,7 @@ const repo = "OPC_cerebro_hive";
 const basePath = isGithubPages ? `/${repo}` : "";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   images: {
     unoptimized: true,
   },

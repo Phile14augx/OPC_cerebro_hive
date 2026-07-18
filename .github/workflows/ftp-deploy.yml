@@ -31,6 +31,12 @@ jobs:
       run: npm run build
       env:
         IS_FTP_DEPLOY: "true"
+        
+    - name: 📦 Prepare Standalone Directory
+      working-directory: ./OPC/cerebro-hive-website
+      run: |
+        cp -R public .next/standalone/public
+        cp -R .next/static .next/standalone/.next/static
       
     - name: 📂 Sync files to Hostinger
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -38,9 +44,8 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./OPC/cerebro-hive-website/out/
+        local-dir: ./OPC/cerebro-hive-website/.next/standalone/
         server-dir: /
         exclude: |
           **/.git*
           **/.git*/**
-          **/node_modules/**
