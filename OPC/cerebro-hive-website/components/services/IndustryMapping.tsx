@@ -4,6 +4,11 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Building, Stethoscope, Briefcase, ShoppingBag, Factory, Shield, Cpu, Zap, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Stack } from "@/components/ui/primitives/Stack";
+import { cardVariants } from "@/components/ui/primitives/Card";
 
 const industries = [
   {
@@ -58,17 +63,17 @@ const industries = [
 
 export function IndustryMapping() {
   return (
-    <section className="section-pad bg-surface-elevated border-y border-border">
-      <div className="container-wide">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-6">
+    <Section size="default" className="bg-surface-elevated border-y border-border">
+      <PageContainer>
+        <Stack gap="md" className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary">
             Industries We Serve
           </h2>
           <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
-            Deep domain expertise combined with bleeding-edge AI engineering. We build 
+            Deep domain expertise combined with bleeding-edge AI engineering. We build
             solutions tailored to the regulatory and operational realities of your sector.
           </p>
-        </div>
+        </Stack>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {industries.map((industry, i) => (
@@ -79,18 +84,18 @@ export function IndustryMapping() {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <Link 
+              <Link
                 href={industry.link}
-                className="group block p-8 rounded-2xl bg-background border border-border hover:border-primary-accent/50 transition-all duration-300 h-full relative overflow-hidden"
+                className={cn(cardVariants({ size: "lg" }), "group block hover:border-primary-accent/50 transition-all duration-300 h-full relative overflow-hidden")}
               >
                 {/* Subtle gradient glow on hover */}
-                <div 
+                <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-2xl pointer-events-none"
                   style={{ background: `radial-gradient(circle at top right, ${industry.color}, transparent 60%)` }}
                 />
-                
+
                 <div className="flex items-center gap-4 mb-4">
-                  <div 
+                  <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center bg-surface border border-border"
                     style={{ color: industry.color }}
                   >
@@ -100,11 +105,11 @@ export function IndustryMapping() {
                     {industry.name}
                   </h3>
                 </div>
-                
+
                 <p className="text-sm text-text-secondary leading-relaxed mb-6">
                   {industry.description}
                 </p>
-                
+
                 <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-text-muted group-hover:text-primary-accent transition-colors">
                   Explore Solutions <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -112,7 +117,7 @@ export function IndustryMapping() {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 }
