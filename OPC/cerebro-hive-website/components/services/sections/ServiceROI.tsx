@@ -4,14 +4,18 @@ import React from "react";
 import { motion } from "framer-motion";
 import { EnterpriseService } from "@/lib/data/types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { cn } from "@/lib/utils";
+import { Section } from "@/components/ui/primitives/Section";
+import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { cardVariants } from "@/components/ui/primitives/Card";
 
 export const ServiceROI = ({ service }: { service: EnterpriseService }) => {
   return (
-    <section className="section-pad bg-background border-b border-border">
-      <div className="container-wide">
-        <SectionHeading 
-          label="ROI & Impact" 
-          title="Measurable Success" 
+    <Section size="default" className="bg-background border-b border-border">
+      <PageContainer>
+        <SectionHeading
+          label="ROI & Impact"
+          title="Measurable Success"
           description="We hold ourselves accountable to strict business outcomes."
         />
 
@@ -23,10 +27,10 @@ export const ServiceROI = ({ service }: { service: EnterpriseService }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="p-8 bg-surface-elevated border border-border rounded-2xl shadow-sm text-center flex flex-col items-center justify-center relative overflow-hidden group"
+              className={cn(cardVariants({ size: "lg" }), "bg-surface-elevated shadow-sm text-center flex flex-col items-center justify-center relative overflow-hidden group")}
             >
               <div className="absolute inset-0 bg-primary-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-              
+
               <h3 className="text-5xl lg:text-6xl font-mono font-black text-text-primary mb-4 relative z-10">
                 {metric.value}
               </h3>
@@ -39,7 +43,7 @@ export const ServiceROI = ({ service }: { service: EnterpriseService }) => {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+      </PageContainer>
+    </Section>
   );
 };
