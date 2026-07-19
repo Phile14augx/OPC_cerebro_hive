@@ -189,9 +189,8 @@ jobs:
 ###########################################################################
 
     - name: Install Node Dependencies
-
       if: matrix.language == 'javascript-typescript'
-
+      working-directory: OPC/cerebro-hive-website
       run: npm ci
 
 ###########################################################################
@@ -222,11 +221,7 @@ jobs:
 
         build-mode: ${{ matrix.build-mode }}
 
-        queries: |
-
-          security-extended
-
-          security-and-quality
+        queries: security-extended,security-and-quality
 
 ###########################################################################
 # Autobuild
