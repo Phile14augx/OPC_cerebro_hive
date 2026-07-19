@@ -232,11 +232,11 @@ export default function CerebroChat() {
             <div className="flex-1 grid grid-cols-1 md:grid-cols-12 min-h-0 relative z-10">
               
               {/* Left Panel: Navigator */}
-              <div className="chat-navigator hidden md:flex flex-col border-r border-border dark:border-border-default col-span-3 bg-surface/40 dark:bg-[#050B14]/40 overflow-y-auto">
+              <div className="sidebar chat-navigator hidden md:flex flex-col border-r border-border dark:border-border-default col-span-3 bg-surface/40 dark:bg-[#050B14]/40 overflow-y-auto">
                 <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6">Navigator</span>
                 <div className="flex flex-col gap-2">
                   {navigatorItems.map(item => (
-                    <button key={item.id} style={{ padding: '12px 14px' }} className="flex flex-col text-left rounded-xl border border-transparent hover:border-primary-accent/30 hover:bg-primary-accent/5 transition-all group relative overflow-hidden">
+                    <button key={item.id} style={{ padding: '12px 14px' }} className="nav-item flex flex-col text-left rounded-xl border border-transparent hover:border-primary-accent/30 hover:bg-primary-accent/5 transition-all group relative overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary-accent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="flex items-center gap-2 mb-1">
                         <item.icon size={14} className="text-text-muted group-hover:text-primary-accent transition-colors shrink-0" />
@@ -249,11 +249,11 @@ export default function CerebroChat() {
               </div>
 
               {/* Center Panel: AI Workspace */}
-              <div className="col-span-1 md:col-span-5 flex flex-col relative bg-surface-elevated/60 dark:bg-[#02050A]/60 shadow-[0_0_50px_rgba(0,0,0,0.05)] dark:shadow-[0_0_50px_rgba(0,0,0,0.5)] z-20">
+              <div className="chat-panel col-span-1 md:col-span-5 flex flex-col relative bg-surface-elevated/60 dark:bg-[#02050A]/60 shadow-[0_0_50px_rgba(0,0,0,0.05)] dark:shadow-[0_0_50px_rgba(0,0,0,0.5)] z-20">
                 <div className="absolute top-0 inset-x-0 h-10 bg-gradient-to-b from-surface-elevated dark:from-[#03060A] to-transparent z-10 pointer-events-none" />
                 
                 {/* Messages Feed */}
-                <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-8">
+                <div className="conversation flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-8">
                   {messages.map((msg) => (
                     <div key={msg.id} className={cn("flex gap-4 w-full", msg.sender === "user" ? "justify-end" : "justify-start")}>
                       {msg.sender === "bot" && <AICoreOrb isGenerating={msg.isGenerating || false} />}
@@ -273,8 +273,8 @@ export default function CerebroChat() {
                         <div className={cn(
                           "p-5 rounded-2xl text-[13px] leading-relaxed relative overflow-hidden border",
                           msg.sender === "user" 
-                            ? "bg-[#F1F5F9] text-text-primary dark:bg-surface-elevated dark:text-text-primary rounded-tr-sm border-border dark:border-border-default" 
-                            : "bg-[#ECFDF5] text-text-primary dark:bg-[#0A121E] dark:text-text-secondary rounded-tl-sm border-primary-accent/20 dark:border-border-subtle shadow-lg"
+                            ? "user-message bg-[#F1F5F9] text-text-primary dark:bg-surface-elevated dark:text-text-primary rounded-tr-sm border-border dark:border-border-default" 
+                            : "assistant-message bg-[#ECFDF5] text-text-primary dark:bg-[#0A121E] dark:text-text-secondary rounded-tl-sm border-primary-accent/20 dark:border-border-subtle shadow-lg"
                         )}>
                           {msg.isGenerating && generationStage ? (
                             <div className="flex flex-col gap-5 min-w-[280px]">
@@ -344,7 +344,7 @@ export default function CerebroChat() {
                         <button 
                           key={prompt.id} 
                           onClick={() => handleSend(prompt.text)}
-                          className="px-3 py-1.5 rounded-full border border-border bg-surface hover:border-primary-accent/50 hover:bg-surface-elevated transition-all text-xs text-text-secondary"
+                          className="prompt-chip px-3 py-1.5 rounded-full border border-border bg-surface hover:border-primary-accent/50 hover:bg-surface-elevated transition-all text-xs text-text-secondary"
                         >
                           {prompt.text}
                         </button>
@@ -357,7 +357,7 @@ export default function CerebroChat() {
 
                 {/* IDE-Style Input Area */}
                 <div className="chat-input-bar shrink-0">
-                  <div className="flex flex-col bg-surface dark:bg-[#0A121E] border border-border dark:border-border-default rounded-xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.5)] focus-within:border-primary-accent/50 transition-colors">
+                  <div className="query-box flex flex-col bg-surface dark:bg-[#0A121E] border border-border dark:border-border-default rounded-xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.5)] focus-within:border-primary-accent/50 transition-colors">
                     <div className="flex items-center px-4 py-3 border-b border-border dark:border-border-subtle">
                        <span className="text-[10px] text-text-muted font-mono">⌘ Command Mode ready (type /)</span>
                     </div>
@@ -368,9 +368,9 @@ export default function CerebroChat() {
                         if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(input); }
                       }}
                       placeholder="Ask Cerebro..."
-                      className="w-full bg-transparent px-4 py-4 text-sm text-text-primary focus:outline-none resize-none min-h-[60px]"
+                      className="chat-input w-full bg-transparent px-4 py-4 text-sm text-text-primary focus:outline-none resize-none min-h-[60px]"
                     />
-                    <div className="flex items-center justify-between px-6 py-4 bg-surface-elevated/40 dark:bg-surface-elevated border-t border-border dark:border-transparent">
+                    <div className="toolbar flex items-center justify-between px-6 py-4 bg-surface-elevated/40 dark:bg-surface-elevated border-t border-border dark:border-transparent">
                       <div className="flex gap-2">
                         <button className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Briefcase size={16}/></button>
                         <button className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Network size={16}/></button>
@@ -379,7 +379,7 @@ export default function CerebroChat() {
                       <button 
                         onClick={() => handleSend(input)}
                         disabled={!input.trim()}
-                        className="px-6 py-2 bg-primary-accent text-text-primary text-sm font-bold rounded flex items-center gap-3 hover:bg-surface transition-colors disabled:opacity-50"
+                        className="send-button px-6 py-2 bg-primary-accent text-text-primary text-sm font-bold rounded flex items-center gap-3 hover:bg-surface transition-colors disabled:opacity-50"
                       >
                         Send <Send size={14} />
                       </button>
@@ -389,7 +389,7 @@ export default function CerebroChat() {
               </div>
 
               {/* Right Panel: Intelligence Hub (Digital Twin) */}
-              <div className="hidden md:flex flex-col border-l border-border dark:border-border-default col-span-4 bg-surface dark:bg-[#010204] overflow-hidden">
+              <div className="architecture-panel hidden md:flex flex-col border-l border-border dark:border-border-default col-span-4 bg-surface dark:bg-[#010204] overflow-hidden">
                 
                 {/* Tabs */}
                 <div className="flex items-center gap-6 px-6 pt-6 border-b border-border dark:border-border-subtle">
@@ -442,8 +442,8 @@ export default function CerebroChat() {
                           onMouseEnter={() => setHoveredNode(node.id)}
                           onMouseLeave={() => setHoveredNode(null)}
                           className={cn(
-                            "absolute flex flex-col items-center justify-center p-3 rounded-lg border bg-[#050B14] cursor-help transition-all transform -translate-x-1/2 -translate-y-1/2 z-10 w-28 shadow-xl",
-                            hoveredNode === node.id ? "border-primary-accent scale-110" : "border-border hover:border-border-strong"
+                            "node absolute flex flex-col items-center justify-center p-3 rounded-lg border bg-[#050B14] cursor-help transition-all transform -translate-x-1/2 -translate-y-1/2 z-10 w-28 shadow-xl",
+                            hoveredNode === node.id ? "border-primary-accent scale-110 active" : "border-border hover:border-border-strong"
                           )}
                           style={{ left: node.x, top: node.y }}
                         >
@@ -489,7 +489,7 @@ export default function CerebroChat() {
                    <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold block mb-4">Referenced Knowledge</span>
                    <div className="flex flex-col gap-2 overflow-y-auto">
                      {["SAP Integration Guide", "Knowledge Graph Architecture", "Agentic Patterns", "Azure Deployment Specs"].map(doc => (
-                       <div key={doc} className="text-xs text-text-secondary p-2 rounded bg-surface border border-border flex justify-between items-center hover:text-text-primary cursor-pointer group">
+                       <div key={doc} className="knowledge-card text-xs text-text-secondary p-2 rounded bg-surface border border-border flex justify-between items-center hover:text-text-primary cursor-pointer group">
                          {doc} <Download size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                        </div>
                      ))}

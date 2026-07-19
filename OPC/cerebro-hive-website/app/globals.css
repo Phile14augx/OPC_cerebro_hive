@@ -293,3 +293,29 @@ p { font-family: var(--font-inter), sans-serif; }
 }
 
 /* Cache bust 1 */
+
+/* ============================================================
+   LIGHT THEME ENTERPRISE CHAT UI OVERRIDES
+   ============================================================ */
+:root:not(.dark) .chat-input { background: #FFFFFF; color: #111827; border: 1px solid #D1D5DB; }
+:root:not(.dark) .chat-input::placeholder { color: #6B7280; }
+:root:not(.dark) .prompt-chip { background:#F8FAFC; color:#1F2937; border:1px solid #CBD5E1; transition:.2s; }
+:root:not(.dark) .prompt-chip:hover { background:#ECFDF5; border-color:#10B981; color:#047857; }
+:root:not(.dark) .chat-panel { background:#FFFFFF; }
+:root:not(.dark) .conversation { background:#FAFBFC; }
+:root:not(.dark) .query-box { background:white; border:1px solid #D1D5DB; color:#111827; }
+:root:not(.dark) .send-button { background:#10B981; color:white; }
+:root:not(.dark) .send-button:hover { background:#059669; }
+:root:not(.dark) .toolbar { border-top:1px solid #E5E7EB; background:#FFFFFF; }
+:root:not(.dark) .toolbar button { color:#64748B; }
+:root:not(.dark) .toolbar button:hover { color:#10B981; }
+:root:not(.dark) .architecture-panel { background:#FFFFFF; }
+:root:not(.dark) .node { background:#F8FAFC; border:1px solid #CBD5E1; color:#334155; }
+:root:not(.dark) .node.active { border-color:#10B981; box-shadow:0 0 0 3px rgba(16,185,129,.15); }
+:root:not(.dark) .sidebar { background:#F9FAFB; border-right:1px solid #E5E7EB; }
+:root:not(.dark) .nav-item { color:#475569; }
+:root:not(.dark) .nav-item:hover { background:#ECFDF5; color:#059669; }
+:root:not(.dark) .knowledge-card { background:white; border:1px solid #E5E7EB; border-left:4px solid #10B981; color:#334155; }
+:root:not(.dark) .assistant-message { background:#F8FAFC; color:#111827; }
+:root:not(.dark) .user-message { background:#ECFDF5; color:#065F46; }
+
