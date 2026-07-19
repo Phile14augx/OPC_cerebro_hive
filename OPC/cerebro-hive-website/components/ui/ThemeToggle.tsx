@@ -11,13 +11,11 @@ export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return <div className="w-[104px] h-9 rounded-full bg-surface-elevated border border-border" />;
-  }
+  // Use resolved theme (or "dark" default when not yet mounted)
+  const activeTheme = mounted ? (theme ?? "dark") : "dark";
 
   const options = [
     { value: "light", icon: Sun, label: "Light" },
@@ -28,7 +26,7 @@ export default function ThemeToggle() {
   return (
     <div className="relative inline-flex items-center p-1 rounded-full bg-surface-elevated border border-border shadow-sm">
       {options.map((option) => {
-        const isActive = theme === option.value;
+        const isActive = activeTheme === option.value;
         const Icon = option.icon;
         
         return (

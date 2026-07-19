@@ -81,7 +81,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${spaceGrotesk.variable} ${inter.variable} ${plexMono.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${plexMono.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <body className="bg-background text-text-primary antialiased selection:bg-primary-accent selection:text-text-primary transition-colors duration-500" suppressHydrationWarning>
         <JsonLd schema={buildOrganizationSchema()} />
         <JsonLd schema={buildWebsiteSchema()} />
@@ -89,7 +89,7 @@ export default function RootLayout({
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            forcedTheme="dark"
+            enableSystem={false}
             disableTransitionOnChange={false}
           >
             <LanguageProvider>

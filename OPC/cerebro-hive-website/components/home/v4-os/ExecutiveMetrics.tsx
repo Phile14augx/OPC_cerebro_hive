@@ -46,7 +46,7 @@ export function ExecutiveMetrics() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, ease: "easeOut" }}
             >
-              <div className="text-4xl md:text-5xl font-space font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-primary-accent mb-2">
+              <div className="text-4xl md:text-5xl font-space font-bold text-transparent bg-clip-text bg-gradient-to-br dark:from-white from-slate-800 to-primary-accent mb-2">
                 {metric.value}
               </div>
               <div className={typeTokens.bodySm}>
