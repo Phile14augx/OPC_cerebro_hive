@@ -91,7 +91,7 @@ export interface PackagedProduct extends BaseEntity {
   config: ProductConfiguration;
   
   // Ecosystem Positioning (Enterprise AI OS)
-  ecosystemLayer: "os" | "business" | "enterprise" | "foundation";
+  ecosystemLayer: "os" | "orchestration" | "intelligence" | "business" | "enterprise" | "platform-foundation";
   moduleConnections?: string[];      // Other product slugs this module integrates with
   platformServices?: string[];       // Shared platform services this module consumes
   dependsOn?: string[];              // Products this module requires

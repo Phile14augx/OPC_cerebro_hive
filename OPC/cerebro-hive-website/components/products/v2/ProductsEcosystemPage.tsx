@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Globe2, Archive, Code2, Workflow, BarChart2, MessageSquare, Server, Shield, Cpu, Zap, ChevronRight } from "lucide-react";
+import { ArrowRight, Globe2, Archive, Code2, Workflow, BarChart2, MessageSquare, Server, Shield, Cpu, Zap, ChevronRight, Database } from "lucide-react";
 import { EcosystemArchitectureDiagram } from "./EcosystemArchitectureDiagram";
 import { ecosystemTiers } from "@/lib/data/products";
 
@@ -77,10 +77,11 @@ const sharedServices = [
 export function ProductsEcosystemPage() {
   const allFeatured = [
     ...ecosystemTiers.os,
-    ...(ecosystemTiers as any).business?.filter ? [ecosystemTiers.business.find((p: any) => p.id === "hivepulse")].filter(Boolean) : [],
+    ...ecosystemTiers.orchestration,
+    ...ecosystemTiers.intelligence,
     ...ecosystemTiers.business,
     ...ecosystemTiers.enterprise,
-    ...ecosystemTiers.foundation,
+    ...ecosystemTiers.platformFoundation,
   ].filter((p, i, arr) => p && arr.findIndex((x: any) => x?.id === p.id) === i);
 
   return (
@@ -232,6 +233,37 @@ export function ProductsEcosystemPage() {
               );
             })}
 
+            {/* Orchestration Engine */}
+            {ecosystemTiers.orchestration.length > 0 && (
+              <div>
+                <div className="text-[10px] font-bold tracking-widest uppercase text-cyan-400 mb-6">Orchestration Engine</div>
+                <div className="grid grid-cols-1 gap-6">
+                  {ecosystemTiers.orchestration.map(product => {
+                    const Icon = moduleIcons[product.id] || Cpu;
+                    return (
+                      <Link
+                        key={product.id}
+                        href={`/products/${product.slug}`}
+                        className="group p-6 rounded-2xl border border-border bg-background hover:border-cyan-500/40 hover:shadow-elevated transition-all flex flex-col sm:flex-row gap-5 items-start sm:items-center"
+                      >
+                        <div className="w-12 h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-cyan-500/25 transition-colors">
+                          <Icon size={22} className="text-cyan-300" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-space font-bold text-text-primary mb-1 group-hover:text-cyan-300 transition-colors">{product.title}</h3>
+                          <p className="text-xs text-text-muted mb-3">{product.hero.subtitle}</p>
+                          <p className="text-sm text-text-secondary leading-relaxed line-clamp-2">{product.summary}</p>
+                        </div>
+                        <div className="flex-shrink-0 flex items-center gap-1 mt-4 sm:mt-0 text-xs text-primary-accent font-bold">
+                          Explore module <ChevronRight size={12} />
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Business Modules */}
             <div>
               <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-400 mb-6">Business Intelligence Modules</div>
@@ -258,6 +290,34 @@ export function ProductsEcosystemPage() {
                 })}
               </div>
             </div>
+
+            {/* Intelligence Layer */}
+            {ecosystemTiers.intelligence.length > 0 && (
+              <div>
+                <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-6">Intelligence Layer</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {ecosystemTiers.intelligence.map(product => {
+                    const Icon = moduleIcons[product.id] || Database;
+                    return (
+                      <Link
+                        key={product.id}
+                        href={`/products/${product.slug}`}
+                        className="group p-6 rounded-2xl border border-border bg-background hover:border-indigo-500/40 hover:shadow-elevated transition-all flex gap-5"
+                      >
+                        <div className="w-12 h-12 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500/25 transition-colors">
+                          <Icon size={22} className="text-indigo-300" />
+                        </div>
+                        <div>
+                          <h3 className="font-space font-bold text-text-primary mb-1 group-hover:text-indigo-300 transition-colors">{product.title}</h3>
+                          <p className="text-xs text-text-muted mb-3">{product.hero.subtitle}</p>
+                          <p className="text-sm text-text-secondary leading-relaxed">{product.summary.substring(0, 160)}…</p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Enterprise Platform */}
             <div>
@@ -287,9 +347,9 @@ export function ProductsEcosystemPage() {
 
             {/* Foundation */}
             <div>
-              <div className="text-[10px] font-bold tracking-widest uppercase text-rose-400 mb-6">Shared Foundation Service</div>
+              <div className="text-[10px] font-bold tracking-widest uppercase text-rose-400 mb-6">Platform Foundation</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {ecosystemTiers.foundation.map(product => {
+                {ecosystemTiers.platformFoundation.map(product => {
                   const Icon = moduleIcons[product.id] || Zap;
                   return (
                     <Link

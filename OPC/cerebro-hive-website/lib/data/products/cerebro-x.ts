@@ -19,7 +19,7 @@ export const cerebroXProduct: PackagedProduct = {
   tags: ["AI Gateway", "Model Routing", "LLM Abstraction", "Prompt Orchestration", "Cost Optimization", "AI Observability"],
 
   // Ecosystem Positioning — Shared Platform Service (AI Gateway)
-  ecosystemLayer: "foundation",
+  ecosystemLayer: "platform-foundation",
   moduleConnections: ["cerebro-copilot", "cerebro-studio", "cerebro-flow", "cerebro-archive", "hivepulse"],
   platformServices: ["ai-gateway", "model-registry", "cost-management", "observability"],
   providesCapabilities: ["model-routing", "provider-abstraction", "prompt-orchestration", "ai-cost-management", "ai-observability"],

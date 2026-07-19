@@ -9,21 +9,22 @@ interface ModuleNode {
   title: string;
   subtitle: string;
   href: string;
-  layer: "os" | "orchestration" | "business" | "enterprise" | "foundation";
+  layer: "os" | "orchestration" | "business" | "intelligence" | "enterprise" | "platform-foundation";
   connections?: string[];
 }
 
 const modules: ModuleNode[] = [
   { id: "cerebro-sphere", title: "CerebroSphere™", subtitle: "Enterprise AI OS", href: "/products/cerebro-sphere", layer: "os", connections: ["hivepulse", "cerebro-archive", "cerebro-studio", "cerebro-flow", "cerebro-insight", "cerebro-copilot", "hive-ops", "hive-shield"] },
-  { id: "hivepulse", title: "HivePulse™", subtitle: "Orchestration Engine", href: "/products/hivepulse", layer: "orchestration", connections: ["cerebro-flow", "cerebro-studio", "hive-ops"] },
-  { id: "cerebro-archive", title: "CerebroArchive™", subtitle: "Knowledge Intelligence", href: "/products/cerebro-archive", layer: "business", connections: ["cerebro-copilot", "cerebro-x"] },
-  { id: "cerebro-studio", title: "CerebroStudio™", subtitle: "AI Development", href: "/products/cerebro-studio", layer: "business", connections: ["cerebro-archive", "cerebro-x"] },
-  { id: "cerebro-flow", title: "CerebroFlow™", subtitle: "AI Automation", href: "/products/cerebro-flow", layer: "business", connections: ["cerebro-archive", "cerebro-x"] },
-  { id: "cerebro-insight", title: "CerebroInsight™", subtitle: "AI Analytics", href: "/products/cerebro-insight", layer: "business", connections: ["cerebro-x"] },
-  { id: "cerebro-copilot", title: "CerebroCopilot™", subtitle: "AI Assistant", href: "/products/cerebro-copilot", layer: "business", connections: ["cerebro-archive", "cerebro-x"] },
+  { id: "hivepulse", title: "HivePulse™", subtitle: "Orchestration Engine", href: "/products/hivepulse", layer: "orchestration", connections: ["cerebro-flow", "cerebro-studio", "hive-ops", "intelligence-layer"] },
+  { id: "cerebro-archive", title: "CerebroArchive™", subtitle: "Knowledge Intelligence", href: "/products/cerebro-archive", layer: "business", connections: ["cerebro-copilot", "intelligence-layer", "cerebro-x"] },
+  { id: "cerebro-studio", title: "CerebroStudio™", subtitle: "AI Development", href: "/products/cerebro-studio", layer: "business", connections: ["cerebro-archive", "intelligence-layer", "cerebro-x"] },
+  { id: "cerebro-flow", title: "CerebroFlow™", subtitle: "AI Automation", href: "/products/cerebro-flow", layer: "business", connections: ["cerebro-archive", "intelligence-layer", "cerebro-x"] },
+  { id: "cerebro-insight", title: "CerebroInsight™", subtitle: "AI Analytics", href: "/products/cerebro-insight", layer: "business", connections: ["intelligence-layer", "cerebro-x"] },
+  { id: "cerebro-copilot", title: "CerebroCopilot™", subtitle: "AI Assistant", href: "/products/cerebro-copilot", layer: "business", connections: ["cerebro-archive", "intelligence-layer", "cerebro-x"] },
+  { id: "intelligence-layer", title: "Intelligence Layer", subtitle: "Knowledge Graph · Embeddings · Reasoning · Memory", href: "/platform", layer: "intelligence", connections: ["cerebro-x"] },
   { id: "hive-ops", title: "HiveOps™", subtitle: "Operations Platform", href: "/products/hive-ops", layer: "enterprise", connections: ["hive-shield", "cerebro-x"] },
   { id: "hive-shield", title: "HiveShield™", subtitle: "Security & Governance", href: "/products/hive-shield", layer: "enterprise", connections: ["cerebro-x"] },
-  { id: "cerebro-x", title: "Cerebro X™", subtitle: "AI Gateway", href: "/products/cerebro-x", layer: "foundation" },
+  { id: "cerebro-x", title: "Cerebro X™", subtitle: "AI Gateway — Platform Foundation", href: "/products/cerebro-x", layer: "platform-foundation" },
 ];
 
 const layerConfig = {
@@ -51,6 +52,14 @@ const layerConfig = {
     badge: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
     dot: "bg-emerald-400",
   },
+  intelligence: {
+    label: "Intelligence Layer",
+    color: "from-indigo-500/20 to-blue-700/20",
+    border: "border-indigo-500/40",
+    text: "text-indigo-300",
+    badge: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30",
+    dot: "bg-indigo-400",
+  },
   enterprise: {
     label: "Enterprise Platform Services",
     color: "from-amber-500/20 to-orange-600/20",
@@ -59,8 +68,8 @@ const layerConfig = {
     badge: "bg-amber-500/20 text-amber-300 border-amber-500/30",
     dot: "bg-amber-400",
   },
-  foundation: {
-    label: "Shared Foundation Service",
+  "platform-foundation": {
+    label: "Platform Foundation",
     color: "from-rose-500/20 to-red-600/20",
     border: "border-rose-500/40",
     text: "text-rose-300",
@@ -69,8 +78,8 @@ const layerConfig = {
   },
 };
 
-const layerOrder: Array<"os" | "orchestration" | "business" | "enterprise" | "foundation"> = [
-  "os", "orchestration", "business", "enterprise", "foundation"
+const layerOrder: Array<"os" | "orchestration" | "business" | "intelligence" | "enterprise" | "platform-foundation"> = [
+  "os", "orchestration", "business", "intelligence", "enterprise", "platform-foundation"
 ];
 
 export function EcosystemArchitectureDiagram() {
@@ -115,6 +124,7 @@ export function EcosystemArchitectureDiagram() {
                 layer === "os" ? "grid-cols-1" :
                 layer === "orchestration" ? "grid-cols-1 max-w-xs" :
                 layer === "business" ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-5" :
+                layer === "intelligence" ? "grid-cols-1" :
                 layer === "enterprise" ? "grid-cols-2" :
                 "grid-cols-1 max-w-xs"
               }`}>

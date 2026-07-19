@@ -21,7 +21,7 @@ export const cerebroLearnProduct: PackagedProduct = {
   status: "production",
   maturity: "legacy",
   tags: ["Training", "LMS"],
-  ecosystemLayer: "business", // @deprecated — absorbed into CerebroArchive™
+  ecosystemLayer: "platform-foundation", // @deprecated — absorbed into CerebroArchive™
 
   seo: {
     title: "CerebroLearn™ | Corporate AI Training & Certification Platform | CerebroHive",

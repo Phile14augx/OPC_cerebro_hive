@@ -8,42 +8,54 @@ import { ArrowRight, ChevronRight, Shield, Server, Zap, Database, Network, Globe
 const archStack = [
   {
     tier: "Applications",
-    description: "User-facing intelligence workspaces",
+    description: "User-facing intelligence workspace — the unified executive operating system",
     items: ["CerebroSphere™ — Enterprise AI Operating System"],
     color: "border-violet-500/50 bg-violet-500/5",
     labelColor: "text-violet-400",
   },
   {
     tier: "Business Intelligence Modules",
-    description: "Domain-specific AI capabilities",
+    description: "Domain-specific AI capabilities delivering standalone enterprise value",
     items: ["CerebroArchive™", "CerebroStudio™", "CerebroFlow™", "CerebroInsight™", "CerebroCopilot™"],
     color: "border-emerald-500/40 bg-emerald-500/5",
     labelColor: "text-emerald-400",
   },
   {
     tier: "Orchestration Engine",
-    description: "Agent execution and workflow runtime",
+    description: "Enterprise agent runtime, multi-agent mesh, and workflow execution",
     items: ["HivePulse™ — Enterprise Agent Orchestration Engine"],
     color: "border-cyan-500/40 bg-cyan-500/5",
     labelColor: "text-cyan-400",
   },
   {
+    tier: "Intelligence Layer",
+    description: "Shared reasoning, knowledge, embeddings, memory, and evaluation services",
+    items: ["Enterprise Knowledge Graph", "Embeddings Engine", "Reasoning & Planning", "Evaluation Framework", "Memory Store", "Recommendations", "AI Forecasting", "Semantic Retrieval"],
+    color: "border-indigo-500/40 bg-indigo-500/5",
+    labelColor: "text-indigo-400",
+  },
+  {
     tier: "Enterprise Platform Services",
-    description: "Operational and security foundation",
+    description: "Operational and security foundation — the trust and infrastructure layer",
     items: ["HiveOps™ — Operations & MLOps Platform", "HiveShield™ — Security & Governance Platform"],
     color: "border-amber-500/40 bg-amber-500/5",
     labelColor: "text-amber-400",
   },
   {
-    tier: "Core Platform Services",
-    description: "Shared services consumed by every module",
-    items: ["Identity & IAM", "AI Gateway (Cerebro X™)", "Event Bus", "Audit Logging", "Search Engine", "Vector Search", "Object Storage", "Billing & Licensing", "API Gateway", "Notifications"],
+    tier: "Platform Foundation",
+    description: "Shared services consumed by every module — provisioned once, consumed by all",
+    items: [
+      "Cerebro X™ (AI Gateway)", "Identity & IAM", "Event Bus", "Audit Logging",
+      "Search Engine", "Vector Search", "Object Storage", "Billing & Licensing",
+      "API Gateway", "Notification Service", "Observability Stack", "Secrets Management",
+      "Enterprise Data Fabric", "Plugin Marketplace",
+    ],
     color: "border-rose-500/30 bg-rose-500/5",
     labelColor: "text-rose-400",
   },
   {
     tier: "Infrastructure",
-    description: "Compute, data, and messaging layer",
+    description: "Compute, data, messaging, and storage — cloud, on-premises, or air-gapped",
     items: ["PostgreSQL + pgvector", "Redis", "NATS / Kafka", "OpenSearch", "Object Storage (MinIO / S3)", "Kubernetes", "Docker", "GPU Clusters"],
     color: "border-slate-500/30 bg-slate-500/5",
     labelColor: "text-slate-400",
@@ -53,16 +65,16 @@ const archStack = [
 const sharedServiceCards = [
   { icon: Users, title: "Enterprise Identity & IAM", desc: "SSO, SAML 2.0, OIDC, MFA, organizational hierarchy, and fine-grained RBAC + ABAC across every module." },
   { icon: Globe2, title: "Multi-Tenancy", desc: "Complete tenant isolation with dedicated schemas, audit trails, data residency controls, and per-tenant rate limits." },
-  { icon: Zap, title: "AI Gateway (Cerebro X™)", desc: "Unified model routing, multi-provider abstraction, cost optimization, prompt caching, and AI observability." },
-  { icon: Network, title: "Event Bus", desc: "Distributed event fabric connecting all modules — workflow triggers, knowledge updates, agent state changes, and analytics feeds." },
-  { icon: Search, title: "Semantic Search", desc: "Unified vector + keyword hybrid search across knowledge, workflows, agents, and analytics from a single query interface." },
+  { icon: Zap, title: "AI Gateway (Cerebro X™)", desc: "Model routing, multi-provider abstraction, prompt registry, response caching, safety enforcement, embeddings, cost control, rate limiting, and AI observability — the full AI control plane." },
+  { icon: Network, title: "Enterprise Data Fabric", desc: "Unified data layer connecting structured data, documents, events, vectors, knowledge graphs, telemetry, trained models, and governance policies across every module." },
+  { icon: Search, title: "Semantic Search", desc: "Unified hybrid vector + keyword search across knowledge, workflows, agents, and analytics from a single query interface." },
   { icon: Database, title: "PostgreSQL + pgvector", desc: "Shared relational data store with native vector support — the canonical data layer for all structured and embedded data." },
   { icon: Shield, title: "Audit Logging", desc: "Immutable, cryptographically signed audit trail of every user action, AI decision, data access, and system event." },
   { icon: Lock, title: "Secrets Management", desc: "Centralized vault for API keys, credentials, and certificates with rotation policies and Kubernetes integration." },
-  { icon: Activity, title: "Observability Stack", desc: "Distributed tracing, structured logging, metrics aggregation, and AI-generated incident summaries across the platform." },
-  { icon: Code, title: "API Gateway", desc: "Consistent API contract — versioned, authenticated, rate-limited, and documented — for every platform service." },
-  { icon: Bell, title: "Notification Service", desc: "Cross-module alerting and notification routing via Slack, Teams, email, webhooks, and in-platform feeds." },
-  { icon: DollarSign, title: "Billing & Licensing", desc: "Capacity-based billing, module licensing, chargeback attribution, and usage analytics across all platform services." },
+  { icon: Activity, title: "Observability Stack", desc: "Distributed tracing, structured logging, metrics aggregation, alerting, and AI-generated incident summaries across the platform." },
+  { icon: Code, title: "Developer Platform", desc: "REST API, GraphQL, webhooks, CLI, SDKs (Python, TypeScript, Go), Terraform provider, and Plugin SDK — enterprise extensibility from day one." },
+  { icon: Bell, title: "Notification Service", desc: "Cross-module alerting and notification routing via Slack, Teams, email, webhooks, and in-platform activity feeds." },
+  { icon: DollarSign, title: "Billing & Licensing", desc: "Capacity-based billing, module licensing, team-level chargeback attribution, and usage analytics across all platform services." },
 ];
 
 const roadmapPhases = [
@@ -70,31 +82,31 @@ const roadmapPhases = [
     phase: "Phase 1",
     title: "Core Platform",
     status: "complete",
-    items: ["Identity & IAM", "Event Bus", "AI Gateway", "Audit Logging", "Multi-Tenancy", "API Gateway"],
+    items: ["Identity & IAM", "Event Bus", "AI Gateway (Cerebro X™)", "Audit Logging", "Multi-Tenancy", "API Gateway", "Enterprise Data Fabric"],
   },
   {
     phase: "Phase 2",
     title: "Knowledge Platform",
     status: "complete",
-    items: ["CerebroArchive™", "Semantic Search", "Document Intelligence", "Model Registry", "Knowledge Graph"],
+    items: ["CerebroArchive™", "Enterprise Knowledge Graph", "Semantic Search", "Document Intelligence", "Model & Prompt Registry", "Embeddings Engine"],
   },
   {
     phase: "Phase 3",
     title: "AI Development & Automation",
     status: "in-progress",
-    items: ["CerebroStudio™", "CerebroFlow™", "HivePulse™ Orchestration", "Agent Builder", "Workflow Engine"],
+    items: ["CerebroStudio™", "CerebroFlow™", "HivePulse™ Orchestration", "Intelligence Layer", "Reasoning & Planning", "Evaluation Framework", "Developer Platform (SDK/CLI)"],
   },
   {
     phase: "Phase 4",
     title: "Intelligence & Analytics",
     status: "planned",
-    items: ["CerebroInsight™", "CerebroCopilot™", "AI Forecasting", "Executive Cockpit", "Workforce Analytics"],
+    items: ["CerebroInsight™", "CerebroCopilot™", "AI Forecasting", "Executive Cockpit", "Workforce Analytics", "Memory Store", "Recommendations Engine"],
   },
   {
     phase: "Phase 5",
     title: "Enterprise Operating System",
     status: "planned",
-    items: ["CerebroSphere™", "Digital Twin", "Talent OS", "ERP Integration", "Industry Verticals", "Plugin Marketplace"],
+    items: ["CerebroSphere™", "Digital Twin", "Plugin Marketplace", "Terraform Provider", "Industry Verticals", "Talent OS", "ERP / CRM Integration"],
   },
 ];
 
@@ -207,7 +219,7 @@ export default function PlatformPage() {
         <div className="container-wide">
           <div className="text-center mb-16">
             <div className="text-[10px] font-bold tracking-widest uppercase text-primary-accent mb-4">Shared Services</div>
-            <h2 className="text-4xl font-space font-bold text-text-primary mb-6">The Foundation Every Module Shares</h2>
+            <h2 className="text-4xl font-space font-bold text-text-primary mb-6">The Platform Foundation Every Module Shares</h2>
             <p className="text-text-secondary max-w-2xl mx-auto">
               These platform services are provisioned once and consumed by all modules — eliminating the duplication, drift, and governance gaps of multi-vendor AI stacks.
             </p>

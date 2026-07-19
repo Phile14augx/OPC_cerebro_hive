@@ -19,7 +19,7 @@ export const hivepulseProduct: PackagedProduct = {
   tags: ["AI OS", "Orchestration", "Platform", "Agent Mesh", "Automation Engine"],
 
   // Ecosystem Positioning — Orchestration Engine sitting beneath CerebroSphere
-  ecosystemLayer: "business",
+  ecosystemLayer: "orchestration",
   moduleConnections: ["cerebro-sphere", "cerebro-flow", "cerebro-studio", "hive-ops", "hive-shield"],
   platformServices: ["ai-gateway", "event-bus", "infrastructure", "monitoring"],
   dependsOn: ["hive-ops", "hive-shield"],

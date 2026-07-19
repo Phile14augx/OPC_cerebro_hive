@@ -54,9 +54,11 @@ export const products: PackagedProduct[] = [
 /** Ecosystem module groups for the Products page UI */
 export const ecosystemTiers = {
   os: products.filter(p => p.ecosystemLayer === "os"),
+  orchestration: products.filter(p => p.ecosystemLayer === "orchestration"),
+  intelligence: products.filter(p => p.ecosystemLayer === "intelligence"),
   business: products.filter(p => p.ecosystemLayer === "business"),
   enterprise: products.filter(p => p.ecosystemLayer === "enterprise"),
-  foundation: products.filter(p => p.ecosystemLayer === "foundation"),
+  platformFoundation: products.filter(p => p.ecosystemLayer === "platform-foundation"),
 };
 
 /** Featured ecosystem products (excludes deprecated/absorbed) */

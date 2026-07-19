@@ -21,7 +21,7 @@ export const cerebroResearchProduct: PackagedProduct = {
   status: "production",
   maturity: "legacy",
   tags: ["R&D", "Science"],
-  ecosystemLayer: "business", // @deprecated — absorbed into CerebroArchive™
+  ecosystemLayer: "platform-foundation", // @deprecated — absorbed into CerebroArchive™
 
   seo: {
     title: "CerebroResearch™ | AI-Powered Enterprise Research & R&D Platform | CerebroHive",
