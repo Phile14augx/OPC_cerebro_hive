@@ -254,5 +254,59 @@ export const manufacturing: Industry = {
     { title: "Edge AI", type: "Guide", link: "/research" },
     { title: "Industrial Agents", type: "Paper", link: "/research" },
     { title: "Factory Automation", type: "Report", link: "/research" }
-  ]
+  ],
+
+  seo: {
+    title: "Manufacturing AI Solutions | Industry 4.0, Predictive Maintenance & Quality AI | CerebroHive",
+    description: "CerebroHive deploys AI for manufacturing — predictive maintenance, computer vision quality control, supply chain AI, production scheduling optimization, and Industry 4.0 transformation.",
+    keywords: [
+      "manufacturing AI solutions", "Industry 4.0 AI", "predictive maintenance AI",
+      "quality control AI", "computer vision manufacturing", "supply chain AI",
+      "production scheduling AI", "industrial AI consulting", "smart factory AI",
+      "manufacturing AI transformation", "OEE optimization AI", "defect detection AI",
+    ],
+  },
+
+  faqs: [
+    {
+      question: "How is AI transforming manufacturing and Industry 4.0?",
+      answer: "AI is transforming manufacturing across five domains: predictive maintenance (AI predicts equipment failures before they occur, reducing unplanned downtime by 30–50%); quality control (computer vision detects defects at machine speed with superhuman consistency); supply chain intelligence (AI optimizes demand forecasting, supplier risk monitoring, and logistics coordination); production optimization (AI-driven scheduling maximizes OEE while minimizing material waste and energy consumption); and knowledge management (capturing and making searchable the tribal knowledge of experienced production workers).",
+    },
+    {
+      question: "What is predictive maintenance AI and how does it work?",
+      answer: "Predictive maintenance AI uses sensor data from industrial equipment — vibration, temperature, pressure, acoustic emissions, current draw — to predict failures before they happen. Machine learning models learn normal operating patterns and detect anomalies that precede failures. CerebroHive builds predictive maintenance systems using time-series ML models (LSTM, Transformer-based anomaly detection), edge computing for real-time sensor processing, and integration with CMMS systems (SAP PM, IBM Maximo) to automatically generate work orders when failure probability exceeds thresholds.",
+    },
+    {
+      question: "How does AI-powered computer vision improve manufacturing quality control?",
+      answer: "Computer vision quality control replaces or augments human visual inspection with AI cameras that inspect at production line speed: detecting surface defects (scratches, dents, discoloration); verifying assembly completeness (all components present and correctly positioned); measuring dimensional accuracy (sub-millimeter precision using structured light or stereo vision); and reading labels and barcodes for traceability. CerebroHive deploys vision systems using YOLO-based detection models, 3D point cloud analysis for complex geometries, and edge inference hardware (NVIDIA Jetson, Intel Movidius) that operates within existing production cells without latency.",
+    },
+    {
+      question: "How does AI help manufacturers with supply chain optimization?",
+      answer: "Manufacturing supply chain AI addresses: demand sensing (combining sell-through data, macroeconomic signals, and market intelligence for more accurate forecasts); inventory optimization (AI determines optimal safety stock levels balancing service level against carrying cost); supplier risk monitoring (AI watches supplier financial health, geopolitical risk, and delivery performance, flagging risks early); logistics optimization (route planning, carrier selection, consolidation opportunities); and materials requirements planning (AI-enhanced MRP that adapts to real-time production data rather than relying on static assumptions).",
+    },
+    {
+      question: "What AI use cases exist for production scheduling optimization?",
+      answer: "Production scheduling AI solves the complex combinatorial problem of sequencing jobs across machines, crews, and materials to maximize throughput while meeting delivery commitments. AI approaches include: reinforcement learning for dynamic scheduling that adapts to machine downtime or demand changes; constraint optimization algorithms for capacity-constrained environments; digital twin simulation for evaluating what-if scenarios before committing to a schedule; and NLP interfaces that let production planners interact with the scheduling system in natural language. CerebroHive integrates scheduling AI with SAP PP, Oracle Manufacturing Cloud, and MES systems.",
+    },
+    {
+      question: "How do you capture and preserve manufacturing tribal knowledge with AI?",
+      answer: "Manufacturers face a critical knowledge retention crisis as experienced workers retire, taking decades of tacit knowledge with them. CerebroHive's knowledge capture approach: structured interviews with subject matter experts converted to searchable knowledge bases; historical maintenance records analyzed to extract failure-fix patterns; SOP documentation automatically generated from observed workflows; troubleshooting guides built from technician notes and CMMS histories; and conversational AI interfaces (industrial chatbots) that let new technicians query the captured knowledge in natural language.",
+    },
+    {
+      question: "What is OEE and how does AI improve it?",
+      answer: "OEE (Overall Equipment Effectiveness) measures manufacturing productivity across three components: availability (equipment running vs. scheduled runtime), performance (actual speed vs. design speed), and quality (good parts vs. total parts). AI improves OEE by: reducing unplanned downtime (predictive maintenance → higher availability); identifying micro-stoppages and speed losses through real-time sensor analysis (→ higher performance); and catching defects earlier through computer vision (→ higher quality). A 5–10% OEE improvement in a large manufacturing facility can generate millions in annual value.",
+    },
+    {
+      question: "How do you integrate AI with existing MES, ERP, and SCADA systems?",
+      answer: "CerebroHive builds integration layers that connect AI systems to manufacturing technology stacks: OPC-UA connectors for SCADA and PLC data; REST/SOAP API integration with SAP, Oracle, and Infor ERP; MQTT and Kafka for real-time IoT data streaming; MES integration with Siemens Opcenter, Rockwell FactoryTalk, and Dassault Apriso. We extract data for AI processing without disrupting existing systems and write results back to the systems operators already use — no separate AI interface required.",
+    },
+    {
+      question: "What cybersecurity considerations exist for AI in manufacturing environments?",
+      answer: "Manufacturing AI in OT (Operational Technology) environments requires careful cybersecurity design: network segmentation between IT and OT networks (ICS/SCADA networks must be isolated from AI systems that connect to enterprise networks); read-only data access from OT systems to AI (AI never writes directly to PLC or SCADA systems); air-gapped or unidirectional data diode architecture for highest-security environments; anomaly detection on OT network traffic (AI monitoring for industrial cyber threats); and incident response plans specific to OT environments where downtime has physical safety implications.",
+    },
+    {
+      question: "How long does it take to deploy AI in a manufacturing facility?",
+      answer: "Manufacturing AI deployment timelines: a computer vision quality control system for a single line takes 8–14 weeks (including camera installation, model training on your defect types, and MES integration); a predictive maintenance system for 20–50 assets takes 12–20 weeks (including sensor audit, data historian integration, and model training); a supply chain AI program takes 16–24 weeks; and a full smart factory transformation with multiple AI capabilities takes 12–18 months. We always deploy AI in parallel with existing processes first, validating AI recommendations against human decisions before granting any autonomous action authority.",
+    },
+  ],
 };

@@ -256,5 +256,59 @@ export const finance: Industry = {
     { title: "Enterprise Knowledge Graphs", type: "Paper", link: "/research" },
     { title: "LLM Security", type: "Guide", link: "/research" },
     { title: "Agentic Banking", type: "Paper", link: "/research" }
-  ]
+  ],
+
+  seo: {
+    title: "Financial Services AI Solutions | AI for Banking, Insurance & FinTech | CerebroHive",
+    description: "CerebroHive deploys AI for financial services — fraud detection, credit risk AI, regulatory reporting automation, AML monitoring, wealth management AI, and compliant LLM infrastructure for banks and insurers.",
+    keywords: [
+      "financial services AI", "banking AI solutions", "AI fraud detection",
+      "credit risk AI", "AML AI monitoring", "regulatory reporting AI",
+      "fintech AI consulting", "wealth management AI", "insurance AI solutions",
+      "SR 11-7 model risk", "financial AI compliance", "FFIEC AI guidance",
+    ],
+  },
+
+  faqs: [
+    {
+      question: "How is AI used in financial services?",
+      answer: "Financial services AI spans six major domains: fraud and financial crime (real-time transaction anomaly detection, AML monitoring, sanctions screening); credit and lending (alternative data credit scoring, loan origination automation, portfolio risk assessment); customer experience (AI-powered financial advisors, intelligent customer service, personalized product recommendations); regulatory compliance (automated regulatory reporting, regulatory change monitoring, audit trail generation); trading and investment (sentiment analysis, algorithmic strategy optimization, risk factor modeling); and operations (document processing, KYC/AML onboarding, reconciliation).",
+    },
+    {
+      question: "How does AI improve fraud detection in banking?",
+      answer: "AI fraud detection improves on rule-based systems by identifying complex, evolving fraud patterns that static rules miss. Machine learning models analyze hundreds of behavioral and contextual signals simultaneously — transaction velocity, device fingerprinting, geolocation consistency, merchant category patterns, time-series anomalies — and score transactions in real time (sub-100ms latency). CerebroHive builds fraud detection systems that achieve 95%+ precision (low false positives) while maintaining high recall on novel fraud patterns, with model explainability for regulatory review.",
+    },
+    {
+      question: "What is model risk management (SR 11-7) and how does CerebroHive ensure compliance?",
+      answer: "SR 11-7 (Federal Reserve Supervisory Guidance on Model Risk Management) requires banks to govern all models used for risk assessment, credit decisions, pricing, and reporting through a formal Model Risk Management (MRM) framework. This includes: model inventory and documentation; independent model validation (IV) by a team separate from model developers; model performance monitoring and back-testing; and governance oversight by model risk committees. CerebroHive produces SR 11-7 compliant documentation for all AI models it builds, supports independent validation processes, and designs monitoring systems that satisfy MRM requirements.",
+    },
+    {
+      question: "Can AI help with AML (Anti-Money Laundering) compliance?",
+      answer: "Yes — AI significantly improves AML effectiveness over traditional rule-based systems. AI applications include: transaction monitoring (identifying suspicious patterns that rules miss, reducing false positive rates by 40–60%); suspicious activity report (SAR) narrative generation (AI drafts SAR narratives from investigation data, saving analyst time); customer risk scoring (dynamic risk assessment integrating behavioral, network, and contextual data); and network analysis (identifying money laundering rings through graph analytics on transaction networks). CerebroHive builds AML AI systems with full audit trails and regulatory examination readiness.",
+    },
+    {
+      question: "How does generative AI help financial institutions with regulatory reporting?",
+      answer: "Generative AI automates the most labor-intensive parts of regulatory reporting: data extraction from multiple source systems into standardized formats; rule interpretation (translating regulatory requirements into data transformation logic); report narrative generation (writing qualitative commentary sections based on quantitative data); exception identification and documentation; and change tracking (monitoring regulatory changes and flagging reports that need updating). Financial institutions using AI for regulatory reporting reduce reporting cycle time by 30–50% and free compliance analysts for higher-value tasks.",
+    },
+    {
+      question: "How do you ensure AI models are fair and unbiased in credit decisions?",
+      answer: "CerebroHive implements fair lending compliance into credit AI from the ground up: proxy variable identification and removal (identifying variables that are proxies for protected characteristics like race, gender, or religion); disparate impact analysis (testing whether model outcomes differ significantly across demographic groups); adverse action reason code generation (providing ECOA/FCRA-compliant explanations for credit denials); and ongoing monitoring for disparate impact drift. We align all credit models with ECOA, Fair Housing Act, and CFPB guidance on algorithmic fairness.",
+    },
+    {
+      question: "What AI use cases are viable for insurance companies?",
+      answer: "Insurance AI spans underwriting (automated risk assessment, document extraction from applications, pricing optimization); claims processing (first notice of loss automation, damage assessment from images and documents, fraud detection, subrogation identification); customer service (AI-powered claims status, policy inquiry, coverage explanation); product personalization (usage-based insurance, behavioral pricing); and risk management (catastrophe modeling, portfolio concentration analysis, reinsurance optimization). CerebroHive has delivered AI systems for P&C, life, and health insurers.",
+    },
+    {
+      question: "How do wealth management firms use AI?",
+      answer: "Wealth management AI applications include: client communication automation (AI-generated portfolio commentary, rebalancing rationale, market update summaries); proposal generation (automated investment proposal documents from client financial profiles); portfolio risk analysis (real-time risk factor exposure, scenario analysis, ESG scoring); compliance monitoring (suitability checking, trade surveillance, regulation best interest documentation); and prospecting (AI-powered lead scoring, relationship intelligence from CRM and market data, next-best-action recommendations).",
+    },
+    {
+      question: "Can AI be deployed on-premises in financial institutions that prohibit cloud data sharing?",
+      answer: "Yes — CerebroHive specializes in on-premises and private cloud AI deployments for financial institutions with strict data residency and cloud restrictions. Approaches include: air-gapped deployment (fully on-premises LLMs like Llama 3 or Mistral deployed on private GPU infrastructure); VPC-isolated cloud (all data and models within the institution's own cloud tenant, never shared with AI providers); federated learning (models trained across distributed data without centralizing sensitive data); and customer-managed encryption (all data encrypted with institution-owned keys). We have delivered compliant AI infrastructure for tier-1 banks.",
+    },
+    {
+      question: "How long does a financial services AI deployment typically take?",
+      answer: "Financial services AI timelines are longer than other industries due to regulatory requirements, security reviews, and procurement processes. A fraud detection model can be in production in 12–16 weeks; a credit scoring model requires 20–32 weeks (including independent validation); an AML transaction monitoring system takes 24–40 weeks (vendor approval, BSA officer sign-off, regulatory notification in some cases); and a full regulatory reporting automation program takes 6–12 months. CerebroHive plans for these timelines from the start and works with your compliance, legal, and procurement teams from day one.",
+    },
+  ],
 };

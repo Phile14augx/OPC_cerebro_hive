@@ -19,7 +19,9 @@
       "Bash(nslookup cerebropchive.org 8.8.8.8)",
       "Bash(nslookup cerebrohive.org 8.8.8.8)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 10 http://cerebropchive.org/)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 10 https://cerebropchive.org/)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 10 https://cerebropchive.org/)",
+      "Bash(gh project *)",
+      "Bash(grep -v \"^$\")"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows"

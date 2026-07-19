@@ -290,5 +290,59 @@ export const healthcare: Industry = {
       { timeOffset: 12000, nodeId: "dashboard", state: "completed", message: "Metrics Updated" }
     ],
     integrations: ["Epic", "Cerner", "Azure", "FHIR"]
-  }
+  },
+
+  seo: {
+    title: "Healthcare AI Solutions | Clinical AI, RAG & Medical Document Processing | CerebroHive",
+    description: "CerebroHive deploys healthcare AI systems — clinical documentation automation, prior authorization AI, medical knowledge RAG, patient engagement AI, and HIPAA-compliant AI infrastructure for hospitals and health systems.",
+    keywords: [
+      "healthcare AI solutions", "clinical AI automation", "medical AI consulting",
+      "HIPAA compliant AI", "prior authorization AI", "clinical documentation AI",
+      "EHR AI integration", "healthcare RAG system", "hospital AI transformation",
+      "medical LLM", "FDA AI medical device", "healthcare data engineering",
+    ],
+  },
+
+  faqs: [
+    {
+      question: "How is AI used in healthcare organizations today?",
+      answer: "Healthcare AI is used across clinical and operational domains: clinical documentation automation (AI-generated SOAP notes, discharge summaries); prior authorization decision support (evidence retrieval, criteria matching); diagnostic imaging assistance (AI-flagged abnormalities); patient engagement (multilingual health education, appointment follow-up, care plan explanation); medical literature search (RAG-powered evidence retrieval for physicians); revenue cycle optimization (coding accuracy, denial prevention); and workforce optimization (staff scheduling, patient flow prediction).",
+    },
+    {
+      question: "What is HIPAA-compliant AI and how does CerebroHive ensure it?",
+      answer: "HIPAA-compliant AI means AI systems handling Protected Health Information (PHI) implement administrative, physical, and technical safeguards required by the HIPAA Security Rule. CerebroHive ensures compliance through: PHI de-identification before LLM processing; Business Associate Agreements (BAAs) with all cloud and AI vendors; end-to-end encryption; role-based access control for patient data; audit logs for all AI interactions involving PHI; data residency controls; and regular HIPAA risk assessments. We partner only with LLM providers who sign BAAs (Microsoft Azure OpenAI, AWS Bedrock).",
+    },
+    {
+      question: "How does AI improve prior authorization in healthcare?",
+      answer: "Prior authorization AI automates the most time-consuming step in the process — gathering and presenting clinical evidence. AI agents retrieve relevant clinical documentation from the EHR, match clinical criteria against payer guidelines, generate structured clinical narratives, flag documentation gaps, and route cases for clinician review. This reduces authorization decision time from days to hours, reduces administrative burden on clinicians by 60–70%, and increases first-pass approval rates by ensuring complete, well-structured submissions.",
+    },
+    {
+      question: "Can AI integrate with Epic, Cerner, or other EHR systems?",
+      answer: "Yes — CerebroHive has production experience integrating AI systems with Epic (using SMART on FHIR apps, Epic App Orchard, and HL7 FHIR APIs), Cerner (Cerner Millennium APIs), Allscripts, Meditech, and custom EHR platforms. We connect AI systems to EHR data via FHIR R4 APIs for structured data and document APIs for clinical notes. All integrations maintain HIPAA compliance and work within the EHR vendor's security framework.",
+    },
+    {
+      question: "How does CerebroHive handle FDA requirements for clinical AI?",
+      answer: "Clinical AI systems that support diagnostic or therapeutic decisions may be classified as Software as a Medical Device (SaMD) by the FDA and require 510(k) clearance or De Novo authorization. CerebroHive designs AI architectures with regulatory pathway in mind: documenting algorithm logic, training data characteristics, performance benchmarks, and intended use; building Software Development Lifecycle documentation aligned with FDA guidance; and designing Predetermined Change Control Plans for model updates. We work alongside your regulatory affairs team for FDA interactions.",
+    },
+    {
+      question: "What AI use cases are highest priority in hospitals and health systems?",
+      answer: "Based on ROI and implementation feasibility, the highest-priority healthcare AI use cases are: (1) Clinical documentation automation — highest physician time savings, mature technology; (2) Revenue cycle AI — coding accuracy and denial prevention have direct P&L impact; (3) Prior authorization — reduces administrative burden and turnaround time; (4) Patient communication — high volume, standardizable, measurable; (5) Supply chain optimization — significant cost savings in high-volume facilities; and (6) Early warning systems — sepsis, deterioration, readmission risk — directly improving patient outcomes.",
+    },
+    {
+      question: "How does AI handle unstructured clinical data like doctor's notes?",
+      answer: "Unstructured clinical data (physician notes, discharge summaries, radiology reports, therapy notes) is processed through: clinical NLP models that understand medical terminology, abbreviations, and clinical context; medical entity extraction (identifying diagnoses, medications, procedures, lab values); clinical concept normalization (mapping to standard codes: ICD-10, SNOMED CT, RxNorm, LOINC); and document understanding models trained on clinical text. CerebroHive uses domain-adapted models (Bio-ClinicalBERT, ClinicalT5, GPT-4 with clinical prompting) for highest accuracy on healthcare-specific language.",
+    },
+    {
+      question: "What is a healthcare knowledge graph and how is it used with AI?",
+      answer: "A healthcare knowledge graph is a structured representation of medical knowledge — connecting diseases, symptoms, treatments, drugs, contraindications, clinical guidelines, and patient population data. Used with AI, the knowledge graph enables: evidence-based clinical decision support (AI answers 'what treatments are recommended for this condition in this patient profile?'); drug interaction checking; guideline adherence monitoring; and research discovery (finding connections between patient populations and treatment outcomes). CerebroHive builds healthcare knowledge graphs using SNOMED CT, ICD-10, RxNorm, and proprietary clinical data.",
+    },
+    {
+      question: "How do you measure ROI from healthcare AI deployments?",
+      answer: "Healthcare AI ROI is measured across three categories: clinician time savings (time per patient encounter, documentation burden hours per week, calculated at clinician FTE cost); revenue impact (coding accuracy improvement → reduced claim denials, prior auth approval rate → faster revenue collection); and patient outcome indicators (readmission rates, early warning system interventions, patient satisfaction scores). CerebroHive establishes baseline measurements before deployment and produces monthly ROI reports for 12 months post-launch.",
+    },
+    {
+      question: "Can AI help with healthcare staffing and workforce optimization?",
+      answer: "Yes — healthcare workforce AI addresses: nurse and physician scheduling (demand prediction by unit, shift, and specialty); float pool optimization (matching available staff to patient acuity needs); early turnover risk detection (AI flags at-risk employees for retention intervention); credentialing automation (AI extracts and validates clinician credentials from documents); and onboarding personalization (adaptive learning paths for new clinical staff). Workforce AI can reduce agency staff costs by 15–25% and reduce scheduling manager time by 40–50%.",
+    },
+  ],
 };

@@ -227,5 +227,59 @@ export const retail: Industry = {
     { title: "Retail AI Architecture", type: "Whitepaper", link: "/research" },
     { title: "Agentic Commerce", type: "Research Paper", link: "/research" },
     { title: "Omnichannel AI", type: "Solution Brief", link: "/research" }
-  ]
+  ],
+
+  seo: {
+    title: "Retail AI Solutions | Personalization, Demand Forecasting & Commerce AI | CerebroHive",
+    description: "CerebroHive deploys AI for retail — demand forecasting, personalization engines, inventory optimization, AI customer service, pricing AI, and supply chain intelligence for retailers and e-commerce.",
+    keywords: [
+      "retail AI solutions", "retail AI consulting", "demand forecasting AI",
+      "retail personalization AI", "inventory optimization AI", "e-commerce AI",
+      "retail customer service AI", "pricing optimization AI", "omnichannel AI",
+      "supply chain retail AI", "retail GenAI", "AI for retailers",
+    ],
+  },
+
+  faqs: [
+    {
+      question: "How is AI transforming retail and e-commerce?",
+      answer: "AI is reshaping retail across the entire value chain: demand forecasting (AI predicts sales with 20–30% lower error than traditional methods, reducing stockouts and overstock); personalization (AI delivers individualized product recommendations, content, and pricing that increase conversion 15–25%); supply chain (AI optimizes ordering, replenishment, and logistics coordination); customer service (AI handles 60–80% of customer inquiries autonomously); pricing (dynamic AI pricing responds to competitor moves, inventory levels, and demand signals in real time); and merchandising (AI-assisted assortment planning, planogram optimization, and markdown management).",
+    },
+    {
+      question: "How does AI demand forecasting outperform traditional methods?",
+      answer: "Traditional retail demand forecasting relies on historical sales patterns and simple seasonality models. AI demand forecasting incorporates hundreds of signals: weather data (seasonal products), local event calendars, macroeconomic indicators, competitor pricing and promotions, social media trend data, and store-level characteristics. Machine learning models (gradient boosting, LSTM, Transformer architectures) capture non-linear relationships between these signals and demand, achieving 15–30% lower forecast error than traditional time-series methods — directly reducing safety stock requirements and stockout rates.",
+    },
+    {
+      question: "What is retail personalization AI and how does it work?",
+      answer: "Retail personalization AI creates individual product recommendations, content, and experiences for each shopper. It works by: building customer embeddings (mathematical representations of each customer's purchase history, browse behavior, and preferences); learning item embeddings (representing products by their attributes and how similar customers behave with them); matching customers to relevant products using collaborative filtering and content-based models; and delivering recommendations across channels (website, email, push, in-store). CerebroHive builds personalization systems that process real-time signals (current session behavior) alongside historical data for relevant, timely recommendations.",
+    },
+    {
+      question: "How does AI improve inventory management in retail?",
+      answer: "Retail inventory AI optimizes across three levels: safety stock optimization (AI calculates the right buffer inventory for each SKU at each location based on demand variability and lead time uncertainty, reducing overstock by 20–30%); replenishment automation (AI triggers purchase orders automatically when inventory falls below AI-calculated reorder points, considering supplier lead times and cost); and allocation optimization (distributing inventory across stores and channels to maximize sell-through and minimize transfers, using AI to predict demand at each location by SKU).",
+    },
+    {
+      question: "How does AI power customer service in retail?",
+      answer: "Retail AI customer service handles the high-volume, standardizable inquiries that dominate contact center volume: order status and tracking (AI retrieves real-time order data and communicates proactively); return processing (AI interprets return requests, checks policy eligibility, and initiates return workflows); product questions (RAG-powered AI answers detailed product queries from catalog data, reviews, and specifications); and complaint resolution (AI resolves straightforward complaints with escalation triggers for complex cases). CerebroHive builds retail customer service AI that handles 60–80% of inquiries autonomously while escalating appropriately to human agents.",
+    },
+    {
+      question: "What is dynamic pricing AI and how do retailers implement it?",
+      answer: "Dynamic pricing AI adjusts retail prices in response to demand signals, competitor prices, inventory levels, and margin targets — in real time or near-real time. Implementation involves: data integration (competitor price scraping, internal inventory and sales data, demand signals); pricing model (rule-based constraints combined with ML price elasticity models); optimization engine (finding the price point that maximizes revenue or margin subject to constraints); and execution integration (pushing prices to e-commerce platforms, POS systems, and electronic shelf labels). CerebroHive builds dynamic pricing systems with guardrails that prevent price changes that would violate promotional commitments, regulatory pricing rules, or brand positioning standards.",
+    },
+    {
+      question: "How does generative AI help with retail product descriptions and content?",
+      answer: "Retail generative AI accelerates and scales content production: product description generation (AI writes SEO-optimized product descriptions from structured attributes at scale — critical for large catalogs with thousands of SKUs); marketing copy (AI generates email subject lines, ad copy, and social content variants for A/B testing); multilingual content (AI translates and localizes product content for international markets); image captioning for accessibility; and conversational product discovery (AI helps shoppers find products through natural language conversations rather than keyword search).",
+    },
+    {
+      question: "Can AI integrate with retail systems like Shopify, Salesforce Commerce Cloud, or SAP Retail?",
+      answer: "Yes — CerebroHive integrates AI with all major retail technology platforms: Shopify Plus and Shopify API for e-commerce; Salesforce Commerce Cloud (SFCC) via API integration; SAP S/4HANA and SAP Retail for ERP and merchandise management; Oracle Retail for planning and allocation; Manhattan Associates and Blue Yonder for supply chain; Magento/Adobe Commerce; and custom OMS/WMS systems. We build integration layers that feed AI systems real-time data and push AI decisions back to operational systems seamlessly.",
+    },
+    {
+      question: "How does AI help with markdown and promotion optimization?",
+      answer: "Markdown optimization AI determines the right discount depth and timing to maximize revenue recovery on slow-moving inventory: predicting sell-through rates at current vs. discounted prices; recommending markdown amounts and timing to clear inventory before end-of-season without leaving money on the table; and identifying which items should receive promotions vs. permanent price reductions. Promotion optimization AI models the expected lift from promotions by SKU, channel, and customer segment — helping merchandisers allocate promotional budgets to the highest-return opportunities.",
+    },
+    {
+      question: "What ROI can retailers expect from AI investments?",
+      answer: "Retail AI ROI varies by use case. Demand forecasting AI: 15–25% reduction in stockouts, 10–20% reduction in overstock → 1–3% of revenue impact. Personalization AI: 15–25% increase in conversion rate, 10–20% increase in average order value → significant revenue uplift. Customer service AI: 40–60% reduction in cost-per-contact → 20–30% contact center cost reduction. Dynamic pricing AI: 2–4% revenue uplift with margin-optimized pricing. CerebroHive models expected ROI for each use case before implementation and tracks actuals against projections monthly.",
+    },
+  ],
 };
