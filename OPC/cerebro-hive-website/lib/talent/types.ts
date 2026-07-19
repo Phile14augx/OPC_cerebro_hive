@@ -1,3 +1,5 @@
+import type React from "react";
+
 export type WidgetType = "code" | "sql" | "prompt" | "markdown" | "ai_interview";
 export type AssessmentDifficulty = "beginner" | "intermediate" | "advanced" | "expert";
 
@@ -65,8 +67,8 @@ export interface WidgetDefinition<T extends BaseWidget> {
   label: string;
   icon: string; // Lucide icon name
   defaultConfig: Partial<T>;
-  renderPreview: (config: T) => JSX.Element;
-  renderConfig: (config: T, onChange: (newConfig: T) => void) => JSX.Element;
+  renderPreview: (config: T) => React.ReactElement;
+  renderConfig: (config: T, onChange: (newConfig: T) => void) => React.ReactElement;
   validate: (config: T) => boolean;
 }
 

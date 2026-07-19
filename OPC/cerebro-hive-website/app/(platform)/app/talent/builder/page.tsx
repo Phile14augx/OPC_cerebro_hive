@@ -6,10 +6,10 @@ import {
   Type, Settings2, Trash2, GripVertical, CheckCircle2, ChevronRight,
   BrainCircuit, GitBranch, ArrowRight
 } from "lucide-react";
-import { Button } from "../../../components/ui/Button";
-import { Card } from "../../../components/ui/Card";
-import { Badge } from "../../../components/ui/Badge";
-import { cn } from "../../../components/ui/utils";
+import { Button } from "../../components/ui/Button";
+import { Card } from "../../components/ui/Card";
+import { Badge } from "../../components/ui/Badge";
+import { cn } from "../../components/ui/utils";
 
 // Types simulating our backend schema
 type WidgetType = "markdown" | "code" | "sql" | "prompt";
