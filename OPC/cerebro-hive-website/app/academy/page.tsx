@@ -3,6 +3,7 @@ import { BookOpen, Compass, GraduationCap, Award, ArrowRight, Zap, HelpCircle, C
 import Link from "next/link";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { useState } from "react";
+import { courses } from "@/lib/data/academy/courses";
 
 const academyPaths = [
   {
@@ -34,158 +35,19 @@ const academyPaths = [
   },
 ];
 
-const courses = [
-  {
-    id: "pe101",
-    code: "PE-101",
-    icon: Brain,
-    color: "#00E5FF",
-    level: "Beginner",
-    title: "Introduction to Prompt Engineering",
-    desc: "Master zero-shot, few-shot, chain-of-thought, and system prompt design patterns. Build a reusable prompt library for business workflows.",
-    duration: "20 hours",
-    modules: 8,
-    price: "₹4,999",
-    usd: "$60",
-    cert: "Certified Prompt Engineer (CPE)",
-    topics: ["Zero-shot & Few-shot Prompting", "Chain-of-Thought Reasoning", "System Prompt Architecture", "Prompt Injection Defense", "Business Prompt Templates", "Multi-Model Comparison"],
-  },
-  {
-    id: "bg201",
-    code: "BG-201",
-    icon: Layers,
-    color: "#7B61FF",
-    level: "Intermediate",
-    title: "Building with LLM APIs",
-    desc: "Integrate OpenAI, Anthropic, and Google Gemini APIs into production Python applications. API design, rate limiting, cost optimization, and fallback strategies.",
-    duration: "35 hours",
-    modules: 12,
-    price: "₹9,999",
-    usd: "$120",
-    cert: "Certified LLM Developer (CLD)",
-    topics: ["OpenAI & Anthropic API Integration", "Streaming & Function Calling", "Rate Limiting & Cost Control", "Multi-Model Fallback Logic", "Async Python Patterns", "API Security & Key Management"],
-  },
-  {
-    id: "rp301",
-    code: "RP-301",
-    icon: Database,
-    color: "#FF8A00",
-    level: "Intermediate",
-    title: "RAG Pipeline Development",
-    desc: "Build production-grade Retrieval-Augmented Generation systems with Pinecone, Weaviate, and pgvector. Chunking strategies, embedding models, and reranking.",
-    duration: "40 hours",
-    modules: 14,
-    price: "₹14,999",
-    usd: "$180",
-    cert: "Certified RAG Engineer (CRE)",
-    topics: ["Vector Database Architecture", "Chunking & Embedding Strategies", "Pinecone & Weaviate Setup", "Hybrid Search (BM25 + Dense)", "Reranking with Cross-Encoders", "Production RAG Evaluation"],
-  },
-  {
-    id: "ma401",
-    code: "MA-401",
-    icon: Cpu,
-    color: "#7B61FF",
-    level: "Advanced",
-    title: "Multi-Agent Systems with LangGraph",
-    desc: "Design and deploy stateful multi-agent workflows using LangGraph and LangChain. Build supervisor hierarchies, tool-calling agents, and human-in-the-loop systems.",
-    duration: "50 hours",
-    modules: 16,
-    price: "₹19,999",
-    usd: "$240",
-    cert: "Certified Agent Architect (CAA)",
-    topics: ["LangGraph State Machines", "Supervisor & Worker Architectures", "Tool-Calling & Function Agents", "Memory Systems (Short & Long-Term)", "Human-in-the-Loop Design", "Agent Observability with LangSmith"],
-  },
-  {
-    id: "ft501",
-    code: "FT-501",
-    icon: FileCode,
-    color: "#FF2ED1",
-    level: "Advanced",
-    title: "LLM Fine-Tuning & Alignment",
-    desc: "Fine-tune open-source LLMs (Mistral, LLaMA, Phi) using LoRA/QLoRA on domain-specific datasets. RLHF basics, DPO, and model evaluation frameworks.",
-    duration: "45 hours",
-    modules: 15,
-    price: "₹24,999",
-    usd: "$300",
-    cert: "Certified Fine-Tuning Specialist (CFS)",
-    topics: ["LoRA & QLoRA Training", "Dataset Preparation & Curation", "Mistral / LLaMA / Phi Architectures", "DPO & RLHF Overview", "Model Evaluation (MMLU, HellaSwag)", "Deployment with vLLM & Ollama"],
-  },
-  {
-    id: "ea601",
-    code: "EA-601",
-    icon: Zap,
-    color: "#FF8A00",
-    level: "Intermediate",
-    title: "Enterprise AI Automation with n8n",
-    desc: "Automate end-to-end business workflows using n8n + AI nodes. CRM automation, document processing, email triage, and approval workflows at enterprise scale.",
-    duration: "30 hours",
-    modules: 10,
-    price: "₹12,999",
-    usd: "$155",
-    cert: "Certified Automation Builder (CAB)",
-    topics: ["n8n Architecture & Self-Hosting", "AI Nodes & OpenAI Integration", "CRM Automation (HubSpot, Salesforce)", "Document Processing Pipelines", "Webhook & API Integration", "Error Handling & Monitoring"],
-  },
-  {
-    id: "ve701",
-    code: "VE-701",
-    icon: Shield,
-    color: "#00E5FF",
-    level: "Advanced",
-    title: "AI for BFSI & Regulated Industries",
-    desc: "Apply AI in banking, insurance, and capital markets while maintaining DPDP Act 2023, RBI, and SEBI compliance. Covers fraud detection, credit scoring, and KYC automation.",
-    duration: "40 hours",
-    modules: 13,
-    price: "₹22,999",
-    usd: "$275",
-    cert: "Certified AI Compliance Practitioner (CACP)",
-    topics: ["DPDP Act 2023 for AI", "RBI AI Guidelines", "KYC Automation with AI", "Fraud Detection Models", "Credit Scoring with ML", "Explainable AI (XAI) for Audits"],
-  },
-  {
-    id: "ap801",
-    code: "AP-801",
-    icon: BarChart2,
-    color: "#7B61FF",
-    level: "Beginner",
-    title: "AI Product Management",
-    desc: "Lead AI product strategy, roadmap, and team alignment. Learn to evaluate AI feasibility, write AI-focused PRDs, and measure AI feature success metrics.",
-    duration: "25 hours",
-    modules: 9,
-    price: "₹8,999",
-    usd: "$110",
-    cert: "Certified AI Product Manager (CAPM)",
-    topics: ["AI Feasibility Assessment", "Writing AI-Specific PRDs", "AI Feature Metrics & KPIs", "Cross-Functional AI Team Leadership", "Build vs Buy vs API Framework", "AI Ethics & Responsible Product Development"],
-  },
-  {
-    id: "gs901",
-    code: "GS-901",
-    icon: Code,
-    color: "#FF2ED1",
-    level: "Advanced",
-    title: "AI Strategy & Governance",
-    desc: "Build enterprise AI governance frameworks, risk registers, and readiness audits. Designed for CTOs, CDOs, and AI strategy leads responsible for organizational AI transformation.",
-    duration: "35 hours",
-    modules: 11,
-    price: "₹29,999",
-    usd: "$360",
-    cert: "Certified AI Strategist (CAS)",
-    topics: ["AI Maturity Assessment", "AI Risk Register Construction", "Responsible AI Frameworks", "Vendor Evaluation for AI", "Build the AI Center of Excellence", "90-Day AI Transformation Roadmap"],
-  },
-  {
-    id: "da1001",
-    code: "DA-1001",
-    icon: Database,
-    color: "#FF8A00",
-    level: "Intermediate",
-    title: "Data Engineering for AI",
-    desc: "Build reliable data pipelines that power AI systems. Modern lakehouse architecture, dbt, Airflow orchestration, and feature store design for ML models.",
-    duration: "45 hours",
-    modules: 15,
-    price: "₹17,999",
-    usd: "$215",
-    cert: "Certified AI Data Engineer (CADE)",
-    topics: ["Data Lakehouse Architecture", "dbt for Data Transformation", "Airflow Pipeline Orchestration", "Feature Store Design", "Data Quality & Observability", "AI-Ready Data Schema Patterns"],
-  },
-];
+// Icon and color map for courses (UI-only, kept in the client component)
+const courseUiConfig: Record<string, { icon: React.ComponentType<{ size?: number; color?: string }>; color: string }> = {
+  pe101: { icon: Brain, color: "#00E5FF" },
+  bg201: { icon: Layers, color: "#7B61FF" },
+  rp301: { icon: Database, color: "#FF8A00" },
+  ma401: { icon: Cpu, color: "#7B61FF" },
+  ft501: { icon: FileCode, color: "#FF2ED1" },
+  ea601: { icon: Zap, color: "#FF8A00" },
+  ve701: { icon: Shield, color: "#00E5FF" },
+  ap801: { icon: BarChart2, color: "#7B61FF" },
+  gs901: { icon: Code, color: "#FF2ED1" },
+  da1001: { icon: Database, color: "#FF8A00" },
+};
 
 const certTiers = [
   { tier: "Associate", badge: "A", color: "#00E5FF", desc: "1 course completed. Introduction-level credentials for non-technical practitioners.", examples: "CPE, CAPM" },
@@ -372,15 +234,17 @@ export default function AcademyPage() {
           {activeTab === "courses" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {courses.map((course) => {
-                const Icon = course.icon;
+                const ui = courseUiConfig[course.id];
+                const Icon = ui.icon;
+                const color = ui.color;
                 const isExpanded = expandedCourse === course.id;
                 return (
                   <div key={course.id} className="card-glass"
                     onClick={() => setExpandedCourse(isExpanded ? null : course.id)}
-                    style={{ padding: "24px 28px", cursor: "pointer", transition: "border-color 0.2s", borderColor: isExpanded ? `${course.color}40` : "rgba(255,255,255,0.07)" }}>
+                    style={{ padding: "24px 28px", cursor: "pointer", transition: "border-color 0.2s", borderColor: isExpanded ? `${color}40` : "rgba(255,255,255,0.07)" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                      <div style={{ width: 40, height: 40, borderRadius: "10px", background: `${course.color}14`, border: `1px solid ${course.color}28`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <Icon size={18} color={course.color} />
+                      <div style={{ width: 40, height: 40, borderRadius: "10px", background: `${color}14`, border: `1px solid ${color}28`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Icon size={18} color={color} />
                       </div>
                       <div style={{ flex: 1 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px", flexWrap: "wrap" }}>
@@ -410,15 +274,15 @@ export default function AcademyPage() {
                             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
                               {course.topics.map((t) => (
                                 <div key={t} style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
-                                  <CheckCircle size={11} color={course.color} style={{ flexShrink: 0, marginTop: "2px" }} />
+                                  <CheckCircle size={11} color={color} style={{ flexShrink: 0, marginTop: "2px" }} />
                                   <span style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.75rem", color: "var(--text-muted)", lineHeight: 1.4 }}>{t}</span>
                                 </div>
                               ))}
                             </div>
                           </div>
                           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                            <div style={{ padding: "14px 16px", background: `${course.color}06`, border: `1px solid ${course.color}18`, borderRadius: "8px" }}>
-                              <div style={{ fontFamily: "Orbitron, sans-serif", fontSize: "0.6rem", fontWeight: 700, color: course.color, marginBottom: "4px" }}>Credential Earned</div>
+                            <div style={{ padding: "14px 16px", background: `${color}06`, border: `1px solid ${color}18`, borderRadius: "8px" }}>
+                              <div style={{ fontFamily: "Orbitron, sans-serif", fontSize: "0.6rem", fontWeight: 700, color: color, marginBottom: "4px" }}>Credential Earned</div>
                               <div style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.78rem", color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "6px" }}>
                                 <Award size={13} color="#FFBA00" /> {course.cert}
                               </div>
