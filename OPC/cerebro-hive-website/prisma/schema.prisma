@@ -54,6 +54,7 @@ model User {
   role           Role          @default(USER)
 
   auditEvents    AuditEvent[]
+  assignedTasks  Task[]
 
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
@@ -98,6 +99,10 @@ model Project {
   agents      Agent[]
   documents   KnowledgeDocument[]
   workflows   Workflow[]
+  
+  epics       Epic[]
+  tasks       Task[]
+  sprints     Sprint[]
 
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -193,4 +198,75 @@ model AuditEvent {
   createdAt DateTime @default(now())
 
   @@index([userId])
+}
+
+// -----------------------------------------------------------------------------
+// PM AGENT / APPLICATION DOMAIN
+// -----------------------------------------------------------------------------
+
+model Sprint {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId   String   @db.Uuid
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  name        String
+  goal        String?
+  startDate   DateTime
+  endDate     DateTime
+  status      String   @default("planned") // planned, active, completed
+  
+  tasks       Task[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+model Epic {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId   String   @db.Uuid
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String?  @db.Text
+  status      String   @default("open") // open, in-progress, done
+  riskLevel   String?  // low, medium, high
+  storyPoints Int?
+  
+  tasks       Task[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+model Task {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  epicId      String?  @db.Uuid
+  epic        Epic?    @relation(fields: [epicId], references: [id], onDelete: SetNull)
+  projectId   String   @db.Uuid
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String?  @db.Text
+  status      String   @default("todo") // todo, in-progress, review, done
+  storyPoints Int?
+  
+  assigneeId  String?  @db.Uuid
+  assignee    User?    @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  sprintId    String?  @db.Uuid
+  sprint      Sprint?  @relation(fields: [sprintId], references: [id], onDelete: SetNull)
+  
+  labels      String[] // using Postgres scalar array
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([epicId])
+  @@index([projectId])
+  @@index([assigneeId])
+  @@index([sprintId])
 }

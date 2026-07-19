@@ -22,8 +22,13 @@ export class AuditService {
     } catch (error) {
       console.error('Failed to log audit event:', error);
       // We purposefully do not throw here to prevent audit logging failures
-      // from breaking core application flows, but in a strict enterprise setup
-      // you might want to forward this to a dead-letter queue or alerting system.
+      // from breaking core application flows. Instead, we enqueue it to the background worker.
+      try {
+        const { auditQueue } = await import('@/lib/queue/client');
+        await auditQueue.add('retryAuditLog', { action, resource, userId, metadata });
+      } catch (queueError) {
+        console.error('CRITICAL: Failed to enqueue audit log fallback:', queueError);
+      }
     }
   }
 }
