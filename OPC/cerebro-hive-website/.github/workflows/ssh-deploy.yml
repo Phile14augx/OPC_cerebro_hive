@@ -113,4 +113,12 @@ EOF
           ln -sf /etc/nginx/sites-available/cerebro-hive /etc/nginx/sites-enabled/cerebro-hive
           rm -f /etc/nginx/sites-enabled/default
           nginx -t && systemctl reload nginx
+          
+          # Install and run Certbot to configure HTTPS
+          if ! command -v certbot &>/dev/null; then
+            apt-get update
+            apt-get install -y certbot python3-certbot-nginx
+          fi
+          # Run certbot to automatically provision and configure SSL (will update the Nginx block)
+          certbot --nginx -d cerebropchive.org -d www.cerebropchive.org --non-interactive --agree-tos -m admin@cerebropchive.org --redirect || echo "Certbot failed, but continuing deployment"
         NGINX
