@@ -44,6 +44,14 @@ else
 fi
 git -C "${REPO_DIR}" log --oneline -1
 
+# The pull above may have replaced THIS very script. Re-exec a private copy of
+# the fresh version exactly once, so the rest of the run always uses current
+# logic (bash reading a file that mutates mid-run executes stale/mixed bytes).
+if [ "${CEREBRO_DEPLOY_REEXEC:-0}" != "1" ]; then
+  cp "${APP_DIR}/scripts/deploy/vps-deploy.sh" /tmp/vps-deploy.fresh.sh
+  CEREBRO_DEPLOY_REEXEC=1 exec bash /tmp/vps-deploy.fresh.sh
+fi
+
 # ------------------------------------------------------------- 2. system basics
 step "Ensuring swap (build safety on 4GB RAM)"
 if ! swapon --show --noheadings | grep -q .; then
@@ -223,6 +231,16 @@ echo "standalone server: ${SERVER_JS}"
 rsync -a --delete public/ "${STANDALONE_APP_DIR}/public/"
 mkdir -p "${STANDALONE_APP_DIR}/.next"
 rsync -a --delete .next/static/ "${STANDALONE_APP_DIR}/.next/static/"
+
+# Durable JSON store: keep data/db.json (contacts, leads, tickets, enrollments)
+# in /var/lib/cerebro-data so redeploys don't wipe submissions. Seed it from the
+# repo's data/ on first run, then symlink the standalone app's data dir to it.
+mkdir -p /var/lib/cerebro-data
+if [ ! -f /var/lib/cerebro-data/db.json ] && [ -d "${APP_DIR}/data" ]; then
+  cp -a "${APP_DIR}/data/." /var/lib/cerebro-data/ 2>/dev/null || true
+fi
+rm -rf "${STANDALONE_APP_DIR}/data"
+ln -sfn /var/lib/cerebro-data "${STANDALONE_APP_DIR}/data"
 
 # --------------------------------------------------------------- 6. run + nginx
 step "Starting app with PM2"
