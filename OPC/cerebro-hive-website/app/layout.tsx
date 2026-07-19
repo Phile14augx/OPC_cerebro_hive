@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, IBM_Plex_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+
+// Force dynamic rendering for every route. The middleware's strict CSP mints a
+// per-request nonce; statically prerendered HTML can't carry it, which would
+// make browsers block every Next.js script chunk in production (blank,
+// non-hydrated pages). Dynamic rendering guarantees each response embeds the
+// matching nonce — identical behavior to `next dev`.
+export const dynamic = "force-dynamic";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CerebroChat from "@/components/layout/CerebroChat";

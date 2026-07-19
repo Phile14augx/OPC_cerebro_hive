@@ -288,13 +288,10 @@ ufw status | head -10 || true
 
 step "HTTPS certificate (Let's Encrypt)"
 command -v certbot >/dev/null || apt-get install -y -qq certbot python3-certbot-nginx >/dev/null
-if certbot certificates 2>/dev/null | grep -q "${DOMAIN}"; then
-  echo "Certificate already exists; ensuring nginx config uses it"
-  certbot install --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --non-interactive || true
-else
-  certbot --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" \
-    --non-interactive --agree-tos -m "${EMAIL}" --redirect
-fi
+# Works for both first issuance and re-installing an existing cert into the
+# freshly written nginx config (certbot reuses the cert if not due for renewal).
+certbot --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" \
+  --non-interactive --agree-tos -m "${EMAIL}" --redirect
 systemctl reload nginx
 
 # --------------------------------------------------------------- 7. health checks
