@@ -4,6 +4,7 @@ interface ArticleOpts {
   title: string;
   description: string;
   slug: string;
+  urlPath?: string;
   datePublished: string;
   dateModified?: string;
   author?: string;
@@ -13,12 +14,15 @@ interface ArticleOpts {
 }
 
 export function buildArticleSchema(opts: ArticleOpts) {
+  const url = opts.urlPath
+    ? `${SITE_URL}${opts.urlPath}`
+    : `${SITE_URL}/research/${opts.slug}`;
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: opts.title,
     description: opts.description,
-    url: `${SITE_URL}/research/${opts.slug}`,
+    url,
     datePublished: opts.datePublished,
     dateModified: opts.dateModified ?? opts.datePublished,
     author: {
@@ -52,7 +56,7 @@ export function buildTechArticleSchema(opts: ArticleOpts & {
   proficiencyLevel?: string;
 }) {
   return {
-    ...buildArticleSchema({ ...opts, slug: `developer/${opts.slug}` }),
+    ...buildArticleSchema(opts),
     '@type': 'TechArticle',
     ...(opts.dependencies && { dependencies: opts.dependencies }),
     proficiencyLevel: opts.proficiencyLevel ?? 'Expert',

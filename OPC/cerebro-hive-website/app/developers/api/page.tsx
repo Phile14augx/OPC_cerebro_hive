@@ -1,8 +1,31 @@
 import React from "react";
+import type { Metadata } from "next";
 import { Server, Lock, Globe2 } from "lucide-react";
+import { JsonLd } from "@/components/discovery";
+import { buildTechArticleSchema } from "@/lib/discovery";
+
+export const metadata: Metadata = {
+  title: "CerebroHive API Reference Documentation",
+  description: "Complete REST API reference for CerebroHive — endpoints, authentication, request/response schemas, rate limits, and code examples in Python and TypeScript.",
+  keywords: ["CerebroHive REST API", "AI API reference", "enterprise AI endpoints", "API authentication", "API documentation"],
+  alternates: { canonical: "https://cerebropchive.org/developers/api" },
+};
+
+const schema = buildTechArticleSchema({
+  title: "CerebroHive API Reference Documentation",
+  description: "Complete REST API reference for CerebroHive — endpoints, authentication, request/response schemas, rate limits, and code examples for Python and TypeScript.",
+  slug: "developers/api",
+  urlPath: "/developers/api",
+  datePublished: "2026-01-01",
+  section: "API Reference",
+  keywords: ["CerebroHive REST API", "AI API reference", "enterprise AI endpoints"],
+  dependencies: "Python 3.10+, TypeScript 5+, Node.js 20+",
+});
 
 export default function ApiReferencePage() {
   return (
+    <>
+      <JsonLd schema={schema} />
     <div className="flex flex-col gap-12 pb-12">
       <div className="border-b border-border pb-8">
         <h1 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-4">
@@ -142,5 +165,6 @@ export default function ApiReferencePage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

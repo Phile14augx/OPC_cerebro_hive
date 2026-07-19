@@ -1,7 +1,27 @@
 import React from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { JsonLd } from "@/components/discovery";
+import { buildTechArticleSchema } from "@/lib/discovery";
+
+export const metadata: Metadata = {
+  title: "Platform Release History | CerebroHive",
+  description: "CerebroHive platform release history — version notes, new features, performance improvements, and bug fixes across all platform releases.",
+  keywords: ["CerebroHive releases", "platform version history", "AI platform release notes", "software updates"],
+  alternates: { canonical: "https://cerebropchive.org/developers/releases" },
+};
+
+const schema = buildTechArticleSchema({
+  title: "CerebroHive Platform Release History",
+  description: "Complete release history for the CerebroHive platform — version notes, feature releases, performance improvements, and bug fixes.",
+  slug: "developers/releases",
+  urlPath: "/developers/releases",
+  datePublished: "2026-01-01",
+  section: "Release Notes",
+  keywords: ["CerebroHive releases", "platform version history", "release notes"],
+});
 
 export default function ReleasesPage() {
   const releases = [
@@ -32,7 +52,9 @@ export default function ReleasesPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-12 pb-12">
+    <>
+      <JsonLd schema={schema} />
+      <div className="flex flex-col gap-12 pb-12">
       <div className="border-b border-border pb-8">
         <h1 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-4 flex items-center gap-3">
           Release Notes <Sparkles className="text-primary-accent" size={28} />
@@ -88,5 +110,6 @@ export default function ReleasesPage() {
         ))}
       </div>
     </div>
+    </>
   );
 }

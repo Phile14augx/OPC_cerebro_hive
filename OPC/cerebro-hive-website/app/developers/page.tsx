@@ -1,10 +1,32 @@
 import React from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Terminal, Code2, Zap, ArrowRight, ShieldCheck, Database, FileJson, Blocks } from "lucide-react";
+import { JsonLd } from "@/components/discovery";
+import { buildTechArticleSchema } from "@/lib/discovery";
+
+export const metadata: Metadata = {
+  title: "Developer API, SDK & Documentation | CerebroHive",
+  description: "Build enterprise AI on CerebroHive — REST API, Python/TypeScript SDKs, MCP servers, CLI tools, architecture guides, and OpenAPI specification.",
+  keywords: ["CerebroHive API", "enterprise AI SDK", "developer quickstart", "MCP server", "AI developer tools"],
+  alternates: { canonical: "https://cerebropchive.org/developers" },
+};
+
+const schema = buildTechArticleSchema({
+  title: "CerebroHive Developer Platform — Getting Started",
+  description: "Get started with the CerebroHive REST API, Python and TypeScript SDKs, CLI tools, and MCP server integrations for enterprise AI development.",
+  slug: "developers",
+  urlPath: "/developers",
+  datePublished: "2026-01-01",
+  section: "Developer Documentation",
+  keywords: ["CerebroHive API", "AI SDK", "developer quickstart", "MCP server"],
+});
 
 export default function DevelopersPage() {
   return (
-    <div className="flex flex-col gap-12 pb-12">
+    <>
+      <JsonLd schema={schema} />
+      <div className="flex flex-col gap-12 pb-12">
       <div className="border-b border-border pb-8">
         <h1 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-4">
           Developer Platform
@@ -97,5 +119,6 @@ export default function DevelopersPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

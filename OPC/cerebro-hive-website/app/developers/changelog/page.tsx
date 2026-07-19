@@ -1,5 +1,25 @@
 import React from "react";
+import type { Metadata } from "next";
 import { GitCommit, Search } from "lucide-react";
+import { JsonLd } from "@/components/discovery";
+import { buildTechArticleSchema } from "@/lib/discovery";
+
+export const metadata: Metadata = {
+  title: "API Changelog & Release Notes | CerebroHive",
+  description: "CerebroHive API changelog — breaking changes, new endpoints, deprecation notices, and upgrade guides for every platform release.",
+  keywords: ["CerebroHive changelog", "API release notes", "API updates", "breaking changes", "API migration"],
+  alternates: { canonical: "https://cerebropchive.org/developers/changelog" },
+};
+
+const schema = buildTechArticleSchema({
+  title: "CerebroHive API Changelog & Release Notes",
+  description: "Detailed changelog for the CerebroHive API and platform — breaking changes, new endpoints, deprecation notices, and upgrade guides.",
+  slug: "developers/changelog",
+  urlPath: "/developers/changelog",
+  datePublished: "2026-01-01",
+  section: "Changelog",
+  keywords: ["CerebroHive changelog", "API release notes", "breaking changes"],
+});
 
 export default function ChangelogPage() {
   const changelogs = [
@@ -43,7 +63,9 @@ export default function ChangelogPage() {
   };
 
   return (
-    <div className="flex flex-col gap-12 pb-12">
+    <>
+      <JsonLd schema={schema} />
+      <div className="flex flex-col gap-12 pb-12">
       <div className="border-b border-border pb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-4">
@@ -90,5 +112,6 @@ export default function ChangelogPage() {
         ))}
       </div>
     </div>
+    </>
   );
 }

@@ -1,5 +1,25 @@
 import React from "react";
+import type { Metadata } from "next";
 import { Milestone, CheckCircle2, CircleDashed, Rocket } from "lucide-react";
+import { JsonLd } from "@/components/discovery";
+import { buildTechArticleSchema } from "@/lib/discovery";
+
+export const metadata: Metadata = {
+  title: "Developer Roadmap | CerebroHive",
+  description: "CerebroHive public developer roadmap — upcoming API features, SDK improvements, MCP integrations, and platform milestones. Track what's coming next.",
+  keywords: ["CerebroHive roadmap", "AI platform roadmap", "upcoming API features", "developer preview", "platform milestones"],
+  alternates: { canonical: "https://cerebropchive.org/developers/roadmap" },
+};
+
+const schema = buildTechArticleSchema({
+  title: "CerebroHive Developer Roadmap",
+  description: "Public developer roadmap for the CerebroHive platform — upcoming API features, SDK improvements, MCP integrations, and platform milestones.",
+  slug: "developers/roadmap",
+  urlPath: "/developers/roadmap",
+  datePublished: "2026-01-01",
+  section: "Roadmap",
+  keywords: ["CerebroHive roadmap", "AI platform roadmap", "upcoming features"],
+});
 
 export default function RoadmapPage() {
   const roadmapData = [
@@ -53,7 +73,9 @@ export default function RoadmapPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-12 pb-12 min-h-screen">
+    <>
+      <JsonLd schema={schema} />
+      <div className="flex flex-col gap-12 pb-12 min-h-screen">
       <div className="border-b border-border pb-8">
         <h1 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-4">
           Public Roadmap
@@ -95,5 +117,6 @@ export default function RoadmapPage() {
         ))}
       </div>
     </div>
+    </>
   );
 }
