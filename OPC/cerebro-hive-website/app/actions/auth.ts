@@ -80,14 +80,14 @@ export async function getLocalSession() {
     const payload = await AuthService.verifyToken(token.value);
     if (!payload || !payload.userId) return null;
     
-    const membership = await prisma.membership.findFirst({
-      where: { userId: payload.userId },
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
       select: { organizationId: true }
     });
     
     return { 
       userId: payload.userId, 
-      organizationId: membership?.organizationId || '' 
+      organizationId: user?.organizationId || '' 
     };
   } catch (err) {
     return null;
