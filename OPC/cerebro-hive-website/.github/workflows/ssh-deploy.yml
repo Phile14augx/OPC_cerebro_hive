@@ -98,30 +98,17 @@ jobs:
         RESTART
 
     - name: Configure Nginx and HTTPS
-      run: |
-        python3 - << 'PYEOF'
-        import subprocess, base64, os
-        key = os.path.expanduser("~/.ssh/deploy_key")
-        host = "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}"
-        ssh = ["ssh", "-i", key, "-o", "StrictHostKeyChecking=no", host]
-        cfg = (
-          "server {\n"
-          "    listen 80;\n"
-          "    server_name cerebropchive.org www.cerebropchive.org _;\n"
-          "    location / {\n"
-          "        proxy_pass http://localhost:3000;\n"
-          "        proxy_http_version 1.1;\n"
-          "        proxy_set_header Upgrade $http_upgrade;\n"
-          "        proxy_set_header Connection upgrade;\n"
-          "        proxy_set_header Host $host;\n"
-          "        proxy_set_header X-Real-IP $remote_addr;\n"
-          "        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n"
-          "        proxy_set_header X-Forwarded-Proto $scheme;\n"
-          "        proxy_cache_bypass $http_upgrade;\n"
-          "    }\n"
-          "}\n"
-        )
-        subprocess.run(ssh + ["tee /etc/nginx/sites-available/cerebro-hive > /dev/null"], input=cfg.encode(), check=True)
-        subprocess.run(ssh + ["ln -sf /etc/nginx/sites-available/cerebro-hive /etc/nginx/sites-enabled/cerebro-hive && rm -f /etc/nginx/sites-enabled/default && nginx -t && systemctl reload nginx"], check=True)
-        subprocess.run(ssh + ["iptables -I INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null; command -v ufw >/dev/null 2>&1 && ufw allow 443/tcp; command -v certbot >/dev/null 2>&1 || apt-get install -y certbot python3-certbot-nginx; certbot --nginx -d cerebropchive.org -d www.cerebropchive.org --non-interactive --agree-tos -m admin@cerebropchive.org --redirect || echo certbot-skipped"])
-        PYEOF
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: |
+          printf 'server {\n    listen 80;\n    server_name cerebropchive.org www.cerebropchive.org _;\n    location / {\n        proxy_pass http://localhost:3000;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade $http_upgrade;\n        proxy_set_header Connection upgrade;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n        proxy_cache_bypass $http_upgrade;\n    }\n}\n' > /etc/nginx/sites-available/cerebro-hive
+          ln -sf /etc/nginx/sites-available/cerebro-hive /etc/nginx/sites-enabled/cerebro-hive
+          rm -f /etc/nginx/sites-enabled/default
+          nginx -t && systemctl reload nginx
+          iptables -I INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
+          command -v ufw >/dev/null 2>&1 && ufw allow 443/tcp || true
+          command -v certbot >/dev/null 2>&1 || apt-get install -y certbot python3-certbot-nginx
+          certbot --nginx -d cerebropchive.org -d www.cerebropchive.org --non-interactive --agree-tos -m admin@cerebropchive.org --redirect || echo "certbot-skipped"
