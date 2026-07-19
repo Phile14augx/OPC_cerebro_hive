@@ -64,64 +64,64 @@ export function ConsultingProcessTimeline() {
   const lineHeight = useTransform(scrollYProgress, [0.2, 0.8], ["0%", "100%"]);
 
   return (
-    <Section size="default" className="bg-background relative z-10 border-b border-border">
-      <div ref={containerRef}>
+    <div ref={containerRef}>
+      <Section size="default" className="bg-background relative z-10 border-b border-border">
         <PageContainer size="narrow">
-          <Stack gap="md" className="text-center mb-20">
-            <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary">
-              The Enterprise Engagement Model
-            </h2>
-            <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
-              A structured, repeatable process designed to de-risk AI adoption and guarantee alignment with business objectives.
-            </p>
-          </Stack>
+        <Stack gap="md" className="text-center mb-20">
+          <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary">
+            The Enterprise Engagement Model
+          </h2>
+          <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
+            A structured, repeatable process designed to de-risk AI adoption and guarantee alignment with business objectives.
+          </p>
+        </Stack>
 
-          <div className="relative pl-8 md:pl-0">
-            {/* Center Line for Desktop, Left Line for Mobile */}
-            <div className="absolute top-0 bottom-0 left-8 md:left-1/2 w-px bg-border -translate-x-1/2 z-0" />
+        <div className="relative pl-8 md:pl-0">
+          {/* Center Line for Desktop, Left Line for Mobile */}
+          <div className="absolute top-0 bottom-0 left-8 md:left-1/2 w-px bg-border -translate-x-1/2 z-0" />
 
-            <motion.div
-              className="absolute top-0 left-8 md:left-1/2 w-[3px] bg-gradient-to-b from-primary-accent via-secondary-accent to-primary-accent -translate-x-1/2 z-0 origin-top"
-              style={{ height: lineHeight }}
-            />
+          <motion.div
+            className="absolute top-0 left-8 md:left-1/2 w-[3px] bg-gradient-to-b from-primary-accent via-secondary-accent to-primary-accent -translate-x-1/2 z-0 origin-top"
+            style={{ height: lineHeight }}
+          />
 
-            {processSteps.map((step, index) => {
-              const isEven = index % 2 === 0;
-              return (
-                <motion.div
-                  key={step.phase}
-                  initial={{ opacity: 0.4, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  className={`relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between mb-12 last:mb-0 ${isEven ? 'md:flex-row-reverse' : ''}`}
-                >
-                  {/* Connector Dot */}
-                  <div className="absolute left-0 md:left-1/2 w-4 h-4 rounded-full border-4 border-background -translate-x-1/2 mt-1.5 md:mt-0 transition-transform duration-300 hover:scale-150 shadow-sm" style={{ backgroundColor: step.color }} />
+          {processSteps.map((step, index) => {
+            const isEven = index % 2 === 0;
+            return (
+              <motion.div
+                key={step.phase}
+                initial={{ opacity: 0.4, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className={`relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between mb-12 last:mb-0 ${isEven ? 'md:flex-row-reverse' : ''}`}
+              >
+                {/* Connector Dot */}
+                <div className="absolute left-0 md:left-1/2 w-4 h-4 rounded-full border-4 border-background -translate-x-1/2 mt-1.5 md:mt-0 transition-transform duration-300 hover:scale-150 shadow-sm" style={{ backgroundColor: step.color }} />
 
-                  {/* Content */}
-                  <div className={`w-full md:w-5/12 pl-10 md:pl-0 ${isEven ? 'md:text-left' : 'md:text-right'}`}>
-                    <div className={cn(cardVariants({ size: "md" }), "bg-surface-elevated shadow-sm hover:shadow-elevated hover:border-text-muted/30 transition-all duration-300 relative")}>
-                      <span className="text-[10px] font-bold tracking-widest uppercase mb-2 block" style={{ color: step.color }}>
-                        Phase 0{index + 1}
-                      </span>
-                      <h3 className="text-xl font-space font-bold text-text-primary mb-3">
-                        {step.phase}
-                      </h3>
-                      <p className="text-sm text-text-secondary leading-relaxed">
-                        {step.description}
-                      </p>
-                    </div>
+                {/* Content */}
+                <div className={`w-full md:w-5/12 pl-10 md:pl-0 ${isEven ? 'md:text-left' : 'md:text-right'}`}>
+                  <div className={cn(cardVariants({ size: "md" }), "bg-surface-elevated shadow-sm hover:shadow-elevated hover:border-text-muted/30 transition-all duration-300 relative")}>
+                    <span className="text-[10px] font-bold tracking-widest uppercase mb-2 block" style={{ color: step.color }}>
+                      Phase 0{index + 1}
+                    </span>
+                    <h3 className="text-xl font-space font-bold text-text-primary mb-3">
+                      {step.phase}
+                    </h3>
+                    <p className="text-sm text-text-secondary leading-relaxed">
+                      {step.description}
+                    </p>
                   </div>
+                </div>
 
-                  {/* Spacer for the other side */}
-                  <div className="hidden md:block w-5/12" />
-                </motion.div>
-              );
-            })}
-          </div>
-        </PageContainer>
-      </div>
+                {/* Spacer for the other side */}
+                <div className="hidden md:block w-5/12" />
+              </motion.div>
+            );
+          })}
+        </div>
+      </PageContainer>
     </Section>
+    </div>
   );
 }

@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { ServiceMorphBackground } from "@/components/services/ServiceMorphBackground";
-import { ArrowRight, Brain, Bot, Database, Code2, GraduationCap } from "lucide-react";
+import { ArrowRight, Brain } from "lucide-react";
 import { ExecutiveSummary } from "@/components/services/ExecutiveSummary";
 import { BusinessOutcomesGrid } from "@/components/services/BusinessOutcomesGrid";
 import { IndustryMapping } from "@/components/services/IndustryMapping";

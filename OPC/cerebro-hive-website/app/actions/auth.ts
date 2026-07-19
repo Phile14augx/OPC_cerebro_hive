@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { AuthService } from '@/lib/services/auth.service';
+import { prisma } from '@/lib/prisma';
 
 export async function authenticate(formData: FormData) {
   const email = formData.get('email')?.toString();
@@ -68,4 +69,27 @@ export async function register(formData: FormData) {
 export async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete('access_token');
+}
+
+export async function getLocalSession() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('access_token');
+  if (!token) return null;
+  
+  try {
+    const payload = await AuthService.verifyToken(token.value);
+    if (!payload || !payload.userId) return null;
+    
+    const membership = await prisma.membership.findFirst({
+      where: { userId: payload.userId },
+      select: { organizationId: true }
+    });
+    
+    return { 
+      userId: payload.userId, 
+      organizationId: membership?.organizationId || '' 
+    };
+  } catch (err) {
+    return null;
+  }
 }
