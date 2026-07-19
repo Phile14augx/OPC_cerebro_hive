@@ -29,7 +29,13 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 10 https://cerebropchive.org)",
       "Bash(curl -s -I --max-time 10 https://cerebropchive.org)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 10 -k https://200.97.175.131)",
-      "Bash(curl -s -I --max-time 10 http://cerebropchive.org)"
+      "Bash(curl -s -I --max-time 10 http://cerebropchive.org)",
+      "Bash(grep -rn \"'\\\\.\\\\.\\\\./\\\\.\\\\.\\\\./\\\\.\\\\.\\\\./components/ui/\" \"OPC/cerebro-hive-website/app/\\(platform\\)/\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP: %{http_code}\\\\n\" --max-time 10 http://cerebropchive.org)",
+      "Bash(curl -s -o /dev/null -w \"HTTPS: %{http_code}\\\\n\" --max-time 15 https://cerebropchive.org)",
+      "Bash(awk -F'\\\\t' '{print $2}')",
+      "Bash(python -c ' *)",
+      "Bash(git rm *)"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows"
