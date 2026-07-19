@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/private/', '/api/', '/_next/'],
     },
-    sitemap: 'https://cerebro-hive.com/sitemap.xml',
+    sitemap: 'https://cerebropchive.org/sitemap.xml',
   };
 }

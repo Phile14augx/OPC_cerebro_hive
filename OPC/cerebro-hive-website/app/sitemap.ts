@@ -3,7 +3,7 @@ import { sitemapSections } from "@/lib/data/sitemap";
 
 export const dynamic = "force-static";
 
-const baseUrl = "https://cerebro-hive.com";
+const baseUrl = "https://cerebropchive.org";
 
 // Per-path overrides; everything else gets sensible defaults.
 const overrides: Record<
