@@ -35,10 +35,30 @@
       "Bash(curl -s -o /dev/null -w \"HTTPS: %{http_code}\\\\n\" --max-time 15 https://cerebropchive.org)",
       "Bash(awk -F'\\\\t' '{print $2}')",
       "Bash(python -c ' *)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(curl -s -o /dev/null -w \"HTTP: %{http_code} | Final URL: %{url_effective}\\\\n\" https://cerebropchive.org)",
+      "Bash(curl -s -o /dev/null -w \"HTTP: %{http_code} | Final URL: %{url_effective}\\\\n\" http://cerebropchive.org)",
+      "Bash(curl -sL -o /dev/null -w \"www HTTPS: %{http_code}\\\\n\" https://www.cerebropchive.org)",
+      "Bash(curl -s https://cerebropchive.org)",
+      "Bash(curl -s https://cerebropchive.org/services)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://cerebropchive.org/services)",
+      "Bash(curl -sL -o /dev/null -w \"Final URL: %{url_effective} | Status: %{http_code}\\\\n\" https://cerebropchive.org/services)",
+      "Bash(curl -sL -o /dev/null -w \"Final URL: %{url_effective} | Status: %{http_code}\\\\n\" https://cerebropchive.org/services/)",
+      "Bash(curl -sL https://cerebropchive.org/services/)",
+      "Bash(grep -v \"//.*white\")",
+      "Bash(grep -v \"dark:from-white\\\\|dark:to-white\\\\|//\\\\|node_modules\")",
+      "Bash(grep -v \"dark:from-white\\\\|dark:to-white\\\\|/10\\\\|/5\\\\|/20\\\\|//\\\\|node_modules\")",
+      "Bash(grep -v \"//\\\\|@\")",
+      "Bash(mkdir -p \"d:\\\\{MY_PROJECTS}\\\\{OPC_cerebro_hive}\\\\OPC\\\\cerebro-hive-website\\\\app\\\\products\\\\hivepulse\" \"d:\\\\{MY_PROJECTS}\\\\{OPC_cerebro_hive}\\\\OPC\\\\cerebro-hive-website\\\\app\\\\products\\\\cerebro-x\")",
+      "Bash(git pull *)",
+      "Bash(mkdir -p \"d:\\\\{MY_PROJECTS}\\\\{OPC_cerebro_hive}\\\\OPC\\\\cerebro-hive-website\\\\lib\\\\data\\\\academy\")",
+      "Bash(New-Item -ItemType Directory -Force -Path \"d:\\\\{MY_PROJECTS}\\\\{OPC_cerebro_hive}\\\\OPC\\\\cerebro-hive-website\\\\app\\\\resources\\\\guides\\\\[slug]\")",
+      "Bash(Out-Null)"
     ],
     "additionalDirectories": [
-      "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows"
+      "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows",
+      "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\OPC\\cerebro-hive-website\\app\\products",
+      "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\OPC\\cerebro-hive-website\\lib\\data"
     ]
   }
 }

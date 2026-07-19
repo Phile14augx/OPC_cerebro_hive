@@ -295,6 +295,7 @@ model CandidateProfile {
   updatedAt            DateTime               @updatedAt
   SkillEvidence        SkillEvidence[]
   SkillProfileSnapshot SkillProfileSnapshot[]
+  AssessmentSession    AssessmentSession[]
 }
 
 model RecruiterProfile {
@@ -355,8 +356,9 @@ model AssessmentVersion {
 
   attempts AssessmentAttempt[]
 
-  createdAt       DateTime @default(now())
-  createdByUserId String?  @db.Uuid // Author
+  createdAt         DateTime            @default(now())
+  createdByUserId   String?             @db.Uuid // Author
+  AssessmentSession AssessmentSession[]
 
   @@unique([assessmentId, versionNumber])
 }
@@ -584,4 +586,95 @@ model ProjectSkillRequirement {
   createdAt DateTime @default(now())
 
   @@index([projectId])
+}
+
+enum SessionStatus {
+  INITIALIZED
+  READY
+  ACTIVE
+  PAUSED
+  RESUMED
+  SUBMITTED
+  EXPIRED
+  TERMINATED
+}
+
+model AssessmentSession {
+  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  candidateId         String            @db.Uuid
+  candidate           CandidateProfile  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  assessmentVersionId String            @db.Uuid
+  assessmentVersion   AssessmentVersion @relation(fields: [assessmentVersionId], references: [id], onDelete: Cascade)
+
+  status    SessionStatus @default(INITIALIZED)
+  startedAt DateTime?
+  endedAt   DateTime?
+
+  // Aggregated session metrics for AI consumption
+  metrics Json?
+
+  telemetryBatches SessionTelemetryBatch[]
+
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  ExecutionJob ExecutionJob[]
+}
+
+model SessionTelemetryBatch {
+  id        String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId String            @db.Uuid
+  session   AssessmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sequence  Int
+  events    Json // The raw telemetry stream for this 5s batch
+
+  createdAt DateTime @default(now())
+}
+
+enum ExecutionStatus {
+  QUEUED
+  ALLOCATING
+  STARTING
+  RUNNING
+  STREAMING
+  COMPLETED
+  FAILED
+  TIMED_OUT
+  CANCELLED
+}
+
+model ExecutionJob {
+  id        String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId String            @db.Uuid
+  session   AssessmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  status   ExecutionStatus @default(QUEUED)
+  language String // e.g., "javascript"
+  code     String          @db.Text
+
+  // Execution Environment
+  runtimeVersion String?
+  containerImage String?
+
+  artifacts ExecutionArtifact[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ExecutionArtifact {
+  id    String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  jobId String       @db.Uuid
+  job   ExecutionJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  stdout   String? @db.Text
+  stderr   String? @db.Text
+  exitCode Int?
+
+  // Execution Metrics
+  queueWaitMs     Int?
+  startupTimeMs   Int?
+  executionTimeMs Int?
+  memoryUsedBytes Int?
+
+  createdAt DateTime @default(now())
 }

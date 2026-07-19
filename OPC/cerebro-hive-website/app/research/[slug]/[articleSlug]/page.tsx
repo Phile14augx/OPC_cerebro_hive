@@ -2,6 +2,8 @@ import { getResearchBySlug, allResearchData } from "@/lib/content/research";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ResearchReader } from "@/components/research/ResearchReader";
+import { JsonLd } from "@/components/discovery";
+import { buildArticleSchema } from "@/lib/discovery";
 
 // Generate static params for all publications
 // Route: /research/[slug]/[articleSlug]
@@ -41,5 +43,21 @@ export default async function ResearchDetail({
     notFound();
   }
 
-  return <ResearchReader publication={publication} />;
+  const schema = buildArticleSchema({
+    title: publication.title,
+    description: publication.abstract,
+    slug: publication.slug,
+    urlPath: `/research/${publication.category}/${publication.slug}`,
+    datePublished: publication.publishDate,
+    author: publication.authors[0]?.name,
+    section: publication.domain,
+    keywords: publication.tags,
+  });
+
+  return (
+    <>
+      <JsonLd schema={schema} />
+      <ResearchReader publication={publication} />
+    </>
+  );
 }
