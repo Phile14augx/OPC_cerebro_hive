@@ -97,18 +97,28 @@ jobs:
           fi
         RESTART
 
-    - name: Configure Nginx and HTTPS
+    - name: Configure Nginx
       run: |
-        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-          "set -e
-          # Write Nginx config without nested heredoc
-          printf 'server {\n    listen 80;\n    server_name cerebropchive.org www.cerebropchive.org _;\n    location / {\n        proxy_pass http://localhost:3000;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade \$http_upgrade;\n        proxy_set_header Connection upgrade;\n        proxy_set_header Host \$host;\n        proxy_set_header X-Real-IP \$remote_addr;\n        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto \$scheme;\n        proxy_cache_bypass \$http_upgrade;\n    }\n}\n' > /etc/nginx/sites-available/cerebro-hive
-          ln -sf /etc/nginx/sites-available/cerebro-hive /etc/nginx/sites-enabled/cerebro-hive
-          rm -f /etc/nginx/sites-enabled/default
-          nginx -t && systemctl reload nginx
-          # Open firewall for HTTPS
-          iptables -I INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
-          command -v ufw >/dev/null && (ufw allow 443/tcp || true) || true
-          # Install and run certbot for SSL
-          command -v certbot >/dev/null || apt-get install -y certbot python3-certbot-nginx
-          certbot --nginx -d cerebropchive.org -d www.cerebropchive.org --non-interactive --agree-tos -m admin@cerebropchive.org --redirect || echo 'Certbot skipped'"
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'NGINX'
+        set -e
+        printf 'server {\n  listen 80;\n  server_name cerebropchive.org www.cerebropchive.org _;\n  location / {\n    proxy_pass http://localhost:3000;\n    proxy_http_version 1.1;\n    proxy_set_header Upgrade $http_upgrade;\n    proxy_set_header Connection upgrade;\n    proxy_set_header Host $host;\n    proxy_set_header X-Real-IP $remote_addr;\n    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n    proxy_set_header X-Forwarded-Proto $scheme;\n    proxy_cache_bypass $http_upgrade;\n  }\n}\n' > /etc/nginx/sites-available/cerebro-hive
+        ln -sf /etc/nginx/sites-available/cerebro-hive /etc/nginx/sites-enabled/cerebro-hive
+        rm -f /etc/nginx/sites-enabled/default
+        nginx -t && systemctl reload nginx
+        NGINX
+
+    - name: Open firewall for HTTPS
+      run: |
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'FIREWALL'
+        iptables -I INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
+        command -v ufw >/dev/null 2>&1 && ufw allow 443/tcp || true
+        FIREWALL
+
+    - name: Provision HTTPS with Certbot
+      run: |
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'CERTBOT'
+        command -v certbot >/dev/null 2>&1 || apt-get install -y certbot python3-certbot-nginx
+        certbot --nginx -d cerebropchive.org -d www.cerebropchive.org \
+          --non-interactive --agree-tos -m admin@cerebropchive.org --redirect \
+          || echo "Certbot: certificate may already exist or domain not pointed to this IP"
+        CERTBOT
