@@ -1,5 +1,11 @@
 import { PackagedProduct } from "../types";
 
+/**
+ * @deprecated CerebroLearn has been absorbed into CerebroArchive™.
+ * Its capabilities (AI certification courses, learning paths, corporate programs)
+ * are now delivered as the AI Learning Library sub-module within CerebroArchive.
+ * This file is retained for backward compatibility only.
+ */
 export const cerebroLearnProduct: PackagedProduct = {
   id: "cerebro-learn",
   slug: "cerebro-learn",
@@ -13,8 +19,9 @@ export const cerebroLearnProduct: PackagedProduct = {
   iconName: "GraduationCap",
   category: "Education",
   status: "production",
-  maturity: "ga",
+  maturity: "legacy",
   tags: ["Training", "LMS"],
+  ecosystemLayer: "business", // @deprecated — absorbed into CerebroArchive™
 
   seo: {
     title: "CerebroLearn™ | Corporate AI Training & Certification Platform | CerebroHive",

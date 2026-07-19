@@ -1,5 +1,11 @@
 import { PackagedProduct } from "../types";
 
+/**
+ * @deprecated CerebroResearch has been absorbed into CerebroArchive™.
+ * Its capabilities (research repository, paper library, benchmarks, datasets)
+ * are now delivered as sub-modules within CerebroArchive's Knowledge Intelligence Platform.
+ * This file is retained for backward compatibility only.
+ */
 export const cerebroResearchProduct: PackagedProduct = {
   id: "cerebro-research",
   slug: "cerebro-research",
@@ -13,8 +19,9 @@ export const cerebroResearchProduct: PackagedProduct = {
   iconName: "Microscope",
   category: "Research",
   status: "production",
-  maturity: "ga",
+  maturity: "legacy",
   tags: ["R&D", "Science"],
+  ecosystemLayer: "business", // @deprecated — absorbed into CerebroArchive™
 
   seo: {
     title: "CerebroResearch™ | AI-Powered Enterprise Research & R&D Platform | CerebroHive",

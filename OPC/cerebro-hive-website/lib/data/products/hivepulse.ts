@@ -16,7 +16,14 @@ export const hivepulseProduct: PackagedProduct = {
   category: "Platform",
   status: "development",
   maturity: "beta",
-  tags: ["AI OS", "Orchestration", "Platform"],
+  tags: ["AI OS", "Orchestration", "Platform", "Agent Mesh", "Automation Engine"],
+
+  // Ecosystem Positioning — Orchestration Engine sitting beneath CerebroSphere
+  ecosystemLayer: "business",
+  moduleConnections: ["cerebro-sphere", "cerebro-flow", "cerebro-studio", "hive-ops", "hive-shield"],
+  platformServices: ["ai-gateway", "event-bus", "infrastructure", "monitoring"],
+  dependsOn: ["hive-ops", "hive-shield"],
+  providesCapabilities: ["agent-orchestration", "agent-mesh", "workflow-execution", "mission-control-engine"],
 
   seo: {
     title: "HivePulse | Enterprise AI Operating System | CerebroHive",
