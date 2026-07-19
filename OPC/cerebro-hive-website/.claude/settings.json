@@ -10,7 +10,12 @@
       "Bash(cp \"C:\\\\Users\\\\LOQ\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d---MY-PROJECTS---OPC-cerebro-hive--OPC-cerebro-hive-website\\\\ff8ff4c6-884b-4ed1-8118-ba4c0f2ae6c5\\\\scratchpad\\\\shot.js\" ./__shot.js)",
       "Bash(node ./__shot.js \"C:\\\\Users\\\\LOQ\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d---MY-PROJECTS---OPC-cerebro-hive--OPC-cerebro-hive-website\\\\ff8ff4c6-884b-4ed1-8118-ba4c0f2ae6c5\\\\scratchpad\\\\after.png\")",
       "Bash(gh secret *)",
-      "Bash(gh workflow *)"
+      "Bash(gh workflow *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 10 http://200.97.175.131/)",
+      "Bash(curl -s --connect-timeout 10 http://200.97.175.131/)",
+      "Bash(curl -s --connect-timeout 10 \"http://200.97.175.131/_next/static/chunks/2ral5swa2nxg2.css\")",
+      "Bash(curl -s --connect-timeout 10 \"http://200.97.175.131/_next/static/chunks/1mybs9352b85-.css\")",
+      "Bash(curl -s --connect-timeout 10 \"http://200.97.175.131/\")"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows"
