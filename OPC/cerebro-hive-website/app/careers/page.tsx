@@ -817,7 +817,7 @@ export default function CareersPage() {
                 <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted">Domain / Role You&apos;re Interested In *</label>
                 <select required value={form.role} onChange={(e) => setForm(f => ({ ...f, role: e.target.value }))} className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors appearance-none cursor-pointer">
                   <option value="" disabled>Select a role...</option>
-                  {orgStructure.flatMap(d => d.roles).map(role => (
+                  {(orgStructure.flatMap(d => d.roles) as Array<{ title: string; desc: string }>).map(role => (
                     <option key={role.title} value={role.title}>{role.title}</option>
                   ))}
                 </select>

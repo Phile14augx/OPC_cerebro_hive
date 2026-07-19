@@ -15,7 +15,13 @@ export const cerebroArchiveProduct: PackagedProduct = {
   status: "production",
   maturity: "ga",
   tags: ["RAG", "Knowledge", "Search"],
-  
+
+  seo: {
+    title: "CerebroArchive™ | Enterprise RAG & Knowledge Platform | CerebroHive",
+    description: "CerebroArchive is an enterprise knowledge platform for RAG, document intelligence, and AI-powered search — connecting LLMs to your organizational knowledge with citation accuracy and access control.",
+    keywords: ["enterprise RAG platform", "knowledge management AI", "document intelligence software", "AI search enterprise", "RAG software", "knowledge graph software", "enterprise semantic search", "document AI platform"],
+  },
+
   config: {
     layout: "platform",
     sections: [

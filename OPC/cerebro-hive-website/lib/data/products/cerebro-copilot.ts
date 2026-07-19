@@ -15,7 +15,13 @@ export const cerebroCopilotProduct: PackagedProduct = {
   status: "production",
   maturity: "ga",
   tags: ["Assistant", "Productivity"],
-  
+
+  seo: {
+    title: "CerebroCopilot™ | Enterprise AI Assistant | CerebroHive",
+    description: "CerebroCopilot is an enterprise AI assistant that augments every knowledge worker — drafting, analyzing, summarizing, and answering questions with access to your organizational context.",
+    keywords: ["enterprise AI assistant", "AI copilot software", "workplace AI tool", "enterprise ChatGPT alternative", "AI productivity tool", "knowledge worker AI", "LLM enterprise assistant", "corporate AI assistant"],
+  },
+
   config: {
     layout: "saas",
     sections: [
