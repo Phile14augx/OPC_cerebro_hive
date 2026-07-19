@@ -41,6 +41,8 @@ jobs:
       run: |
         cp -R public .next/standalone/
         cp -R .next/static .next/standalone/.next/
+        cp -R scripts .next/standalone/
+        cp -R nginx .next/standalone/
 
     - name: Setup SSH
       run: |
@@ -78,14 +80,9 @@ jobs:
         (pm2 describe cerebro-hive > /dev/null 2>&1 && pm2 restart cerebro-hive || (pm2 start server.js --name cerebro-hive && pm2 save))
         "
 
-    - name: Configure Nginx
+    - name: Configure Nginx and provision HTTPS
       run: >
         ssh -i ~/.ssh/deploy_key
         -o StrictHostKeyChecking=no
         ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
-        "
-        printf 'server {\n  listen 80;\n  server_name cerebropchive.org www.cerebropchive.org _;\n  location / {\n    proxy_pass http://localhost:3000;\n    proxy_http_version 1.1;\n    proxy_set_header Upgrade \$http_upgrade;\n    proxy_set_header Connection upgrade;\n    proxy_set_header Host \$host;\n    proxy_set_header X-Real-IP \$remote_addr;\n    proxy_cache_bypass \$http_upgrade;\n  }\n}\n' > /etc/nginx/sites-available/cerebro-hive &&
-        ln -sf /etc/nginx/sites-available/cerebro-hive /etc/nginx/sites-enabled/cerebro-hive &&
-        rm -f /etc/nginx/sites-enabled/default &&
-        nginx -t && systemctl reload nginx
-        "
+        "bash /var/www/cerebro-hive/scripts/vps-nginx.sh"
