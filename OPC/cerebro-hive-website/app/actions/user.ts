@@ -1,18 +1,19 @@
 'use server';
 
 import { cookies } from 'next/headers';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1';
+import { AuthService } from '@/lib/services/auth.service';
+import { prisma } from '@/lib/prisma';
 
 export type UserProfile = {
   id: string;
   email: string;
   full_name: string;
+  role: string;
+  organizationId?: string | null;
 };
 
 /**
- * Fetches the current authenticated user's profile from the Go /me endpoint.
- * Uses the HttpOnly access_token cookie — never exposes the token to the browser.
+ * Fetches the current authenticated user's profile from the database using the JWT cookie.
  */
 export async function getMe(): Promise<{ data?: UserProfile; error?: string }> {
   try {
@@ -21,21 +22,37 @@ export async function getMe(): Promise<{ data?: UserProfile; error?: string }> {
 
     if (!token) return { error: 'Not authenticated' };
 
-    const res = await fetch(`${API_URL}/identity/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store',
+    const payload = await AuthService.verifyToken(token);
+    if (!payload || !payload.userId) {
+      return { error: 'Invalid or expired session.' };
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        organizationId: true,
+      }
     });
 
-    const json = await res.json();
-    if (!res.ok) {
-      return { error: json.error?.message || 'Could not fetch profile.' };
+    if (!user) {
+      return { error: 'User not found.' };
     }
-    return { data: json.data };
+
+    return { 
+      data: {
+        id: user.id,
+        email: user.email,
+        full_name: user.name || '',
+        role: user.role,
+        organizationId: user.organizationId,
+      } 
+    };
   } catch (err) {
     console.error('getMe error:', err);
-    return { error: 'Could not connect to identity service.' };
+    return { error: 'Could not fetch user profile.' };
   }
 }

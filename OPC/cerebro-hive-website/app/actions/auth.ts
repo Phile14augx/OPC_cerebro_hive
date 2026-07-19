@@ -1,34 +1,22 @@
 'use server';
 
 import { cookies } from 'next/headers';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1';
+import { AuthService } from '@/lib/services/auth.service';
 
 export async function authenticate(formData: FormData) {
-  const email = formData.get('email');
-  const password = formData.get('password');
+  const email = formData.get('email')?.toString();
+  const password = formData.get('password')?.toString();
 
   if (!email || !password) {
     return { error: 'Please enter both email and password.' };
   }
 
   try {
-    // Proxy request to Go API
-    const res = await fetch(`${API_URL}/identity/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    
-    const data = await res.json();
-    
-    if (!res.ok) {
-      return { error: data.error?.message || 'Invalid credentials.' };
-    }
+    const token = await AuthService.login(email, password);
 
-    // Set secure HttpOnly cookie with the access token returned by Go
+    // Set secure HttpOnly cookie with the access token
     const cookieStore = await cookies();
-    cookieStore.set('access_token', data.data.access_token, {
+    cookieStore.set('access_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -37,43 +25,47 @@ export async function authenticate(formData: FormData) {
     });
 
     return { success: true };
-
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Authentication Error:', error);
-    return { error: 'An unexpected error occurred. Please try again.' };
+    return { error: error.message || 'Invalid credentials. Please try again.' };
   }
 }
 
 export async function register(formData: FormData) {
-  const email = formData.get('email');
-  const password = formData.get('password');
-  const fullName = formData.get('fullName');
+  const email = formData.get('email')?.toString();
+  const password = formData.get('password')?.toString();
+  const fullName = formData.get('fullName')?.toString();
 
   if (!email || !password || !fullName) {
     return { error: 'All fields are required.' };
   }
 
-  if (password.toString().length < 8) {
+  if (password.length < 8) {
     return { error: 'Password must be at least 8 characters long.' };
   }
 
   try {
-    // Proxy request to Go API
-    const res = await fetch(`${API_URL}/identity/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, full_name: fullName }),
+    const token = await AuthService.register(email, password, fullName);
+    
+    // Auto-login after registration
+    const cookieStore = await cookies();
+    cookieStore.set('access_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 // 1 day
     });
     
-    const data = await res.json();
-    if (!res.ok) {
-      return { error: data.error?.message || 'Registration failed.' };
-    }
-    
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Registration Error:', error);
-    return { error: 'An unexpected error occurred. Please try again.' };
+    return { error: error.message || 'Registration failed. Please try again.' };
   }
+}
+
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete('access_token');
 }

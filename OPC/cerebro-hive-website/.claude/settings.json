@@ -15,7 +15,11 @@
       "Bash(curl -s --connect-timeout 10 http://200.97.175.131/)",
       "Bash(curl -s --connect-timeout 10 \"http://200.97.175.131/_next/static/chunks/2ral5swa2nxg2.css\")",
       "Bash(curl -s --connect-timeout 10 \"http://200.97.175.131/_next/static/chunks/1mybs9352b85-.css\")",
-      "Bash(curl -s --connect-timeout 10 \"http://200.97.175.131/\")"
+      "Bash(curl -s --connect-timeout 10 \"http://200.97.175.131/\")",
+      "Bash(nslookup cerebropchive.org 8.8.8.8)",
+      "Bash(nslookup cerebrohive.org 8.8.8.8)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 10 http://cerebropchive.org/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 10 https://cerebropchive.org/)"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows"
