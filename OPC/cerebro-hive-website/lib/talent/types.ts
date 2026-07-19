@@ -86,6 +86,8 @@ export interface Section {
   activities: Activity[];
 }
 
+export type AssessmentSection = Section;
+
 // 6. The Master Assessment Schema (The "Compiled" Output)
 export interface AssessmentSchema {
   id: string;
