@@ -3,8 +3,10 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-os.environ.setdefault("DATABASE_URL", "sqlite:////tmp/test_agentos.db")
-os.environ.setdefault("ANTHROPIC_API_KEY", "")  # force the mock LLM provider in tests
+os.environ["DATABASE_URL"] = os.environ.get("DATABASE_URL", "sqlite:///test_agentos.db")
+os.environ["ANTHROPIC_API_KEY"] = ""
+os.environ["OPENAI_API_KEY"] = ""
+os.environ["GOOGLE_API_KEY"] = ""
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402

@@ -19,7 +19,7 @@ from app.models.governance import Policy  # noqa: E402
 from app.models.marketplace import AgentTemplate  # noqa: E402
 from app.models.registry import Agent  # noqa: E402
 from app.models.tools import SkillPackage, ToolDefinition  # noqa: E402
-from app.core.tool_framework import BUILTIN_TOOL_SCHEMAS  # noqa: E402
+from app.core.tools import registry as tool_registry  # noqa: E402
 
 AGENTS_STORE = Path(__file__).resolve().parent.parent / "agents_store"
 
@@ -43,9 +43,9 @@ def seed() -> None:
     db = SessionLocal()
     try:
         # Built-in tools catalog
-        for name, schema in BUILTIN_TOOL_SCHEMAS.items():
+        for name, tool in tool_registry._tools.items():
             if not db.query(ToolDefinition).filter(ToolDefinition.name == name).first():
-                db.add(ToolDefinition(name=name, description=f"Built-in tool: {name}", kind="builtin", schema=schema, permissions=["execute"]))
+                db.add(ToolDefinition(name=name, description=tool.metadata.description, kind="builtin", schema=tool.input_schema, permissions=tool.permissions_required))
 
         # Skills
         for skill in SKILLS:

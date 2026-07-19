@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
-from app.core import tool_framework
+from app.core.tools import registry as tool_registry, ToolError
 from app.db import get_db
 from app.models.identity import APIKey
 from app.models.tools import ToolDefinition
@@ -85,11 +85,11 @@ def invoke_tool(name: str, payload: InvokeRequest, db: Session = Depends(get_db)
     if tool is not None and not tool.enabled:
         raise HTTPException(403, f"tool '{name}' is disabled")
     try:
-        return tool_framework.invoke(name, payload.args, permissions=permissions)
-    except tool_framework.ToolError as exc:
+        return tool_registry.invoke(name, payload.args, permissions=permissions)
+    except ToolError as exc:
         raise HTTPException(400, str(exc)) from exc
 
 
 @router.get("/builtins/catalog")
 def builtin_catalog(_key: APIKey = Depends(get_current_api_key)) -> dict:
-    return tool_framework.BUILTIN_TOOL_SCHEMAS
+    return {name: tool.input_schema for name, tool in tool_registry._tools.items()}

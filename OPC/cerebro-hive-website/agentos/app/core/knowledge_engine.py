@@ -12,7 +12,7 @@ from dataclasses import dataclass
 
 from sqlalchemy.orm import Session
 
-from app.core.embeddings import cosine_similarity, embed
+from app.core.cerebro_x.embeddings import cosine_similarity, embed
 from app.models.knowledge import Chunk, Document
 
 CHUNK_SIZE = 400

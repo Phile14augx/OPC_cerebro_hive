@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from sqlalchemy.orm import Session
 
-from app.core.embeddings import cosine_similarity, embed
+from app.core.cerebro_x.embeddings import cosine_similarity, embed
 from app.models.memory import MemoryItem
 
 TIERS = ("working", "short_term", "long_term", "semantic", "episodic", "procedural")

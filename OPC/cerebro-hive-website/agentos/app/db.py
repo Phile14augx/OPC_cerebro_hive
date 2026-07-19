@@ -40,6 +40,7 @@ def get_db() -> Generator[Session, None, None]:
 def init_db() -> None:
     # Import models so they register on Base.metadata before create_all.
     from app.models import (  # noqa: F401
+        conversation,
         execution,
         governance,
         identity,

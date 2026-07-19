@@ -9,7 +9,9 @@ a human approval never calls a tool or an LLM until it's been signed off.
 
 from __future__ import annotations
 
-from app.core import context_engine, evaluation, governance_engine, llm_gateway, memory_engine, observability, planner, tool_framework
+from app.core import context_engine, evaluation, governance_engine, memory_engine, observability, planner
+from app.core.tools import registry as tool_registry, ToolError, to_json_safe
+from app.core.cerebro_x import gateway
 from app.core.event_bus import bus
 from app.models.execution import Run
 from app.models.governance import Approval, AuditLog
@@ -79,6 +81,7 @@ def _execute_steps(db, agent: Agent, run: Run, goal: str) -> Run:
         steps = planner.decompose(goal, strategy=agent.reasoning_profile, available_tools=agent.tools)
     run.plan = planner.plan_to_dicts(steps)
     db.commit()
+    bus.publish(db, "planner_step", {"plan": run.plan}, run_id=run.id)
 
     run.status = "executing"
     agent.lifecycle_state = "executing"
@@ -91,13 +94,16 @@ def _execute_steps(db, agent: Agent, run: Run, goal: str) -> Run:
         if pstep.kind == "tool" and pstep.tool:
             agent.lifecycle_state = "calling_tool"
             db.commit()
+            bus.publish(db, "tool_started", {"tool": pstep.tool, "args": {"query": goal}, "step_id": pstep.id}, run_id=run.id)
             with observability.span(db, run.id, f"tool:{pstep.tool}", {"step": pstep.id}):
                 try:
-                    result = tool_framework.invoke(pstep.tool, {"query": goal}, permissions=["execute"])
+                    result = tool_registry.invoke(pstep.tool, {"query": goal}, permissions=["execute"])
+                    bus.publish(db, "tool_finished", {"tool": pstep.tool, "result": to_json_safe(result), "step_id": pstep.id}, run_id=run.id)
                     memory_engine.remember(
-                        db, agent.id, tool_framework.to_json_safe(result), tier="working", run_id=run.id, meta={"step": pstep.id}
+                        db, agent.id, to_json_safe(result), tier="working", run_id=run.id, meta={"step": pstep.id}
                     )
-                except tool_framework.ToolError as exc:
+                except ToolError as exc:
+                    bus.publish(db, "error", {"error": str(exc), "step_id": pstep.id}, run_id=run.id)
                     memory_engine.remember(
                         db, agent.id, f"tool error: {exc}", tier="working", run_id=run.id, meta={"step": pstep.id, "error": True}
                     )
@@ -112,9 +118,11 @@ def _execute_steps(db, agent: Agent, run: Run, goal: str) -> Run:
             user_prompt = f"Step: {pstep.description}\nGoal: {goal}\nContext so far: {bundle.assembled_text}"
 
             with observability.span(db, run.id, f"llm:{pstep.id}", {"step": pstep.id}):
-                response = llm_gateway.gateway.complete(
+                response = gateway.complete(
                     system=system_prompt, prompt=user_prompt, model=agent.llm_model, temperature=agent.temperature
                 )
+            
+            bus.publish(db, "reasoning", {"text": response.text, "model": response.model, "step_id": pstep.id}, run_id=run.id)
 
             memory_engine.remember(db, agent.id, response.text, tier="working", run_id=run.id, meta={"step": pstep.id})
             observability.record_metric(db, "tokens", response.input_tokens + response.output_tokens, run_id=run.id)

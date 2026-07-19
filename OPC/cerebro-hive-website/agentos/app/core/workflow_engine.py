@@ -37,8 +37,8 @@ from __future__ import annotations
 
 from sqlalchemy.orm import Session
 
-from app.core import tool_framework
-from app.core.embeddings import cosine_similarity, embed
+from app.core.tools import registry as tool_registry, ToolError
+from app.core.cerebro_x.embeddings import cosine_similarity, embed
 from app.core.event_bus import bus
 from app.models.execution import WorkflowRun
 from app.models.governance import Approval
@@ -88,10 +88,10 @@ def step(db: Session, run: WorkflowRun) -> WorkflowRun:
 
         if node_type == "tool":
             try:
-                result = tool_framework.invoke(node["tool"], node.get("args", {}), permissions=["execute"])
+                result = tool_registry.invoke(node["tool"], node.get("args", {}), permissions=["execute"])
                 context[f"{current_id}_result"] = result
                 run.node_states[current_id] = "completed"
-            except tool_framework.ToolError as exc:
+            except ToolError as exc:
                 run.node_states[current_id] = "failed"
                 run.status = "failed"
                 context["error"] = str(exc)

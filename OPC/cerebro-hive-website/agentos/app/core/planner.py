@@ -1,17 +1,8 @@
-"""Planner Engine: Goal -> Task Decomposition -> Dependency Graph -> Execution
-Plan -> Scheduling.
-
-`decompose` implements Chain-of-Thought by default (a small, deterministic,
-linear breakdown that works with the mock provider and any real LLM). The
-`strategy` parameter is a real switch — Tree/Graph-of-Thought and replanning
-are named hooks so the runtime and API already speak the full vocabulary from
-the spec; only their internal search is a stub pending a production LLM
-budget for branching search.
-"""
-
-from __future__ import annotations
-
+import json
+import re
 from dataclasses import dataclass, field
+
+from app.core.cerebro_x import gateway
 
 STRATEGIES = (
     "chain_of_thought",
@@ -30,17 +21,7 @@ class PlanStep:
     depends_on: list[str] = field(default_factory=list)
 
 
-def decompose(goal: str, strategy: str = "chain_of_thought", available_tools: list[str] | None = None) -> list[PlanStep]:
-    """Break a goal into an ordered plan.
-
-    Chain-of-thought (default): understand -> retrieve context -> reason ->
-    (optionally act with a tool) -> synthesize -> self-critique.
-
-    Tree/Graph-of-Thought and HTN strategies currently fall back to the same
-    linear decomposition — the step `kind`/`tool` fields and the runtime that
-    executes them are strategy-agnostic, so swapping in real branching search
-    later doesn't change the execution contract.
-    """
+def _fallback_plan(goal: str, available_tools: list[str] | None = None) -> list[PlanStep]:
     available_tools = available_tools or []
     steps = [
         PlanStep(id="s1", description=f"Understand the goal: {goal}", kind="reason"),
@@ -65,6 +46,45 @@ def decompose(goal: str, strategy: str = "chain_of_thought", available_tools: li
     steps.append(PlanStep(id="s5", description="Self-critique and synthesize the final response", kind="reason", depends_on=["s4"]))
 
     return steps
+
+
+def decompose(goal: str, strategy: str = "chain_of_thought", available_tools: list[str] | None = None) -> list[PlanStep]:
+    """Break a goal into an ordered plan using Cerebro X AI Gateway."""
+    
+    system_prompt = (
+        "You are an expert AI planner. Break the user's goal down into a sequence of discrete steps. "
+        "Available tools: " + (", ".join(available_tools) if available_tools else "None") + ". "
+        "Respond ONLY with a JSON array of steps, where each step is an object with: "
+        "'id' (e.g. s1), 'description', 'kind' (reason|tool|approval), 'tool' (tool name if kind=tool, else null), "
+        "and 'depends_on' (list of step ids this step depends on)."
+    )
+    
+    try:
+        resp = gateway.complete(system=system_prompt, prompt=goal)
+        # Try to parse the LLM's JSON response
+        text = resp.text
+        # Strip markdown code blocks if any
+        text = re.sub(r"^```(?:json)?", "", text)
+        text = re.sub(r"```$", "", text)
+        text = text.strip()
+        
+        parsed = json.loads(text)
+        if not isinstance(parsed, list):
+            raise ValueError("Expected a list of steps")
+        
+        steps = []
+        for step in parsed:
+            steps.append(PlanStep(
+                id=step["id"],
+                description=step["description"],
+                kind=step.get("kind", "reason"),
+                tool=step.get("tool"),
+                depends_on=step.get("depends_on", [])
+            ))
+        return steps
+    except Exception:
+        # Fall back to deterministic CoT if parsing fails or LLM is a mock
+        return _fallback_plan(goal, available_tools)
 
 
 def plan_to_dicts(steps: list[PlanStep]) -> list[dict]:
