@@ -37,6 +37,8 @@ jobs:
       run: |
         cp -R public .next/standalone/
         cp -R .next/static .next/standalone/.next/
+        cp -R scripts .next/standalone/
+        cp -R nginx .next/standalone/
 
     - name: Setup SSH key
       run: |
@@ -46,36 +48,20 @@ jobs:
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
     - name: Bootstrap VPS (first run)
-      run: |
-        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'BOOTSTRAP'
-          set -e
-          # Install Node.js 20 if not present
-          if ! command -v node &>/dev/null; then
-            curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-            apt-get install -y nodejs
-          fi
-          # Install PM2 if not present
-          if ! command -v pm2 &>/dev/null; then
-            npm install -g pm2
-            pm2 startup systemd -u root --hp /root | tail -1 | bash
-          fi
-          # Install Nginx if not present
-          if ! command -v nginx &>/dev/null; then
-            apt-get install -y nginx
-            systemctl enable nginx
-          fi
-          # Open firewall ports for HTTP and HTTPS
-          if command -v ufw &>/dev/null; then
-            ufw allow 80/tcp || true
-            ufw allow 443/tcp || true
-            ufw allow 'Nginx Full' || true
-          fi
-          # Ensure iptables allows HTTP/HTTPS (backup if no ufw)
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script_stop: false
+        script: |
+          mkdir -p /var/www/cerebro-hive
+          command -v node &>/dev/null || (curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs)
+          command -v pm2 &>/dev/null || (npm install -g pm2 && pm2 startup systemd -u root --hp /root | tail -1 | bash)
+          command -v nginx &>/dev/null || (apt-get install -y nginx && systemctl enable nginx)
+          command -v ufw &>/dev/null && (ufw allow 80/tcp || true) && (ufw allow 443/tcp || true) || true
           iptables -I INPUT -p tcp --dport 80 -j ACCEPT 2>/dev/null || true
           iptables -I INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
-          # Create app directory
-          mkdir -p /var/www/cerebro-hive
-        BOOTSTRAP
 
     - name: Upload build to VPS
       run: |
@@ -84,31 +70,18 @@ jobs:
           ./OPC/cerebro-hive-website/.next/standalone/ \
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/cerebro-hive/
 
-    - name: Start / restart app with PM2
-      run: |
-        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'RESTART'
-          set -e
-          cd /var/www/cerebro-hive
-          if pm2 describe cerebro-hive > /dev/null 2>&1; then
-            pm2 restart cerebro-hive
-          else
-            pm2 start server.js --name cerebro-hive --env production
-            pm2 save
-          fi
-        RESTART
-
-    - name: Configure Nginx and HTTPS
+    - name: Restart app with PM2
       uses: appleboy/ssh-action@v1.2.0
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.VPS_SSH_KEY }}
-        script: |
-          printf 'server {\n    listen 80;\n    server_name cerebropchive.org www.cerebropchive.org _;\n    location / {\n        proxy_pass http://localhost:3000;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade $http_upgrade;\n        proxy_set_header Connection upgrade;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n        proxy_cache_bypass $http_upgrade;\n    }\n}\n' > /etc/nginx/sites-available/cerebro-hive
-          ln -sf /etc/nginx/sites-available/cerebro-hive /etc/nginx/sites-enabled/cerebro-hive
-          rm -f /etc/nginx/sites-enabled/default
-          nginx -t && systemctl reload nginx
-          iptables -I INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
-          command -v ufw >/dev/null 2>&1 && ufw allow 443/tcp || true
-          command -v certbot >/dev/null 2>&1 || apt-get install -y certbot python3-certbot-nginx
-          certbot --nginx -d cerebropchive.org -d www.cerebropchive.org --non-interactive --agree-tos -m admin@cerebropchive.org --redirect || echo "certbot-skipped"
+        script: bash /var/www/cerebro-hive/scripts/vps-restart.sh
+
+    - name: Configure Nginx and provision HTTPS
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: bash /var/www/cerebro-hive/scripts/vps-nginx.sh
