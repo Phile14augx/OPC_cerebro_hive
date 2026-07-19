@@ -2,6 +2,9 @@ import { getProductBySlug, products } from "@/lib/data/products";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductRenderer } from "@/components/products/renderer/ProductRenderer";
+import { JsonLd } from "@/components/discovery";
+import { buildSoftwareApplicationSchema } from "@/lib/discovery";
+import { buildProductMetadata } from "@/lib/discovery/metadata";
 
 export async function generateStaticParams() {
   return products.map((p) => ({
@@ -18,15 +21,11 @@ export async function generateMetadata({
   const product = getProductBySlug(slug);
   if (!product) return { title: "Product Not Found" };
 
-  return {
-    title: `${product.title} | CerebroHive`,
+  return buildProductMetadata({
+    title: product.title,
     description: product.summary,
-    openGraph: {
-      title: `${product.title} | CerebroHive`,
-      description: product.summary,
-      type: "website",
-    },
-  };
+    slug: product.slug,
+  });
 }
 
 export default async function ProductDetailRoute({
@@ -41,31 +40,17 @@ export default async function ProductDetailRoute({
     notFound();
   }
 
-  // SoftwareApplication JSON-LD structured data for rich search results
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
+  const schema = buildSoftwareApplicationSchema({
     name: product.title,
     description: product.summary,
-    url: `https://cerebrohive.com/products/${product.slug}`,
+    slug: product.slug,
     applicationCategory: product.category,
     operatingSystem: product.deploymentModels.join(", "),
-    offers: {
-      "@type": "Offer",
-      availability: "https://schema.org/InStock",
-    },
-    provider: {
-      "@type": "Organization",
-      name: "CerebroHive OPC Pvt. Ltd.",
-    },
-  };
+  });
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd schema={schema} />
       <ProductRenderer product={product} />
     </>
   );

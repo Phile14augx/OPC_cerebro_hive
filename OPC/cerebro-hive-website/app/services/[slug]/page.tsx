@@ -3,6 +3,9 @@ import { Metadata } from 'next';
 import { notFound } from "next/navigation";
 import React from 'react';
 import { ServiceRenderer } from "@/components/services/renderer/ServiceRenderer";
+import { JsonLd } from "@/components/discovery";
+import { buildServiceSchema, buildFaqSchema, buildBreadcrumbSchema } from "@/lib/discovery";
+import { buildServiceMetadata } from "@/lib/discovery/metadata";
 
 export async function generateStaticParams() {
   return services.map((s) => ({
@@ -14,16 +17,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const service = services.find(s => s.slug === slug);
   if (!service) return { title: 'Service Not Found' };
-  
-  return {
-    title: `${service.title} | CerebroHive Enterprise Services`,
-    description: service.summary,
-    openGraph: {
-      title: `${service.title} | CerebroHive`,
-      description: service.summary,
-      type: "website",
-    }
-  };
+
+  return buildServiceMetadata({
+    title: service.seo?.title ?? `${service.title} | Enterprise AI Services`,
+    description: service.seo?.description ?? service.summary,
+    slug: service.slug,
+    keywords: service.seo?.keywords,
+  });
 }
 
 export default async function EnterpriseServicePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -34,29 +34,28 @@ export default async function EnterpriseServicePage({ params }: { params: Promis
     notFound();
   }
 
-  // Generate structured data for SEO
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": service.title,
-    "description": service.summary,
-    "url": `https://cerebrohive.com/services/${service.slug}`,
-    "provider": {
-      "@type": "Organization",
-      "name": "CerebroHive OPC Pvt. Ltd."
-    },
-    "areaServed": service.industries.map(ind => ({
-      "@type": "Concept",
-      "name": ind
-    }))
-  };
+  const schemas = [
+    buildServiceSchema({
+      name: service.title,
+      description: service.summary,
+      serviceType: service.category,
+      slug: service.slug,
+    }),
+    buildBreadcrumbSchema([
+      { label: 'Home', href: '/' },
+      { label: 'Services', href: '/services' },
+      { label: service.title, href: `/services/${service.slug}` },
+    ]),
+    ...(service.faqs && service.faqs.length > 0
+      ? [buildFaqSchema(service.faqs.map(f => ({ q: f.question, a: f.answer })))]
+      : []),
+  ];
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {schemas.map((schema, i) => (
+        <JsonLd key={i} schema={schema} />
+      ))}
       <ServiceRenderer service={service} />
     </>
   );

@@ -1,5 +1,16 @@
 import { LucideIcon } from "lucide-react";
 
+export interface IndustrySEO {
+  title: string;
+  description: string;
+  keywords: string[];
+}
+
+export interface IndustryFAQ {
+  question: string;
+  answer: string;
+}
+
 export interface IndustryHero {
   title: string;
   subtitle: string;
@@ -169,6 +180,10 @@ export interface Industry {
   relatedIndustries?: string[]; // Slugs of related industries
   
   resources: { title: string; type: string; link: string }[];
+
+  // SEO + AEO
+  seo?: IndustrySEO;
+  faqs?: IndustryFAQ[];
 
   // NEW: Enterprise Digital Twin Config
   digitalTwin?: DigitalTwinConfig;

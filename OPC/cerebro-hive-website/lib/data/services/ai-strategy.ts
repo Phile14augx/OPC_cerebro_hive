@@ -14,7 +14,17 @@ export const aiStrategyService: EnterpriseService = {
   category: "Strategy",
   status: "production",
   tags: ["Strategy", "Roadmap", "Advisory", "C-Suite"],
-  
+
+  seo: {
+    title: "Enterprise AI Strategy & Roadmap | CerebroHive",
+    description: "CerebroHive's CerebroAI Strategy™ service delivers board-ready AI roadmaps, use case prioritization, and target operating models for enterprises in 45 days.",
+    keywords: [
+      "enterprise AI strategy", "AI roadmap consulting", "AI transformation roadmap",
+      "AI use case prioritization", "enterprise AI advisory", "AI strategy consultant",
+      "CIO AI strategy", "AI governance framework", "AI maturity assessment",
+    ],
+  },
+
   config: {
     layout: "enterprise",
     sections: [
@@ -100,12 +110,52 @@ export const aiStrategyService: EnterpriseService = {
 
   faqs: [
     {
-      question: "Who should participate from our side?",
-      answer: "We require active participation from IT leadership (CIO/CDO) as well as line-of-business owners to ensure the strategy aligns with both technical feasibility and business value."
+      question: "What is an enterprise AI strategy?",
+      answer: "An enterprise AI strategy is a structured plan that defines how an organization will adopt, deploy, and scale artificial intelligence across its operations. It covers AI use case identification, technology architecture choices, governance frameworks, talent requirements, and a phased roadmap — typically over 12–36 months. CerebroHive delivers board-ready AI strategies that align AI investments with measurable business outcomes.",
     },
     {
-      question: "Do you only recommend CerebroHive products?",
-      answer: "While we leverage the Cerebro Platform to accelerate deployment, our architectural recommendations are vendor-agnostic and focus on open standards."
-    }
+      question: "How long does a CerebroHive AI Strategy engagement take?",
+      answer: "Our CerebroAI Strategy™ engagement follows a 6-week structured process: 2 weeks for discovery and assessment, 2 weeks for use case prioritization and ROI modeling, and 2 weeks for roadmap formulation and executive presentation delivery. This results in a board-ready strategy with a 90-day execution plan.",
+    },
+    {
+      question: "What deliverables do we receive from the AI Strategy engagement?",
+      answer: "You receive five core deliverables: (1) Enterprise AI Readiness Assessment scoring your data, infrastructure, and talent maturity; (2) Prioritized Use Case Backlog with ROI projections; (3) Target Platform Architecture aligned to your existing tech stack; (4) Security & Governance Framework covering compliance and risk; and (5) a 90-Day Implementation Roadmap with resource requirements.",
+    },
+    {
+      question: "Who should participate from our organization?",
+      answer: "We require active participation from IT leadership (CIO/CDO), line-of-business owners from 2–3 priority functions, and executive sponsorship at the C-suite level. The strategy engagement is most effective when business context and technical constraints are both represented from day one.",
+    },
+    {
+      question: "Do you only recommend CerebroHive products in the strategy?",
+      answer: "No — our architectural recommendations are vendor-agnostic and built on open standards. We recommend the best tools for your specific context: cloud providers, model providers, vector databases, orchestration frameworks, and governance tools. Where CerebroHive products (like HivePulse or Cerebro X) are the right fit, we include them; otherwise we recommend alternatives.",
+    },
+    {
+      question: "What is an AI readiness assessment and why do we need one?",
+      answer: "An AI readiness assessment evaluates your organization's current state across five dimensions: data maturity, infrastructure readiness, talent capability, governance posture, and business process digitization. It's the foundation of a sound AI strategy because it reveals where you are on the maturity curve and what investments are needed before scaling AI. Without it, organizations typically waste 6–18 months on pilots that can't scale.",
+    },
+    {
+      question: "How do you prioritize AI use cases?",
+      answer: "We score AI use cases across four axes: business value (revenue impact, cost savings, risk reduction), technical feasibility (data availability, model maturity, integration complexity), strategic alignment (fit with company direction), and time-to-value (speed of implementation). Use cases are plotted on a value-feasibility matrix and sequenced into a phased roadmap — quick wins first, transformational initiatives later.",
+    },
+    {
+      question: "What is an AI Target Operating Model?",
+      answer: "An AI Target Operating Model (TOM) defines how AI will be built, deployed, governed, and scaled within your organization. It specifies the roles and teams responsible for AI (centralized CoE, federated, or hybrid), the governance structure, the technology platform choices, the data ownership model, and the processes for AI evaluation and deployment. CerebroHive delivers a bespoke TOM as part of the strategy engagement.",
+    },
+    {
+      question: "How does CerebroHive handle AI governance in the strategy?",
+      answer: "Every CerebroAI Strategy™ engagement includes an AI Governance Framework covering: model explainability requirements, data privacy and security controls, regulatory compliance mapping (GDPR, HIPAA, SOC 2 as applicable), AI risk categorization, bias assessment processes, and human-in-the-loop protocols. Governance is not bolted on — it is architected in from the start.",
+    },
+    {
+      question: "What industries do you have AI strategy experience in?",
+      answer: "CerebroHive has delivered AI strategies for organizations in Financial Services, Healthcare, Manufacturing, Retail, Logistics, Legal & Compliance, Government, Technology, Energy, and Education. Each strategy is tailored to the regulatory environment, data landscape, and competitive dynamics of the specific industry.",
+    },
+    {
+      question: "What happens after the strategy engagement ends?",
+      answer: "After the strategy delivery, clients typically move into one of three paths: (1) Advisory Retainer — ongoing monthly access to CerebroHive architects during implementation; (2) Platform Engineering — we build the technical foundation defined in the strategy; or (3) Self-execution with documentation — for organizations with strong internal teams who need a plan but not ongoing support. We design the handoff to match your capability.",
+    },
+    {
+      question: "How do you measure ROI from an AI strategy investment?",
+      answer: "We measure AI strategy ROI across three time horizons. Immediate (0–90 days): reduced time to identify the right use cases, avoided spend on low-value pilots. Medium-term (6–12 months): faster time-to-production on prioritized use cases, measured as weeks saved. Long-term (12–36 months): revenue uplift, cost reduction, and productivity gains from scaled AI initiatives. Our engagements include an ROI tracking framework tied to the roadmap milestones.",
+    },
   ],
 };
