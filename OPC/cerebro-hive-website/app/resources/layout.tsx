@@ -23,8 +23,8 @@ const collectionSchema = buildCollectionPageSchema({
 });
 
 const breadcrumbSchema = buildBreadcrumbSchema([
-  { name: "Home", url: "https://cerebropchive.org" },
-  { name: "Resources", url: "https://cerebropchive.org/resources" },
+  { label: "Home", href: "https://cerebropchive.org" },
+  { label: "Resources", href: "https://cerebropchive.org/resources" },
 ]);
 
 export default function ResourcesLayout({ children }: { children: React.ReactNode }) {

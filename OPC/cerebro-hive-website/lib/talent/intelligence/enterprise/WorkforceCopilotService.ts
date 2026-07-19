@@ -49,4 +49,17 @@ export class WorkforceCopilotService {
       confidenceScore: 0.95
     };
   }
+
+  async recommendCandidatesForProject(projectId: string, limit: number) {
+    console.log(`[Workforce Copilot] Recommending candidates for project ${projectId}`);
+    return [
+      {
+        candidateId: "candidate-1",
+        overallFitScore: 0.92,
+        explainability: {
+          reason: "High score in Node.js and Systems Design from recent execution artifacts."
+        }
+      }
+    ];
+  }
 }

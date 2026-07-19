@@ -1,12 +1,12 @@
 import { NextRequest } from 'next/server';
-import { SessionService } from '../../../../../../lib/talent/services/SessionService';
-import { ApiUtils } from '../../../../../../lib/talent/utils/api';
-import { withAuthorization } from '../../../../../../lib/talent/auth/middleware';
+import { SessionService } from '../../../../../lib/talent/services/SessionService';
+import { ApiUtils } from '../../../../../lib/talent/utils/api';
+import { withAuthorization } from '../../../../../lib/talent/auth/middleware';
 
 const sessionService = new SessionService();
 
 export async function POST(req: NextRequest) {
-  return withAuthorization(req, 'CREATE_SESSION', '*', async (req, userContext) => {
+  return withAuthorization(req, 'CREATE_SESSION', '*', async (req: any, userContext: any) => {
     try {
       const body = await req.json();
       const { candidateId, assessmentVersionId } = body;

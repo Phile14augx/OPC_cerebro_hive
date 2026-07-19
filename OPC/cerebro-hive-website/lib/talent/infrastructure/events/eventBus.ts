@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { Logger } from './logger';
+import { Logger } from '../observability/logger';
 
 const eventBusLogger = new Logger('DomainEventBus');
 const internalBus = new EventEmitter();
@@ -9,7 +9,19 @@ export type DomainEventType =
   | 'CandidateInvited'
   | 'SubmissionCompleted'
   | 'SkillProfileUpdated'
-  | 'OrganizationSkillGraphRebuilt';
+  | 'OrganizationSkillGraphRebuilt'
+  | 'SessionStarted'
+  | 'SessionResumed'
+  | 'TelemetryBatchReceived'
+  | 'AssessmentSubmitted'
+  | 'ExecutionQueued'
+  | 'WorkerAllocated'
+  | 'SandboxCreated'
+  | 'ExecutionStarted'
+  | 'ExecutionCompleted'
+  | 'ExecutionFailed'
+  | 'SandboxDestroyed'
+  | 'WorkerReleased';
 
 export interface DomainEvent<T = any> {
   type: DomainEventType;

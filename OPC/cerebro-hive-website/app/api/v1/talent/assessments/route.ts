@@ -6,7 +6,7 @@ import { withAuthorization } from '../../../../../lib/talent/auth/middleware';
 const assessmentService = new AssessmentService();
 
 export async function GET(req: NextRequest) {
-  return withAuthorization(req, 'READ_ASSESSMENT', '*', async (req, userContext) => {
+  return withAuthorization(req, 'READ_ASSESSMENT', '*', async (req: any, userContext: any) => {
     try {
       const searchParams = req.nextUrl.searchParams;
       // In a real app, workspaceId would be derived from the user's active context.
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  return withAuthorization(req, 'CREATE_ASSESSMENT', '*', async (req, userContext) => {
+  return withAuthorization(req, 'CREATE_ASSESSMENT', '*', async (req: any, userContext: any) => {
     try {
       const body = await req.json();
       const { title, workspaceId = 'mock-workspace-id' } = body;

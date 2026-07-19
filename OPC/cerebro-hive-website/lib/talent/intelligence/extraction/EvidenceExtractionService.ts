@@ -18,7 +18,7 @@ export class EvidenceExtractionService {
   }
 
   private initializeEventSubscription() {
-    DomainEventBus.subscribe('ExecutionCompleted', async (event) => {
+    DomainEventBus.subscribe<{jobId: string, exitCode: number}>('ExecutionCompleted', async (event) => {
       const { jobId, exitCode } = event.payload;
       logger.info(`Extracting evidence for Job: ${jobId}`);
       await this.extractEvidence(jobId);

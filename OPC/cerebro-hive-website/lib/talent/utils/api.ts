@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import { Logger } from '../infrastructure/observability/logger';
-import { v4 as uuidv4 } from 'uuid';
-
 const apiLogger = new Logger('API_Handler');
 
 export interface ApiResponse<T> {
@@ -15,13 +13,13 @@ export interface ApiResponse<T> {
 export class ApiUtils {
   
   static success<T>(data: T, meta?: any, status: number = 200) {
-    const traceId = uuidv4();
+    const traceId = crypto.randomUUID();
     apiLogger.info(`API Success [${status}]`, { traceId, meta });
     return NextResponse.json({ success: true, data, meta, traceId }, { status });
   }
 
   static error(message: string, status: number = 500, error?: any) {
-    const traceId = uuidv4();
+    const traceId = crypto.randomUUID();
     apiLogger.error(`API Error [${status}]: ${message}`, error, { traceId });
     return NextResponse.json({ success: false, error: message, traceId }, { status });
   }

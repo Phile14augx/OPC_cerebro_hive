@@ -49,10 +49,10 @@ export default async function GuidePage({
   });
 
   const breadcrumbSchema = buildBreadcrumbSchema([
-    { name: "Home", url: "https://cerebropchive.org" },
-    { name: "Resources", url: "https://cerebropchive.org/resources" },
-    { name: "Guides", url: "https://cerebropchive.org/resources/guides" },
-    { name: guide.title, url: `https://cerebropchive.org/resources/guides/${guide.slug}` },
+    { label: "Home", href: "https://cerebropchive.org" },
+    { label: "Resources", href: "https://cerebropchive.org/resources" },
+    { label: "Guides", href: "https://cerebropchive.org/resources/guides" },
+    { label: guide.title, href: `https://cerebropchive.org/resources/guides/${guide.slug}` },
   ]);
 
   return (

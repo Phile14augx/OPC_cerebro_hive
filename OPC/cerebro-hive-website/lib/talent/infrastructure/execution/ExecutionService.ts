@@ -1,6 +1,6 @@
 import { PrismaClient, ExecutionJob, ExecutionStatus } from '@prisma/client';
-import { DomainEventBus } from '../../events/eventBus';
-import { withTransaction } from '../../database/transaction';
+import { DomainEventBus } from '../events/eventBus';
+import { withTransaction } from '../database/transaction';
 import { 
   IQueueProvider, 
   ISandboxProvider, 
@@ -92,7 +92,7 @@ export class ExecutionService {
    * Called by the Next.js API to submit code for execution
    */
   async submitExecution(sessionId: string, language: string, code: string, traceId?: string): Promise<ExecutionJob> {
-    return withTransaction(async (tx) => {
+    return withTransaction(async (tx: any) => {
       // 1. Create Job Record
       const job = await tx.executionJob.create({
         data: {

@@ -5,10 +5,10 @@ import { withAuthorization } from '../../../../../../../lib/talent/auth/middlewa
 
 const sessionService = new SessionService();
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
-  return withAuthorization(req, 'UPDATE_SESSION', '*', async (req, userContext) => {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  return withAuthorization(req, 'UPDATE_SESSION', '*', async (req: any, userContext: any) => {
     try {
-      const sessionId = params.id;
+      const { id: sessionId } = await params;
       const body = await req.json();
       const { sequence, events } = body;
 

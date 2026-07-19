@@ -7,11 +7,11 @@ async function main() {
 
   // 1. Core Users & Organization
   const org = await prisma.organization.upsert({
-    where: { domain: 'cerebrohive.local' },
+    where: { slug: 'cerebrohive-local' },
     update: {},
     create: {
       name: 'CerebroHive Local Env',
-      domain: 'cerebrohive.local',
+      slug: 'cerebrohive-local',
     },
   });
 
@@ -30,8 +30,7 @@ async function main() {
     update: {},
     create: {
       userId: user.id,
-      organizationId: org.id,
-      jobTitle: 'Talent OS Admin',
+      title: 'Talent OS Admin',
     },
   });
 

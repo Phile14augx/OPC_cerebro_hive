@@ -7,8 +7,8 @@ export const dynamic = 'force-dynamic';
 // Shared instance (in production, use a proper singleton across the worker pool)
 const executionService = new ExecutionService();
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const jobId = params.id;
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: jobId } = await params;
   const streamingProvider = executionService.getStreamingProvider();
 
   // Create a TransformStream to push Server-Sent Events to the client
