@@ -12,7 +12,7 @@ import {
   Newspaper, FileText, Activity, Milestone,
   GraduationCap as GradIcon, Award, Beaker, Map,
   CreditCard, Receipt, FileStack, ReceiptText, Key,
-  Sparkles, HelpCircle, Ticket, Users2, ActivitySquare,
+  Sparkles, HelpCircle, Ticket, Users2, ActivitySquare, Target,
   type LucideIcon
 } from "lucide-react";
 
@@ -183,6 +183,19 @@ export const supportNavigation: NavGroup = {
   ],
 };
 
+export const talentNavigation: NavGroup = {
+  title: "Talent OS",
+  href: "/app/talent",
+  icon: Target,
+  items: [
+    { title: "Hiring Pipeline", href: "/app/talent", icon: LayoutDashboard },
+    { title: "Candidates", href: "/app/talent/candidates", icon: Users },
+    { title: "Assessments", href: "/app/talent/assessments", icon: BookOpen },
+    { title: "Assessment Builder", href: "/app/talent/builder", icon: LayoutPanelLeft },
+    { title: "Question Bank", href: "/app/talent/questions", icon: Library },
+  ],
+};
+
 export const platformNavigation: NavGroup[] = [
   workspaceNavigation,
   aiNavigation,
@@ -194,5 +207,6 @@ export const platformNavigation: NavGroup[] = [
   researchNavigation,
   academyNavigation,
   businessNavigation,
+  talentNavigation,
   supportNavigation,
 ];

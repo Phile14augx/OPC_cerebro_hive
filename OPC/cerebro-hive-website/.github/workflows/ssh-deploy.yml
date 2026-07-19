@@ -64,6 +64,15 @@ jobs:
             apt-get install -y nginx
             systemctl enable nginx
           fi
+          # Open firewall ports for HTTP and HTTPS
+          if command -v ufw &>/dev/null; then
+            ufw allow 80/tcp || true
+            ufw allow 443/tcp || true
+            ufw allow 'Nginx Full' || true
+          fi
+          # Ensure iptables allows HTTP/HTTPS (backup if no ufw)
+          iptables -I INPUT -p tcp --dport 80 -j ACCEPT 2>/dev/null || true
+          iptables -I INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
           # Create app directory
           mkdir -p /var/www/cerebro-hive
         BOOTSTRAP

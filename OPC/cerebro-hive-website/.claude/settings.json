@@ -21,7 +21,15 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 10 http://cerebropchive.org/)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 10 https://cerebropchive.org/)",
       "Bash(gh project *)",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Read(//d//**)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{url_effective}\" --max-time 10 https://cerebropchive.org)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 10 http://200.97.175.131)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 10 http://cerebropchive.org)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 10 https://cerebropchive.org)",
+      "Bash(curl -s -I --max-time 10 https://cerebropchive.org)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" --max-time 10 -k https://200.97.175.131)",
+      "Bash(curl -s -I --max-time 10 http://cerebropchive.org)"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows"

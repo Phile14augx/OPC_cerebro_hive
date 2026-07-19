@@ -24,6 +24,7 @@ export function Sidebar() {
       ...(platformNavigation.find(g => g.title === "Data")?.items || []),
       ...(platformNavigation.find(g => g.title === "Security")?.items || [])
     ]},
+    { title: "Talent OS", items: platformNavigation.find(g => g.title === "Talent OS")?.items || [] },
     { title: "Explore", items: platformNavigation.find(g => g.title === "Solutions")?.items || [] }
   ];
 
