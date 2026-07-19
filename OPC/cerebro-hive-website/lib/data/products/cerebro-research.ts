@@ -15,7 +15,13 @@ export const cerebroResearchProduct: PackagedProduct = {
   status: "production",
   maturity: "ga",
   tags: ["R&D", "Science"],
-  
+
+  seo: {
+    title: "CerebroResearch™ | AI-Powered Enterprise Research & R&D Platform | CerebroHive",
+    description: "CerebroResearch accelerates enterprise R&D with AI agents that read, synthesize, and draft research at scale — helping life sciences and pharma teams extract insights from thousands of papers overnight.",
+    keywords: ["AI research platform", "enterprise R&D software", "AI literature review tool", "scientific AI platform", "AI paper analysis software", "R&D intelligence platform", "AI hypothesis generation", "research automation software"],
+  },
+
   config: {
     layout: "saas",
     sections: [

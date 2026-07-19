@@ -15,7 +15,13 @@ export const cerebroStudioProduct: PackagedProduct = {
   status: "production",
   maturity: "ga",
   tags: ["Low-Code", "Agent Builder", "IDE"],
-  
+
+  seo: {
+    title: "CerebroStudio™ | Visual AI Agent Builder & Orchestration IDE | CerebroHive",
+    description: "CerebroStudio is a visual IDE for building, testing, and deploying enterprise AI agents — drag-and-drop agent creation with real-time sandbox testing and one-click deployment to the CerebroHive platform.",
+    keywords: ["AI agent builder", "visual agent IDE", "enterprise agent development platform", "low-code AI agent tool", "AI orchestration IDE", "multi-agent development platform", "no-code AI builder", "agent deployment platform"],
+  },
+
   config: {
     layout: "developer_tool",
     sections: [

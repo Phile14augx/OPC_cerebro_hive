@@ -15,7 +15,13 @@ export const hiveOpsProduct: PackagedProduct = {
   status: "production",
   maturity: "ga",
   tags: ["DevOps", "Monitoring", "LLMOps"],
-  
+
+  seo: {
+    title: "HiveOps™ | Enterprise LLMOps & AI Agent Operations Platform | CerebroHive",
+    description: "HiveOps is an enterprise LLMOps platform for deploying, monitoring, and scaling AI agents in production — with granular token cost attribution, fleet management, and zero-downtime model rollbacks.",
+    keywords: ["LLMOps platform", "AI agent monitoring software", "enterprise LLM operations", "AI fleet management", "LLM cost tracking", "AI deployment platform", "AI model operations", "enterprise AI DevOps"],
+  },
+
   config: {
     layout: "infrastructure",
     sections: [

@@ -10,8 +10,12 @@ import { cerebroLearnProduct } from "./cerebro-learn";
 import { hiveShieldProduct } from "./hive-shield";
 import { hiveOpsProduct } from "./hive-ops";
 import { cerebroSphereProduct } from "./cerebro-sphere";
+import { hivepulseProduct } from "./hivepulse";
+import { cerebroXProduct } from "./cerebro-x";
 
 export const products: PackagedProduct[] = [
+  hivepulseProduct,
+  cerebroXProduct,
   cerebroArchiveProduct,
   cerebroStudioProduct,
   cerebroFlowProduct,
@@ -21,7 +25,7 @@ export const products: PackagedProduct[] = [
   cerebroLearnProduct,
   hiveShieldProduct,
   hiveOpsProduct,
-  cerebroSphereProduct
+  cerebroSphereProduct,
 ];
 
 export const getProductBySlug = (slug: string) => {

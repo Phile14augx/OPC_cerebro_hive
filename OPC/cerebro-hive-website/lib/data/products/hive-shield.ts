@@ -15,7 +15,13 @@ export const hiveShieldProduct: PackagedProduct = {
   status: "production",
   maturity: "ga",
   tags: ["Security", "Governance", "Guardrails"],
-  
+
+  seo: {
+    title: "HiveShield™ | Enterprise AI Security & Governance Platform | CerebroHive",
+    description: "HiveShield protects enterprise AI deployments with real-time threat detection, automatic PII masking, and AI guardrails — defending against prompt injections, jailbreaks, and data exfiltration at production scale.",
+    keywords: ["AI security platform", "enterprise AI governance software", "LLM security tool", "AI guardrails software", "prompt injection detection", "AI safety platform", "enterprise AI compliance", "AI threat detection"],
+  },
+
   config: {
     layout: "infrastructure",
     sections: [

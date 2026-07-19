@@ -15,7 +15,13 @@ export const cerebroSphereProduct: PackagedProduct = {
   status: "production",
   maturity: "ga",
   tags: ["Command Center", "Topology", "Digital Twin"],
-  
+
+  seo: {
+    title: "CerebroSphere™ | Enterprise AI Command Center & Architecture Visualization | CerebroHive",
+    description: "CerebroSphere is an enterprise AI command center that auto-discovers and visualizes your entire AI agent architecture in real-time — with digital twin simulation for safe infrastructure planning before deployment.",
+    keywords: ["AI command center software", "enterprise AI architecture visualization", "AI topology management", "AI observability platform", "digital twin AI infrastructure", "AI system monitoring", "enterprise AI control plane", "AI fleet visualization"],
+  },
+
   config: {
     layout: "platform",
     sections: [

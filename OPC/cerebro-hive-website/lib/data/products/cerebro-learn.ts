@@ -15,7 +15,13 @@ export const cerebroLearnProduct: PackagedProduct = {
   status: "production",
   maturity: "ga",
   tags: ["Training", "LMS"],
-  
+
+  seo: {
+    title: "CerebroLearn™ | Corporate AI Training & Certification Platform | CerebroHive",
+    description: "CerebroLearn is a corporate AI learning platform with hands-on labs, structured certification paths, and practical AI courses — designed to upskill enterprise teams in LLMs, agents, RAG, and AI engineering.",
+    keywords: ["corporate AI training platform", "enterprise AI certification", "AI upskilling software", "AI learning management system", "enterprise AI education", "AI skills training", "AI certification courses", "workplace AI training"],
+  },
+
   config: {
     layout: "saas",
     sections: [

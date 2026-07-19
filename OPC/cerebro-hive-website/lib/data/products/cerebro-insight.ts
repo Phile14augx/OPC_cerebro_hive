@@ -15,7 +15,13 @@ export const cerebroInsightProduct: PackagedProduct = {
   status: "production",
   maturity: "ga",
   tags: ["Analytics", "Dashboards", "BI"],
-  
+
+  seo: {
+    title: "CerebroInsight™ | AI Executive Analytics & Predictive Forecasting | CerebroHive",
+    description: "CerebroInsight delivers real-time AI-driven analytics and predictive forecasting for enterprise leaders — ask questions in plain English and get instant dashboards from your live operational data.",
+    keywords: ["AI analytics platform", "executive analytics software", "AI business intelligence", "natural language BI tool", "AI forecasting software", "enterprise AI dashboards", "predictive analytics enterprise", "AI-powered reporting"],
+  },
+
   config: {
     layout: "saas",
     sections: [

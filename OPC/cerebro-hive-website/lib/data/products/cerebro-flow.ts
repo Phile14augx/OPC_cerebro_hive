@@ -15,7 +15,13 @@ export const cerebroFlowProduct: PackagedProduct = {
   status: "production",
   maturity: "ga",
   tags: ["BPM", "Automation", "Orchestration"],
-  
+
+  seo: {
+    title: "CerebroFlow™ | AI Workflow Automation & BPM Software | CerebroHive",
+    description: "CerebroFlow is an AI-first business process management platform that orchestrates AI agents, human approvals, and enterprise APIs in a unified control plane — automating complex end-to-end workflows without brittle RPA.",
+    keywords: ["AI workflow automation", "enterprise BPM software", "AI process automation", "agentic workflow orchestration", "human in the loop workflow", "AI BPM platform", "enterprise workflow management", "intelligent process automation"],
+  },
+
   config: {
     layout: "saas",
     sections: [
