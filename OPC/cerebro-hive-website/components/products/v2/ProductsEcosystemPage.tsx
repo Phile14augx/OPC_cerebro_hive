@@ -197,35 +197,33 @@ export function ProductsEcosystemPage() {
             </h2>
           </div>
 
-          <div className="flex flex-col gap-16">
+          <div className="flex flex-col gap-24">
             {/* OS Layer */}
             {ecosystemTiers.os.map(product => {
               const Icon = moduleIcons[product.id] || Globe2;
               return (
-                <div key={product.id} className="relative p-8 rounded-2xl border-2 border-violet-500/40 bg-gradient-to-br from-violet-500/10 to-purple-600/5">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-violet-400 mb-6">Enterprise Operating System — OS Layer</div>
-                  <div className="flex flex-col md:flex-row gap-8 items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-violet-500/20 border border-violet-500/40 flex items-center justify-center">
-                          <Icon size={24} className="text-violet-300" />
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-space font-bold text-text-primary">{product.title}</h3>
-                          <p className="text-text-muted text-sm">{product.hero.subtitle}</p>
-                        </div>
+                <div key={product.id} className="relative p-10 rounded-2xl border-2 border-violet-500/40 bg-gradient-to-br from-violet-500/10 to-purple-600/5 text-center flex flex-col items-center">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-violet-400 mb-8">Enterprise Operating System — OS Layer</div>
+                  <div className="flex flex-col items-center max-w-4xl mx-auto">
+                    <div className="flex items-center gap-4 mb-6 flex-col">
+                      <div className="w-16 h-16 rounded-xl bg-violet-500/20 border border-violet-500/40 flex items-center justify-center">
+                        <Icon size={32} className="text-violet-300" />
                       </div>
-                      <p className="text-text-secondary leading-relaxed mb-6 max-w-2xl">{product.summary}</p>
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {product.coreCapabilities.slice(0, 4).map(cap => (
-                          <span key={cap.title} className="px-3 py-1 text-xs font-bold tracking-wide uppercase bg-background border border-border rounded-full text-text-muted">{cap.title}</span>
-                        ))}
-                        {product.coreCapabilities.length > 4 && (
-                          <span className="px-3 py-1 text-xs font-bold tracking-wide uppercase bg-background border border-border rounded-full text-primary-accent">+{product.coreCapabilities.length - 4} more</span>
-                        )}
+                      <div>
+                        <h3 className="text-3xl font-space font-bold text-text-primary mb-2">{product.title}</h3>
+                        <p className="text-text-muted text-sm">{product.hero.subtitle}</p>
                       </div>
                     </div>
-                    <Link href={`/products/${product.slug}`} className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 bg-violet-500/20 border border-violet-500/40 text-violet-300 font-bold text-sm rounded-xl hover:bg-violet-500/30 transition-colors">
+                    <p className="text-text-secondary leading-relaxed mb-8 max-w-2xl mx-auto">{product.summary}</p>
+                    <div className="flex flex-wrap gap-2 mb-8 justify-center">
+                      {product.coreCapabilities.slice(0, 4).map(cap => (
+                        <span key={cap.title} className="px-3 py-1 text-xs font-bold tracking-wide uppercase bg-background border border-border rounded-full text-text-muted">{cap.title}</span>
+                      ))}
+                      {product.coreCapabilities.length > 4 && (
+                        <span className="px-3 py-1 text-xs font-bold tracking-wide uppercase bg-background border border-border rounded-full text-primary-accent">+{product.coreCapabilities.length - 4} more</span>
+                      )}
+                    </div>
+                    <Link href={`/products/${product.slug}`} className="inline-flex items-center gap-2 px-8 py-4 bg-violet-500/20 border border-violet-500/40 text-violet-300 font-bold text-sm rounded-xl hover:bg-violet-500/30 transition-colors">
                       Explore {product.title} <ChevronRight size={16} />
                     </Link>
                   </div>
@@ -236,25 +234,25 @@ export function ProductsEcosystemPage() {
             {/* Orchestration Engine */}
             {ecosystemTiers.orchestration.length > 0 && (
               <div>
-                <div className="text-[10px] font-bold tracking-widest uppercase text-cyan-400 mb-6">Orchestration Engine</div>
-                <div className="grid grid-cols-1 gap-6">
+                <div className="text-[10px] font-bold tracking-widest uppercase text-cyan-400 mb-6 text-center">Orchestration Engine</div>
+                <div className="grid grid-cols-1 gap-8">
                   {ecosystemTiers.orchestration.map(product => {
                     const Icon = moduleIcons[product.id] || Cpu;
                     return (
                       <Link
                         key={product.id}
                         href={`/products/${product.slug}`}
-                        className="group p-6 rounded-2xl border border-border bg-background hover:border-cyan-500/40 hover:shadow-elevated transition-all flex flex-col sm:flex-row gap-5 items-start sm:items-center"
+                        className="group p-8 rounded-2xl border border-border bg-background hover:border-cyan-500/40 hover:shadow-elevated transition-all flex flex-col items-center text-center gap-5"
                       >
-                        <div className="w-12 h-12 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-cyan-500/25 transition-colors">
-                          <Icon size={22} className="text-cyan-300" />
+                        <div className="w-14 h-14 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-cyan-500/25 transition-colors">
+                          <Icon size={28} className="text-cyan-300" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-space font-bold text-text-primary mb-1 group-hover:text-cyan-300 transition-colors">{product.title}</h3>
-                          <p className="text-xs text-text-muted mb-3">{product.hero.subtitle}</p>
+                          <h3 className="font-space font-bold text-text-primary mb-2 text-xl group-hover:text-cyan-300 transition-colors">{product.title}</h3>
+                          <p className="text-xs text-text-muted mb-4">{product.hero.subtitle}</p>
                           <p className="text-sm text-text-secondary leading-relaxed line-clamp-2">{product.summary}</p>
                         </div>
-                        <div className="flex-shrink-0 flex items-center gap-1 mt-4 sm:mt-0 text-xs text-primary-accent font-bold">
+                        <div className="flex-shrink-0 flex items-center gap-1 mt-2 text-xs text-primary-accent font-bold">
                           Explore module <ChevronRight size={12} />
                         </div>
                       </Link>
@@ -267,22 +265,22 @@ export function ProductsEcosystemPage() {
             {/* Business Modules */}
             <div>
               <div className="text-[10px] font-bold tracking-widest uppercase text-emerald-400 mb-6">Business Intelligence Modules</div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {ecosystemTiers.business.map(product => {
                   const Icon = moduleIcons[product.id] || Code2;
                   return (
                     <Link
                       key={product.id}
                       href={`/products/${product.slug}`}
-                      className="group p-6 rounded-2xl border border-border bg-background hover:border-emerald-500/40 hover:shadow-elevated transition-all"
+                      className="group p-8 rounded-2xl border border-border bg-background hover:border-emerald-500/40 hover:shadow-elevated transition-all flex flex-col items-center text-center"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-5 group-hover:bg-emerald-500/25 transition-colors">
-                        <Icon size={20} className="text-emerald-300" />
+                      <div className="w-14 h-14 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-5 group-hover:bg-emerald-500/25 transition-colors">
+                        <Icon size={28} className="text-emerald-300" />
                       </div>
-                      <h3 className="font-space font-bold text-text-primary mb-1 group-hover:text-emerald-300 transition-colors">{product.title}</h3>
-                      <p className="text-xs text-text-muted mb-3">{product.hero.subtitle}</p>
-                      <p className="text-sm text-text-secondary leading-relaxed line-clamp-3">{product.summary}</p>
-                      <div className="flex items-center gap-1 mt-4 text-xs text-primary-accent font-bold">
+                      <h3 className="font-space font-bold text-text-primary mb-2 text-lg group-hover:text-emerald-300 transition-colors">{product.title}</h3>
+                      <p className="text-xs text-text-muted mb-4">{product.hero.subtitle}</p>
+                      <p className="text-sm text-text-secondary leading-relaxed line-clamp-3 mb-6">{product.summary}</p>
+                      <div className="flex items-center gap-1 mt-auto text-xs text-primary-accent font-bold">
                         Explore module <ChevronRight size={12} />
                       </div>
                     </Link>
@@ -295,21 +293,21 @@ export function ProductsEcosystemPage() {
             {ecosystemTiers.intelligence.length > 0 && (
               <div>
                 <div className="text-[10px] font-bold tracking-widest uppercase text-indigo-400 mb-6">Intelligence Layer</div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {ecosystemTiers.intelligence.map(product => {
                     const Icon = moduleIcons[product.id] || Database;
                     return (
                       <Link
                         key={product.id}
                         href={`/products/${product.slug}`}
-                        className="group p-6 rounded-2xl border border-border bg-background hover:border-indigo-500/40 hover:shadow-elevated transition-all flex gap-5"
+                        className="group p-8 rounded-2xl border border-border bg-background hover:border-indigo-500/40 hover:shadow-elevated transition-all flex flex-col items-center text-center gap-4"
                       >
-                        <div className="w-12 h-12 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500/25 transition-colors">
-                          <Icon size={22} className="text-indigo-300" />
+                        <div className="w-14 h-14 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500/25 transition-colors">
+                          <Icon size={28} className="text-indigo-300" />
                         </div>
                         <div>
-                          <h3 className="font-space font-bold text-text-primary mb-1 group-hover:text-indigo-300 transition-colors">{product.title}</h3>
-                          <p className="text-xs text-text-muted mb-3">{product.hero.subtitle}</p>
+                          <h3 className="font-space font-bold text-text-primary mb-2 text-lg group-hover:text-indigo-300 transition-colors">{product.title}</h3>
+                          <p className="text-xs text-text-muted mb-4">{product.hero.subtitle}</p>
                           <p className="text-sm text-text-secondary leading-relaxed">{product.summary.substring(0, 160)}…</p>
                         </div>
                       </Link>
@@ -321,22 +319,22 @@ export function ProductsEcosystemPage() {
 
             {/* Enterprise Platform */}
             <div>
-              <div className="text-[10px] font-bold tracking-widest uppercase text-amber-400 mb-6">Enterprise Platform Services</div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-amber-400 mb-6 text-center">Enterprise Platform Services</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {ecosystemTiers.enterprise.map(product => {
                   const Icon = moduleIcons[product.id] || Shield;
                   return (
                     <Link
                       key={product.id}
                       href={`/products/${product.slug}`}
-                      className="group p-6 rounded-2xl border border-border bg-background hover:border-amber-500/40 hover:shadow-elevated transition-all flex gap-5"
+                      className="group p-8 rounded-2xl border border-border bg-background hover:border-amber-500/40 hover:shadow-elevated transition-all flex flex-col items-center text-center gap-4"
                     >
-                      <div className="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-500/25 transition-colors">
-                        <Icon size={22} className="text-amber-300" />
+                      <div className="w-14 h-14 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-500/25 transition-colors">
+                        <Icon size={28} className="text-amber-300" />
                       </div>
                       <div>
-                        <h3 className="font-space font-bold text-text-primary mb-1 group-hover:text-amber-300 transition-colors">{product.title}</h3>
-                        <p className="text-xs text-text-muted mb-3">{product.hero.subtitle}</p>
+                        <h3 className="font-space font-bold text-text-primary mb-2 text-lg group-hover:text-amber-300 transition-colors">{product.title}</h3>
+                        <p className="text-xs text-text-muted mb-4">{product.hero.subtitle}</p>
                         <p className="text-sm text-text-secondary leading-relaxed">{product.summary.substring(0, 160)}…</p>
                       </div>
                     </Link>
@@ -347,22 +345,22 @@ export function ProductsEcosystemPage() {
 
             {/* Foundation */}
             <div>
-              <div className="text-[10px] font-bold tracking-widest uppercase text-rose-400 mb-6">Platform Foundation</div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-rose-400 mb-6 text-center">Platform Foundation</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {ecosystemTiers.platformFoundation.map(product => {
                   const Icon = moduleIcons[product.id] || Zap;
                   return (
                     <Link
                       key={product.id}
                       href={`/products/${product.slug}`}
-                      className="group p-6 rounded-2xl border border-border bg-background hover:border-rose-500/40 hover:shadow-elevated transition-all flex gap-5"
+                      className="group p-8 rounded-2xl border border-border bg-background hover:border-rose-500/40 hover:shadow-elevated transition-all flex flex-col items-center text-center gap-4"
                     >
-                      <div className="w-12 h-12 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-rose-500/25 transition-colors">
-                        <Icon size={22} className="text-rose-300" />
+                      <div className="w-14 h-14 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-rose-500/25 transition-colors">
+                        <Icon size={28} className="text-rose-300" />
                       </div>
                       <div>
-                        <h3 className="font-space font-bold text-text-primary mb-1 group-hover:text-rose-300 transition-colors">{product.title}</h3>
-                        <p className="text-xs text-text-muted mb-3">{product.hero.subtitle}</p>
+                        <h3 className="font-space font-bold text-text-primary mb-2 text-lg group-hover:text-rose-300 transition-colors">{product.title}</h3>
+                        <p className="text-xs text-text-muted mb-4">{product.hero.subtitle}</p>
                         <p className="text-sm text-text-secondary leading-relaxed">{product.summary.substring(0, 200)}…</p>
                       </div>
                     </Link>
@@ -394,9 +392,9 @@ export function ProductsEcosystemPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-6 rounded-2xl border border-border bg-surface hover:border-primary-accent/30 transition-all"
+                className="p-6 rounded-2xl border border-border bg-surface hover:border-primary-accent/30 transition-all flex flex-col items-center text-center"
               >
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-2 mb-4 justify-center">
                   <span className="text-xs font-bold text-primary-accent bg-primary-accent/10 border border-primary-accent/20 px-2 py-0.5 rounded">{effect.from}</span>
                   <ArrowRight size={12} className="text-text-muted flex-shrink-0" />
                   <span className="text-xs font-bold text-violet-300 bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 rounded">{effect.to}</span>
@@ -439,7 +437,7 @@ export function ProductsEcosystemPage() {
               Deploy Where Your Data Lives
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { title: "SaaS Cloud", desc: "Fully managed on AWS, GCP, or Azure. Fastest time to value.", icon: "☁️" },
               { title: "Private Cloud", desc: "Dedicated VPC deployment within your cloud account. Full data isolation.", icon: "🔐" },
