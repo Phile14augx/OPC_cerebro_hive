@@ -25,7 +25,7 @@ export const ServiceCTA = ({ service }: { service: EnterpriseService }) => {
             Ready to initiate your <br className="hidden md:block" />
             <span className="text-primary-accent">{service.title}</span>?
           </h2>
-          <p className="text-text-secondary mb-10 max-w-xl mx-auto font-inter">
+          <p className="text-text-secondary mb-10 max-w-xl mx-auto font-inter text-center">
             Schedule a strategy session with our principal architects to discuss your specific business context and evaluate the ROI of this engagement.
           </p>
 

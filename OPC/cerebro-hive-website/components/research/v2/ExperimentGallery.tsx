@@ -31,7 +31,7 @@ export const ExperimentGallery = () => {
             <FlaskConical size={14} /> Open Science
           </span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Experiment Gallery</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             We publish our methodology, results, and limitations. Transparency in applied research builds trust in production systems.
           </p>
         </div>

@@ -23,7 +23,7 @@ export function EnterpriseJourney() {
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
             Enterprise AI Transformation Journey
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto text-center">
             A comprehensive, 10-step lifecycle to evolve your organization into an autonomous enterprise.
           </p>
         </div>

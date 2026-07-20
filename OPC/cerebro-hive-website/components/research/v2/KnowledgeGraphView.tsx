@@ -23,7 +23,7 @@ export const KnowledgeGraphView = () => {
             <Network size={14} /> The Navigation System
           </span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Research Knowledge Graph</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Explore the connective tissue of our organization. See exactly how an abstract research paper propagates into a measurable business outcome.
           </p>
         </div>

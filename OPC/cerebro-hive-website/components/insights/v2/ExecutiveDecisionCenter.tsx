@@ -27,7 +27,7 @@ export const ExecutiveDecisionCenter = () => {
         
         <div className="text-center mb-16 relative z-10">
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Executive Decision Center</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Configure your organizational profile to receive personalized strategic recommendations, architectures, and product paths.
           </p>
         </div>

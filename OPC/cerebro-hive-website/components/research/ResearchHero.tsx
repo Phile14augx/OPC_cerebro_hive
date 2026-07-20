@@ -68,7 +68,7 @@ export const ResearchHero = () => {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-text-secondary to-text-muted">Applied Research</span>
           </h1>
           
-          <p className="text-text-secondary text-lg md:text-xl font-inter max-w-2xl mx-auto">
+          <p className="text-text-secondary text-lg md:text-xl font-inter max-w-2xl mx-auto text-center">
             Explore original research, enterprise frameworks, reference architectures, and vendor-neutral benchmarking.
           </p>
           

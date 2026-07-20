@@ -115,7 +115,7 @@ export default function ResourcesPage() {
           <div className="text-center mb-12">
             <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Most Downloaded</span>
             <h2 className="text-4xl font-space font-bold text-text-primary mb-4">Featured Resources</h2>
-            <p className="text-text-secondary max-w-xl mx-auto">The resources enterprise teams download most when planning AI initiatives.</p>
+            <p className="text-text-secondary max-w-xl mx-auto text-center">The resources enterprise teams download most when planning AI initiatives.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {featured.map((f, i) => (

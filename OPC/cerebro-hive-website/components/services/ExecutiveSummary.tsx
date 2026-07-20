@@ -28,7 +28,7 @@ export function ExecutiveSummary() {
               From AI Strategy to Enterprise Scale
             </h2>
 
-            <p className="text-lg md:text-xl text-text-secondary font-inter leading-relaxed max-w-4xl mx-auto">
+            <p className="text-lg md:text-xl text-text-secondary font-inter leading-relaxed max-w-4xl mx-auto text-center">
               We partner with executive teams to identify high-impact AI opportunities,
               design production-ready architectures, implement secure intelligent systems,
               and establish governance frameworks for long-term business value.

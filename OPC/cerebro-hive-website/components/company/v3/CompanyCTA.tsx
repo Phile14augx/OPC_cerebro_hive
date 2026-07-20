@@ -17,7 +17,7 @@ export default function CompanyCTA() {
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-space font-bold text-text-primary mb-8 tracking-tighter leading-none">
             Build the Future of Enterprise AI Together.
           </h2>
-          <p className="text-xl md:text-2xl text-text-muted max-w-2xl mx-auto font-inter font-medium mb-12">
+          <p className="text-xl md:text-2xl text-text-muted max-w-2xl mx-auto font-inter font-medium mb-12 text-center">
             Whether you are an enterprise looking to transform your architecture, or an engineer looking to solve the hardest problems in AI—we should talk.
           </p>
 

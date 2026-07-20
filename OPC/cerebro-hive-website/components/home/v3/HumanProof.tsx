@@ -48,7 +48,7 @@ export default function HumanProof() {
             <Users size={12} /> Enterprise Evidence
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">Proven in production.</h2>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter text-center">
             See how Fortune 500 companies use CerebroHive to transition from legacy operations to autonomous execution.
           </p>
         </Stack>

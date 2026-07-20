@@ -15,7 +15,7 @@ export function ExecutiveDecisionPlatform() {
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
             Executive Decision Center
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto text-center">
             Select your role to explore tailored enterprise AI integration paths.
           </p>
         </div>

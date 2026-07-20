@@ -71,7 +71,7 @@ export function ConsultingProcessTimeline() {
           <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary">
             The Enterprise Engagement Model
           </h2>
-          <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
+          <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto text-center">
             A structured, repeatable process designed to de-risk AI adoption and guarantee alignment with business objectives.
           </p>
         </Stack>

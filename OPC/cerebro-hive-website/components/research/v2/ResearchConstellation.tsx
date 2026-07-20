@@ -39,7 +39,7 @@ export const ResearchConstellation = () => {
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block">Translation Pipeline</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">From Lab to Enterprise</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Our research architecture operates across three distinct layers, ensuring that theoretical breakthroughs become measurable business outcomes.
           </p>
         </div>

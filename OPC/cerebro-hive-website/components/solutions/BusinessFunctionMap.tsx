@@ -66,7 +66,7 @@ export function BusinessFunctionMap() {
         <div className="text-center mb-16">
           <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold mb-3 block">Departmental Transformation</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Business Function Map</h2>
-          <p className="text-text-secondary text-lg max-w-2xl mx-auto">
+          <p className="text-text-secondary text-lg max-w-2xl mx-auto text-center">
             Explore how AI transforms specific business units. From automated compliance to predictive sales pipelines, discover the architecture for your department.
           </p>
         </div>

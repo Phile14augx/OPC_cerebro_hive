@@ -79,7 +79,7 @@ export const PlatformArchitecture = () => {
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">How We're Built</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Platform, Not Point Tools</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Every product and every engagement is built on one proprietary Platform — the defensible core competitors can&apos;t replicate by hiring consultants.
           </p>
         </div>

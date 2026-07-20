@@ -23,7 +23,7 @@ export default function EnterpriseProof() {
         
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">The Breadth of our Ecosystem</h2>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter text-center">
             We don't just build software. We contribute to the foundational science of AI, maintain open standards, and foster a global community of enterprise architects.
           </p>
         </div>

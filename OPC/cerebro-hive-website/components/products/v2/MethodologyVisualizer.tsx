@@ -64,7 +64,7 @@ export const MethodologyVisualizer = () => {
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block">Proven Methodology</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">How We Deliver</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             A deterministic engineering approach to enterprise AI transformation. Every phase produces a tangible, measurable deliverable.
           </p>
         </div>

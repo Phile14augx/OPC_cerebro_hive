@@ -10,7 +10,7 @@ export default function CompanyRoadmap() {
         
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Strategic Vision</h2>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter text-center">
             We are not building for what AI can do today. We are building the infrastructure for what enterprises will require tomorrow.
           </p>
         </div>

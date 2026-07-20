@@ -52,7 +52,7 @@ export const HeroEcosystem = () => {
             AI-Native Platforms Built for <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-text-secondary to-text-muted">Intelligent Enterprises</span>
           </h1>
-          <p className="text-text-secondary text-lg max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary text-lg max-w-2xl mx-auto font-inter text-center">
             From AI-powered ERP to autonomous enterprise agents, discover the proprietary platforms and frameworks transforming modern organizations.
           </p>
           <div className="flex justify-center gap-4 pt-4">

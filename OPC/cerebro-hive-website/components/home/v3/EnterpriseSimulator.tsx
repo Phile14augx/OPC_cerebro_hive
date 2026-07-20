@@ -43,7 +43,7 @@ export default function EnterpriseSimulator() {
             <Settings size={12} /> Interactive Blueprint
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">Enterprise Transformation Simulator</h2>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Configure your organizational parameters to instantly generate a personalized AI blueprint, architecture, and estimated ROI model.
           </p>
         </Stack>

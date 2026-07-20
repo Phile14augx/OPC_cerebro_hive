@@ -11,7 +11,7 @@ export const ResearchToProductBridge = () => {
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Applied Translation</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Research That Builds Products</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Our papers do not collect dust. We ensure every theoretical advance is aggressively evaluated, optimized, and pushed into the CerebroHive product suite.
           </p>
         </div>

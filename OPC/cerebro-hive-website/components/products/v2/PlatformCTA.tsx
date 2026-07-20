@@ -33,7 +33,7 @@ export const PlatformCTA = () => {
             </span>
           </h2>
           
-          <p className="text-lg md:text-xl text-text-secondary font-inter mb-10 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-text-secondary font-inter mb-10 max-w-2xl mx-auto text-center">
             Stop buying fragmented AI tools. Build a unified, autonomous enterprise platform that scales with your business.
           </p>
 

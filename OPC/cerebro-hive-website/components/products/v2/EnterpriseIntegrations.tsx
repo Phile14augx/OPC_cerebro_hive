@@ -59,7 +59,7 @@ export const EnterpriseIntegrations = () => {
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Universal Compatibility</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Enterprise Integrations</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             CerebroOS connects directly to your existing systems of record. No ripping and replacing required.
           </p>
         </div>

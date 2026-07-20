@@ -22,7 +22,7 @@ export const StrategyCanvas = () => {
         
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">AI Strategy Canvas</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Generate a personalized executive deliverable containing an opportunity matrix, suggested architecture, and estimated ROI.
           </p>
         </div>

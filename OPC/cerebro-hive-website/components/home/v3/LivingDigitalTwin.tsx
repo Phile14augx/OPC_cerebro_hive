@@ -47,7 +47,7 @@ export default function LivingDigitalTwin() {
             <Zap size={12} /> Living Digital Twin
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">The Automation Impact</h2>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Watch how agentic workflows fundamentally rewire departmental efficiency, shifting humans from operators to overseers.
           </p>
         </Stack>

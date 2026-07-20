@@ -50,7 +50,7 @@ export function TechStackShowcase() {
           <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary">
             Enterprise Technology Stack
           </h2>
-          <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
+          <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto text-center">
             We are vendor-agnostic and engineering-led. We select the optimal models, frameworks, and infrastructure for your specific security and performance requirements.
           </p>
         </Stack>

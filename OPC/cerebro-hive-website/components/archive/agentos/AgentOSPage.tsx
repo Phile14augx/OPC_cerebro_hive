@@ -106,7 +106,7 @@ export const AgentOSPage = () => {
                 your agentic OS?
               </span>
             </h2>
-            <p className="text-lg md:text-xl text-text-secondary font-inter mb-10 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-text-secondary font-inter mb-10 max-w-2xl mx-auto text-center">
               Stop stitching together agent frameworks, vector DBs, and workflow tools. Run every autonomous workflow on one governed kernel.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

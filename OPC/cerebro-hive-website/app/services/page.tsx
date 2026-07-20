@@ -92,7 +92,7 @@ export default function ServicesPage() {
             <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary">
               Core Consulting Capabilities
             </h2>
-            <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
+            <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto text-center">
               Specialized practices combining deep domain expertise with world-class engineering execution.
             </p>
           </Stack>
@@ -130,7 +130,7 @@ export default function ServicesPage() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-accent to-[#00E5FF]">AI Transformation?</span>
             </h2>
 
-            <p className="text-lg text-text-secondary font-inter max-w-[700px] mx-auto leading-relaxed mb-12">
+            <p className="text-lg text-text-secondary font-inter max-w-[700px] mx-auto leading-relaxed mb-12 text-center">
               Speak with a Principal Solutions Architect today to discuss your enterprise requirements and explore our engagement models.
             </p>
 

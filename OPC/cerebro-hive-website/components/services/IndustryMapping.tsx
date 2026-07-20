@@ -69,7 +69,7 @@ export function IndustryMapping() {
           <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary">
             Industries We Serve
           </h2>
-          <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
+          <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto text-center">
             Deep domain expertise combined with bleeding-edge AI engineering. We build
             solutions tailored to the regulatory and operational realities of your sector.
           </p>

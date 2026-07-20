@@ -30,7 +30,7 @@ export const BenchmarkLab = () => {
             <Activity size={14} /> Evaluation Lab
           </span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Enterprise Task Benchmarks</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Generic LLM benchmarks (MMLU, HumanEval) don't reflect real business workflows. We evaluate models on actual enterprise tasks.
           </p>
         </div>

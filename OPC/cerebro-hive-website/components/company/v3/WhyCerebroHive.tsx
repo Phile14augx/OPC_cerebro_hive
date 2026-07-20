@@ -10,7 +10,7 @@ export default function WhyCerebroHive() {
         
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">A Different Approach.</h2>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter text-center">
             We are not a traditional consulting firm that delivers a project and leaves. We are an engineering partner that builds and evolves your architecture.
           </p>
         </div>

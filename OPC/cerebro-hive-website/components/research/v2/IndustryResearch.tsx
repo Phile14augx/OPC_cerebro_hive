@@ -38,7 +38,7 @@ export const IndustryResearch = () => {
         
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Research by Industry</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             We conduct targeted research to solve the specific bottlenecks holding back AI adoption in highly regulated sectors.
           </p>
         </div>

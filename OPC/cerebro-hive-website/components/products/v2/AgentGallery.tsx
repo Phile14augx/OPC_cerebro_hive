@@ -59,7 +59,7 @@ export const AgentGallery = () => {
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block">AgentOS Fleet</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Autonomous Digital Workers</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Deploy specialized AI agents that possess domain expertise, utilize enterprise tools, and execute end-to-end workflows autonomously.
           </p>
         </div>

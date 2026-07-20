@@ -53,7 +53,7 @@ export const ArchitectureStudio = () => {
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-widest text-accent-secondary mb-3 block">Interactive Configurator</span>
           <h2 className="text-4xl md:text-6xl font-space font-bold text-text-primary mb-4">Enterprise Architecture Studio</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-lg">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-lg text-center">
             Every enterprise is unique. Input your constraints and instantly generate a customized AI platform architecture blueprint.
           </p>
         </div>

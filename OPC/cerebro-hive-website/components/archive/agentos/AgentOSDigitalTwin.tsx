@@ -50,7 +50,7 @@ export const AgentOSDigitalTwin = () => {
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Digital Twin</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Every packet, visible in real time</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Distributed tracing, built for agents instead of microservices. Watch a single request move through the runtime end to end.
           </p>
         </div>

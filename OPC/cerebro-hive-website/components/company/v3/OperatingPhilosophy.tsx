@@ -26,7 +26,7 @@ export default function OperatingPhilosophy() {
             <Scale size={12} /> Operating Philosophy
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">The principles that guide every decision we make.</h2>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter text-center">
             In an industry driven by hype and short-term trends, we build for the long term. These are the non-negotiables that define how we engineer systems.
           </p>
         </div>

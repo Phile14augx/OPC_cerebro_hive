@@ -28,7 +28,7 @@ export const GlobalPresenceMap = () => {
           <h3 className="text-4xl md:text-5xl font-space font-bold text-text-primary tracking-tight mb-6">
             Where We Operate
           </h3>
-          <p className="text-lg text-text-secondary font-inter leading-relaxed max-w-xl mx-auto">
+          <p className="text-lg text-text-secondary font-inter leading-relaxed max-w-xl mx-auto text-center">
             Our delivery capability spans the globe, with targeted expansion roadmaps to serve mid-market enterprises across key economic hubs.
           </p>
         </div>

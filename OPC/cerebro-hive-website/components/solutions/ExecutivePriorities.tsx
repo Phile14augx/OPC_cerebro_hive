@@ -52,7 +52,7 @@ export function ExecutivePriorities() {
         <div className="text-center mb-16">
           <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold mb-3 block">Outcome-Driven Selection</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Organized Around Your Priorities</h2>
-          <p className="text-text-secondary text-lg max-w-2xl mx-auto">
+          <p className="text-text-secondary text-lg max-w-2xl mx-auto text-center">
             We don't start with technologies. We start with the business outcomes you need to achieve this quarter.
           </p>
         </div>

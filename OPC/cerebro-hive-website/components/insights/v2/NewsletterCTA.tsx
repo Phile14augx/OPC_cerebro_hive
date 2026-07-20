@@ -23,7 +23,7 @@ export const NewsletterCTA = () => {
           </div>
 
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Weekly Executive Intelligence</h2>
-          <p className="text-text-secondary text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-text-secondary text-lg mb-8 max-w-2xl mx-auto text-center">
             Not a newsletter. A curated strategic briefing delivered every Tuesday to 5,000+ technology leaders and CIOs.
           </p>
 

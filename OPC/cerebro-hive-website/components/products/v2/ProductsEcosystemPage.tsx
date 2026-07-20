@@ -107,7 +107,7 @@ export function ProductsEcosystemPage() {
                 Eight Intelligent Modules.
               </span>
             </h1>
-            <p className="text-xl text-text-secondary leading-relaxed max-w-3xl mx-auto mb-10">
+            <p className="text-xl text-text-secondary leading-relaxed max-w-3xl mx-auto mb-10 text-center">
               CerebroHive is a modular Enterprise AI Operating System. Each module delivers standalone value while sharing a common identity layer, AI gateway, event bus, and data fabric — creating powerful intelligence network effects across the entire platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -179,7 +179,7 @@ export function ProductsEcosystemPage() {
             <h2 className="text-4xl font-space font-bold text-text-primary mb-6">
               The Ecosystem at a Glance
             </h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">
+            <p className="text-text-secondary max-w-2xl mx-auto text-center">
               Hover any module to see its connections. Every module integrates natively with every other — no API glue required.
             </p>
           </div>
@@ -214,7 +214,7 @@ export function ProductsEcosystemPage() {
                         <p className="text-text-muted text-sm">{product.hero.subtitle}</p>
                       </div>
                     </div>
-                    <p className="text-text-secondary leading-relaxed mb-8 max-w-2xl mx-auto">{product.summary}</p>
+                    <p className="text-text-secondary leading-relaxed mb-8 max-w-2xl mx-auto text-center">{product.summary}</p>
                     <div className="flex flex-wrap gap-2 mb-8 justify-center">
                       {product.coreCapabilities.slice(0, 4).map(cap => (
                         <span key={cap.title} className="px-3 py-1 text-xs font-bold tracking-wide uppercase bg-background border border-border rounded-full text-text-muted">{cap.title}</span>
@@ -380,7 +380,7 @@ export function ProductsEcosystemPage() {
             <h2 className="text-4xl font-space font-bold text-text-primary mb-6">
               Modules That Reinforce Each Other
             </h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">
+            <p className="text-text-secondary max-w-2xl mx-auto text-center">
               Every module is more powerful because of the others. This is the network effect of an AI Operating System.
             </p>
           </div>
@@ -414,7 +414,7 @@ export function ProductsEcosystemPage() {
             <h2 className="text-4xl font-space font-bold text-text-primary mb-6">
               One Foundation. Every Module.
             </h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">
+            <p className="text-text-secondary max-w-2xl mx-auto text-center">
               Every CerebroHive module shares the same enterprise-grade foundation — eliminating the integration overhead, data silos, and governance gaps of multi-vendor AI stacks.
             </p>
           </div>

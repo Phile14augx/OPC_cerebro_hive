@@ -37,7 +37,7 @@ export const PlatformActionDemo = () => {
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Live Execution</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Platform in Action</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Watch how CerebroOS handles an unstructured invoice, applies reasoning, and updates your financial system autonomously.
           </p>
         </div>

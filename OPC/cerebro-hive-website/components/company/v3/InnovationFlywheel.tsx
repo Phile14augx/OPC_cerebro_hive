@@ -23,7 +23,7 @@ export default function InnovationFlywheel() {
             <Repeat size={12} /> The Flywheel
           </div>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">How Knowledge Compounds</h2>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Our operating model is a continuous learning loop. Every deployment generates data that feeds back into our fundamental research.
           </p>
         </div>

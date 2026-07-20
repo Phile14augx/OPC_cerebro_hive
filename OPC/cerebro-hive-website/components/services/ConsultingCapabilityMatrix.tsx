@@ -28,7 +28,7 @@ export function ConsultingCapabilityMatrix() {
             <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary">
               End-to-End Delivery Capability
             </h2>
-            <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
+            <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto text-center">
               Unlike point-solution vendors, we provide full-lifecycle enterprise AI transformation—from executive strategy to production operations.
             </p>
           </Stack>

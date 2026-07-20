@@ -138,7 +138,7 @@ export default function PlatformPage() {
                 Operating System
               </span>
             </h1>
-            <p className="text-xl text-text-secondary leading-relaxed max-w-3xl mx-auto mb-10">
+            <p className="text-xl text-text-secondary leading-relaxed max-w-3xl mx-auto mb-10 text-center">
               A 5-layer modular architecture built for enterprise scale — from shared platform services and a unified AI gateway to specialized intelligence modules and an executive operating system.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -173,7 +173,7 @@ export default function PlatformPage() {
           <div className="text-center mb-16">
             <div className="text-[10px] font-bold tracking-widest uppercase text-primary-accent mb-4">Architecture Stack</div>
             <h2 className="text-4xl font-space font-bold text-text-primary mb-6">5-Layer Platform Architecture</h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">
+            <p className="text-text-secondary max-w-2xl mx-auto text-center">
               Click any layer to see its composition. Every layer depends on the layers below it.
             </p>
           </div>
@@ -220,7 +220,7 @@ export default function PlatformPage() {
           <div className="text-center mb-16">
             <div className="text-[10px] font-bold tracking-widest uppercase text-primary-accent mb-4">Shared Services</div>
             <h2 className="text-4xl font-space font-bold text-text-primary mb-6">The Platform Foundation Every Module Shares</h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">
+            <p className="text-text-secondary max-w-2xl mx-auto text-center">
               These platform services are provisioned once and consumed by all modules — eliminating the duplication, drift, and governance gaps of multi-vendor AI stacks.
             </p>
           </div>
@@ -368,7 +368,7 @@ export default function PlatformPage() {
         <div className="container-wide text-center">
           <div className="text-[10px] font-bold tracking-widest uppercase text-primary-accent mb-4">Enterprise Integrations</div>
           <h2 className="text-4xl font-space font-bold text-text-primary mb-6">Connects to Your Existing Stack</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto mb-12">
+          <p className="text-text-secondary max-w-2xl mx-auto mb-12 text-center">
             CerebroHive integrates natively with the enterprise systems your teams already use.
           </p>
           <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">

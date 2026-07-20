@@ -471,7 +471,7 @@ export default function CareersPage() {
                   <div className="text-center py-10">
                     <Briefcase size={48} className="mx-auto text-primary-accent mb-4 opacity-50" />
                     <h3 className="text-xl font-bold text-text-primary mb-2">Detailed Framework Coming Soon</h3>
-                    <p className="text-text-secondary max-w-md mx-auto">This role is part of our strategic roadmap. We are currently finalizing the standard role definitions for this position.</p>
+                    <p className="text-text-secondary max-w-md mx-auto text-center">This role is part of our strategic roadmap. We are currently finalizing the standard role definitions for this position.</p>
                   </div>
                 ) : (
                   <>
@@ -644,7 +644,7 @@ export default function CareersPage() {
           <div className="text-center mb-16">
             <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Hiring Reimagined</span>
             <h2 className="text-4xl md:text-5xl font-space font-bold text-text-primary mb-4">The Agentic Interview</h2>
-            <p className="text-text-secondary max-w-3xl mx-auto">
+            <p className="text-text-secondary max-w-3xl mx-auto text-center">
               We don&apos;t just test knowledge—we evaluate whether you can reason, plan, collaborate with AI agents, validate outputs, and deliver business outcomes. You are expected to use AI assistants appropriately during the interview.
             </p>
           </div>
@@ -689,7 +689,7 @@ export default function CareersPage() {
           <div className="text-center mb-16">
             <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Scalable Organization</span>
             <h2 className="text-4xl md:text-5xl font-space font-bold text-text-primary mb-4">Our Practices & Teams</h2>
-            <p className="text-text-secondary max-w-3xl mx-auto">
+            <p className="text-text-secondary max-w-3xl mx-auto text-center">
               Our organization is structured around specialized practices rather than traditional IT departments, designed to support our growth as a global Enterprise AI Consulting and Engineering firm.
             </p>
           </div>
@@ -770,7 +770,7 @@ export default function CareersPage() {
           <div className="text-center mb-16">
             <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Career Framework</span>
             <h2 className="text-4xl md:text-5xl font-space font-bold text-text-primary mb-4">Competency Levels</h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">Every role operates on a transparent, standardized proficiency scale to ensure clear expectations, accountability, and a predictable growth trajectory.</p>
+            <p className="text-text-secondary max-w-2xl mx-auto text-center">Every role operates on a transparent, standardized proficiency scale to ensure clear expectations, accountability, and a predictable growth trajectory.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {competencyLevels.map((c, i) => (
@@ -792,7 +792,7 @@ export default function CareersPage() {
           <div className="text-center mb-12">
             <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Talent Network</span>
             <h2 className="text-4xl md:text-5xl font-space font-bold text-text-primary mb-4">Submit Your Profile</h2>
-            <p className="text-text-secondary max-w-xl mx-auto">We review every submission. If your background aligns with our roadmap, a senior team member will reach out personally.</p>
+            <p className="text-text-secondary max-w-xl mx-auto text-center">We review every submission. If your background aligns with our roadmap, a senior team member will reach out personally.</p>
           </div>
 
           {submitted ? (

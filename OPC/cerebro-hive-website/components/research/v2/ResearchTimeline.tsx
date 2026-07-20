@@ -17,7 +17,7 @@ export const ResearchTimeline = () => {
         
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Technology Transfer</h2>
-          <p className="text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
             Watch how our foundational research directly matures into our core enterprise products.
           </p>
         </div>

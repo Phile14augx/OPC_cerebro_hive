@@ -72,7 +72,7 @@ export default function TransformationRoadmap() {
 
         <Stack gap="md" className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary">The Transformation Roadmap</h2>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter">
+          <p className="text-lg text-text-secondary max-w-2xl mx-auto font-inter text-center">
             How we guide organizations from manual operations to an AI-native architecture in six months.
           </p>
         </Stack>

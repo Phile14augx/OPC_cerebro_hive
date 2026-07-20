@@ -24,7 +24,7 @@ export const ProductCTA = ({ product }: { product: PackagedProduct }) => {
             Deploy <span className="text-secondary-accent">{product.title}</span> <br className="hidden md:block" />
             in your enterprise today.
           </h2>
-          <p className="text-text-secondary mb-10 max-w-xl mx-auto font-inter">
+          <p className="text-text-secondary mb-10 max-w-xl mx-auto font-inter text-center">
             Schedule a technical deep-dive with our solutions architects and get a private demo tailored to your stack.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">

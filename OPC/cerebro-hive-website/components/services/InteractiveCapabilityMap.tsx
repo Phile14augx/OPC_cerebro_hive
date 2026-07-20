@@ -93,7 +93,7 @@ export function InteractiveCapabilityMap() {
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-text-primary">
             Explore AI Value Chains
           </h2>
-          <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto">
+          <p className="text-lg text-text-secondary font-inter max-w-2xl mx-auto text-center">
             See how we connect industry challenges to AI capabilities, architecting end-to-end solutions that drive enterprise value.
           </p>
         </Stack>
