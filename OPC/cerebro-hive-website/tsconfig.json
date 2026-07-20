@@ -41,6 +41,7 @@
     "components/archive",
     "tests",
     "platform",
-    "stories"
+    "stories",
+    "vitest.config.ts"
   ]
 }
