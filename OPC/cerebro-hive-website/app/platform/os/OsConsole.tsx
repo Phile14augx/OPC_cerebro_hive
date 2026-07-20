@@ -138,6 +138,12 @@ export default function OsConsole() {
         </div>
       </section>
 
+      <section className="mt-12 rounded-xl border border-primary-accent/40 bg-primary-accent/5 p-6">
+        <h2 className="text-xl font-semibold text-text-primary">HiveForge™ — Enterprise AI Cloud Marketplace</h2>
+        <p className="mt-1 max-w-2xl text-sm text-text-secondary">The compute, data, and marketplace layer beneath this OS — provision VPS, GPU, Kubernetes, databases, and install marketplace items directly.</p>
+        <Link href="/platform/hiveforge" className="mt-4 inline-block rounded-lg bg-primary-accent px-5 py-2.5 text-sm font-semibold text-background">Open HiveForge →</Link>
+      </section>
+
       <section className="mt-14">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">Every Subsystem, One Click Away</p>
         <h2 className="mt-2 text-2xl font-bold text-text-primary">Explore the Enterprise Cognitive OS</h2>

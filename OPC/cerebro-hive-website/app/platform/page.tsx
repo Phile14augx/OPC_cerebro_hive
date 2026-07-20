@@ -151,6 +151,9 @@ export default function PlatformPage() {
               <Link href="/products" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
                 Explore Products
               </Link>
+              <Link href="/platform/hiveforge" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
+                Browse HiveForge Marketplace
+              </Link>
             </div>
           </motion.div>
         </div>

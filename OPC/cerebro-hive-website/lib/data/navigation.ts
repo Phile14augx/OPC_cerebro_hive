@@ -14,6 +14,7 @@ export const mainNavigation: NavItem[] = [
       { label: "Capabilities", href: "/platform#capabilities" },
       { label: "Live Runtime", href: "/platform/live-runtime" },
       { label: "Enterprise AI OS Console", href: "/platform/os" },
+      { label: "HiveForge — AI Cloud Marketplace", href: "/platform/hiveforge" },
     ]
   },
   {
@@ -86,6 +87,7 @@ export const footerNavigation = {
     { label: "Reasoning Engine™", href: "/platform/reasoning-engine" },
     { label: "Live Runtime →", href: "/platform/live-runtime" },
     { label: "Enterprise AI OS Console →", href: "/platform/os" },
+    { label: "HiveForge — AI Cloud Marketplace →", href: "/platform/hiveforge" },
   ],
   products: [
     { label: "CerebroArchive™", href: "/products/cerebro-archive" },

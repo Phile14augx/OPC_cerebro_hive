@@ -668,6 +668,29 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
   });
   app.get("/v1/dataplatform/metrics", async req => ({ metrics: await p.dataPlatform.listMetrics(ctx(req)) }));
 
+  // ---------------- HiveForge (Enterprise AI Cloud Marketplace) ----------------
+  app.get("/v1/hiveforge/catalog", async req => {
+    const q = req.query as { category?: string };
+    return { categories: p.hiveForge.listCatalog(ctx(req), q.category as never) };
+  });
+  app.post("/v1/hiveforge/provision", async req => {
+    const body = parse(z.object({ itemId: z.string().min(1), region: z.string().optional() }), req.body);
+    return p.hiveForge.provision(ctx(req), body);
+  });
+  app.get("/v1/hiveforge/resources", async req => {
+    const q = req.query as { kind?: string };
+    return { resources: await p.hiveForge.listResources(ctx(req), q.kind as never) };
+  });
+  app.post("/v1/hiveforge/resources/:id/deprovision", async req => p.hiveForge.deprovision(ctx(req), (req.params as { id: string }).id));
+  app.post("/v1/hiveforge/marketplace/install", async req => {
+    const body = parse(z.object({ itemId: z.string().min(1) }), req.body);
+    return p.hiveForge.installMarketplaceItem(ctx(req), body.itemId);
+  });
+  app.get("/v1/hiveforge/installations", async req => ({ installations: await p.hiveForge.listInstallations(ctx(req)) }));
+  app.get("/v1/hiveforge/billing/cost-explorer", async req => p.hiveForge.costExplorer(ctx(req)));
+  app.post("/v1/hiveforge/billing/invoices", async req => p.hiveForge.generateInvoice(ctx(req)));
+  app.get("/v1/hiveforge/billing/invoices", async req => ({ invoices: await p.hiveForge.listInvoices(ctx(req)) }));
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {

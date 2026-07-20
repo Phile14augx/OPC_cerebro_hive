@@ -207,4 +207,10 @@ export const Subjects = {
     lineageLinked: "dataplatform.lineage.linked",
     metricDefined: "dataplatform.metric.defined",
   },
+  hiveforge: {
+    resourceProvisioned: "hiveforge.resource.provisioned",
+    resourceDeprovisioned: "hiveforge.resource.deprovisioned",
+    marketplaceInstalled: "hiveforge.marketplace.installed",
+    invoiceGenerated: "hiveforge.invoice.generated",
+  },
 } as const;

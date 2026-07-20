@@ -11,7 +11,7 @@ const ROLE_GRANTS: Record<string, string[]> = {
     "mesh:read", "eval:*", "observatory:read", "hub:read", "simulator:*", "connect:invoke", "sphere:read", "ai:*",
     "governance:*", "web3:*", "devops:*", "mlops:*", "secops:*", "aiops:*",
     "compiler:*", "swarm:*", "actions:*",
-    "digitaltwin:*", "research:*", "zerotrust:*", "dataplatform:*",
+    "digitaltwin:*", "research:*", "zerotrust:*", "dataplatform:*", "hiveforge:*",
   ],
   developer: [
     "runtime:*", "reasoning:*", "memory:read", "memory:write", "knowledge:*", "context:*",
@@ -20,12 +20,13 @@ const ROLE_GRANTS: Record<string, string[]> = {
     "devops:read", "devops:write", "mlops:read", "mlops:write", "secops:read", "aiops:read",
     "compiler:read", "compiler:write", "swarm:read", "swarm:write", "actions:read", "actions:execute",
     "digitaltwin:read", "digitaltwin:write", "research:read", "research:write", "zerotrust:read", "dataplatform:read", "dataplatform:write",
+    "hiveforge:read", "hiveforge:write",
   ],
   analyst: [
     "knowledge:read", "hub:read", "observatory:read", "sphere:read", "memory:read", "eval:read", "governance:read", "web3:read",
     "devops:read", "mlops:read", "secops:read", "aiops:read",
     "compiler:read", "swarm:read", "actions:read",
-    "digitaltwin:read", "research:read", "zerotrust:read", "dataplatform:read",
+    "digitaltwin:read", "research:read", "zerotrust:read", "dataplatform:read", "hiveforge:read",
   ],
   viewer: ["*:read", "sphere:read"],
 };
