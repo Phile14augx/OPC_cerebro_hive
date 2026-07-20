@@ -19,6 +19,8 @@ export interface IconMetadata {
   keywords: string[];
   aliases: string[];
   tags: string[];
+  intent?: string[];
+  industries?: string[];
   animated?: boolean;
   duotone?: boolean;
   premium?: boolean;
