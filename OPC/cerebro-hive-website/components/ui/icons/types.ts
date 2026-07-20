@@ -1,4 +1,4 @@
-import { HTMLMotionProps } from "framer-motion";
+import { SVGMotionProps } from "framer-motion";
 
 export type IconSize = 16 | 20 | 24 | 32 | 48 | 64 | number;
 export type IconVariant = "outline" | "duotone" | "filled" | "rounded" | "sharp" | "solid" | "mini";
@@ -11,27 +11,38 @@ export interface IconMetadata {
   displayName?: string;
   category: string;
   subcategory?: string;
-  keywords: string[];
-  tags: string[];
-  aliases: string[];
   version: string;
   introduced: string;
-  stability: IconStability;
   deprecated?: boolean;
-  deprecatedReason?: string;
   replacedBy?: string;
+  stability: IconStability;
+  keywords: string[];
+  aliases: string[];
+  tags: string[];
   animated?: boolean;
   duotone?: boolean;
+  premium?: boolean;
+  rtlSafe?: boolean;
+  searchWeight?: number;
 }
 
-export interface BaseIconProps extends Omit<HTMLMotionProps<"svg">, "children" | "fill" | "stroke"> {
+export type IconColorToken = "primary" | "secondary" | "accent" | "muted" | "success" | "warning" | "danger" | "info" | string;
+
+export interface BaseIconProps extends Omit<SVGMotionProps<SVGSVGElement>, "children" | "fill" | "stroke"> {
   size?: IconSize;
   strokeWidth?: number;
   variant?: IconVariant;
   animation?: IconAnimation;
   children?: React.ReactNode;
   
+  // Future-proof tokens
+  color?: IconColorToken;
+  secondaryColor?: IconColorToken;
+  
   // Accessibility
   decorative?: boolean;
   label?: string;
+  description?: string;
+  
+  animated?: boolean;
 }
