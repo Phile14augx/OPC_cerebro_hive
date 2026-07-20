@@ -1,6 +1,9 @@
 import { buildPlatform } from "./app/container.js";
 import { createServer } from "./kernel/gateway/server.js";
 
+process.on("unhandledRejection", err => { console.error("[unhandledRejection]", err); });
+process.on("uncaughtException", err => { console.error("[uncaughtException]", err); });
+
 async function main(): Promise<void> {
   const platform = await buildPlatform({
     withDatabase: process.env.PLATFORM_NO_DB !== "1",

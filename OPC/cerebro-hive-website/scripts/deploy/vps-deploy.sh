@@ -238,11 +238,16 @@ docker exec cerebrohive-db psql -U cerebrohive -d cerebrohive_db -tc \
 docker compose -f "${STACK_DIR}/docker-compose.yml" restart platform >/dev/null 2>&1 || true
 
 step "Bootstrapping platform demo organization"
-for i in $(seq 1 30); do
-  curl -sf http://127.0.0.1:8090/health >/dev/null 2>&1 && break
+PLATFORM_UP=0
+for i in $(seq 1 45); do
+  if curl -sf http://127.0.0.1:8090/health >/dev/null 2>&1; then PLATFORM_UP=1; break; fi
   sleep 2
 done
-if ! grep -q PLATFORM_DEMO_KEY "${SECRETS_FILE}"; then
+if [ "${PLATFORM_UP}" != "1" ]; then
+  echo "WARN: platform did not become healthy; recent logs:"
+  docker logs --tail 40 cerebrohive-platform 2>&1 | sed 's/^/    /' || true
+fi
+if [ "${PLATFORM_UP}" = "1" ] && ! grep -q PLATFORM_DEMO_KEY "${SECRETS_FILE}"; then
   BOOT_JSON=$(curl -s -X POST http://127.0.0.1:8090/v1/bootstrap \
     -H 'content-type: application/json' \
     -d "{\"name\":\"CerebroHive Demo\",\"slug\":\"demo\",\"ownerEmail\":\"${EMAIL}\",\"bootstrapKey\":\"${PLATFORM_BOOTSTRAP_KEY}\"}")

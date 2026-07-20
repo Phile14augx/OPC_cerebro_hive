@@ -1,4 +1,4 @@
-import { connect, StringCodec, type NatsConnection, type JetStreamManager, type JetStreamClient } from "nats";
+import { connect, consumerOpts, createInbox, StringCodec, type NatsConnection, type JetStreamManager, type JetStreamClient } from "nats";
 import { type EventBus, type EventEnvelope, type EventHandler, type Subscription, eventEnvelopeSchema, makeEnvelope } from "./events.js";
 import type { Logger } from "../logging/logger.js";
 
@@ -40,10 +40,13 @@ export class NatsEventBus implements EventBus {
 
   async subscribe(pattern: string, handler: EventHandler, opts?: { durable?: string }): Promise<Subscription> {
     const durable = (opts?.durable ?? `plat-${pattern}`).replace(/[^a-zA-Z0-9_-]/g, "-");
-    const sub = await this.js.subscribe(pattern, {
-      config: { durable_name: durable, ack_policy: "explicit" as never, deliver_policy: "new" as never },
-      queue: durable,
-    } as never);
+    const copts = consumerOpts();
+    copts.durable(durable);
+    copts.deliverTo(createInbox());
+    copts.queue(durable);
+    copts.ackExplicit();
+    copts.deliverNew();
+    const sub = await this.js.subscribe(pattern, copts);
     (async () => {
       for await (const m of sub) {
         try {
