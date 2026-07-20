@@ -14,7 +14,7 @@ function IndustriesPageContent() {
     <div className="bg-background min-h-screen relative overflow-hidden">
       
       {/* 1. Hero & Interactive Explorer */}
-      <section className="relative min-h-screen flex flex-col items-center justify-start pt-32 pb-16">
+      <section className="relative min-h-screen flex flex-col items-center justify-start pt-12 pb-16">
         <div className="container-wide relative z-10 w-full flex flex-col items-center text-center">
           
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border mb-8 backdrop-blur-sm shadow-sm">

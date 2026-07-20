@@ -14,7 +14,7 @@ export default function LiveRuntimePage() {
 
   return (
     <main className="bg-background min-h-screen">
-      <section className="border-b border-border pt-32 pb-10">
+      <section className="border-b border-border pt-12 pb-10">
         <div className="container-wide">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-accent/10 border border-primary-accent/30 mb-4">
             <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent">AgentOS — Live Runtime</span>

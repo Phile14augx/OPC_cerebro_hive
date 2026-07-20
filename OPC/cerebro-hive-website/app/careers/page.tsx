@@ -612,7 +612,7 @@ export default function CareersPage() {
       </AnimatePresence>
 
       {/* Hero */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden border-b border-border pt-20">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(0,245,122,0.07),transparent)]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] dark:block hidden" style={{ backgroundSize: "48px 48px" }} />
         <motion.div initial={{ opacity: 0.4, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="container-wide flex flex-col items-center text-center relative z-10">

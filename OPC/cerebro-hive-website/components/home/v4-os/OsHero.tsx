@@ -28,7 +28,7 @@ export function OsHero() {
 
   return (
     <section
-      className={`relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background ${spacingTokens.pagePadding} pt-20 pb-16`}
+      className={`relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background ${spacingTokens.pagePadding} pb-16`}
     >
       {/* Ambient grid background */}
       <div className="absolute inset-0 z-0">

@@ -31,7 +31,7 @@ export default async function ResearchProgramPage({ params }: { params: Promise<
   }
 
   return (
-    <div className="bg-background min-h-screen pt-24 font-inter">
+    <div className="bg-background min-h-screen pt-4 font-inter">
       <section className="relative min-h-[60vh] flex flex-col items-center justify-center z-10 border-b border-border text-center">
         <div className="absolute inset-0 bg-gradient-to-b opacity-50 from-primary-accent/5 via-transparent to-transparent pointer-events-none" />
         

@@ -17,7 +17,7 @@ export default function StatusPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-background pt-32 pb-20">
+    <div className="min-h-screen bg-background pt-12 pb-20">
       <div className="container-wide max-w-4xl">
         
         {/* Header */}

@@ -34,7 +34,7 @@ export default async function PlatformCapabilityPage({ params }: { params: Promi
   }
 
   return (
-    <div className="bg-background min-h-screen pt-24 font-inter">
+    <div className="bg-background min-h-screen pt-4 font-inter">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

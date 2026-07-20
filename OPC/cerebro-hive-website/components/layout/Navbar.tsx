@@ -26,6 +26,7 @@ export default function Navbar() {
 
   return (
     <>
+      <div className="h-20 w-full shrink-0" />
       <motion.nav 
         variants={{
           visible: { y: 0 },

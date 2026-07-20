@@ -123,7 +123,7 @@ export default function PlatformPage() {
     <div className="bg-background min-h-screen font-inter">
 
       {/* HERO */}
-      <section className="relative overflow-hidden border-b border-border pt-28 pb-24">
+      <section className="relative overflow-hidden border-b border-border pt-8 pb-24">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-accent/5 via-transparent to-violet-500/5 pointer-events-none" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-primary-accent/6 blur-[100px] rounded-full pointer-events-none" />
         <div className="container-wide relative z-10 text-center">

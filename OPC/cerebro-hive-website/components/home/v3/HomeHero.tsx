@@ -39,7 +39,7 @@ export default function HomeHero() {
       {/* Immersive Theme-Aware Ambient Background */}
       <BackgroundEngine type="hero" />
 
-      <PageContainer className="relative z-10 pt-32 pb-20">
+      <PageContainer className="relative z-10 pt-12 pb-20">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
           {/* Left: Copy */}

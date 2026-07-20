@@ -38,7 +38,7 @@ export default function DevelopersLayout({
   return (
     <>
       <JsonLd schema={breadcrumbSchema} />
-      <div className="min-h-screen bg-background pt-24 pb-20">
+      <div className="min-h-screen bg-background pt-4 pb-20">
         <div className="container-wide flex flex-col md:flex-row gap-8 lg:gap-12">
           {/* Sidebar Navigation */}
           <aside className="w-full md:w-64 lg:w-72 shrink-0 border-b md:border-b-0 md:border-r border-border pb-6 md:pb-0 md:pr-6">

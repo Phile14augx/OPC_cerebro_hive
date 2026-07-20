@@ -104,7 +104,7 @@ export default function OsConsole() {
   );
 
   return (
-    <main className="mx-auto max-w-6xl px-6 pb-24 pt-28">
+    <main className="mx-auto max-w-6xl px-6 pb-24 pt-8">
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">Enterprise AI OS — Production Instance</p>
       <h1 className="mt-3 text-4xl font-bold text-text-primary md:text-5xl">Operate the OS. Live.</h1>
       <p className="mt-4 max-w-2xl text-text-secondary">
