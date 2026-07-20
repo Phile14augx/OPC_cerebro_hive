@@ -4,7 +4,11 @@ export const KEY = process.env.NEXT_PUBLIC_PLATFORM_DEMO_KEY || "";
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API}${path}`, {
     ...init,
-    headers: { "content-type": "application/json", authorization: `Bearer ${KEY}`, ...(init?.headers ?? {}) },
+    headers: {
+      ...(init?.body ? { "content-type": "application/json" } : {}),
+      authorization: `Bearer ${KEY}`,
+      ...(init?.headers ?? {}),
+    },
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));

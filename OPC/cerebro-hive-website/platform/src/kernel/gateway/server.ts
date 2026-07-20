@@ -15,6 +15,15 @@ const PUBLIC_PATHS = new Set(["/health", "/ready", "/openapi.json", "/v1/bootstr
 export async function createServer(platform: Platform): Promise<FastifyInstance> {
   const app = Fastify({ logger: false, bodyLimit: 8 * 1024 * 1024 });
 
+  // Tolerate POST/PUT/PATCH requests sent with a `content-type: application/json`
+  // header but an empty body (common for action-style endpoints like deprovision
+  // or generate-invoice that take no payload) — treat empty body as `{}` instead
+  // of the Fastify default of rejecting it outright.
+  app.addContentTypeParser("application/json", { parseAs: "string" }, (_req, body, done) => {
+    if (!body || (typeof body === "string" && body.trim().length === 0)) { done(null, {}); return; }
+    try { done(null, JSON.parse(body as string)); } catch (err) { done(err as Error, undefined); }
+  });
+
   await app.register(swagger, {
     openapi: {
       info: {
@@ -56,7 +65,7 @@ export async function createServer(platform: Platform): Promise<FastifyInstance>
     }
     platform.logger.error({ err: err.message, stack: err.stack?.slice(0, 500) }, "unhandled error");
     platform.telemetry.metrics.increment("http.error", 1, { code: "internal" });
-    await reply.code(500).send({ error: { code: "internal", message: "internal error", debug: err.message, debugStack: err.stack?.slice(0, 800) } });
+    await reply.code(500).send({ error: { code: "internal", message: "internal error" } });
   });
 
   app.get("/health", async () => ({ status: "ok", service: "cerebro-platform", at: new Date().toISOString() }));
