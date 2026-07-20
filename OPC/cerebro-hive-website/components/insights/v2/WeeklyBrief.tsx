@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ArrowRight, BookOpen, AlertTriangle, Lightbulb, Target } from "lucide-react";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 
 export const WeeklyBrief = () => {
   return (
@@ -82,9 +83,15 @@ export const WeeklyBrief = () => {
                 </li>
               </ul>
               
-              <button className="w-full py-3 bg-[#00E5FF]/10 text-accent-secondary border border-[#00E5FF]/30 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-[#00E5FF] hover:text-text-primary transition-colors flex items-center justify-center gap-2">
+              <TrackedLink
+                href="/contact"
+                analyticsEvent="cta_click"
+                analyticsCategory="weekly_brief"
+                analyticsLabel="Subscribe to Briefing"
+                className="w-full py-3 bg-[#00E5FF]/10 text-accent-secondary border border-[#00E5FF]/30 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-[#00E5FF] hover:text-text-primary transition-colors flex items-center justify-center gap-2"
+              >
                 Subscribe to Briefing <ArrowRight size={14} />
-              </button>
+              </TrackedLink>
             </div>
 
           </div>

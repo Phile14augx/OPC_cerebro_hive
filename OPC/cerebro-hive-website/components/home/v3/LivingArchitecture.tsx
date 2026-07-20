@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Section } from "@/components/ui/primitives/Section";
 import { PageContainer } from "@/components/ui/primitives/PageContainer";
 import { Stack } from "@/components/ui/primitives/Stack";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 
 const layers = [
   {
@@ -150,9 +151,15 @@ export default function LivingArchitecture() {
                       <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-1">CerebroHive Implementation</div>
                       <div className="font-bold text-accent-secondary">{layer.products}</div>
                     </div>
-                    <button className="px-4 py-2 border border-border rounded text-xs font-bold uppercase tracking-widest text-text-primary hover:bg-surface-elevated dark:hover:bg-surface-elevated transition-colors">
+                    <TrackedLink
+                      href="/developers/architecture"
+                      analyticsEvent="cta_click"
+                      analyticsCategory="living_architecture"
+                      analyticsLabel={`View Documentation - ${layer.label}`}
+                      className="px-4 py-2 border border-border rounded text-xs font-bold uppercase tracking-widest text-text-primary hover:bg-surface-elevated dark:hover:bg-surface-elevated transition-colors"
+                    >
                       View Documentation
-                    </button>
+                    </TrackedLink>
                   </div>
 
                 </motion.div>

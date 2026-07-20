@@ -2,6 +2,9 @@
 
 import React from "react";
 import { Code2, Star, GitFork, Download, TerminalSquare } from "lucide-react";
+import { TrackedLink } from "@/components/ui/TrackedLink";
+
+const GITHUB_ORG = "https://github.com/Phile14augx";
 
 const projects = [
   {
@@ -48,14 +51,27 @@ export const OpenSourceProjects = () => {
               We open-source our foundational tooling, datasets, and evaluation frameworks to accelerate the entire AI ecosystem.
             </p>
           </div>
-          <button className="px-6 py-3 bg-surface border border-border text-text-primary text-sm font-bold rounded-lg hover:bg-surface hover:text-text-primary transition-colors flex items-center gap-2">
+          <TrackedLink
+            href={GITHUB_ORG}
+            analyticsEvent="cta_click"
+            analyticsCategory="open_source_projects"
+            analyticsLabel="View GitHub Organization"
+            className="px-6 py-3 bg-surface border border-border text-text-primary text-sm font-bold rounded-lg hover:bg-surface hover:text-text-primary transition-colors flex items-center gap-2"
+          >
             View GitHub Organization
-          </button>
+          </TrackedLink>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {projects.map((proj, i) => (
-            <div key={i} className="bg-surface border border-border rounded-2xl p-6 hover:border-primary-accent/50 transition-colors flex flex-col h-full">
+            <TrackedLink
+              href={GITHUB_ORG}
+              analyticsEvent="cta_click"
+              analyticsCategory="open_source_projects"
+              analyticsLabel={proj.name}
+              key={i}
+              className="bg-surface border border-border rounded-2xl p-6 hover:border-primary-accent/50 transition-colors flex flex-col h-full"
+            >
               
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -81,8 +97,8 @@ export const OpenSourceProjects = () => {
                   <span className="flex items-center gap-1 hover:text-[#00E5FF] transition-colors cursor-pointer"><Download size={14} /> {proj.dl}</span>
                 </div>
               </div>
-              
-            </div>
+
+            </TrackedLink>
           ))}
         </div>
 

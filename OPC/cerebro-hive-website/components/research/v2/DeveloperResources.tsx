@@ -2,12 +2,13 @@
 
 import React from "react";
 import { Code2, Terminal, Book, Box, ArrowRight } from "lucide-react";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 
 const resources = [
-  { icon: Terminal, title: "API Explorer", desc: "Interactive playground for CerebroOS endpoints." },
-  { icon: Box, title: "SDK Documentation", desc: "Native libraries for Python, Node.js, and Go." },
-  { icon: Code2, title: "Reference Architectures", desc: "Production-grade templates for deploying agent swarms." },
-  { icon: Book, title: "Prompt Library", desc: "Version-controlled, highly optimized system prompts." }
+  { icon: Terminal, title: "API Explorer", desc: "Interactive playground for CerebroOS endpoints.", href: "/platform/live-runtime" },
+  { icon: Box, title: "SDK Documentation", desc: "Native libraries for Python, Node.js, and Go.", href: "/developers" },
+  { icon: Code2, title: "Reference Architectures", desc: "Production-grade templates for deploying agent swarms.", href: "/developers/architecture" },
+  { icon: Book, title: "Prompt Library", desc: "Version-controlled, highly optimized system prompts.", href: "/developers" }
 ];
 
 export const DeveloperResources = () => {
@@ -25,18 +26,31 @@ export const DeveloperResources = () => {
             <p className="text-lg text-text-secondary mb-8 max-w-xl">
               Access the same tools our researchers use. From interactive API playgrounds to verified prompt libraries, everything you need to operationalize AI is here.
             </p>
-            <button className="px-8 py-4 bg-[#00E5FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform hover:scale-105 shadow-[0_0_20px_rgba(0,229,255,0.3)]">
+            <TrackedLink
+              href="/platform/live-runtime"
+              analyticsEvent="cta_click"
+              analyticsCategory="developer_resources"
+              analyticsLabel="Access Portal"
+              className="px-8 py-4 bg-[#00E5FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform hover:scale-105 shadow-[0_0_20px_rgba(0,229,255,0.3)] w-fit"
+            >
               Access Portal <ArrowRight size={16} />
-            </button>
+            </TrackedLink>
           </div>
 
           <div className="w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
             {resources.map((res, i) => (
-              <div key={i} className="p-6 rounded-xl bg-surface border border-border hover:bg-surface-elevated transition-colors group cursor-pointer">
+              <TrackedLink
+                href={res.href}
+                analyticsEvent="cta_click"
+                analyticsCategory="developer_resources"
+                analyticsLabel={res.title}
+                key={i}
+                className="p-6 rounded-xl bg-surface border border-border hover:bg-surface-elevated transition-colors group cursor-pointer block"
+              >
                 <res.icon size={24} className="text-text-muted group-hover:text-text-primary transition-colors mb-4" />
                 <h3 className="text-text-primary font-space font-bold mb-2">{res.title}</h3>
                 <p className="text-xs text-text-secondary">{res.desc}</p>
-              </div>
+              </TrackedLink>
             ))}
           </div>
 

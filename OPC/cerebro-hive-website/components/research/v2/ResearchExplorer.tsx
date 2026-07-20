@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import { Filter, ChevronDown, Download, FileText, Database, Code2, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedLink } from "@/components/ui/TrackedLink";
+
+const GITHUB_ORG = "https://github.com/Phile14augx";
 
 const personas = ["Executive", "Engineer", "Researcher", "Student", "Partner"];
 
@@ -51,9 +54,9 @@ export const ResearchExplorer = () => {
   const filteredPapers = papers.filter(p => p.personas.includes(activePersona));
 
   return (
-    <section className="py-24 border-b border-border bg-background">
+    <section id="research-archive" className="py-24 border-b border-border bg-background">
       <div className="container-wide max-w-6xl">
-        
+
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
           <div>
             <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-4">Research Archive</h2>
@@ -105,18 +108,36 @@ export const ResearchExplorer = () => {
               </div>
 
               <div className="flex flex-row md:flex-col gap-2 shrink-0 w-full md:w-auto">
-                <button className="flex-1 md:flex-none px-4 py-2.5 bg-surface border border-border rounded-lg text-xs font-bold text-text-primary hover:bg-primary-accent hover:text-text-primary hover:border-primary-accent transition-colors flex items-center justify-center gap-2">
+                <TrackedLink
+                  href="/contact"
+                  analyticsEvent="cta_click"
+                  analyticsCategory="research_archive"
+                  analyticsLabel={`Read Paper - ${paper.title}`}
+                  className="flex-1 md:flex-none px-4 py-2.5 bg-surface border border-border rounded-lg text-xs font-bold text-text-primary hover:bg-primary-accent hover:text-text-primary hover:border-primary-accent transition-colors flex items-center justify-center gap-2"
+                >
                   <FileText size={14} /> Read Paper
-                </button>
+                </TrackedLink>
                 {paper.github && (
-                  <button className="flex-1 md:flex-none px-4 py-2.5 bg-surface-secondary border border-border rounded-lg text-xs font-bold text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center gap-2">
+                  <TrackedLink
+                    href={GITHUB_ORG}
+                    analyticsEvent="cta_click"
+                    analyticsCategory="research_archive"
+                    analyticsLabel={`Code - ${paper.title}`}
+                    className="flex-1 md:flex-none px-4 py-2.5 bg-surface-secondary border border-border rounded-lg text-xs font-bold text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center gap-2"
+                  >
                     <Code2 size={14} /> Code
-                  </button>
+                  </TrackedLink>
                 )}
                 {paper.dataset && (
-                  <button className="flex-1 md:flex-none px-4 py-2.5 bg-surface-secondary border border-border rounded-lg text-xs font-bold text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center gap-2">
+                  <TrackedLink
+                    href={GITHUB_ORG}
+                    analyticsEvent="cta_click"
+                    analyticsCategory="research_archive"
+                    analyticsLabel={`Dataset - ${paper.title}`}
+                    className="flex-1 md:flex-none px-4 py-2.5 bg-surface-secondary border border-border rounded-lg text-xs font-bold text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center gap-2"
+                  >
                     <Database size={14} /> Dataset
-                  </button>
+                  </TrackedLink>
                 )}
               </div>
               

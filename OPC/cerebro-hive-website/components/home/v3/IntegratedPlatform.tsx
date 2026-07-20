@@ -24,7 +24,7 @@ const products = [
     desc: "The orchestration layer. Deploy specialized agents to handle finance, HR, or operations workflows autonomously.",
     color: "bg-[#7B61FF]",
     textColor: "text-[#7B61FF]",
-    href: "/platform/agentos"
+    href: "/products/agentos"
   },
   {
     title: "Quantiva ERP",

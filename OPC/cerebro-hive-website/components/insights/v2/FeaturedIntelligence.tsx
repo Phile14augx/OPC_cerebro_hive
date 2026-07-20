@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { ArrowRight, PlayCircle, BookOpen, Clock, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -53,7 +54,7 @@ export const FeaturedIntelligence = () => {
 
         <div className="grid lg:grid-cols-3 gap-6">
           {articles.map((article, i) => (
-            <div key={i} className="group bg-surface border border-border rounded-2xl p-8 hover:border-border-strong transition-all flex flex-col cursor-pointer relative overflow-hidden h-full">
+            <Link href="/research" key={i} className="group bg-surface border border-border rounded-2xl p-8 hover:border-border-strong transition-all flex flex-col cursor-pointer relative overflow-hidden h-full">
               
               <div className={cn("absolute top-0 left-0 w-full h-1", article.color)} />
 
@@ -86,7 +87,7 @@ export const FeaturedIntelligence = () => {
                 <ArrowRight size={16} className="text-primary-accent group-hover:translate-x-1 transition-transform" />
               </div>
 
-            </div>
+            </Link>
           ))}
         </div>
 
