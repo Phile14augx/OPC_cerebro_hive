@@ -97,12 +97,16 @@ PG_AGENTOS_PASS=$(openssl rand -hex 24)
 REDIS_PASS=$(openssl rand -hex 24)
 NEXTAUTH_SECRET=$(openssl rand -base64 32 | tr -d '\n')
 AGENTOS_ADMIN_SECRET=$(openssl rand -hex 32)
+PLATFORM_PG_PASS=$(openssl rand -hex 24)
+PLATFORM_BOOTSTRAP_KEY=$(openssl rand -hex 24)
 EOF
   chmod 600 "${SECRETS_FILE}"
   echo "New secrets generated at ${SECRETS_FILE}"
 else
   echo "Reusing existing secrets from ${SECRETS_FILE}"
 fi
+grep -q PLATFORM_PG_PASS "${SECRETS_FILE}" || echo "PLATFORM_PG_PASS=$(openssl rand -hex 24)" >> "${SECRETS_FILE}"
+grep -q PLATFORM_BOOTSTRAP_KEY "${SECRETS_FILE}" || echo "PLATFORM_BOOTSTRAP_KEY=$(openssl rand -hex 24)" >> "${SECRETS_FILE}"
 # shellcheck disable=SC1090
 source "${SECRETS_FILE}"
 
@@ -157,6 +161,37 @@ services:
     volumes:
       - redis_data:/data
 
+  nats:
+    image: nats:2-alpine
+    container_name: cerebrohive-nats
+    restart: always
+    command: ["-js", "-sd", "/data"]
+    ports:
+      - "127.0.0.1:4222:4222"
+    volumes:
+      - nats_data:/data
+
+  platform:
+    build: ${APP_DIR}/platform
+    container_name: cerebrohive-platform
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql://cerebrohive:${PG_SUPER_PASS}@db:5432/cerebro_platform
+      REDIS_URL: redis://:${REDIS_PASS}@redis:6379
+      NATS_URL: nats://nats:4222
+      EVENT_BUS: nats
+      AGENTOS_URL: http://agentos:8088
+      PLATFORM_BOOTSTRAP_KEY: ${PLATFORM_BOOTSTRAP_KEY}
+      PUBLIC_BASE_URL: https://${DOMAIN}/platform-api
+      PORT: "8090"
+    ports:
+      - "127.0.0.1:8090:8090"
+
   agentos:
     build: ${APP_DIR}/agentos
     container_name: cerebrohive-agentos
@@ -175,6 +210,7 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  nats_data:
 EOF
 
 step "Starting docker stack (db, redis, agentos)"
@@ -195,6 +231,31 @@ docker exec cerebrohive-db psql -U cerebrohive -d cerebrohive_db -tc \
   "SELECT 1 FROM pg_database WHERE datname='agentos'" | grep -q 1 || \
   docker exec cerebrohive-db psql -U cerebrohive -d cerebrohive_db -c \
   "CREATE DATABASE agentos OWNER agentos;"
+docker exec cerebrohive-db psql -U cerebrohive -d cerebrohive_db -tc \
+  "SELECT 1 FROM pg_database WHERE datname='cerebro_platform'" | grep -q 1 || \
+  docker exec cerebrohive-db psql -U cerebrohive -d cerebrohive_db -c \
+  "CREATE DATABASE cerebro_platform OWNER cerebrohive;"
+docker compose -f "${STACK_DIR}/docker-compose.yml" restart platform >/dev/null 2>&1 || true
+
+step "Bootstrapping platform demo organization"
+for i in $(seq 1 30); do
+  curl -sf http://127.0.0.1:8090/health >/dev/null 2>&1 && break
+  sleep 2
+done
+if ! grep -q PLATFORM_DEMO_KEY "${SECRETS_FILE}"; then
+  BOOT_JSON=$(curl -s -X POST http://127.0.0.1:8090/v1/bootstrap \
+    -H 'content-type: application/json' \
+    -d "{\"name\":\"CerebroHive Demo\",\"slug\":\"demo\",\"ownerEmail\":\"${EMAIL}\",\"bootstrapKey\":\"${PLATFORM_BOOTSTRAP_KEY}\"}")
+  DEMO_KEY=$(echo "${BOOT_JSON}" | grep -o '"secret":"[^"]*"' | head -1 | cut -d'"' -f4)
+  if [ -n "${DEMO_KEY}" ]; then
+    echo "PLATFORM_DEMO_KEY=${DEMO_KEY}" >> "${SECRETS_FILE}"
+    echo "Demo organization bootstrapped"
+  else
+    echo "WARN: bootstrap response: ${BOOT_JSON}"
+  fi
+fi
+# shellcheck disable=SC1090
+source "${SECRETS_FILE}"
 
 # ------------------------------------------------------------- 5. app build
 step "Writing production .env"
@@ -205,6 +266,8 @@ REDIS_URL="redis://:${REDIS_PASS}@127.0.0.1:6379"
 NEXTAUTH_SECRET="${NEXTAUTH_SECRET}"
 NEXTAUTH_URL="https://${DOMAIN}"
 NEXT_PUBLIC_AGENTOS_API_URL="https://${DOMAIN}/agentos"
+NEXT_PUBLIC_PLATFORM_API_URL="https://${DOMAIN}/platform-api"
+NEXT_PUBLIC_PLATFORM_DEMO_KEY="${PLATFORM_DEMO_KEY:-}"
 ALLOWED_ORIGINS="https://${DOMAIN},https://www.${DOMAIN}"
 NODE_ENV="production"
 EOF
@@ -276,6 +339,18 @@ server {
         return 302 /agentos/;
     }
 
+    # CerebroHive Enterprise AI OS (path prefix stripped)
+    location /platform-api/ {
+        proxy_pass http://127.0.0.1:8090/;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_read_timeout 180s;
+        proxy_buffering off;
+    }
+
     # Next.js app
     location / {
         proxy_pass http://127.0.0.1:3000;
@@ -321,6 +396,8 @@ echo "--- next (127.0.0.1:3000) ---"
 curl -s -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" http://127.0.0.1:3000/ || true
 echo "--- agentos (127.0.0.1:8088) ---"
 curl -s -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" http://127.0.0.1:8088/ || true
+echo "--- platform (127.0.0.1:8090) ---"
+curl -s -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" http://127.0.0.1:8090/health || true
 echo "--- https://${DOMAIN}/ ---"
 curl -s -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" "https://${DOMAIN}/" || true
 
