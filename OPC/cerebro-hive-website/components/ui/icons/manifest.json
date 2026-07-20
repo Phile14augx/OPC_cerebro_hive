@@ -1,0 +1,304 @@
+[
+  {
+    "id": "database",
+    "component": "Database",
+    "category": "database",
+    "aliases": [
+      "db"
+    ],
+    "keywords": [
+      "sql",
+      "storage",
+      "postgres",
+      "mysql"
+    ]
+  },
+  {
+    "id": "server",
+    "component": "Server",
+    "category": "infrastructure",
+    "aliases": [
+      "host"
+    ],
+    "keywords": [
+      "compute",
+      "node",
+      "bare-metal"
+    ]
+  },
+  {
+    "id": "cloud",
+    "component": "Cloud",
+    "category": "cloud",
+    "aliases": [],
+    "keywords": [
+      "aws",
+      "azure",
+      "gcp",
+      "hosting"
+    ]
+  },
+  {
+    "id": "cloud-compute",
+    "component": "CloudCompute",
+    "category": "cloud",
+    "aliases": [],
+    "keywords": [
+      "processing",
+      "cloud-function"
+    ]
+  },
+  {
+    "id": "shield",
+    "component": "Shield",
+    "category": "security",
+    "aliases": [],
+    "keywords": [
+      "protection",
+      "firewall",
+      "secure"
+    ]
+  },
+  {
+    "id": "lock",
+    "component": "Lock",
+    "category": "security",
+    "aliases": [],
+    "keywords": [
+      "secure",
+      "encryption",
+      "private"
+    ]
+  },
+  {
+    "id": "workflow",
+    "component": "Workflow",
+    "category": "workflow",
+    "aliases": [],
+    "keywords": [
+      "pipeline",
+      "process",
+      "flow"
+    ]
+  },
+  {
+    "id": "settings",
+    "component": "Settings",
+    "category": "navigation",
+    "aliases": [
+      "gear"
+    ],
+    "keywords": [
+      "preferences",
+      "options",
+      "config"
+    ]
+  },
+  {
+    "id": "search",
+    "component": "Search",
+    "category": "navigation",
+    "aliases": [
+      "magnifier"
+    ],
+    "keywords": [
+      "find",
+      "lookup",
+      "query"
+    ]
+  },
+  {
+    "id": "ai-brain",
+    "component": "AiBrain",
+    "category": "ai",
+    "aliases": [
+      "brain"
+    ],
+    "keywords": [
+      "intelligence",
+      "neural",
+      "smart"
+    ]
+  },
+  {
+    "id": "robot",
+    "component": "Robot",
+    "category": "agents",
+    "aliases": [
+      "bot"
+    ],
+    "keywords": [
+      "agent",
+      "automaton",
+      "bot"
+    ]
+  },
+  {
+    "id": "file-code",
+    "component": "FileCode",
+    "category": "files",
+    "aliases": [
+      "code"
+    ],
+    "keywords": [
+      "source",
+      "script",
+      "json"
+    ]
+  },
+  {
+    "id": "file-json",
+    "component": "FileJson",
+    "category": "files",
+    "aliases": [
+      "json"
+    ],
+    "keywords": [
+      "data",
+      "api"
+    ]
+  },
+  {
+    "id": "chart-bar",
+    "component": "ChartBar",
+    "category": "analytics",
+    "aliases": [
+      "graph"
+    ],
+    "keywords": [
+      "graph",
+      "data",
+      "metrics"
+    ]
+  },
+  {
+    "id": "chart-pie",
+    "component": "ChartPie",
+    "category": "analytics",
+    "aliases": [
+      "pie"
+    ],
+    "keywords": [
+      "graph",
+      "data",
+      "metrics"
+    ]
+  },
+  {
+    "id": "home",
+    "component": "Home",
+    "category": "dashboard",
+    "aliases": [
+      "house"
+    ],
+    "keywords": [
+      "main",
+      "start",
+      "landing"
+    ]
+  },
+  {
+    "id": "user",
+    "component": "User",
+    "category": "navigation",
+    "aliases": [
+      "person"
+    ],
+    "keywords": [
+      "person",
+      "account",
+      "profile"
+    ]
+  },
+  {
+    "id": "users",
+    "component": "Users",
+    "category": "enterprise",
+    "aliases": [
+      "team"
+    ],
+    "keywords": [
+      "team",
+      "group",
+      "organization"
+    ]
+  },
+  {
+    "id": "building",
+    "component": "Building",
+    "category": "enterprise",
+    "aliases": [
+      "company"
+    ],
+    "keywords": [
+      "company",
+      "office",
+      "hq"
+    ]
+  },
+  {
+    "id": "check-circle",
+    "component": "CheckCircle",
+    "category": "status",
+    "aliases": [
+      "success"
+    ],
+    "keywords": [
+      "success",
+      "done",
+      "complete"
+    ]
+  },
+  {
+    "id": "alert-circle",
+    "component": "AlertCircle",
+    "category": "status",
+    "aliases": [
+      "warning"
+    ],
+    "keywords": [
+      "warning",
+      "error",
+      "danger"
+    ]
+  },
+  {
+    "id": "loader",
+    "component": "Loader",
+    "category": "status",
+    "aliases": [
+      "loading"
+    ],
+    "keywords": [
+      "spinner",
+      "loading",
+      "wait"
+    ]
+  },
+  {
+    "id": "terminal",
+    "component": "Terminal",
+    "category": "developer",
+    "aliases": [
+      "console"
+    ],
+    "keywords": [
+      "cli",
+      "console",
+      "prompt"
+    ]
+  },
+  {
+    "id": "api",
+    "component": "Api",
+    "category": "developer",
+    "aliases": [
+      "webhook"
+    ],
+    "keywords": [
+      "endpoint",
+      "integration",
+      "rest"
+    ]
+  }
+]

@@ -1,8 +1,10 @@
-﻿import { HTMLMotionProps } from "framer-motion";
+import { HTMLMotionProps } from "framer-motion";
 
 export type IconSize = 16 | 20 | 24 | 32 | 48 | 64 | number;
 export type IconVariant = "outline" | "duotone" | "filled" | "rounded" | "sharp" | "solid" | "mini";
 export type IconAnimation = "idle" | "hover" | "active" | "loading" | "success" | "error" | "pulse" | "glow" | "flow" | "orbit" | "rotate" | "float";
+
+export type IconStability = "experimental" | "beta" | "stable" | "legacy";
 
 export interface IconMetadata {
   id: string;
@@ -10,6 +12,12 @@ export interface IconMetadata {
   keywords: string[];
   tags: string[];
   aliases: string[];
+  version: string;
+  introduced: string;
+  stability: IconStability;
+  deprecated?: boolean;
+  deprecatedReason?: string;
+  replacedBy?: string;
 }
 
 export interface BaseIconProps extends Omit<HTMLMotionProps<"svg">, "children" | "fill" | "stroke"> {
@@ -18,4 +26,8 @@ export interface BaseIconProps extends Omit<HTMLMotionProps<"svg">, "children" |
   variant?: IconVariant;
   animation?: IconAnimation;
   children?: React.ReactNode;
+  
+  // Accessibility
+  decorative?: boolean;
+  label?: string;
 }

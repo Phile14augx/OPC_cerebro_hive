@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React, { useId } from "react";
 import { motion } from "framer-motion";
 import { BaseIconProps } from "./types";
 import { sizeMap, defaultStrokeWidth } from "./tokens";
@@ -12,6 +12,8 @@ export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
     animation = "idle", 
     className = "", 
     children, 
+    decorative = true,
+    label,
     ...props 
   }, ref) => {
     
@@ -20,8 +22,9 @@ export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
     // Select animation variants
     const animationProps = iconAnimations[animation] || {};
 
-    // For dual-tone styling, we apply standard Cerebro color variables
-    const isDuotone = variant === "duotone";
+    // Generate unique IDs for accessibility
+    const titleId = useId();
+    const descId = useId();
 
     return (
       <motion.svg
@@ -35,12 +38,17 @@ export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
-        className={cerebro-icon variant-\ \}
+        className={`cerebro-icon variant-${variant} ${className}`}
         variants={animationProps}
         animate="animate"
         whileHover={animation === "hover" ? "hover" : undefined}
+        role="img"
+        focusable={false}
+        aria-hidden={decorative && !label ? "true" : undefined}
+        aria-labelledby={label ? titleId : undefined}
         {...props}
       >
+        {label && <title id={titleId}>{label}</title>}
         {children}
       </motion.svg>
     );
