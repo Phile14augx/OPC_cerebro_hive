@@ -1,1 +1,2 @@
-export { Workflow } from './Workflow';
+export { WorkflowNodes } from './WorkflowNodes';
+export { Pipeline } from './Pipeline';

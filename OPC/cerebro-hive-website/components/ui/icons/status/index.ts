@@ -1,3 +1,3 @@
-export { CheckCircle } from './CheckCircle';
-export { AlertCircle } from './AlertCircle';
+export { StatusOnline } from './StatusOnline';
+export { StatusOffline } from './StatusOffline';
 export { Loader } from './Loader';

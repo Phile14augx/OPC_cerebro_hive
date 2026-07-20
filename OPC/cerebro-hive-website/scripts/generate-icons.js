@@ -94,10 +94,15 @@ iconMap.forEach(iconDef => {
     
     const metaStr = `  '${componentName}': {
     id: '${iconDef.id}',
+    displayName: ${iconDef.displayName ? `'${iconDef.displayName}'` : undefined},
     category: '${iconDef.category}',
+    subcategory: ${iconDef.subcategory ? `'${iconDef.subcategory}'` : undefined},
     keywords: ${JSON.stringify(keywords)},
     tags: ${JSON.stringify(tags)},
     aliases: ${JSON.stringify(aliases)},
+    intent: ${JSON.stringify(iconDef.intent || [])},
+    industries: ${JSON.stringify(iconDef.industries || [])},
+    searchWeight: ${iconDef.searchWeight || 0},
     version: '${version}',
     introduced: '${introduced}',
     stability: '${stability}'
@@ -109,7 +114,9 @@ iconMap.forEach(iconDef => {
       component: componentName,
       category: iconDef.category,
       aliases: aliases,
-      keywords: keywords
+      keywords: keywords,
+      intent: iconDef.intent || [],
+      searchWeight: iconDef.searchWeight || 0
     });
     
     generatedCount++;

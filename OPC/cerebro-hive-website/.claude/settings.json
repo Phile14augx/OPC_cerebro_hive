@@ -57,7 +57,12 @@
       "Bash(git merge *)",
       "Bash(git stash *)",
       "Bash(git remote *)",
-      "Bash(node ./repro-run.js)"
+      "Bash(node ./repro-run.js)",
+      "Bash(curl -sI https://cerebropchive.org)",
+      "Bash(nslookup cerebropchive.org)",
+      "Bash(curl -s https://cerebropchive.org/ -o /tmp/live.html)",
+      "Bash(grep -o 'href=\"[^\"]*\\\\.css[^\"]*\"' /tmp/live.html | head -10; echo \"---\"; wc -l /tmp/live.html)",
+      "Bash(grep -o '\\\\*,\\\\*::before,\\\\*::after{[^}]*}' /tmp/2iyobvyoxitnu.css)"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows",
