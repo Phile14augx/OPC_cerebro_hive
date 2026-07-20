@@ -38,6 +38,13 @@ interface SwarmRoleResult { role: string; description: string; output: string; c
 interface SwarmRun { id: string; objective: string; roles: SwarmRoleResult[]; consensus?: { finalAnswer: string; averageScore: number; agreement: number }; status: string; auditTrail: { stage: string; note: string }[] }
 interface ActionDefinition { kind: string; title: string; category: string; requiresApproval: boolean }
 interface ActionExecution { id: string; kind: string; status: string; result?: Record<string, unknown> }
+interface TwinRun { id: string; kind: string; result: Record<string, unknown> & { recommendation?: string } }
+interface PromptVersion { id: string; name: string; version: number }
+interface LeaderboardEntry { target: string; score: number; regression: boolean }
+interface ToolGrant { id: string; agentId: string; tool: string; allow: boolean }
+interface McpServer { id: string; name: string; riskTier: string; status: string }
+interface DataAsset { id: string; name: string; kind: string; freshnessSlaMinutes: number }
+interface WorldGraph { edges: { id: string; from: string; to: string; relationship: string }[] }
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API}${path}`, {
@@ -95,6 +102,18 @@ export default function OsConsole() {
   const [actionLog, setActionLog] = useState<ActionExecution[]>([]);
   const [actionBusy, setActionBusy] = useState<string | null>(null);
 
+  const [twinRuns, setTwinRuns] = useState<TwinRun[]>([]);
+  const [twinBusy, setTwinBusy] = useState(false);
+  const [promptVersions, setPromptVersions] = useState<PromptVersion[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [researchBusy, setResearchBusy] = useState(false);
+  const [toolGrants, setToolGrants] = useState<ToolGrant[]>([]);
+  const [mcpServers, setMcpServers] = useState<McpServer[]>([]);
+  const [ztBusy, setZtBusy] = useState(false);
+  const [dataAssets, setDataAssets] = useState<DataAsset[]>([]);
+  const [dpBusy, setDpBusy] = useState(false);
+  const [worldGraph, setWorldGraph] = useState<WorldGraph | null>(null);
+
   const refresh = useCallback(async () => {
     try {
       const health = await fetch(`${API}/health`).then(r => r.ok);
@@ -112,7 +131,68 @@ export default function OsConsole() {
       setModelCatalog((await api<{ models: ModelProfile[] }>("/v1/router/catalog")).models);
       setActionCatalog((await api<{ actions: ActionDefinition[] }>("/v1/actions/catalog")).actions);
       setActionLog((await api<{ actions: ActionExecution[] }>("/v1/actions/log")).actions);
+      setTwinRuns((await api<{ runs: TwinRun[] }>("/v1/digitaltwin/runs")).runs);
+      setPromptVersions((await api<{ versions: PromptVersion[] }>("/v1/research/prompts")).versions);
+      setToolGrants((await api<{ grants: ToolGrant[] }>("/v1/zerotrust/grants")).grants);
+      setMcpServers((await api<{ servers: McpServer[] }>("/v1/zerotrust/mcp-servers")).servers);
+      setDataAssets((await api<{ assets: DataAsset[] }>("/v1/dataplatform/assets")).assets);
+      setWorldGraph(await api<WorldGraph>("/v1/world/graph"));
     } catch { setOnline(false); }
+  }, []);
+
+  const runSupplyChainTwin = useCallback(async () => {
+    setTwinBusy(true);
+    try {
+      await api("/v1/digitaltwin/supply-chain", { method: "POST", body: JSON.stringify({ suppliers: 25, disruptionProbability: 0.25, avgLeadTimeDays: 21 }) });
+      setTwinRuns((await api<{ runs: TwinRun[] }>("/v1/digitaltwin/runs")).runs);
+    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setTwinBusy(false); }
+  }, []);
+
+  const runCyberTwin = useCallback(async () => {
+    setTwinBusy(true);
+    try {
+      await api("/v1/digitaltwin/cyber-attack", { method: "POST", body: JSON.stringify({ attackVector: "phishing", assetCriticality: "high", mttdHours: 6, mttrHours: 10 }) });
+      setTwinRuns((await api<{ runs: TwinRun[] }>("/v1/digitaltwin/runs")).runs);
+    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setTwinBusy(false); }
+  }, []);
+
+  const registerPromptVersion = useCallback(async () => {
+    setResearchBusy(true);
+    try {
+      await api("/v1/research/prompts", { method: "POST", body: JSON.stringify({ name: "grounded-qa", template: "Answer strictly from: {{sources}}" }) });
+      setPromptVersions((await api<{ versions: PromptVersion[] }>("/v1/research/prompts")).versions);
+      setLeaderboard((await api<{ entries: LeaderboardEntry[] }>("/v1/research/leaderboard/provider-compare")).entries);
+    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setResearchBusy(false); }
+  }, []);
+
+  const grantToolAccess = useCallback(async () => {
+    setZtBusy(true);
+    try {
+      await api("/v1/zerotrust/grants", { method: "POST", body: JSON.stringify({ agentId: "runtime-agent-1", tool: "deploy_kubernetes", allow: true }) });
+      setToolGrants((await api<{ grants: ToolGrant[] }>("/v1/zerotrust/grants")).grants);
+    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setZtBusy(false); }
+  }, []);
+
+  const registerMcpServer = useCallback(async () => {
+    setZtBusy(true);
+    try {
+      await api("/v1/zerotrust/mcp-servers", { method: "POST", body: JSON.stringify({ name: "external-connector", url: "https://mcp.example.com", riskTier: "high", capabilities: ["read", "write"] }) });
+      setMcpServers((await api<{ servers: McpServer[] }>("/v1/zerotrust/mcp-servers")).servers);
+    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setZtBusy(false); }
+  }, []);
+
+  const registerDataAsset = useCallback(async () => {
+    setDpBusy(true);
+    try {
+      await api("/v1/dataplatform/assets", { method: "POST", body: JSON.stringify({ name: `dataset_${Math.random().toString(16).slice(2, 6)}`, kind: "table", owner: "data-eng", freshnessSlaMinutes: 60 }) });
+      setDataAssets((await api<{ assets: DataAsset[] }>("/v1/dataplatform/assets")).assets);
+    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setDpBusy(false); }
   }, []);
 
   const routeText = useCallback(async () => {
@@ -546,6 +626,98 @@ export default function OsConsole() {
           {actionLog.length === 0 && <li className="text-text-secondary">No actions executed yet.</li>}
         </ul>
         <p className="mt-2 text-xs text-text-secondary">* requires approval before execution</p>
+      </section>
+
+      <section className="mt-14">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">The Remaining Pillars</p>
+        <h2 className="mt-2 text-2xl font-bold text-text-primary">World Model™ · Digital Twin™ · Research™ · Zero Trust™ · Data Platform™</h2>
+        <p className="mt-2 max-w-3xl text-sm text-text-secondary">
+          A living graph of the enterprise, named business scenarios that simulate and write back into that graph, versioned prompt/agent research with A/B testing,
+          deny-by-default tool and MCP governance, and a governed data-asset catalog with lineage.
+        </p>
+      </section>
+
+      <section className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="rounded-xl border border-border bg-surface/40 p-4">
+          <h3 className="font-semibold text-text-primary">Enterprise World Model™</h3>
+          <p className="mt-1 text-xs text-text-secondary">Every object — employees, departments, risks, assets, policies — inside one graph.</p>
+          <div className="mt-3 text-2xl font-semibold text-text-primary">{worldGraph?.edges.length ?? 0}</div>
+          <div className="text-xs text-text-secondary">relationship edges tracked</div>
+        </div>
+
+        <div className="rounded-xl border border-border bg-surface/40 p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-text-primary">Digital Twin™</h3>
+            <div className="flex gap-1">
+              <button onClick={() => void runSupplyChainTwin()} disabled={twinBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Supply chain</button>
+              <button onClick={() => void runCyberTwin()} disabled={twinBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Cyber</button>
+            </div>
+          </div>
+          <ul className="mt-3 space-y-1.5 text-xs">
+            {twinRuns.slice(0, 3).map(r => (
+              <li key={r.id} className="rounded-lg border border-border bg-background px-2 py-1.5">
+                <span className="text-primary-accent">{r.kind.replace(/_/g, " ")}</span>{r.result.recommendation ? `: ${r.result.recommendation}` : ""}
+              </li>
+            ))}
+            {twinRuns.length === 0 && <li className="text-text-secondary">No scenarios simulated yet.</li>}
+          </ul>
+        </div>
+
+        <div className="rounded-xl border border-border bg-surface/40 p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-text-primary">Research Platform™</h3>
+            <button onClick={() => void registerPromptVersion()} disabled={researchBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Version prompt</button>
+          </div>
+          <ul className="mt-3 space-y-1.5 text-xs">
+            {promptVersions.slice(0, 4).map(v => (
+              <li key={v.id} className="rounded-lg border border-border bg-background px-2 py-1.5">{v.name} · v{v.version}</li>
+            ))}
+            {promptVersions.length === 0 && <li className="text-text-secondary">No prompt versions registered yet.</li>}
+          </ul>
+          {leaderboard.length > 0 && (
+            <div className="mt-2 text-xs text-text-secondary">Leaderboard: {leaderboard.map(l => `${l.target}=${l.score}`).join(", ")}</div>
+          )}
+        </div>
+
+        <div className="rounded-xl border border-border bg-surface/40 p-4">
+          <div className="flex items-center justify-between gap-1">
+            <h3 className="font-semibold text-text-primary">Zero Trust™</h3>
+            <div className="flex gap-1">
+              <button onClick={() => void grantToolAccess()} disabled={ztBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Grant tool</button>
+              <button onClick={() => void registerMcpServer()} disabled={ztBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Register MCP</button>
+            </div>
+          </div>
+          <ul className="mt-3 space-y-1.5 text-xs">
+            {toolGrants.slice(0, 2).map(g => (
+              <li key={g.id} className="rounded-lg border border-border bg-background px-2 py-1.5">{g.agentId} → {g.tool}: <span className={g.allow ? "text-primary-accent" : "text-red-400"}>{g.allow ? "allow" : "deny"}</span></li>
+            ))}
+            {mcpServers.slice(0, 2).map(s => (
+              <li key={s.id} className="rounded-lg border border-border bg-background px-2 py-1.5">{s.name} · {s.riskTier} · <span className={s.status === "approved" ? "text-primary-accent" : s.status === "pending" ? "text-amber-400" : "text-red-400"}>{s.status}</span></li>
+            ))}
+            {toolGrants.length === 0 && mcpServers.length === 0 && <li className="text-text-secondary">No grants or MCP servers registered yet.</li>}
+          </ul>
+        </div>
+
+        <div className="rounded-xl border border-border bg-surface/40 p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-text-primary">Data Platform™</h3>
+            <button onClick={() => void registerDataAsset()} disabled={dpBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Register asset</button>
+          </div>
+          <ul className="mt-3 space-y-1.5 text-xs">
+            {dataAssets.slice(0, 4).map(a => (
+              <li key={a.id} className="rounded-lg border border-border bg-background px-2 py-1.5">{a.name} · {a.kind} · SLA {a.freshnessSlaMinutes}m</li>
+            ))}
+            {dataAssets.length === 0 && <li className="text-text-secondary">No data assets registered yet.</li>}
+          </ul>
+        </div>
+
+        <div className="rounded-xl border border-border bg-surface/40 p-4">
+          <h3 className="font-semibold text-text-primary">Developer Platform™ SDK</h3>
+          <p className="mt-1 text-xs text-text-secondary">A typed TypeScript client over this entire API surface — one method group per domain, ships with the platform package.</p>
+          <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-background p-2 text-[11px] text-text-secondary">{`import { createClient } from "@cerebrohive/sdk";
+const cerebro = createClient({ baseUrl, apiKey });
+await cerebro.swarm.run("Research X, then build it.");`}</pre>
+        </div>
       </section>
     </main>
   );

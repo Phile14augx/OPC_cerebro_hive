@@ -5,7 +5,14 @@ import { cosine } from "../x/mock-provider.js";
 
 export type WorldEntityKind =
   | "organization" | "user" | "project" | "workflow" | "document" | "agent"
-  | "infrastructure" | "process" | "skill" | "policy" | "execution";
+  | "infrastructure" | "process" | "skill" | "policy" | "execution"
+  | "department" | "application" | "customer" | "vendor" | "risk" | "asset";
+
+export type WorldRelationship =
+  | "owns" | "depends_on" | "employs" | "reports_to" | "belongs_to" | "runs_on"
+  | "supplies_to" | "affects" | "governed_by" | "mitigated_by";
+
+export interface WorldEdge { id: string; organizationId: string; from: string; to: string; relationship: WorldRelationship; createdAt: string }
 
 export interface WorldEntity {
   id: string; organizationId: string; kind: WorldEntityKind; refId: string;
@@ -47,6 +54,8 @@ export class InMemoryWorldRepository implements WorldRepository {
  * projected into entity state; embeddings enable semantic queries over world state.
  */
 export class WorldModel {
+  private edges: WorldEdge[] = [];
+
   constructor(
     private readonly repo: WorldRepository,
     private readonly representation: RepresentationModel,
@@ -55,6 +64,22 @@ export class WorldModel {
   async project(organizationId: string, kind: WorldEntityKind, refId: string, name: string, state: Record<string, unknown>): Promise<WorldEntity> {
     const embedding = this.representation.encode(`${kind} ${name} ${JSON.stringify(state).slice(0, 500)}`);
     return this.repo.upsert({ organizationId, kind, refId, name, state, embedding });
+  }
+
+  /** Relate two already-projected entities — this is what makes the World Model "one graph" rather than a flat entity table. */
+  link(organizationId: string, from: string, to: string, relationship: WorldRelationship): WorldEdge {
+    const edge: WorldEdge = { id: newId("wedge"), organizationId, from, to, relationship, createdAt: new Date().toISOString() };
+    this.edges.push(edge);
+    return edge;
+  }
+
+  /** Every edge touching an entity, in either direction — the neighborhood used for "reason over the enterprise graph" queries. */
+  neighborhood(organizationId: string, entityId: string): WorldEdge[] {
+    return this.edges.filter(e => e.organizationId === organizationId && (e.from === entityId || e.to === entityId));
+  }
+
+  graph(organizationId: string): { edges: WorldEdge[] } {
+    return { edges: this.edges.filter(e => e.organizationId === organizationId) };
   }
 
   async semanticQuery(organizationId: string, query: string, opts?: { kind?: WorldEntityKind; limit?: number }): Promise<(WorldEntity & { score: number })[]> {

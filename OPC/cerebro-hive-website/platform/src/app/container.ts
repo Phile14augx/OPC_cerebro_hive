@@ -50,6 +50,10 @@ import { AiopsService, InMemoryAiopsRepository } from "../domains/aiops/aiops.js
 import { CompilerService, InMemoryCompilerRepository } from "../domains/compiler/compiler.js";
 import { InMemorySwarmRepository, SwarmService } from "../domains/swarm/swarm.js";
 import { ActionsService, InMemoryActionsRepository } from "../domains/actions/actions.js";
+import { DigitalTwinService, InMemoryDigitalTwinRepository } from "../domains/digitaltwin/digitaltwin.js";
+import { InMemoryResearchRepository, ResearchService } from "../domains/research/research.js";
+import { InMemoryZeroTrustRepository, ZeroTrustService } from "../domains/zerotrust/zerotrust.js";
+import { DataPlatformService, InMemoryDataPlatformRepository } from "../domains/dataplatform/dataplatform.js";
 import { systemContext } from "../kernel/context/context.js";
 
 export interface Platform {
@@ -96,6 +100,10 @@ export interface Platform {
   compiler: CompilerService;
   swarm: SwarmService;
   actions: ActionsService;
+  digitalTwin: DigitalTwinService;
+  research: ResearchService;
+  zeroTrust: ZeroTrustService;
+  dataPlatform: DataPlatformService;
   shutdown(): Promise<void>;
 }
 
@@ -213,6 +221,14 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
   const swarm = new SwarmService(swarmRepo, bus, policy, x, runtime);
   const actionsRepo = new InMemoryActionsRepository();
   const actions = new ActionsService(actionsRepo, bus, policy, flow);
+  const digitalTwinRepo = new InMemoryDigitalTwinRepository();
+  const digitalTwin = new DigitalTwinService(digitalTwinRepo, bus, policy, world);
+  const researchRepo = new InMemoryResearchRepository();
+  const research = new ResearchService(researchRepo, bus, policy, evals);
+  const zeroTrustRepo = new InMemoryZeroTrustRepository();
+  const zeroTrust = new ZeroTrustService(zeroTrustRepo, bus, policy);
+  const dataPlatformRepo = new InMemoryDataPlatformRepository();
+  const dataPlatform = new DataPlatformService(dataPlatformRepo, bus, policy);
 
   if (snapshots) {
     snapshots.register("runtime", comboSnapshot({ executions: mapSnapshot(runtimeRepo.executions), steps: mapSnapshot(runtimeRepo.stepRows), artifacts: arraySnapshot(runtimeRepo.artifactRows) }));
@@ -241,6 +257,10 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     snapshots.register("compiler", arraySnapshot(compilerRepo.programs));
     snapshots.register("swarm", mapSnapshot(swarmRepo.runs));
     snapshots.register("actions", arraySnapshot(actionsRepo.rows));
+    snapshots.register("digital_twin", arraySnapshot(digitalTwinRepo.rows));
+    snapshots.register("research", comboSnapshot({ prompts: arraySnapshot(researchRepo.prompts), agents: arraySnapshot(researchRepo.agents), experiments: arraySnapshot(researchRepo.experiments) }));
+    snapshots.register("zero_trust", comboSnapshot({ grants: arraySnapshot(zeroTrustRepo.grants), mcpServers: mapSnapshot(zeroTrustRepo.mcpServers), tokens: mapSnapshot(zeroTrustRepo.tokens) }));
+    snapshots.register("data_platform", comboSnapshot({ assets: mapSnapshot(dataPlatformRepo.assets), edges: arraySnapshot(dataPlatformRepo.edges), metrics: arraySnapshot(dataPlatformRepo.metrics) }));
     await snapshots.start();
   }
 
@@ -266,6 +286,7 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     x, moe: new MixtureOfExperts(x), world, memory, knowledge, guard, runtime, scheduler, tools,
     contextEngine, mesh, flow, governance, registries, ethics, ontology, web3, evals, observatory, connect, hub, simulator, sphere, consulting,
     devops, mlops, secops, aiops, agentExecutor, router, compiler, swarm, actions,
+    digitalTwin, research, zeroTrust, dataPlatform,
     async shutdown() {
       scheduler.stop();
       await snapshots?.stop();

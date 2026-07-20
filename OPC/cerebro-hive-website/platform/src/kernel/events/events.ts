@@ -187,4 +187,24 @@ export const Subjects = {
     approvalRequired: "actions.approval.required",
     denied: "actions.execution.denied",
   },
+  digitaltwin: {
+    scenarioCompleted: "digitaltwin.scenario.completed",
+  },
+  research: {
+    promptVersioned: "research.prompt.versioned",
+    agentVersioned: "research.agent.versioned",
+    experimentRecorded: "research.experiment.recorded",
+  },
+  zerotrust: {
+    grantChanged: "zerotrust.grant.changed",
+    mcpServerRegistered: "zerotrust.mcp_server.registered",
+    mcpServerReviewed: "zerotrust.mcp_server.reviewed",
+    tokenIssued: "zerotrust.token.issued",
+  },
+  dataplatform: {
+    assetRegistered: "dataplatform.asset.registered",
+    freshnessBreached: "dataplatform.freshness.breached",
+    lineageLinked: "dataplatform.lineage.linked",
+    metricDefined: "dataplatform.metric.defined",
+  },
 } as const;

@@ -9,7 +9,10 @@ const STREAMS: Record<string, string[]> = {
   KNOWLEDGE: ["knowledge.>", "memory.>"],
   SECURITY: ["security.>", "governance.>", "eval.>"],
   PLATFORM: ["platform.>", "ai.>", "simulator.>", "hub.>", "connect.>"],
-  OPS: ["devops.>", "mlops.>", "secops.>", "aiops.>", "graph.>", "chain.>", "router.>", "compiler.>", "swarm.>", "actions.>"],
+  OPS: [
+    "devops.>", "mlops.>", "secops.>", "aiops.>", "graph.>", "chain.>", "router.>", "compiler.>", "swarm.>", "actions.>",
+    "digitaltwin.>", "research.>", "zerotrust.>", "dataplatform.>",
+  ],
 };
 
 /** NATS JetStream event bus — durable, at-least-once. */

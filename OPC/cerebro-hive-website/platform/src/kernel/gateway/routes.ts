@@ -533,6 +533,141 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
     return { actions: await p.actions.list(ctx(req), q.limit ? Number(q.limit) : undefined) };
   });
 
+  // ---------------- Cerebro Digital Twin (named enterprise scenario simulation) ----------------
+  app.post("/v1/digitaltwin/supply-chain", async req => {
+    const body = parse(z.object({ suppliers: z.number().int().positive(), disruptionProbability: z.number().min(0).max(1), avgLeadTimeDays: z.number().positive(), seed: z.string().optional() }), req.body);
+    return p.digitalTwin.supplyChain(ctx(req), body);
+  });
+  app.post("/v1/digitaltwin/hiring", async req => {
+    const body = parse(z.object({ openRoles: z.number().int().positive(), applicantsPerRole: z.number().positive(), conversionRate: z.number().min(0).max(1), avgTimeToHireDays: z.number().positive(), seed: z.string().optional() }), req.body);
+    return p.digitalTwin.hiring(ctx(req), body);
+  });
+  app.post("/v1/digitaltwin/manufacturing", async req => {
+    const body = parse(z.object({ lines: z.number().int().positive(), unitsPerHourPerLine: z.number().positive(), defectRate: z.number().min(0).max(1), demandUnits: z.number().positive(), hoursAvailable: z.number().positive(), seed: z.string().optional() }), req.body);
+    return p.digitalTwin.manufacturing(ctx(req), body);
+  });
+  app.post("/v1/digitaltwin/cyber-attack", async req => {
+    const body = parse(z.object({ attackVector: z.string().min(1), assetCriticality: z.enum(["low", "medium", "high", "critical"]), mttdHours: z.number().positive(), mttrHours: z.number().positive(), seed: z.string().optional() }), req.body);
+    return p.digitalTwin.cyberAttack(ctx(req), body);
+  });
+  app.post("/v1/digitaltwin/cloud-migration", async req => {
+    const body = parse(z.object({ workloads: z.number().int().positive(), migrationWavesWeeks: z.number().positive(), riskTolerance: z.enum(["low", "medium", "high"]), seed: z.string().optional() }), req.body);
+    return p.digitalTwin.cloudMigration(ctx(req), body);
+  });
+  app.post("/v1/digitaltwin/sales-pipeline", async req => {
+    const body = parse(z.object({
+      stages: z.array(z.object({ name: z.string(), count: z.number().int().nonnegative(), conversion: z.number().min(0).max(1) })).min(1),
+      avgDealSizeUsd: z.number().positive(), seed: z.string().optional(),
+    }), req.body);
+    return p.digitalTwin.salesPipeline(ctx(req), body);
+  });
+  app.post("/v1/digitaltwin/financial-forecast", async req => {
+    const body = parse(z.object({ revenueUsd: z.number().positive(), expensesUsd: z.number().positive(), monthlyGrowthPct: z.number(), horizonMonths: z.number().int().positive().max(60), seed: z.string().optional() }), req.body);
+    return p.digitalTwin.financialForecast(ctx(req), body);
+  });
+  app.post("/v1/digitaltwin/merger", async req => {
+    const body = parse(z.object({ acquirerHeadcount: z.number().int().positive(), targetHeadcount: z.number().int().positive(), overlapPct: z.number().min(0).max(1), synergyTargetPct: z.number().min(0).max(1), seed: z.string().optional() }), req.body);
+    return p.digitalTwin.merger(ctx(req), body);
+  });
+  app.post("/v1/digitaltwin/policy-change", async req => {
+    const body = parse(z.object({ affectedEmployees: z.number().int().positive(), complianceDeadlineDays: z.number().int().positive(), currentCompliancePct: z.number().min(0).max(1), trainingCapacityPerDay: z.number().positive(), seed: z.string().optional() }), req.body);
+    return p.digitalTwin.policyChange(ctx(req), body);
+  });
+  app.get("/v1/digitaltwin/runs", async req => {
+    const q = req.query as { kind?: string; limit?: string };
+    return { runs: await p.digitalTwin.list(ctx(req), q.kind as never, q.limit ? Number(q.limit) : undefined) };
+  });
+
+  // ---------------- Cerebro Research (prompt/agent versioning, A/B tests, leaderboards) ----------------
+  app.post("/v1/research/prompts", async req => {
+    const body = parse(z.object({ name: z.string().min(1), template: z.string().min(1), notes: z.string().optional() }), req.body);
+    return p.research.registerPrompt(ctx(req), body);
+  });
+  app.get("/v1/research/prompts", async req => {
+    const q = req.query as { name?: string };
+    return { versions: await p.research.listPrompts(ctx(req), q.name) };
+  });
+  app.post("/v1/research/agents", async req => {
+    const body = parse(z.object({ name: z.string().min(1), config: z.record(z.unknown()), notes: z.string().optional() }), req.body);
+    return p.research.registerAgent(ctx(req), body);
+  });
+  app.get("/v1/research/agents", async req => {
+    const q = req.query as { name?: string };
+    return { versions: await p.research.listAgents(ctx(req), q.name) };
+  });
+  app.post("/v1/research/ab-test", async req => {
+    const body = parse(z.object({
+      name: z.string().min(1),
+      cases: z.array(z.object({ id: z.string(), input: z.string() })).min(1),
+      providers: z.array(z.string()).min(2),
+      promptVersionId: z.string().optional(), agentVersionId: z.string().optional(),
+    }), req.body);
+    return p.research.runAbTest(ctx(req), body);
+  });
+  app.get("/v1/research/experiments", async req => {
+    const q = req.query as { limit?: string };
+    return { experiments: await p.research.listExperiments(ctx(req), q.limit ? Number(q.limit) : undefined) };
+  });
+  app.get("/v1/research/leaderboard/:suite", async req => {
+    return { entries: await p.research.leaderboard(ctx(req), (req.params as { suite: string }).suite) };
+  });
+
+  // ---------------- Cerebro Zero Trust (tool grants, MCP governance, capability tokens) ----------------
+  app.post("/v1/zerotrust/grants", async req => {
+    const body = parse(z.object({ agentId: z.string().min(1), tool: z.string().min(1), allow: z.boolean() }), req.body);
+    return p.zeroTrust.grantTool(ctx(req), body);
+  });
+  app.get("/v1/zerotrust/grants", async req => {
+    const q = req.query as { agentId?: string };
+    return { grants: await p.zeroTrust.listGrants(ctx(req), q.agentId) };
+  });
+  app.get("/v1/zerotrust/check", async req => {
+    const q = req.query as { agentId: string; tool: string };
+    return { allowed: await p.zeroTrust.canUseTool(ctx(req), q.agentId, q.tool) };
+  });
+  app.post("/v1/zerotrust/mcp-servers", async req => {
+    const body = parse(z.object({ name: z.string().min(1), url: z.string().min(1), riskTier: z.enum(["low", "medium", "high", "critical"]), capabilities: z.array(z.string()).default([]) }), req.body);
+    return p.zeroTrust.registerMcpServer(ctx(req), body);
+  });
+  app.post("/v1/zerotrust/mcp-servers/:id/review", async req => {
+    const body = parse(z.object({ decision: z.enum(["approved", "denied"]) }), req.body);
+    return p.zeroTrust.reviewMcpServer(ctx(req), (req.params as { id: string }).id, body.decision);
+  });
+  app.get("/v1/zerotrust/mcp-servers", async req => ({ servers: await p.zeroTrust.listMcpServers(ctx(req)) }));
+  app.post("/v1/zerotrust/tokens", async req => {
+    const body = parse(z.object({ agentId: z.string().min(1), tools: z.array(z.string()).min(1), ttlMinutes: z.number().int().positive().max(1440).optional() }), req.body);
+    return p.zeroTrust.issueCapabilityToken(ctx(req), body);
+  });
+  app.get("/v1/zerotrust/tokens", async req => {
+    const q = req.query as { agentId?: string };
+    return { tokens: await p.zeroTrust.listTokens(ctx(req), q.agentId) };
+  });
+
+  // ---------------- Cerebro Data Platform (asset catalog, lineage, semantic layer) ----------------
+  app.post("/v1/dataplatform/assets", async req => {
+    const body = parse(z.object({
+      name: z.string().min(1), kind: z.enum(["table", "stream", "lakehouse", "warehouse", "vector_index", "graph", "time_series", "object_store", "feature_view"]),
+      owner: z.string().min(1), freshnessSlaMinutes: z.number().int().positive(), tags: z.array(z.string()).optional(), schema: z.array(z.string()).optional(),
+    }), req.body);
+    return p.dataPlatform.registerAsset(ctx(req), body);
+  });
+  app.get("/v1/dataplatform/assets", async req => {
+    const q = req.query as { kind?: string };
+    return { assets: await p.dataPlatform.listAssets(ctx(req), q.kind as never) };
+  });
+  app.post("/v1/dataplatform/assets/:id/touch", async req => p.dataPlatform.touchAsset(ctx(req), (req.params as { id: string }).id));
+  app.get("/v1/dataplatform/assets/:id/freshness", async req => p.dataPlatform.checkFreshness(ctx(req), (req.params as { id: string }).id));
+  app.post("/v1/dataplatform/lineage", async req => {
+    const body = parse(z.object({ from: z.string().min(1), to: z.string().min(1), transform: z.string().min(1) }), req.body);
+    return p.dataPlatform.link(ctx(req), body);
+  });
+  app.get("/v1/dataplatform/lineage/:assetId", async req => p.dataPlatform.lineage(ctx(req), (req.params as { assetId: string }).assetId));
+  app.post("/v1/dataplatform/metrics", async req => {
+    const body = parse(z.object({ name: z.string().min(1), definition: z.string().min(1), sourceAssetId: z.string().optional(), unit: z.string().min(1), owner: z.string().min(1) }), req.body);
+    return p.dataPlatform.defineMetric(ctx(req), body);
+  });
+  app.get("/v1/dataplatform/metrics", async req => ({ metrics: await p.dataPlatform.listMetrics(ctx(req)) }));
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {
@@ -591,6 +726,15 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
     const body = parse(z.object({ query: z.string().min(1), kind: z.string().optional(), limit: z.number().int().max(50).optional() }), req.body);
     return p.world.semanticQuery(ctx(req).principal.organizationId, body.query, body as never);
   });
+  app.post("/v1/world/link", async req => {
+    const c = ctx(req);
+    const body = parse(z.object({
+      from: z.string().min(1), to: z.string().min(1),
+      relationship: z.enum(["owns", "depends_on", "employs", "reports_to", "belongs_to", "runs_on", "supplies_to", "affects", "governed_by", "mitigated_by"]),
+    }), req.body);
+    return p.world.link(c.principal.organizationId, body.from, body.to, body.relationship);
+  });
+  app.get("/v1/world/graph", async req => p.world.graph(ctx(req).principal.organizationId));
 
   // ---------------- Core Consulting Capabilities ----------------
   app.get("/v1/consulting/catalog", async req => { ctx(req); return p.consulting.catalog(); });
