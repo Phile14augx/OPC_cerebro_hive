@@ -198,31 +198,59 @@ def step(db: Session, run: WorkflowRun) -> WorkflowRun:
             continue
 
         if node_type == "agent_vote":
+            from concurrent.futures import ThreadPoolExecutor, as_completed
             from app.core import runtime as runtime_core
             from app.models.registry import Agent
+            from app.db import SessionLocal
 
             agent_slugs: list[str] = node.get("agent_slugs", [])
             goal = node.get("goal") or context.get("goal") or ""
             dissent_threshold = float(node.get("dissent_threshold", 0.3))
 
-            candidates: list[dict] = []
+            # Resolve agents upfront in this session
+            agents_to_run: list[tuple[str, Agent]] = []
             excluded: list[dict] = []
             for slug in agent_slugs:
                 agent = db.query(Agent).filter(Agent.slug == slug).first()
                 if agent is None:
                     excluded.append({"agent_slug": slug, "reason": "not registered"})
-                    continue
-                sub_run = runtime_core.execute(db, agent, goal)
-                if sub_run.status == "completed" and sub_run.result:
-                    candidates.append({"agent_slug": slug, "run_id": sub_run.id, "text": sub_run.result})
-                elif sub_run.status == "pending_approval":
-                    # Excluded from *this* vote rather than pausing the whole
-                    # mesh — a stricter policy (block the vote until every
-                    # member is unblocked) is a reasonable production upgrade,
-                    # noted here rather than silently implemented as such.
-                    excluded.append({"agent_slug": slug, "run_id": sub_run.id, "reason": "pending_approval"})
                 else:
-                    excluded.append({"agent_slug": slug, "run_id": sub_run.id, "reason": sub_run.status})
+                    agents_to_run.append((slug, agent.id))
+
+            def _run_agent(agent_id_slug: tuple[str, str]) -> dict:
+                """Run one agent in its own DB session (thread-safe)."""
+                slug, agent_id = agent_id_slug
+                thread_db = SessionLocal()
+                try:
+                    agent_obj = thread_db.query(Agent).filter(Agent.id == agent_id).first()
+                    if agent_obj is None:
+                        return {"agent_slug": slug, "error": "not found"}
+                    sub_run = runtime_core.execute(thread_db, agent_obj, goal)
+                    return {
+                        "agent_slug": slug,
+                        "run_id": sub_run.id,
+                        "status": sub_run.status,
+                        "result": sub_run.result,
+                    }
+                except Exception as exc:  # noqa: BLE001
+                    return {"agent_slug": slug, "error": str(exc)}
+                finally:
+                    thread_db.close()
+
+            candidates: list[dict] = []
+            max_workers = min(len(agents_to_run), 5)
+            with ThreadPoolExecutor(max_workers=max_workers) as pool:
+                futures = {pool.submit(_run_agent, (slug, agent_id)): slug for slug, agent_id in agents_to_run}
+                for future in as_completed(futures):
+                    result = future.result()
+                    if result.get("status") == "completed" and result.get("result"):
+                        candidates.append(result)
+                    elif result.get("status") == "pending_approval":
+                        excluded.append({"agent_slug": result["agent_slug"], "run_id": result.get("run_id"), "reason": "pending_approval"})
+                    elif result.get("error"):
+                        excluded.append({"agent_slug": result["agent_slug"], "reason": result["error"]})
+                    else:
+                        excluded.append({"agent_slug": result["agent_slug"], "run_id": result.get("run_id"), "reason": result.get("status", "unknown")})
 
             context[f"{current_id}_excluded"] = excluded
 
@@ -238,7 +266,7 @@ def step(db: Session, run: WorkflowRun) -> WorkflowRun:
             # cosine similarity to every *other* candidate's answer. The candidate
             # with the highest average agreement wins; anyone far from that
             # centroid is recorded as dissent rather than silently discarded.
-            vectors = [embed(c["text"]) for c in candidates]
+            vectors = [embed(c["result"]) for c in candidates]
             n = len(candidates)
             agreement_scores = []
             for i in range(n):
@@ -248,7 +276,7 @@ def step(db: Session, run: WorkflowRun) -> WorkflowRun:
             winner_idx = max(range(n), key=lambda i: agreement_scores[i])
             winner = candidates[winner_idx]
 
-            context[f"{current_id}_result"] = winner["text"]
+            context[f"{current_id}_result"] = winner["result"]
             context[f"{current_id}_winner_agent"] = winner["agent_slug"]
             context[f"{current_id}_consensus_score"] = round(agreement_scores[winner_idx], 4)
             context[f"{current_id}_candidates"] = [

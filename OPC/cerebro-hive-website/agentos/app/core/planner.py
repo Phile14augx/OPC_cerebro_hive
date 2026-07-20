@@ -22,29 +22,27 @@ class PlanStep:
 
 
 def _fallback_plan(goal: str, available_tools: list[str] | None = None) -> list[PlanStep]:
+    """Minimal deterministic plan used when the LLM doesn't produce parseable JSON.
+
+    Kept to 2 steps so that mock-mode execution (e.g. agent_vote with 3
+    agents running synchronously) completes well within the request timeout.
+    """
     available_tools = available_tools or []
     steps = [
-        PlanStep(id="s1", description=f"Understand the goal: {goal}", kind="reason"),
-        PlanStep(id="s2", description="Retrieve relevant memory and knowledge", kind="reason", depends_on=["s1"]),
+        PlanStep(id="s1", description=f"Understand and reason about the goal: {goal}", kind="reason"),
     ]
-
     if available_tools:
         steps.append(
             PlanStep(
-                id="s3",
-                description=f"Use tool `{available_tools[0]}` to gather/act on information",
+                id="s2",
+                description=f"Use tool `{available_tools[0]}` to gather information",
                 kind="tool",
                 tool=available_tools[0],
-                depends_on=["s2"],
+                depends_on=["s1"],
             )
         )
-        reason_depends = "s3"
     else:
-        reason_depends = "s2"
-
-    steps.append(PlanStep(id="s4", description="Reason over gathered context to form an answer", kind="reason", depends_on=[reason_depends]))
-    steps.append(PlanStep(id="s5", description="Self-critique and synthesize the final response", kind="reason", depends_on=["s4"]))
-
+        steps.append(PlanStep(id="s2", description="Synthesize final response", kind="reason", depends_on=["s1"]))
     return steps
 
 

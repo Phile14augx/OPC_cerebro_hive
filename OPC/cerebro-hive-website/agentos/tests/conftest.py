@@ -7,13 +7,19 @@ os.environ["DATABASE_URL"] = os.environ.get("DATABASE_URL", "sqlite:///test_agen
 os.environ["ANTHROPIC_API_KEY"] = ""
 os.environ["OPENAI_API_KEY"] = ""
 os.environ["GOOGLE_API_KEY"] = ""
+# Give agent_vote (3 sequential agents) enough headroom
+os.environ["AGENTOS_REQUEST_TIMEOUT_SECONDS"] = "120"
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
+from app.config import get_settings  # noqa: E402
 from app.db import Base, engine  # noqa: E402
 from app.main import app  # noqa: E402
 from app.rate_limit import limiter  # noqa: E402
+
+# Clear the lru_cache so the timeout env var above is actually read.
+get_settings.cache_clear()
 
 
 @pytest.fixture(autouse=True)
