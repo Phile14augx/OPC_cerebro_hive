@@ -16,13 +16,15 @@ export function IconShowcase() {
   const categories = ["All", ...new Set(Object.values(iconRegistry).map(i => i.category))];
 
   const filteredIcons = useMemo(() => {
-    return Object.values(iconRegistry).filter(meta => {
-      const matchesSearch = meta.name.toLowerCase().includes(search.toLowerCase()) || 
-                            meta.keywords?.some(k => k.toLowerCase().includes(search.toLowerCase())) ||
-                            meta.aliases?.some(a => a.toLowerCase().includes(search.toLowerCase()));
-      const matchesCategory = categoryFilter === "All" || meta.category === categoryFilter;
-      return matchesSearch && matchesCategory;
-    });
+    return Object.entries(iconRegistry)
+      .filter(([name, meta]) => {
+        const matchesSearch = name.toLowerCase().includes(search.toLowerCase()) ||
+                              meta.keywords?.some(k => k.toLowerCase().includes(search.toLowerCase())) ||
+                              meta.aliases?.some(a => a.toLowerCase().includes(search.toLowerCase()));
+        const matchesCategory = categoryFilter === "All" || meta.category === categoryFilter;
+        return matchesSearch && matchesCategory;
+      })
+      .map(([name, meta]) => ({ name, ...meta }));
   }, [search, categoryFilter]);
 
   const bgClasses = {
