@@ -12,7 +12,7 @@ export default function ServicesOverview() {
       title: t("home.services.consulting.title"),
       subtitle: t("home.services.consulting.subtitle"),
       description: t("home.services.consulting.desc"),
-      href: "/services/ai-consulting",
+      href: "/services/ai-strategy",
       accentColor: "#00E5FF",
       borderGradient: "linear-gradient(180deg, #00E5FF 0%, transparent 100%)",
       features: [
@@ -28,7 +28,7 @@ export default function ServicesOverview() {
       title: t("home.services.automation.title"),
       subtitle: t("home.services.automation.subtitle"),
       description: t("home.services.automation.desc"),
-      href: "/services/ai-automation",
+      href: "/services/autonomous-transformation",
       accentColor: "#FF8A00",
       borderGradient: "linear-gradient(180deg, #FF8A00 0%, transparent 100%)",
       features: [
