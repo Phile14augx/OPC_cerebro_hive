@@ -326,6 +326,148 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
     return p.web3.complianceScreen(ctx(req), params.chainId, params.address);
   });
 
+  // ---------------- DevOps (CI/CD, environments, GitOps drift, deployments) ----------------
+  app.post("/v1/devops/pipelines/run", async req => {
+    const body = parse(z.object({
+      pipelineName: z.string().min(1), commitSha: z.string().min(1), branch: z.string().min(1),
+      stages: z.array(z.enum(["lint", "test", "build", "security_scan", "sbom", "sign", "deploy", "smoke_test"])).optional(),
+    }), req.body);
+    return p.devops.runPipeline(ctx(req), body);
+  });
+  app.get("/v1/devops/pipelines", async req => {
+    const q = req.query as { limit?: string };
+    return { runs: await p.devops.listPipelineRuns(ctx(req), q.limit ? Number(q.limit) : undefined) };
+  });
+  app.post("/v1/devops/environments", async req => {
+    const body = parse(z.object({
+      name: z.string().min(1), tier: z.enum(["dev", "staging", "production"]),
+      region: z.string().min(1), clusterOrHost: z.string().min(1), iacModule: z.string().min(1),
+    }), req.body);
+    return p.devops.registerEnvironment(ctx(req), body);
+  });
+  app.get("/v1/devops/environments", async req => ({ environments: await p.devops.listEnvironments(ctx(req)) }));
+  app.post("/v1/devops/environments/:id/drift", async req => {
+    const body = parse(z.object({ declaredStateHash: z.string().min(1) }), req.body);
+    return p.devops.checkDrift(ctx(req), (req.params as { id: string }).id, body.declaredStateHash);
+  });
+  app.post("/v1/devops/deployments", async req => {
+    const body = parse(z.object({
+      environmentId: z.string().min(1), service: z.string().min(1), version: z.string().min(1),
+      strategy: z.enum(["rolling", "blue_green", "canary"]).optional(), pipelineRunId: z.string().optional(),
+    }), req.body);
+    return p.devops.deploy(ctx(req), body);
+  });
+  app.post("/v1/devops/deployments/:id/rollback", async req => p.devops.rollback(ctx(req), (req.params as { id: string }).id));
+  app.get("/v1/devops/deployments", async req => {
+    const q = req.query as { environmentId?: string };
+    return { deployments: await p.devops.listDeployments(ctx(req), q.environmentId) };
+  });
+
+  // ---------------- MLOps (experiments, model lineage, features, serving, drift) ----------------
+  app.post("/v1/mlops/experiments", async req => {
+    const body = parse(z.object({ name: z.string().min(1), framework: z.string().min(1), params: z.record(z.unknown()).optional() }), req.body);
+    return p.mlops.startExperiment(ctx(req), body);
+  });
+  app.post("/v1/mlops/experiments/:id/metrics", async req => {
+    const body = parse(z.object({ metrics: z.record(z.number()) }), req.body);
+    return p.mlops.logMetrics(ctx(req), (req.params as { id: string }).id, body.metrics);
+  });
+  app.post("/v1/mlops/experiments/:id/complete", async req => p.mlops.completeExperiment(ctx(req), (req.params as { id: string }).id));
+  app.get("/v1/mlops/experiments", async req => ({ experiments: await p.mlops.listExperiments(ctx(req)) }));
+  app.post("/v1/mlops/models", async req => {
+    const body = parse(z.object({
+      modelName: z.string().min(1), artifactUri: z.string().min(1), metrics: z.record(z.number()), experimentId: z.string().optional(),
+    }), req.body);
+    return p.mlops.registerModelVersion(ctx(req), body);
+  });
+  app.post("/v1/mlops/models/:id/promote", async req => {
+    const body = parse(z.object({ targetStage: z.enum(["none", "staging", "production", "archived"]) }), req.body);
+    return p.mlops.promote(ctx(req), (req.params as { id: string }).id, body.targetStage);
+  });
+  app.get("/v1/mlops/models", async req => {
+    const q = req.query as { modelName?: string };
+    return { versions: await p.mlops.listModelVersions(ctx(req), q.modelName) };
+  });
+  app.post("/v1/mlops/features", async req => {
+    const body = parse(z.object({
+      name: z.string().min(1), entity: z.string().min(1), valueType: z.enum(["int", "float", "string", "bool", "vector"]),
+      freshnessSlaMinutes: z.number().positive().optional(), tags: z.array(z.string()).optional(),
+    }), req.body);
+    return p.mlops.registerFeature(ctx(req), body);
+  });
+  app.get("/v1/mlops/features", async req => ({ features: await p.mlops.listFeatures(ctx(req)) }));
+  app.post("/v1/mlops/endpoints", async req => {
+    const body = parse(z.object({ modelVersionId: z.string().min(1), name: z.string().min(1), replicas: z.number().int().positive().optional() }), req.body);
+    return p.mlops.deployEndpoint(ctx(req), body);
+  });
+  app.get("/v1/mlops/endpoints", async req => ({ endpoints: await p.mlops.listEndpoints(ctx(req)) }));
+  app.post("/v1/mlops/drift", async req => {
+    const body = parse(z.object({
+      modelVersionId: z.string().min(1), feature: z.string().min(1), baselineMean: z.number(), currentMean: z.number(),
+    }), req.body);
+    return p.mlops.checkDrift(ctx(req), body);
+  });
+  app.get("/v1/mlops/drift", async req => {
+    const q = req.query as { modelVersionId?: string };
+    return { reports: await p.mlops.listDrift(ctx(req), q.modelVersionId) };
+  });
+
+  // ---------------- SecOps / MLSecOps (scanning, SBOM, signing, policy-as-code, red-team) ----------------
+  app.post("/v1/secops/scans", async req => {
+    const body = parse(z.object({ kind: z.enum(["sast", "sca", "container", "secret", "iac"]), target: z.string().min(1), commitSha: z.string().optional() }), req.body);
+    return p.secops.runScan(ctx(req), body);
+  });
+  app.get("/v1/secops/scans", async req => {
+    const q = req.query as { kind?: string };
+    return { scans: await p.secops.listScans(ctx(req), q.kind as never) };
+  });
+  app.post("/v1/secops/sboms", async req => {
+    const body = parse(z.object({
+      artifact: z.string().min(1), version: z.string().min(1),
+      components: z.array(z.object({ name: z.string(), version: z.string(), license: z.string() })),
+    }), req.body);
+    return p.secops.generateSbom(ctx(req), body);
+  });
+  app.get("/v1/secops/sboms", async req => ({ sboms: await p.secops.listSboms(ctx(req)) }));
+  app.post("/v1/secops/sign", async req => {
+    const body = parse(z.object({ artifact: z.string().min(1), digest: z.string().min(1) }), req.body);
+    return p.secops.signArtifact(ctx(req), body.artifact, body.digest);
+  });
+  app.get("/v1/secops/signatures", async req => ({ signatures: await p.secops.listSignatures(ctx(req)) }));
+  app.post("/v1/secops/policy/evaluate", async req => {
+    const body = parse(z.object({ resourceKind: z.string().min(1), resource: z.record(z.unknown()) }), req.body);
+    return p.secops.evaluatePolicy(ctx(req), body.resourceKind, body.resource);
+  });
+  app.get("/v1/secops/policy/evaluations", async req => ({ evaluations: await p.secops.listPolicyEvals(ctx(req)) }));
+  app.post("/v1/secops/redteam", async req => {
+    const body = parse(z.object({
+      targetKind: z.enum(["model", "agent", "prompt"]), targetId: z.string().min(1), attacksPerCategory: z.number().int().positive().optional(),
+    }), req.body);
+    return p.secops.runRedTeam(ctx(req), body);
+  });
+  app.get("/v1/secops/redteam", async req => ({ results: await p.secops.listRedTeam(ctx(req)) }));
+
+  // ---------------- AIOps (anomaly detection, incidents, correlation, remediation) ----------------
+  app.post("/v1/aiops/detect", async req => {
+    const body = parse(z.object({ baselines: z.record(z.number()).optional() }), req.body);
+    return p.aiops.detect(ctx(req), body.baselines as never);
+  });
+  app.get("/v1/aiops/anomalies", async req => {
+    const q = req.query as { limit?: string };
+    return { anomalies: await p.aiops.listAnomalies(ctx(req), q.limit ? Number(q.limit) : undefined) };
+  });
+  app.get("/v1/aiops/incidents", async req => {
+    const q = req.query as { status?: string };
+    return { incidents: await p.aiops.listIncidents(ctx(req), q.status as never) };
+  });
+  app.post("/v1/aiops/incidents/:id/resolve", async req => p.aiops.resolveIncident(ctx(req), (req.params as { id: string }).id));
+
+  // ---------------- Agent Executor (LangChain-style ReAct loop over the tool registry) ----------------
+  app.post("/v1/agent/run", async req => {
+    const body = parse(z.object({ objective: z.string().min(1).max(4000) }), req.body);
+    return p.agentExecutor.run(ctx(req), body.objective);
+  });
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {

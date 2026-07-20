@@ -21,6 +21,7 @@ import { InMemoryAiCallRepository } from "../ai/x/types.js";
 import { MixtureOfExperts } from "../ai/moe/moe.js";
 import { HashedProjectionModel } from "../ai/representation/representation.js";
 import { InMemoryWorldRepository, WorldModel } from "../ai/world/world.js";
+import { AgentExecutor } from "../ai/chains/chains.js";
 
 import { InMemoryMemoryRepository, MemoryFabric } from "../domains/memory/memory.js";
 import { InMemoryKnowledgeRepository, KnowledgeFabric } from "../domains/knowledge/knowledge.js";
@@ -41,6 +42,10 @@ import { InMemoryInsightRepository, IntelligenceHub } from "../domains/hub/hub.j
 import { InMemorySimulationRepository, SimulatorService } from "../domains/simulator/simulator.js";
 import { InMemoryNotificationRepository, SphereService } from "../domains/sphere/sphere.js";
 import { ConsultingService, InMemoryConsultingRepository } from "../domains/consulting/consulting.js";
+import { DevOpsService, InMemoryDevOpsRepository } from "../domains/devops/devops.js";
+import { InMemoryMlopsRepository, MlopsService } from "../domains/mlops/mlops.js";
+import { InMemorySecOpsRepository, SecOpsService } from "../domains/secops/secops.js";
+import { AiopsService, InMemoryAiopsRepository } from "../domains/aiops/aiops.js";
 import { systemContext } from "../kernel/context/context.js";
 
 export interface Platform {
@@ -78,6 +83,11 @@ export interface Platform {
   simulator: SimulatorService;
   sphere: SphereService;
   consulting: ConsultingService;
+  devops: DevOpsService;
+  mlops: MlopsService;
+  secops: SecOpsService;
+  aiops: AiopsService;
+  agentExecutor: AgentExecutor;
   shutdown(): Promise<void>;
 }
 
@@ -178,6 +188,15 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
   const sphere = new SphereService(notifRepo, bus, world, hub, observatory, mesh, governance, knowledge, memory, runtime);
   const consultingRepo = new InMemoryConsultingRepository();
   const consulting = new ConsultingService(consultingRepo, bus, policy, x, world, flow, knowledge, simulator);
+  const devopsRepo = new InMemoryDevOpsRepository();
+  const devops = new DevOpsService(devopsRepo, bus, policy);
+  const mlopsRepo = new InMemoryMlopsRepository();
+  const mlops = new MlopsService(mlopsRepo, bus, policy);
+  const secopsRepo = new InMemorySecOpsRepository();
+  const secops = new SecOpsService(secopsRepo, bus, policy);
+  const aiopsRepo = new InMemoryAiopsRepository();
+  const aiops = new AiopsService(aiopsRepo, bus, policy, observatory, guard);
+  const agentExecutor = new AgentExecutor({ tools, gateway: x, bus });
 
   if (snapshots) {
     snapshots.register("runtime", comboSnapshot({ executions: mapSnapshot(runtimeRepo.executions), steps: mapSnapshot(runtimeRepo.stepRows), artifacts: arraySnapshot(runtimeRepo.artifactRows) }));
@@ -198,6 +217,10 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     snapshots.register("notifications", arraySnapshot(notifRepo.rows));
     snapshots.register("connectors", mapSnapshot(connectRepo.rows));
     snapshots.register("consulting", comboSnapshot({ engagements: mapSnapshot(consultingRepo.engagements), assessments: mapSnapshot(consultingRepo.assessments), roadmaps: mapSnapshot(consultingRepo.roadmaps) }));
+    snapshots.register("devops", comboSnapshot({ runs: mapSnapshot(devopsRepo.runs), environments: mapSnapshot(devopsRepo.environments), deployments: mapSnapshot(devopsRepo.deployments) }));
+    snapshots.register("mlops", comboSnapshot({ experiments: mapSnapshot(mlopsRepo.experiments), modelVersions: mapSnapshot(mlopsRepo.modelVersions), features: mapSnapshot(mlopsRepo.features), endpoints: mapSnapshot(mlopsRepo.endpoints), drift: arraySnapshot(mlopsRepo.driftReports) }));
+    snapshots.register("secops", comboSnapshot({ scans: arraySnapshot(secopsRepo.scans), sboms: arraySnapshot(secopsRepo.sboms), signatures: arraySnapshot(secopsRepo.signatures), policyEvals: arraySnapshot(secopsRepo.policyEvals), redTeam: arraySnapshot(secopsRepo.redTeamRuns) }));
+    snapshots.register("aiops", comboSnapshot({ anomalies: arraySnapshot(aiopsRepo.anomalies), incidents: mapSnapshot(aiopsRepo.incidents) }));
     await snapshots.start();
   }
 
@@ -222,6 +245,7 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     config, logger, telemetry, bus, policy, identity, audit, flags, db, snapshots,
     x, moe: new MixtureOfExperts(x), world, memory, knowledge, guard, runtime, scheduler, tools,
     contextEngine, mesh, flow, governance, registries, ethics, ontology, web3, evals, observatory, connect, hub, simulator, sphere, consulting,
+    devops, mlops, secops, aiops, agentExecutor,
     async shutdown() {
       scheduler.stop();
       await snapshots?.stop();
