@@ -8,7 +8,9 @@ export type IconStability = "experimental" | "beta" | "stable" | "legacy";
 
 export interface IconMetadata {
   id: string;
+  displayName?: string;
   category: string;
+  subcategory?: string;
   keywords: string[];
   tags: string[];
   aliases: string[];
@@ -18,6 +20,8 @@ export interface IconMetadata {
   deprecated?: boolean;
   deprecatedReason?: string;
   replacedBy?: string;
+  animated?: boolean;
+  duotone?: boolean;
 }
 
 export interface BaseIconProps extends Omit<HTMLMotionProps<"svg">, "children" | "fill" | "stroke"> {
