@@ -3,6 +3,7 @@
 import React from 'react';
 import { IndustryHero as IHero, EngineConfig } from '@/lib/data/industries/types';
 import { AnimatedButton } from '@/components/ui/AnimatedButton';
+import { TrackedLink } from '@/components/ui/TrackedLink';
 import { motion } from 'framer-motion';
 
 export function IndustryHero({ hero, config }: { hero: IHero, config: EngineConfig }) {
@@ -55,8 +56,12 @@ export function IndustryHero({ hero, config }: { hero: IHero, config: EngineConf
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
         >
-          <AnimatedButton variant="primary">{hero.primaryCta}</AnimatedButton>
-          <AnimatedButton variant="outline">{hero.secondaryCta}</AnimatedButton>
+          <TrackedLink href="/developers/architecture" analyticsEvent="cta_click" analyticsCategory="industry_hero" analyticsLabel={hero.primaryCta}>
+            <AnimatedButton variant="primary">{hero.primaryCta}</AnimatedButton>
+          </TrackedLink>
+          <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="industry_hero" analyticsLabel={hero.secondaryCta}>
+            <AnimatedButton variant="outline">{hero.secondaryCta}</AnimatedButton>
+          </TrackedLink>
         </motion.div>
       </div>
     </section>

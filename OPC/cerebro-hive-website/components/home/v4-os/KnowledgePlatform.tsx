@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { knowledgeHub } from "@/lib/config/knowledge";
 
 export function KnowledgePlatform() {
@@ -15,15 +16,16 @@ export function KnowledgePlatform() {
               Architectural patterns, engineering playbooks, and research from the CerebroHive labs.
             </p>
           </div>
-          <button className="px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap">
+          <Link href="/research" className="px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap">
             Explore All Research
-          </button>
+          </Link>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {knowledgeHub.map((item) => (
-            <article 
-              key={item.id} 
+            <Link
+              href="/research"
+              key={item.id}
               className="group flex flex-col justify-between p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
             >
               <div>
@@ -45,7 +47,7 @@ export function KnowledgePlatform() {
                 <span>Read Document</span>
                 <span className="transform group-hover:translate-x-1 transition-transform">→</span>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>

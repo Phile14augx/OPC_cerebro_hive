@@ -13,32 +13,32 @@ export const executivePathways: ExecutivePathway[] = [
     id: "exec",
     role: "Executives",
     actions: [
-      { label: "Schedule Executive Strategy Session", href: "#", primary: true },
-      { label: "Request AI Transformation Roadmap", href: "#" }
+      { label: "Schedule Executive Strategy Session", href: "/contact", primary: true },
+      { label: "Request AI Transformation Roadmap", href: "/tools/solution-finder" }
     ]
   },
   {
     id: "tech",
     role: "Technology Leaders",
     actions: [
-      { label: "Review Reference Architectures", href: "#", primary: true },
-      { label: "Explore Integration Framework", href: "#" }
+      { label: "Review Reference Architectures", href: "/developers/architecture", primary: true },
+      { label: "Explore Integration Framework", href: "/developers/api" }
     ]
   },
   {
     id: "eng",
     role: "Engineering Teams",
     actions: [
-      { label: "Launch Developer Sandbox", href: "#", primary: true },
-      { label: "View Technical Documentation", href: "#" }
+      { label: "Launch Developer Sandbox", href: "/platform/live-runtime", primary: true },
+      { label: "View Technical Documentation", href: "/developers" }
     ]
   },
   {
     id: "decision",
     role: "Decision Makers",
     actions: [
-      { label: "Calculate Business ROI", href: "#", primary: true },
-      { label: "Assess AI Readiness", href: "#" }
+      { label: "Calculate Business ROI", href: "/tools/solution-finder", primary: true },
+      { label: "Assess AI Readiness", href: "/tools/ai-readiness" }
     ]
   }
 ];

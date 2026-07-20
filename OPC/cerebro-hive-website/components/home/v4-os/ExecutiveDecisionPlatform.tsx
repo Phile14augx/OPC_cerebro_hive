@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { executivePathways } from "@/lib/config/pathways";
 
 export function ExecutiveDecisionPlatform() {
@@ -31,8 +32,9 @@ export function ExecutiveDecisionPlatform() {
               
               <div className="flex flex-col gap-4 flex-grow justify-end">
                 {pathway.actions.map((action, idx) => (
-                  <button 
+                  <Link
                     key={idx}
+                    href={action.href}
                     className={`w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-300 ${
                       action.primary
                         ? "bg-white text-black font-semibold hover:bg-gray-200"
@@ -43,7 +45,7 @@ export function ExecutiveDecisionPlatform() {
                       <span>{action.label}</span>
                       <span className="opacity-50">→</span>
                     </div>
-                  </button>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -52,11 +54,11 @@ export function ExecutiveDecisionPlatform() {
 
         {/* Global Ecosystem Links */}
         <div className="mt-20 pt-10 border-t border-white/10 flex flex-wrap justify-center gap-8 text-sm text-gray-500">
-          <a href="#" className="hover:text-white transition-colors">CerebroArchive</a>
-          <a href="#" className="hover:text-white transition-colors">Research Hub</a>
-          <a href="#" className="hover:text-white transition-colors">Enterprise Trust Center</a>
-          <a href="#" className="hover:text-white transition-colors">ROI Calculator</a>
-          <a href="#" className="hover:text-white transition-colors">Architecture Playground</a>
+          <Link href="/products/cerebro-archive" className="hover:text-white transition-colors">CerebroArchive</Link>
+          <Link href="/research" className="hover:text-white transition-colors">Research Hub</Link>
+          <Link href="/legal/security" className="hover:text-white transition-colors">Enterprise Trust Center</Link>
+          <Link href="/tools/solution-finder" className="hover:text-white transition-colors">ROI Calculator</Link>
+          <Link href="/platform/live-runtime" className="hover:text-white transition-colors">Architecture Playground</Link>
         </div>
 
       </div>

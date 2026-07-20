@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Building2, Calculator, Users, Briefcase, Cog, Package, Scale, Cpu, BrainCircuit, Target, ArrowRight } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 
 // Nodes configuration
 const departments = [
@@ -78,13 +79,25 @@ export const PlatformHero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <button className="group px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-surface shadow-[0_0_20px_rgba(0,245,122,0.2)]">
+            <TrackedLink
+              href="/contact"
+              analyticsEvent="cta_click"
+              analyticsCategory="products_platform_hero"
+              analyticsLabel="Build My AI Platform"
+              className="group px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-surface shadow-[0_0_20px_rgba(0,245,122,0.2)]"
+            >
               Build My AI Platform
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </button>
-            <button className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/40 hover:bg-surface-elevated transition-all flex items-center justify-center">
+            </TrackedLink>
+            <TrackedLink
+              href="/developers/architecture"
+              analyticsEvent="cta_click"
+              analyticsCategory="products_platform_hero"
+              analyticsLabel="Generate Architecture"
+              className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-primary-accent/40 hover:bg-surface-elevated transition-all flex items-center justify-center"
+            >
               Generate Architecture
-            </button>
+            </TrackedLink>
           </div>
         </div>
 

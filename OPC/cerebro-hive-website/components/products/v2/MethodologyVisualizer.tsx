@@ -4,47 +4,53 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Compass, Scale, PenTool, Rocket, ShieldCheck, ArrowRight, FileText, FileSpreadsheet, FileBox, Cpu, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 
 const phases = [
-  { 
-    id: "discover", 
-    label: "1. Discover", 
-    icon: Compass, 
-    desc: "We analyze your business goals, bottlenecks, and data landscape.", 
+  {
+    id: "discover",
+    label: "1. Discover",
+    icon: Compass,
+    desc: "We analyze your business goals, bottlenecks, and data landscape.",
     deliverable: "AI Opportunity Report",
-    deliverableIcon: FileText
+    deliverableIcon: FileText,
+    deliverableHref: "/tools/solution-finder"
   },
-  { 
-    id: "assess", 
-    label: "2. Assess", 
-    icon: Scale, 
-    desc: "Evaluate technical debt, data quality, and team capabilities.", 
+  {
+    id: "assess",
+    label: "2. Assess",
+    icon: Scale,
+    desc: "Evaluate technical debt, data quality, and team capabilities.",
     deliverable: "Readiness Score",
-    deliverableIcon: FileSpreadsheet
+    deliverableIcon: FileSpreadsheet,
+    deliverableHref: "/tools/ai-readiness"
   },
-  { 
-    id: "architect", 
-    label: "3. Architect", 
-    icon: PenTool, 
-    desc: "Design the cloud infrastructure, agent workflows, and API layers.", 
+  {
+    id: "architect",
+    label: "3. Architect",
+    icon: PenTool,
+    desc: "Design the cloud infrastructure, agent workflows, and API layers.",
     deliverable: "Solution Blueprint",
-    deliverableIcon: FileBox
+    deliverableIcon: FileBox,
+    deliverableHref: "/developers/architecture"
   },
-  { 
-    id: "build", 
-    label: "4. Build", 
-    icon: Rocket, 
-    desc: "Deploy the platform, integrate with ERP, and train custom agents.", 
+  {
+    id: "build",
+    label: "4. Build",
+    icon: Rocket,
+    desc: "Deploy the platform, integrate with ERP, and train custom agents.",
     deliverable: "Production Platform",
-    deliverableIcon: Cpu
+    deliverableIcon: Cpu,
+    deliverableHref: "/platform/live-runtime"
   },
-  { 
-    id: "operate", 
-    label: "5. Operate", 
-    icon: ShieldCheck, 
-    desc: "Continuous monitoring, ROI tracking, and security governance.", 
+  {
+    id: "operate",
+    label: "5. Operate",
+    icon: ShieldCheck,
+    desc: "Continuous monitoring, ROI tracking, and security governance.",
     deliverable: "Governance Dashboard",
-    deliverableIcon: Activity
+    deliverableIcon: Activity,
+    deliverableHref: "/platform"
   }
 ];
 
@@ -133,7 +139,13 @@ export const MethodologyVisualizer = () => {
                 {/* The Deliverable */}
                 <div className="w-full md:w-auto">
                   <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-3 text-center md:text-left">Phase Output</div>
-                  <div className="bg-surface-elevated border border-border rounded-xl p-6 flex items-center gap-4 min-w-[280px] group hover:border-[#00E5FF]/50 transition-colors">
+                  <TrackedLink
+                    href={phases[activePhase].deliverableHref}
+                    analyticsEvent="cta_click"
+                    analyticsCategory="products_methodology"
+                    analyticsLabel={phases[activePhase].deliverable}
+                    className="bg-surface-elevated border border-border rounded-xl p-6 flex items-center gap-4 min-w-[280px] group hover:border-[#00E5FF]/50 transition-colors cursor-pointer"
+                  >
                     <div className="w-12 h-12 rounded-lg bg-[#00E5FF]/10 text-accent-secondary flex items-center justify-center shrink-0">
                       {React.createElement(phases[activePhase].deliverableIcon, { size: 24 })}
                     </div>
@@ -143,7 +155,7 @@ export const MethodologyVisualizer = () => {
                         {phases[activePhase].deliverable}
                       </div>
                     </div>
-                  </div>
+                  </TrackedLink>
                 </div>
 
               </motion.div>
