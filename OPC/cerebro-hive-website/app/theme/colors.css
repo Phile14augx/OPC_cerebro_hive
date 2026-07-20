@@ -66,6 +66,12 @@
   --btn-primary-bg: var(--color-emerald-500);
   --btn-primary-text: #FFFFFF;
   --btn-primary-hover: var(--color-emerald-400);
+
+  /* Icons */
+  --icon-primary: var(--color-slate-900);
+  --icon-secondary: var(--color-slate-100);
+  --icon-accent: var(--color-emerald-500);
+  --icon-muted: var(--color-slate-400);
 }
 
 /* Theme Tokens (Dark Mode - Mission Control) */
@@ -98,6 +104,12 @@
   --btn-primary-bg: var(--color-neon-500);
   --btn-primary-text: var(--color-obsidian-950);
   --btn-primary-hover: var(--color-emerald-300);
+
+  /* Icons */
+  --icon-primary: #FFFFFF;
+  --icon-secondary: var(--color-obsidian-800);
+  --icon-accent: var(--color-neon-500);
+  --icon-muted: var(--color-slate-600);
 }
 
 /* Layer 3: Component Mappings for Tailwind v4 */
@@ -127,4 +139,10 @@
   --color-primary-accent: var(--text-accent);
   --color-secondary-accent: var(--color-blue-500);
   --color-surface-secondary: var(--bg-surface-elevated);
+
+  /* Icon Colors */
+  --color-icon-primary: var(--icon-primary);
+  --color-icon-secondary: var(--icon-secondary);
+  --color-icon-accent: var(--icon-accent);
+  --color-icon-muted: var(--icon-muted);
 }
