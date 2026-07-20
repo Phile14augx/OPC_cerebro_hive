@@ -8,14 +8,19 @@
 @import "./theme/icons.css";
 
 /* ============================================================
-   RESET & BASE
+   BASE
+   NOTE: box-sizing/margin/padding reset is intentionally omitted
+   here — Tailwind v4's Preflight already applies it, correctly
+   scoped inside `@layer base`. A duplicate unlayered reset here
+   previously beat every Tailwind spacing utility (p-*, m-*,
+   mx-auto, ...) site-wide, because unlayered CSS always wins over
+   layered CSS regardless of specificity — that was the cause of
+   the sitewide centering/spacing bug. Turbopack's CSS pipeline
+   also does not reliably preserve additional hand-authored
+   `@layer base { ... }` blocks in this file (they get flattened
+   back to unlayered rules), so re-wrapping isn't a safe fix here —
+   removing the duplicate is.
    ============================================================ */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
@@ -258,7 +263,7 @@ p { font-family: var(--font-inter), sans-serif; }
 }
 
 /* ============================================================
-   CEREBRO CHAT — Navigator & input safe zones  
+   CEREBRO CHAT — Navigator & input safe zones
    ============================================================ */
 .chat-navigator {
   padding: 24px 20px;
@@ -318,4 +323,3 @@ p { font-family: var(--font-inter), sans-serif; }
 :root:not(.dark) .knowledge-card { background:white; border:1px solid #E5E7EB; border-left:4px solid #10B981; color:#334155; }
 :root:not(.dark) .assistant-message { background:#F8FAFC; color:#111827; }
 :root:not(.dark) .user-message { background:#ECFDF5; color:#065F46; }
-
