@@ -33,6 +33,8 @@ jobs:
 
       - name: Build Project
         run: npm run build
+        env:
+          IS_FTP_DEPLOY: "true"
 
       - name: Post CI Status to PR
         if: github.event_name == 'pull_request'
