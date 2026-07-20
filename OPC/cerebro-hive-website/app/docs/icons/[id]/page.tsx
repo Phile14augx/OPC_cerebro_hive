@@ -1,17 +1,17 @@
-import { IconRegistry } from "@/components/ui/icons/IconRegistry";
+import { iconRegistry } from "@/components/ui/icons/IconRegistry";
 import { notFound } from "next/navigation";
 import React from "react";
 
 // For static generation
 export function generateStaticParams() {
-  return Object.keys(IconRegistry).map((id) => ({
+  return Object.keys(iconRegistry).map((id) => ({
     id: id,
   }));
 }
 
 export default function IconDocumentationPage({ params }: { params: { id: string } }) {
   const iconId = params.id;
-  const meta = IconRegistry[iconId];
+  const meta = iconRegistry[iconId];
 
   if (!meta) {
     notFound();

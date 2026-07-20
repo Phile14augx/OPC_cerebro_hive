@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { IconSearchEngine, SearchScore } from './searchEngine';
-import { IconRegistry } from './IconRegistry';
+import { iconRegistry } from './IconRegistry';
 import { IconMetadata } from './IconMetadata';
 import { BaseIconProps } from './types';
 
@@ -10,7 +10,7 @@ import { BaseIconProps } from './types';
 export const IconSearch = ({ onSelect }: { onSelect?: (icon: IconMetadata) => void }) => {
   const [query, setQuery] = useState("");
 
-  const engine = useMemo(() => new IconSearchEngine(IconRegistry), []);
+  const engine = useMemo(() => new IconSearchEngine(iconRegistry), []);
   
   const results = useMemo(() => engine.search(query), [query, engine]);
 

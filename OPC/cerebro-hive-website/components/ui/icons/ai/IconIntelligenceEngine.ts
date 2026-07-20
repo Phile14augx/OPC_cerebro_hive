@@ -1,5 +1,4 @@
 import { IconMetadata } from "../IconMetadata";
-import { IconRegistry } from "../IconRegistry";
 
 /**
  * Phase 17: AI Icon Intelligence Architecture
