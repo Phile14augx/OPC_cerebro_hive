@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-
-const API = process.env.NEXT_PUBLIC_PLATFORM_API_URL || "http://localhost:8090";
-const KEY = process.env.NEXT_PUBLIC_PLATFORM_DEMO_KEY || "";
+import Link from "next/link";
+import { api, checkOnline, KEY, osPillars } from "./lib";
 
 interface Cockpit {
   analytics?: { executions?: { total: number; completed: number; failed: number }; knowledge?: { documents: number }; ai?: { calls: number; costUsd: number } };
@@ -18,45 +17,6 @@ interface ExecutionResult {
   error?: string;
 }
 interface Capability { id: string; name: string; tagline: string; deliverables: string[]; poweredBy: string[] }
-interface Inventory { total: number; byKind: Record<string, number>; byRiskTier: Record<string, number>; highRiskWithoutEvidence: { id: string; name: string }[] }
-interface EthicsAssessment { overall: number; band: string; scores: Record<string, number>; findings: string[] }
-interface Chain { id: string; name: string; layer: string; nativeCurrency: string }
-interface DefiProtocol { id: string; name: string; category: string; chains: string[] }
-interface AccountLookup { chain: { id: string; name: string }; address: string; balanceFormatted: string; nonce: number; gasPriceGwei: number; source: string }
-interface ComplianceResult { riskScore: number; band: string; signals: string[] }
-interface PipelineRun { id: string; pipelineName: string; status: string; stages: { name: string; status: string }[] }
-interface ModelVersion { id: string; modelName: string; version: number; stage: string; gateChecks: { name: string; passed: boolean }[] }
-interface ScanRun { id: string; kind: string; status: string; findings: { severity: string; rule: string }[] }
-interface RedTeamResult { id: string; attacksRun: number; attacksSucceeded: number }
-interface Incident { id: string; title: string; severity: string; status: string; suggestedPlaybook?: string }
-interface AgentStep { thought: string; tool: string; observation: string }
-interface AgentResult { finalAnswer: string; steps: AgentStep[]; status: string }
-interface RoutingDecision { id: string; intent: string; complexity: number; privacyTier: string; selectedModel: string; rationale: string; predictedCostUsd: number; predictedLatencyMs: number }
-interface ModelProfile { id: string; family: string; quality: number; local: boolean }
-interface CompiledProgram { id: string; goal: string; strategy: string; plan: { steps: { id: number; description: string }[] }; workflowId?: string; runId?: string }
-interface SwarmRoleResult { role: string; description: string; output: string; critique: { ok: boolean; score: number } }
-interface SwarmRun { id: string; objective: string; roles: SwarmRoleResult[]; consensus?: { finalAnswer: string; averageScore: number; agreement: number }; status: string; auditTrail: { stage: string; note: string }[] }
-interface ActionDefinition { kind: string; title: string; category: string; requiresApproval: boolean }
-interface ActionExecution { id: string; kind: string; status: string; result?: Record<string, unknown> }
-interface TwinRun { id: string; kind: string; result: Record<string, unknown> & { recommendation?: string } }
-interface PromptVersion { id: string; name: string; version: number }
-interface LeaderboardEntry { target: string; score: number; regression: boolean }
-interface ToolGrant { id: string; agentId: string; tool: string; allow: boolean }
-interface McpServer { id: string; name: string; riskTier: string; status: string }
-interface DataAsset { id: string; name: string; kind: string; freshnessSlaMinutes: number }
-interface WorldGraph { edges: { id: string; from: string; to: string; relationship: string }[] }
-
-async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
-    ...init,
-    headers: { "content-type": "application/json", authorization: `Bearer ${KEY}`, ...(init?.headers ?? {}) },
-  });
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error((body as { error?: { message?: string } }).error?.message ?? `HTTP ${res.status}`);
-  }
-  return res.json() as Promise<T>;
-}
 
 export default function OsConsole() {
   const [online, setOnline] = useState<boolean | null>(null);
@@ -67,219 +27,15 @@ export default function OsConsole() {
   const [execution, setExecution] = useState<ExecutionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const [inventory, setInventory] = useState<Inventory | null>(null);
-  const [ethics, setEthics] = useState<EthicsAssessment | null>(null);
-  const [ethicsSubject, setEthicsSubject] = useState("gpt-4o-mini");
-  const [chains, setChains] = useState<Chain[]>([]);
-  const [defi, setDefi] = useState<DefiProtocol[]>([]);
-  const [chainId, setChainId] = useState("ethereum");
-  const [address, setAddress] = useState("0x0000000000000000000000000000000000dEaD");
-  const [account, setAccount] = useState<AccountLookup | null>(null);
-  const [compliance, setCompliance] = useState<ComplianceResult | null>(null);
-  const [web3Busy, setWeb3Busy] = useState(false);
-
-  const [pipelineRuns, setPipelineRuns] = useState<PipelineRun[]>([]);
-  const [modelVersions, setModelVersions] = useState<ModelVersion[]>([]);
-  const [scans, setScans] = useState<ScanRun[]>([]);
-  const [redTeam, setRedTeam] = useState<RedTeamResult | null>(null);
-  const [incidents, setIncidents] = useState<Incident[]>([]);
-  const [opsBusy, setOpsBusy] = useState<string | null>(null);
-  const [agentObjective, setAgentObjective] = useState("What is (48000 - 12500) / 12500 * 100?");
-  const [agentResult, setAgentResult] = useState<AgentResult | null>(null);
-  const [agentBusy, setAgentBusy] = useState(false);
-
-  const [routerText, setRouterText] = useState("Write a Kubernetes deployment manifest and explain the rollout strategy.");
-  const [routingDecision, setRoutingDecision] = useState<RoutingDecision | null>(null);
-  const [modelCatalog, setModelCatalog] = useState<ModelProfile[]>([]);
-  const [routerBusy, setRouterBusy] = useState(false);
-  const [compilerGoal, setCompilerGoal] = useState("Research the competitive landscape, draft a positioning brief, then verify it against the source research.");
-  const [compiledProgram, setCompiledProgram] = useState<CompiledProgram | null>(null);
-  const [compilerBusy, setCompilerBusy] = useState(false);
-  const [swarmObjective, setSwarmObjective] = useState("Research the topic, write an implementation, then review it for security issues.");
-  const [swarmRun, setSwarmRun] = useState<SwarmRun | null>(null);
-  const [swarmBusy, setSwarmBusy] = useState(false);
-  const [actionCatalog, setActionCatalog] = useState<ActionDefinition[]>([]);
-  const [actionLog, setActionLog] = useState<ActionExecution[]>([]);
-  const [actionBusy, setActionBusy] = useState<string | null>(null);
-
-  const [twinRuns, setTwinRuns] = useState<TwinRun[]>([]);
-  const [twinBusy, setTwinBusy] = useState(false);
-  const [promptVersions, setPromptVersions] = useState<PromptVersion[]>([]);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [researchBusy, setResearchBusy] = useState(false);
-  const [toolGrants, setToolGrants] = useState<ToolGrant[]>([]);
-  const [mcpServers, setMcpServers] = useState<McpServer[]>([]);
-  const [ztBusy, setZtBusy] = useState(false);
-  const [dataAssets, setDataAssets] = useState<DataAsset[]>([]);
-  const [dpBusy, setDpBusy] = useState(false);
-  const [worldGraph, setWorldGraph] = useState<WorldGraph | null>(null);
-
   const refresh = useCallback(async () => {
+    const ok = await checkOnline();
+    setOnline(ok);
+    if (!ok || !KEY) return;
     try {
-      const health = await fetch(`${API}/health`).then(r => r.ok);
-      setOnline(health);
-      if (!health || !KEY) return;
       setCockpit(await api<Cockpit>("/v1/sphere/cockpit"));
       setCatalog(await api<Capability[]>("/v1/consulting/catalog"));
-      setInventory(await api<Inventory>("/v1/governance/inventory"));
-      setChains((await api<{ chains: Chain[] }>("/v1/web3/chains")).chains);
-      setDefi((await api<{ protocols: DefiProtocol[] }>("/v1/web3/defi")).protocols);
-      setPipelineRuns((await api<{ runs: PipelineRun[] }>("/v1/devops/pipelines")).runs);
-      setModelVersions((await api<{ versions: ModelVersion[] }>("/v1/mlops/models")).versions);
-      setScans((await api<{ scans: ScanRun[] }>("/v1/secops/scans")).scans);
-      setIncidents((await api<{ incidents: Incident[] }>("/v1/aiops/incidents")).incidents);
-      setModelCatalog((await api<{ models: ModelProfile[] }>("/v1/router/catalog")).models);
-      setActionCatalog((await api<{ actions: ActionDefinition[] }>("/v1/actions/catalog")).actions);
-      setActionLog((await api<{ actions: ActionExecution[] }>("/v1/actions/log")).actions);
-      setTwinRuns((await api<{ runs: TwinRun[] }>("/v1/digitaltwin/runs")).runs);
-      setPromptVersions((await api<{ versions: PromptVersion[] }>("/v1/research/prompts")).versions);
-      setToolGrants((await api<{ grants: ToolGrant[] }>("/v1/zerotrust/grants")).grants);
-      setMcpServers((await api<{ servers: McpServer[] }>("/v1/zerotrust/mcp-servers")).servers);
-      setDataAssets((await api<{ assets: DataAsset[] }>("/v1/dataplatform/assets")).assets);
-      setWorldGraph(await api<WorldGraph>("/v1/world/graph"));
-    } catch { setOnline(false); }
+    } catch { /* noop */ }
   }, []);
-
-  const runSupplyChainTwin = useCallback(async () => {
-    setTwinBusy(true);
-    try {
-      await api("/v1/digitaltwin/supply-chain", { method: "POST", body: JSON.stringify({ suppliers: 25, disruptionProbability: 0.25, avgLeadTimeDays: 21 }) });
-      setTwinRuns((await api<{ runs: TwinRun[] }>("/v1/digitaltwin/runs")).runs);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setTwinBusy(false); }
-  }, []);
-
-  const runCyberTwin = useCallback(async () => {
-    setTwinBusy(true);
-    try {
-      await api("/v1/digitaltwin/cyber-attack", { method: "POST", body: JSON.stringify({ attackVector: "phishing", assetCriticality: "high", mttdHours: 6, mttrHours: 10 }) });
-      setTwinRuns((await api<{ runs: TwinRun[] }>("/v1/digitaltwin/runs")).runs);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setTwinBusy(false); }
-  }, []);
-
-  const registerPromptVersion = useCallback(async () => {
-    setResearchBusy(true);
-    try {
-      await api("/v1/research/prompts", { method: "POST", body: JSON.stringify({ name: "grounded-qa", template: "Answer strictly from: {{sources}}" }) });
-      setPromptVersions((await api<{ versions: PromptVersion[] }>("/v1/research/prompts")).versions);
-      setLeaderboard((await api<{ entries: LeaderboardEntry[] }>("/v1/research/leaderboard/provider-compare")).entries);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setResearchBusy(false); }
-  }, []);
-
-  const grantToolAccess = useCallback(async () => {
-    setZtBusy(true);
-    try {
-      await api("/v1/zerotrust/grants", { method: "POST", body: JSON.stringify({ agentId: "runtime-agent-1", tool: "deploy_kubernetes", allow: true }) });
-      setToolGrants((await api<{ grants: ToolGrant[] }>("/v1/zerotrust/grants")).grants);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setZtBusy(false); }
-  }, []);
-
-  const registerMcpServer = useCallback(async () => {
-    setZtBusy(true);
-    try {
-      await api("/v1/zerotrust/mcp-servers", { method: "POST", body: JSON.stringify({ name: "external-connector", url: "https://mcp.example.com", riskTier: "high", capabilities: ["read", "write"] }) });
-      setMcpServers((await api<{ servers: McpServer[] }>("/v1/zerotrust/mcp-servers")).servers);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setZtBusy(false); }
-  }, []);
-
-  const registerDataAsset = useCallback(async () => {
-    setDpBusy(true);
-    try {
-      await api("/v1/dataplatform/assets", { method: "POST", body: JSON.stringify({ name: `dataset_${Math.random().toString(16).slice(2, 6)}`, kind: "table", owner: "data-eng", freshnessSlaMinutes: 60 }) });
-      setDataAssets((await api<{ assets: DataAsset[] }>("/v1/dataplatform/assets")).assets);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setDpBusy(false); }
-  }, []);
-
-  const routeText = useCallback(async () => {
-    setRouterBusy(true); setError(null);
-    try { setRoutingDecision(await api<RoutingDecision>("/v1/router/route", { method: "POST", body: JSON.stringify({ text: routerText }) })); }
-    catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setRouterBusy(false); }
-  }, [routerText]);
-
-  const compileGoal = useCallback(async () => {
-    setCompilerBusy(true); setError(null);
-    try { setCompiledProgram(await api<CompiledProgram>("/v1/compiler/compile", { method: "POST", body: JSON.stringify({ goal: compilerGoal, deploy: true }) })); }
-    catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setCompilerBusy(false); }
-  }, [compilerGoal]);
-
-  const runSwarm = useCallback(async () => {
-    setSwarmBusy(true); setError(null);
-    try { setSwarmRun(await api<SwarmRun>("/v1/swarm/run", { method: "POST", body: JSON.stringify({ objective: swarmObjective }) })); }
-    catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setSwarmBusy(false); }
-  }, [swarmObjective]);
-
-  const executeAction = useCallback(async (kind: string, approved?: boolean) => {
-    setActionBusy(kind);
-    try {
-      const params = kind === "create_jira_ticket" ? { project: "OPS" } : kind === "deploy_kubernetes" ? { deployment: "web-api", cluster: "prod" } : {};
-      await api("/v1/actions/execute", { method: "POST", body: JSON.stringify({ kind, params, approved }) });
-      setActionLog((await api<{ actions: ActionExecution[] }>("/v1/actions/log")).actions);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setActionBusy(null); }
-  }, []);
-
-  const runPipeline = useCallback(async () => {
-    setOpsBusy("pipeline");
-    try {
-      await api("/v1/devops/pipelines/run", { method: "POST", body: JSON.stringify({ pipelineName: "web-api", commitSha: Math.random().toString(16).slice(2, 10), branch: "main" }) });
-      setPipelineRuns((await api<{ runs: PipelineRun[] }>("/v1/devops/pipelines")).runs);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setOpsBusy(null); }
-  }, []);
-
-  const runScan = useCallback(async () => {
-    setOpsBusy("scan");
-    try {
-      await api("/v1/secops/scans", { method: "POST", body: JSON.stringify({ kind: "sast", target: "web-api" }) });
-      setScans((await api<{ scans: ScanRun[] }>("/v1/secops/scans")).scans);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setOpsBusy(null); }
-  }, []);
-
-  const runRedTeam = useCallback(async () => {
-    setOpsBusy("redteam");
-    try { setRedTeam(await api<RedTeamResult>("/v1/secops/redteam", { method: "POST", body: JSON.stringify({ targetKind: "agent", targetId: "runtime-agent-1" }) })); }
-    catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setOpsBusy(null); }
-  }, []);
-
-  const detectAnomalies = useCallback(async () => {
-    setOpsBusy("aiops");
-    try {
-      await api("/v1/aiops/detect", { method: "POST", body: JSON.stringify({ baselines: { error_rate_spike: -1, guard_block_spike: -1 } }) });
-      setIncidents((await api<{ incidents: Incident[] }>("/v1/aiops/incidents")).incidents);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setOpsBusy(null); }
-  }, []);
-
-  const runAgent = useCallback(async () => {
-    setAgentBusy(true); setError(null);
-    try { setAgentResult(await api<AgentResult>("/v1/agent/run", { method: "POST", body: JSON.stringify({ objective: agentObjective }) })); }
-    catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setAgentBusy(false); }
-  }, [agentObjective]);
-
-  const runEthics = useCallback(async () => {
-    try { setEthics(await api<EthicsAssessment>("/v1/governance/ethics/assess", { method: "POST", body: JSON.stringify({ subjectKind: "model", subjectId: ethicsSubject }) })); }
-    catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-  }, [ethicsSubject]);
-
-  const lookupAccount = useCallback(async () => {
-    setWeb3Busy(true);
-    try {
-      setAccount(await api<AccountLookup>(`/v1/web3/accounts/${chainId}/${address}`));
-      setCompliance(await api<ComplianceResult>(`/v1/web3/compliance/${chainId}/${address}`));
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setWeb3Busy(false); }
-  }, [chainId, address]);
 
   useEffect(() => { void refresh(); }, [refresh]);
 
@@ -300,6 +56,8 @@ export default function OsConsole() {
     </div>
   );
 
+  const groups = Array.from(new Set(osPillars.map(p => p.group)));
+
   return (
     <main className="mx-auto max-w-6xl px-6 pb-24 pt-8">
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">Enterprise AI OS — Production Instance</p>
@@ -308,6 +66,7 @@ export default function OsConsole() {
         This console talks to the CerebroHive Enterprise AI OS running on this site&apos;s own infrastructure:
         Cerebro X™ gateway, AgentOS™ runtime with Guard™ in the execution path, Knowledge Fabric™,
         Agent Mesh™, and the ten Core Consulting Capabilities. Every number below is computed by the real platform.
+        Every subsystem has its own dedicated page — click through below.
       </p>
 
       <div className="mt-6 flex items-center gap-2 text-sm">
@@ -379,346 +138,31 @@ export default function OsConsole() {
         </div>
       </section>
 
-      <section className="mt-12 grid gap-4 md:grid-cols-2">
-        <div className="rounded-xl border border-border bg-surface/40 p-6">
-          <h2 className="text-xl font-semibold text-text-primary">AI Governance™ — Registries &amp; Ethics</h2>
-          <p className="mt-1 text-sm text-text-secondary">Model, Prompt, Agent, Policy, Risk, and Evidence registries roll up into a single AI Inventory; every subject can be scored across the eight AI-ethics pillars.</p>
-          {inventory && (
-            <div className="mt-4 grid grid-cols-3 gap-2 text-sm">
-              <div className="rounded-lg border border-border bg-background px-3 py-2"><div className="text-xs text-text-secondary">Registered</div><div className="text-lg font-semibold text-text-primary">{inventory.total}</div></div>
-              <div className="rounded-lg border border-border bg-background px-3 py-2"><div className="text-xs text-text-secondary">High risk</div><div className="text-lg font-semibold text-text-primary">{inventory.byRiskTier.high ?? 0}</div></div>
-              <div className="rounded-lg border border-border bg-background px-3 py-2"><div className="text-xs text-text-secondary">Unevidenced high-risk</div><div className="text-lg font-semibold text-text-primary">{inventory.highRiskWithoutEvidence.length}</div></div>
-            </div>
-          )}
-          <div className="mt-4 flex gap-2">
-            <input value={ethicsSubject} onChange={e => setEthicsSubject(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="model / agent / workflow id" />
-            <button onClick={() => void runEthics()} disabled={!online || !KEY} className="rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent disabled:opacity-40">Assess ethics</button>
-          </div>
-          {ethics && (
-            <div className="mt-3 rounded-lg border border-border bg-background p-3 text-sm">
-              <div className="text-text-primary">Overall: <span className="font-semibold">{ethics.overall}</span> — <span className="text-primary-accent">{ethics.band.replace(/_/g, " ")}</span></div>
-              {ethics.findings.length > 0 && <ul className="mt-1 list-inside list-disc text-xs text-text-secondary">{ethics.findings.map(f => <li key={f}>{f}</li>)}</ul>}
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-xl border border-border bg-surface/40 p-6">
-          <h2 className="text-xl font-semibold text-text-primary">Cerebro Chain™ — Blockchain &amp; Web3</h2>
-          <p className="mt-1 text-sm text-text-secondary">Chain registry, DeFi catalog, and read-only account/compliance lookups over public RPCs (deterministic fallback offline).</p>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {chains.map(c => (
-              <button key={c.id} onClick={() => setChainId(c.id)} className={`rounded-full border px-3 py-1 text-xs ${chainId === c.id ? "border-primary-accent text-primary-accent" : "border-border text-text-secondary"}`}>{c.name}</button>
-            ))}
-          </div>
-          <div className="mt-3 flex gap-2">
-            <input value={address} onChange={e => setAddress(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="address" />
-            <button onClick={() => void lookupAccount()} disabled={web3Busy || !online || !KEY} className="rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent disabled:opacity-40">{web3Busy ? "…" : "Lookup"}</button>
-          </div>
-          {account && (
-            <div className="mt-3 rounded-lg border border-border bg-background p-3 text-sm text-text-primary">
-              Balance: <span className="font-semibold">{account.balanceFormatted} {account.chain.name === "Solana" ? "SOL" : "native"}</span> · nonce {account.nonce} · gas {account.gasPriceGwei} gwei
-              <span className="ml-2 text-xs text-text-secondary">({account.source})</span>
-              {compliance && <div className="mt-1 text-xs text-text-secondary">Compliance risk: <span className="text-primary-accent">{compliance.band}</span> ({compliance.riskScore})</div>}
-            </div>
-          )}
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {defi.map(p => <span key={p.id} className="rounded-full border border-border px-3 py-1 text-xs text-text-secondary">{p.name} · {p.category}</span>)}
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-12">
-        <h2 className="text-xl font-semibold text-text-primary">DevOps · MLOps · DevSecOps/MLSecOps · AIOps</h2>
-        <p className="mt-1 text-sm text-text-secondary">Live operational domains: CI/CD, model lineage, security scanning, and self-healing incident detection — all running as first-class platform resources.</p>
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border border-border bg-surface/40 p-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-text-primary">DevOps · CI/CD</h3>
-              <button onClick={() => void runPipeline()} disabled={opsBusy !== null || !online || !KEY} className="rounded-lg border border-primary-accent px-3 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">{opsBusy === "pipeline" ? "…" : "Run pipeline"}</button>
-            </div>
-            <ul className="mt-3 space-y-2 text-xs">
-              {pipelineRuns.slice(0, 4).map(r => (
-                <li key={r.id} className="rounded-lg border border-border bg-background px-2 py-1.5">
-                  <span className={r.status === "succeeded" ? "text-primary-accent" : "text-red-400"}>{r.status}</span> · {r.pipelineName} · {r.stages.length} stages
-                </li>
-              ))}
-              {pipelineRuns.length === 0 && <li className="text-text-secondary">No pipeline runs yet.</li>}
-            </ul>
-          </div>
-
-          <div className="rounded-xl border border-border bg-surface/40 p-4">
-            <h3 className="font-semibold text-text-primary">MLOps · Model Lineage</h3>
-            <ul className="mt-3 space-y-2 text-xs">
-              {modelVersions.slice(0, 4).map(m => (
-                <li key={m.id} className="rounded-lg border border-border bg-background px-2 py-1.5">
-                  {m.modelName} v{m.version} · <span className="text-primary-accent">{m.stage}</span> · {m.gateChecks.filter(g => g.passed).length}/{m.gateChecks.length} gates
-                </li>
-              ))}
-              {modelVersions.length === 0 && <li className="text-text-secondary">No model versions registered yet.</li>}
-            </ul>
-          </div>
-
-          <div className="rounded-xl border border-border bg-surface/40 p-4">
-            <div className="flex items-center justify-between gap-1">
-              <h3 className="font-semibold text-text-primary">DevSecOps/MLSecOps</h3>
-              <div className="flex gap-1">
-                <button onClick={() => void runScan()} disabled={opsBusy !== null || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">{opsBusy === "scan" ? "…" : "Scan"}</button>
-                <button onClick={() => void runRedTeam()} disabled={opsBusy !== null || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">{opsBusy === "redteam" ? "…" : "Red-team"}</button>
-              </div>
-            </div>
-            <ul className="mt-3 space-y-2 text-xs">
-              {scans.slice(0, 3).map(s => (
-                <li key={s.id} className="rounded-lg border border-border bg-background px-2 py-1.5">
-                  {s.kind} · <span className={s.status === "passed" ? "text-primary-accent" : "text-red-400"}>{s.status}</span> · {s.findings.length} findings
-                </li>
-              ))}
-              {redTeam && <li className="rounded-lg border border-border bg-background px-2 py-1.5">Red-team: {redTeam.attacksSucceeded}/{redTeam.attacksRun} attacks succeeded</li>}
-              {scans.length === 0 && !redTeam && <li className="text-text-secondary">No scans run yet.</li>}
-            </ul>
-          </div>
-
-          <div className="rounded-xl border border-border bg-surface/40 p-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-text-primary">AIOps · Incidents</h3>
-              <button onClick={() => void detectAnomalies()} disabled={opsBusy !== null || !online || !KEY} className="rounded-lg border border-primary-accent px-3 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">{opsBusy === "aiops" ? "…" : "Detect"}</button>
-            </div>
-            <ul className="mt-3 space-y-2 text-xs">
-              {incidents.slice(0, 4).map(i => (
-                <li key={i.id} className="rounded-lg border border-border bg-background px-2 py-1.5">
-                  <span className="text-red-400">{i.severity}</span> · {i.title} · {i.status}
-                </li>
-              ))}
-              {incidents.length === 0 && <li className="text-text-secondary">No open incidents.</li>}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-12 rounded-xl border border-border bg-surface/40 p-6">
-        <h2 className="text-xl font-semibold text-text-primary">Cerebro Agent Executor™ — LangChain/LangGraph-style ReAct loop</h2>
-        <p className="mt-1 text-sm text-text-secondary">Binds the runtime tool registry (calculator, catalog, memory, knowledge) into a thought → action → observation loop over Cerebro X™.</p>
-        <div className="mt-4 flex flex-col gap-3 md:flex-row">
-          <input
-            value={agentObjective}
-            onChange={e => setAgentObjective(e.target.value)}
-            onKeyDown={e => { if (e.key === "Enter" && !agentBusy) void runAgent(); }}
-            className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-text-primary outline-none focus:border-primary-accent"
-            placeholder="Give the agent an objective…"
-          />
-          <button onClick={() => void runAgent()} disabled={agentBusy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 font-semibold text-background transition-opacity disabled:opacity-40">
-            {agentBusy ? "Running…" : "Run agent"}
-          </button>
-        </div>
-        {agentResult && (
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
-            <div className="rounded-lg border border-border bg-background p-4">
-              <div className="text-xs uppercase tracking-wider text-text-secondary">Final answer — {agentResult.status.replace(/_/g, " ")}</div>
-              <p className="mt-2 whitespace-pre-wrap text-sm text-text-primary">{agentResult.finalAnswer}</p>
-            </div>
-            <div className="rounded-lg border border-border bg-background p-4">
-              <div className="text-xs uppercase tracking-wider text-text-secondary">Reasoning trace</div>
-              <ol className="mt-2 space-y-2 text-xs text-text-secondary">
-                {agentResult.steps.map((s, i) => (
-                  <li key={i}><span className="text-primary-accent">{s.tool}</span>: {s.thought} → {s.observation}</li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        )}
-      </section>
-
       <section className="mt-14">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">Enterprise Cognitive Operating System</p>
-        <h2 className="mt-2 text-2xl font-bold text-text-primary">Cerebro Router™ · Compiler™ · Swarm™ · Actions™</h2>
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">Every Subsystem, One Click Away</p>
+        <h2 className="mt-2 text-2xl font-bold text-text-primary">Explore the Enterprise Cognitive OS</h2>
         <p className="mt-2 max-w-3xl text-sm text-text-secondary">
-          The unifying layer: intelligent multi-model routing, natural language compiled straight into running workflows,
-          a Planner → Coordinator → Specialists → Critics → Judge → Consensus → Verifier → Auditor multi-agent protocol, and
-          governed autonomous execution against enterprise systems.
+          {osPillars.length} live subsystems, each with its own operable page — no API domain or documentation lookup required.
         </p>
       </section>
 
-      <section className="mt-6 rounded-xl border border-border bg-surface/40 p-6">
-        <h3 className="text-lg font-semibold text-text-primary">Cerebro Router™ — no human chooses a model, the OS does</h3>
-        <p className="mt-1 text-sm text-text-secondary">Every request passes through intent detection → complexity estimation → cost/latency prediction → privacy classification → model selection, across a catalog of {modelCatalog.length || "14"} models.</p>
-        <div className="mt-4 flex flex-col gap-3 md:flex-row">
-          <input value={routerText} onChange={e => setRouterText(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="Describe a request to route…" />
-          <button onClick={() => void routeText()} disabled={routerBusy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{routerBusy ? "Routing…" : "Route"}</button>
-        </div>
-        {routingDecision && (
-          <div className="mt-4 rounded-lg border border-border bg-background p-4 text-sm">
-            <div className="text-text-primary">intent=<span className="text-primary-accent">{routingDecision.intent}</span> · complexity={routingDecision.complexity} · privacy=<span className="text-primary-accent">{routingDecision.privacyTier}</span></div>
-            <div className="mt-1 text-text-primary">Selected: <span className="font-semibold">{routingDecision.selectedModel}</span> — ~${routingDecision.predictedCostUsd.toFixed(4)} / ~{routingDecision.predictedLatencyMs}ms</div>
-            <p className="mt-1 text-xs text-text-secondary">{routingDecision.rationale}</p>
-          </div>
-        )}
-      </section>
-
-      <section className="mt-6 rounded-xl border border-border bg-surface/40 p-6">
-        <h3 className="text-lg font-semibold text-text-primary">Cerebro Compiler™ — natural language → goals → plans → workflows → execution graph → deployment</h3>
-        <p className="mt-1 text-sm text-text-secondary">Compiles a sentence directly into a validated, running Cerebro Flow™ workflow — no hand-authored DAG.</p>
-        <div className="mt-4 flex flex-col gap-3 md:flex-row">
-          <input value={compilerGoal} onChange={e => setCompilerGoal(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="Describe a goal to compile…" />
-          <button onClick={() => void compileGoal()} disabled={compilerBusy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{compilerBusy ? "Compiling…" : "Compile & deploy"}</button>
-        </div>
-        {compiledProgram && (
-          <div className="mt-4 rounded-lg border border-border bg-background p-4 text-sm">
-            <div className="text-text-primary">Strategy: <span className="text-primary-accent">{compiledProgram.strategy}</span> · Workflow: <span className="font-mono text-xs">{compiledProgram.workflowId}</span></div>
-            <ol className="mt-2 space-y-1 text-xs text-text-secondary">
-              {compiledProgram.plan.steps.map(s => <li key={s.id}>{s.id}. {s.description}</li>)}
-            </ol>
-          </div>
-        )}
-      </section>
-
-      <section className="mt-6 rounded-xl border border-border bg-surface/40 p-6">
-        <h3 className="text-lg font-semibold text-text-primary">Cerebro Swarm™ — Planner → Coordinator → Specialists → Critics → Judge → Consensus → Verifier → Auditor</h3>
-        <p className="mt-1 text-sm text-text-secondary">A single objective fans out to role-labeled specialists executed by AgentOS™, each independently critiqued, synthesized into one consensus answer, and hard-verified.</p>
-        <div className="mt-4 flex flex-col gap-3 md:flex-row">
-          <input value={swarmObjective} onChange={e => setSwarmObjective(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="Describe an objective for the swarm…" />
-          <button onClick={() => void runSwarm()} disabled={swarmBusy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{swarmBusy ? "Coordinating…" : "Run swarm"}</button>
-        </div>
-        {swarmRun && (
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
-            <div className="rounded-lg border border-border bg-background p-4">
-              <div className="text-xs uppercase tracking-wider text-text-secondary">Consensus — {swarmRun.status.replace(/_/g, " ")}, avg score {swarmRun.consensus?.averageScore}</div>
-              <p className="mt-2 whitespace-pre-wrap text-sm text-text-primary">{swarmRun.consensus?.finalAnswer}</p>
-            </div>
-            <div className="rounded-lg border border-border bg-background p-4">
-              <div className="text-xs uppercase tracking-wider text-text-secondary">Specialist roles</div>
-              <ol className="mt-2 space-y-1 text-xs text-text-secondary">
-                {swarmRun.roles.map((r, i) => (
-                  <li key={i}><span className="text-primary-accent">{r.role}</span>: {r.description} — score {r.critique.score}</li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        )}
-      </section>
-
-      <section className="mt-6 rounded-xl border border-border bg-surface/40 p-6">
-        <h3 className="text-lg font-semibold text-text-primary">Cerebro Actions™ — not recommendations, execution</h3>
-        <p className="mt-1 text-sm text-text-secondary">Governed enterprise action connectors; high-blast-radius actions require explicit approval before they run.</p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {actionCatalog.map(a => (
-            <button
-              key={a.kind}
-              onClick={() => void executeAction(a.kind)}
-              disabled={actionBusy !== null || !online || !KEY}
-              className="rounded-full border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40"
-              title={a.requiresApproval ? "Requires approval" : undefined}
-            >
-              {actionBusy === a.kind ? "…" : a.title}{a.requiresApproval ? " *" : ""}
-            </button>
-          ))}
-        </div>
-        <ul className="mt-4 space-y-1.5 text-xs">
-          {actionLog.slice(0, 6).map(a => (
-            <li key={a.id} className="flex items-center justify-between rounded-lg border border-border bg-background px-3 py-1.5">
-              <span className="text-text-primary">{a.kind}</span>
-              <span className="flex items-center gap-2">
-                {a.status === "pending_approval" && (
-                  <button onClick={() => void executeAction(a.kind, true)} className="rounded border border-primary-accent px-2 py-0.5 text-[11px] text-primary-accent">Approve</button>
-                )}
-                <span className={a.status === "executed" ? "text-primary-accent" : a.status === "pending_approval" ? "text-amber-400" : "text-red-400"}>{a.status.replace(/_/g, " ")}</span>
-              </span>
-            </li>
-          ))}
-          {actionLog.length === 0 && <li className="text-text-secondary">No actions executed yet.</li>}
-        </ul>
-        <p className="mt-2 text-xs text-text-secondary">* requires approval before execution</p>
-      </section>
-
-      <section className="mt-14">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">The Remaining Pillars</p>
-        <h2 className="mt-2 text-2xl font-bold text-text-primary">World Model™ · Digital Twin™ · Research™ · Zero Trust™ · Data Platform™</h2>
-        <p className="mt-2 max-w-3xl text-sm text-text-secondary">
-          A living graph of the enterprise, named business scenarios that simulate and write back into that graph, versioned prompt/agent research with A/B testing,
-          deny-by-default tool and MCP governance, and a governed data-asset catalog with lineage.
-        </p>
-      </section>
-
-      <section className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <div className="rounded-xl border border-border bg-surface/40 p-4">
-          <h3 className="font-semibold text-text-primary">Enterprise World Model™</h3>
-          <p className="mt-1 text-xs text-text-secondary">Every object — employees, departments, risks, assets, policies — inside one graph.</p>
-          <div className="mt-3 text-2xl font-semibold text-text-primary">{worldGraph?.edges.length ?? 0}</div>
-          <div className="text-xs text-text-secondary">relationship edges tracked</div>
-        </div>
-
-        <div className="rounded-xl border border-border bg-surface/40 p-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-text-primary">Digital Twin™</h3>
-            <div className="flex gap-1">
-              <button onClick={() => void runSupplyChainTwin()} disabled={twinBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Supply chain</button>
-              <button onClick={() => void runCyberTwin()} disabled={twinBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Cyber</button>
-            </div>
-          </div>
-          <ul className="mt-3 space-y-1.5 text-xs">
-            {twinRuns.slice(0, 3).map(r => (
-              <li key={r.id} className="rounded-lg border border-border bg-background px-2 py-1.5">
-                <span className="text-primary-accent">{r.kind.replace(/_/g, " ")}</span>{r.result.recommendation ? `: ${r.result.recommendation}` : ""}
-              </li>
+      {groups.map(group => (
+        <section key={group} className="mt-8">
+          <h3 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">{group}</h3>
+          <div className="mt-3 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {osPillars.filter(p => p.group === group).map(p => (
+              <Link
+                key={p.slug}
+                href={`/platform/os/${p.slug}`}
+                className="rounded-xl border border-border bg-surface/40 p-4 transition-colors hover:border-primary-accent"
+              >
+                <div className="font-semibold text-text-primary">{p.name}</div>
+                <p className="mt-1 text-xs text-text-secondary">{p.tagline}</p>
+              </Link>
             ))}
-            {twinRuns.length === 0 && <li className="text-text-secondary">No scenarios simulated yet.</li>}
-          </ul>
-        </div>
-
-        <div className="rounded-xl border border-border bg-surface/40 p-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-text-primary">Research Platform™</h3>
-            <button onClick={() => void registerPromptVersion()} disabled={researchBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Version prompt</button>
           </div>
-          <ul className="mt-3 space-y-1.5 text-xs">
-            {promptVersions.slice(0, 4).map(v => (
-              <li key={v.id} className="rounded-lg border border-border bg-background px-2 py-1.5">{v.name} · v{v.version}</li>
-            ))}
-            {promptVersions.length === 0 && <li className="text-text-secondary">No prompt versions registered yet.</li>}
-          </ul>
-          {leaderboard.length > 0 && (
-            <div className="mt-2 text-xs text-text-secondary">Leaderboard: {leaderboard.map(l => `${l.target}=${l.score}`).join(", ")}</div>
-          )}
-        </div>
-
-        <div className="rounded-xl border border-border bg-surface/40 p-4">
-          <div className="flex items-center justify-between gap-1">
-            <h3 className="font-semibold text-text-primary">Zero Trust™</h3>
-            <div className="flex gap-1">
-              <button onClick={() => void grantToolAccess()} disabled={ztBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Grant tool</button>
-              <button onClick={() => void registerMcpServer()} disabled={ztBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Register MCP</button>
-            </div>
-          </div>
-          <ul className="mt-3 space-y-1.5 text-xs">
-            {toolGrants.slice(0, 2).map(g => (
-              <li key={g.id} className="rounded-lg border border-border bg-background px-2 py-1.5">{g.agentId} → {g.tool}: <span className={g.allow ? "text-primary-accent" : "text-red-400"}>{g.allow ? "allow" : "deny"}</span></li>
-            ))}
-            {mcpServers.slice(0, 2).map(s => (
-              <li key={s.id} className="rounded-lg border border-border bg-background px-2 py-1.5">{s.name} · {s.riskTier} · <span className={s.status === "approved" ? "text-primary-accent" : s.status === "pending" ? "text-amber-400" : "text-red-400"}>{s.status}</span></li>
-            ))}
-            {toolGrants.length === 0 && mcpServers.length === 0 && <li className="text-text-secondary">No grants or MCP servers registered yet.</li>}
-          </ul>
-        </div>
-
-        <div className="rounded-xl border border-border bg-surface/40 p-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-text-primary">Data Platform™</h3>
-            <button onClick={() => void registerDataAsset()} disabled={dpBusy || !online || !KEY} className="rounded-lg border border-primary-accent px-2 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40">Register asset</button>
-          </div>
-          <ul className="mt-3 space-y-1.5 text-xs">
-            {dataAssets.slice(0, 4).map(a => (
-              <li key={a.id} className="rounded-lg border border-border bg-background px-2 py-1.5">{a.name} · {a.kind} · SLA {a.freshnessSlaMinutes}m</li>
-            ))}
-            {dataAssets.length === 0 && <li className="text-text-secondary">No data assets registered yet.</li>}
-          </ul>
-        </div>
-
-        <div className="rounded-xl border border-border bg-surface/40 p-4">
-          <h3 className="font-semibold text-text-primary">Developer Platform™ SDK</h3>
-          <p className="mt-1 text-xs text-text-secondary">A typed TypeScript client over this entire API surface — one method group per domain, ships with the platform package.</p>
-          <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-background p-2 text-[11px] text-text-secondary">{`import { createClient } from "@cerebrohive/sdk";
-const cerebro = createClient({ baseUrl, apiKey });
-await cerebro.swarm.run("Research X, then build it.");`}</pre>
-        </div>
-      </section>
+        </section>
+      ))}
     </main>
   );
 }

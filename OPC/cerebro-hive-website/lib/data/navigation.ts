@@ -13,6 +13,7 @@ export const mainNavigation: NavItem[] = [
       { label: "Architecture", href: "/developers/architecture" },
       { label: "Capabilities", href: "/platform#capabilities" },
       { label: "Live Runtime", href: "/platform/live-runtime" },
+      { label: "Enterprise AI OS Console", href: "/platform/os" },
     ]
   },
   {
@@ -84,6 +85,7 @@ export const footerNavigation = {
     { label: "Knowledge Fabric™", href: "/platform/knowledge-fabric" },
     { label: "Reasoning Engine™", href: "/platform/reasoning-engine" },
     { label: "Live Runtime →", href: "/platform/live-runtime" },
+    { label: "Enterprise AI OS Console →", href: "/platform/os" },
   ],
   products: [
     { label: "CerebroArchive™", href: "/products/cerebro-archive" },

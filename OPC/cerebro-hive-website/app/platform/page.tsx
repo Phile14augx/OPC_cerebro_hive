@@ -142,8 +142,11 @@ export default function PlatformPage() {
               A 5-layer modular architecture built for enterprise scale — from shared platform services and a unified AI gateway to specialized intelligence modules and an executive operating system.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:-translate-y-1 shadow-elevated flex items-center gap-3">
-                Request Architecture Briefing <ArrowRight size={16} />
+              <Link href="/platform/os" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:-translate-y-1 shadow-elevated flex items-center gap-3">
+                Operate the Live OS Console <ArrowRight size={16} />
+              </Link>
+              <Link href="/contact" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
+                Request Architecture Briefing
               </Link>
               <Link href="/products" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
                 Explore Products

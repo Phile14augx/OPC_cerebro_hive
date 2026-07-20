@@ -39,7 +39,7 @@ export default function DevelopersPage() {
       {/* Quick Start Cards */}
       <section>
         <h2 className="text-sm uppercase tracking-widest text-text-muted font-bold mb-6">Quick Start</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link href="/developers/api" className="group p-6 rounded-2xl bg-surface border border-border hover:border-primary-accent/50 transition-all hover:shadow-elevated">
             <div className="w-12 h-12 rounded-xl bg-primary-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <FileJson className="text-primary-accent" size={24} />
@@ -51,7 +51,7 @@ export default function DevelopersPage() {
               Connect to our globally distributed, low-latency API to manage agents, query datasets, and trigger autonomous workflows.
             </p>
           </Link>
-          
+
           <Link href="/developers/architecture" className="group p-6 rounded-2xl bg-surface border border-border hover:border-secondary-accent/50 transition-all hover:shadow-elevated">
             <div className="w-12 h-12 rounded-xl bg-secondary-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Blocks className="text-secondary-accent" size={24} />
@@ -61,6 +61,18 @@ export default function DevelopersPage() {
             </h3>
             <p className="text-sm text-text-secondary">
               Understand the core paradigms of AgentOS, CerebroSphere, and our event-driven infrastructure.
+            </p>
+          </Link>
+
+          <Link href="/platform/os" className="group p-6 rounded-2xl bg-surface border border-border hover:border-primary-accent/50 transition-all hover:shadow-elevated">
+            <div className="w-12 h-12 rounded-xl bg-primary-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Zap className="text-primary-accent" size={24} />
+            </div>
+            <h3 className="text-lg font-bold text-text-primary mb-2 flex items-center gap-2">
+              Live OS Console <ArrowRight size={16} className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-primary-accent" />
+            </h3>
+            <p className="text-sm text-text-secondary">
+              Operate every platform subsystem — Router, Compiler, Swarm, Digital Twin, Zero Trust, and more — against the real, running API.
             </p>
           </Link>
         </div>
