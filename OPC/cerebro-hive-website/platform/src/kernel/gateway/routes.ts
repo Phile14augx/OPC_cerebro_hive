@@ -244,6 +244,88 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
     return p.audit.list(c.principal.organizationId, { limit: 100 });
   });
 
+  // ---------------- Governance Registries (Model/Prompt/Agent/Policy/Risk/Evidence) ----------------
+  app.post("/v1/governance/registries", async req => {
+    const body = parse(z.object({
+      kind: z.enum(["model", "prompt", "agent", "policy", "risk", "evidence"]),
+      name: z.string().min(1).max(300), description: z.string().max(4000).optional(), owner: z.string().optional(),
+      riskTier: z.enum(["low", "medium", "high", "critical"]).optional(), tags: z.array(z.string()).optional(),
+      attributes: z.record(z.unknown()).optional(), linkedEvidenceIds: z.array(z.string()).optional(),
+    }), req.body);
+    return p.registries.register(ctx(req), body);
+  });
+  app.get("/v1/governance/registries", async req => {
+    const q = req.query as { kind?: string };
+    return { entries: await p.registries.list(ctx(req), q.kind as never) };
+  });
+  app.get("/v1/governance/registries/:id", async req => p.registries.get(ctx(req), (req.params as { id: string }).id));
+  app.post("/v1/governance/registries/:id/transition", async req => {
+    const body = parse(z.object({ lifecycle: z.enum(["proposed", "review", "approved", "active", "deprecated", "retired"]) }), req.body);
+    return p.registries.transition(ctx(req), (req.params as { id: string }).id, body.lifecycle);
+  });
+  app.post("/v1/governance/registries/:id/evidence", async req => {
+    const body = parse(z.object({ evidenceId: z.string().min(1) }), req.body);
+    return p.registries.attachEvidence(ctx(req), (req.params as { id: string }).id, body.evidenceId);
+  });
+  app.get("/v1/governance/inventory", async req => p.registries.inventory(ctx(req)));
+  app.post("/v1/governance/ethics/assess", async req => {
+    const body = parse(z.object({ subjectKind: z.string().min(1), subjectId: z.string().min(1), scores: z.record(z.number().min(0).max(1)).optional() }), req.body);
+    return p.ethics.assess(ctx(req), body.subjectKind, body.subjectId, body.scores as never);
+  });
+  app.get("/v1/governance/ethics", async req => ({ assessments: p.ethics.list(ctx(req).principal.organizationId) }));
+
+  // ---------------- Ontology (Enterprise World Model semantic layer) ----------------
+  app.post("/v1/ontology/nodes", async req => {
+    const body = parse(z.object({
+      type: z.enum(["person", "organization", "team", "project", "repository", "service", "api", "dataset", "model", "prompt", "agent", "workflow", "policy", "incident", "risk", "deployment"]),
+      name: z.string().min(1).max(300), properties: z.record(z.unknown()).optional(),
+      confidence: z.number().min(0).max(1).optional(), provenance: z.string().optional(),
+    }), req.body);
+    return p.ontology.upsertNode(ctx(req), body);
+  });
+  app.get("/v1/ontology/nodes", async req => {
+    const q = req.query as { type?: string };
+    return { nodes: await p.ontology.nodes(ctx(req), q.type as never) };
+  });
+  app.post("/v1/ontology/edges", async req => {
+    const body = parse(z.object({
+      fromNodeId: z.string().min(1), toNodeId: z.string().min(1),
+      relationship: z.enum(["WORKS_FOR", "MEMBER_OF", "IMPLEMENTS", "DEPENDS_ON", "USES", "GOVERNS", "OWNS", "CALLS"]),
+      weight: z.number().optional(), confidence: z.number().min(0).max(1).optional(), source: z.string().optional(), reason: z.string().optional(),
+    }), req.body);
+    return p.ontology.link(ctx(req), body);
+  });
+  app.get("/v1/ontology/nodes/:id/expand", async req => {
+    const q = req.query as { depth?: string };
+    return p.ontology.expand(ctx(req), (req.params as { id: string }).id, q.depth ? Number(q.depth) : undefined);
+  });
+  app.get("/v1/ontology/graph", async req => p.ontology.graph(ctx(req)));
+
+  // ---------------- Web3 / Blockchain ----------------
+  app.get("/v1/web3/chains", async req => { ctx(req); return { chains: p.web3.chains() }; });
+  app.get("/v1/web3/defi", async req => { ctx(req); return { protocols: p.web3.defiCatalog() }; });
+  app.get("/v1/web3/cross-chain", async req => { ctx(req); return { protocols: p.web3.crossChain() }; });
+  app.get("/v1/web3/account-abstraction", async req => { ctx(req); return { stack: p.web3.accountAbstraction() }; });
+  app.post("/v1/web3/contracts", async req => {
+    const body = parse(z.object({
+      chainId: z.string().min(1), address: z.string().min(1), name: z.string().min(1).max(300),
+      standard: z.enum(["erc20", "erc721", "erc1155", "erc4337", "custom"]), abiSummary: z.array(z.string()).optional(), auditTools: z.array(z.string()).optional(),
+    }), req.body);
+    return p.web3.registerContract(ctx(req), body);
+  });
+  app.get("/v1/web3/contracts", async req => {
+    const q = req.query as { chainId?: string };
+    return { contracts: await p.web3.listContracts(ctx(req), q.chainId) };
+  });
+  app.get("/v1/web3/accounts/:chainId/:address", async req => {
+    const params = req.params as { chainId: string; address: string };
+    return p.web3.accountLookup(ctx(req), params.chainId, params.address);
+  });
+  app.get("/v1/web3/compliance/:chainId/:address", async req => {
+    const params = req.params as { chainId: string; address: string };
+    return p.web3.complianceScreen(ctx(req), params.chainId, params.address);
+  });
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {

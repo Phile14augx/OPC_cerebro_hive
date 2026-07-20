@@ -31,6 +31,9 @@ import { ContextEngine, builtinAssemblers } from "../domains/context/context-eng
 import { InMemoryAgentRepository, MeshService, agentosBridgeHandler } from "../domains/mesh/mesh.js";
 import { FlowService, InMemoryFlowRepository } from "../domains/flow/flow.js";
 import { GovernanceService, InMemoryApprovalRepository } from "../domains/governance/governance.js";
+import { EthicsService, InMemoryRegistryRepository, RegistryService } from "../domains/governance/registries.js";
+import { InMemoryOntologyRepository, OntologyService } from "../domains/knowledge/ontology.js";
+import { InMemoryWeb3Repository, Web3Service } from "../domains/web3/web3.js";
 import { EvalService, InMemoryEvalRepository } from "../domains/evaluation/evaluation.js";
 import { ObservatoryService } from "../domains/observatory/observatory.js";
 import { ConnectService, InMemoryConnectorRepository } from "../domains/connect/connect.js";
@@ -64,6 +67,10 @@ export interface Platform {
   mesh: MeshService;
   flow: FlowService;
   governance: GovernanceService;
+  registries: RegistryService;
+  ethics: EthicsService;
+  ontology: OntologyService;
+  web3: Web3Service;
   evals: EvalService;
   observatory: ObservatoryService;
   connect: ConnectService;
@@ -149,6 +156,13 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
 
   const approvalsRepo = new InMemoryApprovalRepository();
   const governance = new GovernanceService(approvalsRepo, bus, policy, audit);
+  const registryRepo = new InMemoryRegistryRepository();
+  const registries = new RegistryService(registryRepo, bus, policy);
+  const ethics = new EthicsService();
+  const ontologyRepo = new InMemoryOntologyRepository();
+  const ontology = new OntologyService(ontologyRepo, bus, policy);
+  const web3Repo = new InMemoryWeb3Repository();
+  const web3 = new Web3Service(web3Repo, bus, policy);
   const flowRepo = new InMemoryFlowRepository();
   const flow = new FlowService(flowRepo, bus, policy, runtime, governance);
   const evalRepo = new InMemoryEvalRepository();
@@ -172,6 +186,9 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     snapshots.register("mesh", mapSnapshot(meshRepo.agents));
     snapshots.register("flow", comboSnapshot({ workflows: mapSnapshot(flowRepo.workflows), runs: mapSnapshot(flowRepo.runs) }));
     snapshots.register("approvals", mapSnapshot(approvalsRepo.rows));
+    snapshots.register("registries", mapSnapshot(registryRepo.rows));
+    snapshots.register("ontology", comboSnapshot({ nodes: mapSnapshot(ontologyRepo.nodes), edges: arraySnapshot(ontologyRepo.edges) }));
+    snapshots.register("web3_contracts", mapSnapshot(web3Repo.rows));
     snapshots.register("guard", arraySnapshot(guardRepo.rows));
     snapshots.register("evals", arraySnapshot(evalRepo.runs));
     snapshots.register("ai_calls", arraySnapshot(aiCalls.records));
@@ -204,7 +221,7 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
   return {
     config, logger, telemetry, bus, policy, identity, audit, flags, db, snapshots,
     x, moe: new MixtureOfExperts(x), world, memory, knowledge, guard, runtime, scheduler, tools,
-    contextEngine, mesh, flow, governance, evals, observatory, connect, hub, simulator, sphere, consulting,
+    contextEngine, mesh, flow, governance, registries, ethics, ontology, web3, evals, observatory, connect, hub, simulator, sphere, consulting,
     async shutdown() {
       scheduler.stop();
       await snapshots?.stop();
