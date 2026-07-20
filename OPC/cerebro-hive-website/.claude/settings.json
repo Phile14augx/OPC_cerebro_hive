@@ -53,7 +53,11 @@
       "Bash(git pull *)",
       "Bash(mkdir -p \"d:\\\\{MY_PROJECTS}\\\\{OPC_cerebro_hive}\\\\OPC\\\\cerebro-hive-website\\\\lib\\\\data\\\\academy\")",
       "Bash(New-Item -ItemType Directory -Force -Path \"d:\\\\{MY_PROJECTS}\\\\{OPC_cerebro_hive}\\\\OPC\\\\cerebro-hive-website\\\\app\\\\resources\\\\guides\\\\[slug]\")",
-      "Bash(Out-Null)"
+      "Bash(Out-Null)",
+      "Bash(git merge *)",
+      "Bash(git stash *)",
+      "Bash(git remote *)",
+      "Bash(node ./repro-run.js)"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows",
