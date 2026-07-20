@@ -56,7 +56,7 @@ export async function createServer(platform: Platform): Promise<FastifyInstance>
     }
     platform.logger.error({ err: err.message, stack: err.stack?.slice(0, 500) }, "unhandled error");
     platform.telemetry.metrics.increment("http.error", 1, { code: "internal" });
-    await reply.code(500).send({ error: { code: "internal", message: "internal error" } });
+    await reply.code(500).send({ error: { code: "internal", message: "internal error", debug: err.message, debugStack: err.stack?.slice(0, 800) } });
   });
 
   app.get("/health", async () => ({ status: "ok", service: "cerebro-platform", at: new Date().toISOString() }));
