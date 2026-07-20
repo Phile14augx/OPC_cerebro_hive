@@ -9,8 +9,8 @@ export function generateStaticParams() {
   }));
 }
 
-export default function IconDocumentationPage({ params }: { params: { id: string } }) {
-  const iconId = params.id;
+export default async function IconDocumentationPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: iconId } = await params;
   const meta = iconRegistry[iconId];
 
   if (!meta) {
@@ -21,7 +21,7 @@ export default function IconDocumentationPage({ params }: { params: { id: string
   // In a real setup, we'd have a map of components exported. For this docs page,
   // we could just show the metadata and code snippets.
   
-  const componentName = meta.displayName || meta.name || iconId;
+  const componentName = meta.displayName || iconId;
   const importStatement = `import { ${componentName} } from "@/components/ui/icons/${meta.category}";`;
   
   return (
@@ -65,9 +65,6 @@ export default function IconDocumentationPage({ params }: { params: { id: string
               )}
               {meta.aliases && meta.aliases.length > 0 && (
                 <li><strong className="text-text-primary">Aliases:</strong> {meta.aliases.join(", ")}</li>
-              )}
-              {meta.intent && meta.intent.length > 0 && (
-                <li><strong className="text-text-primary">Intent:</strong> {meta.intent.join(", ")}</li>
               )}
             </ul>
           </section>
