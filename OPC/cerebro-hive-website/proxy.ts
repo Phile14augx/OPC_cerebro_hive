@@ -43,7 +43,7 @@ function buildCsp(nonce: string): string {
     .join("; ");
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const nonce = crypto.randomUUID().replace(/-/g, "");
   const csp = buildCsp(nonce);
 
