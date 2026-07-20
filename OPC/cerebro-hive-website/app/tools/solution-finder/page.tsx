@@ -149,7 +149,7 @@ export default function SolutionFinderPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "var(--bg-primary)", color: "var(--text-primary)", paddingTop: "120px", paddingBottom: "100px", position: "relative", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "var(--bg-primary)", color: "var(--text-primary)", paddingTop: "40px", paddingBottom: "100px", position: "relative", overflow: "hidden" }}>
       {/* Decorative Grid Layer */}
       <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px)", backgroundSize: "32px 32px", pointerEvents: "none" }} />
       <div style={{ position: "absolute", top: "25%", left: "25%", width: "400px", height: "400px", backgroundColor: "rgba(0, 229, 255, 0.04)", borderRadius: "50%", filter: "blur(120px)", pointerEvents: "none" }} />

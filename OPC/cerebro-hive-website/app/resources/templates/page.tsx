@@ -180,7 +180,7 @@ export default function TemplatesPage() {
   return (
     <>
       {/* Hero Section */}
-      <section style={{ paddingTop: "140px", paddingBottom: "50px", position: "relative", overflow: "hidden" }}>
+      <section style={{ paddingTop: "60px", paddingBottom: "50px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 40% at 50% 0%, rgba(0,229,255,0.05) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="container-wide" style={{ position: "relative" }}>
           

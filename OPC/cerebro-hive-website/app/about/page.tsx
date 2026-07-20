@@ -25,7 +25,7 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero */}
-      <section style={{ paddingTop: "140px", paddingBottom: "80px", position: "relative", overflow: "hidden" }}>
+      <section style={{ paddingTop: "60px", paddingBottom: "80px", position: "relative", overflow: "hidden" }}>
         <div style={{
           position: "absolute", inset: 0,
           background: "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,229,255,0.06) 0%, transparent 70%)",

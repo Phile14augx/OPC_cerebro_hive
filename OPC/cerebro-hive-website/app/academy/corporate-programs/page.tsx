@@ -27,7 +27,7 @@ export default function CorporateProgramsPage() {
 
   return (
     <>
-      <section style={{ paddingTop: "140px", paddingBottom: "60px", position: "relative", overflow: "hidden" }}>
+      <section style={{ paddingTop: "60px", paddingBottom: "60px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 40% at 50% 0%, rgba(0,229,255,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="container-wide" style={{ position: "relative" }}>
           <Link href="/academy/courses" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px" }}>
