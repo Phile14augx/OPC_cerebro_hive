@@ -10,16 +10,19 @@ const ROLE_GRANTS: Record<string, string[]> = {
     "runtime:*", "reasoning:*", "flow:*", "memory:*", "knowledge:*", "context:*",
     "mesh:read", "eval:*", "observatory:read", "hub:read", "simulator:*", "connect:invoke", "sphere:read", "ai:*",
     "governance:*", "web3:*", "devops:*", "mlops:*", "secops:*", "aiops:*",
+    "compiler:*", "swarm:*", "actions:*",
   ],
   developer: [
     "runtime:*", "reasoning:*", "memory:read", "memory:write", "knowledge:*", "context:*",
     "eval:*", "observatory:read", "simulator:*", "sphere:read", "ai:*", "flow:read", "flow:run",
     "web3:read", "web3:write", "governance:read",
     "devops:read", "devops:write", "mlops:read", "mlops:write", "secops:read", "aiops:read",
+    "compiler:read", "compiler:write", "swarm:read", "swarm:write", "actions:read", "actions:execute",
   ],
   analyst: [
     "knowledge:read", "hub:read", "observatory:read", "sphere:read", "memory:read", "eval:read", "governance:read", "web3:read",
     "devops:read", "mlops:read", "secops:read", "aiops:read",
+    "compiler:read", "swarm:read", "actions:read",
   ],
   viewer: ["*:read", "sphere:read"],
 };

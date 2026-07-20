@@ -9,7 +9,7 @@ const STREAMS: Record<string, string[]> = {
   KNOWLEDGE: ["knowledge.>", "memory.>"],
   SECURITY: ["security.>", "governance.>", "eval.>"],
   PLATFORM: ["platform.>", "ai.>", "simulator.>", "hub.>", "connect.>"],
-  OPS: ["devops.>", "mlops.>", "secops.>", "aiops.>", "graph.>", "chain.>"],
+  OPS: ["devops.>", "mlops.>", "secops.>", "aiops.>", "graph.>", "chain.>", "router.>", "compiler.>", "swarm.>", "actions.>"],
 };
 
 /** NATS JetStream event bus — durable, at-least-once. */
@@ -26,8 +26,17 @@ export class NatsEventBus implements EventBus {
     bus.jsm = await bus.nc.jetstreamManager();
     bus.js = bus.nc.jetstream();
     for (const [name, subjects] of Object.entries(STREAMS)) {
-      try { await bus.jsm.streams.info(name); }
-      catch { await bus.jsm.streams.add({ name, subjects, max_age: 7 * 24 * 3600 * 1e9, max_msgs: 500_000 }); }
+      try {
+        const info = await bus.jsm.streams.info(name);
+        const existing = new Set(info.config.subjects);
+        const missing = subjects.filter(s => !existing.has(s));
+        if (missing.length) {
+          await bus.jsm.streams.update(name, { subjects: [...info.config.subjects, ...missing] });
+          logger.info({ name, added: missing }, "nats stream subjects reconciled");
+        }
+      } catch {
+        await bus.jsm.streams.add({ name, subjects, max_age: 7 * 24 * 3600 * 1e9, max_msgs: 500_000 });
+      }
     }
     logger.info({ url }, "nats jetstream connected");
     return bus;

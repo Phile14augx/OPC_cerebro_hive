@@ -31,6 +31,13 @@ interface RedTeamResult { id: string; attacksRun: number; attacksSucceeded: numb
 interface Incident { id: string; title: string; severity: string; status: string; suggestedPlaybook?: string }
 interface AgentStep { thought: string; tool: string; observation: string }
 interface AgentResult { finalAnswer: string; steps: AgentStep[]; status: string }
+interface RoutingDecision { id: string; intent: string; complexity: number; privacyTier: string; selectedModel: string; rationale: string; predictedCostUsd: number; predictedLatencyMs: number }
+interface ModelProfile { id: string; family: string; quality: number; local: boolean }
+interface CompiledProgram { id: string; goal: string; strategy: string; plan: { steps: { id: number; description: string }[] }; workflowId?: string; runId?: string }
+interface SwarmRoleResult { role: string; description: string; output: string; critique: { ok: boolean; score: number } }
+interface SwarmRun { id: string; objective: string; roles: SwarmRoleResult[]; consensus?: { finalAnswer: string; averageScore: number; agreement: number }; status: string; auditTrail: { stage: string; note: string }[] }
+interface ActionDefinition { kind: string; title: string; category: string; requiresApproval: boolean }
+interface ActionExecution { id: string; kind: string; status: string; result?: Record<string, unknown> }
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API}${path}`, {
@@ -74,6 +81,20 @@ export default function OsConsole() {
   const [agentResult, setAgentResult] = useState<AgentResult | null>(null);
   const [agentBusy, setAgentBusy] = useState(false);
 
+  const [routerText, setRouterText] = useState("Write a Kubernetes deployment manifest and explain the rollout strategy.");
+  const [routingDecision, setRoutingDecision] = useState<RoutingDecision | null>(null);
+  const [modelCatalog, setModelCatalog] = useState<ModelProfile[]>([]);
+  const [routerBusy, setRouterBusy] = useState(false);
+  const [compilerGoal, setCompilerGoal] = useState("Research the competitive landscape, draft a positioning brief, then verify it against the source research.");
+  const [compiledProgram, setCompiledProgram] = useState<CompiledProgram | null>(null);
+  const [compilerBusy, setCompilerBusy] = useState(false);
+  const [swarmObjective, setSwarmObjective] = useState("Research the topic, write an implementation, then review it for security issues.");
+  const [swarmRun, setSwarmRun] = useState<SwarmRun | null>(null);
+  const [swarmBusy, setSwarmBusy] = useState(false);
+  const [actionCatalog, setActionCatalog] = useState<ActionDefinition[]>([]);
+  const [actionLog, setActionLog] = useState<ActionExecution[]>([]);
+  const [actionBusy, setActionBusy] = useState<string | null>(null);
+
   const refresh = useCallback(async () => {
     try {
       const health = await fetch(`${API}/health`).then(r => r.ok);
@@ -88,7 +109,41 @@ export default function OsConsole() {
       setModelVersions((await api<{ versions: ModelVersion[] }>("/v1/mlops/models")).versions);
       setScans((await api<{ scans: ScanRun[] }>("/v1/secops/scans")).scans);
       setIncidents((await api<{ incidents: Incident[] }>("/v1/aiops/incidents")).incidents);
+      setModelCatalog((await api<{ models: ModelProfile[] }>("/v1/router/catalog")).models);
+      setActionCatalog((await api<{ actions: ActionDefinition[] }>("/v1/actions/catalog")).actions);
+      setActionLog((await api<{ actions: ActionExecution[] }>("/v1/actions/log")).actions);
     } catch { setOnline(false); }
+  }, []);
+
+  const routeText = useCallback(async () => {
+    setRouterBusy(true); setError(null);
+    try { setRoutingDecision(await api<RoutingDecision>("/v1/router/route", { method: "POST", body: JSON.stringify({ text: routerText }) })); }
+    catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setRouterBusy(false); }
+  }, [routerText]);
+
+  const compileGoal = useCallback(async () => {
+    setCompilerBusy(true); setError(null);
+    try { setCompiledProgram(await api<CompiledProgram>("/v1/compiler/compile", { method: "POST", body: JSON.stringify({ goal: compilerGoal, deploy: true }) })); }
+    catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setCompilerBusy(false); }
+  }, [compilerGoal]);
+
+  const runSwarm = useCallback(async () => {
+    setSwarmBusy(true); setError(null);
+    try { setSwarmRun(await api<SwarmRun>("/v1/swarm/run", { method: "POST", body: JSON.stringify({ objective: swarmObjective }) })); }
+    catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setSwarmBusy(false); }
+  }, [swarmObjective]);
+
+  const executeAction = useCallback(async (kind: string, approved?: boolean) => {
+    setActionBusy(kind);
+    try {
+      const params = kind === "create_jira_ticket" ? { project: "OPS" } : kind === "deploy_kubernetes" ? { deployment: "web-api", cluster: "prod" } : {};
+      await api("/v1/actions/execute", { method: "POST", body: JSON.stringify({ kind, params, approved }) });
+      setActionLog((await api<{ actions: ActionExecution[] }>("/v1/actions/log")).actions);
+    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setActionBusy(null); }
   }, []);
 
   const runPipeline = useCallback(async () => {
@@ -390,6 +445,107 @@ export default function OsConsole() {
             </div>
           </div>
         )}
+      </section>
+
+      <section className="mt-14">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">Enterprise Cognitive Operating System</p>
+        <h2 className="mt-2 text-2xl font-bold text-text-primary">Cerebro Router™ · Compiler™ · Swarm™ · Actions™</h2>
+        <p className="mt-2 max-w-3xl text-sm text-text-secondary">
+          The unifying layer: intelligent multi-model routing, natural language compiled straight into running workflows,
+          a Planner → Coordinator → Specialists → Critics → Judge → Consensus → Verifier → Auditor multi-agent protocol, and
+          governed autonomous execution against enterprise systems.
+        </p>
+      </section>
+
+      <section className="mt-6 rounded-xl border border-border bg-surface/40 p-6">
+        <h3 className="text-lg font-semibold text-text-primary">Cerebro Router™ — no human chooses a model, the OS does</h3>
+        <p className="mt-1 text-sm text-text-secondary">Every request passes through intent detection → complexity estimation → cost/latency prediction → privacy classification → model selection, across a catalog of {modelCatalog.length || "14"} models.</p>
+        <div className="mt-4 flex flex-col gap-3 md:flex-row">
+          <input value={routerText} onChange={e => setRouterText(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="Describe a request to route…" />
+          <button onClick={() => void routeText()} disabled={routerBusy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{routerBusy ? "Routing…" : "Route"}</button>
+        </div>
+        {routingDecision && (
+          <div className="mt-4 rounded-lg border border-border bg-background p-4 text-sm">
+            <div className="text-text-primary">intent=<span className="text-primary-accent">{routingDecision.intent}</span> · complexity={routingDecision.complexity} · privacy=<span className="text-primary-accent">{routingDecision.privacyTier}</span></div>
+            <div className="mt-1 text-text-primary">Selected: <span className="font-semibold">{routingDecision.selectedModel}</span> — ~${routingDecision.predictedCostUsd.toFixed(4)} / ~{routingDecision.predictedLatencyMs}ms</div>
+            <p className="mt-1 text-xs text-text-secondary">{routingDecision.rationale}</p>
+          </div>
+        )}
+      </section>
+
+      <section className="mt-6 rounded-xl border border-border bg-surface/40 p-6">
+        <h3 className="text-lg font-semibold text-text-primary">Cerebro Compiler™ — natural language → goals → plans → workflows → execution graph → deployment</h3>
+        <p className="mt-1 text-sm text-text-secondary">Compiles a sentence directly into a validated, running Cerebro Flow™ workflow — no hand-authored DAG.</p>
+        <div className="mt-4 flex flex-col gap-3 md:flex-row">
+          <input value={compilerGoal} onChange={e => setCompilerGoal(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="Describe a goal to compile…" />
+          <button onClick={() => void compileGoal()} disabled={compilerBusy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{compilerBusy ? "Compiling…" : "Compile & deploy"}</button>
+        </div>
+        {compiledProgram && (
+          <div className="mt-4 rounded-lg border border-border bg-background p-4 text-sm">
+            <div className="text-text-primary">Strategy: <span className="text-primary-accent">{compiledProgram.strategy}</span> · Workflow: <span className="font-mono text-xs">{compiledProgram.workflowId}</span></div>
+            <ol className="mt-2 space-y-1 text-xs text-text-secondary">
+              {compiledProgram.plan.steps.map(s => <li key={s.id}>{s.id}. {s.description}</li>)}
+            </ol>
+          </div>
+        )}
+      </section>
+
+      <section className="mt-6 rounded-xl border border-border bg-surface/40 p-6">
+        <h3 className="text-lg font-semibold text-text-primary">Cerebro Swarm™ — Planner → Coordinator → Specialists → Critics → Judge → Consensus → Verifier → Auditor</h3>
+        <p className="mt-1 text-sm text-text-secondary">A single objective fans out to role-labeled specialists executed by AgentOS™, each independently critiqued, synthesized into one consensus answer, and hard-verified.</p>
+        <div className="mt-4 flex flex-col gap-3 md:flex-row">
+          <input value={swarmObjective} onChange={e => setSwarmObjective(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="Describe an objective for the swarm…" />
+          <button onClick={() => void runSwarm()} disabled={swarmBusy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{swarmBusy ? "Coordinating…" : "Run swarm"}</button>
+        </div>
+        {swarmRun && (
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <div className="rounded-lg border border-border bg-background p-4">
+              <div className="text-xs uppercase tracking-wider text-text-secondary">Consensus — {swarmRun.status.replace(/_/g, " ")}, avg score {swarmRun.consensus?.averageScore}</div>
+              <p className="mt-2 whitespace-pre-wrap text-sm text-text-primary">{swarmRun.consensus?.finalAnswer}</p>
+            </div>
+            <div className="rounded-lg border border-border bg-background p-4">
+              <div className="text-xs uppercase tracking-wider text-text-secondary">Specialist roles</div>
+              <ol className="mt-2 space-y-1 text-xs text-text-secondary">
+                {swarmRun.roles.map((r, i) => (
+                  <li key={i}><span className="text-primary-accent">{r.role}</span>: {r.description} — score {r.critique.score}</li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section className="mt-6 rounded-xl border border-border bg-surface/40 p-6">
+        <h3 className="text-lg font-semibold text-text-primary">Cerebro Actions™ — not recommendations, execution</h3>
+        <p className="mt-1 text-sm text-text-secondary">Governed enterprise action connectors; high-blast-radius actions require explicit approval before they run.</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {actionCatalog.map(a => (
+            <button
+              key={a.kind}
+              onClick={() => void executeAction(a.kind)}
+              disabled={actionBusy !== null || !online || !KEY}
+              className="rounded-full border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40"
+              title={a.requiresApproval ? "Requires approval" : undefined}
+            >
+              {actionBusy === a.kind ? "…" : a.title}{a.requiresApproval ? " *" : ""}
+            </button>
+          ))}
+        </div>
+        <ul className="mt-4 space-y-1.5 text-xs">
+          {actionLog.slice(0, 6).map(a => (
+            <li key={a.id} className="flex items-center justify-between rounded-lg border border-border bg-background px-3 py-1.5">
+              <span className="text-text-primary">{a.kind}</span>
+              <span className="flex items-center gap-2">
+                {a.status === "pending_approval" && (
+                  <button onClick={() => void executeAction(a.kind, true)} className="rounded border border-primary-accent px-2 py-0.5 text-[11px] text-primary-accent">Approve</button>
+                )}
+                <span className={a.status === "executed" ? "text-primary-accent" : a.status === "pending_approval" ? "text-amber-400" : "text-red-400"}>{a.status.replace(/_/g, " ")}</span>
+              </span>
+            </li>
+          ))}
+          {actionLog.length === 0 && <li className="text-text-secondary">No actions executed yet.</li>}
+        </ul>
+        <p className="mt-2 text-xs text-text-secondary">* requires approval before execution</p>
       </section>
     </main>
   );

@@ -168,4 +168,23 @@ export const Subjects = {
     invoked: "chain.invoked",
     completed: "chain.completed",
   },
+  router: {
+    decided: "router.decision.made",
+    executed: "router.decision.executed",
+  },
+  compiler: {
+    compiled: "compiler.goal.compiled",
+    workflowGenerated: "compiler.workflow.generated",
+  },
+  swarm: {
+    runStarted: "swarm.run.started",
+    roleCompleted: "swarm.role.completed",
+    consensusReached: "swarm.consensus.reached",
+    runCompleted: "swarm.run.completed",
+  },
+  actions: {
+    executed: "actions.execution.completed",
+    approvalRequired: "actions.approval.required",
+    denied: "actions.execution.denied",
+  },
 } as const;

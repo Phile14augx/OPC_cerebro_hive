@@ -22,6 +22,7 @@ import { MixtureOfExperts } from "../ai/moe/moe.js";
 import { HashedProjectionModel } from "../ai/representation/representation.js";
 import { InMemoryWorldRepository, WorldModel } from "../ai/world/world.js";
 import { AgentExecutor } from "../ai/chains/chains.js";
+import { InMemoryRouterRepository, ModelRouter } from "../ai/router/router.js";
 
 import { InMemoryMemoryRepository, MemoryFabric } from "../domains/memory/memory.js";
 import { InMemoryKnowledgeRepository, KnowledgeFabric } from "../domains/knowledge/knowledge.js";
@@ -46,6 +47,9 @@ import { DevOpsService, InMemoryDevOpsRepository } from "../domains/devops/devop
 import { InMemoryMlopsRepository, MlopsService } from "../domains/mlops/mlops.js";
 import { InMemorySecOpsRepository, SecOpsService } from "../domains/secops/secops.js";
 import { AiopsService, InMemoryAiopsRepository } from "../domains/aiops/aiops.js";
+import { CompilerService, InMemoryCompilerRepository } from "../domains/compiler/compiler.js";
+import { InMemorySwarmRepository, SwarmService } from "../domains/swarm/swarm.js";
+import { ActionsService, InMemoryActionsRepository } from "../domains/actions/actions.js";
 import { systemContext } from "../kernel/context/context.js";
 
 export interface Platform {
@@ -88,6 +92,10 @@ export interface Platform {
   secops: SecOpsService;
   aiops: AiopsService;
   agentExecutor: AgentExecutor;
+  router: ModelRouter;
+  compiler: CompilerService;
+  swarm: SwarmService;
+  actions: ActionsService;
   shutdown(): Promise<void>;
 }
 
@@ -197,6 +205,14 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
   const aiopsRepo = new InMemoryAiopsRepository();
   const aiops = new AiopsService(aiopsRepo, bus, policy, observatory, guard);
   const agentExecutor = new AgentExecutor({ tools, gateway: x, bus });
+  const routerRepo = new InMemoryRouterRepository();
+  const router = new ModelRouter(routerRepo, bus, x);
+  const compilerRepo = new InMemoryCompilerRepository();
+  const compiler = new CompilerService(compilerRepo, bus, policy, x, flow);
+  const swarmRepo = new InMemorySwarmRepository();
+  const swarm = new SwarmService(swarmRepo, bus, policy, x, runtime);
+  const actionsRepo = new InMemoryActionsRepository();
+  const actions = new ActionsService(actionsRepo, bus, policy, flow);
 
   if (snapshots) {
     snapshots.register("runtime", comboSnapshot({ executions: mapSnapshot(runtimeRepo.executions), steps: mapSnapshot(runtimeRepo.stepRows), artifacts: arraySnapshot(runtimeRepo.artifactRows) }));
@@ -221,6 +237,10 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     snapshots.register("mlops", comboSnapshot({ experiments: mapSnapshot(mlopsRepo.experiments), modelVersions: mapSnapshot(mlopsRepo.modelVersions), features: mapSnapshot(mlopsRepo.features), endpoints: mapSnapshot(mlopsRepo.endpoints), drift: arraySnapshot(mlopsRepo.driftReports) }));
     snapshots.register("secops", comboSnapshot({ scans: arraySnapshot(secopsRepo.scans), sboms: arraySnapshot(secopsRepo.sboms), signatures: arraySnapshot(secopsRepo.signatures), policyEvals: arraySnapshot(secopsRepo.policyEvals), redTeam: arraySnapshot(secopsRepo.redTeamRuns) }));
     snapshots.register("aiops", comboSnapshot({ anomalies: arraySnapshot(aiopsRepo.anomalies), incidents: mapSnapshot(aiopsRepo.incidents) }));
+    snapshots.register("router", arraySnapshot(routerRepo.decisions));
+    snapshots.register("compiler", arraySnapshot(compilerRepo.programs));
+    snapshots.register("swarm", mapSnapshot(swarmRepo.runs));
+    snapshots.register("actions", arraySnapshot(actionsRepo.rows));
     await snapshots.start();
   }
 
@@ -245,7 +265,7 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     config, logger, telemetry, bus, policy, identity, audit, flags, db, snapshots,
     x, moe: new MixtureOfExperts(x), world, memory, knowledge, guard, runtime, scheduler, tools,
     contextEngine, mesh, flow, governance, registries, ethics, ontology, web3, evals, observatory, connect, hub, simulator, sphere, consulting,
-    devops, mlops, secops, aiops, agentExecutor,
+    devops, mlops, secops, aiops, agentExecutor, router, compiler, swarm, actions,
     async shutdown() {
       scheduler.stop();
       await snapshots?.stop();

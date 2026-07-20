@@ -468,6 +468,71 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
     return p.agentExecutor.run(ctx(req), body.objective);
   });
 
+  // ---------------- Cerebro Router (multi-model intelligent routing) ----------------
+  app.get("/v1/router/catalog", async req => { ctx(req); return { models: p.router.catalog() }; });
+  app.post("/v1/router/route", async req => {
+    const body = parse(z.object({
+      text: z.string().min(1).max(16_000),
+      constraints: z.object({
+        maxCostUsd: z.number().positive().optional(), maxLatencyMs: z.number().positive().optional(),
+        requireLocal: z.boolean().optional(), preferredFamily: z.string().optional(), minQuality: z.number().min(0).max(1).optional(),
+      }).optional(),
+    }), req.body);
+    return p.router.route(ctx(req), body.text, body.constraints);
+  });
+  app.post("/v1/router/execute", async req => {
+    const body = parse(z.object({
+      messages: z.array(z.object({ role: z.enum(["system", "user", "assistant", "tool"]), content: z.string().max(32_000) })).min(1),
+      constraints: z.object({
+        maxCostUsd: z.number().positive().optional(), maxLatencyMs: z.number().positive().optional(),
+        requireLocal: z.boolean().optional(), preferredFamily: z.string().optional(), minQuality: z.number().min(0).max(1).optional(),
+      }).optional(),
+    }), req.body);
+    return p.router.execute(ctx(req), body.messages, body.constraints);
+  });
+  app.get("/v1/router/history", async req => {
+    const q = req.query as { limit?: string };
+    return { decisions: await p.router.history(ctx(req), q.limit ? Number(q.limit) : undefined) };
+  });
+
+  // ---------------- Cerebro Compiler (NL goal -> plan -> workflow -> execution graph) ----------------
+  app.post("/v1/compiler/compile", async req => {
+    const body = parse(z.object({
+      goal: z.string().min(1).max(8000), name: z.string().max(200).optional(),
+      deploy: z.boolean().optional(), execute: z.boolean().optional(), input: z.record(z.unknown()).optional(),
+    }), req.body);
+    return p.compiler.compile(ctx(req), body);
+  });
+  app.get("/v1/compiler/programs", async req => {
+    const q = req.query as { limit?: string };
+    return { programs: await p.compiler.list(ctx(req), q.limit ? Number(q.limit) : undefined) };
+  });
+
+  // ---------------- Cerebro Swarm (multi-agent coordination protocol) ----------------
+  app.post("/v1/swarm/run", async req => {
+    const body = parse(z.object({ objective: z.string().min(1).max(4000) }), req.body);
+    return p.swarm.run(ctx(req), body.objective);
+  });
+  app.get("/v1/swarm/runs", async req => {
+    const q = req.query as { limit?: string };
+    return { runs: await p.swarm.list(ctx(req), q.limit ? Number(q.limit) : undefined) };
+  });
+  app.get("/v1/swarm/runs/:id", async req => p.swarm.get(ctx(req), (req.params as { id: string }).id));
+
+  // ---------------- Cerebro Actions (autonomous enterprise execution) ----------------
+  app.get("/v1/actions/catalog", async req => { ctx(req); return { actions: p.actions.catalog() }; });
+  app.post("/v1/actions/execute", async req => {
+    const body = parse(z.object({
+      kind: z.enum(["create_jira_ticket", "open_github_pr", "deploy_kubernetes", "send_email", "update_crm_record", "update_erp_record", "provision_infrastructure", "trigger_workflow"]),
+      params: z.record(z.unknown()).optional(), approved: z.boolean().optional(),
+    }), req.body);
+    return p.actions.execute(ctx(req), body);
+  });
+  app.get("/v1/actions/log", async req => {
+    const q = req.query as { limit?: string };
+    return { actions: await p.actions.list(ctx(req), q.limit ? Number(q.limit) : undefined) };
+  });
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {
