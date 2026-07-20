@@ -103,6 +103,17 @@ export const Subjects = {
     approvalRequested: "governance.approval.requested",
     approvalDecided: "governance.approval.decided",
     policyViolation: "governance.policy.violation",
+    registryEntered: "governance.registry.entered",
+    registryTransitioned: "governance.registry.transitioned",
+  },
+  ontology: {
+    nodeUpserted: "ontology.node.upserted",
+    edgeCreated: "ontology.edge.created",
+  },
+  web3: {
+    accountQueried: "web3.account.queried",
+    contractRegistered: "web3.contract.registered",
+    complianceScreened: "web3.compliance.screened",
   },
   platform: {
     organizationCreated: "platform.organization.created",
