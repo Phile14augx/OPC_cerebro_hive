@@ -1,88 +1,30 @@
 name: Deploy to VPS via SSH
 
+# The VPS owns the build: this job simply triggers the idempotent one-shot
+# deploy script (git pull → docker stack → prisma → next build → PM2 → nginx →
+# certbot → health checks). Full log is echoed back into the Actions output.
 on:
   push:
     branches:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: vps-deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
-    name: Build & Deploy
+    name: Run vps-deploy.sh on the VPS
     runs-on: ubuntu-latest
-
+    timeout-minutes: 30
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
+    - name: Deploy over SSH
+      uses: appleboy/ssh-action@v1.2.0
       with:
-        node-version: '20'
-        cache: 'npm'
-        cache-dependency-path: './OPC/cerebro-hive-website/package-lock.json'
-
-    - name: Install dependencies
-      working-directory: ./OPC/cerebro-hive-website
-      run: npm ci
-
-    - name: Generate Prisma client
-      working-directory: ./OPC/cerebro-hive-website
-      run: npx prisma generate
-
-    - name: Build standalone
-      working-directory: ./OPC/cerebro-hive-website
-      run: npm run build
-      env:
-        IS_FTP_DEPLOY: "true"
-
-    - name: Prepare bundle
-      working-directory: ./OPC/cerebro-hive-website
-      run: |
-        cp -R public .next/standalone/
-        cp -R .next/static .next/standalone/.next/
-        cp -R scripts .next/standalone/
-        cp -R nginx .next/standalone/
-
-    - name: Setup SSH
-      run: |
-        mkdir -p ~/.ssh
-        printf '%s\n' "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
-        chmod 600 ~/.ssh/deploy_key
-        ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
-
-    - name: Bootstrap VPS
-      run: >
-        ssh -i ~/.ssh/deploy_key
-        -o StrictHostKeyChecking=no
-        ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
-        "
-        command -v node || (curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs);
-        command -v pm2 || npm install -g pm2;
-        command -v nginx || (apt-get install -y nginx && systemctl enable nginx);
-        mkdir -p /var/www/cerebro-hive
-        "
-
-    - name: Upload build
-      run: |
-        rsync -az --delete \
-          -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-          ./OPC/cerebro-hive-website/.next/standalone/ \
-          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/cerebro-hive/
-
-    - name: Restart app with PM2
-      run: >
-        ssh -i ~/.ssh/deploy_key
-        -o StrictHostKeyChecking=no
-        ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
-        "
-        cd /var/www/cerebro-hive &&
-        (pm2 describe cerebro-hive > /dev/null 2>&1 && pm2 restart cerebro-hive || (pm2 start server.js --name cerebro-hive && pm2 save))
-        "
-
-    - name: Configure Nginx and provision HTTPS
-      run: >
-        ssh -i ~/.ssh/deploy_key
-        -o StrictHostKeyChecking=no
-        ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
-        "bash /var/www/cerebro-hive/scripts/vps-nginx.sh"
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        command_timeout: 25m
+        script: |
+          bash /opt/cerebro/OPC/cerebro-hive-website/scripts/deploy/vps-deploy.sh
