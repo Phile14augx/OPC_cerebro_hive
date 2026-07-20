@@ -9,7 +9,7 @@ export function EnterpriseTransformation() {
   const activeTransform = transformations[activeIndex];
 
   return (
-    <section className="py-24 relative overflow-hidden bg-black text-white">
+    <section className="py-24 relative overflow-hidden bg-background text-text-primary">
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none" />
 
@@ -18,7 +18,7 @@ export function EnterpriseTransformation() {
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
             Enterprise Transformation
           </h2>
-          <p className="text-xl text-gray-400">
+          <p className="text-xl text-text-muted">
             Driving measurable business outcomes through industry-specific AI architectures.
           </p>
         </div>
@@ -32,8 +32,8 @@ export function EnterpriseTransformation() {
                 onClick={() => setActiveIndex(idx)}
                 className={`text-left px-6 py-4 rounded-xl transition-all duration-300 ${
                   activeIndex === idx
-                    ? "bg-white/10 border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-                    : "hover:bg-white/5 border border-transparent text-gray-400 hover:text-white"
+                    ? "bg-surface-elevated border border-border shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                    : "hover:bg-surface border border-transparent text-text-muted hover:text-text-primary"
                 }`}
               >
                 <h3 className="text-lg font-semibold">{transform.industry}</h3>
@@ -50,15 +50,15 @@ export function EnterpriseTransformation() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-md h-full"
+                className="bg-surface border border-border rounded-2xl p-8 backdrop-blur-md h-full"
               >
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
                     <h4 className="text-sm uppercase tracking-widest text-blue-400 mb-2">The Challenge</h4>
-                    <p className="text-gray-300 leading-relaxed mb-8">{activeTransform.challenge}</p>
+                    <p className="text-text-secondary leading-relaxed mb-8">{activeTransform.challenge}</p>
 
                     <h4 className="text-sm uppercase tracking-widest text-emerald-400 mb-2">The Outcome</h4>
-                    <p className="text-gray-300 leading-relaxed">{activeTransform.outcome}</p>
+                    <p className="text-text-secondary leading-relaxed">{activeTransform.outcome}</p>
                   </div>
 
                   <div className="space-y-8">
@@ -66,7 +66,7 @@ export function EnterpriseTransformation() {
                       <h4 className="text-sm uppercase tracking-widest text-purple-400 mb-4">Reference Architecture</h4>
                       <ul className="space-y-3">
                         {activeTransform.architecture.map((arch, i) => (
-                          <li key={i} className="flex items-center gap-3 text-gray-300 bg-white/5 px-4 py-2 rounded-lg border border-white/5">
+                          <li key={i} className="flex items-center gap-3 text-text-secondary bg-surface px-4 py-2 rounded-lg border border-border">
                             <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
                             {arch}
                           </li>
@@ -78,7 +78,7 @@ export function EnterpriseTransformation() {
                       <h4 className="text-sm uppercase tracking-widest text-amber-400 mb-4">Representative Use Cases</h4>
                       <ul className="space-y-2">
                         {activeTransform.useCases.map((useCase, i) => (
-                          <li key={i} className="flex items-center gap-2 text-gray-400">
+                          <li key={i} className="flex items-center gap-2 text-text-muted">
                             <span className="text-amber-500">→</span>
                             {useCase}
                           </li>

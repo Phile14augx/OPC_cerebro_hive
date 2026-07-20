@@ -5,7 +5,7 @@ import { executivePathways } from "@/lib/config/pathways";
 
 export function ExecutiveDecisionPlatform() {
   return (
-    <section className="py-32 relative bg-black text-white border-t border-white/10 overflow-hidden">
+    <section className="py-32 relative bg-background text-text-primary border-t border-border overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[500px] bg-blue-900/20 blur-[150px] rounded-full pointer-events-none" />
       
@@ -15,7 +15,7 @@ export function ExecutiveDecisionPlatform() {
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
             Executive Decision Center
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto text-center">
+          <p className="text-xl text-text-muted max-w-2xl mx-auto text-center">
             Select your role to explore tailored enterprise AI integration paths.
           </p>
         </div>
@@ -24,9 +24,9 @@ export function ExecutiveDecisionPlatform() {
           {executivePathways.map((pathway) => (
             <div 
               key={pathway.id}
-              className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-md flex flex-col h-full"
+              className="bg-surface border border-border rounded-2xl p-8 backdrop-blur-md flex flex-col h-full"
             >
-              <h3 className="text-xl font-bold mb-6 text-white border-b border-white/10 pb-4">
+              <h3 className="text-xl font-bold mb-6 text-text-primary border-b border-border pb-4">
                 {pathway.role}
               </h3>
               
@@ -37,8 +37,8 @@ export function ExecutiveDecisionPlatform() {
                     href={action.href}
                     className={`w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-300 ${
                       action.primary
-                        ? "bg-white text-black font-semibold hover:bg-gray-200"
-                        : "bg-white/5 text-gray-300 border border-white/10 hover:bg-white/10"
+                        ? "bg-primary-accent text-background font-semibold hover:bg-primary-accent/90"
+                        : "bg-surface text-text-secondary border border-border hover:bg-surface-elevated"
                     }`}
                   >
                     <div className="flex justify-between items-center">
@@ -53,12 +53,12 @@ export function ExecutiveDecisionPlatform() {
         </div>
 
         {/* Global Ecosystem Links */}
-        <div className="mt-20 pt-10 border-t border-white/10 flex flex-wrap justify-center gap-8 text-sm text-gray-500">
-          <Link href="/products/cerebro-archive" className="hover:text-white transition-colors">CerebroArchive</Link>
-          <Link href="/research" className="hover:text-white transition-colors">Research Hub</Link>
-          <Link href="/legal/security" className="hover:text-white transition-colors">Enterprise Trust Center</Link>
-          <Link href="/tools/solution-finder" className="hover:text-white transition-colors">ROI Calculator</Link>
-          <Link href="/platform/live-runtime" className="hover:text-white transition-colors">Architecture Playground</Link>
+        <div className="mt-20 pt-10 border-t border-border flex flex-wrap justify-center gap-8 text-sm text-text-muted">
+          <Link href="/products/cerebro-archive" className="hover:text-text-primary transition-colors">CerebroArchive</Link>
+          <Link href="/research" className="hover:text-text-primary transition-colors">Research Hub</Link>
+          <Link href="/legal/security" className="hover:text-text-primary transition-colors">Enterprise Trust Center</Link>
+          <Link href="/tools/solution-finder" className="hover:text-text-primary transition-colors">ROI Calculator</Link>
+          <Link href="/platform/live-runtime" className="hover:text-text-primary transition-colors">Architecture Playground</Link>
         </div>
 
       </div>

@@ -14,7 +14,7 @@ const metrics = [
 
 export function ExecutiveMetrics() {
   return (
-    <section className={`relative border-y border-white/5 bg-background/50 ${spacingTokens.sectionGap} ${spacingTokens.pagePadding}`}>
+    <section className={`relative border-y border-border bg-background/50 ${spacingTokens.sectionGap} ${spacingTokens.pagePadding}`}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <motion.h2 
@@ -40,7 +40,7 @@ export function ExecutiveMetrics() {
           {metrics.map((metric, i) => (
             <motion.div
               key={i}
-              className="flex flex-col items-center justify-center text-center p-6 rounded-2xl bg-white/5 dark:bg-black/20 border border-white/5 hover:border-primary-accent/30 transition-colors"
+              className="flex flex-col items-center justify-center text-center p-6 rounded-2xl bg-surface dark:bg-background/20 border border-border hover:border-primary-accent/30 transition-colors"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}

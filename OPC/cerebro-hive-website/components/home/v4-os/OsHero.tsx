@@ -118,14 +118,14 @@ export function OsHero() {
                 onClick={() => setActiveStep(i)}
                 className={`relative flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all duration-300 cursor-pointer ${
                   activeStep === i
-                    ? "bg-white/10 border-white/20 shadow-lg"
-                    : "bg-white/3 border-white/8 hover:bg-white/6 hover:border-white/15"
+                    ? "bg-surface-elevated border-border shadow-lg"
+                    : "bg-surface/50 border-border hover:bg-surface hover:border-border/50"
                 }`}
               >
                 {/* Active connector line */}
                 {i < cognitiveSteps.length - 1 && (
                   <div className={`hidden md:block absolute -right-[5px] top-1/2 -translate-y-1/2 w-2 h-0.5 z-10 transition-colors duration-300 ${
-                    activeStep > i ? "bg-primary-accent/60" : "bg-white/10"
+                    activeStep > i ? "bg-primary-accent/60" : "bg-surface-elevated"
                   }`} />
                 )}
                 <span className="text-xl">{step.icon}</span>
@@ -151,7 +151,7 @@ export function OsHero() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-center backdrop-blur-sm"
+              className="bg-surface border border-border rounded-2xl px-6 py-4 text-center backdrop-blur-sm"
             >
               <span className={`text-2xl mr-3`}>{cognitiveSteps[activeStep].icon}</span>
               <span className={`font-semibold ${cognitiveSteps[activeStep].color}`}>
@@ -164,7 +164,7 @@ export function OsHero() {
 
         {/* Stats Bar */}
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-px mt-20 bg-white/8 rounded-2xl overflow-hidden border border-white/8"
+          className="grid grid-cols-2 md:grid-cols-4 gap-px mt-20 bg-surface rounded-2xl overflow-hidden border border-border"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: motionTokens.duration.slow, delay: 0.9 }}

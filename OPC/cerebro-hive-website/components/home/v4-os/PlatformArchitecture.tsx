@@ -152,7 +152,7 @@ export function PlatformArchitecture() {
 
       {/* Architecture CTA */}
       <motion.div
-        className="max-w-3xl mx-auto mt-12 p-8 rounded-2xl bg-gradient-to-r from-cyan-500/5 via-blue-500/5 to-indigo-500/5 border border-white/8 text-center"
+        className="max-w-3xl mx-auto mt-12 p-8 rounded-2xl bg-gradient-to-r from-cyan-500/5 via-blue-500/5 to-indigo-500/5 border border-border text-center"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}

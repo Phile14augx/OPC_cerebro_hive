@@ -9,19 +9,19 @@ export function IntegrationIntelligence() {
   const categories = Array.from(new Set(ecosystemIntegrations.map((i) => i.category)));
 
   return (
-    <section className="py-24 relative overflow-hidden bg-black text-white">
+    <section className="py-24 relative overflow-hidden bg-background text-text-primary">
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
             Integration Intelligence
           </h2>
-          <p className="text-xl text-gray-400">
+          <p className="text-xl text-text-muted">
             Secure, bidirectional interoperability with your existing enterprise investments.
           </p>
         </div>
 
         {/* Abstract Constellation Layout */}
-        <div className="relative max-w-5xl mx-auto aspect-video rounded-3xl border border-white/10 bg-white/[0.02] p-8 lg:p-16 flex items-center justify-center">
+        <div className="relative max-w-5xl mx-auto aspect-video rounded-3xl border border-border bg-surface-elevated p-8 lg:p-16 flex items-center justify-center">
           
           {/* Central Cerebro OS Node */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
@@ -48,11 +48,11 @@ export function IntegrationIntelligence() {
                   style={{ top, left }}
                   suppressHydrationWarning
                 >
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm shadow-xl pointer-events-auto">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 text-center">{category}</h3>
+                  <div className="bg-surface border border-border rounded-xl p-4 backdrop-blur-sm shadow-xl pointer-events-auto">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-text-muted mb-3 text-center">{category}</h3>
                     <div className="flex flex-col gap-2">
                       {integrations.map(integration => (
-                        <div key={integration.id} className="text-sm text-gray-300 bg-black/40 px-3 py-1.5 rounded-md border border-white/5 text-center whitespace-nowrap">
+                        <div key={integration.id} className="text-sm text-text-secondary bg-background/40 px-3 py-1.5 rounded-md border border-border text-center whitespace-nowrap">
                           {integration.name}
                         </div>
                       ))}
