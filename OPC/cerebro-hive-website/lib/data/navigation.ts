@@ -10,7 +10,7 @@ export const mainNavigation: NavItem[] = [
     href: "/platform",
     children: [
       { label: "Overview", href: "/platform" },
-      { label: "Architecture", href: "/platform/architecture" },
+      { label: "Architecture", href: "/developers/architecture" },
       { label: "Capabilities", href: "/platform#capabilities" },
       { label: "Live Runtime", href: "/platform/live-runtime" },
     ]
@@ -42,7 +42,7 @@ export const mainNavigation: NavItem[] = [
     children: [
       { label: "All Industries", href: "/industries" },
       { label: "Healthcare", href: "/industries/healthcare" },
-      { label: "Financial Services", href: "/industries/financial-services" },
+      { label: "Financial Services", href: "/industries/finance" },
       { label: "Manufacturing", href: "/industries/manufacturing" },
       { label: "Retail", href: "/industries/retail" },
     ]
@@ -70,9 +70,9 @@ export const mainNavigation: NavItem[] = [
     label: "Company",
     href: "/company",
     children: [
-      { label: "About Us", href: "/company/about" },
-      { label: "Careers", href: "/company/careers" },
-      { label: "Contact", href: "/company/contact" },
+      { label: "About Us", href: "/about" },
+      { label: "Careers", href: "/careers" },
+      { label: "Contact", href: "/contact" },
     ]
   }
 ];
@@ -98,8 +98,8 @@ export const footerNavigation = {
     { label: "AI Governance & Trust", href: "/services/ai-governance" },
   ],
   company: [
-    { label: "About", href: "/company/about" },
-    { label: "Careers", href: "/company/careers" },
-    { label: "Contact", href: "/company/contact" },
+    { label: "About", href: "/about" },
+    { label: "Careers", href: "/careers" },
+    { label: "Contact", href: "/contact" },
   ]
 };
