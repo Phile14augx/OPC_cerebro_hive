@@ -269,9 +269,9 @@ export default function Footer() {
               <h4 className="text-[10px] font-bold tracking-widest uppercase text-text-muted mb-3 flex items-center gap-2">
                 <CheckCircle2 size={12} /> Enterprise Ready
               </h4>
-              <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
+              <div className="flex flex-wrap gap-2">
                 {capabilities.map(cap => (
-                  <span key={cap} className="text-[10px] px-2.5 py-1 rounded-full bg-surface border border-border text-text-muted whitespace-nowrap hover:border-primary-accent/40 hover:text-text-primary transition-all cursor-default shrink-0">
+                  <span key={cap} className="text-[10px] px-2.5 py-1 rounded-full bg-surface border border-border text-text-muted whitespace-nowrap hover:border-primary-accent/40 hover:text-text-primary transition-all cursor-default">
                     {cap}
                   </span>
                 ))}
