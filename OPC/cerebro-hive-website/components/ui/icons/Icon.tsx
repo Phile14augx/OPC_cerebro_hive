@@ -21,9 +21,9 @@ export const Icon = ({ name, fallback = null, ...props }: DynamicIconProps) => {
   }
 
   // Dynamically import the icon from its category bundle
-  const DynamicComponent = React.lazy(() => 
-    import(`./\${meta.category}/index.ts`).then(module => ({
-      default: module[meta.component]
+  const DynamicComponent = React.lazy(() =>
+    import(`./${meta.category}/index`).then(module => ({
+      default: (module as Record<string, React.ComponentType<BaseIconProps>>)[meta.component]
     }))
   );
 
