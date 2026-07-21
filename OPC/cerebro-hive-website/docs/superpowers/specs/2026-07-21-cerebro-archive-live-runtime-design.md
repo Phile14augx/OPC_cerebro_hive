@@ -3,6 +3,14 @@
 **Status:** Approved
 **Scope:** A real, interactive demo of CerebroArchive's core capabilities (semantic search, knowledge graph, document intelligence), following the pattern established by AgentOS's Live Runtime.
 
+**Goals:**
+- Demonstrate real computation — every result is genuinely derived from the input, not canned.
+- Be completely deterministic — same input always produces the same output.
+- Keep every result explainable — show *why*, not just the answer.
+- Reuse one computational pipeline — search, graph, and document intelligence all derive from the same TF-IDF representation.
+- Match AgentOS's established Live Runtime pattern.
+- Avoid unnecessary abstraction — only build what a concrete, current feature needs (§7).
+
 ---
 
 ## 1. Context
@@ -156,7 +164,7 @@ app/products/cerebro-archive/live-runtime/page.tsx  — thin page wrapper, same 
 
 **Error handling:** empty query → disable the search button, no error state needed. Pasted document under ~50 characters → inline validation message, no server round trip. Server action failures (no I/O beyond the in-memory Map, so should be rare) → caught and surfaced as a dismissible inline banner, same pattern as `AgentOSLiveRuntime`'s `res.error` handling.
 
-**Testing:** this project has no unit-test runner configured anywhere (verified: no jest/vitest, no test files under `lib/` or `components/`, `lib/agentos/` itself has zero tests). The only testing convention that exists is Playwright E2E (`npm run test:e2e`). Introducing a unit-test framework is a separate, larger decision than this feature warrants making unilaterally. Testing for this feature is therefore a small Playwright E2E spec against `/products/cerebro-archive/live-runtime`: running an example search produces ranked results, and selecting a document in the Document Intelligence tab produces non-empty summary/entities/classification output.
+**Testing:** the computational modules under `lib/cerebro-archive/` (tokenize, vectorize, search, graph, intelligence) are intentionally pure functions, making them straightforward to unit test whenever this project has a unit-test framework in place. Today it doesn't (verified: no jest/vitest, no test files under `lib/` or `components/`, `lib/agentos/` itself has zero tests) — only Playwright E2E (`npm run test:e2e`) is configured. Introducing a unit-test framework is a separate engineering decision, independent of this feature. Testing for this feature is therefore a small Playwright E2E spec against `/products/cerebro-archive/live-runtime`: running an example search produces ranked results, and selecting a document in the Document Intelligence tab produces non-empty summary/entities/classification output. If a unit-test framework is adopted later, the pure functions here need no rework to be covered by it.
 
 **Integration with the existing product page:** `/products/cerebro-archive`'s existing hero CTA ("Explore Knowledge Platform") is left as-is per its current data; a new secondary CTA linking to `/products/cerebro-archive/live-runtime` is added, matching how AgentOS's main page links to its live runtime.
 
