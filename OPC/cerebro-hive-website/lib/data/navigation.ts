@@ -55,7 +55,7 @@ export const mainNavigation: NavItem[] = [
     ]
   },
   {
-    label: "Research",
+    label: "CerebroLabs™",
     href: "/research",
     children: [
       { label: "CerebroHive Labs", href: "/research" },

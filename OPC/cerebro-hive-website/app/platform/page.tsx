@@ -141,7 +141,7 @@ const WORKSPACE_TILES: WorkspaceTile[] = [
     border: "border-t-primary-accent", iconColor: "text-primary-accent", glow: "hover:shadow-[0_0_32px_-8px_rgba(16,185,129,0.35)]",
   },
   {
-    title: "Architecture Briefing", subtitle: "Request enterprise architecture, roadmaps, and implementation plans.",
+    title: "CerebroArchitect™", subtitle: "Request an AI enterprise architect for blueprints, roadmaps, and implementation plans.",
     href: "/contact", category: "build", icon: Compass,
     border: "border-t-cyan-400", iconColor: "text-cyan-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(34,211,238,0.35)]",
   },
@@ -176,7 +176,7 @@ const WORKSPACE_TILES: WorkspaceTile[] = [
     border: "border-t-amber-400", iconColor: "text-amber-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(251,191,36,0.35)]",
   },
   {
-    title: "Explore Products", subtitle: "Browse the full CerebroHive product catalog.",
+    title: "Product Hub™", subtitle: "Browse the full CerebroHive product catalog.",
     href: "/products", category: "marketplace", icon: Boxes,
     border: "border-t-slate-300", iconColor: "text-slate-300", glow: "hover:shadow-[0_0_32px_-8px_rgba(203,213,225,0.3)]",
   },
