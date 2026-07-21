@@ -19,6 +19,8 @@ export const mainNavigation: NavItem[] = [
       { label: "CerebroSwarm™ — Enterprise Cognitive Workforce", href: "/platform/swarm" },
       { label: "CerebroInsight™ — Executive Intelligence Platform", href: "/platform/insight" },
       { label: "CerebroGrowth™ — Enterprise AI Growth Engine", href: "/platform/growth" },
+      { label: "CerebroForge™ — AI Innovation Factory", href: "/platform/forge" },
+      { label: "Hive Infrastructure Suite — Cloud, Storage, Compute, Network, Identity, Monitor, API", href: "/platform/cloud" },
     ]
   },
   {
@@ -54,7 +56,7 @@ export const mainNavigation: NavItem[] = [
     ]
   },
   {
-    label: "Research",
+    label: "CerebroLabs™",
     href: "/research",
     children: [
       { label: "CerebroHive Labs", href: "/research" },
@@ -85,17 +87,13 @@ export const mainNavigation: NavItem[] = [
 
 export const footerNavigation = {
   platform: [
-    { label: "AgentOS™", href: "/platform/agentos" },
-    { label: "Memory Fabric™", href: "/platform/memory-fabric" },
-    { label: "Knowledge Fabric™", href: "/platform/knowledge-fabric" },
-    { label: "Reasoning Engine™", href: "/platform/reasoning-engine" },
-    { label: "Live Runtime →", href: "/platform/live-runtime" },
-    { label: "Enterprise AI OS Console →", href: "/platform/os" },
-    { label: "HiveForge — AI Cloud Marketplace →", href: "/platform/hiveforge" },
-    { label: "CerebroStudio™ — AI Development Workspace →", href: "/platform/studio" },
-    { label: "CerebroSwarm™ — Enterprise Cognitive Workforce →", href: "/platform/swarm" },
-    { label: "CerebroInsight™ — Executive Intelligence Platform →", href: "/platform/insight" },
-    { label: "CerebroGrowth™ — Enterprise AI Growth Engine →", href: "/platform/growth" },
+    { label: "Enterprise AI OS Console", href: "/platform/os" },
+    { label: "HiveForge — AI Cloud Marketplace", href: "/platform/hiveforge" },
+    { label: "CerebroStudio™", href: "/platform/studio" },
+    { label: "CerebroGrowth™", href: "/platform/growth" },
+    { label: "CerebroForge™", href: "/platform/forge" },
+    { label: "Hive Infrastructure Suite", href: "/platform/cloud" },
+    { label: "View All Products →", href: "/platform" },
   ],
   products: [
     { label: "CerebroArchive™", href: "/products/cerebro-archive" },

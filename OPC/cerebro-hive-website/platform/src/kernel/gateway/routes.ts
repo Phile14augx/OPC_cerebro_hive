@@ -825,6 +825,154 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
   });
   app.get("/v1/cerebrogrowth/briefs", async req => ({ briefs: await p.cerebroGrowth.listBriefs(ctx(req)) }));
 
+  // ---------------- CerebroForge (AI Innovation Factory — Phase 1: Discovery + Scoring + Product Opportunity/Spec Generator) ----------------
+  app.post("/v1/cerebroforge/signals", async req => {
+    const body = parse(z.object({
+      title: z.string().min(1).max(200), sourceType: z.enum(["paper", "repo", "model", "dataset", "news", "startup"]),
+      category: z.enum(["llms", "multimodal", "agents", "rag", "reasoning", "computer-vision", "speech",
+        "reinforcement-learning", "world-models", "robotics", "mlops", "inference", "vector-databases",
+        "synthetic-data", "evaluation", "security", "ai-safety"]),
+      summary: z.string().min(1).max(4000), sourceOrg: z.string().max(200).optional(),
+    }), req.body);
+    return p.cerebroForge.ingestSignal(ctx(req), body);
+  });
+  app.get("/v1/cerebroforge/signals", async req => ({ signals: await p.cerebroForge.listSignals(ctx(req)) }));
+  app.get("/v1/cerebroforge/signals/:id", async req => p.cerebroForge.getSignal(ctx(req), (req.params as { id: string }).id));
+  app.post("/v1/cerebroforge/signals/:id/specs", async req => {
+    const body = parse(z.object({
+      opportunityType: z.enum(["saas-feature", "api", "sdk", "consulting", "copilot", "automation-agent",
+        "whitepaper", "internal-tool", "infrastructure", "course"]),
+    }), req.body);
+    return p.cerebroForge.generateProductSpec(ctx(req), (req.params as { id: string }).id, body.opportunityType);
+  });
+  app.get("/v1/cerebroforge/specs", async req => ({ specs: await p.cerebroForge.listProductSpecs(ctx(req)) }));
+  app.post("/v1/cerebroforge/extract", async req => {
+    const body = parse(z.object({
+      text: z.string().min(1).max(50000),
+      title: z.string().min(1).max(500),
+    }), req.body);
+    return p.cerebroForge.extract(ctx(req), body);
+  });
+  app.post("/v1/cerebroforge/entity-resolution", async req => {
+    const body = parse(z.object({
+      action: z.enum(["resolve", "canonicalize", "deduplicate", "merge"]),
+      names: z.array(z.string()).optional(),
+      name: z.string().optional(),
+      type: z.enum(["Paper", "Repository", "Dataset", "Model", "Algorithm", "Architecture", "Training Method", "Evaluation Metric", "Framework", "Language", "Hardware", "GPU", "TPU", "Cloud", "API", "Company", "Research Lab", "University", "Author", "Patent", "Benchmark", "Enterprise Product", "Industry", "Regulation"]).optional(),
+      sourceId: z.string().optional(),
+      targetId: z.string().optional(),
+    }), req.body);
+    return p.cerebroForge.entityResolution(ctx(req), body);
+  });
+
+  app.get("/v1/cerebroforge/knowledge/entities", async req => p.cerebroForge.graphAction(ctx(req), { action: "entities" }));
+  app.get("/v1/cerebroforge/knowledge/graph", async req => p.cerebroForge.graphAction(ctx(req), { action: "graph" }));
+  app.get("/v1/cerebroforge/knowledge/traverse", async req => p.cerebroForge.graphAction(ctx(req), { action: "traverse", ...(req.query as Record<string, unknown>) }));
+  app.get("/v1/cerebroforge/knowledge/search", async req => p.cerebroForge.graphAction(ctx(req), { action: "search", ...(req.query as Record<string, unknown>) }));
+  app.get("/v1/cerebroforge/knowledge/lineage", async req => p.cerebroForge.graphAction(ctx(req), { action: "lineage", ...(req.query as Record<string, unknown>) }));
+  app.get("/v1/cerebroforge/knowledge/clusters", async req => p.cerebroForge.graphAction(ctx(req), { action: "clusters" }));
+  app.get("/v1/cerebroforge/knowledge/provenance", async req => p.cerebroForge.graphAction(ctx(req), { action: "provenance", ...(req.query as Record<string, unknown>) }));
+  app.get("/v1/cerebroforge/knowledge/ontology", async req => p.cerebroForge.graphAction(ctx(req), { action: "ontology" }));
+  app.post("/v1/cerebroforge/graph/query", async req => {
+    const body = parse(z.object({ query: z.string().min(1) }), req.body);
+    return p.cerebroForge.graphAction(ctx(req), { action: "query", ...body });
+  });
+
+  app.post("/v1/cerebroforge/trends/calculate", async req => {
+    const body = parse(z.object({
+      entityId: z.string().min(1)
+    }), req.body);
+    return p.cerebroForge.trendAction(ctx(req), body);
+  });
+
+  app.post("/v1/cerebroforge/product-opportunities", async req => {
+    const body = parse(z.object({
+      conceptId: z.string().min(1)
+    }), req.body);
+    return p.cerebroForge.opportunityAction(ctx(req), body);
+  });
+
+  app.post("/v1/cerebroforge/reason", async req => {
+    const body = parse(z.object({ entityId: z.string().min(1) }), req.body);
+    return p.cerebroForge.reasonAction(ctx(req), body);
+  });
+
+  app.post("/v1/cerebroforge/forecast", async req => {
+    const body = parse(z.object({ entityId: z.string().min(1) }), req.body);
+    return p.cerebroForge.forecastAction(ctx(req), body);
+  });
+
+  app.post("/v1/cerebroforge/opportunity/rank", async req => {
+    const body = parse(z.object({ entityIds: z.array(z.string()).min(1) }), req.body);
+    return p.cerebroForge.opportunityAction(ctx(req), { action: "rank", ...body });
+  });
+
+  // ---------------- Hive Infrastructure Suite (HiveCloud/HiveStorage/HiveCompute/HiveNetwork/HiveIdentity/HiveMonitor/HiveAPI) ----------------
+  app.post("/v1/hivecloud/accounts", async req => {
+    const body = parse(z.object({
+      accountName: z.string().min(1).max(200), provider: z.enum(["aws", "azure", "gcp", "on-prem"]),
+      region: z.string().min(1).max(100), environment: z.enum(["production", "staging", "development"]),
+    }), req.body);
+    return p.hiveCloud.provisionCloudAccount(ctx(req), body);
+  });
+  app.get("/v1/hivecloud/accounts", async req => ({ accounts: await p.hiveCloud.listCloudAccounts(ctx(req)) }));
+
+  app.post("/v1/hivestorage/buckets", async req => {
+    const body = parse(z.object({
+      name: z.string().min(1).max(200), provider: z.enum(["aws", "azure", "gcp", "on-prem"]),
+      tier: z.enum(["hot", "warm", "cold", "archive"]), sizeGb: z.number().positive(),
+    }), req.body);
+    return p.hiveCloud.provisionStorageBucket(ctx(req), body);
+  });
+  app.get("/v1/hivestorage/buckets", async req => ({ buckets: await p.hiveCloud.listStorageBuckets(ctx(req)) }));
+
+  app.post("/v1/hivecompute/instances", async req => {
+    const body = parse(z.object({
+      name: z.string().min(1).max(200), kind: z.enum(["vm", "container", "serverless"]),
+      sizeTier: z.enum(["small", "medium", "large", "xlarge"]), region: z.string().min(1).max(100),
+      autoscaling: z.boolean().default(false),
+    }), req.body);
+    return p.hiveCloud.provisionComputeInstance(ctx(req), body);
+  });
+  app.get("/v1/hivecompute/instances", async req => ({ instances: await p.hiveCloud.listComputeInstances(ctx(req)) }));
+
+  app.post("/v1/hivenetwork/topologies", async req => {
+    const body = parse(z.object({
+      name: z.string().min(1).max(200), cidr: z.string().min(1).max(50), region: z.string().min(1).max(100),
+      subnetCount: z.number().int().min(1).max(64), peeredWith: z.array(z.string()).max(20).optional(),
+    }), req.body);
+    return p.hiveCloud.provisionNetworkTopology(ctx(req), body);
+  });
+  app.get("/v1/hivenetwork/topologies", async req => ({ topologies: await p.hiveCloud.listNetworkTopologies(ctx(req)) }));
+
+  app.post("/v1/hiveidentity/roles", async req => {
+    const body = parse(z.object({
+      name: z.string().min(1).max(200), permissions: z.array(z.string()).min(1).max(50),
+      mfaRequired: z.boolean(), ssoProvider: z.string().max(100).optional(), memberCount: z.number().int().min(0).max(10000),
+    }), req.body);
+    return p.hiveCloud.createIdentityRole(ctx(req), body);
+  });
+  app.get("/v1/hiveidentity/roles", async req => ({ roles: await p.hiveCloud.listIdentityRoles(ctx(req)) }));
+
+  app.post("/v1/hivemonitor/monitors", async req => {
+    const body = parse(z.object({
+      serviceName: z.string().min(1).max(200), metric: z.string().min(1).max(100),
+      thresholdWarning: z.number(), thresholdCritical: z.number(), alertChannels: z.array(z.string()).max(10).default([]),
+    }), req.body);
+    return p.hiveCloud.createMonitor(ctx(req), body);
+  });
+  app.get("/v1/hivemonitor/monitors", async req => ({ monitors: await p.hiveCloud.listMonitors(ctx(req)) }));
+
+  app.post("/v1/hiveapi/endpoints", async req => {
+    const body = parse(z.object({
+      name: z.string().min(1).max(200), method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]),
+      path: z.string().min(1).max(300), authType: z.enum(["api-key", "oauth2", "mtls"]),
+      rateLimitPerMin: z.number().int().min(1).max(100000),
+    }), req.body);
+    return p.hiveCloud.registerApiEndpoint(ctx(req), body);
+  });
+  app.get("/v1/hiveapi/endpoints", async req => ({ endpoints: await p.hiveCloud.listApiEndpoints(ctx(req)) }));
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {
