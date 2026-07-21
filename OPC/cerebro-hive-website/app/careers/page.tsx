@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, CheckCircle2, Cpu, BrainCircuit, Users, Globe2, Sparkles, Code2, GraduationCap, Heart, Zap, Shield, Coffee, Briefcase, Send, ChevronRight, X, BarChart, Layers, Terminal, Search } from "lucide-react";
+import { ArrowRight, CheckCircle2, Cpu, BrainCircuit, Users, Globe2, Sparkles, Code2, GraduationCap, Heart, Zap, Shield, Coffee, Briefcase, Send, ChevronRight, X, BarChart, Layers, Terminal, Search, XCircle, Loader2, Linkedin, FileText, Upload } from "lucide-react";
+import type { PipelineResult } from "@/lib/hiring/pipeline";
 
 // Existing Data
 const cultureValues = [
@@ -409,27 +410,39 @@ export default function CareersPage() {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", email: "", role: "", portfolio: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", role: "", linkedinUrl: "", resumeText: "" });
+  const [pipeline, setPipeline] = useState<PipelineResult | null>(null);
   const [activeDept, setActiveDept] = useState(orgStructure[0].department);
   const [selectedRole, setSelectedRole] = useState<any | null>(null);
+
+  const handleResumeFile = async (file: File) => {
+    if (!/\.(txt|md)$/i.test(file.name)) {
+      setError("For now, upload your resume as a .txt or .md file, or just paste the text below.");
+      return;
+    }
+    const text = await file.text();
+    setForm(f => ({ ...f, resumeText: text.slice(0, 20_000) }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/leads", {
+      const res = await fetch("/api/hiring/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          company: form.portfolio || "Not provided",
-          type: "career-application",
-          inputs: { role: form.role, portfolio: form.portfolio, message: form.message },
+          applicantName: form.name,
+          applicantEmail: form.email,
+          roleTitle: form.role,
+          resumeText: form.resumeText,
+          linkedinUrl: form.linkedinUrl,
         }),
       });
-      if (!res.ok) throw new Error("Submission failed");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Submission failed");
+      setPipeline(data.pipeline as PipelineResult);
       setSubmitted(true);
     } catch {
       setError("Something went wrong. Please email talent@cerebro-hive.com directly.");
@@ -786,21 +799,21 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* Application Form */}
+      {/* Application Form — Fully Automated AI Hiring Pipeline */}
       <section id="apply" className="section-pad">
         <div className="container-wide max-w-3xl">
           <div className="text-center mb-12">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Talent Network</span>
-            <h2 className="text-4xl md:text-5xl font-space font-bold text-text-primary mb-4">Submit Your Profile</h2>
-            <p className="text-text-secondary max-w-xl mx-auto text-center">We review every submission. If your background aligns with our roadmap, a senior team member will reach out personally.</p>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Fully Automated · No Human Intervention</span>
+            <h2 className="text-4xl md:text-5xl font-space font-bold text-text-primary mb-4">Apply — AI Screens, Interviews, and Offers</h2>
+            <p className="text-text-secondary max-w-xl mx-auto text-center">
+              Submit your resume and LinkedIn profile. Our AI screens you against the role, then automatically runs you through
+              7 technical rounds and 3 HR rounds — ending in an automated offer or a clear reason why you didn&apos;t advance. No
+              recruiter reviews this in between.
+            </p>
           </div>
 
-          {submitted ? (
-            <motion.div initial={{ opacity: 0.4, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-12 rounded-2xl bg-primary-accent/10 border border-primary-accent/30 flex flex-col items-center text-center gap-4">
-              <CheckCircle2 size={48} className="text-primary-accent" />
-              <h3 className="text-2xl font-space font-bold text-text-primary">Profile Received</h3>
-              <p className="text-text-secondary max-w-sm">We&apos;ve added your profile to our talent network. We review submissions quarterly and will reach out if we see a strong match.</p>
-            </motion.div>
+          {submitted && pipeline ? (
+            <PipelineResultView pipeline={pipeline} roleTitle={form.role} onReset={() => { setSubmitted(false); setPipeline(null); setForm({ name: "", email: "", role: "", linkedinUrl: "", resumeText: "" }); }} />
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-5 p-8 md:p-10 rounded-2xl bg-surface border border-border shadow-elevated">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -814,7 +827,7 @@ export default function CareersPage() {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted">Domain / Role You&apos;re Interested In *</label>
+                <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted">Domain / Role You&apos;re Applying For *</label>
                 <select required value={form.role} onChange={(e) => setForm(f => ({ ...f, role: e.target.value }))} className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors appearance-none cursor-pointer">
                   <option value="" disabled>Select a role...</option>
                   {orgStructure.reduce<string[]>((acc, d) => [...acc, ...d.roles.map(r => r.title)], []).map(title => (
@@ -823,16 +836,22 @@ export default function CareersPage() {
                 </select>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted">Portfolio / LinkedIn / GitHub</label>
-                <input value={form.portfolio} onChange={(e) => setForm(f => ({ ...f, portfolio: e.target.value }))} placeholder="https://" className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors" />
+                <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-1.5"><Linkedin size={12} /> LinkedIn Profile URL *</label>
+                <input required value={form.linkedinUrl} onChange={(e) => setForm(f => ({ ...f, linkedinUrl: e.target.value }))} placeholder="https://www.linkedin.com/in/yourname" className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors" />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted">Tell Us About Yourself *</label>
-                <textarea required rows={5} value={form.message} onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))} placeholder="What are you working on? What kind of problems excite you? What are you looking for in your next role?" className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none" />
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-1.5"><FileText size={12} /> Resume *</label>
+                  <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-primary-accent cursor-pointer hover:underline">
+                    <Upload size={12} /> Upload .txt / .md
+                    <input type="file" accept=".txt,.md" className="hidden" onChange={(e) => e.target.files?.[0] && handleResumeFile(e.target.files[0])} />
+                  </label>
+                </div>
+                <textarea required rows={8} value={form.resumeText} onChange={(e) => setForm(f => ({ ...f, resumeText: e.target.value }))} placeholder="Paste your resume text here — experience, skills, projects, and anything relevant to the role you're applying for." className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none" />
               </div>
               <button type="submit" disabled={isLoading} className="flex items-center justify-center gap-3 px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated mt-2 disabled:opacity-60 disabled:cursor-not-allowed">
-                <Send size={16} />
-                {isLoading ? "Sending…" : "Submit Profile"}
+                {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                {isLoading ? "Running automated pipeline…" : "Submit & Run Automated Pipeline"}
               </button>
               {error && <p className="text-red-400 text-xs text-center">{error}</p>}
             </form>
@@ -840,5 +859,74 @@ export default function CareersPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+function StageRow({ label, score, passed, feedback }: { label: string; score: number; passed: boolean; feedback: string }) {
+  return (
+    <div className={`p-4 rounded-xl border ${passed ? "border-primary-accent/30 bg-primary-accent/5" : "border-red-500/30 bg-red-500/5"}`}>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          {passed ? <CheckCircle2 size={16} className="text-primary-accent shrink-0" /> : <XCircle size={16} className="text-red-400 shrink-0" />}
+          <span className="text-sm font-bold text-text-primary">{label}</span>
+        </div>
+        <span className={`text-xs font-bold ${passed ? "text-primary-accent" : "text-red-400"}`}>{score}/100</span>
+      </div>
+      <p className="mt-1.5 text-xs text-text-secondary pl-6">{feedback}</p>
+    </div>
+  );
+}
+
+function PipelineResultView({ pipeline, roleTitle, onReset }: { pipeline: PipelineResult; roleTitle: string; onReset: () => void }) {
+  const outcomeCopy: Record<PipelineResult["status"], { title: string; tone: "pass" | "fail" }> = {
+    screening_failed: { title: "Not Selected — Didn't Clear AI Screening", tone: "fail" },
+    technical_failed: { title: "Not Selected — Didn't Clear Technical Rounds", tone: "fail" },
+    hr_failed: { title: "Not Selected — Didn't Clear HR Rounds", tone: "fail" },
+    offer_extended: { title: "Offer Extended — Congratulations!", tone: "pass" },
+  };
+  const outcome = outcomeCopy[pipeline.status];
+
+  return (
+    <motion.div initial={{ opacity: 0.4, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6 p-8 md:p-10 rounded-2xl bg-surface border border-border shadow-elevated">
+      <div className={`p-6 rounded-2xl border flex flex-col items-center text-center gap-3 ${outcome.tone === "pass" ? "bg-primary-accent/10 border-primary-accent/30" : "bg-red-500/5 border-red-500/20"}`}>
+        {outcome.tone === "pass" ? <CheckCircle2 size={40} className="text-primary-accent" /> : <XCircle size={40} className="text-red-400" />}
+        <h3 className="text-2xl font-space font-bold text-text-primary">{outcome.title}</h3>
+        <p className="text-text-secondary max-w-md text-sm">{pipeline.summary}</p>
+        {pipeline.offer && (
+          <div className="mt-2 grid grid-cols-3 gap-4 w-full max-w-md">
+            <div className="p-3 bg-background rounded-xl border border-border"><div className="text-[10px] uppercase text-text-muted">Role</div><div className="text-sm font-bold text-text-primary">{roleTitle}</div></div>
+            <div className="p-3 bg-background rounded-xl border border-border"><div className="text-[10px] uppercase text-text-muted">Level</div><div className="text-sm font-bold text-text-primary">{pipeline.offer.level}</div></div>
+            <div className="p-3 bg-background rounded-xl border border-border"><div className="text-[10px] uppercase text-text-muted">Start</div><div className="text-sm font-bold text-text-primary">{pipeline.offer.startDate}</div></div>
+          </div>
+        )}
+      </div>
+
+      <div>
+        <h4 className="text-[11px] font-bold uppercase tracking-widest text-text-muted mb-3">AI Screening</h4>
+        <StageRow label={pipeline.screening.stage} score={pipeline.screening.score} passed={pipeline.screening.passed} feedback={pipeline.screening.feedback} />
+      </div>
+
+      {pipeline.technicalRounds.length > 0 && (
+        <div>
+          <h4 className="text-[11px] font-bold uppercase tracking-widest text-text-muted mb-3">Technical Rounds ({pipeline.technicalRounds.length} of 7 run)</h4>
+          <div className="flex flex-col gap-2">
+            {pipeline.technicalRounds.map((r, i) => <StageRow key={i} label={r.stage} score={r.score} passed={r.passed} feedback={r.feedback} />)}
+          </div>
+        </div>
+      )}
+
+      {pipeline.hrRounds.length > 0 && (
+        <div>
+          <h4 className="text-[11px] font-bold uppercase tracking-widest text-text-muted mb-3">HR Rounds ({pipeline.hrRounds.length} of 3 run)</h4>
+          <div className="flex flex-col gap-2">
+            {pipeline.hrRounds.map((r, i) => <StageRow key={i} label={r.stage} score={r.score} passed={r.passed} feedback={r.feedback} />)}
+          </div>
+        </div>
+      )}
+
+      <button onClick={onReset} className="self-center mt-2 px-6 py-3 bg-background border border-border text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:border-primary-accent/40 transition-colors">
+        Submit Another Application
+      </button>
+    </motion.div>
   );
 }

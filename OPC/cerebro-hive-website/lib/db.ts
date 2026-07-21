@@ -78,6 +78,30 @@ export interface DBContact {
   createdAt: string;
 }
 
+export interface DBApplicationStage {
+  stage: string;
+  category: "screening" | "technical" | "hr";
+  score: number;
+  passed: boolean;
+  feedback: string;
+}
+
+export interface DBApplication {
+  id: string;
+  applicantName: string;
+  applicantEmail: string;
+  roleTitle: string;
+  resumeText: string;
+  linkedinUrl: string;
+  status: "screening_failed" | "technical_failed" | "hr_failed" | "offer_extended";
+  screening: DBApplicationStage;
+  technicalRounds: DBApplicationStage[];
+  hrRounds: DBApplicationStage[];
+  offer: { level: string; annualCtc: string; startDate: string } | null;
+  summary: string;
+  createdAt: string;
+}
+
 export interface DatabaseSchema {
   projects: DBProject[];
   invoices: DBInvoice[];
@@ -87,6 +111,7 @@ export interface DatabaseSchema {
   leads: DBLead[];
   enrollments: DBEnrollment[];
   contacts: DBContact[];
+  applications: DBApplication[];
 }
 
 // Initial seed data
@@ -142,7 +167,8 @@ const SEED_DATA: DatabaseSchema = {
   tickets: [],
   leads: [],
   enrollments: [],
-  contacts: []
+  contacts: [],
+  applications: []
 };
 
 // Internal database cache
@@ -167,7 +193,9 @@ async function initDb(): Promise<DatabaseSchema> {
     await fs.mkdir(DB_DIR, { recursive: true });
     try {
       const fileData = await fs.readFile(DB_FILE, "utf-8");
-      cachedDb = JSON.parse(fileData);
+      const parsed = JSON.parse(fileData) as Partial<DatabaseSchema>;
+      // Backfill any collections added to the schema after this file was first written to disk.
+      cachedDb = { ...SEED_DATA, ...parsed } as DatabaseSchema;
       return cachedDb!;
     } catch {
       // File doesn't exist, create it with seed data

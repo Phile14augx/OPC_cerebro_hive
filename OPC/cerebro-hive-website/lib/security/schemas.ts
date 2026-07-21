@@ -71,3 +71,19 @@ export const enterpriseEmployeeIdSchema = z
   .min(1)
   .max(64)
   .regex(/^[A-Za-z0-9-]+$/, "id must be alphanumeric");
+
+export const jobApplicationSchema = z
+  .object({
+    applicantName: shortText(200),
+    applicantEmail: email,
+    roleTitle: shortText(200),
+    resumeText: shortText(20_000),
+    linkedinUrl: z
+      .string()
+      .trim()
+      .max(300)
+      .refine(v => v === "" || /^https?:\/\/([\w-]+\.)?linkedin\.com\//i.test(v), "must be a linkedin.com URL")
+      .optional()
+      .default(""),
+  })
+  .strict();
