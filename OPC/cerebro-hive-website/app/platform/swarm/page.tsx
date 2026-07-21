@@ -120,6 +120,13 @@ export default function CerebroSwarmPage() {
         <span className="text-text-secondary">{online === null ? "Checking platform…" : online ? "Platform online" : "Platform unreachable"}</span>
       </div>
 
+      <section className="mt-6 rounded-xl border border-primary-accent/40 bg-primary-accent/5 p-6">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary-accent">Want the numbers behind the decisions?</p>
+        <h2 className="mt-2 text-xl font-semibold text-text-primary">CerebroInsight™ — the executive intelligence layer</h2>
+        <p className="mt-2 max-w-2xl text-sm text-text-secondary">Live metrics, alerts, and AI-generated insight narratives pulled directly from HiveForge, CerebroStudio, and CerebroSwarm activity.</p>
+        <Link href="/platform/insight" className="mt-4 inline-block rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent">Open CerebroInsight™ →</Link>
+      </section>
+
       <section className="mt-8">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">Executive roster</h2>
         <div className="mt-3 grid gap-3 md:grid-cols-3 lg:grid-cols-5">

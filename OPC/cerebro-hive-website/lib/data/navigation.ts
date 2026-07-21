@@ -17,6 +17,7 @@ export const mainNavigation: NavItem[] = [
       { label: "HiveForge — AI Cloud Marketplace", href: "/platform/hiveforge" },
       { label: "CerebroStudio™ — AI Development Workspace", href: "/platform/studio" },
       { label: "CerebroSwarm™ — Enterprise Cognitive Workforce", href: "/platform/swarm" },
+      { label: "CerebroInsight™ — Executive Intelligence Platform", href: "/platform/insight" },
     ]
   },
   {
@@ -92,6 +93,7 @@ export const footerNavigation = {
     { label: "HiveForge — AI Cloud Marketplace →", href: "/platform/hiveforge" },
     { label: "CerebroStudio™ — AI Development Workspace →", href: "/platform/studio" },
     { label: "CerebroSwarm™ — Enterprise Cognitive Workforce →", href: "/platform/swarm" },
+    { label: "CerebroInsight™ — Executive Intelligence Platform →", href: "/platform/insight" },
   ],
   products: [
     { label: "CerebroArchive™", href: "/products/cerebro-archive" },

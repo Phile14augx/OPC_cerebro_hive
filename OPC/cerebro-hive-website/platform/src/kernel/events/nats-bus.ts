@@ -11,7 +11,7 @@ const STREAMS: Record<string, string[]> = {
   PLATFORM: ["platform.>", "ai.>", "simulator.>", "hub.>", "connect.>"],
   OPS: [
     "devops.>", "mlops.>", "secops.>", "aiops.>", "graph.>", "chain.>", "router.>", "compiler.>", "swarm.>", "actions.>",
-    "digitaltwin.>", "research.>", "zerotrust.>", "dataplatform.>", "hiveforge.>", "cerebrostudio.>", "cerebroswarm.>",
+    "digitaltwin.>", "research.>", "zerotrust.>", "dataplatform.>", "hiveforge.>", "cerebrostudio.>", "cerebroswarm.>", "cerebroinsight.>",
   ],
 };
 

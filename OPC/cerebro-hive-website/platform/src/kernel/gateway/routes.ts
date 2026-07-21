@@ -771,6 +771,23 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
   app.get("/v1/cerebroswarm/directives", async req => ({ directives: await p.cerebroSwarm.listDirectives(ctx(req)) }));
   app.get("/v1/cerebroswarm/directives/:id", async req => p.cerebroSwarm.getDirective(ctx(req), (req.params as { id: string }).id));
 
+  // ---------------- CerebroInsight (AI-native executive intelligence layer) ----------------
+  app.post("/v1/cerebroinsight/refresh", async req => ({ metrics: await p.cerebroInsight.refreshMetrics(ctx(req)) }));
+  app.get("/v1/cerebroinsight/metrics", async req => ({ metrics: await p.cerebroInsight.listMetrics(ctx(req)) }));
+
+  app.get("/v1/cerebroinsight/dashboards", async req => ({ dashboards: await p.cerebroInsight.listDashboards(ctx(req)) }));
+  app.post("/v1/cerebroinsight/dashboards", async req => {
+    const body = parse(z.object({
+      name: z.string().min(1),
+      widgets: z.array(z.object({ type: z.enum(["kpi", "line", "bar", "pie", "table"]), title: z.string().min(1), metricKeys: z.array(z.string()).min(1) })).min(1),
+    }), req.body);
+    return p.cerebroInsight.createDashboard(ctx(req), body);
+  });
+
+  app.get("/v1/cerebroinsight/alerts", async req => ({ alerts: await p.cerebroInsight.listAlerts(ctx(req)) }));
+  app.get("/v1/cerebroinsight/alert-rules", async req => ({ rules: await p.cerebroInsight.listAlertRules(ctx(req)) }));
+  app.get("/v1/cerebroinsight/insights", async req => ({ insights: await p.cerebroInsight.listInsights(ctx(req)) }));
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {

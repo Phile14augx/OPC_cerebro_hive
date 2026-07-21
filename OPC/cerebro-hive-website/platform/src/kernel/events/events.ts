@@ -228,4 +228,8 @@ export const Subjects = {
     taskCompleted: "cerebroswarm.task.completed",
     directiveCompleted: "cerebroswarm.directive.completed",
   },
+  cerebroinsight: {
+    metricsRefreshed: "cerebroinsight.metrics.refreshed",
+    alertTriggered: "cerebroinsight.alert.triggered",
+  },
 } as const;
