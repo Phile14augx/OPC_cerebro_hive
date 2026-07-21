@@ -33,30 +33,59 @@ export class Kernel {
     };
   }
 
+  private validateManifest(plugin: Plugin): boolean {
+    const m = plugin.manifest;
+    if (!m || !m.metadata || !m.metadata.id || !m.kind || !m.schemaVersion) {
+      console.error(`[Kernel] Plugin ${m?.metadata?.id || 'unknown'} has invalid manifest schema.`);
+      return false;
+    }
+    return true;
+  }
+
   async loadPlugin(plugin: Plugin): Promise<void> {
+    plugin.state = "installed";
+    plugin.health = "Starting";
     const context = this.createContext(plugin.manifest.metadata.id, plugin.manifest.metadata.version);
 
     try {
+      if (!this.validateManifest(plugin)) {
+        throw new Error("Manifest validation failed structurally.");
+      }
+
       if (plugin.validate) {
         const isValid = await plugin.validate(context);
-        if (!isValid) throw new Error("Plugin validation failed.");
+        if (!isValid) throw new Error("Plugin validate() failed.");
+      }
+      
+      plugin.state = "validated";
+
+      if (plugin.resolveDependencies) {
+        plugin.state = "resolving";
+        const depsResolved = await plugin.resolveDependencies(context);
+        if (!depsResolved) throw new Error("Plugin dependency resolution failed.");
       }
       
       // Register it in the registry (assuming extension kind as fallback or explicitly typed)
       if (plugin.register) {
          await plugin.register(context);
       }
+      plugin.state = "registered";
 
       if (plugin.initialize) {
         await plugin.initialize(context);
       }
+      plugin.state = "initialized";
 
       if (plugin.start) {
         await plugin.start(context);
       }
+      plugin.state = "ready";
+      plugin.health = "Healthy";
 
     } catch (err) {
       console.error(`[Kernel] Failed to load plugin ${plugin.manifest.metadata.id}`, err);
+      plugin.state = "error";
+      plugin.health = "Failed";
       throw err;
     }
   }
@@ -71,6 +100,8 @@ export class Kernel {
         const context = this.createContext(plugin.manifest.metadata.id, plugin.manifest.metadata.version);
         await plugin.unload(context);
       }
+      plugin.state = "unloaded";
+      plugin.health = "Disabled";
     }
   }
 }
