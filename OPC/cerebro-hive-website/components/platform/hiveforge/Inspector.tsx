@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { eventBus } from "../../../app/platform/hiveforge/core/events/EventBus";
 import { DomainEvent } from "../../../app/platform/hiveforge/core/contracts/event";
+import { IntelligenceAgents } from "./IntelligenceAgents";
 
 export function Inspector() {
   const [events, setEvents] = useState<DomainEvent[]>([]);
@@ -24,6 +25,9 @@ export function Inspector() {
       </div>
 
       <div className="flex-1 p-4 space-y-6 overflow-y-auto">
+        {/* Intelligence Agents */}
+        <IntelligenceAgents />
+
         {/* Context panel */}
         <div>
           <div className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2">Current Context</div>
