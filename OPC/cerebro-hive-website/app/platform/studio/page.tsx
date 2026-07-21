@@ -54,6 +54,13 @@ export default function StudioHubPage() {
 
       {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
 
+      <section className="mt-6 rounded-xl border border-primary-accent/40 bg-primary-accent/5 p-6">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary-accent">Need it planned before it's built?</p>
+        <h2 className="mt-2 text-xl font-semibold text-text-primary">CerebroSwarm™ — the executive council that coordinates the work</h2>
+        <p className="mt-2 max-w-2xl text-sm text-text-secondary">Submit an objective and five domain-expert agents — CEO, Strategy, Enterprise Architect, Planner, Reviewer — chain a plan together before anything gets built here.</p>
+        <Link href="/platform/swarm" className="mt-4 inline-block rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent">Open CerebroSwarm™ →</Link>
+      </section>
+
       <section className="mt-8 rounded-xl border border-border bg-surface/40 p-5">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">New workspace</h2>
         <div className="mt-3 grid gap-3 md:grid-cols-[1fr_2fr_auto]">

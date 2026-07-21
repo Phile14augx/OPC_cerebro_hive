@@ -761,6 +761,16 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
 
   app.get("/v1/cerebrostudio/workspaces/:id/runs", async req => ({ runs: await p.cerebroStudio.listRuns(ctx(req), (req.params as { id: string }).id) }));
 
+  // ---------------- CerebroSwarm (executive council + architecture coordination layer) ----------------
+  app.get("/v1/cerebroswarm/agents", async req => ({ agents: p.cerebroSwarm.listAgents(ctx(req)) }));
+
+  app.post("/v1/cerebroswarm/directives", async req => {
+    const body = parse(z.object({ objective: z.string().min(1), priority: z.enum(["Low", "Medium", "High"]).optional() }), req.body);
+    return p.cerebroSwarm.submitDirective(ctx(req), body);
+  });
+  app.get("/v1/cerebroswarm/directives", async req => ({ directives: await p.cerebroSwarm.listDirectives(ctx(req)) }));
+  app.get("/v1/cerebroswarm/directives/:id", async req => p.cerebroSwarm.getDirective(ctx(req), (req.params as { id: string }).id));
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {

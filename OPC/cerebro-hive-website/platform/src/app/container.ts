@@ -56,6 +56,7 @@ import { InMemoryZeroTrustRepository, ZeroTrustService } from "../domains/zerotr
 import { DataPlatformService, InMemoryDataPlatformRepository } from "../domains/dataplatform/dataplatform.js";
 import { HiveForgeService, InMemoryHiveForgeRepository } from "../domains/hiveforge/hiveforge.js";
 import { CerebroStudioService, InMemoryCerebroStudioRepository } from "../domains/cerebrostudio/cerebrostudio.js";
+import { CerebroSwarmService, InMemoryCerebroSwarmRepository } from "../domains/cerebroswarm/cerebroswarm.js";
 import { systemContext } from "../kernel/context/context.js";
 
 export interface Platform {
@@ -108,6 +109,7 @@ export interface Platform {
   dataPlatform: DataPlatformService;
   hiveForge: HiveForgeService;
   cerebroStudio: CerebroStudioService;
+  cerebroSwarm: CerebroSwarmService;
   shutdown(): Promise<void>;
 }
 
@@ -237,6 +239,8 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
   const hiveForge = new HiveForgeService(hiveForgeRepo, bus, policy);
   const cerebroStudioRepo = new InMemoryCerebroStudioRepository();
   const cerebroStudio = new CerebroStudioService(cerebroStudioRepo, bus, policy);
+  const cerebroSwarmRepo = new InMemoryCerebroSwarmRepository();
+  const cerebroSwarm = new CerebroSwarmService(cerebroSwarmRepo, bus, policy);
 
   if (snapshots) {
     snapshots.register("runtime", comboSnapshot({ executions: mapSnapshot(runtimeRepo.executions), steps: mapSnapshot(runtimeRepo.stepRows), artifacts: arraySnapshot(runtimeRepo.artifactRows) }));
@@ -276,6 +280,9 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
       notebooks: mapSnapshot(cerebroStudioRepo.notebooks), datasets: mapSnapshot(cerebroStudioRepo.datasets),
       runs: mapSnapshot(cerebroStudioRepo.runs),
     }));
+    snapshots.register("cerebroswarm", comboSnapshot({
+      directives: mapSnapshot(cerebroSwarmRepo.directives), tasks: mapSnapshot(cerebroSwarmRepo.tasks),
+    }));
     await snapshots.start();
   }
 
@@ -301,7 +308,7 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     x, moe: new MixtureOfExperts(x), world, memory, knowledge, guard, runtime, scheduler, tools,
     contextEngine, mesh, flow, governance, registries, ethics, ontology, web3, evals, observatory, connect, hub, simulator, sphere, consulting,
     devops, mlops, secops, aiops, agentExecutor, router, compiler, swarm, actions,
-    digitalTwin, research, zeroTrust, dataPlatform, hiveForge, cerebroStudio,
+    digitalTwin, research, zeroTrust, dataPlatform, hiveForge, cerebroStudio, cerebroSwarm,
     async shutdown() {
       scheduler.stop();
       await snapshots?.stop();

@@ -223,4 +223,9 @@ export const Subjects = {
     datasetCreated: "cerebrostudio.dataset.created",
     runCompleted: "cerebrostudio.run.completed",
   },
+  cerebroswarm: {
+    directiveSubmitted: "cerebroswarm.directive.submitted",
+    taskCompleted: "cerebroswarm.task.completed",
+    directiveCompleted: "cerebroswarm.directive.completed",
+  },
 } as const;
