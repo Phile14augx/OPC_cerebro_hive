@@ -23,10 +23,25 @@ export async function checkOnline(): Promise<boolean> {
 
 export interface CatalogItem { id: string; name: string; provisionable: boolean; hourlyRateUsd?: number }
 export interface CatalogCategory { id: string; name: string; tagline: string; subgroups: { name: string; items: CatalogItem[] }[] }
-export interface ProvisionedResource { id: string; kind: string; category: string; subgroup: string; itemId: string; itemName: string; region: string; status: string; specs: Record<string, unknown>; endpoint: string; hourlyRateUsd: number; createdAt: string }
+export type SizeTier = "small" | "medium" | "large" | "xlarge";
+export interface ProvisionedResource {
+  id: string; kind: string; category: string; subgroup: string; itemId: string; itemName: string;
+  region: string; status: string; sizeTier: SizeTier; replicas?: number; options: string[];
+  specs: Record<string, unknown>; endpoint: string; hourlyRateUsd: number; createdAt: string;
+}
 export interface MarketplaceInstallation { id: string; itemId: string; itemName: string; category: string; installedAt: string }
 export interface Invoice { id: string; periodStart: string; periodEnd: string; lineItems: { resourceId: string; itemName: string; hours: number; amountUsd: number }[]; totalUsd: number; generatedAt: string }
 export interface CostExplorer { byKind: Record<string, number>; byCategory: Record<string, number>; totalUsd: number; resourceCount: number }
+
+/** Wizard config — mirrors the backend's REGIONS / SIZE_TIER_MULTIPLIER. */
+export const WIZARD_REGIONS = ["us-east-1", "us-west-2", "eu-west-1", "ap-south-1"];
+export const WIZARD_SIZE_TIERS: { id: SizeTier; label: string; blurb: string; multiplier: number }[] = [
+  { id: "small", label: "Small", blurb: "Dev/test workloads, lowest cost.", multiplier: 0.5 },
+  { id: "medium", label: "Medium", blurb: "Standard production workloads.", multiplier: 1 },
+  { id: "large", label: "Large", blurb: "High-throughput production workloads.", multiplier: 2 },
+  { id: "xlarge", label: "X-Large", blurb: "Mission-critical, maximum headroom.", multiplier: 4 },
+];
+export const WIZARD_OPTION_CHOICES = ["multi-az", "high-availability", "auto-scaling", "encryption-at-rest"];
 
 /** Sidebar/hub navigation groups — hand-curated to mirror catalog.ts's 24 categories without duplicating the full item data client-side. */
 export const hiveForgeSections: { id: string; name: string; blurb: string; href: string }[] = [

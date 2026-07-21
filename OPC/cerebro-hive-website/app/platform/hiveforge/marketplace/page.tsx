@@ -3,14 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { api, checkOnline, KEY, type CatalogCategory, type MarketplaceInstallation } from "../lib";
+import { api, checkOnline, KEY, type CatalogCategory, type CatalogItem, type MarketplaceInstallation } from "../lib";
+import { HiveForgeWizard } from "../HiveForgeWizard";
 
 export default function MarketplacePage() {
   const [online, setOnline] = useState<boolean | null>(null);
   const [category, setCategory] = useState<CatalogCategory | null>(null);
   const [installations, setInstallations] = useState<MarketplaceInstallation[]>([]);
-  const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [wizardItem, setWizardItem] = useState<CatalogItem | null>(null);
 
   const refresh = useCallback(async () => {
     const ok = await checkOnline();
@@ -24,15 +25,6 @@ export default function MarketplacePage() {
   }, []);
 
   useEffect(() => { void refresh(); }, [refresh]);
-
-  const install = useCallback(async (itemId: string) => {
-    setBusy(itemId);
-    try {
-      await api("/v1/hiveforge/marketplace/install", { method: "POST", body: JSON.stringify({ itemId }) });
-      setInstallations((await api<{ installations: MarketplaceInstallation[] }>("/v1/hiveforge/installations")).installations);
-    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
-    finally { setBusy(null); }
-  }, []);
 
   return (
     <main className="mx-auto max-w-6xl px-6 pb-24 pt-8">
@@ -56,11 +48,11 @@ export default function MarketplacePage() {
             <div key={item.id} className="flex items-center justify-between rounded-lg border border-border bg-surface/40 px-3 py-2.5">
               <div className="text-sm font-medium text-text-primary">{item.name}</div>
               <button
-                onClick={() => void install(item.id)}
-                disabled={busy !== null || !online || !KEY}
+                onClick={() => setWizardItem(item)}
+                disabled={!online || !KEY}
                 className="rounded-lg border border-primary-accent px-2.5 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40"
               >
-                {busy === item.id ? "…" : "Install"}
+                Install…
               </button>
             </div>
           ))}
@@ -76,6 +68,15 @@ export default function MarketplacePage() {
           {installations.length === 0 && <li className="text-text-secondary">No marketplace items installed yet.</li>}
         </ul>
       </section>
+
+      {wizardItem && (
+        <HiveForgeWizard
+          item={wizardItem}
+          mode="install"
+          onClose={() => setWizardItem(null)}
+          onDone={refresh}
+        />
+      )}
     </main>
   );
 }

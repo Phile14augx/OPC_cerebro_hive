@@ -68,10 +68,24 @@ function resolveKind(category: CatalogCategoryId, subgroup: string): ResourceKin
   return "deployment";
 }
 
+/** Size tier chosen in the provisioning wizard — scales specs and hourly rate via SIZE_TIER_MULTIPLIER. */
+export type SizeTier = "small" | "medium" | "large" | "xlarge";
+
+export const SIZE_TIER_MULTIPLIER: Record<SizeTier, number> = { small: 0.5, medium: 1, large: 2, xlarge: 4 };
+
+export interface ProvisionInput {
+  itemId: string;
+  region?: string;
+  sizeTier?: SizeTier;
+  replicas?: number;
+  options?: string[];
+}
+
 export interface ProvisionedResource {
   id: string; organizationId: string; kind: ResourceKind; category: CatalogCategoryId; subgroup: string;
   itemId: string; itemName: string;
   region: string; status: "provisioning" | "running" | "stopped" | "deprovisioned";
+  sizeTier: SizeTier; replicas?: number; options: string[];
   specs: Record<string, unknown>; endpoint: string; hourlyRateUsd: number;
   createdAt: string; deprovisionedAt?: string;
 }
@@ -116,37 +130,48 @@ export class InMemoryHiveForgeRepository implements HiveForgeRepository {
   async listInvoices(org: string) { return this.invoices.filter(i => i.organizationId === org); }
 }
 
-function specsFor(kind: ResourceKind, itemId: string, rand: () => number): Record<string, unknown> {
+interface SpecsConfig { sizeTier: SizeTier; replicas?: number; options: string[] }
+
+/**
+ * Deterministic, wizard-aware spec generator. `mult` (from SIZE_TIER_MULTIPLIER) scales the
+ * primary quantity for the resource kind so that the wizard's size-tier choice has a real,
+ * visible effect on what gets provisioned; `config.replicas`/`config.options` (when supplied
+ * by the wizard) override the corresponding defaults directly.
+ */
+function specsFor(kind: ResourceKind, itemId: string, rand: () => number, config: SpecsConfig): Record<string, unknown> {
+  const mult = SIZE_TIER_MULTIPLIER[config.sizeTier];
+  const opts = config.options;
   switch (kind) {
-    case "vps": return { vcpu: [1, 2, 4, 8, 16][Math.floor(rand() * 5)], ramGb: [1, 2, 4, 8, 32][Math.floor(rand() * 5)], diskGb: 25 + Math.floor(rand() * 400) };
-    case "gpu": return { gpuCount: [1, 2, 4, 8][Math.floor(rand() * 4)], vramGb: itemId.includes("h100") || itemId.includes("h200") ? 80 : itemId.includes("a100") ? 40 : 24, interconnect: rand() > 0.5 ? "NVLink" : "PCIe" };
-    case "kubernetes": return { nodes: 3 + Math.floor(rand() * 12), version: "1.31", nodePoolType: rand() > 0.6 ? "gpu" : "cpu" };
-    case "container": return { registry: "registry.hiveforge.dev", image: `hiveforge/${itemId}`, replicas: 1 + Math.floor(rand() * 5) };
-    case "serverless": return { runtime: "node20", memoryMb: [128, 256, 512, 1024][Math.floor(rand() * 4)], coldStartMs: 40 + Math.floor(rand() * 200) };
-    case "database": return { storageGb: 10 + Math.floor(rand() * 490), replicas: rand() > 0.5 ? 2 : 1, version: "latest" };
-    case "storage": return { capacityGb: 100 + Math.floor(rand() * 9900), redundancy: rand() > 0.5 ? "multi-az" : "single-az" };
-    case "network": return { bandwidthGbps: [1, 5, 10, 25][Math.floor(rand() * 4)] };
-    case "domain": return { autoRenew: true, dnssec: rand() > 0.3 };
-    case "deployment": return { framework: "auto-detect", buildMinutes: 1 + Math.floor(rand() * 6) };
-    case "ai-tool": return { seatLicenses: 1 + Math.floor(rand() * 49), workspaces: 1 + Math.floor(rand() * 8), computeCreditsPerMonth: 1000 + Math.floor(rand() * 9000) };
+    case "vps": return { vcpu: Math.max(1, Math.round(2 * mult)), ramGb: Math.max(1, Math.round(4 * mult)), diskGb: Math.max(20, Math.round(80 * mult)), options: opts };
+    case "gpu": return { gpuCount: Math.max(1, Math.round(2 * mult)), vramGb: itemId.includes("h100") || itemId.includes("h200") ? 80 : itemId.includes("a100") ? 40 : 24, interconnect: rand() > 0.5 ? "NVLink" : "PCIe", options: opts };
+    case "kubernetes": return { nodes: config.replicas ?? Math.max(1, Math.round(6 * mult)), version: "1.31", nodePoolType: opts.includes("gpu-pool") ? "gpu" : "cpu", options: opts };
+    case "container": return { registry: "registry.hiveforge.dev", image: `hiveforge/${itemId}`, replicas: config.replicas ?? Math.max(1, Math.round(2 * mult)), options: opts };
+    case "serverless": return { runtime: "node20", memoryMb: Math.max(128, Math.round(256 * mult)), coldStartMs: 40 + Math.floor(rand() * 200), options: opts };
+    case "database": return { storageGb: Math.max(10, Math.round(100 * mult)), replicas: config.replicas ?? (mult >= 2 ? 2 : 1), version: "latest", options: opts };
+    case "storage": return { capacityGb: Math.max(50, Math.round(1000 * mult)), redundancy: opts.includes("multi-az") || mult >= 2 ? "multi-az" : "single-az", options: opts };
+    case "network": return { bandwidthGbps: Math.max(1, Math.round(5 * mult)), options: opts };
+    case "domain": return { autoRenew: !opts.includes("no-auto-renew"), dnssec: opts.includes("dnssec") || rand() > 0.5, options: opts };
+    case "deployment": return { framework: "auto-detect", buildMinutes: Math.max(1, Math.round(4 * mult)), options: opts };
+    case "ai-tool": return { seatLicenses: Math.max(1, Math.round(10 * mult)), workspaces: Math.max(1, Math.round(2 * mult)), computeCreditsPerMonth: Math.round(2000 * mult), options: opts };
     case "ai-model": return {
-      parameters: ["7B", "13B", "34B", "70B", "405B"][Math.floor(rand() * 5)],
-      contextWindowTokens: [8000, 32000, 128000, 200000][Math.floor(rand() * 4)],
+      parameters: mult <= 0.5 ? "7B" : mult === 1 ? "34B" : mult === 2 ? "70B" : "405B",
+      contextWindowTokens: mult <= 0.5 ? 8000 : mult === 1 ? 32000 : mult === 2 ? 128000 : 200000,
       modality: itemId.includes("vision") ? "vision" : itemId.includes("audio") || itemId.includes("speech") ? "audio" : itemId.includes("embed") ? "embedding" : "text",
+      options: opts,
     };
-    case "ai-agent": return { maxStepsPerRun: 5 + Math.floor(rand() * 45), toolsGranted: 1 + Math.floor(rand() * 12), memoryEnabled: rand() > 0.3 };
-    case "api-service": return { rateLimitRpm: [60, 600, 6000, 60000][Math.floor(rand() * 4)], authMethod: rand() > 0.5 ? "api-key" : "oauth2", regionsServed: 1 + Math.floor(rand() * 4) };
-    case "devops-tool": return { pipelinesActive: 1 + Math.floor(rand() * 20), buildMinutesIncluded: 500 + Math.floor(rand() * 9500), concurrency: 1 + Math.floor(rand() * 8) };
-    case "observability-tool": return { retentionDays: [7, 14, 30, 90][Math.floor(rand() * 4)], ingestGbPerDay: 1 + Math.floor(rand() * 500), alertRules: Math.floor(rand() * 50) };
-    case "security-tool": return { usersProtected: 10 + Math.floor(rand() * 990), mfaEnforced: rand() > 0.2, threatFeedsActive: 1 + Math.floor(rand() * 6) };
-    case "governance-tool": return { policiesEnforced: 1 + Math.floor(rand() * 30), approvalSlaHours: [1, 4, 12, 24][Math.floor(rand() * 4)], auditRetentionDays: 365 };
-    case "data-tool": return { pipelinesActive: 1 + Math.floor(rand() * 15), throughputMbps: 10 + Math.floor(rand() * 990), connectorsConfigured: 1 + Math.floor(rand() * 20) };
-    case "knowledge-tool": return { documentsIndexed: 1000 + Math.floor(rand() * 999000), embeddingDims: [384, 768, 1536, 3072][Math.floor(rand() * 4)], refreshIntervalMin: [5, 15, 60, 1440][Math.floor(rand() * 4)] };
-    case "automation-tool": return { workflowsActive: 1 + Math.floor(rand() * 40), runsPerDay: Math.floor(rand() * 5000), avgRunSeconds: 1 + Math.floor(rand() * 120) };
-    case "developer-tool": return { seats: 1 + Math.floor(rand() * 50), buildMinutesIncluded: 100 + Math.floor(rand() * 4900) };
-    case "enterprise-app": return { activeUsers: 10 + Math.floor(rand() * 4990), modulesEnabled: 1 + Math.floor(rand() * 10) };
-    case "marketplace-item": return { installScope: rand() > 0.5 ? "organization" : "workspace", version: `${1 + Math.floor(rand() * 4)}.${Math.floor(rand() * 10)}.${Math.floor(rand() * 10)}` };
-    case "billing-tool": return { billingCycle: rand() > 0.5 ? "monthly" : "usage-based", currency: "USD" };
+    case "ai-agent": return { maxStepsPerRun: Math.max(5, Math.round(20 * mult)), toolsGranted: Math.max(1, Math.round(4 * mult)), memoryEnabled: !opts.includes("no-memory"), options: opts };
+    case "api-service": return { rateLimitRpm: Math.max(60, Math.round(600 * mult)), authMethod: opts.includes("oauth2") ? "oauth2" : "api-key", regionsServed: Math.max(1, Math.round(2 * mult)), options: opts };
+    case "devops-tool": return { pipelinesActive: Math.max(1, Math.round(5 * mult)), buildMinutesIncluded: Math.round(2000 * mult), concurrency: Math.max(1, Math.round(2 * mult)), options: opts };
+    case "observability-tool": return { retentionDays: mult <= 0.5 ? 7 : mult === 1 ? 14 : mult === 2 ? 30 : 90, ingestGbPerDay: Math.round(50 * mult), alertRules: Math.round(10 * mult), options: opts };
+    case "security-tool": return { usersProtected: Math.max(10, Math.round(100 * mult)), mfaEnforced: !opts.includes("no-mfa"), threatFeedsActive: Math.max(1, Math.round(2 * mult)), options: opts };
+    case "governance-tool": return { policiesEnforced: Math.max(1, Math.round(6 * mult)), approvalSlaHours: mult <= 0.5 ? 24 : mult === 1 ? 12 : mult === 2 ? 4 : 1, auditRetentionDays: 365, options: opts };
+    case "data-tool": return { pipelinesActive: Math.max(1, Math.round(4 * mult)), throughputMbps: Math.round(100 * mult), connectorsConfigured: Math.max(1, Math.round(4 * mult)), options: opts };
+    case "knowledge-tool": return { documentsIndexed: Math.round(50_000 * mult), embeddingDims: mult <= 0.5 ? 384 : mult === 1 ? 768 : mult === 2 ? 1536 : 3072, refreshIntervalMin: mult <= 0.5 ? 1440 : mult === 1 ? 60 : mult === 2 ? 15 : 5, options: opts };
+    case "automation-tool": return { workflowsActive: Math.max(1, Math.round(8 * mult)), runsPerDay: Math.round(500 * mult), avgRunSeconds: 1 + Math.floor(rand() * 60), options: opts };
+    case "developer-tool": return { seats: Math.max(1, Math.round(10 * mult)), buildMinutesIncluded: Math.round(1000 * mult), options: opts };
+    case "enterprise-app": return { activeUsers: Math.max(10, Math.round(500 * mult)), modulesEnabled: Math.max(1, Math.round(3 * mult)), options: opts };
+    case "marketplace-item": return { installScope: opts.includes("workspace-scope") ? "workspace" : "organization", version: `${1 + Math.floor(rand() * 4)}.${Math.floor(rand() * 10)}.${Math.floor(rand() * 10)}`, options: opts };
+    case "billing-tool": return { billingCycle: opts.includes("usage-based") ? "usage-based" : "monthly", currency: "USD", options: opts };
   }
 }
 
@@ -162,7 +187,7 @@ export class HiveForgeService {
     return category ? catalog.filter(c => c.id === category) : catalog;
   }
 
-  async provision(ctx: RequestContext, input: { itemId: string; region?: string }): Promise<ProvisionedResource> {
+  async provision(ctx: RequestContext, input: ProvisionInput): Promise<ProvisionedResource> {
     this.policy.assert(ctx.principal, "hiveforge:write", { kind: "resource", organizationId: ctx.principal.organizationId });
     const found = findCatalogItem(input.itemId);
     if (!found) throw PlatformError.notFound("catalog_item", input.itemId);
@@ -172,16 +197,20 @@ export class HiveForgeService {
     const rand = seededRandom(`${found.item.id}:${id}`);
     const kind = resolveKind(found.category, found.subgroup);
     const region = input.region ?? REGIONS[Math.floor(rand() * REGIONS.length)] ?? "us-east-1";
+    const sizeTier: SizeTier = input.sizeTier ?? "medium";
+    const options = input.options ?? [];
+    const mult = SIZE_TIER_MULTIPLIER[sizeTier];
     const resource: ProvisionedResource = {
       id, organizationId: org, kind, category: found.category, subgroup: found.subgroup,
       itemId: found.item.id, itemName: found.item.name,
-      region, status: "running", specs: specsFor(kind, found.item.id, rand),
+      region, status: "running", sizeTier, replicas: input.replicas, options,
+      specs: specsFor(kind, found.item.id, rand, { sizeTier, replicas: input.replicas, options }),
       endpoint: `${kind}-${id.slice(-8)}.${region}.hiveforge.dev`,
-      hourlyRateUsd: found.item.hourlyRateUsd ?? 0.05,
+      hourlyRateUsd: Number(((found.item.hourlyRateUsd ?? 0.05) * mult).toFixed(4)),
       createdAt: new Date().toISOString(),
     };
     await this.repo.insertResource(resource);
-    await this.bus.publish(Subjects.hiveforge.resourceProvisioned, { resourceId: resource.id, kind: resource.kind, category: resource.category, itemId: resource.itemId }, { organizationId: org, actor: ctx.principal.userId, traceId: ctx.traceId });
+    await this.bus.publish(Subjects.hiveforge.resourceProvisioned, { resourceId: resource.id, kind: resource.kind, category: resource.category, itemId: resource.itemId, sizeTier: resource.sizeTier }, { organizationId: org, actor: ctx.principal.userId, traceId: ctx.traceId });
     return resource;
   }
 

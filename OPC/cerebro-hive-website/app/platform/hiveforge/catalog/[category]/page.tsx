@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { api, checkOnline, KEY, type CatalogCategory, type ProvisionedResource } from "../../lib";
+import { api, checkOnline, KEY, type CatalogCategory, type CatalogItem, type ProvisionedResource } from "../../lib";
+import { HiveForgeWizard } from "../../HiveForgeWizard";
 
 export default function CatalogCategoryPage() {
   const params = useParams<{ category: string }>();
@@ -14,6 +15,7 @@ export default function CatalogCategoryPage() {
   const [resources, setResources] = useState<ProvisionedResource[]>([]);
   const [busyItem, setBusyItem] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [wizardItem, setWizardItem] = useState<CatalogItem | null>(null);
 
   const refresh = useCallback(async () => {
     const ok = await checkOnline();
@@ -30,16 +32,6 @@ export default function CatalogCategoryPage() {
   }, [categoryId]);
 
   useEffect(() => { void refresh(); }, [refresh]);
-
-  const provision = useCallback(async (itemId: string) => {
-    setBusyItem(itemId); setMessage(null);
-    try {
-      const resource = await api<{ id: string; endpoint: string }>("/v1/hiveforge/provision", { method: "POST", body: JSON.stringify({ itemId }) });
-      setMessage(`Provisioned ${itemId} → ${resource.endpoint}`);
-      await refresh();
-    } catch (err) { setMessage(err instanceof Error ? err.message : String(err)); }
-    finally { setBusyItem(null); }
-  }, [refresh]);
 
   const deprovision = useCallback(async (id: string) => {
     setBusyItem(id);
@@ -85,7 +77,7 @@ export default function CatalogCategoryPage() {
             {running.map(r => (
               <div key={r.id} className="flex items-center justify-between rounded-lg border border-border bg-surface/40 px-4 py-3">
                 <div>
-                  <div className="text-sm font-medium text-text-primary">{r.itemName} <span className="text-xs text-text-secondary">· {r.subgroup}</span></div>
+                  <div className="text-sm font-medium text-text-primary">{r.itemName} <span className="text-xs text-text-secondary">· {r.subgroup} · {r.sizeTier}</span></div>
                   <div className="text-xs text-text-secondary">{r.endpoint} · {r.region} · ${r.hourlyRateUsd.toFixed(4)}/hr</div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -111,17 +103,17 @@ export default function CatalogCategoryPage() {
                     <div className="text-sm font-medium text-text-primary">{item.name}</div>
                     {item.provisionable && (
                       <div className="text-xs text-text-secondary">
-                        {item.hourlyRateUsd ? `$${item.hourlyRateUsd.toFixed(4)}/hr` : "Included"}
+                        {item.hourlyRateUsd ? `from $${item.hourlyRateUsd.toFixed(4)}/hr` : "Included"}
                       </div>
                     )}
                   </div>
                   {item.provisionable && (
                     <button
-                      onClick={() => void provision(item.id)}
-                      disabled={busyItem !== null || !online || !KEY}
+                      onClick={() => setWizardItem(item)}
+                      disabled={!online || !KEY}
                       className="rounded-lg border border-primary-accent px-2.5 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40"
                     >
-                      {busyItem === item.id ? "…" : "Provision"}
+                      Provision…
                     </button>
                   )}
                 </div>
@@ -131,6 +123,15 @@ export default function CatalogCategoryPage() {
         ))}
         {!category && online && <p className="text-text-secondary">Loading catalog…</p>}
       </div>
+
+      {wizardItem && (
+        <HiveForgeWizard
+          item={wizardItem}
+          mode="provision"
+          onClose={() => setWizardItem(null)}
+          onDone={refresh}
+        />
+      )}
     </main>
   );
 }

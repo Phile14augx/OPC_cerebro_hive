@@ -66,6 +66,21 @@ describe("HiveForge — Enterprise AI Cloud Marketplace catalog + provisioning",
     expect(cost.resourceCount).toBe(0);
   });
 
+  it("wizard config (sizeTier/replicas/options) meaningfully scales specs and hourly rate", async () => {
+    const { platform, ctx } = await testPlatform();
+    const small = await platform.hiveForge.provision(ctx, { itemId: "enterprise-vps", sizeTier: "small" });
+    const xlarge = await platform.hiveForge.provision(ctx, { itemId: "premium-vps", sizeTier: "xlarge" });
+    expect((xlarge.specs as { vcpu: number }).vcpu).toBeGreaterThan((small.specs as { vcpu: number }).vcpu);
+    expect(xlarge.hourlyRateUsd).toBeGreaterThan(small.hourlyRateUsd);
+
+    const withReplicas = await platform.hiveForge.provision(ctx, { itemId: "postgresql", replicas: 7 });
+    expect((withReplicas.specs as { replicas: number }).replicas).toBe(7);
+
+    const withOptions = await platform.hiveForge.provision(ctx, { itemId: "object-storage", options: ["multi-az"] });
+    expect((withOptions.specs as { redundancy: string }).redundancy).toBe("multi-az");
+    expect(withOptions.options).toEqual(["multi-az"]);
+  });
+
   it("installs a marketplace item and lists installations", async () => {
     const { platform, ctx } = await testPlatform();
     const install = await platform.hiveForge.installMarketplaceItem(ctx, "ai-agents");

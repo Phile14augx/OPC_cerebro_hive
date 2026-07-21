@@ -674,7 +674,13 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
     return { categories: p.hiveForge.listCatalog(ctx(req), q.category as never) };
   });
   app.post("/v1/hiveforge/provision", async req => {
-    const body = parse(z.object({ itemId: z.string().min(1), region: z.string().optional() }), req.body);
+    const body = parse(z.object({
+      itemId: z.string().min(1),
+      region: z.string().optional(),
+      sizeTier: z.enum(["small", "medium", "large", "xlarge"]).optional(),
+      replicas: z.number().int().min(1).max(64).optional(),
+      options: z.array(z.string().max(40)).max(10).optional(),
+    }), req.body);
     return p.hiveForge.provision(ctx(req), body);
   });
   app.get("/v1/hiveforge/resources", async req => {
