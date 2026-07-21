@@ -191,12 +191,19 @@ function WorkspaceLauncher() {
   const [category, setCategory] = useState<LauncherCategory>("all");
   const [query, setQuery] = useState("");
 
+  const q = query.trim().toLowerCase();
+  const searching = q.length > 0;
+
+  // While searching, ignore the active workspace and match across everything —
+  // otherwise scope to the selected workspace so the panel height stays fixed
+  // regardless of how many products CerebroHive ships.
   const filtered = WORKSPACE_TILES.filter(t => {
-    const matchesCategory = category === "all" || t.category === category;
-    const q = query.trim().toLowerCase();
+    const matchesCategory = searching || category === "all" || t.category === category;
     const matchesQuery = !q || t.title.toLowerCase().includes(q) || t.subtitle.toLowerCase().includes(q);
     return matchesCategory && matchesQuery;
   });
+
+  const countFor = (id: LauncherCategory) => (id === "all" ? WORKSPACE_TILES.length : WORKSPACE_TILES.filter(t => t.category === id).length);
 
   return (
     <div className="mt-4">
@@ -206,54 +213,67 @@ function WorkspaceLauncher() {
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="What would you like to build today?"
+            placeholder="Search all workspaces and products…"
             className="w-full rounded-xl border border-border bg-surface py-4 pl-12 pr-4 text-sm text-text-primary placeholder:text-text-secondary focus:border-primary-accent/50 focus:outline-none"
           />
         </div>
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+      {/* Workspace tabs — a fixed row of categories, not a growing wall of tiles.
+          Selecting a workspace scopes the panel below; searching overrides it. */}
+      <div className="mt-6 flex items-center justify-center gap-1 overflow-x-auto border-b border-border pb-px">
         {LAUNCHER_CATEGORIES.map(c => (
           <button
             key={c.id}
             onClick={() => setCategory(c.id)}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-widest transition-all ${
-              category === c.id
-                ? "border-primary-accent bg-primary-accent/10 text-primary-accent"
-                : "border-border text-text-secondary hover:border-primary-accent/40 hover:text-text-primary"
+            disabled={searching}
+            className={`inline-flex shrink-0 items-center gap-1.5 border-b-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest transition-all disabled:cursor-default disabled:opacity-40 ${
+              !searching && category === c.id
+                ? "border-primary-accent text-primary-accent"
+                : "border-transparent text-text-secondary hover:text-text-primary"
             }`}
           >
             {c.id === "all" && <LayoutGrid size={12} />}
             {c.label}
+            <span className="text-[10px] font-normal normal-case text-text-secondary/70">{countFor(c.id)}</span>
           </button>
         ))}
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filtered.map(tile => {
-          const Icon = tile.icon;
-          return (
-            <Link
-              key={tile.href}
-              href={tile.href}
-              className={`group flex min-h-[220px] flex-col justify-between rounded-2xl border border-border border-t-4 ${tile.border} bg-surface/60 p-8 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] ${tile.glow} ${
-                tile.featured ? "sm:col-span-2" : ""
-              }`}
-            >
-              <div>
-                <Icon size={28} className={`${tile.iconColor} transition-transform duration-300 group-hover:scale-110`} />
-                <h3 className="mt-5 font-space text-lg font-bold text-text-primary">{tile.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-text-secondary">{tile.subtitle}</p>
-              </div>
-              <div className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-text-secondary transition-all group-hover:gap-2.5 group-hover:text-primary-accent">
-                Open <ArrowRight size={14} />
-              </div>
-            </Link>
-          );
-        })}
-        {filtered.length === 0 && (
-          <p className="col-span-full text-center text-sm text-text-secondary">No workspaces match "{query}".</p>
+      {/* Fixed-height, internally-scrolling workspace panel: the page never grows
+          taller as more products ship — only this panel scrolls. */}
+      <div className="mt-6 max-h-[640px] overflow-y-auto rounded-2xl border border-border bg-surface/20 p-6 sm:p-8">
+        {searching && (
+          <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-text-secondary">
+            {filtered.length} result{filtered.length === 1 ? "" : "s"} across all workspaces
+          </p>
         )}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {filtered.map(tile => {
+            const Icon = tile.icon;
+            return (
+              <Link
+                key={tile.href}
+                href={tile.href}
+                className={`group flex min-h-[200px] flex-col justify-between rounded-2xl border border-border border-t-4 ${tile.border} bg-surface/60 p-7 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] ${tile.glow} ${
+                  tile.featured ? "sm:col-span-2 xl:col-span-1" : ""
+                }`}
+              >
+                <div>
+                  <Icon size={26} className={`${tile.iconColor} transition-transform duration-300 group-hover:scale-110`} />
+                  <h3 className="mt-4 font-space text-base font-bold text-text-primary">{tile.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-text-secondary">{tile.subtitle}</p>
+                </div>
+                <div className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-text-secondary transition-all group-hover:gap-2.5 group-hover:text-primary-accent">
+                  Open <ArrowRight size={14} />
+                </div>
+              </Link>
+            );
+          })}
+          {filtered.length === 0 && (
+            <p className="col-span-full py-12 text-center text-sm text-text-secondary">No workspaces match "{query}".</p>
+          )}
+        </div>
       </div>
     </div>
   );
