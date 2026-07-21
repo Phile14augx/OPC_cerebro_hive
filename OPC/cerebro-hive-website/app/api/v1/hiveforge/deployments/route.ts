@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { eventStore } from "../../../../platform/hiveforge/core/events/EventStore";
+import { deploymentOrchestrator } from "../../../../platform/hiveforge/core/engine/DeploymentOrchestrator";
 
 const prisma = new PrismaClient();
 
@@ -55,8 +56,11 @@ export async function POST(req: Request) {
       payload: { deploymentId: result.deployment.id, blueprintId }
     });
 
-    // We simulate handing off to the ExecutionPlanner here in the background
-    // setTimeout(() => executionPlanner.execute(result.operation.id), 0);
+    // We simulate handing off to the Orchestrator here in the background
+    // setTimeout avoids blocking the HTTP response
+    setTimeout(() => {
+      deploymentOrchestrator.startOrchestration(result.operation.id, blueprintId, config);
+    }, 0);
 
     return NextResponse.json({
       operationId: result.operation.id,

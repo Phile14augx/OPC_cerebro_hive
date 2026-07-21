@@ -8,7 +8,17 @@ export type DomainEventType =
   | "PolicyViolation" 
   | "RollbackExecuted"
   | "WorkflowStarted"
-  | "WorkflowCompleted";
+  | "WorkflowCompleted"
+  | "OperationPending"
+  | "OperationQueued"
+  | "OperationValidating"
+  | "OperationPlanning"
+  | "OperationAllocating"
+  | "OperationProvisioning"
+  | "OperationConfiguring"
+  | "OperationVerifying"
+  | "OperationReady"
+  | "OperationFailed";
 
 export interface DomainEvent {
   id: string; // UUID

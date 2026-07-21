@@ -102,8 +102,12 @@ export class Registry implements PlatformRegistryContext {
 
 export const platformRegistry = new Registry();
 
+import { mockCloudProviderPlugin } from "../providers/MockCloudProvider";
+
 // Seed Core Plugins at boot
 const seedCorePlugins = () => {
+  platformRegistry.registerProvider(mockCloudProviderPlugin);
+
   platformRegistry.registerCloud({
     state: "ready",
     health: "Healthy",

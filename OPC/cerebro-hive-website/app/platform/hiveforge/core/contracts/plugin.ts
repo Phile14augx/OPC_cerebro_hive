@@ -79,11 +79,16 @@ export interface ActionDefinition {
   keyboardShortcut?: string;
 }
 
+import { IProvisioningProvider } from "./provider";
+
 export interface Plugin {
   readonly manifest: ExtensionManifest;
   state: PluginLifecycleState;
   health: PluginHealthState;
   
+  // Executable capabilities
+  provider?: IProvisioningProvider;
+
   // Contributions
   navigationNodes?: NavigationNode[];
   actions?: ActionDefinition[];
