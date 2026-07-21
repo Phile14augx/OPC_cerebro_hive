@@ -788,6 +788,35 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
   app.get("/v1/cerebroinsight/alert-rules", async req => ({ rules: await p.cerebroInsight.listAlertRules(ctx(req)) }));
   app.get("/v1/cerebroinsight/insights", async req => ({ insights: await p.cerebroInsight.listInsights(ctx(req)) }));
 
+  // ---------------- CerebroGrowth (Enterprise AI Growth OS — Phase 1: Content Studio + CRM + Sales Copilot) ----------------
+  app.post("/v1/cerebrogrowth/content", async req => {
+    const body = parse(z.object({ sourceTitle: z.string().min(1).max(200), sourceExcerpt: z.string().min(1).max(8000) }), req.body);
+    return p.cerebroGrowth.generateContentSet(ctx(req), body);
+  });
+  app.get("/v1/cerebrogrowth/content", async req => ({ contentSets: await p.cerebroGrowth.listContentSets(ctx(req)) }));
+
+  app.post("/v1/cerebrogrowth/leads", async req => {
+    const body = parse(z.object({
+      contactName: z.string().min(1).max(200), email: z.string().email(), title: z.string().max(200).optional(),
+      companyName: z.string().min(1).max(200), industry: z.string().max(100).optional(), employeeCount: z.number().int().positive().optional(),
+      source: z.enum(["lead-gen-form", "referral", "inbound", "outbound", "event"]), notes: z.string().max(2000).optional(),
+    }), req.body);
+    return p.cerebroGrowth.createLead(ctx(req), body);
+  });
+  app.get("/v1/cerebrogrowth/leads", async req => ({ leads: await p.cerebroGrowth.listLeads(ctx(req)) }));
+  app.post("/v1/cerebrogrowth/leads/:id/stage", async req => {
+    const body = parse(z.object({ stage: z.enum(["new", "qualified", "meeting", "proposal", "contract", "won", "lost"]) }), req.body);
+    return p.cerebroGrowth.advanceLeadStage(ctx(req), (req.params as { id: string }).id, body.stage);
+  });
+  app.post("/v1/cerebrogrowth/leads/:id/proposal", async req => p.cerebroGrowth.generateProposal(ctx(req), (req.params as { id: string }).id));
+  app.get("/v1/cerebrogrowth/proposals", async req => ({ proposals: await p.cerebroGrowth.listProposals(ctx(req)) }));
+
+  app.post("/v1/cerebrogrowth/briefs", async req => {
+    const body = parse(z.object({ companyName: z.string().min(1).max(200), industry: z.string().max(100).optional() }), req.body);
+    return p.cerebroGrowth.generateSalesBrief(ctx(req), body);
+  });
+  app.get("/v1/cerebrogrowth/briefs", async req => ({ briefs: await p.cerebroGrowth.listBriefs(ctx(req)) }));
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {

@@ -198,6 +198,13 @@ export default function CerebroInsightPage() {
 
       {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
 
+      <section className="mt-6 rounded-xl border border-primary-accent/40 bg-primary-accent/5 p-6">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary-accent">Want the pipeline behind these numbers?</p>
+        <h2 className="mt-2 text-xl font-semibold text-text-primary">CerebroGrowth™ — the enterprise AI growth engine</h2>
+        <p className="mt-2 max-w-2xl text-sm text-text-secondary">AI content studio, CRM pipeline with opportunity/risk scoring, and a sales copilot that generates company intelligence briefs on demand.</p>
+        <Link href="/platform/growth" className="mt-4 inline-block rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent">Open CerebroGrowth™ →</Link>
+      </section>
+
       {alerts.length > 0 && (
         <section className="mt-8 space-y-2">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">Active alerts</h2>

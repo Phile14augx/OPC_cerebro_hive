@@ -232,4 +232,11 @@ export const Subjects = {
     metricsRefreshed: "cerebroinsight.metrics.refreshed",
     alertTriggered: "cerebroinsight.alert.triggered",
   },
+  cerebrogrowth: {
+    contentGenerated: "cerebrogrowth.content.generated",
+    leadCreated: "cerebrogrowth.lead.created",
+    leadStageChanged: "cerebrogrowth.lead.stage_changed",
+    proposalGenerated: "cerebrogrowth.proposal.generated",
+    briefGenerated: "cerebrogrowth.brief.generated",
+  },
 } as const;
