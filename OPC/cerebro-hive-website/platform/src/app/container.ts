@@ -298,6 +298,7 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     snapshots.register("cerebrogrowth", comboSnapshot({
       contentSets: mapSnapshot(cerebroGrowthRepo.contentSets), leads: mapSnapshot(cerebroGrowthRepo.leads),
       proposals: mapSnapshot(cerebroGrowthRepo.proposals), briefs: mapSnapshot(cerebroGrowthRepo.briefs),
+      leadIntelligence: mapSnapshot(cerebroGrowthRepo.leadIntelligence),
     }));
     await snapshots.start();
   }

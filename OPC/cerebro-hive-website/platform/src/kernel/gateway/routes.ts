@@ -810,6 +810,11 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
   });
   app.post("/v1/cerebrogrowth/leads/:id/proposal", async req => p.cerebroGrowth.generateProposal(ctx(req), (req.params as { id: string }).id));
   app.get("/v1/cerebrogrowth/proposals", async req => ({ proposals: await p.cerebroGrowth.listProposals(ctx(req)) }));
+  app.post("/v1/cerebrogrowth/leads/:id/enrich", async req => p.cerebroGrowth.enrichLead(ctx(req), (req.params as { id: string }).id));
+  app.get("/v1/cerebrogrowth/leads/:id/intelligence", async req => {
+    const intelligence = await p.cerebroGrowth.getLeadIntelligence(ctx(req), (req.params as { id: string }).id);
+    return { intelligence: intelligence ?? null };
+  });
 
   app.post("/v1/cerebrogrowth/briefs", async req => {
     const body = parse(z.object({ companyName: z.string().min(1).max(200), industry: z.string().max(100).optional() }), req.body);

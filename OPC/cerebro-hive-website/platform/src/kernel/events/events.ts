@@ -236,6 +236,7 @@ export const Subjects = {
     contentGenerated: "cerebrogrowth.content.generated",
     leadCreated: "cerebrogrowth.lead.created",
     leadStageChanged: "cerebrogrowth.lead.stage_changed",
+    leadEnriched: "cerebrogrowth.lead.enriched",
     proposalGenerated: "cerebrogrowth.proposal.generated",
     briefGenerated: "cerebrogrowth.brief.generated",
   },

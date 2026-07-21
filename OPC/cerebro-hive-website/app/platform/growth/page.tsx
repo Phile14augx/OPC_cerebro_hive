@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, ChevronDown, ChevronRight } from "lucide-react";
 import {
   api, checkOnline, KEY, LEAD_STAGE_ORDER,
-  type ContentSet, type Lead, type LeadSource, type LeadStage, type Proposal, type SalesBrief,
+  type ContentSet, type Lead, type LeadSource, type LeadStage, type Proposal, type SalesBrief, type LeadIntelligence,
 } from "./lib";
 
 type Tab = "content" | "crm" | "copilot";
@@ -99,7 +99,54 @@ function ContentStudioPanel({ online }: { online: boolean | null }) {
   );
 }
 
-function LeadCard({ lead, onAdvance, onProposal }: { lead: Lead; onAdvance: (id: string, stage: LeadStage) => void; onProposal: (id: string) => void }) {
+const FUNDING_LABEL: Record<string, string> = {
+  bootstrapped: "Bootstrapped", seed: "Seed", "series-a": "Series A",
+  "series-b": "Series B", "series-c-plus": "Series C+", public: "Public",
+};
+
+function IntelligencePanel({ intel }: { intel: LeadIntelligence }) {
+  return (
+    <div className="mt-3 space-y-3 rounded-lg border border-primary-accent/30 bg-surface p-3">
+      <div className="grid gap-2 text-xs sm:grid-cols-2">
+        <div><span className="text-text-secondary">AI readiness: </span><span className="font-semibold text-primary-accent">{intel.aiReadinessScore}/100</span></div>
+        <div><span className="text-text-secondary">Funding stage: </span><span className="font-semibold text-text-primary">{FUNDING_LABEL[intel.fundingStage] ?? intel.fundingStage}</span></div>
+        <div><span className="text-text-secondary">Employee trend: </span><span className="font-semibold text-text-primary capitalize">{intel.employeeTrend}</span></div>
+        <div><span className="text-text-secondary">Hiring signal: </span><span className="text-text-primary">{intel.hiringTrend}</span></div>
+      </div>
+      <p className="text-xs text-text-secondary">{intel.websiteSignal}</p>
+      <div>
+        <div className="text-xs font-semibold uppercase tracking-wider text-text-secondary">Likely stack</div>
+        <div className="mt-1 flex flex-wrap gap-1.5">
+          {intel.techStackGuess.map(t => (
+            <span key={t} className="rounded-full border border-border px-2 py-0.5 text-[11px] text-text-secondary">{t}</span>
+          ))}
+        </div>
+      </div>
+      <p className="text-xs text-text-secondary">{intel.recommendedServiceRationale}</p>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wider text-primary-accent">Opportunity ({intel.opportunity})</div>
+          <ul className="mt-1 space-y-0.5 text-[11px] text-text-secondary">
+            {intel.opportunityFactors.map((f, i) => <li key={i}>• {f}</li>)}
+          </ul>
+        </div>
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wider text-red-400/80">Risk ({intel.risk})</div>
+          <ul className="mt-1 space-y-0.5 text-[11px] text-text-secondary">
+            {intel.riskFactors.map((f, i) => <li key={i}>• {f}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LeadCard({
+  lead, onAdvance, onProposal, onEnrich, intel, enriching,
+}: {
+  lead: Lead; onAdvance: (id: string, stage: LeadStage) => void; onProposal: (id: string) => void;
+  onEnrich: (id: string) => void; intel: LeadIntelligence | undefined; enriching: boolean;
+}) {
   const idx = LEAD_STAGE_ORDER.indexOf(lead.stage);
   const next = idx >= 0 && idx < LEAD_STAGE_ORDER.length - 1 ? LEAD_STAGE_ORDER[idx + 1] : undefined;
   return (
@@ -126,12 +173,16 @@ function LeadCard({ lead, onAdvance, onProposal }: { lead: Lead; onAdvance: (id:
             Generate proposal
           </button>
         )}
+        <button onClick={() => onEnrich(lead.id)} disabled={enriching} className="rounded-md border border-border px-2.5 py-1 text-xs font-semibold text-text-secondary disabled:opacity-40">
+          {enriching ? "Enriching…" : intel ? "Re-enrich" : "Enrich"}
+        </button>
         {lead.stage !== "lost" && lead.stage !== "won" && (
           <button onClick={() => onAdvance(lead.id, "lost")} className="rounded-md border border-border px-2.5 py-1 text-xs font-semibold text-red-400/80">
             Mark lost
           </button>
         )}
       </div>
+      {intel && <IntelligencePanel intel={intel} />}
     </div>
   );
 }
@@ -142,6 +193,8 @@ function CrmPanel({ online }: { online: boolean | null }) {
   const [form, setForm] = useState({ contactName: "", email: "", title: "", companyName: "", industry: "", employeeCount: "", source: "inbound" as LeadSource, notes: "" });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [intelligence, setIntelligence] = useState<Record<string, LeadIntelligence>>({});
+  const [enrichingId, setEnrichingId] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     if (!online || !KEY) return;
@@ -184,6 +237,15 @@ function CrmPanel({ online }: { online: boolean | null }) {
     catch (err) { setError(err instanceof Error ? err.message : String(err)); }
   }, [refresh]);
 
+  const enrich = useCallback(async (id: string) => {
+    setEnrichingId(id); setError(null);
+    try {
+      const res = await api<{ intelligence: LeadIntelligence }>(`/v1/cerebrogrowth/leads/${id}/enrich`, { method: "POST" });
+      setIntelligence(m => ({ ...m, [id]: res.intelligence }));
+    } catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    finally { setEnrichingId(null); }
+  }, []);
+
   const byStage = (stage: LeadStage) => leads.filter(l => l.stage === stage);
 
   return (
@@ -220,7 +282,16 @@ function CrmPanel({ online }: { online: boolean | null }) {
             <div key={stage} className="rounded-xl border border-border bg-surface/20 p-3">
               <div className="text-xs font-semibold uppercase tracking-wider text-text-secondary">{STAGE_LABEL[stage]} ({byStage(stage).length})</div>
               <div className="mt-2 space-y-2">
-                {byStage(stage).map(l => <LeadCard key={l.id} lead={l} onAdvance={(id, s) => void advance(id, s)} onProposal={id => void proposal(id)} />)}
+                {byStage(stage).map(l => (
+                  <LeadCard
+                    key={l.id} lead={l}
+                    onAdvance={(id, s) => void advance(id, s)}
+                    onProposal={id => void proposal(id)}
+                    onEnrich={id => void enrich(id)}
+                    intel={intelligence[l.id]}
+                    enriching={enrichingId === l.id}
+                  />
+                ))}
               </div>
             </div>
           ))}

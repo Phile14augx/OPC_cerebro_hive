@@ -53,3 +53,13 @@ export interface SalesBrief {
   existingStackGuess: string[]; painPoints: string[]; stakeholders: string[];
   suggestedPitch: string; discoveryQuestions: string[]; proposalOutline: string[]; createdAt: string;
 }
+
+export type FundingStage = "bootstrapped" | "seed" | "series-a" | "series-b" | "series-c-plus" | "public";
+export type EmployeeTrend = "growing" | "stable" | "shrinking";
+export interface LeadIntelligence {
+  id: string; leadId: string;
+  websiteSignal: string; fundingStage: FundingStage; employeeTrend: EmployeeTrend;
+  techStackGuess: string[]; hiringTrend: string; aiReadinessScore: number;
+  opportunity: number; risk: number; opportunityFactors: string[]; riskFactors: string[];
+  recommendedServiceRationale: string; createdAt: string;
+}

@@ -113,4 +113,56 @@ describe("CerebroGrowth™ — Enterprise AI Growth OS Phase 1 (Content Studio +
     expect(otherLeads.map(l => l.id)).not.toContain(lead.id);
     await expect(platform.cerebroGrowth.advanceLeadStage(otherCtx, lead.id, "qualified")).rejects.toThrow();
   });
+
+  it("enriches a lead with intelligence signals and a full score breakdown (Phase 6)", async () => {
+    const { platform, ctx } = await testPlatform();
+    const lead = await platform.cerebroGrowth.createLead(ctx, {
+      contactName: "Enrich Test", email: "enrich@bigco.com", title: "Chief Technology Officer",
+      companyName: "BigCo", employeeCount: 10000, source: "referral", notes: "Need AI agent automation, budget approved.",
+    });
+    const intelligence = await platform.cerebroGrowth.enrichLead(ctx, lead.id);
+    expect(intelligence.leadId).toBe(lead.id);
+    expect(intelligence.aiReadinessScore).toBeGreaterThanOrEqual(10);
+    expect(intelligence.aiReadinessScore).toBeLessThanOrEqual(95);
+    expect(intelligence.opportunityFactors.length).toBeGreaterThan(0);
+    expect(intelligence.riskFactors.length).toBeGreaterThan(0);
+    expect(intelligence.techStackGuess.length).toBeGreaterThan(0);
+    expect(["bootstrapped", "seed", "series-a", "series-b", "series-c-plus", "public"]).toContain(intelligence.fundingStage);
+    expect(intelligence.recommendedServiceRationale).toContain(lead.recommendedService);
+  });
+
+  it("is deterministic — enriching the same lead twice produces the same intelligence", async () => {
+    const { platform, ctx } = await testPlatform();
+    const lead = await platform.cerebroGrowth.createLead(ctx, { contactName: "Determ Test", email: "determ@test.com", companyName: "DetermCo", source: "inbound" });
+    const a = await platform.cerebroGrowth.enrichLead(ctx, lead.id);
+    const b = await platform.cerebroGrowth.enrichLead(ctx, lead.id);
+    expect(a.aiReadinessScore).toBe(b.aiReadinessScore);
+    expect(a.fundingStage).toBe(b.fundingStage);
+    expect(a.techStackGuess).toEqual(b.techStackGuess);
+  });
+
+  it("404s enriching an unknown lead", async () => {
+    const { platform, ctx } = await testPlatform();
+    await expect(platform.cerebroGrowth.enrichLead(ctx, "does-not-exist")).rejects.toThrow();
+  });
+
+  it("getLeadIntelligence returns undefined before enrichment and the record after", async () => {
+    const { platform, ctx } = await testPlatform();
+    const lead = await platform.cerebroGrowth.createLead(ctx, { contactName: "Fetch Test", email: "fetch@test.com", companyName: "FetchCo", source: "event" });
+    const before = await platform.cerebroGrowth.getLeadIntelligence(ctx, lead.id);
+    expect(before).toBeUndefined();
+    await platform.cerebroGrowth.enrichLead(ctx, lead.id);
+    const after = await platform.cerebroGrowth.getLeadIntelligence(ctx, lead.id);
+    expect(after?.leadId).toBe(lead.id);
+  });
+
+  it("scopes lead intelligence per organization", async () => {
+    const { platform, ctx } = await testPlatform();
+    const { ctx: otherCtx } = await testPlatform();
+    const lead = await platform.cerebroGrowth.createLead(ctx, { contactName: "Intel Scoped", email: "intelscoped@test.com", companyName: "IntelScopedCo", source: "inbound" });
+    await platform.cerebroGrowth.enrichLead(ctx, lead.id);
+    await expect(platform.cerebroGrowth.enrichLead(otherCtx, lead.id)).rejects.toThrow();
+    const otherIntel = await platform.cerebroGrowth.getLeadIntelligence(otherCtx, lead.id);
+    expect(otherIntel).toBeUndefined();
+  });
 });

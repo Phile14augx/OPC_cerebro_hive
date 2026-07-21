@@ -171,30 +171,37 @@ function recommendedServiceFor(text: string): string {
   return DEFAULT_SERVICE;
 }
 
-function scoreLead(input: { title?: string; companyName: string; employeeCount?: number; source: LeadSource; notes?: string }, rand: () => number): { opportunity: number; risk: number } {
+interface ScoreBreakdown { opportunity: number; risk: number; opportunityFactors: string[]; riskFactors: string[] }
+
+function scoreLeadDetailed(input: { title?: string; companyName: string; employeeCount?: number; source: LeadSource; notes?: string }, rand: () => number): ScoreBreakdown {
   let opportunity = 40 + Math.floor(rand() * 20);
   let risk = 30 + Math.floor(rand() * 20);
+  const opportunityFactors: string[] = [`Baseline score for an inbound-quality profile: +${opportunity}`];
+  const riskFactors: string[] = [`Baseline risk for an unqualified profile: +${risk}`];
 
   const title = (input.title ?? "").toLowerCase();
-  if (/chief|cxo|ceo|cto|ciso|coo/.test(title)) opportunity += 22;
-  else if (/vp|vice president|head of/.test(title)) opportunity += 15;
-  else if (/director|manager/.test(title)) opportunity += 8;
+  if (/chief|cxo|ceo|cto|ciso|coo/.test(title)) { opportunity += 22; opportunityFactors.push("C-level title — strong buying authority: +22"); }
+  else if (/vp|vice president|head of/.test(title)) { opportunity += 15; opportunityFactors.push("VP/Head-of title — likely budget influence: +15"); }
+  else if (/director|manager/.test(title)) { opportunity += 8; opportunityFactors.push("Director/Manager title — some buying influence: +8"); }
+  else { riskFactors.push("No senior title on file — buying authority unconfirmed"); }
 
   const size = input.employeeCount ?? 0;
-  if (size >= 5000) opportunity += 15;
-  else if (size >= 500) opportunity += 10;
-  else if (size >= 50) opportunity += 4;
-  else risk += 8;
+  if (size >= 5000) { opportunity += 15; opportunityFactors.push("Enterprise-scale company (5,000+ employees): +15"); }
+  else if (size >= 500) { opportunity += 10; opportunityFactors.push("Mid-market company (500-5,000 employees): +10"); }
+  else if (size >= 50) { opportunity += 4; opportunityFactors.push("Small-to-mid company (50-500 employees): +4"); }
+  else { risk += 8; riskFactors.push("Company under 50 employees — smaller budget likely: +8"); }
 
-  if (input.source === "referral") { opportunity += 12; risk -= 8; }
-  else if (input.source === "lead-gen-form") { opportunity += 6; }
-  else if (input.source === "outbound") { risk += 6; }
+  if (input.source === "referral") { opportunity += 12; risk -= 8; opportunityFactors.push("Referral source — warm intro, higher trust: +12"); riskFactors.push("Referral source reduces risk: -8"); }
+  else if (input.source === "lead-gen-form") { opportunity += 6; opportunityFactors.push("Lead-gen form submission — self-identified interest: +6"); }
+  else if (input.source === "outbound") { risk += 6; riskFactors.push("Cold outbound — no inbound interest signal yet: +6"); }
+  else { opportunityFactors.push(`${input.source} source — neutral signal`); }
 
-  if (input.notes && input.notes.length > 40) opportunity += 5;
+  if (input.notes && input.notes.length > 40) { opportunity += 5; opportunityFactors.push("Detailed notes on file — clearer need identified: +5"); }
+  else { riskFactors.push("Sparse notes — need not yet well understood"); }
 
   opportunity = Math.max(5, Math.min(99, opportunity));
   risk = Math.max(5, Math.min(95, risk));
-  return { opportunity, risk };
+  return { opportunity, risk, opportunityFactors, riskFactors };
 }
 
 export interface ProposalTier { name: string; priceUsd: number; includes: string[] }
@@ -307,6 +314,59 @@ function buildSalesBrief(companyName: string, industry: string | undefined, rand
 }
 
 // ---------------------------------------------------------------------------------------------
+// Lead Intelligence (Phase 6) — enrichment layer on top of the CRM's flat opportunity/risk score
+// ---------------------------------------------------------------------------------------------
+
+export type EmployeeTrend = "growing" | "stable" | "shrinking";
+export type FundingStage = "bootstrapped" | "seed" | "series-a" | "series-b" | "series-c-plus" | "public" | "unknown";
+
+export interface LeadIntelligence {
+  id: string; organizationId: string; leadId: string;
+  websiteSignal: string; fundingStage: FundingStage; employeeTrend: EmployeeTrend;
+  techStackGuess: string[]; hiringTrend: string; aiReadinessScore: number;
+  opportunity: number; risk: number; opportunityFactors: string[]; riskFactors: string[];
+  recommendedServiceRationale: string; createdAt: string;
+}
+
+const FUNDING_POOL: FundingStage[] = ["bootstrapped", "seed", "series-a", "series-b", "series-c-plus", "public"];
+const EMPLOYEE_TREND_POOL: EmployeeTrend[] = ["growing", "stable", "shrinking"];
+const HIRING_SIGNALS = [
+  "actively hiring across engineering and data roles",
+  "hiring has slowed but engineering headcount is stable",
+  "recently posted several AI/ML engineering roles",
+  "hiring freeze reported in the last two quarters",
+  "expanding go-to-market team alongside engineering",
+];
+
+function fundingStageFor(employeeCount: number | undefined, rand: () => number): FundingStage {
+  const size = employeeCount ?? 0;
+  if (size >= 5000) return "public";
+  if (size >= 1000) return rand() > 0.5 ? "public" : "series-c-plus";
+  if (size >= 200) return "series-b";
+  if (size >= 50) return "series-a";
+  if (size >= 10) return "seed";
+  return "bootstrapped";
+}
+
+function buildLeadIntelligence(lead: Lead, score: ScoreBreakdown, rand: () => number): Omit<LeadIntelligence, "id" | "organizationId" | "leadId" | "createdAt"> {
+  const domainGuess = lead.companyName.toLowerCase().replace(/[^a-z0-9]+/g, "") + ".com";
+  const fundingStage = fundingStageFor(lead.employeeCount, rand);
+  const employeeTrend = EMPLOYEE_TREND_POOL[Math.floor(rand() * EMPLOYEE_TREND_POOL.length)]!;
+  const techStackGuess = pick(STACK_POOL, 3 + Math.floor(rand() * 2), rand);
+  const hiringTrend = HIRING_SIGNALS[Math.floor(rand() * HIRING_SIGNALS.length)]!;
+  const aiReadinessScore = Math.max(10, Math.min(95, Math.round((score.opportunity * 0.6 + (100 - score.risk) * 0.4))));
+
+  return {
+    websiteSignal: `Public signals for ${domainGuess} suggest an active web presence with recent product or careers page updates.`,
+    fundingStage, employeeTrend, techStackGuess, hiringTrend, aiReadinessScore,
+    opportunity: score.opportunity, risk: score.risk,
+    opportunityFactors: score.opportunityFactors, riskFactors: score.riskFactors,
+    recommendedServiceRationale: `Recommended "${lead.recommendedService}" based on the language in the lead's notes and industry; ` +
+      `an AI readiness score of ${aiReadinessScore}/100 suggests they are ${aiReadinessScore >= 70 ? "ready for a production-scale engagement" : aiReadinessScore >= 45 ? "ready for a scoped pilot before a larger commitment" : "early-stage and best suited to a foundational assessment first"}.`,
+  };
+}
+
+// ---------------------------------------------------------------------------------------------
 // Repository
 // ---------------------------------------------------------------------------------------------
 
@@ -324,6 +384,10 @@ export interface CerebroGrowthRepository {
 
   insertBrief(b: SalesBrief): Promise<void>;
   listBriefs(org: string): Promise<SalesBrief[]>;
+
+  upsertLeadIntelligence(i: LeadIntelligence): Promise<void>;
+  getLeadIntelligence(org: string, leadId: string): Promise<LeadIntelligence | undefined>;
+  listLeadIntelligence(org: string): Promise<LeadIntelligence[]>;
 }
 
 export class InMemoryCerebroGrowthRepository implements CerebroGrowthRepository {
@@ -331,6 +395,7 @@ export class InMemoryCerebroGrowthRepository implements CerebroGrowthRepository 
   leads = new Map<string, Lead>();
   proposals = new Map<string, Proposal>();
   briefs = new Map<string, SalesBrief>();
+  leadIntelligence = new Map<string, LeadIntelligence>(); // key: leadId
 
   async insertContentSet(c: ContentSet) { this.contentSets.set(c.id, structuredClone(c)); }
   async listContentSets(org: string) { return [...this.contentSets.values()].filter(c => c.organizationId === org).sort((a, b) => b.createdAt.localeCompare(a.createdAt)); }
@@ -345,6 +410,10 @@ export class InMemoryCerebroGrowthRepository implements CerebroGrowthRepository 
 
   async insertBrief(b: SalesBrief) { this.briefs.set(b.id, structuredClone(b)); }
   async listBriefs(org: string) { return [...this.briefs.values()].filter(b => b.organizationId === org).sort((a, b) => b.createdAt.localeCompare(a.createdAt)); }
+
+  async upsertLeadIntelligence(i: LeadIntelligence) { this.leadIntelligence.set(i.leadId, structuredClone(i)); }
+  async getLeadIntelligence(org: string, leadId: string) { const i = this.leadIntelligence.get(leadId); return i && i.organizationId === org ? structuredClone(i) : undefined; }
+  async listLeadIntelligence(org: string) { return [...this.leadIntelligence.values()].filter(i => i.organizationId === org); }
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -383,7 +452,7 @@ export class CerebroGrowthService {
     const org = ctx.principal.organizationId;
     const now = new Date().toISOString();
     const rand = seededRandom(`${org}:${input.email}:${input.companyName}`);
-    const { opportunity, risk } = scoreLead(input, rand);
+    const { opportunity, risk } = scoreLeadDetailed(input, rand);
     const recommendedService = recommendedServiceFor(`${input.notes ?? ""} ${input.industry ?? ""}`);
     const stage: LeadStage = opportunity >= 65 ? "qualified" : "new";
     const lead: Lead = {
@@ -438,6 +507,25 @@ export class CerebroGrowthService {
     }
     await this.bus.publish(Subjects.cerebrogrowth.proposalGenerated, { proposalId: proposal.id, leadId: lead.id }, { organizationId: org, actor: ctx.principal.userId, traceId: ctx.traceId });
     return proposal;
+  }
+
+  async enrichLead(ctx: RequestContext, leadId: string): Promise<LeadIntelligence> {
+    this.policy.assert(ctx.principal, "cerebrogrowth:write", { kind: "lead", organizationId: ctx.principal.organizationId });
+    const org = ctx.principal.organizationId;
+    const lead = await this.repo.getLead(org, leadId);
+    if (!lead) throw PlatformError.notFound("lead", leadId);
+    const rand = seededRandom(`${org}:${lead.id}:intelligence`);
+    const score = scoreLeadDetailed(lead, rand);
+    const built = buildLeadIntelligence(lead, score, rand);
+    const intelligence: LeadIntelligence = { id: newId("lin"), organizationId: org, leadId: lead.id, ...built, createdAt: new Date().toISOString() };
+    await this.repo.upsertLeadIntelligence(intelligence);
+    await this.bus.publish(Subjects.cerebrogrowth.leadEnriched, { leadId: lead.id, aiReadinessScore: intelligence.aiReadinessScore }, { organizationId: org, actor: ctx.principal.userId, traceId: ctx.traceId });
+    return intelligence;
+  }
+
+  async getLeadIntelligence(ctx: RequestContext, leadId: string): Promise<LeadIntelligence | undefined> {
+    this.policy.assert(ctx.principal, "cerebrogrowth:read", { kind: "lead", organizationId: ctx.principal.organizationId });
+    return this.repo.getLeadIntelligence(ctx.principal.organizationId, leadId);
   }
 
   listProposals(ctx: RequestContext): Promise<Proposal[]> {
