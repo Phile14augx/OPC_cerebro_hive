@@ -1,5 +1,5 @@
-import { ClusterService } from "../../application/services/ClusterService.js";
-import { CreateClusterCommand } from "../../application/commands/CreateClusterCommand.js";
+import { ClusterService } from "../../application/services/ClusterService";
+import { CreateClusterCommand } from "../../application/commands/CreateClusterCommand";
 
 export class ClusterController {
   private service: ClusterService;

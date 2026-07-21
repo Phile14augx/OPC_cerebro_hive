@@ -1,7 +1,7 @@
-import { CreateClusterCommand } from "../commands/CreateClusterCommand.js";
-import { CreateClusterHandler } from "../handlers/CreateClusterHandler.js";
-import { IEventBus } from "../../domain/events/IEventBus.js";
-import { InMemoryEventBus } from "../../infrastructure/messaging/InMemoryEventBus.js";
+import { CreateClusterCommand } from "../commands/CreateClusterCommand";
+import { CreateClusterHandler } from "../handlers/CreateClusterHandler";
+import { IEventBus } from "../../domain/events/IEventBus";
+import { InMemoryEventBus } from "../../infrastructure/messaging/InMemoryEventBus";
 
 export class ClusterService {
   private createClusterHandler: CreateClusterHandler;

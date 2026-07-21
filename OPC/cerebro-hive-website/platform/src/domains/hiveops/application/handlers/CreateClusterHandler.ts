@@ -1,5 +1,5 @@
-import { CreateClusterCommand } from "../commands/CreateClusterCommand.js";
-import { IEventBus } from "../../domain/events/IEventBus.js";
+import { CreateClusterCommand } from "../commands/CreateClusterCommand";
+import { IEventBus } from "../../domain/events/IEventBus";
 
 export class CreateClusterHandler {
   constructor(private eventBus: IEventBus) {}

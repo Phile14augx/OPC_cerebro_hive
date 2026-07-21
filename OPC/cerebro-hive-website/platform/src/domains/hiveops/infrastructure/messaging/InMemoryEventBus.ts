@@ -1,5 +1,5 @@
-import { DomainEvent } from "../../domain/events/DomainEvent.js";
-import { IEventBus } from "../../domain/events/IEventBus.js";
+import { DomainEvent } from "../../domain/events/DomainEvent";
+import { IEventBus } from "../../domain/events/IEventBus";
 
 export class InMemoryEventBus implements IEventBus {
   private handlers: Map<string, Array<(event: DomainEvent) => Promise<void>>> = new Map();

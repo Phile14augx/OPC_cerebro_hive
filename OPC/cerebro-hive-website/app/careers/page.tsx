@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, CheckCircle2, Cpu, BrainCircuit, Users, Globe2, Sparkles, Code2, GraduationCap, Heart, Zap, Shield, Coffee, Briefcase, Send, ChevronRight, X, BarChart, Layers, Terminal, Search, XCircle, Loader2, Linkedin, FileText, Upload } from "lucide-react";
+import { ArrowRight, CheckCircle2, Cpu, BrainCircuit, Users, Globe2, Sparkles, Code2, GraduationCap, Heart, Zap, Shield, Coffee, Briefcase, Send, ChevronRight, X, BarChart, Layers, Terminal, Search, XCircle, Loader2, Link2, FileText, Upload } from "lucide-react";
 import type { PipelineResult } from "@/lib/hiring/pipeline";
 
 // Existing Data
@@ -836,7 +836,7 @@ export default function CareersPage() {
                 </select>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-1.5"><Linkedin size={12} /> LinkedIn Profile URL *</label>
+                <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-1.5"><Link2 size={12} /> LinkedIn Profile URL *</label>
                 <input required value={form.linkedinUrl} onChange={(e) => setForm(f => ({ ...f, linkedinUrl: e.target.value }))} placeholder="https://www.linkedin.com/in/yourname" className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors" />
               </div>
               <div className="flex flex-col gap-2">

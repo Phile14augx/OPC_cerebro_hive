@@ -1,5 +1,5 @@
-import { DeploymentService } from "../../application/services/DeploymentService.js";
-import { DeployModelCommand } from "../../application/commands/DeployModelCommand.js";
+import { DeploymentService } from "../../application/services/DeploymentService";
+import { DeployModelCommand } from "../../application/commands/DeployModelCommand";
 
 export class DeploymentController {
   private service: DeploymentService;

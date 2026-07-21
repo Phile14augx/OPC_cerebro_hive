@@ -1,5 +1,5 @@
-import { GetDashboardQuery } from "../queries/GetDashboardQuery.js";
-import { GetDashboardHandler } from "../handlers/GetDashboardHandler.js";
+import { GetDashboardQuery } from "../queries/GetDashboardQuery";
+import { GetDashboardHandler } from "../handlers/GetDashboardHandler";
 
 export class OperationsService {
   private getDashboardHandler: GetDashboardHandler;

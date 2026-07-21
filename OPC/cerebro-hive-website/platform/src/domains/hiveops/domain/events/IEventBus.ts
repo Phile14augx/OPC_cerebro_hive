@@ -1,4 +1,4 @@
-import { DomainEvent } from "./DomainEvent.js";
+import { DomainEvent } from "./DomainEvent";
 
 export interface IEventBus {
   publish(event: DomainEvent): Promise<void>;

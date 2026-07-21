@@ -1,7 +1,7 @@
-import { DeployModelCommand } from "../commands/DeployModelCommand.js";
-import { DeployModelHandler } from "../handlers/DeployModelHandler.js";
-import { IEventBus } from "../../domain/events/IEventBus.js";
-import { InMemoryEventBus } from "../../infrastructure/messaging/InMemoryEventBus.js";
+import { DeployModelCommand } from "../commands/DeployModelCommand";
+import { DeployModelHandler } from "../handlers/DeployModelHandler";
+import { IEventBus } from "../../domain/events/IEventBus";
+import { InMemoryEventBus } from "../../infrastructure/messaging/InMemoryEventBus";
 
 export class DeploymentService {
   private deployModelHandler: DeployModelHandler;
