@@ -62,7 +62,9 @@
       "Bash(nslookup cerebropchive.org)",
       "Bash(curl -s https://cerebropchive.org/ -o /tmp/live.html)",
       "Bash(grep -o 'href=\"[^\"]*\\\\.css[^\"]*\"' /tmp/live.html | head -10; echo \"---\"; wc -l /tmp/live.html)",
-      "Bash(grep -o '\\\\*,\\\\*::before,\\\\*::after{[^}]*}' /tmp/2iyobvyoxitnu.css)"
+      "Bash(grep -o '\\\\*,\\\\*::before,\\\\*::after{[^}]*}' /tmp/2iyobvyoxitnu.css)",
+      "Bash(gh run *)",
+      "Bash(echo \"EXIT_CODE:$?\")"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows",

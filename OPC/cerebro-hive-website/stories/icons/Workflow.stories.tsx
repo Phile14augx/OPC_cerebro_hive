@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { WorkflowNodes, Pipeline } from '../../components/ui/icons/workflow';
+import { WorkflowNodes as WorkflowNodesIcon, Pipeline as PipelineIcon } from '../../components/ui/icons/workflow';
 
 const meta: Meta = {
   title: 'Icons/Workflow',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const WorkflowNodes: StoryObj = {
-  render: (args) => <WorkflowNodes {...args} />,
+  render: (args) => <WorkflowNodesIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const WorkflowNodes: StoryObj = {
 
 
 export const Pipeline: StoryObj = {
-  render: (args) => <Pipeline {...args} />,
+  render: (args) => <PipelineIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

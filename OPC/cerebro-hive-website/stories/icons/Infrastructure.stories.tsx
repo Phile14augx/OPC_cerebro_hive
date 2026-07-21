@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Server } from '../../components/ui/icons/infrastructure';
+import { Server as ServerIcon } from '../../components/ui/icons/infrastructure';
 
 const meta: Meta = {
   title: 'Icons/Infrastructure',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Server: StoryObj = {
-  render: (args) => <Server {...args} />,
+  render: (args) => <ServerIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

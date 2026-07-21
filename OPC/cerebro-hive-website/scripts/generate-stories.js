@@ -29,7 +29,7 @@ Object.entries(categories).forEach(([category, icons]) => {
   const categoryTitle = category.charAt(0).toUpperCase() + category.slice(1);
   const storyFilePath = path.join(storiesDir, `${categoryTitle}.stories.tsx`);
 
-  const imports = icons.map(i => i.component).join(', ');
+  const imports = icons.map(i => `${i.component} as ${i.component}Icon`).join(', ');
 
   const content = `import type { Meta, StoryObj } from '@storybook/react';
 import { ${imports} } from '../../components/ui/icons/${category}';
@@ -70,7 +70,7 @@ export default meta;
 
 ${icons.map(icon => `
 export const ${icon.component}: StoryObj = {
-  render: (args) => <${icon.component} {...args} />,
+  render: (args) => <${icon.component}Icon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

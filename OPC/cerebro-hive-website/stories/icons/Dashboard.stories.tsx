@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Home } from '../../components/ui/icons/dashboard';
+import { Home as HomeIcon } from '../../components/ui/icons/dashboard';
 
 const meta: Meta = {
   title: 'Icons/Dashboard',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Home: StoryObj = {
-  render: (args) => <Home {...args} />,
+  render: (args) => <HomeIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

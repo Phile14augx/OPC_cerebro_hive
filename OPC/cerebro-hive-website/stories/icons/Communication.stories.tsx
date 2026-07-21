@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ThumbsUp, ThumbsDown } from '../../components/ui/icons/communication';
+import { ThumbsUp as ThumbsUpIcon, ThumbsDown as ThumbsDownIcon } from '../../components/ui/icons/communication';
 
 const meta: Meta = {
   title: 'Icons/Communication',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const ThumbsUp: StoryObj = {
-  render: (args) => <ThumbsUp {...args} />,
+  render: (args) => <ThumbsUpIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const ThumbsUp: StoryObj = {
 
 
 export const ThumbsDown: StoryObj = {
-  render: (args) => <ThumbsDown {...args} />,
+  render: (args) => <ThumbsDownIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

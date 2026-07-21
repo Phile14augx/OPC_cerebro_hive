@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Shield, Lock } from '../../components/ui/icons/security';
+import { Shield as ShieldIcon, Lock as LockIcon } from '../../components/ui/icons/security';
 
 const meta: Meta = {
   title: 'Icons/Security',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Shield: StoryObj = {
-  render: (args) => <Shield {...args} />,
+  render: (args) => <ShieldIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const Shield: StoryObj = {
 
 
 export const Lock: StoryObj = {
-  render: (args) => <Lock {...args} />,
+  render: (args) => <LockIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

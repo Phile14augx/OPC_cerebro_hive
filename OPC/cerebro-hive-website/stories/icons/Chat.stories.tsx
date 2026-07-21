@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Message, MessageDots, Send, BotAvatar, UserAvatar } from '../../components/ui/icons/chat';
+import { Message as MessageIcon, MessageDots as MessageDotsIcon, Send as SendIcon, BotAvatar as BotAvatarIcon, UserAvatar as UserAvatarIcon } from '../../components/ui/icons/chat';
 
 const meta: Meta = {
   title: 'Icons/Chat',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Message: StoryObj = {
-  render: (args) => <Message {...args} />,
+  render: (args) => <MessageIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const Message: StoryObj = {
 
 
 export const MessageDots: StoryObj = {
-  render: (args) => <MessageDots {...args} />,
+  render: (args) => <MessageDotsIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -61,7 +61,7 @@ export const MessageDots: StoryObj = {
 
 
 export const Send: StoryObj = {
-  render: (args) => <Send {...args} />,
+  render: (args) => <SendIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -73,7 +73,7 @@ export const Send: StoryObj = {
 
 
 export const BotAvatar: StoryObj = {
-  render: (args) => <BotAvatar {...args} />,
+  render: (args) => <BotAvatarIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -85,7 +85,7 @@ export const BotAvatar: StoryObj = {
 
 
 export const UserAvatar: StoryObj = {
-  render: (args) => <UserAvatar {...args} />,
+  render: (args) => <UserAvatarIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

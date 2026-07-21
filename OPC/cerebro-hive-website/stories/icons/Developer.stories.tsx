@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Terminal, Api } from '../../components/ui/icons/developer';
+import { Terminal as TerminalIcon, Api as ApiIcon } from '../../components/ui/icons/developer';
 
 const meta: Meta = {
   title: 'Icons/Developer',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Terminal: StoryObj = {
-  render: (args) => <Terminal {...args} />,
+  render: (args) => <TerminalIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const Terminal: StoryObj = {
 
 
 export const Api: StoryObj = {
-  render: (args) => <Api {...args} />,
+  render: (args) => <ApiIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

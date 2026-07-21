@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Database } from '../../components/ui/icons/database';
+import { Database as DatabaseIcon } from '../../components/ui/icons/database';
 
 const meta: Meta = {
   title: 'Icons/Database',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Database: StoryObj = {
-  render: (args) => <Database {...args} />,
+  render: (args) => <DatabaseIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

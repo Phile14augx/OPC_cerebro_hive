@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { StatusOnline, StatusOffline, Loader } from '../../components/ui/icons/status';
+import { StatusOnline as StatusOnlineIcon, StatusOffline as StatusOfflineIcon, Loader as LoaderIcon } from '../../components/ui/icons/status';
 
 const meta: Meta = {
   title: 'Icons/Status',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const StatusOnline: StoryObj = {
-  render: (args) => <StatusOnline {...args} />,
+  render: (args) => <StatusOnlineIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const StatusOnline: StoryObj = {
 
 
 export const StatusOffline: StoryObj = {
-  render: (args) => <StatusOffline {...args} />,
+  render: (args) => <StatusOfflineIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -61,7 +61,7 @@ export const StatusOffline: StoryObj = {
 
 
 export const Loader: StoryObj = {
-  render: (args) => <Loader {...args} />,
+  render: (args) => <LoaderIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Users, Building } from '../../components/ui/icons/enterprise';
+import { Users as UsersIcon, Building as BuildingIcon } from '../../components/ui/icons/enterprise';
 
 const meta: Meta = {
   title: 'Icons/Enterprise',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Users: StoryObj = {
-  render: (args) => <Users {...args} />,
+  render: (args) => <UsersIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const Users: StoryObj = {
 
 
 export const Building: StoryObj = {
-  render: (args) => <Building {...args} />,
+  render: (args) => <BuildingIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

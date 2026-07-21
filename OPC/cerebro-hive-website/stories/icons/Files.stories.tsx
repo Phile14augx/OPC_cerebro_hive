@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Document, Attachment, FileCode, FileJson } from '../../components/ui/icons/files';
+import { Document as DocumentIcon, Attachment as AttachmentIcon, FileCode as FileCodeIcon, FileJson as FileJsonIcon } from '../../components/ui/icons/files';
 
 const meta: Meta = {
   title: 'Icons/Files',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Document: StoryObj = {
-  render: (args) => <Document {...args} />,
+  render: (args) => <DocumentIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const Document: StoryObj = {
 
 
 export const Attachment: StoryObj = {
-  render: (args) => <Attachment {...args} />,
+  render: (args) => <AttachmentIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -61,7 +61,7 @@ export const Attachment: StoryObj = {
 
 
 export const FileCode: StoryObj = {
-  render: (args) => <FileCode {...args} />,
+  render: (args) => <FileCodeIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -73,7 +73,7 @@ export const FileCode: StoryObj = {
 
 
 export const FileJson: StoryObj = {
-  render: (args) => <FileJson {...args} />,
+  render: (args) => <FileJsonIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

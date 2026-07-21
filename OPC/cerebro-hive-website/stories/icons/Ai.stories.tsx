@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { AiBrain } from '../../components/ui/icons/ai';
+import { AiBrain as AiBrainIcon } from '../../components/ui/icons/ai';
 
 const meta: Meta = {
   title: 'Icons/Ai',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const AiBrain: StoryObj = {
-  render: (args) => <AiBrain {...args} />,
+  render: (args) => <AiBrainIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

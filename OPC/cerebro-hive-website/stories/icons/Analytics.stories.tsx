@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ChartBar, ChartPie } from '../../components/ui/icons/analytics';
+import { ChartBar as ChartBarIcon, ChartPie as ChartPieIcon } from '../../components/ui/icons/analytics';
 
 const meta: Meta = {
   title: 'Icons/Analytics',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const ChartBar: StoryObj = {
-  render: (args) => <ChartBar {...args} />,
+  render: (args) => <ChartBarIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const ChartBar: StoryObj = {
 
 
 export const ChartPie: StoryObj = {
-  render: (args) => <ChartPie {...args} />,
+  render: (args) => <ChartPieIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

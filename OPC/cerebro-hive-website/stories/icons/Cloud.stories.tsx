@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Cloud, CloudCompute } from '../../components/ui/icons/cloud';
+import { Cloud as CloudIcon, CloudCompute as CloudComputeIcon } from '../../components/ui/icons/cloud';
 
 const meta: Meta = {
   title: 'Icons/Cloud',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Cloud: StoryObj = {
-  render: (args) => <Cloud {...args} />,
+  render: (args) => <CloudIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const Cloud: StoryObj = {
 
 
 export const CloudCompute: StoryObj = {
-  render: (args) => <CloudCompute {...args} />,
+  render: (args) => <CloudComputeIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

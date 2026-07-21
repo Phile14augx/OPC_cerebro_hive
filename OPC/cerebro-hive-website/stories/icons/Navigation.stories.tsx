@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Menu, SidebarLeft, Settings, Search } from '../../components/ui/icons/navigation';
+import { Menu as MenuIcon, SidebarLeft as SidebarLeftIcon, Settings as SettingsIcon, Search as SearchIcon } from '../../components/ui/icons/navigation';
 
 const meta: Meta = {
   title: 'Icons/Navigation',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Menu: StoryObj = {
-  render: (args) => <Menu {...args} />,
+  render: (args) => <MenuIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const Menu: StoryObj = {
 
 
 export const SidebarLeft: StoryObj = {
-  render: (args) => <SidebarLeft {...args} />,
+  render: (args) => <SidebarLeftIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -61,7 +61,7 @@ export const SidebarLeft: StoryObj = {
 
 
 export const Settings: StoryObj = {
-  render: (args) => <Settings {...args} />,
+  render: (args) => <SettingsIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -73,7 +73,7 @@ export const Settings: StoryObj = {
 
 
 export const Search: StoryObj = {
-  render: (args) => <Search {...args} />,
+  render: (args) => <SearchIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

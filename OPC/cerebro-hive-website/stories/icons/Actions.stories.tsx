@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Sparkles, Zap, Refresh, Copy } from '../../components/ui/icons/actions';
+import { Sparkles as SparklesIcon, Zap as ZapIcon, Refresh as RefreshIcon, Copy as CopyIcon } from '../../components/ui/icons/actions';
 
 const meta: Meta = {
   title: 'Icons/Actions',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Sparkles: StoryObj = {
-  render: (args) => <Sparkles {...args} />,
+  render: (args) => <SparklesIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -49,7 +49,7 @@ export const Sparkles: StoryObj = {
 
 
 export const Zap: StoryObj = {
-  render: (args) => <Zap {...args} />,
+  render: (args) => <ZapIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -61,7 +61,7 @@ export const Zap: StoryObj = {
 
 
 export const Refresh: StoryObj = {
-  render: (args) => <Refresh {...args} />,
+  render: (args) => <RefreshIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',
@@ -73,7 +73,7 @@ export const Refresh: StoryObj = {
 
 
 export const Copy: StoryObj = {
-  render: (args) => <Copy {...args} />,
+  render: (args) => <CopyIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

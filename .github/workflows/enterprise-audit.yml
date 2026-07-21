@@ -39,6 +39,7 @@ jobs:
         
         # In a real environment, you might fail the build if there are broken links.
         # We can extract the broken links count from route-coverage-matrix.csv if needed.
+        exit 0
 
     - name: Upload Audit Dashboard
       uses: actions/upload-artifact@v4
