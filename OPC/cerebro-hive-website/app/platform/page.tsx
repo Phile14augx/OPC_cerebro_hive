@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, ChevronRight, Shield, Server, Zap, Database, Network, Globe2, Lock, Activity, Code, Search, Bell, Users, DollarSign } from "lucide-react";
+import { ArrowRight, ChevronRight, Shield, Server, Zap, Database, Network, Globe2, Lock, Activity, Code, Search, Bell, Users, DollarSign, Cpu, Compass, Code2, FlaskConical, BarChart3, TrendingUp, Store, Boxes, LayoutGrid } from "lucide-react";
 import { EnterpriseIntegrations } from "@/components/platform/EnterpriseIntegrations";
 
 const archStack = [
@@ -117,6 +117,143 @@ const statusConfig = {
   planned: { label: "Planned", color: "text-slate-400", bg: "bg-slate-500/10 border-slate-500/30" },
 };
 
+type LauncherCategory = "all" | "build" | "operate" | "analyze" | "grow" | "marketplace";
+
+const LAUNCHER_CATEGORIES: { id: LauncherCategory; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "build", label: "Build" },
+  { id: "operate", label: "Operate" },
+  { id: "analyze", label: "Analyze" },
+  { id: "grow", label: "Grow" },
+  { id: "marketplace", label: "Marketplace" },
+];
+
+interface WorkspaceTile {
+  title: string; subtitle: string; href: string; category: Exclude<LauncherCategory, "all">;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  border: string; iconColor: string; glow: string; featured?: boolean;
+}
+
+const WORKSPACE_TILES: WorkspaceTile[] = [
+  {
+    title: "Enterprise AI OS Console", subtitle: "Operate the live enterprise AI operating system in real time.",
+    href: "/platform/os", category: "operate", icon: Cpu, featured: true,
+    border: "border-t-primary-accent", iconColor: "text-primary-accent", glow: "hover:shadow-[0_0_32px_-8px_rgba(16,185,129,0.35)]",
+  },
+  {
+    title: "Architecture Briefing", subtitle: "Request enterprise architecture, roadmaps, and implementation plans.",
+    href: "/contact", category: "build", icon: Compass,
+    border: "border-t-cyan-400", iconColor: "text-cyan-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(34,211,238,0.35)]",
+  },
+  {
+    title: "CerebroStudio™", subtitle: "Build, prompt, and ship AI agents in a governed IDE.",
+    href: "/platform/studio", category: "build", icon: Code2,
+    border: "border-t-violet-400", iconColor: "text-violet-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(167,139,250,0.35)]",
+  },
+  {
+    title: "CerebroForge™", subtitle: "Turn research signals into scored product opportunities.",
+    href: "/platform/forge", category: "build", icon: FlaskConical,
+    border: "border-t-teal-400", iconColor: "text-teal-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(45,212,191,0.35)]",
+  },
+  {
+    title: "CerebroSwarm™", subtitle: "Coordinate your enterprise cognitive workforce of AI agents.",
+    href: "/platform/swarm", category: "operate", icon: Users,
+    border: "border-t-orange-400", iconColor: "text-orange-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(251,146,60,0.35)]",
+  },
+  {
+    title: "CerebroInsight™", subtitle: "Executive intelligence, metrics, and alerting platform.",
+    href: "/platform/insight", category: "analyze", icon: BarChart3,
+    border: "border-t-emerald-400", iconColor: "text-emerald-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(52,211,153,0.35)]",
+  },
+  {
+    title: "CerebroGrowth™", subtitle: "Content studio, CRM pipeline, and AI sales copilot.",
+    href: "/platform/growth", category: "grow", icon: TrendingUp,
+    border: "border-t-blue-400", iconColor: "text-blue-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(96,165,250,0.35)]",
+  },
+  {
+    title: "HiveForge Marketplace", subtitle: "Provision AI cloud resources across 24 catalog categories.",
+    href: "/platform/hiveforge", category: "marketplace", icon: Store,
+    border: "border-t-amber-400", iconColor: "text-amber-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(251,191,36,0.35)]",
+  },
+  {
+    title: "Explore Products", subtitle: "Browse the full CerebroHive product catalog.",
+    href: "/products", category: "marketplace", icon: Boxes,
+    border: "border-t-slate-300", iconColor: "text-slate-300", glow: "hover:shadow-[0_0_32px_-8px_rgba(203,213,225,0.3)]",
+  },
+];
+
+function WorkspaceLauncher() {
+  const [category, setCategory] = useState<LauncherCategory>("all");
+  const [query, setQuery] = useState("");
+
+  const filtered = WORKSPACE_TILES.filter(t => {
+    const matchesCategory = category === "all" || t.category === category;
+    const q = query.trim().toLowerCase();
+    const matchesQuery = !q || t.title.toLowerCase().includes(q) || t.subtitle.toLowerCase().includes(q);
+    return matchesCategory && matchesQuery;
+  });
+
+  return (
+    <div className="mt-4">
+      <div className="mx-auto max-w-2xl">
+        <div className="relative">
+          <Search size={18} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary" />
+          <input
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="What would you like to build today?"
+            className="w-full rounded-xl border border-border bg-surface py-4 pl-12 pr-4 text-sm text-text-primary placeholder:text-text-secondary focus:border-primary-accent/50 focus:outline-none"
+          />
+        </div>
+      </div>
+
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+        {LAUNCHER_CATEGORIES.map(c => (
+          <button
+            key={c.id}
+            onClick={() => setCategory(c.id)}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-widest transition-all ${
+              category === c.id
+                ? "border-primary-accent bg-primary-accent/10 text-primary-accent"
+                : "border-border text-text-secondary hover:border-primary-accent/40 hover:text-text-primary"
+            }`}
+          >
+            {c.id === "all" && <LayoutGrid size={12} />}
+            {c.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {filtered.map(tile => {
+          const Icon = tile.icon;
+          return (
+            <Link
+              key={tile.href}
+              href={tile.href}
+              className={`group flex min-h-[220px] flex-col justify-between rounded-2xl border border-border border-t-4 ${tile.border} bg-surface/60 p-8 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] ${tile.glow} ${
+                tile.featured ? "sm:col-span-2" : ""
+              }`}
+            >
+              <div>
+                <Icon size={28} className={`${tile.iconColor} transition-transform duration-300 group-hover:scale-110`} />
+                <h3 className="mt-5 font-space text-lg font-bold text-text-primary">{tile.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-text-secondary">{tile.subtitle}</p>
+              </div>
+              <div className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-text-secondary transition-all group-hover:gap-2.5 group-hover:text-primary-accent">
+                Open <ArrowRight size={14} />
+              </div>
+            </Link>
+          );
+        })}
+        {filtered.length === 0 && (
+          <p className="col-span-full text-center text-sm text-text-secondary">No workspaces match "{query}".</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function PlatformPage() {
   const [activeStack, setActiveStack] = useState<number | null>(null);
 
@@ -142,36 +279,14 @@ export default function PlatformPage() {
             <p className="text-xl text-text-secondary leading-relaxed max-w-3xl mx-auto mb-10 text-center">
               A 5-layer modular architecture built for enterprise scale — from shared platform services and a unified AI gateway to specialized intelligence modules and an executive operating system.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/platform/os" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:-translate-y-1 shadow-elevated flex items-center gap-3">
-                Operate the Live OS Console <ArrowRight size={16} />
-              </Link>
-              <Link href="/contact" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
-                Request Architecture Briefing
-              </Link>
-              <Link href="/products" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
-                Explore Products
-              </Link>
-              <Link href="/platform/hiveforge" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
-                Browse HiveForge Marketplace
-              </Link>
-              <Link href="/platform/studio" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
-                Open CerebroStudio™
-              </Link>
-              <Link href="/platform/swarm" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
-                Meet CerebroSwarm™
-              </Link>
-              <Link href="/platform/insight" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
-                View CerebroInsight™
-              </Link>
-              <Link href="/platform/growth" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
-                Explore CerebroGrowth™
-              </Link>
-              <Link href="/platform/forge" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
-                Explore CerebroForge™
-              </Link>
-            </div>
           </motion.div>
+        </div>
+        <div className="container-wide relative z-10 mt-2">
+          <div className="mx-auto max-w-xl text-center">
+            <h2 className="font-space text-2xl font-bold text-text-primary">Start Your Work</h2>
+            <p className="mt-2 text-sm text-text-secondary">Access products, AI workspaces, and marketplaces from one launcher.</p>
+          </div>
+          <WorkspaceLauncher />
         </div>
       </section>
 
