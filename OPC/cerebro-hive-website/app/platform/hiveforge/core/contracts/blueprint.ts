@@ -2,11 +2,15 @@
  * Blueprint Contracts
  */
 
+export type BlueprintLifecycle = "experimental" | "beta" | "stable" | "deprecated" | "archived";
+
 export interface BlueprintIdentity {
   id: string;
   version: string;
   name: string;
   description: string;
+  lifecycle: BlueprintLifecycle;
+  revisionHash: string; // Immutable revision hash
 }
 
 export interface BlueprintValidationResult {
