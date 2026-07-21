@@ -53,13 +53,14 @@ export async function createServer(platform: Platform): Promise<FastifyInstance>
     if (!allowed) { await reply.code(429).send({ error: { code: "rate_limited", message: "too many requests" } }); return reply; }
   });
 
-  app.setErrorHandler(async (err, _req, reply) => {
+  app.setErrorHandler(async (rawErr, _req, reply) => {
+    const err = rawErr as Error & { validation?: unknown };
     if (err instanceof PlatformError) {
       platform.telemetry.metrics.increment("http.error", 1, { code: err.code });
       await reply.code(httpStatus(err.code)).send({ error: { code: err.code, message: err.message, details: err.details ?? null, retryable: err.retryable } });
       return;
     }
-    if ((err as { validation?: unknown }).validation) {
+    if (err.validation) {
       await reply.code(400).send({ error: { code: "validation", message: err.message } });
       return;
     }
