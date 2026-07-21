@@ -101,3 +101,58 @@ export class Registry implements PlatformRegistryContext {
 }
 
 export const platformRegistry = new Registry();
+
+// Seed Core Plugins at boot
+const seedCorePlugins = () => {
+  platformRegistry.registerCloud({
+    state: "ready",
+    health: "Healthy",
+    register: async () => {},
+    manifest: {
+      schemaVersion: "1.0",
+      apiVersion: "1.0",
+      metadata: { id: "cloud-compute", name: "Cloud Compute", version: "1.0.0" },
+      kind: "cloud",
+      spec: {
+        description: "A full compute portfolio — VPS, GPU, inference, training.",
+        categories: ["compute"]
+      }
+    }
+  });
+  
+  platformRegistry.registerBlueprint({
+    state: "ready",
+    health: "Healthy",
+    register: async () => {},
+    manifest: {
+      schemaVersion: "1.0",
+      apiVersion: "1.0",
+      metadata: { id: "vps-standard", name: "Standard Instance (2 vCPU, 4GB RAM)", version: "1.0.0" },
+      kind: "blueprint",
+      spec: {
+        description: "Standard VPS Blueprint",
+        schema: { type: "object" },
+        template: { provider: "aws", type: "t3.medium" }
+      }
+    }
+  });
+
+  platformRegistry.registerBlueprint({
+    state: "ready",
+    health: "Healthy",
+    register: async () => {},
+    manifest: {
+      schemaVersion: "1.0",
+      apiVersion: "1.0",
+      metadata: { id: "gpu-t4", name: "NVIDIA T4 Server", version: "1.0.0" },
+      kind: "blueprint",
+      spec: {
+        description: "GPU Blueprint",
+        schema: { type: "object" },
+        template: { provider: "aws", type: "g4dn.xlarge" }
+      }
+    }
+  });
+};
+
+seedCorePlugins();
