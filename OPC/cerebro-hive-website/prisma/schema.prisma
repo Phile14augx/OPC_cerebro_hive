@@ -44,6 +44,11 @@ model Workspace {
   
   resources  Resource[]
   policies   Policy[]
+  clusters   Cluster[]
+  pipelines  Pipeline[]
+  models     Model[]
+  alerts     Alert[]
+  incidents  Incident[]
 
   @@index([organizationId])
 }
@@ -800,4 +805,144 @@ model Tag {
 
   @@unique([resourceId, key])
   @@index([resourceId])
+}
+
+// -----------------------------------------------------------------------------
+// HIVEOPS PLATFORM (Phase 1)
+// -----------------------------------------------------------------------------
+
+model Cluster {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String   @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  name        String
+  region      String
+  status      String   @default("provisioning")
+  
+  nodes       Node[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([workspaceId])
+}
+
+model Node {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clusterId   String   @db.Uuid
+  cluster     Cluster  @relation(fields: [clusterId], references: [id], onDelete: Cascade)
+  
+  name        String
+  instanceType String
+  status      String   @default("ready")
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([clusterId])
+}
+
+model Pipeline {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String   @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  name        String
+  repository  String?
+  status      String   @default("active")
+  
+  runs        PipelineRun[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([workspaceId])
+}
+
+model PipelineRun {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pipelineId  String   @db.Uuid
+  pipeline    Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  
+  status      String   @default("running")
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+
+  @@index([pipelineId])
+}
+
+model Model {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String   @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  name        String
+  version     String
+  framework   String
+  
+  endpoints   Endpoint[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([workspaceId])
+}
+
+model Endpoint {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelId     String   @db.Uuid
+  model       Model    @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  
+  url         String
+  status      String   @default("active")
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([modelId])
+}
+
+model Alert {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String   @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  title       String
+  severity    String
+  status      String   @default("firing")
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([workspaceId])
+}
+
+model Incident {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String   @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String?  @db.Text
+  status      String   @default("investigating")
+  severity    String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([workspaceId])
+}
+
+model EventStore {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  aggregateId   String   @db.Uuid
+  aggregateType String
+  eventName     String
+  version       Int      @default(1)
+  payload       Json
+  
+  createdAt     DateTime @default(now())
+
+  @@index([aggregateId, aggregateType])
 }
