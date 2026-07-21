@@ -171,6 +171,11 @@ const WORKSPACE_TILES: WorkspaceTile[] = [
     border: "border-t-blue-400", iconColor: "text-blue-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(96,165,250,0.35)]",
   },
   {
+    title: "Hive Infrastructure Suite", subtitle: "Provision cloud, storage, compute, network, identity, monitoring, and API infrastructure.",
+    href: "/platform/cloud", category: "operate", icon: Server,
+    border: "border-t-sky-400", iconColor: "text-sky-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(56,189,248,0.35)]",
+  },
+  {
     title: "HiveForge Marketplace", subtitle: "Provision AI cloud resources across 24 catalog categories.",
     href: "/platform/hiveforge", category: "marketplace", icon: Store,
     border: "border-t-amber-400", iconColor: "text-amber-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(251,191,36,0.35)]",

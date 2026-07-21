@@ -243,5 +243,21 @@ export const Subjects = {
   cerebroforge: {
     signalIngested: "cerebroforge.signal.ingested",
     productSpecGenerated: "cerebroforge.product_spec.generated",
+    knowledgeExtracted: "cerebroforge.knowledge.extracted",
+    entityResolved: "cerebroforge.entity.resolved",
+    graphUpdated: "cerebroforge.graph.updated",
+    reasoningCompleted: "cerebroforge.reasoning.completed",
+    trendCalculated: "cerebroforge.trend.calculated",
+    forecastCompleted: "cerebroforge.forecast.completed",
+    opportunityGenerated: "cerebroforge.opportunity.generated",
+  },
+  hivecloud: {
+    accountProvisioned: "hivecloud.account.provisioned",
+    bucketProvisioned: "hivecloud.bucket.provisioned",
+    instanceProvisioned: "hivecloud.instance.provisioned",
+    networkProvisioned: "hivecloud.network.provisioned",
+    roleCreated: "hivecloud.role.created",
+    monitorCreated: "hivecloud.monitor.created",
+    endpointRegistered: "hivecloud.endpoint.registered",
   },
 } as const;

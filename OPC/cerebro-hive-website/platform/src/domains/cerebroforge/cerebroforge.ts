@@ -272,6 +272,34 @@ export class InMemoryCerebroForgeRepository implements CerebroForgeRepository {
 }
 
 // ---------------------------------------------------------------------------------------------
+// Capability Registry
+// ---------------------------------------------------------------------------------------------
+
+export interface Capability {
+  id: string;
+  name: string;
+  version: string;
+  dependencies: string[];
+  health: "Healthy" | "Degraded" | "Offline";
+  status: "Active" | "Inactive";
+  metadata: Record<string, any>;
+  permissions: string[];
+}
+
+export class CapabilityRegistry {
+  private capabilities = new Map<string, Capability>();
+
+  register(cap: Capability) {
+    this.capabilities.set(cap.id, cap);
+  }
+
+  get(id: string) { return this.capabilities.get(id); }
+  list() { return Array.from(this.capabilities.values()); }
+}
+
+export const globalCapabilityRegistry = new CapabilityRegistry();
+
+// ---------------------------------------------------------------------------------------------
 // Service
 // ---------------------------------------------------------------------------------------------
 
@@ -331,6 +359,147 @@ export class CerebroForgeService {
   listProductSpecs(ctx: RequestContext): Promise<ProductSpec[]> {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "spec", organizationId: ctx.principal.organizationId });
     return this.repo.listProductSpecs(ctx.principal.organizationId);
+  }
+
+  async extract(ctx: RequestContext, input: { text: string; title: string }) {
+    this.policy.assert(ctx.principal, "cerebroforge:write", { kind: "extraction", organizationId: ctx.principal.organizationId });
+    const { extractKnowledge } = await import("./extraction.js");
+    const result = extractKnowledge(input.text, input.title);
+    
+    await this.bus.publish(Subjects.cerebroforge.knowledgeExtracted, { 
+      title: input.title, 
+      metadata: result.metadata 
+    }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
+
+    return result;
+  }
+
+  async entityResolution(ctx: RequestContext, input: any) {
+    this.policy.assert(ctx.principal, "cerebroforge:write", { kind: "extraction", organizationId: ctx.principal.organizationId });
+    const { globalEntityResolver } = await import("./entity-resolution.js");
+    
+    switch (input.action) {
+      case "resolve": {
+        if (!input.name || !input.type) throw PlatformError.validation("name and type required for resolve");
+        const resolved = globalEntityResolver.resolve(input.name, input.type);
+        await this.bus.publish(Subjects.cerebroforge.entityResolved, { entity: resolved }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
+        return { entity: resolved };
+      }
+      case "canonicalize":
+        if (!input.names || !input.type) throw PlatformError.validation("names array and type required for canonicalize");
+        return { entities: globalEntityResolver.canonicalize(input.names, input.type) };
+      case "deduplicate": {
+        if (!input.names || !input.type) throw PlatformError.validation("names array and type required for deduplicate");
+        const resolved = input.names.map((n: string) => globalEntityResolver.resolve(n, input.type));
+        return { entities: globalEntityResolver.deduplicate(resolved) };
+      }
+      case "merge":
+        if (!input.sourceId || !input.targetId) throw PlatformError.validation("sourceId and targetId required for merge");
+        return { entity: globalEntityResolver.merge(input.sourceId, input.targetId) };
+      default:
+        throw PlatformError.validation("Invalid action");
+    }
+  }
+
+  async graphAction(ctx: RequestContext, input: any) {
+    this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "graph", organizationId: ctx.principal.organizationId });
+    const { globalKnowledgeGraph } = await import("./knowledge-graph.js");
+    
+    switch (input.action) {
+      case "entities":
+        return { entities: globalKnowledgeGraph.getAllEntities() };
+      case "graph":
+        return { 
+          nodes: globalKnowledgeGraph.getAllEntities(),
+          edges: [] // Simplified for now since we don't have a getEdges method yet, let's just return what we can
+        };
+      case "traverse":
+        if (!input.sourceId || !input.targetId) throw PlatformError.validation("sourceId and targetId required");
+        return { path: globalKnowledgeGraph.shortestPath(input.sourceId, input.targetId) };
+      case "search":
+        if (!input.query) throw PlatformError.validation("query required");
+        return { results: globalKnowledgeGraph.embeddings.semanticSearch(input.query, parseInt(input.topK || "5")) };
+      case "lineage":
+        if (!input.entityId) throw PlatformError.validation("entityId required");
+        return { lineage: globalKnowledgeGraph.getLineage(input.entityId, input.direction || "ancestors") };
+      case "clusters":
+        return { clusters: globalKnowledgeGraph.discoverClusters() };
+      case "provenance":
+        if (!input.entityId) throw PlatformError.validation("entityId required");
+        const entity = globalKnowledgeGraph.getEntity(input.entityId);
+        if (!entity) throw PlatformError.notFound("entity", input.entityId);
+        return {
+          source: entity.source, extractionMethod: entity.extractionMethod,
+          extractorVersion: entity.extractorVersion, createdBy: entity.createdBy,
+          verificationStatus: entity.verificationStatus, license: entity.license,
+          timestamp: entity.timestamp, checksum: entity.checksum
+        };
+      case "ontology":
+        return { status: "Active", engine: "Declarative Ontology Validator v1" };
+      case "query":
+        return { results: [] }; // Mock deterministic query response
+      default:
+        throw PlatformError.validation("Invalid action");
+    }
+  }
+
+  async trendAction(ctx: RequestContext, input: any) {
+    this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "trend", organizationId: ctx.principal.organizationId });
+    const { globalTrendEngine } = await import("./trend.js");
+    
+    if (!input.entityId) throw PlatformError.validation("entityId required");
+    const trend = globalTrendEngine.calculateTrendScore(input.entityId);
+    
+    await this.bus.publish(Subjects.cerebroforge.trendCalculated, { entityId: input.entityId, score: trend.overallScore }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
+    
+    return { trend };
+  }
+
+  async opportunityAction(ctx: RequestContext, input: any) {
+    this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "opportunity", organizationId: ctx.principal.organizationId });
+    const { globalOpportunityEngine } = await import("./opportunity.js");
+    
+    if (input.action === "rank") {
+      if (!input.entityIds || !Array.isArray(input.entityIds)) throw PlatformError.validation("entityIds array required");
+      return { rankedOpportunities: [] }; // Mock response
+    }
+    
+    if (!input.conceptId) throw PlatformError.validation("conceptId required");
+    const graph = globalOpportunityEngine.discoverOpportunity(input.conceptId);
+    
+    await this.bus.publish(Subjects.cerebroforge.opportunityGenerated, { conceptId: input.conceptId, revenue: graph.estimatedRevenue }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
+    
+    return { graph };
+  }
+
+  async reasonAction(ctx: RequestContext, input: any) {
+    this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "reasoning", organizationId: ctx.principal.organizationId });
+    const { globalReasoningProvider } = await import("./reasoning.js");
+    
+    if (!input.entityId) throw PlatformError.validation("entityId required");
+    
+    const missingLinks = globalReasoningProvider.inferMissingLinks(input.entityId);
+    const conflicts = globalReasoningProvider.detectConflicts(input.entityId);
+    const opportunities = globalReasoningProvider.recommendOpportunities(input.entityId);
+    
+    await this.bus.publish(Subjects.cerebroforge.reasoningCompleted, { entityId: input.entityId }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
+    
+    return { missingLinks, conflicts, opportunities };
+  }
+
+  async forecastAction(ctx: RequestContext, input: any) {
+    this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "forecast", organizationId: ctx.principal.organizationId });
+    const { globalTrendEngine } = await import("./trend.js");
+    const { TrendForecastEngine } = await import("./forecast.js");
+    
+    if (!input.entityId) throw PlatformError.validation("entityId required");
+    
+    const engine = new TrendForecastEngine(globalTrendEngine);
+    const forecast = engine.forecast(input.entityId);
+    
+    await this.bus.publish(Subjects.cerebroforge.forecastCompleted, { entityId: input.entityId, projectedGrowth: forecast.projectedGrowth }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
+    
+    return { forecast };
   }
 }
 

@@ -12,6 +12,7 @@ const ROLE_GRANTS: Record<string, string[]> = {
     "governance:*", "web3:*", "devops:*", "mlops:*", "secops:*", "aiops:*",
     "compiler:*", "swarm:*", "actions:*",
     "digitaltwin:*", "research:*", "zerotrust:*", "dataplatform:*", "hiveforge:*", "cerebrostudio:*", "cerebroswarm:*", "cerebroinsight:*", "cerebrogrowth:*", "cerebroforge:*",
+    "hivecloud:*", "hivestorage:*", "hivecompute:*", "hivenetwork:*", "hiveidentity:*", "hivemonitor:*", "hiveapi:*",
   ],
   developer: [
     "runtime:*", "reasoning:*", "memory:read", "memory:write", "knowledge:*", "context:*",
@@ -22,12 +23,16 @@ const ROLE_GRANTS: Record<string, string[]> = {
     "digitaltwin:read", "digitaltwin:write", "research:read", "research:write", "zerotrust:read", "dataplatform:read", "dataplatform:write",
     "hiveforge:read", "hiveforge:write", "cerebrostudio:read", "cerebrostudio:write", "cerebroswarm:read", "cerebroswarm:write",
     "cerebroinsight:read", "cerebroinsight:write", "cerebrogrowth:read", "cerebrogrowth:write", "cerebroforge:read", "cerebroforge:write",
+    "hivecloud:read", "hivecloud:write", "hivestorage:read", "hivestorage:write", "hivecompute:read", "hivecompute:write",
+    "hivenetwork:read", "hivenetwork:write", "hiveidentity:read", "hiveidentity:write", "hivemonitor:read", "hivemonitor:write",
+    "hiveapi:read", "hiveapi:write",
   ],
   analyst: [
     "knowledge:read", "hub:read", "observatory:read", "sphere:read", "memory:read", "eval:read", "governance:read", "web3:read",
     "devops:read", "mlops:read", "secops:read", "aiops:read",
     "compiler:read", "swarm:read", "actions:read",
     "digitaltwin:read", "research:read", "zerotrust:read", "dataplatform:read", "hiveforge:read", "cerebrostudio:read", "cerebroswarm:read", "cerebroinsight:read", "cerebrogrowth:read", "cerebroforge:read",
+    "hivecloud:read", "hivestorage:read", "hivecompute:read", "hivenetwork:read", "hiveidentity:read", "hivemonitor:read", "hiveapi:read",
   ],
   viewer: ["*:read", "sphere:read"],
 };

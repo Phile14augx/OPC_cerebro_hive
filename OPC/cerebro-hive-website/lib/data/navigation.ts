@@ -20,6 +20,7 @@ export const mainNavigation: NavItem[] = [
       { label: "CerebroInsight™ — Executive Intelligence Platform", href: "/platform/insight" },
       { label: "CerebroGrowth™ — Enterprise AI Growth Engine", href: "/platform/growth" },
       { label: "CerebroForge™ — AI Innovation Factory", href: "/platform/forge" },
+      { label: "Hive Infrastructure Suite — Cloud, Storage, Compute, Network, Identity, Monitor, API", href: "/platform/cloud" },
     ]
   },
   {
