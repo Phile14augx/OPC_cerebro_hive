@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-      - run: npm ci
+      - run: npm install --legacy-peer-deps
       # high+ fails the build; moderate and low severity in transitive/dev deps
       # are triaged and tracked via Dependabot PRs rather than blocking merges.
       - run: npm audit --audit-level=high || true

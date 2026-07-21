@@ -24,7 +24,7 @@ jobs:
 
     - name: 🔨 Install Dependencies
       working-directory: ./OPC/cerebro-hive-website
-      run: npm ci
+      run: npm install --legacy-peer-deps
 
     - name: 🏗️ Build Project
       working-directory: ./OPC/cerebro-hive-website
