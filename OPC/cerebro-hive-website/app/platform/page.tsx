@@ -167,6 +167,9 @@ export default function PlatformPage() {
               <Link href="/platform/growth" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
                 Explore CerebroGrowth™
               </Link>
+              <Link href="/platform/forge" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
+                Explore CerebroForge™
+              </Link>
             </div>
           </motion.div>
         </div>

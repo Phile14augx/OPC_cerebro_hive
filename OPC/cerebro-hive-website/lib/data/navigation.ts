@@ -19,6 +19,7 @@ export const mainNavigation: NavItem[] = [
       { label: "CerebroSwarm™ — Enterprise Cognitive Workforce", href: "/platform/swarm" },
       { label: "CerebroInsight™ — Executive Intelligence Platform", href: "/platform/insight" },
       { label: "CerebroGrowth™ — Enterprise AI Growth Engine", href: "/platform/growth" },
+      { label: "CerebroForge™ — AI Innovation Factory", href: "/platform/forge" },
     ]
   },
   {
@@ -96,6 +97,7 @@ export const footerNavigation = {
     { label: "CerebroSwarm™ — Enterprise Cognitive Workforce →", href: "/platform/swarm" },
     { label: "CerebroInsight™ — Executive Intelligence Platform →", href: "/platform/insight" },
     { label: "CerebroGrowth™ — Enterprise AI Growth Engine →", href: "/platform/growth" },
+    { label: "CerebroForge™ — AI Innovation Factory →", href: "/platform/forge" },
   ],
   products: [
     { label: "CerebroArchive™", href: "/products/cerebro-archive" },

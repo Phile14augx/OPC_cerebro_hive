@@ -240,4 +240,8 @@ export const Subjects = {
     proposalGenerated: "cerebrogrowth.proposal.generated",
     briefGenerated: "cerebrogrowth.brief.generated",
   },
+  cerebroforge: {
+    signalIngested: "cerebroforge.signal.ingested",
+    productSpecGenerated: "cerebroforge.product_spec.generated",
+  },
 } as const;

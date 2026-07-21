@@ -59,6 +59,7 @@ import { CerebroStudioService, InMemoryCerebroStudioRepository } from "../domain
 import { CerebroSwarmService, InMemoryCerebroSwarmRepository } from "../domains/cerebroswarm/cerebroswarm.js";
 import { CerebroInsightService, InMemoryCerebroInsightRepository } from "../domains/cerebroinsight/cerebroinsight.js";
 import { CerebroGrowthService, InMemoryCerebroGrowthRepository } from "../domains/cerebrogrowth/cerebrogrowth.js";
+import { CerebroForgeService, InMemoryCerebroForgeRepository } from "../domains/cerebroforge/cerebroforge.js";
 import { systemContext } from "../kernel/context/context.js";
 
 export interface Platform {
@@ -114,6 +115,7 @@ export interface Platform {
   cerebroSwarm: CerebroSwarmService;
   cerebroInsight: CerebroInsightService;
   cerebroGrowth: CerebroGrowthService;
+  cerebroForge: CerebroForgeService;
   shutdown(): Promise<void>;
 }
 
@@ -249,6 +251,8 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
   const cerebroInsight = new CerebroInsightService(cerebroInsightRepo, bus, policy, hiveForge, cerebroStudio, cerebroSwarm);
   const cerebroGrowthRepo = new InMemoryCerebroGrowthRepository();
   const cerebroGrowth = new CerebroGrowthService(cerebroGrowthRepo, bus, policy);
+  const cerebroForgeRepo = new InMemoryCerebroForgeRepository();
+  const cerebroForge = new CerebroForgeService(cerebroForgeRepo, bus, policy);
 
   if (snapshots) {
     snapshots.register("runtime", comboSnapshot({ executions: mapSnapshot(runtimeRepo.executions), steps: mapSnapshot(runtimeRepo.stepRows), artifacts: arraySnapshot(runtimeRepo.artifactRows) }));
@@ -300,6 +304,9 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
       proposals: mapSnapshot(cerebroGrowthRepo.proposals), briefs: mapSnapshot(cerebroGrowthRepo.briefs),
       leadIntelligence: mapSnapshot(cerebroGrowthRepo.leadIntelligence),
     }));
+    snapshots.register("cerebroforge", comboSnapshot({
+      signals: mapSnapshot(cerebroForgeRepo.signals), productSpecs: mapSnapshot(cerebroForgeRepo.productSpecs),
+    }));
     await snapshots.start();
   }
 
@@ -325,7 +332,7 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     x, moe: new MixtureOfExperts(x), world, memory, knowledge, guard, runtime, scheduler, tools,
     contextEngine, mesh, flow, governance, registries, ethics, ontology, web3, evals, observatory, connect, hub, simulator, sphere, consulting,
     devops, mlops, secops, aiops, agentExecutor, router, compiler, swarm, actions,
-    digitalTwin, research, zeroTrust, dataPlatform, hiveForge, cerebroStudio, cerebroSwarm, cerebroInsight, cerebroGrowth,
+    digitalTwin, research, zeroTrust, dataPlatform, hiveForge, cerebroStudio, cerebroSwarm, cerebroInsight, cerebroGrowth, cerebroForge,
     async shutdown() {
       scheduler.stop();
       await snapshots?.stop();

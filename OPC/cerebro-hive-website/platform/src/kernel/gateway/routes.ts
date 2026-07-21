@@ -825,6 +825,28 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
   });
   app.get("/v1/cerebrogrowth/briefs", async req => ({ briefs: await p.cerebroGrowth.listBriefs(ctx(req)) }));
 
+  // ---------------- CerebroForge (AI Innovation Factory — Phase 1: Discovery + Scoring + Product Opportunity/Spec Generator) ----------------
+  app.post("/v1/cerebroforge/signals", async req => {
+    const body = parse(z.object({
+      title: z.string().min(1).max(200), sourceType: z.enum(["paper", "repo", "model", "dataset", "news", "startup"]),
+      category: z.enum(["llms", "multimodal", "agents", "rag", "reasoning", "computer-vision", "speech",
+        "reinforcement-learning", "world-models", "robotics", "mlops", "inference", "vector-databases",
+        "synthetic-data", "evaluation", "security", "ai-safety"]),
+      summary: z.string().min(1).max(4000), sourceOrg: z.string().max(200).optional(),
+    }), req.body);
+    return p.cerebroForge.ingestSignal(ctx(req), body);
+  });
+  app.get("/v1/cerebroforge/signals", async req => ({ signals: await p.cerebroForge.listSignals(ctx(req)) }));
+  app.get("/v1/cerebroforge/signals/:id", async req => p.cerebroForge.getSignal(ctx(req), (req.params as { id: string }).id));
+  app.post("/v1/cerebroforge/signals/:id/specs", async req => {
+    const body = parse(z.object({
+      opportunityType: z.enum(["saas-feature", "api", "sdk", "consulting", "copilot", "automation-agent",
+        "whitepaper", "internal-tool", "infrastructure", "course"]),
+    }), req.body);
+    return p.cerebroForge.generateProductSpec(ctx(req), (req.params as { id: string }).id, body.opportunityType);
+  });
+  app.get("/v1/cerebroforge/specs", async req => ({ specs: await p.cerebroForge.listProductSpecs(ctx(req)) }));
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {
