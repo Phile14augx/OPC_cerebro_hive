@@ -64,7 +64,15 @@
       "Bash(grep -o 'href=\"[^\"]*\\\\.css[^\"]*\"' /tmp/live.html | head -10; echo \"---\"; wc -l /tmp/live.html)",
       "Bash(grep -o '\\\\*,\\\\*::before,\\\\*::after{[^}]*}' /tmp/2iyobvyoxitnu.css)",
       "Bash(gh run *)",
-      "Bash(echo \"EXIT_CODE:$?\")"
+      "Bash(echo \"EXIT_CODE:$?\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3001/ --max-time 5)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/ --max-time 5)",
+      "PowerShell(Get-Process -Name node,next -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Process | Where-Object { $_.ProcessName -match 'node|next' } | Select-Object Id, ProcessName, StartTime)",
+      "Bash(npm run *)",
+      "Bash(disown)",
+      "Bash(curl -s -o /dev/null -w \"port 3000: HTTP %{http_code}\\\\n\" http://localhost:3000/ --max-time 5)",
+      "Bash(curl -s -o /dev/null -w \"port 3001: HTTP %{http_code}\\\\n\" http://localhost:3001/ --max-time 5)"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows",
