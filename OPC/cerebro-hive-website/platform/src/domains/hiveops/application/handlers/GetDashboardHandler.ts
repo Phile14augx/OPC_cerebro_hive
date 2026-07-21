@@ -1,4 +1,4 @@
-import { GetDashboardQuery } from "../queries/GetDashboardQuery";
+import { GetDashboardQuery } from "../queries/GetDashboardQuery.js";
 
 export class GetDashboardHandler {
   async handle(query: GetDashboardQuery): Promise<any> {

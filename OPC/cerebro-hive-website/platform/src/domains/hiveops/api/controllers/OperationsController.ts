@@ -1,4 +1,4 @@
-import { OperationsService } from "../../application/services/OperationsService";
+import { OperationsService } from "../../application/services/OperationsService.js";
 
 export class OperationsController {
   private service: OperationsService;

@@ -1,5 +1,5 @@
-import { ClusterService } from "../../application/services/ClusterService";
-import { CreateClusterCommand } from "../../application/commands/CreateClusterCommand";
+import { ClusterService } from "../../application/services/ClusterService.js";
+import { CreateClusterCommand } from "../../application/commands/CreateClusterCommand.js";
 
 export class ClusterController {
   private service: ClusterService;
@@ -10,7 +10,7 @@ export class ClusterController {
 
   async createCluster(req: Request) {
     try {
-      const body = await req.json();
+      const body = await req.json() as { workspaceId: string; name: string; region: string };
       const command: CreateClusterCommand = {
         workspaceId: body.workspaceId,
         name: body.name,

@@ -1,5 +1,5 @@
-import { DeployModelCommand } from "../commands/DeployModelCommand";
-import { IEventBus } from "../../domain/events/IEventBus";
+import { DeployModelCommand } from "../commands/DeployModelCommand.js";
+import { IEventBus } from "../../domain/events/IEventBus.js";
 
 export class DeployModelHandler {
   constructor(private eventBus: IEventBus) {}
