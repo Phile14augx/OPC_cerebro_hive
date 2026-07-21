@@ -21,7 +21,15 @@ export async function checkOnline(): Promise<boolean> {
   try { return await fetch(`${API}/health`).then(r => r.ok); } catch { return false; }
 }
 
-export interface CatalogItem { id: string; name: string; provisionable: boolean; hourlyRateUsd?: number }
+export type ResourceKind =
+  | "vps" | "gpu" | "kubernetes" | "container" | "serverless"
+  | "database" | "storage" | "network" | "domain" | "deployment"
+  | "ai-tool" | "ai-model" | "ai-agent" | "api-service"
+  | "devops-tool" | "observability-tool" | "security-tool" | "governance-tool"
+  | "data-tool" | "knowledge-tool" | "automation-tool" | "developer-tool"
+  | "enterprise-app" | "marketplace-item" | "billing-tool";
+
+export interface CatalogItem { id: string; name: string; provisionable: boolean; hourlyRateUsd?: number; kind?: ResourceKind }
 export interface CatalogCategory { id: string; name: string; tagline: string; subgroups: { name: string; items: CatalogItem[] }[] }
 export type SizeTier = "small" | "medium" | "large" | "xlarge";
 export interface ProvisionedResource {
@@ -33,15 +41,10 @@ export interface MarketplaceInstallation { id: string; itemId: string; itemName:
 export interface Invoice { id: string; periodStart: string; periodEnd: string; lineItems: { resourceId: string; itemName: string; hours: number; amountUsd: number }[]; totalUsd: number; generatedAt: string }
 export interface CostExplorer { byKind: Record<string, number>; byCategory: Record<string, number>; totalUsd: number; resourceCount: number }
 
-/** Wizard config — mirrors the backend's REGIONS / SIZE_TIER_MULTIPLIER. */
+/** Regions offered in the wizard — mirrors the backend's REGIONS list. Per-kind size tiers and
+ *  option choices live in wizardKinds.ts, keyed by ResourceKind, since those genuinely differ
+ *  per item type (see HiveForgeWizard). */
 export const WIZARD_REGIONS = ["us-east-1", "us-west-2", "eu-west-1", "ap-south-1"];
-export const WIZARD_SIZE_TIERS: { id: SizeTier; label: string; blurb: string; multiplier: number }[] = [
-  { id: "small", label: "Small", blurb: "Dev/test workloads, lowest cost.", multiplier: 0.5 },
-  { id: "medium", label: "Medium", blurb: "Standard production workloads.", multiplier: 1 },
-  { id: "large", label: "Large", blurb: "High-throughput production workloads.", multiplier: 2 },
-  { id: "xlarge", label: "X-Large", blurb: "Mission-critical, maximum headroom.", multiplier: 4 },
-];
-export const WIZARD_OPTION_CHOICES = ["multi-az", "high-availability", "auto-scaling", "encryption-at-rest"];
 
 /** Sidebar/hub navigation groups — hand-curated to mirror catalog.ts's 24 categories without duplicating the full item data client-side. */
 export const hiveForgeSections: { id: string; name: string; blurb: string; href: string }[] = [

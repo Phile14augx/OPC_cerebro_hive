@@ -4,7 +4,7 @@ import type { RequestContext } from "../../kernel/context/context.js";
 import type { PolicyEngine } from "../../kernel/policy/policy.js";
 import { PlatformError } from "../../kernel/errors/errors.js";
 import { seededRandom } from "../simulator/simulator.js";
-import { catalog, findCatalogItem, type CatalogCategory, type CatalogCategoryId } from "./catalog.js";
+import { catalog, findCatalogItem, type CatalogCategoryId } from "./catalog.js";
 
 /**
  * HiveForge™ — the Enterprise AI Cloud Marketplace. A governed catalog +
@@ -182,9 +182,22 @@ export class HiveForgeService {
     private readonly policy: PolicyEngine,
   ) {}
 
-  listCatalog(ctx: RequestContext, category?: CatalogCategoryId): CatalogCategory[] {
+  /**
+   * Browsable catalog, with each item annotated with the ResourceKind it will provision as.
+   * The frontend wizard uses this to render a kind-specific configuration step (a GPU item gets
+   * GPU-shaped fields, an AI model gets model-shaped fields, a database gets database-shaped
+   * fields, etc.) instead of one generic form for all 230+ line items.
+   */
+  listCatalog(ctx: RequestContext, category?: CatalogCategoryId) {
     this.policy.assert(ctx.principal, "hiveforge:read", { kind: "catalog", organizationId: ctx.principal.organizationId });
-    return category ? catalog.filter(c => c.id === category) : catalog;
+    const cats = category ? catalog.filter(c => c.id === category) : catalog;
+    return cats.map(c => ({
+      ...c,
+      subgroups: c.subgroups.map(sg => ({
+        ...sg,
+        items: sg.items.map(item => ({ ...item, kind: resolveKind(c.id, sg.name) })),
+      })),
+    }));
   }
 
   async provision(ctx: RequestContext, input: ProvisionInput): Promise<ProvisionedResource> {

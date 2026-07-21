@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import {
-  api, KEY,
-  WIZARD_REGIONS, WIZARD_SIZE_TIERS, WIZARD_OPTION_CHOICES,
+  api, KEY, WIZARD_REGIONS,
   type CatalogItem, type ProvisionedResource, type MarketplaceInstallation, type SizeTier,
 } from "./lib";
+import { wizardConfigForKind } from "./wizardKinds";
 
 interface Props {
   item: CatalogItem;
@@ -17,14 +17,18 @@ interface Props {
   onDone: () => void;
 }
 
+const TIER_MULTIPLIER: Record<SizeTier, number> = { small: 0.5, medium: 1, large: 2, xlarge: 4 };
+
 /**
- * Shared multi-step provisioning wizard used by every HiveForge console (the 24 catalog category
- * pages, Cloud Compute, Data & Networking, and — in "install" mode — the Marketplace). Walks
- * through Configure → Review → Result for real resource provisioning, capturing region, size
- * tier, replica/node count, and add-on options that are sent to the backend and materially change
- * the specs and hourly rate of what gets provisioned.
+ * Shared multi-step provisioning wizard used by every HiveForge console (all 24 catalog category
+ * pages, Cloud Compute, Data & Networking, and — in "install" mode — the Marketplace). The
+ * Configure step is kind-specific (see wizardKinds.ts): a GPU item shows GPU-class options and
+ * interconnect add-ons, a database shows storage/replica tiers and data-protection add-ons, an AI
+ * model shows parameter-size/context-window tiers, and so on — 25 distinct configuration surfaces
+ * mirroring the real product, not one generic form reused for all 230+ line items.
  */
 export function HiveForgeWizard({ item, mode = "provision", onClose, onDone }: Props) {
+  const config = wizardConfigForKind(item.kind);
   const [step, setStep] = useState(1);
   const [region, setRegion] = useState(WIZARD_REGIONS[0]!);
   const [sizeTier, setSizeTier] = useState<SizeTier>("medium");
@@ -38,8 +42,7 @@ export function HiveForgeWizard({ item, mode = "provision", onClose, onDone }: P
   const resultStep = mode === "provision" ? 3 : 2;
   const totalSteps = resultStep;
 
-  const multiplier = WIZARD_SIZE_TIERS.find(t => t.id === sizeTier)?.multiplier ?? 1;
-  const estRate = item.hourlyRateUsd ? item.hourlyRateUsd * multiplier : 0;
+  const estRate = item.hourlyRateUsd ? item.hourlyRateUsd * TIER_MULTIPLIER[sizeTier] : 0;
 
   const toggleOption = (o: string) => setOptions(prev => (prev.includes(o) ? prev.filter(x => x !== o) : [...prev, o]));
 
@@ -77,6 +80,7 @@ export function HiveForgeWizard({ item, mode = "provision", onClose, onDone }: P
           </h3>
           <button onClick={onClose} className="text-text-secondary hover:text-text-primary" aria-label="Close">✕</button>
         </div>
+        {mode === "provision" && step === 1 && <p className="mt-1 text-xs text-text-secondary">{config.subtitle}</p>}
 
         <div className="mt-3 flex gap-1.5">
           {Array.from({ length: totalSteps }).map((_, i) => (
@@ -97,37 +101,42 @@ export function HiveForgeWizard({ item, mode = "provision", onClose, onDone }: P
             </div>
 
             <div>
-              <label className="text-xs font-semibold uppercase tracking-widest text-text-secondary">Size tier</label>
+              <label className="text-xs font-semibold uppercase tracking-widest text-text-secondary">{config.sizeLabel}</label>
               <div className="mt-1 grid grid-cols-2 gap-2">
-                {WIZARD_SIZE_TIERS.map(t => (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => setSizeTier(t.id)}
-                    className={`rounded-lg border px-3 py-2 text-left text-xs transition-colors ${sizeTier === t.id ? "border-primary-accent text-primary-accent" : "border-border text-text-secondary hover:border-text-secondary"}`}
-                  >
-                    <div className="font-semibold">{t.label}</div>
-                    <div className="mt-0.5 text-[10px] text-text-secondary">{t.blurb}</div>
-                  </button>
-                ))}
+                {(Object.keys(config.sizeTiers) as SizeTier[]).map(tierId => {
+                  const t = config.sizeTiers[tierId];
+                  return (
+                    <button
+                      key={tierId}
+                      type="button"
+                      onClick={() => setSizeTier(tierId)}
+                      className={`rounded-lg border px-3 py-2 text-left text-xs transition-colors ${sizeTier === tierId ? "border-primary-accent text-primary-accent" : "border-border text-text-secondary hover:border-text-secondary"}`}
+                    >
+                      <div className="font-semibold">{t.label}</div>
+                      <div className="mt-0.5 text-[10px] text-text-secondary">{t.blurb}</div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-widest text-text-secondary">Replicas / nodes (optional)</label>
-              <input
-                type="number" min={1} max={64}
-                value={replicas}
-                onChange={e => setReplicas(e.target.value === "" ? "" : Number(e.target.value))}
-                className="mt-1 w-full rounded-lg border border-border bg-surface-elevated px-3 py-2 text-sm text-text-primary"
-                placeholder="Auto (based on size tier)"
-              />
-            </div>
+            {config.showReplicas && (
+              <div>
+                <label className="text-xs font-semibold uppercase tracking-widest text-text-secondary">{config.replicasLabel} (optional)</label>
+                <input
+                  type="number" min={1} max={64}
+                  value={replicas}
+                  onChange={e => setReplicas(e.target.value === "" ? "" : Number(e.target.value))}
+                  className="mt-1 w-full rounded-lg border border-border bg-surface-elevated px-3 py-2 text-sm text-text-primary"
+                  placeholder={config.replicasPlaceholder}
+                />
+              </div>
+            )}
 
             <div>
-              <label className="text-xs font-semibold uppercase tracking-widest text-text-secondary">Add-on options</label>
+              <label className="text-xs font-semibold uppercase tracking-widest text-text-secondary">{config.optionsLabel}</label>
               <div className="mt-1 flex flex-wrap gap-2">
-                {WIZARD_OPTION_CHOICES.map(o => (
+                {config.optionChoices.map(o => (
                   <button
                     key={o} type="button" onClick={() => toggleOption(o)}
                     className={`rounded-full border px-3 py-1 text-xs transition-colors ${options.includes(o) ? "border-primary-accent text-primary-accent" : "border-border text-text-secondary hover:border-text-secondary"}`}
@@ -152,9 +161,11 @@ export function HiveForgeWizard({ item, mode = "provision", onClose, onDone }: P
               {mode === "provision" && (
                 <>
                   <div className="mt-1 flex justify-between"><span className="text-text-secondary">Region</span><span className="text-text-primary">{region}</span></div>
-                  <div className="mt-1 flex justify-between"><span className="text-text-secondary">Size tier</span><span className="text-text-primary capitalize">{sizeTier}</span></div>
-                  <div className="mt-1 flex justify-between"><span className="text-text-secondary">Replicas / nodes</span><span className="text-text-primary">{replicas === "" ? "Auto" : replicas}</span></div>
-                  <div className="mt-1 flex justify-between"><span className="text-text-secondary">Options</span><span className="text-text-primary text-right">{options.length ? options.join(", ") : "None"}</span></div>
+                  <div className="mt-1 flex justify-between"><span className="text-text-secondary">{config.sizeLabel}</span><span className="text-text-primary">{config.sizeTiers[sizeTier].label}</span></div>
+                  {config.showReplicas && (
+                    <div className="mt-1 flex justify-between"><span className="text-text-secondary">{config.replicasLabel}</span><span className="text-text-primary">{replicas === "" ? "Auto" : replicas}</span></div>
+                  )}
+                  <div className="mt-1 flex justify-between"><span className="text-text-secondary">{config.optionsLabel}</span><span className="text-text-primary text-right">{options.length ? options.join(", ") : "None"}</span></div>
                   <div className="mt-2 flex justify-between border-t border-border pt-2 font-semibold"><span className="text-text-secondary">Est. rate</span><span className="text-primary-accent">${estRate.toFixed(4)}/hr</span></div>
                 </>
               )}
