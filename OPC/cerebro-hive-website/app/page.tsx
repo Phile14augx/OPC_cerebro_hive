@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { OsHero } from "@/components/home/v4-os/OsHero";
 import { PlatformArchitecture } from "@/components/home/v4-os/PlatformArchitecture";
+import { EnterprisePlatformCTA } from "@/components/home/v4-os/EnterprisePlatformCTA";
 import { ExecutiveMetrics } from "@/components/home/v4-os/ExecutiveMetrics";
 import { LivingEnterpriseBrain } from "@/components/home/v4-os/LivingEnterpriseBrain";
 import { EnterpriseTransformation } from "@/components/home/v4-os/EnterpriseTransformation";
@@ -37,6 +38,7 @@ const homeSections = [
   { id: "metrics", Component: ExecutiveMetrics },
   { id: "brain", Component: LivingEnterpriseBrain },
   { id: "architecture", Component: PlatformArchitecture },
+  { id: "enterprise-platform-cta", Component: EnterprisePlatformCTA },
   { id: "transformation", Component: EnterpriseTransformation },
   { id: "intelligence", Component: IntegrationIntelligence },
   { id: "knowledge", Component: KnowledgePlatform },
