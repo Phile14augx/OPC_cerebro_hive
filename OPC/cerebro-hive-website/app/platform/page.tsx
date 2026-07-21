@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, ChevronRight, Shield, Server, Zap, Database, Network, Globe2, Lock, Activity, Code, Search, Bell, Users, DollarSign } from "lucide-react";
+import { EnterpriseIntegrations } from "@/components/platform/EnterpriseIntegrations";
 
 const archStack = [
   {
@@ -389,12 +390,8 @@ export default function PlatformPage() {
           <p className="text-text-secondary max-w-2xl mx-auto mb-12 text-center">
             CerebroHive integrates natively with the enterprise systems your teams already use.
           </p>
-          <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
-            {["SAP", "Salesforce", "ServiceNow", "Microsoft 365", "Google Workspace", "Slack", "Jira", "Confluence", "GitHub", "GitLab", "AWS", "GCP", "Azure", "Snowflake", "BigQuery", "Redshift", "Okta", "Azure AD", "Terraform", "Kubernetes", "Docker", "Prometheus", "Grafana", "Splunk", "HashiCorp Vault"].map(sys => (
-              <div key={sys} className="px-4 py-2 rounded-xl border border-border bg-background text-sm font-bold text-text-secondary hover:border-primary-accent/40 hover:text-text-primary transition-colors">
-                {sys}
-              </div>
-            ))}
+          <div className="w-full mt-12">
+            <EnterpriseIntegrations />
           </div>
         </div>
       </section>

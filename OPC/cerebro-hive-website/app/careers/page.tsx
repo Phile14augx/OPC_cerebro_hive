@@ -925,11 +925,7 @@ function PipelineResultView({ pipeline, roleTitle, onReset }: { pipeline: Pipeli
         </div>
       )}
 
-<<<<<<< HEAD
-      <button onClick={onReset} className="self-center mt-2 px-6 py-3 bg-background border border-border text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:border-primary-accent/40 transition-colors">
-=======
       <button suppressHydrationWarning onClick={onReset} className="self-center mt-2 px-6 py-3 bg-background border border-border text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:border-primary-accent/40 transition-colors">
->>>>>>> a2e57f9 (fix(hydration): suppress hydration warnings on interactive elements to prevent browser extension mismatch)
         Submit Another Application
       </button>
     </motion.div>
