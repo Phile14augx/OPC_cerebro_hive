@@ -678,8 +678,8 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
     return p.hiveForge.provision(ctx(req), body);
   });
   app.get("/v1/hiveforge/resources", async req => {
-    const q = req.query as { kind?: string };
-    return { resources: await p.hiveForge.listResources(ctx(req), q.kind as never) };
+    const q = req.query as { kind?: string; category?: string };
+    return { resources: await p.hiveForge.listResources(ctx(req), { kind: q.kind as never, category: q.category as never }) };
   });
   app.post("/v1/hiveforge/resources/:id/deprovision", async req => p.hiveForge.deprovision(ctx(req), (req.params as { id: string }).id));
   app.post("/v1/hiveforge/marketplace/install", async req => {

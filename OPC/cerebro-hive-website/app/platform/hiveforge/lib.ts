@@ -23,10 +23,10 @@ export async function checkOnline(): Promise<boolean> {
 
 export interface CatalogItem { id: string; name: string; provisionable: boolean; hourlyRateUsd?: number }
 export interface CatalogCategory { id: string; name: string; tagline: string; subgroups: { name: string; items: CatalogItem[] }[] }
-export interface ProvisionedResource { id: string; kind: string; itemId: string; itemName: string; region: string; status: string; specs: Record<string, unknown>; endpoint: string; hourlyRateUsd: number; createdAt: string }
+export interface ProvisionedResource { id: string; kind: string; category: string; subgroup: string; itemId: string; itemName: string; region: string; status: string; specs: Record<string, unknown>; endpoint: string; hourlyRateUsd: number; createdAt: string }
 export interface MarketplaceInstallation { id: string; itemId: string; itemName: string; category: string; installedAt: string }
 export interface Invoice { id: string; periodStart: string; periodEnd: string; lineItems: { resourceId: string; itemName: string; hours: number; amountUsd: number }[]; totalUsd: number; generatedAt: string }
-export interface CostExplorer { byKind: Record<string, number>; totalUsd: number; resourceCount: number }
+export interface CostExplorer { byKind: Record<string, number>; byCategory: Record<string, number>; totalUsd: number; resourceCount: number }
 
 /** Sidebar/hub navigation groups — hand-curated to mirror catalog.ts's 24 categories without duplicating the full item data client-side. */
 export const hiveForgeSections: { id: string; name: string; blurb: string; href: string }[] = [

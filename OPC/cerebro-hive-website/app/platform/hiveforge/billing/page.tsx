@@ -62,6 +62,10 @@ export default function BillingPage() {
             <div className="text-xs uppercase tracking-wider text-text-secondary">By kind</div>
             <div className="mt-1 text-sm text-text-primary">{Object.entries(cost.byKind).map(([k, v]) => `${k}: $${v.toFixed(2)}`).join(" · ") || "—"}</div>
           </div>
+          <div className="rounded-lg border border-border bg-surface/60 px-4 py-3 col-span-2 md:col-span-4">
+            <div className="text-xs uppercase tracking-wider text-text-secondary">By category</div>
+            <div className="mt-1 text-sm text-text-primary">{Object.entries(cost.byCategory).map(([k, v]) => `${k}: $${v.toFixed(2)}`).join(" · ") || "—"}</div>
+          </div>
         </section>
       )}
 

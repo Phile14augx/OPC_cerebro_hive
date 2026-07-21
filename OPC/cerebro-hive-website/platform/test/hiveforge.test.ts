@@ -27,9 +27,34 @@ describe("HiveForge — Enterprise AI Cloud Marketplace catalog + provisioning",
     expect(resources.map(r => r.id)).toEqual(expect.arrayContaining([vps.id, gpu.id]));
   });
 
-  it("refuses to provision a non-provisionable catalog item", async () => {
+  it("refuses to provision an unknown catalog item id", async () => {
     const { platform, ctx } = await testPlatform();
-    await expect(platform.hiveForge.provision(ctx, { itemId: "cerebro-studio" })).rejects.toThrow();
+    await expect(platform.hiveForge.provision(ctx, { itemId: "does-not-exist-xyz" })).rejects.toThrow();
+  });
+
+  it("every one of the 24 catalog categories has at least one provisionable item, and provisioning one from each of a sample set succeeds", async () => {
+    const { platform, ctx } = await testPlatform();
+    const categories = platform.hiveForge.listCatalog(ctx);
+    expect(categories.length).toBe(24);
+    for (const c of categories) {
+      const provisionableItems = c.subgroups.flatMap(sg => sg.items).filter(i => i.provisionable);
+      expect(provisionableItems.length).toBeGreaterThan(0);
+    }
+    const sample = ["cerebro-studio", "foundation-models", "customer-support", "chat-api", "docker-registry", "metrics", "iam", "ai-policies", "etl", "knowledge-graph", "workflow-builder", "browser-ide", "hivepulse", "subscription-management"];
+    for (const itemId of sample) {
+      const resource = await platform.hiveForge.provision(ctx, { itemId });
+      expect(resource.status).toBe("running");
+      expect(resource.category).toBeDefined();
+    }
+  });
+
+  it("filters resources by category", async () => {
+    const { platform, ctx } = await testPlatform();
+    await platform.hiveForge.provision(ctx, { itemId: "chat-api" });
+    await platform.hiveForge.provision(ctx, { itemId: "shared-vps" });
+    const apiOnly = await platform.hiveForge.listResources(ctx, { category: "apis-developer-platform" });
+    expect(apiOnly.length).toBe(1);
+    expect(apiOnly[0]!.itemId).toBe("chat-api");
   });
 
   it("deprovisions a resource and it no longer accrues cost", async () => {
