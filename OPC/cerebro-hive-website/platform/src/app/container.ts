@@ -55,6 +55,7 @@ import { InMemoryResearchRepository, ResearchService } from "../domains/research
 import { InMemoryZeroTrustRepository, ZeroTrustService } from "../domains/zerotrust/zerotrust.js";
 import { DataPlatformService, InMemoryDataPlatformRepository } from "../domains/dataplatform/dataplatform.js";
 import { HiveForgeService, InMemoryHiveForgeRepository } from "../domains/hiveforge/hiveforge.js";
+import { CerebroStudioService, InMemoryCerebroStudioRepository } from "../domains/cerebrostudio/cerebrostudio.js";
 import { systemContext } from "../kernel/context/context.js";
 
 export interface Platform {
@@ -106,6 +107,7 @@ export interface Platform {
   zeroTrust: ZeroTrustService;
   dataPlatform: DataPlatformService;
   hiveForge: HiveForgeService;
+  cerebroStudio: CerebroStudioService;
   shutdown(): Promise<void>;
 }
 
@@ -233,6 +235,8 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
   const dataPlatform = new DataPlatformService(dataPlatformRepo, bus, policy);
   const hiveForgeRepo = new InMemoryHiveForgeRepository();
   const hiveForge = new HiveForgeService(hiveForgeRepo, bus, policy);
+  const cerebroStudioRepo = new InMemoryCerebroStudioRepository();
+  const cerebroStudio = new CerebroStudioService(cerebroStudioRepo, bus, policy);
 
   if (snapshots) {
     snapshots.register("runtime", comboSnapshot({ executions: mapSnapshot(runtimeRepo.executions), steps: mapSnapshot(runtimeRepo.stepRows), artifacts: arraySnapshot(runtimeRepo.artifactRows) }));
@@ -266,6 +270,12 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     snapshots.register("zero_trust", comboSnapshot({ grants: arraySnapshot(zeroTrustRepo.grants), mcpServers: mapSnapshot(zeroTrustRepo.mcpServers), tokens: mapSnapshot(zeroTrustRepo.tokens) }));
     snapshots.register("data_platform", comboSnapshot({ assets: mapSnapshot(dataPlatformRepo.assets), edges: arraySnapshot(dataPlatformRepo.edges), metrics: arraySnapshot(dataPlatformRepo.metrics) }));
     snapshots.register("hiveforge", comboSnapshot({ resources: mapSnapshot(hiveForgeRepo.resources), installations: arraySnapshot(hiveForgeRepo.installations), invoices: arraySnapshot(hiveForgeRepo.invoices) }));
+    snapshots.register("cerebrostudio", comboSnapshot({
+      workspaces: mapSnapshot(cerebroStudioRepo.workspaces), prompts: mapSnapshot(cerebroStudioRepo.prompts),
+      agents: mapSnapshot(cerebroStudioRepo.agents), flows: mapSnapshot(cerebroStudioRepo.flows),
+      notebooks: mapSnapshot(cerebroStudioRepo.notebooks), datasets: mapSnapshot(cerebroStudioRepo.datasets),
+      runs: mapSnapshot(cerebroStudioRepo.runs),
+    }));
     await snapshots.start();
   }
 
@@ -291,7 +301,7 @@ export async function buildPlatform(opts: BuildOptions = {}): Promise<Platform> 
     x, moe: new MixtureOfExperts(x), world, memory, knowledge, guard, runtime, scheduler, tools,
     contextEngine, mesh, flow, governance, registries, ethics, ontology, web3, evals, observatory, connect, hub, simulator, sphere, consulting,
     devops, mlops, secops, aiops, agentExecutor, router, compiler, swarm, actions,
-    digitalTwin, research, zeroTrust, dataPlatform, hiveForge,
+    digitalTwin, research, zeroTrust, dataPlatform, hiveForge, cerebroStudio,
     async shutdown() {
       scheduler.stop();
       await snapshots?.stop();

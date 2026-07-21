@@ -213,4 +213,14 @@ export const Subjects = {
     marketplaceInstalled: "hiveforge.marketplace.installed",
     invoiceGenerated: "hiveforge.invoice.generated",
   },
+  cerebrostudio: {
+    workspaceCreated: "cerebrostudio.workspace.created",
+    promptCreated: "cerebrostudio.prompt.created",
+    promptVersioned: "cerebrostudio.prompt.versioned",
+    agentCreated: "cerebrostudio.agent.created",
+    flowCreated: "cerebrostudio.flow.created",
+    notebookCreated: "cerebrostudio.notebook.created",
+    datasetCreated: "cerebrostudio.dataset.created",
+    runCompleted: "cerebrostudio.run.completed",
+  },
 } as const;

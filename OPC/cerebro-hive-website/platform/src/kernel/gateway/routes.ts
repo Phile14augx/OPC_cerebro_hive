@@ -697,6 +697,70 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
   app.post("/v1/hiveforge/billing/invoices", async req => p.hiveForge.generateInvoice(ctx(req)));
   app.get("/v1/hiveforge/billing/invoices", async req => ({ invoices: await p.hiveForge.listInvoices(ctx(req)) }));
 
+  // ---------------- CerebroStudio (full IDE-style AI development workspace) ----------------
+  app.post("/v1/cerebrostudio/workspaces", async req => {
+    const body = parse(z.object({ name: z.string().min(1), description: z.string().optional() }), req.body);
+    return p.cerebroStudio.createWorkspace(ctx(req), body);
+  });
+  app.get("/v1/cerebrostudio/workspaces", async req => ({ workspaces: await p.cerebroStudio.listWorkspaces(ctx(req)) }));
+  app.get("/v1/cerebrostudio/workspaces/:id", async req => p.cerebroStudio.getWorkspace(ctx(req), (req.params as { id: string }).id));
+
+  app.post("/v1/cerebrostudio/workspaces/:id/prompts", async req => {
+    const body = parse(z.object({ name: z.string().min(1), template: z.string().min(1) }), req.body);
+    return p.cerebroStudio.createPrompt(ctx(req), (req.params as { id: string }).id, body);
+  });
+  app.get("/v1/cerebrostudio/workspaces/:id/prompts", async req => ({ prompts: await p.cerebroStudio.listPrompts(ctx(req), (req.params as { id: string }).id) }));
+  app.post("/v1/cerebrostudio/prompts/:id/versions", async req => {
+    const body = parse(z.object({ template: z.string().min(1) }), req.body);
+    return p.cerebroStudio.updatePrompt(ctx(req), (req.params as { id: string }).id, body.template);
+  });
+  app.post("/v1/cerebrostudio/prompts/:id/run", async req => {
+    const body = parse(z.object({ input: z.string().default("") }), req.body);
+    return p.cerebroStudio.runPrompt(ctx(req), (req.params as { id: string }).id, body.input);
+  });
+
+  app.post("/v1/cerebrostudio/workspaces/:id/agents", async req => {
+    const body = parse(z.object({ name: z.string().min(1), systemPrompt: z.string().min(1), model: z.string().optional(), tools: z.array(z.string()).optional(), memoryEnabled: z.boolean().optional() }), req.body);
+    return p.cerebroStudio.createAgent(ctx(req), (req.params as { id: string }).id, body);
+  });
+  app.get("/v1/cerebrostudio/workspaces/:id/agents", async req => ({ agents: await p.cerebroStudio.listAgents(ctx(req), (req.params as { id: string }).id) }));
+  app.post("/v1/cerebrostudio/agents/:id/run", async req => {
+    const body = parse(z.object({ input: z.string().default("") }), req.body);
+    return p.cerebroStudio.runAgent(ctx(req), (req.params as { id: string }).id, body.input);
+  });
+
+  app.post("/v1/cerebrostudio/workspaces/:id/flows", async req => {
+    const body = parse(z.object({ name: z.string().min(1), steps: z.array(z.object({ kind: z.enum(["prompt", "agent"]), refId: z.string().min(1) })).min(1) }), req.body);
+    return p.cerebroStudio.createFlow(ctx(req), (req.params as { id: string }).id, body);
+  });
+  app.get("/v1/cerebrostudio/workspaces/:id/flows", async req => ({ flows: await p.cerebroStudio.listFlows(ctx(req), (req.params as { id: string }).id) }));
+  app.post("/v1/cerebrostudio/flows/:id/run", async req => {
+    const body = parse(z.object({ input: z.string().default("") }), req.body);
+    return p.cerebroStudio.runFlow(ctx(req), (req.params as { id: string }).id, body.input);
+  });
+
+  app.post("/v1/cerebrostudio/workspaces/:id/notebooks", async req => {
+    const body = parse(z.object({ name: z.string().min(1) }), req.body);
+    return p.cerebroStudio.createNotebook(ctx(req), (req.params as { id: string }).id, body.name);
+  });
+  app.get("/v1/cerebrostudio/workspaces/:id/notebooks", async req => ({ notebooks: await p.cerebroStudio.listNotebooks(ctx(req), (req.params as { id: string }).id) }));
+  app.post("/v1/cerebrostudio/notebooks/:id/cells", async req => {
+    const body = parse(z.object({ type: z.enum(["markdown", "code"]), content: z.string().default("") }), req.body);
+    return p.cerebroStudio.addCell(ctx(req), (req.params as { id: string }).id, body);
+  });
+  app.post("/v1/cerebrostudio/notebooks/:id/cells/:cellId/run", async req => {
+    const params = req.params as { id: string; cellId: string };
+    return p.cerebroStudio.runCell(ctx(req), params.id, params.cellId);
+  });
+
+  app.post("/v1/cerebrostudio/workspaces/:id/datasets", async req => {
+    const body = parse(z.object({ name: z.string().min(1), format: z.enum(["csv", "jsonl", "txt"]), sampleRows: z.array(z.record(z.unknown())).optional() }), req.body);
+    return p.cerebroStudio.createDataset(ctx(req), (req.params as { id: string }).id, body);
+  });
+  app.get("/v1/cerebrostudio/workspaces/:id/datasets", async req => ({ datasets: await p.cerebroStudio.listDatasets(ctx(req), (req.params as { id: string }).id) }));
+
+  app.get("/v1/cerebrostudio/workspaces/:id/runs", async req => ({ runs: await p.cerebroStudio.listRuns(ctx(req), (req.params as { id: string }).id) }));
+
   // ---------------- Connect ----------------
   app.get("/v1/connect/catalog", async req => { ctx(req); return p.connect.catalog(); });
   app.post("/v1/connect/instances", async req => {

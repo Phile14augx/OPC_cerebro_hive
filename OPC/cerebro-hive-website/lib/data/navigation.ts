@@ -15,6 +15,7 @@ export const mainNavigation: NavItem[] = [
       { label: "Live Runtime", href: "/platform/live-runtime" },
       { label: "Enterprise AI OS Console", href: "/platform/os" },
       { label: "HiveForge — AI Cloud Marketplace", href: "/platform/hiveforge" },
+      { label: "CerebroStudio™ — AI Development Workspace", href: "/platform/studio" },
     ]
   },
   {
@@ -88,6 +89,7 @@ export const footerNavigation = {
     { label: "Live Runtime →", href: "/platform/live-runtime" },
     { label: "Enterprise AI OS Console →", href: "/platform/os" },
     { label: "HiveForge — AI Cloud Marketplace →", href: "/platform/hiveforge" },
+    { label: "CerebroStudio™ — AI Development Workspace →", href: "/platform/studio" },
   ],
   products: [
     { label: "CerebroArchive™", href: "/products/cerebro-archive" },

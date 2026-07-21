@@ -61,6 +61,13 @@ export default function HiveForgePage() {
         </div>
       </section>
 
+      <section className="mt-12 rounded-xl border border-primary-accent/40 bg-primary-accent/5 p-6">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary-accent">Building AI products, not just infrastructure?</p>
+        <h2 className="mt-2 text-xl font-semibold text-text-primary">CerebroStudio™ — the full IDE-style AI development workspace</h2>
+        <p className="mt-2 max-w-2xl text-sm text-text-secondary">Versioned prompts, agents, flows, notebooks, and datasets, all runnable end to end inside a workspace.</p>
+        <Link href="/platform/studio" className="mt-4 inline-block rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent">Open CerebroStudio™ →</Link>
+      </section>
+
       <section className="mt-12">
         <h2 className="text-xl font-semibold text-text-primary">Complete Product Catalog</h2>
         <p className="mt-1 text-sm text-text-secondary">24 categories. Click through to browse every product and provision what&apos;s live.</p>
