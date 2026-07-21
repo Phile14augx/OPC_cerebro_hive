@@ -15,9 +15,9 @@
 
 ## 1. Context
 
-`/products/cerebro-archive` already exists as a content/marketing page, rendered generically through `ProductRenderer` from data in `lib/data/products/cerebro-archive.ts` — same template most products use. Only AgentOS has gone beyond that generic template into a genuinely interactive experience: `/products/agentos/live-runtime`, a page where visitors run real input through `lib/agentos/` (Guard → Reasoning Engine → Planner → Scheduler → Memory Fabric → Eval) via Next.js server actions, with results computed live — "no canned output" — and session memory persisted to disk.
+`/products/cerebro-archive` already exists as a content/marketing page, rendered generically through `ProductRenderer` from data in `lib/data/products/cerebro-archive.ts` — same template most products use. The site's actual interactive-demo convention is **one shared hub, not per-product routes**: `/platform/live-runtime` is the single destination every "Run Live Demo" / "Launch Developer Sandbox" / "Architecture Playground" CTA across the entire site points to (home hero, platform architecture, executive decision platform, research dev resources, `lib/data/platform/capabilities.ts`, nav, sitemap). It currently offers a mode toggle between AgentOS's "In-Browser Kernel" (`lib/agentos/`, wired through Guard → Reasoning Engine → Planner → Scheduler → Memory Fabric → Eval via Next.js server actions, results computed live, session memory persisted to disk) and its "Full Backend" (a separate FastAPI service). Note: an older per-product route, `/products/agentos/live-runtime`, exists only as a deprecated redirect stub — it is not the pattern to follow.
 
-This spec designs the equivalent for CerebroArchive: `/products/cerebro-archive/live-runtime`, letting visitors run real search, knowledge-graph construction, and document-intelligence analysis against a small in-app corpus.
+This spec designs the equivalent runtime for CerebroArchive as a **third mode on that same shared hub** (`/platform/live-runtime`), letting visitors run real search, knowledge-graph construction, and document-intelligence analysis against a small in-app corpus, alongside the existing AgentOS modes.
 
 ---
 
@@ -148,14 +148,14 @@ app/actions/cerebro-archive-runtime.ts
   — server actions: ingestDocument, runSearch, runDocumentIntelligence, resetSession
 ```
 
-**Components**, mirroring `components/platform/live-runtime/`:
+**Components**, alongside the existing `components/platform/live-runtime/`:
 ```
-components/products/cerebro-archive/
+components/platform/live-runtime/cerebro-archive/
   ArchiveLiveRuntime.tsx          — top-level: session id, tab state, "paste a document" form
   SearchGraphPanel.tsx            — search box + ranked results + graph visualization
   DocumentIntelligencePanel.tsx   — document picker + summary/entities/classification display
-app/products/cerebro-archive/live-runtime/page.tsx  — thin page wrapper, same shape as AgentOS's
 ```
+`app/platform/live-runtime/page.tsx` (existing file) gains a third `Mode` value, `"cerebro-archive"`, alongside the existing `"kernel"` / `"backend"`, rendering `ArchiveLiveRuntime` when selected — extending the existing `useState<Mode>` + ternary, not introducing a registry/plugin abstraction for what is still a small, fixed, first-party set of modes. The page also reads an optional `?mode=` search param on load (via `useSearchParams`) to select the initial mode, defaulting to `"kernel"` if absent or unrecognized — this is what lets the CerebroArchive product page deep-link straight into the right mode.
 
 **UI layout:** header badge + narrative copy (§2) → tab switcher (Search & Graph / Document Intelligence) → mode-specific panel, inside the existing `section-pad`/`container-wide` shell used sitewide (no new layout primitives).
 
@@ -164,9 +164,9 @@ app/products/cerebro-archive/live-runtime/page.tsx  — thin page wrapper, same 
 
 **Error handling:** empty query → disable the search button, no error state needed. Pasted document under ~50 characters → inline validation message, no server round trip. Server action failures (no I/O beyond the in-memory Map, so should be rare) → caught and surfaced as a dismissible inline banner, same pattern as `AgentOSLiveRuntime`'s `res.error` handling.
 
-**Testing:** the computational modules under `lib/cerebro-archive/` (tokenize, vectorize, search, graph, intelligence) are intentionally pure functions, making them straightforward to unit test whenever this project has a unit-test framework in place. Today it doesn't (verified: no jest/vitest, no test files under `lib/` or `components/`, `lib/agentos/` itself has zero tests) — only Playwright E2E (`npm run test:e2e`) is configured. Introducing a unit-test framework is a separate engineering decision, independent of this feature. Testing for this feature is therefore a small Playwright E2E spec against `/products/cerebro-archive/live-runtime`: running an example search produces ranked results, and selecting a document in the Document Intelligence tab produces non-empty summary/entities/classification output. If a unit-test framework is adopted later, the pure functions here need no rework to be covered by it.
+**Testing:** the computational modules under `lib/cerebro-archive/` (tokenize, vectorize, search, graph, intelligence) are intentionally pure functions, making them straightforward to unit test whenever this project has a unit-test framework in place. Today it doesn't (verified: no jest/vitest, no test files under `lib/` or `components/`, `lib/agentos/` itself has zero tests) — only Playwright E2E (`npm run test:e2e`) is configured. Introducing a unit-test framework is a separate engineering decision, independent of this feature. Testing for this feature is therefore a small Playwright E2E spec against `/platform/live-runtime?mode=cerebro-archive`: running an example search produces ranked results, and selecting a document in the Document Intelligence tab produces non-empty summary/entities/classification output. If a unit-test framework is adopted later, the pure functions here need no rework to be covered by it.
 
-**Integration with the existing product page:** `/products/cerebro-archive`'s existing hero CTA ("Explore Knowledge Platform") is left as-is per its current data; a new secondary CTA linking to `/products/cerebro-archive/live-runtime` is added, matching how AgentOS's main page links to its live runtime.
+**Integration with the existing product page:** `/products/cerebro-archive`'s existing hero CTA ("Explore Knowledge Platform") is left as-is per its current data; a new secondary CTA linking to `/platform/live-runtime?mode=cerebro-archive` is added, matching how the site's other product/platform pages link into the shared live-runtime hub.
 
 ---
 
@@ -180,3 +180,4 @@ Recorded here so they aren't silently reconsidered later without a concrete need
 - Disk persistence of user-pasted documents.
 - A collapsible "Computation Trace" or "Developer Diagnostics" panel — the per-result explainability already in §5/§6 (matched terms, edge labels, classification reasons) covers this; a separate panel would mostly re-list the same numbers in a different shape.
 - Any comparison to or reuse of patterns from `platform/src/domains/hiveforge/` — that's unreviewed, in-progress code in a separate Node service, not an established precedent for this Next.js demo layer.
+- A `RuntimeRegistry`/plugin abstraction for `/platform/live-runtime`'s mode switcher. Going from two modes to three is one more union member and one more ternary branch; a registry solves dynamic/third-party extensibility, which doesn't apply here — every mode is a known, first-party component.
