@@ -716,6 +716,7 @@ export default function CareersPage() {
                   <button
                     key={dept.department}
                     onClick={() => setActiveDept(dept.department)}
+                    suppressHydrationWarning
                     className={`flex items-center justify-between p-4 rounded-xl text-left transition-all ${
                       isActive 
                         ? "bg-primary-accent border border-primary-accent text-background shadow-elevated" 
@@ -819,16 +820,16 @@ export default function CareersPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted">Full Name *</label>
-                  <input required value={form.name} onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Alexandra Chen" className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors" />
+                  <input suppressHydrationWarning required value={form.name} onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Alexandra Chen" className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted">Email *</label>
-                  <input required type="email" value={form.email} onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))} placeholder="alex@acme.com" className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors" />
+                  <input suppressHydrationWarning required type="email" value={form.email} onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))} placeholder="alex@acme.com" className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors" />
                 </div>
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted">Domain / Role You&apos;re Applying For *</label>
-                <select required value={form.role} onChange={(e) => setForm(f => ({ ...f, role: e.target.value }))} className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors appearance-none cursor-pointer">
+                <select suppressHydrationWarning required value={form.role} onChange={(e) => setForm(f => ({ ...f, role: e.target.value }))} className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors appearance-none cursor-pointer">
                   <option value="" disabled>Select a role...</option>
                   {orgStructure.reduce<string[]>((acc, d) => [...acc, ...d.roles.map(r => r.title)], []).map(title => (
                     <option key={title} value={title}>{title}</option>
@@ -837,19 +838,19 @@ export default function CareersPage() {
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-1.5"><Link2 size={12} /> LinkedIn Profile URL *</label>
-                <input required value={form.linkedinUrl} onChange={(e) => setForm(f => ({ ...f, linkedinUrl: e.target.value }))} placeholder="https://www.linkedin.com/in/yourname" className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors" />
+                <input suppressHydrationWarning required value={form.linkedinUrl} onChange={(e) => setForm(f => ({ ...f, linkedinUrl: e.target.value }))} placeholder="https://www.linkedin.com/in/yourname" className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors" />
               </div>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <label className="text-[11px] font-bold uppercase tracking-widest text-text-muted flex items-center gap-1.5"><FileText size={12} /> Resume *</label>
                   <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-primary-accent cursor-pointer hover:underline">
                     <Upload size={12} /> Upload .txt / .md
-                    <input type="file" accept=".txt,.md" className="hidden" onChange={(e) => e.target.files?.[0] && handleResumeFile(e.target.files[0])} />
+                    <input suppressHydrationWarning type="file" accept=".txt,.md" className="hidden" onChange={(e) => e.target.files?.[0] && handleResumeFile(e.target.files[0])} />
                   </label>
                 </div>
-                <textarea required rows={8} value={form.resumeText} onChange={(e) => setForm(f => ({ ...f, resumeText: e.target.value }))} placeholder="Paste your resume text here — experience, skills, projects, and anything relevant to the role you're applying for." className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none" />
+                <textarea suppressHydrationWarning required rows={8} value={form.resumeText} onChange={(e) => setForm(f => ({ ...f, resumeText: e.target.value }))} placeholder="Paste your resume text here — experience, skills, projects, and anything relevant to the role you're applying for." className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none" />
               </div>
-              <button type="submit" disabled={isLoading} className="flex items-center justify-center gap-3 px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated mt-2 disabled:opacity-60 disabled:cursor-not-allowed">
+              <button suppressHydrationWarning type="submit" disabled={isLoading} className="flex items-center justify-center gap-3 px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated mt-2 disabled:opacity-60 disabled:cursor-not-allowed">
                 {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                 {isLoading ? "Running automated pipeline…" : "Submit & Run Automated Pipeline"}
               </button>
@@ -924,7 +925,11 @@ function PipelineResultView({ pipeline, roleTitle, onReset }: { pipeline: Pipeli
         </div>
       )}
 
+<<<<<<< HEAD
       <button onClick={onReset} className="self-center mt-2 px-6 py-3 bg-background border border-border text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:border-primary-accent/40 transition-colors">
+=======
+      <button suppressHydrationWarning onClick={onReset} className="self-center mt-2 px-6 py-3 bg-background border border-border text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:border-primary-accent/40 transition-colors">
+>>>>>>> a2e57f9 (fix(hydration): suppress hydration warnings on interactive elements to prevent browser extension mismatch)
         Submit Another Application
       </button>
     </motion.div>

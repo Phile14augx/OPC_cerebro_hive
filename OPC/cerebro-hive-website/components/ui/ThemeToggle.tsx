@@ -39,8 +39,9 @@ export default function ThemeToggle() {
             )}
             title={option.label}
             aria-label={`Set theme to ${option.label}`}
+            suppressHydrationWarning
           >
-            <Icon size={14} />
+            <Icon size={14} suppressHydrationWarning />
             {isActive && (
               <motion.div
                 layoutId="theme-active-indicator"

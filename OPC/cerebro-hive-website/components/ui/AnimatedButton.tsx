@@ -28,6 +28,7 @@ export const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButton
           className
         )}
         {...props as any}
+        suppressHydrationWarning
       >
         <div 
           className={cn(
