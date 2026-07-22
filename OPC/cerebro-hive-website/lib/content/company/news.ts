@@ -1,1 +1,0 @@
-export const newsCategories = ["Press Releases", "Blogs", "Research", "Announcements", "Media Coverage", "Events"];

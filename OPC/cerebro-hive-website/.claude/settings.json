@@ -76,7 +76,14 @@
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/products/cerebro-archive --max-time 8)",
       "Bash(curl -s -D - -o /dev/null http://localhost:3000/products/cerebro-archive --max-time 8)",
       "Bash(curl -sL -o /tmp/archive_page.html -w \"final HTTP %{http_code} url=%{url_effective}\\\\n\" http://localhost:3000/products/cerebro-archive --max-time 8)",
-      "Bash(xargs wc -l)"
+      "Bash(xargs wc -l)",
+      "Bash(grep -i \"EnterprisePlatformCTA\\\\|app/page.tsx\\\\|app\\\\\\\\\\\\\\\\page.tsx\")",
+      "Bash(mkdir -p __TRACKED_VAR__/app-platform-cloud __TRACKED_VAR__/app-platform-forge __TRACKED_VAR__/domains-cerebroforge __TRACKED_VAR__/domains-hivecloud __TRACKED_VAR__/platform-test)",
+      "Bash(mv app/platform/cloud/* __TRACKED_VAR__/app-platform-cloud/)",
+      "Bash(mv app/platform/forge/* __TRACKED_VAR__/app-platform-forge/)",
+      "Bash(mv platform/src/domains/cerebroforge/* __TRACKED_VAR__/domains-cerebroforge/)",
+      "Bash(mv platform/src/domains/hivecloud/* __TRACKED_VAR__/domains-hivecloud/)",
+      "Bash(echo \"exit: $?\")"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows",

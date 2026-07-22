@@ -56,6 +56,7 @@ Pre-built agent blueprints for specific business functions, deployable in 6-10 w
 | [products.md](./products.md) | All 5 products — features, architecture, use cases, pricing |
 | [solutions.md](./solutions.md) | All 7 solutions — metrics, agent flows, integrations, ICP |
 | [CerebHive_Products_services_Solutions.md](./CerebHive_Products_services_Solutions.md) | Master combined document — 10 services, 5 products, 7 solutions, engagement models, and tech stack |
+| [ENTERPRISE-VISION.md](./ENTERPRISE-VISION.md) | Long-term "Enterprise AI OS" positioning (50 products / 50 services) — **vision only, not current offering** |
 
 ---
 
