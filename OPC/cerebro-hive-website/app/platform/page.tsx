@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, ChevronRight, Shield, Server, Zap, Database, Network, Globe2, Lock, Activity, Code, Search, Bell, Users, DollarSign, Cpu, Compass, Code2, FlaskConical, BarChart3, TrendingUp, Store, Boxes, LayoutGrid } from "lucide-react";
+import { ArrowRight, ChevronRight, Shield, Server, Zap, Database, Network, Globe2, Lock, Activity, Code, Search, Bell, Users, DollarSign, Cpu, Compass, Code2, FlaskConical, BarChart3, TrendingUp, Store, Boxes, LayoutGrid, Archive, MessageSquare, Radio, Route, GitBranch } from "lucide-react";
 import { EnterpriseIntegrations } from "@/components/platform/EnterpriseIntegrations";
 
 const archStack = [
@@ -184,6 +184,31 @@ const WORKSPACE_TILES: WorkspaceTile[] = [
     title: "HiveShield™", subtitle: "Governance approvals, compliance mappings, and Zero Trust agent security.",
     href: "/platform/shield", category: "operate", icon: Shield,
     border: "border-t-rose-400", iconColor: "text-rose-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(251,113,133,0.35)]",
+  },
+  {
+    title: "CerebroArchive™", subtitle: "Ingest, search, and reason over your organization's knowledge.",
+    href: "/platform/archive", category: "analyze", icon: Archive,
+    border: "border-t-indigo-400", iconColor: "text-indigo-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(129,140,248,0.35)]",
+  },
+  {
+    title: "CerebroCopilot™", subtitle: "A conversational assistant grounded in your platform's live state.",
+    href: "/platform/copilot", category: "operate", icon: MessageSquare,
+    border: "border-t-fuchsia-400", iconColor: "text-fuchsia-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(232,121,249,0.35)]",
+  },
+  {
+    title: "HivePulse™", subtitle: "The unified control plane for your agent mesh and execution runtime.",
+    href: "/platform/pulse", category: "operate", icon: Radio,
+    border: "border-t-lime-400", iconColor: "text-lime-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(163,230,53,0.35)]",
+  },
+  {
+    title: "Cerebro X™", subtitle: "The AI gateway: model routing, cost, and observability in one place.",
+    href: "/platform/x", category: "analyze", icon: Route,
+    border: "border-t-cyan-300", iconColor: "text-cyan-300", glow: "hover:shadow-[0_0_32px_-8px_rgba(103,232,249,0.35)]",
+  },
+  {
+    title: "CerebroFlow™", subtitle: "Event-driven workflow orchestration with human-in-the-loop approvals.",
+    href: "/platform/flow", category: "build", icon: GitBranch,
+    border: "border-t-orange-300", iconColor: "text-orange-300", glow: "hover:shadow-[0_0_32px_-8px_rgba(253,186,116,0.35)]",
   },
   {
     title: "Product Hub™", subtitle: "Browse the full CerebroHive product catalog.",
