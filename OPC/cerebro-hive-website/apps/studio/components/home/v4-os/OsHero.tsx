@@ -2,17 +2,63 @@
 
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, BrainCircuit, Zap, Shield, Network, Play } from "lucide-react";
+import {
+  ArrowRight, BrainCircuit, Zap, Shield, Network, Play,
+  Eye, Layers, Search, ListChecks, RotateCw,
+} from "lucide-react";
 import { typeTokens, spacingTokens, motionTokens } from "@/lib/design-system/tokens";
 import { useState } from "react";
 
 const cognitiveSteps = [
-  { label: "Observe", icon: "👁", color: "text-cyan-400", desc: "Ingest & contextualize enterprise signals" },
-  { label: "Retrieve", icon: "🔍", color: "text-blue-400", desc: "Hybrid Graph + Vector + Memory retrieval" },
-  { label: "Reason", icon: "🧠", color: "text-indigo-400", desc: "Ontology-aware inference engine" },
-  { label: "Plan", icon: "📋", color: "text-purple-400", desc: "DAG task graph with policy enforcement" },
-  { label: "Execute", icon: "⚡", color: "text-violet-400", desc: "Multi-agent autonomous execution" },
-  { label: "Reflect", icon: "🔄", color: "text-fuchsia-400", desc: "Self-evaluation & memory consolidation" },
+  {
+    label: "Observe", icon: Eye, color: "text-cyan-400",
+    desc: "Ingest enterprise signals, events & telemetry",
+    inputs: ["Events", "Telemetry", "Documents"],
+    process: ["Signal normalization", "Noise filtering"],
+    output: ["Structured event stream"],
+  },
+  {
+    label: "Understand", icon: Layers, color: "text-sky-400",
+    desc: "Classify intent & enrich context",
+    inputs: ["Events", "Prior context"],
+    process: ["Intent classification", "Context enrichment"],
+    output: ["Enriched context frame"],
+  },
+  {
+    label: "Retrieve", icon: Search, color: "text-blue-400",
+    desc: "Hybrid Graph + Vector + Memory retrieval",
+    inputs: ["Context", "Query"],
+    process: ["Vector search", "Graph traversal", "Memory lookup"],
+    output: ["Ranked evidence set"],
+  },
+  {
+    label: "Reason", icon: BrainCircuit, color: "text-indigo-400",
+    desc: "Ontology-aware inference engine",
+    inputs: ["Evidence", "Ontology"],
+    process: ["Root-cause analysis", "Similarity reasoning"],
+    output: ["Candidate conclusions"],
+  },
+  {
+    label: "Plan", icon: ListChecks, color: "text-purple-400",
+    desc: "DAG task graph with policy enforcement",
+    inputs: ["Conclusions", "Policies"],
+    process: ["Task decomposition", "Policy checks"],
+    output: ["Execution plan (DAG)"],
+  },
+  {
+    label: "Execute", icon: Zap, color: "text-violet-400",
+    desc: "Multi-agent autonomous execution",
+    inputs: ["Execution plan"],
+    process: ["Agent dispatch", "Tool invocation"],
+    output: ["Action results"],
+  },
+  {
+    label: "Learn", icon: RotateCw, color: "text-fuchsia-400",
+    desc: "Self-evaluation & continuous memory optimization",
+    inputs: ["Action results", "Outcomes"],
+    process: ["Evaluation", "Memory update"],
+    output: ["Updated memory"],
+  },
 ];
 
 const stats = [
@@ -24,7 +70,18 @@ const stats = [
 
 export function OsHero() {
   const [activeStep, setActiveStep] = useState(0);
+  const [expanded, setExpanded] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const ActiveIcon = cognitiveSteps[activeStep].icon;
+
+  const handleStepClick = (i: number) => {
+    if (i === activeStep) {
+      setExpanded((e) => !e);
+    } else {
+      setActiveStep(i);
+      setExpanded(false);
+    }
+  };
 
   return (
     <section
@@ -111,36 +168,52 @@ export function OsHero() {
           </p>
 
           {/* Step pills */}
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
-            {cognitiveSteps.map((step, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveStep(i)}
-                className={`relative flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all duration-300 cursor-pointer ${
-                  activeStep === i
-                    ? "bg-surface-elevated border-border shadow-lg"
-                    : "bg-surface/50 border-border hover:bg-surface hover:border-border/50"
-                }`}
-              >
-                {/* Active connector line */}
-                {i < cognitiveSteps.length - 1 && (
-                  <div className={`hidden md:block absolute -right-[5px] top-1/2 -translate-y-1/2 w-2 h-0.5 z-10 transition-colors duration-300 ${
-                    activeStep > i ? "bg-primary-accent/60" : "bg-surface-elevated"
-                  }`} />
-                )}
-                <span className="text-xl">{step.icon}</span>
-                <span className={`text-xs font-semibold ${activeStep === i ? step.color : "text-slate-400"}`}>
-                  {step.label}
-                </span>
-                {activeStep === i && (
-                  <motion.div
-                    layoutId="stepIndicator"
-                    className="absolute inset-0 rounded-xl ring-1 ring-primary-accent/40"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
-              </button>
-            ))}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2 mb-6">
+            {cognitiveSteps.map((step, i) => {
+              const Icon = step.icon;
+              return (
+                <button
+                  key={i}
+                  onClick={() => handleStepClick(i)}
+                  className={`relative flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all duration-300 cursor-pointer ${
+                    activeStep === i
+                      ? "bg-surface-elevated border-border shadow-lg"
+                      : "bg-surface/50 border-border hover:bg-surface hover:border-border/50"
+                  }`}
+                >
+                  {/* Active connector line */}
+                  {i < cognitiveSteps.length - 1 && (
+                    <div className="hidden md:block absolute -right-[5px] top-1/2 -translate-y-1/2 w-2 h-0.5 z-10 overflow-visible">
+                      <div className={`w-full h-full transition-colors duration-300 ${
+                        activeStep > i ? "bg-primary-accent/60" : "bg-surface-elevated"
+                      }`} />
+                      {activeStep > i && !prefersReducedMotion && (
+                        <motion.div
+                          className="absolute top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-primary-accent shadow-[0_0_6px_var(--color-primary-accent)]"
+                          animate={{ left: ["0%", "90%"] }}
+                          transition={{
+                            duration: motionTokens.duration.ambient,
+                            repeat: Infinity,
+                            ease: motionTokens.easing.smooth,
+                          }}
+                        />
+                      )}
+                    </div>
+                  )}
+                  <Icon className={`w-5 h-5 ${activeStep === i ? step.color : "text-slate-400"}`} />
+                  <span className={`text-xs font-semibold ${activeStep === i ? step.color : "text-slate-400"}`}>
+                    {step.label}
+                  </span>
+                  {activeStep === i && (
+                    <motion.div
+                      layoutId="stepIndicator"
+                      className="absolute inset-0 rounded-xl ring-1 ring-primary-accent/40"
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           {/* Step detail card */}
@@ -153,12 +226,46 @@ export function OsHero() {
               transition={{ duration: 0.2 }}
               className="bg-surface border border-border rounded-2xl px-6 py-4 text-center backdrop-blur-sm"
             >
-              <span className={`text-2xl mr-3`}>{cognitiveSteps[activeStep].icon}</span>
+              <ActiveIcon className={`inline w-5 h-5 mr-2 -mt-1 ${cognitiveSteps[activeStep].color}`} />
               <span className={`font-semibold ${cognitiveSteps[activeStep].color}`}>
                 {cognitiveSteps[activeStep].label}:
               </span>{" "}
               <span className="text-slate-300 text-sm">{cognitiveSteps[activeStep].desc}</span>
+              <button
+                onClick={() => setExpanded((e) => !e)}
+                className="block mx-auto mt-2 text-xs text-primary-accent hover:underline"
+              >
+                {expanded ? "Hide details" : "Explore this stage →"}
+              </button>
             </motion.div>
+          </AnimatePresence>
+
+          {/* Expanded Input / Process / Output breakdown */}
+          <AnimatePresence>
+            {expanded && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: motionTokens.duration.normal, ease: motionTokens.easing.smooth }}
+                className="overflow-hidden"
+              >
+                <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-surface/50 border border-border rounded-2xl p-5">
+                  {(["inputs", "process", "output"] as const).map((section) => (
+                    <div key={section} className="text-center sm:text-left">
+                      <p className="text-[11px] uppercase tracking-widest text-slate-500 mb-2">
+                        {section === "inputs" ? "Input" : section === "process" ? "Process" : "Output"}
+                      </p>
+                      <ul className="space-y-1">
+                        {cognitiveSteps[activeStep][section].map((item) => (
+                          <li key={item} className="text-sm text-slate-300">{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
         </motion.div>
 
