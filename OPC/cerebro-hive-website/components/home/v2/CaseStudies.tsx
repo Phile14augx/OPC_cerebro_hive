@@ -42,10 +42,10 @@ export default function CaseStudies() {
       <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-background to-transparent opacity-50" />
 
       <div className="container-wide relative z-10">
-        <SectionHeading 
+        <SectionHeading
           label="Business Impact"
-          title="Proven Outcomes"
-          description="We measure our success by the tangible business value we generate. See how our AI agents transform enterprise operations."
+          title="Representative Outcomes"
+          description="Illustrative scenarios modeling the business value our AI agent architectures are designed to generate — not audited results from named clients."
           className="mb-16"
         />
 
@@ -75,7 +75,7 @@ export default function CaseStudies() {
               <div>
                 <div className="flex items-center gap-2 text-primary-accent mb-2">
                   <ShieldCheck size={18} />
-                  <span className="text-xs uppercase tracking-widest font-bold font-space">Global FinTech</span>
+                  <span className="text-xs uppercase tracking-widest font-bold font-space">Illustrative — FinTech Profile</span>
                 </div>
                 <h3 className="text-2xl font-bold text-text-primary">Compliance Automation</h3>
               </div>

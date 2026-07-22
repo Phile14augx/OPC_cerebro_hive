@@ -181,6 +181,11 @@ const WORKSPACE_TILES: WorkspaceTile[] = [
     border: "border-t-amber-400", iconColor: "text-amber-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(251,191,36,0.35)]",
   },
   {
+    title: "HiveShield™", subtitle: "Governance approvals, compliance mappings, and Zero Trust agent security.",
+    href: "/platform/shield", category: "operate", icon: Shield,
+    border: "border-t-rose-400", iconColor: "text-rose-400", glow: "hover:shadow-[0_0_32px_-8px_rgba(251,113,133,0.35)]",
+  },
+  {
     title: "Product Hub™", subtitle: "Browse the full CerebroHive product catalog.",
     href: "/products", category: "marketplace", icon: Boxes,
     border: "border-t-slate-300", iconColor: "text-slate-300", glow: "hover:shadow-[0_0_32px_-8px_rgba(203,213,225,0.3)]",

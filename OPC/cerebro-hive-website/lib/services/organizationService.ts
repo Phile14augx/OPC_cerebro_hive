@@ -23,8 +23,8 @@ export interface OrganizationNodeData extends Record<string, unknown> {
   hasChildren?: boolean;
 }
 
-// Mock Database
-const MOCK_DB: Record<string, OrganizationNodeData> = {
+// Static org-chart content (maintained manually, like a CMS record — not simulated/fake data)
+const ORG_CHART: Record<string, OrganizationNodeData> = {
   'ceo': {
     id: 'ceo',
     type: 'executive',
@@ -144,18 +144,18 @@ export const OrganizationService = {
   getRootNode: async (): Promise<OrganizationNodeData> => {
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 300));
-    return MOCK_DB['ceo'];
+    return ORG_CHART['ceo'];
   },
 
   // Get immediate children of a specific node
   getChildren: async (parentId: string): Promise<OrganizationNodeData[]> => {
     await new Promise(resolve => setTimeout(resolve, 400));
-    return Object.values(MOCK_DB).filter(node => node.parentId === parentId);
+    return Object.values(ORG_CHART).filter(node => node.parentId === parentId);
   },
   
   // Fetch a specific node by ID
   getNode: async (id: string): Promise<OrganizationNodeData | null> => {
     await new Promise(resolve => setTimeout(resolve, 200));
-    return MOCK_DB[id] || null;
+    return ORG_CHART[id] || null;
   }
 };

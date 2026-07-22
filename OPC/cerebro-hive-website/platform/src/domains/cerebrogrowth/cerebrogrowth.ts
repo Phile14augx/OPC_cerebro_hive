@@ -111,10 +111,25 @@ function buildContentPieces(sourceTitle: string, sourceExcerpt: string, rand: ()
   const blog =
     `# ${sourceTitle}\n\n` +
     `${sourceExcerpt.slice(0, 280)}${sourceExcerpt.length > 280 ? "…" : ""}\n\n` +
-    `## Why ${k1} Matters Now\n(stub — expand with supporting data and examples)\n\n` +
-    `## The Role of ${k2}\n(stub — expand with case studies)\n\n` +
-    `## Getting ${k3} Right\n(stub — expand with a practical checklist)\n\n` +
-    `## Conclusion\n(stub — summarize the recommended next steps)`;
+    `## Why ${k1} Matters Now\n` +
+    `Most enterprise ${k1.toLowerCase()} initiatives were scoped as pilots, not infrastructure. That gap shows up ` +
+    `first in governance — inconsistent access controls, no audit trail, and no shared source of truth across teams. ` +
+    `"${sourceTitle}" is a signal that the organizations pulling ahead have already closed that gap: they treat ` +
+    `${k1.toLowerCase()} as a platform capability, provisioned once and consumed by every team that needs it.\n\n` +
+    `## The Role of ${k2}\n` +
+    `${k2} is the connective layer between isolated pilots and a program that compounds. Teams that under-invest ` +
+    `here end up rebuilding the same integrations, data pipelines, and evaluation harnesses inside every new ` +
+    `initiative. Teams that get it right build ${k2.toLowerCase()} once, instrument it, and let every downstream ` +
+    `use case inherit that foundation — cutting time-to-value on the next project rather than resetting the clock.\n\n` +
+    `## Getting ${k3} Right\n` +
+    `A practical starting checklist: (1) inventory every place ${k3.toLowerCase()} decisions are currently made ` +
+    `ad hoc, (2) centralize policy so a rule change propagates everywhere instead of needing per-team updates, ` +
+    `(3) instrument for audit before scaling — retrofitting logging after an incident is far more expensive than ` +
+    `building it in from day one, and (4) assign clear ownership so ${k3.toLowerCase()} isn't everyone's part-time job.\n\n` +
+    `## Conclusion\n` +
+    `The organizations that turn ${k1.toLowerCase()} from pilot into durable advantage are the ones that fund ` +
+    `${k2.toLowerCase()} and ${k3.toLowerCase()} as shared infrastructure early, not after the second or third ` +
+    `initiative stalls. If you're evaluating where to invest next, start with an honest audit of both.`;
 
   const videoScript =
     `[HOOK, 0:00-0:05]\nWhat if your ${k1.toLowerCase()} strategy is missing the one thing that actually predicts success?\n\n` +

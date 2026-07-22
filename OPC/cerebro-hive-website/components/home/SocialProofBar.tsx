@@ -98,6 +98,9 @@ export default function SocialProofBar() {
             </div>
           ))}
         </div>
+        <p style={{ textAlign: "center", fontSize: "0.7rem", color: "var(--text-muted)", opacity: 0.7, marginTop: "10px" }}>
+          Illustrative figures representing target scale, not audited live metrics.
+        </p>
       </div>
 
       <style>{`

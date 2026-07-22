@@ -12,17 +12,24 @@ import { Badge } from "../../../components/ui/Badge";
 import { StatCard } from "../../../components/ui/StatCard";
 
 export default function CandidateReport({ params }: { params: { id: string } }) {
-  // Mock data based on the ID (in a real app, this would be fetched)
+  // TalentOS's Prisma-backed AssessmentService/SubmissionService are not yet wired to a
+  // live seeded database for this route, so this renders a clearly-labeled sample report
+  // rather than presenting fabricated per-candidate data as if it were real.
   const candidateName = params.id.split('-').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ');
 
   return (
     <div className="space-y-8">
+      {/* Sample data notice */}
+      <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/5 px-4 py-2.5 text-xs text-yellow-200/90">
+        Sample report — illustrates the AI Assessor output format. Not live data for a real candidate.
+      </div>
+
       {/* Back & Header */}
       <div className="space-y-6">
         <Link href="/app/talent" className="text-sm font-bold text-text-muted hover:text-text-primary flex items-center gap-2 transition-colors">
           <ChevronLeft size={16} /> Back to Pipeline
         </Link>
-        
+
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-2xl bg-surface-elevated border border-border flex items-center justify-center shrink-0 shadow-sm">

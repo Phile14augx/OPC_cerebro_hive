@@ -239,10 +239,10 @@ export default function Industries() {
   return (
     <section className="section-pad bg-background relative overflow-hidden font-inter min-h-screen">
       <div className="container-wide relative z-10">
-        <SectionHeading 
+        <SectionHeading
           label="Industries"
           title="Sector-Specific Intelligence"
-          description="We build AI systems that understand the unique data, regulations, and workflows of your industry."
+          description="We build AI systems that understand the unique data, regulations, and workflows of your industry. Metrics below are illustrative targets, not live production telemetry."
           className="mb-16"
         />
 
