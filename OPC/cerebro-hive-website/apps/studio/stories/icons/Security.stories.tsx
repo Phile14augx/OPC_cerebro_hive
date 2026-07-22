@@ -1,0 +1,61 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { Shield as ShieldIcon, Lock as LockIcon } from '../../components/ui/icons/security';
+
+const meta: Meta = {
+  title: 'Icons/Security',
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    size: {
+      control: { type: 'select' },
+      options: [16, 20, 24, 32, 48, 64],
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['outline', 'duotone', 'filled', 'rounded', 'sharp', 'solid', 'mini'],
+    },
+    animation: {
+      control: { type: 'select' },
+      options: ['idle', 'hover', 'active', 'loading', 'attention', 'success', 'error', 'disabled', 'transition', 'pulse', 'flow', 'orbit', 'sparkle', 'rotate', 'float', 'scan', 'ping', 'draw', 'breathe', 'ripple', 'wave', 'magnetic', 'glow'],
+    },
+    animated: {
+      control: 'boolean',
+    },
+    color: {
+      control: 'text',
+      description: 'Color token (e.g. primary, accent) or hex',
+    },
+    secondaryColor: {
+      control: 'text',
+    },
+  },
+};
+
+export default meta;
+
+
+export const Shield: StoryObj = {
+  render: (args) => <ShieldIcon {...args} />,
+  args: {
+    size: 64,
+    variant: 'duotone',
+    animation: 'idle',
+    animated: false,
+    color: 'primary',
+  },
+};
+
+
+export const Lock: StoryObj = {
+  render: (args) => <LockIcon {...args} />,
+  args: {
+    size: 64,
+    variant: 'duotone',
+    animation: 'idle',
+    animated: false,
+    color: 'primary',
+  },
+};
+

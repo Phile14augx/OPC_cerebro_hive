@@ -1,0 +1,325 @@
+@import "tailwindcss";
+
+@import "./theme/colors.css";
+@import "./theme/typography.css";
+@import "./theme/elevation.css";
+@import "./theme/motion.css";
+@import "./theme/charts.css";
+@import "./theme/icons.css";
+
+/* ============================================================
+   BASE
+   NOTE: box-sizing/margin/padding reset is intentionally omitted
+   here — Tailwind v4's Preflight already applies it, correctly
+   scoped inside `@layer base`. A duplicate unlayered reset here
+   previously beat every Tailwind spacing utility (p-*, m-*,
+   mx-auto, ...) site-wide, because unlayered CSS always wins over
+   layered CSS regardless of specificity — that was the cause of
+   the sitewide centering/spacing bug. Turbopack's CSS pipeline
+   also does not reliably preserve additional hand-authored
+   `@layer base { ... }` blocks in this file (they get flattened
+   back to unlayered rules), so re-wrapping isn't a safe fix here —
+   removing the duplicate is.
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: var(--line-height-body);
+  overflow-x: hidden;
+}
+
+/* Offset fixed navbar (72px) */
+main {
+  min-height: calc(100vh - 72px);
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.font-space { font-family: var(--font-space), sans-serif; }
+.font-inter { font-family: var(--font-inter), sans-serif; }
+.font-plex { font-family: var(--font-plex), monospace; }
+.font-jetbrains { font-family: var(--font-jetbrains), monospace; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space), sans-serif;
+  font-weight: var(--font-weight-heading);
+  line-height: 1.2;
+  color: var(--text-primary);
+  letter-spacing: var(--letter-spacing-heading);
+}
+
+p { font-family: var(--font-inter), sans-serif; }
+
+/* ============================================================
+   THEME BEHAVIOR PRIMITIVES
+   ============================================================ */
+.theme-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-elevation-raised);
+  transition: all var(--motion-duration) var(--motion-easing-default);
+}
+.theme-card:hover {
+  box-shadow: var(--shadow-elevation-popover), var(--shadow-glow-primary);
+  transform: translateY(-2px);
+  border-color: var(--text-accent);
+}
+
+.theme-panel {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--shadow-elevation-floating);
+}
+
+.theme-glass,
+.card-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-elevation-floating), var(--shadow-glow-secondary);
+  transition: all var(--motion-duration) var(--motion-easing-default);
+}
+
+.card-glass:hover {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-elevation-popover), var(--shadow-glow-primary);
+  transform: translateY(-2px);
+}
+
+.theme-button-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-radius: var(--radius-button);
+  font-weight: var(--font-weight-heavy);
+  box-shadow: var(--shadow-elevation-raised), var(--shadow-glow-primary);
+  transition: all var(--motion-duration) var(--motion-easing-default);
+}
+.theme-button-primary:hover {
+  background: var(--btn-primary-hover);
+  box-shadow: var(--shadow-elevation-floating), var(--shadow-glow-primary);
+  transform: translateY(-1px);
+}
+
+.btn-primary,
+.btn-ghost,
+.btn-orange {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  font-weight: var(--font-weight-heavy, 700);
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  transition: all var(--motion-duration) var(--motion-easing-default);
+  text-decoration: none;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: var(--shadow-elevation-raised), var(--shadow-glow-primary);
+}
+.btn-primary:hover {
+  background: var(--btn-primary-hover);
+  box-shadow: var(--shadow-elevation-floating), var(--shadow-glow-primary);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-accent);
+  border: 1px solid var(--border-default);
+}
+.btn-ghost:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-focus);
+  transform: translateY(-2px);
+}
+
+.btn-orange {
+  background: var(--text-warning);
+  color: var(--btn-primary-text);
+  box-shadow: var(--shadow-elevation-raised);
+}
+.btn-orange:hover {
+  box-shadow: var(--shadow-elevation-floating);
+  transform: translateY(-2px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 151, 168, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(139, 151, 168, 0.5); }
+
+/* Animations */
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 4rem)); } /* -50% minus half of the gap to perfectly seamlessly loop */
+}
+@keyframes scrollRight {
+  0% { transform: translateX(calc(-50% - 4rem)); }
+  100% { transform: translateX(0); }
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: -8;
+  }
+}
+@keyframes glowDim {
+  0%, 100% { opacity: 1; filter: brightness(1.5); }
+  50% { opacity: 0.2; filter: brightness(0.8); }
+}
+@keyframes dataFlow {
+  0% { left: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+.animate-data-flow {
+  animation: dataFlow 2s linear infinite;
+}
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Global Transitions for Theme Morphing */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform;
+  transition-timing-function: var(--motion-easing);
+  transition-duration: var(--motion-duration);
+}
+
+/* ============================================================
+   SECTION SPACING
+   ============================================================ */
+.section-pad { padding: 120px 0; }
+.section-pad-sm { padding: 80px 0; }
+
+.container-wide {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+@media (max-width: 768px) {
+  .section-pad { padding: 80px 0; }
+  .container-wide { padding: 0 24px; }
+}
+
+/* ============================================================
+   ACCESSIBILITY: Focus Visibility
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--primary-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.2);
+}
+
+/* ============================================================
+   EXPLICIT CARD PADDING UTILITIES
+   Components should use these classes directly, not rely on
+   global attribute-based selectors that cause padding multiplication.
+   ============================================================ */
+
+/* Utility classes for explicit card padding */
+.card-pad    { padding: 32px; }
+.card-pad-sm { padding: 20px 24px; }
+.card-pad-lg { padding: 48px; }
+.service-card{ padding: 40px; }
+
+/* ============================================================
+   INDUSTRIES EXPANDED TAB — Guaranteed padding
+   ============================================================ */
+.industries-expanded-content {
+  padding: 48px;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   CEREBRO CHAT — Navigator & input safe zones
+   ============================================================ */
+.chat-navigator {
+  padding: 24px 20px;
+}
+
+.chat-input-bar {
+  padding: 0 24px 24px;
+}
+
+/* ============================================================
+   COMET BORDER — Service card hover effect
+   ============================================================ */
+
+/* Total perimeter of a typical card ~3480px; tail=90px, head=6px at offset -84 from tail */
+@keyframes cometTail {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -3490; }
+}
+
+/* Head leads 84px ahead of the tail's front edge */
+@keyframes cometHead {
+  from { stroke-dashoffset: -84; }
+  to   { stroke-dashoffset: -3574; }
+}
+
+.animate-comet-tail {
+  animation: cometTail 4s linear infinite;
+}
+
+.animate-comet-head {
+  animation: cometHead 4s linear infinite;
+}
+
+/* Cache bust 1 */
+
+/* ============================================================
+   LIGHT THEME ENTERPRISE CHAT UI OVERRIDES
+   ============================================================ */
+:root:not(.dark) .chat-input { background: #FFFFFF; color: #111827; border: 1px solid #D1D5DB; }
+:root:not(.dark) .chat-input::placeholder { color: #6B7280; }
+:root:not(.dark) .prompt-chip { background:#F8FAFC; color:#1F2937; border:1px solid #CBD5E1; transition:.2s; }
+:root:not(.dark) .prompt-chip:hover { background:#ECFDF5; border-color:#10B981; color:#047857; }
+:root:not(.dark) .chat-panel { background:#FFFFFF; }
+:root:not(.dark) .conversation { background:#FAFBFC; }
+:root:not(.dark) .query-box { background:white; border:1px solid #D1D5DB; color:#111827; }
+:root:not(.dark) .send-button { background:#10B981; color:white; }
+:root:not(.dark) .send-button:hover { background:#059669; }
+:root:not(.dark) .toolbar { border-top:1px solid #E5E7EB; background:#FFFFFF; }
+:root:not(.dark) .toolbar button { color:#64748B; }
+:root:not(.dark) .toolbar button:hover { color:#10B981; }
+:root:not(.dark) .architecture-panel { background:#FFFFFF; }
+:root:not(.dark) .node { background:#F8FAFC; border:1px solid #CBD5E1; color:#334155; }
+:root:not(.dark) .node.active { border-color:#10B981; box-shadow:0 0 0 3px rgba(16,185,129,.15); }
+:root:not(.dark) .sidebar { background:#F9FAFB; border-right:1px solid #E5E7EB; }
+:root:not(.dark) .nav-item { color:#475569; }
+:root:not(.dark) .nav-item:hover { background:#ECFDF5; color:#059669; }
+:root:not(.dark) .knowledge-card { background:white; border:1px solid #E5E7EB; border-left:4px solid #10B981; color:#334155; }
+:root:not(.dark) .assistant-message { background:#F8FAFC; color:#111827; }
+:root:not(.dark) .user-message { background:#ECFDF5; color:#065F46; }

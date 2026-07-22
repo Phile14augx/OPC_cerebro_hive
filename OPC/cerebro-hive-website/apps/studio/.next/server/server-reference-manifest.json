@@ -1,0 +1,54 @@
+{
+  "node": {
+    "405ef040fac57c429e3180e1b521c6c4330c4739ba": {
+      "workers": {
+        "app/(auth)/login/page": {
+          "moduleId": 10516,
+          "async": false,
+          "exportedName": "authenticate",
+          "filename": "apps/studio/app/actions/auth.ts"
+        }
+      },
+      "filename": "apps/studio/app/actions/auth.ts",
+      "exportedName": "authenticate"
+    },
+    "40ff92a6b70088c97428f7e47ba37a61f2cea9e2d3": {
+      "workers": {
+        "app/(auth)/register/page": {
+          "moduleId": 801905,
+          "async": false,
+          "exportedName": "register",
+          "filename": "apps/studio/app/actions/auth.ts"
+        }
+      },
+      "filename": "apps/studio/app/actions/auth.ts",
+      "exportedName": "register"
+    },
+    "603f1dca3c87b572dafb877a42d65986e9e5b7fc88": {
+      "workers": {
+        "app/platform/live-runtime/page": {
+          "moduleId": 520314,
+          "async": false,
+          "exportedName": "runAgentOSTask",
+          "filename": "apps/studio/app/actions/agentos-runtime.ts"
+        }
+      },
+      "filename": "apps/studio/app/actions/agentos-runtime.ts",
+      "exportedName": "runAgentOSTask"
+    },
+    "407fcd12e1df308fce140632a13258266d853c591c": {
+      "workers": {
+        "app/platform/live-runtime/page": {
+          "moduleId": 520314,
+          "async": false,
+          "exportedName": "resetAgentOSSession",
+          "filename": "apps/studio/app/actions/agentos-runtime.ts"
+        }
+      },
+      "filename": "apps/studio/app/actions/agentos-runtime.ts",
+      "exportedName": "resetAgentOSSession"
+    }
+  },
+  "edge": {},
+  "encryptionKey": "SQ+3AlcZqTwPjS9NS/xx/yQotaHhehfGbBn5sY9md84="
+}

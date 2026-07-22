@@ -1,0 +1,3 @@
+module.exports=[284917,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"AI Services — CerebroHive",description:"End-to-end AI services for enterprises — consulting, automation, custom AI development, data engineering, and corporate AI training programs."}])},929857,a=>{a.n(a.i(284917))}];
+
+//# sourceMappingURL=apps_studio_app_services_layout_tsx_131g-9a._.js.map

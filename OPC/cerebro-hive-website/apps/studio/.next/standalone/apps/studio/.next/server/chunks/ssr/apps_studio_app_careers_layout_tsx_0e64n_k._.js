@@ -1,0 +1,3 @@
+module.exports=[66661,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Careers at CerebroHive — Join Our AI Engineering Team",description:"Work on enterprise-scale AI systems with a research-first, no-politics engineering culture. Open roles across AI research, platform engineering, consulting, and education."}])},165059,a=>{a.n(a.i(66661))}];
+
+//# sourceMappingURL=apps_studio_app_careers_layout_tsx_0e64n_k._.js.map

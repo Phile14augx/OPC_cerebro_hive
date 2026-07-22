@@ -1,0 +1,3 @@
+module.exports=[315910,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"AI Research — CerebroHive Research Institute",description:"Original AI research from CerebroHive — benchmarks, experiments, open-source projects, and publications spanning LLMs, multi-agent systems, RAG, and enterprise AI architecture."}])},588407,a=>{a.n(a.i(315910))}];
+
+//# sourceMappingURL=apps_studio_app_research_layout_tsx_1bjwgdk._.js.map

@@ -1,0 +1,3 @@
+module.exports=[157292,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"AI for Every Industry — CerebroHive",description:"Explore AI use cases, compliance frameworks, reference architectures, and transformation roadmaps tailored to 15 industries — from finance and healthcare to manufacturing and government."}])},722845,a=>{a.n(a.i(157292))}];
+
+//# sourceMappingURL=apps_studio_app_industries_layout_tsx_0ujoe9o._.js.map

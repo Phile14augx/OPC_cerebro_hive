@@ -1,0 +1,3 @@
+{
+  "/(platform)/app/talent/candidates/[id]/page": "app/(platform)/app/talent/candidates/[id]/page.js"
+}

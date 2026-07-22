@@ -1,0 +1,17 @@
+{
+  "node": {
+    "40ff92a6b70088c97428f7e47ba37a61f2cea9e2d3": {
+      "workers": {
+        "app/(auth)/register/page": {
+          "moduleId": 801905,
+          "async": false,
+          "exportedName": "register",
+          "filename": "apps/studio/app/actions/auth.ts"
+        }
+      },
+      "exportedName": "register",
+      "filename": "apps/studio/app/actions/auth.ts"
+    }
+  },
+  "edge": {}
+}

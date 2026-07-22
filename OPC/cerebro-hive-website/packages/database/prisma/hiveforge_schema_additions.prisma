@@ -1,0 +1,119 @@
+// -----------------------------------------------------------------------------
+// HIVEFORGE PLATFORM & PROVISIONING
+// -----------------------------------------------------------------------------
+
+model Provider {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+  config      Json?
+  
+  resources   Resource[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Blueprint {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+  schema      Json     // Input schema
+  template    Json     // Generation template
+  
+  resources   Resource[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Resource {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String   @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  providerId  String?  @db.Uuid
+  provider    Provider? @relation(fields: [providerId], references: [id], onDelete: SetNull)
+
+  blueprintId String?  @db.Uuid
+  blueprint   Blueprint? @relation(fields: [blueprintId], references: [id], onDelete: SetNull)
+
+  status      String   @default("pending")
+  health      String   @default("unknown")
+  cost        Float    @default(0.0)
+  config      Json?
+
+  deployments Deployment[]
+  operations  Operation[]
+  tags        Tag[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([workspaceId])
+  @@index([providerId])
+}
+
+model Deployment {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resourceId  String   @db.Uuid
+  resource    Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  
+  status      String   @default("requested")
+  config      Json?
+
+  operations  Operation[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([resourceId])
+}
+
+model Operation {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resourceId    String   @db.Uuid
+  resource      Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  
+  deploymentId  String?  @db.Uuid
+  deployment    Deployment? @relation(fields: [deploymentId], references: [id], onDelete: SetNull)
+
+  status        String   @default("queued") // queued, running, provisioning, completed, failed
+  type          String   // create, update, delete
+  logs          Json?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([resourceId])
+  @@index([deploymentId])
+}
+
+model Policy {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String   @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  name        String
+  description String?
+  rules       Json
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([workspaceId])
+}
+
+model Tag {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key         String
+  value       String
+  
+  resourceId  String   @db.Uuid
+  resource    Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@unique([resourceId, key])
+  @@index([resourceId])
+}

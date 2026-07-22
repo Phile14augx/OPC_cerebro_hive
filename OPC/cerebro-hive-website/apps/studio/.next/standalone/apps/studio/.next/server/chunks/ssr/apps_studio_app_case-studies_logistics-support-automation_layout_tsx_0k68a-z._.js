@@ -1,0 +1,3 @@
+module.exports=[440062,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Logistics Support Automation — CerebroHive Case Study",description:"How CerebroHive deployed an AI-powered logistics support automation system, reducing resolution time by over 70% with n8n orchestration and LLM-backed classification."}])},340649,a=>{a.n(a.i(440062))}];
+
+//# sourceMappingURL=apps_studio_app_case-studies_logistics-support-automation_layout_tsx_0k68a-z._.js.map

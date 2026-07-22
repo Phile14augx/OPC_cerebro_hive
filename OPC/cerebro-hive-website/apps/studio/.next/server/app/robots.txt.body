@@ -1,0 +1,7 @@
+User-Agent: *
+Allow: /
+Disallow: /private/
+Disallow: /api/
+Disallow: /_next/
+
+Sitemap: https://cerebropchive.org/sitemap.xml

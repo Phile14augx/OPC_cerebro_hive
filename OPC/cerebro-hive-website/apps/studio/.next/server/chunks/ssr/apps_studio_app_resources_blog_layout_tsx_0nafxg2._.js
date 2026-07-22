@@ -1,0 +1,3 @@
+module.exports=[888285,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Blog — CerebroHive",description:"Technical articles, AI strategy posts, and enterprise engineering perspectives from the CerebroHive team."}])},977874,a=>{a.n(a.i(888285))}];
+
+//# sourceMappingURL=apps_studio_app_resources_blog_layout_tsx_0nafxg2._.js.map

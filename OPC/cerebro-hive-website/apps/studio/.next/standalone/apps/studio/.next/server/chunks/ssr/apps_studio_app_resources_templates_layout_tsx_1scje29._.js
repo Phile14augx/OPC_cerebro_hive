@@ -1,0 +1,3 @@
+module.exports=[163789,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"AI Project Templates — CerebroHive",description:"Ready-to-use templates for AI project scoping, RFPs, ROI analysis, agent architecture, and data engineering — free to download."}])},607338,a=>{a.n(a.i(163789))}];
+
+//# sourceMappingURL=apps_studio_app_resources_templates_layout_tsx_1scje29._.js.map

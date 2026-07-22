@@ -1,0 +1,3 @@
+module.exports=[783643,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Learn AI — CerebroHive",description:"Free AI learning resources, guides, and getting-started content from CerebroHive — for individuals and enterprise teams at every level."}])},249140,a=>{a.n(a.i(783643))}];
+
+//# sourceMappingURL=apps_studio_app_learn_layout_tsx_1oesvv0._.js.map

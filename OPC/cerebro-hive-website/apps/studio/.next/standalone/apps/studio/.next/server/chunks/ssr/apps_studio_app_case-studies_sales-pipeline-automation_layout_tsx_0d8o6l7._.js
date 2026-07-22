@@ -1,0 +1,3 @@
+module.exports=[16725,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Sales Pipeline Automation — CerebroHive Case Study",description:"How CerebroHive automated a client's entire sales pipeline with AI agents — from lead scoring to proposal generation. Measured outcomes and architecture breakdown."}])},303262,a=>{a.n(a.i(16725))}];
+
+//# sourceMappingURL=apps_studio_app_case-studies_sales-pipeline-automation_layout_tsx_0d8o6l7._.js.map

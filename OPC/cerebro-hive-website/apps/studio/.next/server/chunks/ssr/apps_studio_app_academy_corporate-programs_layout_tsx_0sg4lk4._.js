@@ -1,0 +1,3 @@
+module.exports=[284899,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Corporate AI Training Programs — CerebroHive Academy",description:"Tailor cohort AI training for your engineering, product, and leadership teams. Managed seat allocation, custom curriculum, and certification tracking."}])},882116,a=>{a.n(a.i(284899))}];
+
+//# sourceMappingURL=apps_studio_app_academy_corporate-programs_layout_tsx_0sg4lk4._.js.map

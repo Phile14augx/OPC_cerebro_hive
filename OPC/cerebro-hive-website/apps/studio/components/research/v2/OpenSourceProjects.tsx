@@ -1,0 +1,108 @@
+"use client";
+
+import React from "react";
+import { Code2, Star, GitFork, Download, TerminalSquare } from "lucide-react";
+import { TrackedLink } from "@/components/ui/TrackedLink";
+
+const GITHUB_ORG = "https://github.com/Phile14augx";
+
+const projects = [
+  {
+    name: "cerebro-rag",
+    desc: "The open-source core of our Enterprise RAG pipeline. Includes semantic chunkers, vector hybrid search, and citation grounding.",
+    stars: "4.2k",
+    forks: "382",
+    dl: "12k/mo",
+    lang: "Python",
+    color: "bg-blue-500"
+  },
+  {
+    name: "agent-eval-framework",
+    desc: "A suite for evaluating autonomous agents on multi-step reasoning tasks without human intervention.",
+    stars: "1.8k",
+    forks: "145",
+    dl: "5k/mo",
+    lang: "TypeScript",
+    color: "bg-[#00E5FF]"
+  },
+  {
+    name: "edgar-corpus-v2",
+    desc: "A cleaned, chunked, and vectorized dataset of 5 years of SEC filings, optimized for LLM financial reasoning.",
+    stars: "890",
+    forks: "92",
+    dl: "50k/mo",
+    lang: "Jupyter",
+    color: "bg-[#FFB300]"
+  }
+];
+
+export const OpenSourceProjects = () => {
+  return (
+    <section className="py-24 border-b border-border bg-background">
+      <div className="container-wide">
+        
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block flex items-center gap-2">
+              <Code2 size={14} /> Open Source
+            </span>
+            <h2 className="text-3xl md:text-4xl font-space font-bold text-text-primary mb-4">Building in the Open</h2>
+            <p className="text-text-secondary font-inter max-w-2xl">
+              We open-source our foundational tooling, datasets, and evaluation frameworks to accelerate the entire AI ecosystem.
+            </p>
+          </div>
+          <TrackedLink
+            href={GITHUB_ORG}
+            analyticsEvent="cta_click"
+            analyticsCategory="open_source_projects"
+            analyticsLabel="View GitHub Organization"
+            className="px-6 py-3 bg-surface border border-border text-text-primary text-sm font-bold rounded-lg hover:bg-surface hover:text-text-primary transition-colors flex items-center gap-2"
+          >
+            View GitHub Organization
+          </TrackedLink>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {projects.map((proj, i) => (
+            <TrackedLink
+              href={GITHUB_ORG}
+              analyticsEvent="cta_click"
+              analyticsCategory="open_source_projects"
+              analyticsLabel={proj.name}
+              key={i}
+              className="bg-surface border border-border rounded-2xl p-6 hover:border-primary-accent/50 transition-colors flex flex-col h-full"
+            >
+              
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <TerminalSquare size={20} className="text-text-muted" />
+                  <h3 className="text-lg font-space font-bold text-text-primary group-hover:text-primary-accent transition-colors">
+                    {proj.name}
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-sm text-text-secondary mb-6 flex-1 leading-relaxed">
+                {proj.desc}
+              </p>
+
+              <div className="flex items-center justify-between text-xs text-text-muted border-t border-border pt-4">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${proj.color}`} />
+                  {proj.lang}
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="flex items-center gap-1 hover:text-[#FFB300] transition-colors cursor-pointer"><Star size={14} /> {proj.stars}</span>
+                  <span className="flex items-center gap-1 hover:text-text-primary transition-colors cursor-pointer"><GitFork size={14} /> {proj.forks}</span>
+                  <span className="flex items-center gap-1 hover:text-[#00E5FF] transition-colors cursor-pointer"><Download size={14} /> {proj.dl}</span>
+                </div>
+              </div>
+
+            </TrackedLink>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  );
+};

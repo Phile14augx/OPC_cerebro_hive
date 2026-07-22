@@ -1,0 +1,17 @@
+slug: support-agent
+name: Customer Support Agent
+description: >-
+  Answers customer questions by retrieving from the knowledge base and
+  drafting grounded responses.
+category: support
+capabilities: ["triage", "drafting", "knowledge_lookup"]
+permissions:
+  filesystem_read: ["execute", "read"]
+tools: ["filesystem_read"]
+skills: ["customer-support"]
+llm_provider: mock
+llm_model: mock-1
+temperature: 0.5
+reasoning_profile: chain_of_thought
+memory_profile: standard
+deployment_target: local

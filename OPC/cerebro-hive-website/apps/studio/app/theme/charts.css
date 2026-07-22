@@ -1,0 +1,59 @@
+/* ============================================================
+   CEREBRO HIVE DESIGN SYSTEM v2
+   Layer 1 & 2: Chart & Data Visualization Tokens
+   ============================================================ */
+
+:root {
+  /* Light Mode Charts (High Contrast, Clean Lines) */
+  --chart-grid: var(--color-slate-200);
+  --chart-axis: var(--color-slate-400);
+  --chart-label: var(--color-slate-700);
+  --chart-tooltip-bg: var(--color-slate-900);
+  --chart-tooltip-text: #FFFFFF;
+  
+  --chart-positive: var(--color-emerald-500);
+  --chart-negative: #EF4444;
+  --chart-neutral: var(--color-blue-500);
+  --chart-highlight: var(--color-cyan-500);
+  
+  /* Diagram & Knowledge Graph Specific */
+  --diagram-node-bg: #FFFFFF;
+  --diagram-node-border: var(--color-slate-300);
+  --diagram-edge: var(--color-slate-300);
+  --diagram-edge-active: var(--color-blue-500);
+}
+
+.dark {
+  /* Dark Mode Charts (Neon, Glowing) */
+  --chart-grid: rgba(255, 255, 255, 0.05);
+  --chart-axis: rgba(255, 255, 255, 0.2);
+  --chart-label: var(--color-slate-400);
+  --chart-tooltip-bg: var(--color-obsidian-800);
+  --chart-tooltip-text: #FFFFFF;
+  
+  --chart-positive: var(--color-neon-500);
+  --chart-negative: #EF4444;
+  --chart-neutral: var(--color-cyan-500);
+  --chart-highlight: #FFD166;
+  
+  /* Diagram & Knowledge Graph Specific */
+  --diagram-node-bg: var(--color-obsidian-900);
+  --diagram-node-border: rgba(255, 255, 255, 0.1);
+  --diagram-edge: rgba(255, 255, 255, 0.1);
+  --diagram-edge-active: var(--color-cyan-500);
+}
+
+@theme {
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-axis: var(--chart-axis);
+  --color-chart-label: var(--chart-label);
+  --color-chart-positive: var(--chart-positive);
+  --color-chart-negative: var(--chart-negative);
+  --color-chart-neutral: var(--chart-neutral);
+  --color-chart-highlight: var(--chart-highlight);
+  
+  --color-diagram-node-bg: var(--diagram-node-bg);
+  --color-diagram-node-border: var(--diagram-node-border);
+  --color-diagram-edge: var(--diagram-edge);
+  --color-diagram-edge-active: var(--diagram-edge-active);
+}

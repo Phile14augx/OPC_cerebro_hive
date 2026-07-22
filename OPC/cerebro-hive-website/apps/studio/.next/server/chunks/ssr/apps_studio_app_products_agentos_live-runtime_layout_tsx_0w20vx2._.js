@@ -1,0 +1,3 @@
+module.exports=[947649,a=>{"use strict";a.s(["default",0,function({children:a}){return a},"metadata",0,{title:"AgentOS Live Runtime | CerebroHive",description:"Run the real Cerebro AgentOS kernel — Guard, Reasoning Engine, Planner, Scheduler, Memory Fabric and Eval executing live in your browser, or connect to the full Python AgentOS backend."}])},745961,a=>{a.n(a.i(947649))}];
+
+//# sourceMappingURL=apps_studio_app_products_agentos_live-runtime_layout_tsx_0w20vx2._.js.map

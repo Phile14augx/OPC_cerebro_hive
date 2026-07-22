@@ -1,0 +1,3 @@
+module.exports=[427699,(a,b,c)=>{b.exports=a.x("events",()=>require("events"))},522734,(a,b,c)=>{b.exports=a.x("fs",()=>require("fs"))},446786,(a,b,c)=>{b.exports=a.x("os",()=>require("os"))},37702,(a,b,c)=>{b.exports=a.x("worker_threads",()=>require("worker_threads"))},504446,(a,b,c)=>{b.exports=a.x("net",()=>require("net"))},688947,(a,b,c)=>{b.exports=a.x("stream",()=>require("stream"))},792509,(a,b,c)=>{b.exports=a.x("url",()=>require("url"))},755004,(a,b,c)=>{b.exports=a.x("tls",()=>require("tls"))}];
+
+//# sourceMappingURL=%5Bexternals%5D__1w01qus._.js.map

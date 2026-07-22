@@ -1,0 +1,3 @@
+module.exports=[226449,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"AI Readiness Assessment — CerebroHive",description:"Benchmark your organisation's AI readiness across strategy, data, talent, infrastructure, and governance. Get a scored report with a prioritised transformation roadmap."}])},229786,a=>{a.n(a.i(226449))}];
+
+//# sourceMappingURL=apps_studio_app_tools_ai-readiness_layout_tsx_1oikh-1._.js.map

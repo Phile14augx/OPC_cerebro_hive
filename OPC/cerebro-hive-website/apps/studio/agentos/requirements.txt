@@ -1,0 +1,48 @@
+# ─── Web Framework ─────────────────────────────────────────────────────────
+fastapi>=0.115
+uvicorn[standard]>=0.32
+python-multipart>=0.0.9
+slowapi>=0.1.9
+
+# ─── Database ──────────────────────────────────────────────────────────────
+sqlalchemy>=2.0
+psycopg2-binary>=2.9
+alembic>=1.13
+
+# ─── Validation & Config ───────────────────────────────────────────────────
+pydantic>=2.9
+pydantic-settings>=2.5
+
+# ─── Auth ──────────────────────────────────────────────────────────────────
+pyjwt[crypto]>=2.9          # JWT validation + Keycloak JWKS (needs cryptography)
+cryptography>=43.0
+
+# ─── HTTP ──────────────────────────────────────────────────────────────────
+httpx>=0.27
+pyyaml>=6.0
+
+# ─── AI Providers ──────────────────────────────────────────────────────────
+anthropic>=0.34
+openai>=1.52
+google-genai>=0.2.0
+tenacity>=9.0
+numpy>=1.26
+
+# ─── Event Bus (NATS JetStream) ────────────────────────────────────────────
+nats-py>=2.7                 # async NATS JetStream client
+
+# ─── Search (OpenSearch) ───────────────────────────────────────────────────
+opensearch-py>=2.7           # OpenSearch Python client
+
+# ─── Object Storage (MinIO) ────────────────────────────────────────────────
+minio>=7.2                   # MinIO S3-compatible client
+
+# ─── Observability ─────────────────────────────────────────────────────────
+opentelemetry-api>=1.27
+opentelemetry-sdk>=1.27
+opentelemetry-instrumentation-fastapi>=0.48b0
+
+# ─── Testing ───────────────────────────────────────────────────────────────
+pytest>=8.3
+pytest-asyncio>=0.24
+httpx>=0.27                  # for TestClient async support
