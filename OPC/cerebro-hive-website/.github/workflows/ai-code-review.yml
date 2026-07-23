@@ -1,0 +1,189 @@
+name: AI Code Review
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Runs Claude on every pull request to produce:
+#   • Code quality & architecture feedback
+#   • Security risk score
+#   • Breaking-change detection
+#   • Missing test coverage gaps
+#   • DDD boundary violations
+#   • Performance hotspots
+#   • A structured PR summary comment
+# ──────────────────────────────────────────────────────────────────────────────
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+    branches: [main, develop, "release/*"]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: ai-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # ────────────────────────────────────────────────────────────
+  # 1. Diff extraction
+  # ────────────────────────────────────────────────────────────
+  extract-diff:
+    name: Extract PR Diff
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    outputs:
+      diff_summary: ${{ steps.diff.outputs.summary }}
+      changed_files: ${{ steps.diff.outputs.files }}
+      additions: ${{ steps.diff.outputs.additions }}
+      deletions: ${{ steps.diff.outputs.deletions }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract diff statistics
+        id: diff
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | head -80 | tr '\n' ',')
+          ADDITIONS=$(git diff --stat origin/${{ github.base_ref }}...HEAD | tail -1 | grep -oP '\d+ insertion' | grep -oP '\d+' || echo 0)
+          DELETIONS=$(git diff --stat origin/${{ github.base_ref }}...HEAD | tail -1 | grep -oP '\d+ deletion' | grep -oP '\d+' || echo 0)
+          echo "files=$FILES" >> $GITHUB_OUTPUT
+          echo "additions=$ADDITIONS" >> $GITHUB_OUTPUT
+          echo "deletions=$DELETIONS" >> $GITHUB_OUTPUT
+
+          # Truncate diff to 12000 chars for API
+          DIFF=$(git diff origin/${{ github.base_ref }}...HEAD -- \
+            '*.ts' '*.tsx' '*.py' '*.java' '*.go' '*.sql' \
+            ':!*.lock' ':!node_modules' ':!dist' ':!*.min.*' \
+            | head -c 12000)
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$DIFF" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+  # ────────────────────────────────────────────────────────────
+  # 2. Claude AI review
+  # ────────────────────────────────────────────────────────────
+  claude-review:
+    name: Claude AI Review
+    runs-on: ubuntu-latest
+    needs: extract-diff
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Claude Code Review
+        uses: anthropics/anthropic-ai-action@v1
+        id: claude
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: claude-sonnet-4-6
+          prompt: |
+            You are a senior AI platform engineer reviewing a pull request for **CerebroHive** — an enterprise AI platform comprising:
+            - **CerebroStudio** (@cerebro/studio) — Next.js 15 client
+            - **HiveForge** (@cerebro/forge) — workflow builder
+            - **Platform API** (@cerebro/platform-api) — core REST/gRPC API
+            - **AI Gateway** (@cerebro/ai-gateway) — multi-provider LLM routing
+            - **ForgeAPI** (@cerebro/forge-api) — NestJS orchestration service
+            - Shared packages: @cerebro/ai, @cerebro/workflow, @cerebro/database, @cerebro/telemetry, @cerebro/events
+
+            **PR Title:** ${{ github.event.pull_request.title }}
+            **Author:** ${{ github.event.pull_request.user.login }}
+            **Files changed:** ${{ needs.extract-diff.outputs.changed_files }}
+            **+${{ needs.extract-diff.outputs.additions }} / -${{ needs.extract-diff.outputs.deletions }}**
+
+            **DIFF:**
+            ```
+            ${{ needs.extract-diff.outputs.diff_summary }}
+            ```
+
+            Produce a structured review with the following sections:
+
+            ## 📋 Summary
+            One paragraph describing what this PR does.
+
+            ## 🏗️ Architecture Assessment
+            - Does this follow DDD boundaries?
+            - Are packages used correctly (no cross-cutting concerns)?
+            - Event-driven patterns followed for @cerebro/events?
+            - AI Gateway contracts respected?
+
+            ## 🔐 Security Findings
+            List any: hardcoded secrets, SQL injection risk, missing auth checks, insecure deserialization, SSRF vectors, missing rate limits, OWASP Top 10 violations. Rate: CRITICAL / HIGH / MEDIUM / LOW / NONE.
+
+            ## 🧪 Test Coverage Gaps
+            Identify missing unit, integration, or e2e tests for the changed code.
+
+            ## ⚡ Performance Considerations
+            - N+1 queries, missing indexes, unoptimized vector searches, synchronous LLM calls that should be async, missing caches.
+
+            ## 💡 Code Quality
+            - Naming, readability, error handling, TypeScript strictness, missing validations.
+
+            ## 🔄 Breaking Changes
+            List any API contract breaks, schema migrations, event schema changes, or SDK changes.
+
+            ## 🎯 Risk Score
+            Score 0–10. Explain reasoning.
+            - 0–3: Safe to merge
+            - 4–6: Needs minor fixes
+            - 7–9: Significant issues, needs rework
+            - 10: Do not merge
+
+            ## ✅ Verdict
+            APPROVE / REQUEST_CHANGES / COMMENT
+
+      - name: Post review comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const review = `${{ steps.claude.outputs.response }}`;
+            const body = `## 🤖 CerebroHive AI Code Review\n\n` +
+              `> Powered by Claude Sonnet 4.6 — automated architecture & security review\n\n` +
+              review +
+              `\n\n---\n*This review is AI-generated. Human review is still required for production merges.*`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body.substring(0, 65000)
+            });
+
+  # ────────────────────────────────────────────────────────────
+  # 3. Architecture Decision Record validation
+  # ────────────────────────────────────────────────────────────
+  adr-check:
+    name: ADR Compliance Check
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for new infra patterns without ADR
+        run: |
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          # If new terraform modules or k8s resources added, warn if no ADR updated
+          if echo "$CHANGED" | grep -qE "infra/terraform/modules/[^/]+/main\.tf"; then
+            if ! echo "$CHANGED" | grep -qE "docs/adr/"; then
+              echo "::warning::New Terraform modules detected without a corresponding ADR update."
+              echo "Please add or update an ADR in docs/adr/ to document this infrastructure decision."
+            fi
+          fi
+
+  # ────────────────────────────────────────────────────────────
+  # 4. PR labelling based on change type
+  # ────────────────────────────────────────────────────────────
+  auto-label:
+    name: Auto Label PR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+        continue-on-error: true

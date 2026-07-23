@@ -1,0 +1,317 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Helm Chart Default Values
+# Override per environment with values-dev.yaml / values-staging.yaml / values-production.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+
+global:
+  imageRegistry: ghcr.io
+  imageRepository: cerebro-hive/cerebro-hive
+  imagePullPolicy: Always
+  imagePullSecrets:
+    - name: ghcr-credentials
+
+  # Image tags — overridden by deploy pipeline with sha-<short>
+  imageTag: latest
+
+  # Environment-specific config
+  environment: dev
+  domain: cerebrohive.com
+  appUrl: "https://app.cerebrohive.com"
+  apiUrl: "https://api.cerebrohive.com"
+
+  # Observability
+  otel:
+    enabled: true
+    endpoint: "http://otel-collector:4317"
+
+  # Secrets backend (kubernetes | aws-secrets-manager | vault)
+  secretsBackend: kubernetes
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroStudio
+# ──────────────────────────────────────────────────────────────────────────────
+studio:
+  enabled: true
+  name: studio
+  image:
+    repository: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}/studio"
+    tag: "{{ .Values.global.imageTag }}"
+    pullPolicy: "{{ .Values.global.imagePullPolicy }}"
+  replicaCount: 2
+  port: 3000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  pdb:
+    enabled: true
+    minAvailable: 1
+  serviceAccount:
+    create: true
+    name: studio
+    annotations: {}
+  env:
+    NEXT_TELEMETRY_DISABLED: "1"
+  ingress:
+    host: "app.{{ .Values.global.domain }}"
+  probes:
+    readiness:
+      path: /api/health
+      initialDelaySeconds: 15
+    liveness:
+      path: /api/health
+      initialDelaySeconds: 30
+
+# ──────────────────────────────────────────────────────────────────────────────
+# HiveForge
+# ──────────────────────────────────────────────────────────────────────────────
+forge:
+  enabled: true
+  name: forge
+  image:
+    repository: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}/forge"
+    tag: "{{ .Values.global.imageTag }}"
+    pullPolicy: "{{ .Values.global.imagePullPolicy }}"
+  replicaCount: 2
+  port: 3001
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 70
+  pdb:
+    enabled: true
+    minAvailable: 1
+  ingress:
+    host: "forge.{{ .Values.global.domain }}"
+  probes:
+    readiness:
+      path: /api/health
+      initialDelaySeconds: 15
+    liveness:
+      path: /api/health
+      initialDelaySeconds: 30
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Platform API
+# ──────────────────────────────────────────────────────────────────────────────
+platform_api:
+  enabled: true
+  name: platform-api
+  image:
+    repository: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}/platform-api"
+    tag: "{{ .Values.global.imageTag }}"
+    pullPolicy: "{{ .Values.global.imagePullPolicy }}"
+  replicaCount: 2
+  port: 4000
+  resources:
+    requests:
+      cpu: 200m
+      memory: 384Mi
+    limits:
+      cpu: 1000m
+      memory: 768Mi
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 12
+    targetCPUUtilizationPercentage: 70
+  pdb:
+    enabled: true
+    minAvailable: 1
+  migrations:
+    runOnDeploy: true
+  ingress:
+    host: "api.{{ .Values.global.domain }}"
+  probes:
+    readiness:
+      path: /health
+      initialDelaySeconds: 15
+    liveness:
+      path: /health
+      initialDelaySeconds: 30
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ForgeAPI (NestJS orchestration)
+# ──────────────────────────────────────────────────────────────────────────────
+forge_api:
+  enabled: true
+  name: forge-api
+  image:
+    repository: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}/forge-api"
+    tag: "{{ .Values.global.imageTag }}"
+    pullPolicy: "{{ .Values.global.imagePullPolicy }}"
+  replicaCount: 2
+  port: 4005
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 1Gi
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 65
+  pdb:
+    enabled: true
+    minAvailable: 1
+  terminationGracePeriodSeconds: 180
+  probes:
+    readiness:
+      path: /health
+      initialDelaySeconds: 20
+    liveness:
+      path: /health
+      initialDelaySeconds: 40
+
+# ──────────────────────────────────────────────────────────────────────────────
+# AI Gateway
+# ──────────────────────────────────────────────────────────────────────────────
+ai_gateway:
+  enabled: true
+  name: ai-gateway
+  image:
+    repository: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}/ai-gateway"
+    tag: "{{ .Values.global.imageTag }}"
+    pullPolicy: "{{ .Values.global.imagePullPolicy }}"
+  replicaCount: 2
+  port: 4010
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 768Mi
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 20
+    targetCPUUtilizationPercentage: 60
+  pdb:
+    enabled: true
+    minAvailable: 1
+  terminationGracePeriodSeconds: 120  # Long for streaming LLM responses
+  config:
+    enableStreaming: true
+    enableCostTracking: true
+    enableCaching: true
+    cacheTTL: 300
+    rateLimitRPM: 1000
+  # Providers — API keys injected from secrets
+  providers:
+    anthropic:
+      enabled: true
+      model: claude-sonnet-4-6
+    openai:
+      enabled: true
+      model: gpt-4o
+    google:
+      enabled: true
+      model: gemini-2.0-flash
+    azure:
+      enabled: false
+    ollama:
+      enabled: false
+      endpoint: "http://ollama:11434"
+  probes:
+    readiness:
+      path: /health
+      initialDelaySeconds: 10
+    liveness:
+      path: /health
+      initialDelaySeconds: 20
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Ingress (shared)
+# ──────────────────────────────────────────────────────────────────────────────
+ingress:
+  enabled: true
+  className: nginx
+  tls:
+    enabled: true
+    secretName: cerebro-hive-tls
+    issuer: letsencrypt-prod
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Secrets — secret names (values must exist before deploy)
+# ──────────────────────────────────────────────────────────────────────────────
+secrets:
+  cerebro-hive-secrets:
+    name: cerebro-hive-secrets
+    # Keys expected: DATABASE_URL, REDIS_URL, JWT_SECRET, NEXTAUTH_SECRET
+  cerebro-hive-ai-secrets:
+    name: cerebro-hive-ai-secrets
+    # Keys expected: ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_AI_API_KEY
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Progressive Delivery (Argo Rollouts)
+# ──────────────────────────────────────────────────────────────────────────────
+rollouts:
+  enabled: false   # Enable in production overlay
+  strategy: canary
+  canary:
+    steps:
+      - setWeight: 5
+      - pause: {duration: 2m}
+      - setWeight: 25
+      - pause: {duration: 3m}
+      - setWeight: 50
+      - pause: {duration: 5m}
+      - setWeight: 100
+    autoPromotionEnabled: false
+    analysis:
+      enabled: true
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Optional dependencies (disabled for external managed services in production)
+# ──────────────────────────────────────────────────────────────────────────────
+postgresql:
+  enabled: false   # Use RDS in production
+  auth:
+    database: cerebrohive_db
+    username: cerebrohive
+    existingSecret: cerebro-hive-secrets
+    secretKeys:
+      userPasswordKey: POSTGRES_PASSWORD
+
+redis:
+  enabled: false   # Use ElastiCache in production
+  auth:
+    enabled: true
+    existingSecret: cerebro-hive-secrets
+    existingSecretPasswordKey: REDIS_PASSWORD
+
+nats:
+  enabled: false   # Use managed NATS or self-hosted per environment
+
+certManager:
+  install: false   # Assume cert-manager pre-installed
+
+argoRollouts:
+  install: false   # Assume argo-rollouts pre-installed

@@ -1,0 +1,120 @@
+name: Release
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Semantic Release Pipeline
+#
+# Triggered on push to main after CI passes.
+# Uses conventional commits to:
+#   1. Determine next semver version
+#   2. Generate CHANGELOG.md
+#   3. Create GitHub Release with release notes
+#   4. Tag the commit (v1.2.3)
+#   5. Trigger production build & deploy
+# ──────────────────────────────────────────────────────────────────────────────
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (no actual release)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  packages: write
+  id-token: write
+
+jobs:
+  release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+
+      - name: Install release dependencies
+        run: |
+          pnpm add -g \
+            semantic-release \
+            @semantic-release/changelog \
+            @semantic-release/git \
+            @semantic-release/github \
+            @semantic-release/exec \
+            conventional-changelog-conventionalcommits
+
+      - name: Run semantic-release
+        id: release
+        run: |
+          if [[ "${{ github.event.inputs.dry_run }}" == "true" ]]; then
+            npx semantic-release --dry-run
+          else
+            npx semantic-release
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: "cerebrohive-bot[bot]"
+          GIT_AUTHOR_EMAIL: "bot@cerebrohive.com"
+          GIT_COMMITTER_NAME: "cerebrohive-bot[bot]"
+          GIT_COMMITTER_EMAIL: "bot@cerebrohive.com"
+
+  # Trigger production deployment on new release
+  deploy-production:
+    name: Deploy to Production
+    needs: [release]
+    if: needs.release.outputs.released == 'true'
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  # Generate and publish SDK after release
+  publish-sdk:
+    name: Publish SDK
+    runs-on: ubuntu-latest
+    needs: [release]
+    if: needs.release.outputs.released == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.tag }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build SDK package
+        run: pnpm --filter @cerebro/sdk run build
+        continue-on-error: true
+
+      - name: Publish SDK to npm
+        run: pnpm --filter @cerebro/sdk publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        continue-on-error: true

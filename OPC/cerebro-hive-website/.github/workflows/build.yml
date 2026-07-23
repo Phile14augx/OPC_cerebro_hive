@@ -1,0 +1,239 @@
+name: Build & Publish Images
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Docker Build Pipeline
+#
+# Builds multi-architecture (linux/amd64, linux/arm64) container images
+# for every service and pushes them to:
+#   • GitHub Container Registry (ghcr.io)  — primary
+#   • AWS ECR                              — production deployments
+#
+# Triggers on:
+#   • Push to main / release/* / hotfix/*
+#   • Manual dispatch with optional image selection
+#
+# Images are signed with Cosign (keyless OIDC) for supply chain security.
+# ──────────────────────────────────────────────────────────────────────────────
+
+on:
+  push:
+    branches: [main, "release/*", "hotfix/*"]
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      services:
+        description: "Comma-separated services to build (all if empty)"
+        required: false
+        default: ""
+      push_to_ecr:
+        description: "Push to AWS ECR"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write  # Cosign keyless signing
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/cerebro-hive
+
+jobs:
+  # ────────────────────────────────────────────────────────────
+  # Determine which services to build
+  # ────────────────────────────────────────────────────────────
+  setup:
+    name: Determine Build Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+      sha_short: ${{ steps.meta.outputs.sha_short }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute short SHA
+        id: meta
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build service matrix
+        id: matrix
+        run: |
+          SERVICES='[
+            {"name":"studio",       "context":".", "dockerfile":"apps/studio/Dockerfile",         "image":"studio"},
+            {"name":"forge",        "context":".", "dockerfile":"apps/forge/Dockerfile",           "image":"forge"},
+            {"name":"platform-api", "context":".", "dockerfile":"apps/platform-api/Dockerfile",    "image":"platform-api"},
+            {"name":"forge-api",    "context":".", "dockerfile":"services/forge-api/Dockerfile",   "image":"forge-api"},
+            {"name":"ai-gateway",   "context":".", "dockerfile":"packages/ai-gateway/Dockerfile",  "image":"ai-gateway"}
+          ]'
+
+          INPUT="${{ github.event.inputs.services }}"
+          if [[ -n "$INPUT" ]]; then
+            # Filter to only requested services
+            FILTERED=$(echo "$SERVICES" | python3 -c "
+          import json, sys
+          svc = sys.stdin.read()
+          all_svc = json.loads(svc)
+          requested = [s.strip() for s in '$INPUT'.split(',')]
+          filtered = [s for s in all_svc if s['name'] in requested]
+          print(json.dumps(filtered))
+          ")
+            echo "value={\"include\":$FILTERED}" >> $GITHUB_OUTPUT
+          else
+            echo "value={\"include\":$SERVICES}" >> $GITHUB_OUTPUT
+          fi
+
+  # ────────────────────────────────────────────────────────────
+  # Build each service image
+  # ────────────────────────────────────────────────────────────
+  build:
+    name: Build — ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Set up QEMU for multi-arch emulation
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+
+      # Docker Buildx for multi-platform builds
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+          driver-opts: |
+            image=moby/buildkit:latest
+            network=host
+
+      # Login to GHCR
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Login to AWS ECR (production only)
+      - name: Configure AWS credentials
+        if: github.ref == 'refs/heads/main' || github.event.inputs.push_to_ecr == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+        continue-on-error: true
+
+      - name: Login to Amazon ECR
+        if: github.ref == 'refs/heads/main' || github.event.inputs.push_to_ecr == 'true'
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+        continue-on-error: true
+
+      # Compute image tags
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.IMAGE_PREFIX }}/${{ matrix.image }}
+            ${{ steps.ecr-login.outputs.registry && format('{0}/cerebro-hive/{1}', steps.ecr-login.outputs.registry, matrix.image) || '' }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix=sha-,format=short
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+          labels: |
+            org.opencontainers.image.title=CerebroHive ${{ matrix.name }}
+            org.opencontainers.image.vendor=CerebroHive
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            com.cerebrohive.service=${{ matrix.name }}
+            com.cerebrohive.version=${{ needs.setup.outputs.sha_short }}
+
+      # Build and push
+      - name: Build and push ${{ matrix.name }}
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: |
+            type=registry,ref=${{ env.IMAGE_PREFIX }}/${{ matrix.image }}:cache
+            type=gha,scope=${{ matrix.name }}
+          cache-to: |
+            type=registry,ref=${{ env.IMAGE_PREFIX }}/${{ matrix.image }}:cache,mode=max
+            type=gha,mode=max,scope=${{ matrix.name }}
+          build-args: |
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            GIT_SHA=${{ github.sha }}
+            GIT_REF=${{ github.ref_name }}
+            SERVICE_NAME=${{ matrix.name }}
+          provenance: true
+          sbom: true
+
+      # Cosign keyless signing (OIDC-based, no keys stored)
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign image with Cosign (keyless)
+        run: |
+          cosign sign --yes \
+            ${{ env.IMAGE_PREFIX }}/${{ matrix.image }}@${{ steps.build.outputs.digest }}
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+
+      # Post build digest as output
+      - name: Output image digest
+        run: |
+          echo "### 🐳 Image Built: ${{ matrix.name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Digest:** \`${{ steps.build.outputs.digest }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Tags:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+  # ────────────────────────────────────────────────────────────
+  # Trigger GitOps update after successful builds
+  # ────────────────────────────────────────────────────────────
+  trigger-gitops:
+    name: Trigger GitOps Deploy
+    runs-on: ubuntu-latest
+    needs: [setup, build]
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
+    steps:
+      - name: Determine target environment
+        id: env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == refs/heads/release/* ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+          else
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Trigger deploy workflow
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy.yml',
+              ref: context.ref,
+              inputs: {
+                environment: '${{ steps.env.outputs.environment }}',
+                sha: '${{ needs.setup.outputs.sha_short }}'
+              }
+            });

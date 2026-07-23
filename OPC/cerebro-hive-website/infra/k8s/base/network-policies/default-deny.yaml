@@ -1,0 +1,16 @@
+---
+# ──────────────────────────────────────────────────────────────────────────────
+# Default Deny — block all ingress and egress unless explicitly allowed.
+# This is the security baseline; specific policies open only what's needed.
+# ──────────────────────────────────────────────────────────────────────────────
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: cerebro-hive
+spec:
+  podSelector: {}   # applies to ALL pods in namespace
+  policyTypes:
+    - Ingress
+    - Egress

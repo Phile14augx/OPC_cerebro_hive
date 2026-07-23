@@ -1,0 +1,49 @@
+apiVersion: v2
+name: cerebro-hive
+description: |
+  CerebroHive Platform — Umbrella Helm Chart.
+  Deploys all platform services: studio, forge, platform-api, forge-api, ai-gateway.
+
+type: application
+version: 0.1.0
+appVersion: "0.0.0"
+
+maintainers:
+  - name: CerebroHive Platform Engineering
+    email: platform@cerebrohive.com
+
+keywords:
+  - ai-platform
+  - cerebro-hive
+  - devsecops
+
+dependencies:
+  # PostgreSQL (Bitnami) — used in dev; production uses RDS via Terraform
+  - name: postgresql
+    version: "15.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+
+  # Redis (Bitnami)
+  - name: redis
+    version: "19.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+
+  # NATS
+  - name: nats
+    version: "1.x.x"
+    repository: https://nats-io.github.io/k8s/helm/charts/
+    condition: nats.enabled
+
+  # cert-manager (optional — can use pre-installed)
+  - name: cert-manager
+    version: "1.x.x"
+    repository: https://charts.jetstack.io
+    condition: certManager.install
+
+  # Argo Rollouts
+  - name: argo-rollouts
+    version: "2.x.x"
+    repository: https://argoproj.github.io/argo-helm
+    condition: argoRollouts.install

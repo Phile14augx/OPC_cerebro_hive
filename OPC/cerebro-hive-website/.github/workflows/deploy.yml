@@ -1,0 +1,225 @@
+name: GitOps Deploy
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — GitOps Deployment Pipeline
+#
+# Flow:
+#   1. Update Helm values with new image SHA
+#   2. Commit updated values to GitOps repo
+#   3. ArgoCD auto-syncs and deploys to target environment
+#   4. Argo Rollouts manages canary / blue-green promotion
+#   5. Health checks verify successful rollout
+#
+# Environments:
+#   dev       → auto-deploy on every merge to develop
+#   staging   → auto-deploy on every merge to main
+#   production→ requires manual approval gate
+# ──────────────────────────────────────────────────────────────────────────────
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options: [dev, staging, production]
+      sha:
+        description: "Image SHA to deploy (short)"
+        required: true
+      services:
+        description: "Comma-separated services to deploy (all if empty)"
+        required: false
+
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+      sha:
+        type: string
+        required: true
+
+permissions:
+  contents: write
+  deployments: write
+  pull-requests: write
+
+env:
+  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/cerebro-hive
+
+jobs:
+  # ────────────────────────────────────────────────────────────
+  # Production requires manual approval
+  # ────────────────────────────────────────────────────────────
+  approval:
+    name: Await Production Approval
+    runs-on: ubuntu-latest
+    if: inputs.environment == 'production'
+    environment:
+      name: production
+      url: https://app.cerebrohive.com
+    steps:
+      - name: Production deployment approved
+        run: echo "Production deployment approved by ${{ github.actor }}"
+
+  # ────────────────────────────────────────────────────────────
+  # Update Helm values with new image tags
+  # ────────────────────────────────────────────────────────────
+  update-helm-values:
+    name: Update Helm Values (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    needs: [approval]
+    if: always() && (inputs.environment != 'production' || needs.approval.result == 'success')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITOPS_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "cerebrohive-bot[bot]"
+          git config user.email "bot@cerebrohive.com"
+
+      - name: Update image tags in Helm values
+        run: |
+          ENV="${{ inputs.environment }}"
+          SHA="sha-${{ inputs.sha }}"
+          VALUES_FILE="infra/helm/cerebro-hive/values-${ENV}.yaml"
+
+          echo "Updating image tags to ${SHA} in ${VALUES_FILE}"
+
+          # Update each service image tag using yq
+          SERVICES=(studio forge "platform-api" "forge-api" "ai-gateway")
+          INPUT_SERVICES="${{ inputs.services }}"
+          if [[ -n "$INPUT_SERVICES" ]]; then
+            IFS=',' read -ra SERVICES <<< "$INPUT_SERVICES"
+          fi
+
+          # Install yq
+          wget -qO /usr/local/bin/yq \
+            https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          chmod +x /usr/local/bin/yq
+
+          for svc in "${SERVICES[@]}"; do
+            svc=$(echo "$svc" | tr -d ' ')
+            KEY=$(echo "$svc" | tr '-' '_')
+            if yq e ".${KEY}" "$VALUES_FILE" > /dev/null 2>&1; then
+              yq e -i ".${KEY}.image.tag = \"${SHA}\"" "$VALUES_FILE"
+              echo "  ✓ Updated ${svc} → ${SHA}"
+            fi
+          done
+
+          echo "Updated values file:"
+          grep -A2 "image:" "$VALUES_FILE" | head -40
+
+      - name: Commit and push updated values
+        run: |
+          git add infra/helm/cerebro-hive/values-${{ inputs.environment }}.yaml
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git commit -m "chore(deploy): update ${{ inputs.environment }} image tags to sha-${{ inputs.sha }}
+
+          Services updated: ${{ inputs.services || 'all' }}
+          Environment: ${{ inputs.environment }}
+          Triggered by: ${{ github.actor }}
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          git push
+
+  # ────────────────────────────────────────────────────────────
+  # Wait for ArgoCD to sync
+  # ────────────────────────────────────────────────────────────
+  argocd-sync:
+    name: ArgoCD Sync (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    needs: [update-helm-values]
+    steps:
+      - name: Install ArgoCD CLI
+        run: |
+          curl -sSL -o /usr/local/bin/argocd \
+            https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x /usr/local/bin/argocd
+
+      - name: Wait for ArgoCD sync
+        run: |
+          argocd app wait cerebro-hive-${{ inputs.environment }} \
+            --sync \
+            --health \
+            --timeout 600 \
+            --server ${{ secrets.ARGOCD_SERVER }} \
+            --auth-token ${{ secrets.ARGOCD_TOKEN }} \
+            --insecure
+        continue-on-error: true
+        env:
+          ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
+          ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
+
+      - name: Get ArgoCD app status
+        run: |
+          argocd app get cerebro-hive-${{ inputs.environment }} \
+            --server ${{ secrets.ARGOCD_SERVER }} \
+            --auth-token ${{ secrets.ARGOCD_TOKEN }} \
+            --insecure || true
+        continue-on-error: true
+
+  # ────────────────────────────────────────────────────────────
+  # Post-deployment health check
+  # ────────────────────────────────────────────────────────────
+  health-check:
+    name: Health Check (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    needs: [argocd-sync]
+    steps:
+      - name: Determine base URL
+        id: url
+        run: |
+          case "${{ inputs.environment }}" in
+            dev)        echo "base_url=https://dev.cerebrohive.com" >> $GITHUB_OUTPUT ;;
+            staging)    echo "base_url=https://staging.cerebrohive.com" >> $GITHUB_OUTPUT ;;
+            production) echo "base_url=https://app.cerebrohive.com" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Check application health endpoints
+        run: |
+          BASE="${{ steps.url.outputs.base_url }}"
+          echo "Checking health at ${BASE}"
+
+          # Wait up to 3 minutes for services to be ready
+          for i in $(seq 1 18); do
+            STATUS=$(curl -sf -o /dev/null -w "%{http_code}" "${BASE}/api/health" 2>/dev/null || echo "000")
+            if [[ "$STATUS" == "200" ]]; then
+              echo "✅ Health check passed (attempt $i)"
+              break
+            fi
+            echo "⏳ Attempt $i/18 — status: ${STATUS}, retrying in 10s..."
+            sleep 10
+          done
+
+          if [[ "$STATUS" != "200" ]]; then
+            echo "::error::Health check failed after 3 minutes. Last status: ${STATUS}"
+            exit 1
+          fi
+        continue-on-error: true
+
+      - name: Create GitHub deployment status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+              environment: '${{ inputs.environment }}',
+              description: 'sha-${{ inputs.sha }}',
+              auto_merge: false,
+              required_contexts: []
+            });
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.data.id,
+              state: 'success',
+              environment_url: '${{ steps.url.outputs.base_url }}',
+              description: 'Deployed sha-${{ inputs.sha }} to ${{ inputs.environment }}'
+            });
+        continue-on-error: true

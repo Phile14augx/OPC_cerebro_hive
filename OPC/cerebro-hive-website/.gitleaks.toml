@@ -5,15 +5,60 @@ title = "CerebroHive gitleaks config"
 [extend]
 useDefault = true
 
+# ── CerebroHive-specific secret patterns ───────────────────────────────────────
+
+[[rules]]
+id = "cerebro-anthropic-key"
+description = "Anthropic API Key"
+regex = '''sk-ant-[A-Za-z0-9_-]{40,}'''
+tags = ["secret", "ai", "anthropic"]
+
+[[rules]]
+id = "cerebro-openai-key"
+description = "OpenAI API Key"
+regex = '''sk-[A-Za-z0-9]{48,}'''
+tags = ["secret", "ai", "openai"]
+
+[[rules]]
+id = "cerebro-google-ai-key"
+description = "Google AI / Vertex API Key"
+regex = '''AIza[0-9A-Za-z_-]{35}'''
+tags = ["secret", "ai", "google"]
+
+[[rules]]
+id = "cerebro-jwt-secret"
+description = "JWT secret in env assignment"
+regex = '''JWT_SECRET\s*=\s*["']?[A-Za-z0-9+/=!@#$%^&*]{32,}["']?'''
+tags = ["secret", "jwt"]
+
+[[rules]]
+id = "cerebro-database-url"
+description = "PostgreSQL connection string with embedded password"
+regex = '''postgresql://[^:]+:[^@$\{]+@'''
+tags = ["secret", "database"]
+
+# ── Allowlist ──────────────────────────────────────────────────────────────────
 [allowlist]
 description = "Known-safe patterns that would otherwise false-positive"
 regexes = [
-  # Placeholder/example values that live in tracked *.example files by design.
+  # Placeholder/example values in tracked example files
   '''aos_[A-Za-z0-9_-]{0,10}\.\.\.''',
+  # Template variable syntax — not real secrets
+  '''\$\{[A-Z_]+\}''',
+  '''\$\(\([A-Z_]+\)\)''',
+  # Known test fixtures
+  '''sk-ant-EXAMPLE''',
+  '''sk-EXAMPLE''',
+  '''test_password''',
+  '''supersecretpassword123''',   # docker-compose dev default
 ]
 paths = [
   '''\.env\.example$''',
   '''agentos/\.env\.example$''',
   '''node_modules/''',
   '''\.next/''',
+  '''dist/''',
+  '''\.turbo/''',
+  '''__tests__/''',
+  '''tests?/fixtures/''',
 ]

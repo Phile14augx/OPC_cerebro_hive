@@ -1,7 +1,99 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Prometheus Configuration (Local Dev)
+# ──────────────────────────────────────────────────────────────────────────────
+
 global:
-  scrape_interval: 15s
+  scrape_interval:     15s
+  evaluation_interval: 15s
+  scrape_timeout:      10s
+
+  external_labels:
+    environment: dev
+    cluster: cerebro-hive-local
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]
+
+rule_files:
+  - "/etc/prometheus/rules/*.yml"
 
 scrape_configs:
-  - job_name: 'otel-collector'
+  # OTel Collector — receives metrics from all services
+  - job_name: otel-collector
     static_configs:
-      - targets: ['otel-collector:8889']
+      - targets: ["otel-collector:8889"]
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: "cerebrohive_.*"
+        action: keep
+
+  # OTel Collector self-telemetry
+  - job_name: otel-collector-self
+    static_configs:
+      - targets: ["otel-collector:8888"]
+
+  # CerebroStudio
+  - job_name: studio
+    static_configs:
+      - targets: ["studio:3000"]
+    metrics_path: /api/metrics
+    scheme: http
+
+  # Platform API
+  - job_name: platform-api
+    static_configs:
+      - targets: ["platform-api:4000"]
+    metrics_path: /metrics
+
+  # AI Gateway
+  - job_name: ai-gateway
+    static_configs:
+      - targets: ["ai-gateway:4010"]
+    metrics_path: /metrics
+    scrape_interval: 10s   # Higher frequency for AI cost tracking
+
+  # ForgeAPI
+  - job_name: forge-api
+    static_configs:
+      - targets: ["forge-api:4005"]
+    metrics_path: /metrics
+
+  # PostgreSQL Exporter
+  - job_name: postgres
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: cerebrohive-db
+
+  # Redis Exporter
+  - job_name: redis
+    static_configs:
+      - targets: ["redis-exporter:9121"]
+
+  # NATS JetStream Exporter
+  - job_name: nats
+    static_configs:
+      - targets: ["nats:8222"]
+    metrics_path: /metrics
+
+  # Keycloak metrics
+  - job_name: keycloak
+    static_configs:
+      - targets: ["keycloak:8080"]
+    metrics_path: /realms/master/metrics
+    scrape_interval: 60s
+
+  # Prometheus self-monitoring
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # Grafana
+  - job_name: grafana
+    static_configs:
+      - targets: ["grafana:3000"]
+    metrics_path: /metrics

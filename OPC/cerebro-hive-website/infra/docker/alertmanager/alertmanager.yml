@@ -1,0 +1,99 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Alertmanager Configuration
+# Routes alerts → Slack channels + PagerDuty (production)
+# ──────────────────────────────────────────────────────────────────────────────
+
+global:
+  resolve_timeout: 5m
+  slack_api_url: "${SLACK_WEBHOOK_URL}"
+
+templates:
+  - "/etc/alertmanager/templates/*.tmpl"
+
+route:
+  group_by: ["alertname", "cluster", "service"]
+  group_wait: 10s
+  group_interval: 10m
+  repeat_interval: 1h
+  receiver: "slack-default"
+
+  routes:
+    # Critical alerts → PagerDuty + Slack
+    - match:
+        severity: critical
+      receiver: pagerduty-critical
+      continue: true
+
+    # AI cost alerts → dedicated channel
+    - match_re:
+        alertname: "AI.*Cost.*|.*Token.*"
+      receiver: slack-ai-costs
+      group_by: ["alertname"]
+      group_wait: 5m
+      repeat_interval: 6h
+
+    # Warning alerts → Slack warnings channel
+    - match:
+        severity: warning
+      receiver: slack-warnings
+
+    # Info alerts → Slack general
+    - match:
+        severity: info
+      receiver: slack-info
+      repeat_interval: 24h
+
+receivers:
+  - name: slack-default
+    slack_configs:
+      - channel: "#cerebro-alerts"
+        title: '{{ template "cerebro.title" . }}'
+        text: '{{ template "cerebro.text" . }}'
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+        send_resolved: true
+
+  - name: slack-warnings
+    slack_configs:
+      - channel: "#cerebro-warnings"
+        title: '⚠️ {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+        send_resolved: true
+
+  - name: slack-ai-costs
+    slack_configs:
+      - channel: "#cerebro-ai-costs"
+        title: '💰 AI Cost Alert: {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ "\n" }}Runbook: {{ .Annotations.runbook }}{{ end }}'
+        send_resolved: false
+
+  - name: slack-info
+    slack_configs:
+      - channel: "#cerebro-info"
+        title: 'ℹ️ {{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+        send_resolved: true
+
+  - name: pagerduty-critical
+    pagerduty_configs:
+      - routing_key: "${PAGERDUTY_ROUTING_KEY}"
+        description: '{{ .GroupLabels.alertname }}: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+        severity: critical
+        details:
+          environment: '{{ .CommonLabels.environment }}'
+          service: '{{ .CommonLabels.service }}'
+          runbook: '{{ (index .Alerts 0).Annotations.runbook }}'
+
+inhibit_rules:
+  # If the cluster is down, suppress individual service alerts
+  - source_match:
+      alertname: "ClusterDown"
+    target_match_re:
+      alertname: ".*"
+    equal: ["cluster"]
+
+  # Suppress warnings if critical firing for same service
+  - source_match:
+      severity: "critical"
+    target_match:
+      severity: "warning"
+    equal: ["alertname", "service"]

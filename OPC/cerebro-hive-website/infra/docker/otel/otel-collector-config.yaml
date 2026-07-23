@@ -1,38 +1,191 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — OpenTelemetry Collector Configuration
+#
+# Receives traces, metrics, and logs from all platform services via OTLP.
+# Exports to:
+#   Traces  → Tempo (OTLP gRPC)
+#   Metrics → Prometheus (pull via scrape endpoint)
+#   Logs    → Loki (push)
+#
+# Includes AI-specific metric processing: token usage, cost, latency by model.
+# ──────────────────────────────────────────────────────────────────────────────
+
+extensions:
+  health_check:
+    endpoint: "0.0.0.0:13133"
+  pprof:
+    endpoint: "0.0.0.0:1888"
+  zpages:
+    endpoint: "0.0.0.0:55679"
+
 receivers:
+  # OTLP from all services (gRPC + HTTP)
   otlp:
     protocols:
       grpc:
-        endpoint: 0.0.0.0:4317
+        endpoint: "0.0.0.0:4317"
+        max_recv_msg_size_mib: 20
       http:
-        endpoint: 0.0.0.0:4318
+        endpoint: "0.0.0.0:4318"
+        cors:
+          allowed_origins: ["*"]
+
+  # Prometheus scrape for services that expose /metrics directly
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: "otel-collector-self"
+          scrape_interval: 30s
+          static_configs:
+            - targets: ["localhost:8889"]
+
+        - job_name: "postgres-exporter"
+          scrape_interval: 30s
+          static_configs:
+            - targets: ["postgres-exporter:9187"]
+
+        - job_name: "redis-exporter"
+          scrape_interval: 30s
+          static_configs:
+            - targets: ["redis-exporter:9121"]
+
+        - job_name: "nats-exporter"
+          scrape_interval: 30s
+          static_configs:
+            - targets: ["nats:8222"]
+
+  # Docker container metrics (local dev)
+  docker_stats:
+    endpoint: "unix:///var/run/docker.sock"
+    collection_interval: 30s
+    timeout: 20s
+    api_version: "1.24"
+    container_labels_as_attributes: true
 
 processors:
+  # Batch before exporting (improves throughput)
   batch:
+    timeout: 5s
+    send_batch_size: 1024
+    send_batch_max_size: 2048
+
+  # Memory limit guard
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+
+  # Add service resource attributes
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: "${OTEL_ENVIRONMENT:-dev}"
+        action: upsert
+      - key: service.namespace
+        value: "cerebro-hive"
+        action: insert
+
+  # Filter out health check spans (reduces noise)
+  filter/health:
+    traces:
+      span:
+        - 'attributes["http.route"] == "/health"'
+        - 'attributes["http.route"] == "/api/health"'
+        - 'attributes["http.route"] == "/metrics"'
+
+  # Transform AI Gateway metrics: add cost labels
+  transform/ai_metrics:
+    metric_statements:
+      - context: datapoint
+        statements:
+          - set(attributes["ai.cost.currency"], "USD") where IsMatch(metric.name, "^ai_gateway_.*")
+
+  # Tail-based sampling: keep 100% of errors, 10% of successful traces
+  tail_sampling:
+    decision_wait: 10s
+    num_traces: 10000
+    expected_new_traces_per_sec: 100
+    policies:
+      - name: errors-policy
+        type: status_code
+        status_code:
+          status_codes: [ERROR]
+      - name: slow-traces-policy
+        type: latency
+        latency:
+          threshold_ms: 2000
+      - name: ai-gateway-policy
+        type: string_attribute
+        string_attribute:
+          key: service.name
+          values: [ai-gateway]
+      - name: probabilistic-policy
+        type: probabilistic
+        probabilistic:
+          sampling_percentage: 10
 
 exporters:
-  prometheus:
-    endpoint: "0.0.0.0:8889"
-    namespace: cerebrohive
-  
-  otlp/jaeger:
-    endpoint: "jaeger:4317"
+  # Traces → Tempo
+  otlp/tempo:
+    endpoint: "tempo:4317"
     tls:
       insecure: true
 
+  # Metrics → Prometheus (pull endpoint)
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: cerebrohive
+    send_timestamps: true
+    metric_expiration: 180m
+    resource_to_telemetry_conversion:
+      enabled: true
+
+  # Logs → Loki
   loki:
     endpoint: "http://loki:3100/loki/api/v1/push"
+    default_labels_enabled:
+      exporter: false
+      job: true
+      instance: false
+      level: true
+    labels:
+      resource:
+        service.name: "service_name"
+        service.version: "service_version"
+        deployment.environment: "environment"
+      attributes:
+        level: ""
+        http.method: ""
+        http.route: ""
+        http.status_code: ""
+
+  # Debug logging (disable in production)
+  debug:
+    verbosity: basic
+    sampling_initial: 5
+    sampling_thereafter: 200
 
 service:
+  extensions: [health_check, pprof, zpages]
+
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp/jaeger]
+      processors: [memory_limiter, filter/health, resource, tail_sampling, batch]
+      exporters: [otlp/tempo]
+
     metrics:
-      receivers: [otlp]
-      processors: [batch]
+      receivers: [otlp, prometheus, docker_stats]
+      processors: [memory_limiter, resource, transform/ai_metrics, batch]
       exporters: [prometheus]
+
     logs:
       receivers: [otlp]
-      processors: [batch]
+      processors: [memory_limiter, resource, batch]
       exporters: [loki]
+
+  telemetry:
+    logs:
+      level: warn
+    metrics:
+      address: "0.0.0.0:8888"

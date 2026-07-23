@@ -1,0 +1,11 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: studio-pdb
+  namespace: cerebro-hive
+spec:
+  minAvailable: 1   # always keep at least 1 pod during node drains
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: studio
+      app.kubernetes.io/component: studio

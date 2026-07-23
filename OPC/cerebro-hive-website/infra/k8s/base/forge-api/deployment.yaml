@@ -1,0 +1,214 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forge-api
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: forge-api
+    app.kubernetes.io/component: forge-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: forge-api
+      app.kubernetes.io/component: forge-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: forge-api
+        app.kubernetes.io/component: forge-api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "4005"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: forge-api
+      automountServiceAccountToken: false
+      # ForgeAPI runs long workflows — generous grace period
+      terminationGracePeriodSeconds: 180
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: forge-api
+
+      containers:
+        - name: forge-api
+          image: ghcr.io/cerebro-hive/cerebro-hive/forge-api:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 4005
+              protocol: TCP
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1001
+            capabilities:
+              drop: [ALL]
+
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: FORGE_API_PORT
+              value: "4005"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-hive-secrets
+                  key: DATABASE_URL
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-hive-secrets
+                  key: REDIS_URL
+            - name: AI_PROVIDER
+              value: anthropic
+            - name: AI_MODEL_ID
+              value: claude-sonnet-4-6
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-hive-ai-secrets
+                  key: ANTHROPIC_API_KEY
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-hive-ai-secrets
+                  key: OPENAI_API_KEY
+            - name: NATS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cerebro-hive-config
+                  key: NATS_URL
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: cerebro-hive-config
+                  key: OTEL_ENDPOINT
+            - name: OTEL_SERVICE_NAME
+              value: forge-api
+
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 2000m    # Workflow orchestration is CPU-intensive
+              memory: 1Gi
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4005
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 3
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 4005
+            initialDelaySeconds: 40
+            periodSeconds: 20
+            failureThreshold: 3
+
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: workflow-scratch
+              mountPath: /app/scratch
+
+          lifecycle:
+            preStop:
+              exec:
+                # Allow in-flight agent/workflow tasks to drain
+                command: ["/bin/sh", "-c", "sleep 30"]
+
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: workflow-scratch
+          emptyDir:
+            sizeLimit: 1Gi
+
+      imagePullSecrets:
+        - name: ghcr-credentials
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: forge-api
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: forge-api
+    app.kubernetes.io/component: forge-api
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: forge-api
+    app.kubernetes.io/component: forge-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: 4005
+      protocol: TCP
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: forge-api
+  namespace: cerebro-hive
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: forge-api
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 65
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 600   # Long cooldown for long-running workflows
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 300

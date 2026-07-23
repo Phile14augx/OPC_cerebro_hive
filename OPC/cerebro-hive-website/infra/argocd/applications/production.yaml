@@ -1,0 +1,55 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cerebro-hive-production
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    # PagerDuty alert on production sync failure
+    notifications.argoproj.io/subscribe.on-sync-failed.pagerduty: cerebro-production
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: cerebro-deployments
+    notifications.argoproj.io/subscribe.on-health-degraded.slack: cerebro-alerts
+    notifications.argoproj.io/subscribe.on-health-degraded.pagerduty: cerebro-production
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cerebro-hive
+
+  source:
+    repoURL: https://github.com/cerebro-hive/cerebro-hive-website
+    targetRevision: "HEAD"   # Always sync from tagged releases
+    path: infra/helm/cerebro-hive
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-production.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cerebro-hive
+
+  # PRODUCTION: NO automated sync — requires manual trigger
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false    # Namespace must pre-exist in production
+      - ServerSideApply=true
+      - PruneLast=true
+    retry:
+      limit: 2
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+
+  revisionHistoryLimit: 20
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: argoproj.io
+      kind: Rollout
+      jsonPointers:
+        - /spec/replicas

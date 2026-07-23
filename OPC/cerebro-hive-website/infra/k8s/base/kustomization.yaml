@@ -1,0 +1,66 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Kubernetes Base Configuration
+# All environments inherit from this base and override via overlays.
+# ──────────────────────────────────────────────────────────────────────────────
+
+namespace: cerebro-hive
+
+resources:
+  # Namespace
+  - namespaces.yaml
+
+  # RBAC
+  - rbac/service-accounts.yaml
+  - rbac/roles.yaml
+
+  # Network Policies
+  - network-policies/default-deny.yaml
+  - network-policies/allow-internal.yaml
+  - network-policies/allow-ingress.yaml
+  - network-policies/allow-monitoring.yaml
+
+  # Services
+  - studio/deployment.yaml
+  - studio/service.yaml
+  - studio/hpa.yaml
+  - studio/pdb.yaml
+
+  - forge/deployment.yaml
+  - forge/service.yaml
+  - forge/hpa.yaml
+
+  - platform-api/deployment.yaml
+  - platform-api/service.yaml
+  - platform-api/hpa.yaml
+  - platform-api/pdb.yaml
+
+  - forge-api/deployment.yaml
+  - forge-api/service.yaml
+  - forge-api/hpa.yaml
+
+  - ai-gateway/deployment.yaml
+  - ai-gateway/service.yaml
+  - ai-gateway/hpa.yaml
+  - ai-gateway/pdb.yaml
+
+  # Ingress + TLS
+  - ingress/certificate.yaml
+  - ingress/ingress.yaml
+
+  # Rollouts (replaces Deployments in production)
+  - rollouts/analysis-template.yaml
+
+  # Monitoring
+  - monitoring/service-monitors.yaml
+  - monitoring/prometheus-rules.yaml
+  - monitoring/alertmanager-config.yaml
+
+commonLabels:
+  app.kubernetes.io/part-of: cerebro-hive
+  app.kubernetes.io/managed-by: argocd
+
+commonAnnotations:
+  app.kubernetes.io/version: "0.0.0"

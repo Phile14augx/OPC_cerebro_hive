@@ -1,16 +1,69 @@
 apiVersion: 1
 
+deleteDatasources:
+  - name: Jaeger   # Replaced by Tempo
+
 datasources:
+  # ── Prometheus (metrics) ─────────────────────────────────────────────────
   - name: Prometheus
     type: prometheus
+    uid: prometheus
     access: proxy
     url: http://prometheus:9090
     isDefault: true
+    jsonData:
+      httpMethod: POST
+      timeInterval: 15s
+      exemplarTraceIdDestinations:
+        - name: trace_id
+          datasourceUid: tempo
+
+  # ── Loki (logs) ──────────────────────────────────────────────────────────
   - name: Loki
     type: loki
+    uid: loki
     access: proxy
     url: http://loki:3100
-  - name: Jaeger
-    type: jaeger
+    jsonData:
+      derivedFields:
+        - datasourceUid: tempo
+          matcherRegex: '"trace_id":"(\w+)"'
+          name: TraceID
+          url: "${__value.raw}"
+          urlDisplayLabel: "View Trace in Tempo"
+
+  # ── Tempo (distributed traces) ───────────────────────────────────────────
+  - name: Tempo
+    type: tempo
+    uid: tempo
     access: proxy
-    url: http://jaeger:16686
+    url: http://tempo:3200
+    jsonData:
+      httpMethod: GET
+      serviceMap:
+        datasourceUid: prometheus
+      search:
+        hide: false
+      lokiSearch:
+        datasourceUid: loki
+      tracesToLogs:
+        datasourceUid: loki
+        filterByTraceID: true
+        filterBySpanID: false
+        tags:
+          - key: service.name
+            value: service_name
+      tracesToMetrics:
+        datasourceUid: prometheus
+        tags:
+          - key: service.name
+            value: service
+
+  # ── Alertmanager ─────────────────────────────────────────────────────────
+  - name: Alertmanager
+    type: alertmanager
+    uid: alertmanager
+    access: proxy
+    url: http://alertmanager:9093
+    jsonData:
+      implementation: prometheus

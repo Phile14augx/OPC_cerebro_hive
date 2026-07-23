@@ -1,0 +1,84 @@
+---
+# Allow all pods within cerebro-hive namespace to communicate with each other
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-internal-traffic
+  namespace: cerebro-hive
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cerebro-hive
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cerebro-hive
+
+---
+# Allow DNS resolution (CoreDNS in kube-system)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: cerebro-hive
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+---
+# Allow egress to external services (LLM APIs, etc.)
+# Scoped to ai-gateway only — other services go through the gateway
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ai-gateway-egress
+  namespace: cerebro-hive
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: ai-gateway
+  policyTypes:
+    - Egress
+  egress:
+    # Allow HTTPS egress to LLM APIs (OpenAI, Anthropic, Google, etc.)
+    - ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 80
+
+---
+# Allow platform-api egress for external webhooks and integrations
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-platform-api-egress
+  namespace: cerebro-hive
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: platform-api
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - protocol: TCP
+          port: 443

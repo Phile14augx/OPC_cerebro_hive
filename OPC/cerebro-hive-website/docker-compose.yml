@@ -269,6 +269,36 @@ networks:
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./infra/docker/loki/loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: cerebrohive-tempo
+    restart: always
+    command: -config.file=/etc/tempo/tempo-config.yaml
+    ports:
+      - "3200:3200"   # HTTP API
+      - "4317"        # OTLP gRPC (internal, shared with OTel collector)
+    volumes:
+      - ./infra/docker/tempo/tempo-config.yaml:/etc/tempo/tempo-config.yaml:ro
+      - tempo_data:/var/tempo
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: cerebrohive-alertmanager
+    restart: always
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./infra/docker/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    environment:
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+      PAGERDUTY_ROUTING_KEY: ${PAGERDUTY_ROUTING_KEY:-}
 
   grafana:
     image: grafana/grafana:10.3.3
@@ -277,14 +307,50 @@ networks:
     ports:
       - "3001:3000"
     volumes:
-      - ./infra/docker/grafana/provisioning:/etc/grafana/provisioning
+      - ./infra/docker/grafana/provisioning:/etc/grafana/provisioning:ro
       - grafana_data:/var/lib/grafana
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
+      GF_AUTH_DISABLE_LOGIN_FORM: "false"
+      GF_FEATURE_TOGGLES_ENABLE: "traceqlEditor"
+      GF_INSTALL_PLUGINS: "grafana-piechart-panel"
     depends_on:
       - prometheus
       - loki
-      - jaeger
+      - tempo
+      - alertmanager
+
+  # ─── Exporters ─────────────────────────────────────────────────────────────
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: cerebrohive-postgres-exporter
+    restart: always
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-cerebrohive}:${POSTGRES_PASSWORD:-supersecretpassword123}@db:5432/${POSTGRES_DB:-cerebrohive_db}?sslmode=disable"
+    ports:
+      - "9187:9187"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: cerebrohive-redis-exporter
+    restart: always
+    environment:
+      REDIS_ADDR: "redis://redis:6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispassword123}
+    ports:
+      - "9121:9121"
+    depends_on:
+      redis:
+        condition: service_healthy
   prometheus_data:
   grafana_data:
+  loki_data:
+  tempo_data:
 
   # --- Temporal (Phase 7) ------------------------------------
 

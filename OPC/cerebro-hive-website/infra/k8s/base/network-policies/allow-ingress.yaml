@@ -1,0 +1,115 @@
+---
+# Allow ingress controller to reach studio (public-facing)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-studio
+  namespace: cerebro-hive
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: studio
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
+
+---
+# Allow ingress controller to reach forge (public-facing)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-forge
+  namespace: cerebro-hive
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: forge
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
+
+---
+# Allow ingress to platform-api (API clients)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-platform-api
+  namespace: cerebro-hive
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: platform-api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: cerebro-hive
+
+---
+# Allow ingress to ai-gateway ONLY from within the platform
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-ai-gateway
+  namespace: cerebro-hive
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: ai-gateway
+  policyTypes:
+    - Ingress
+  ingress:
+    # Internal services only — never public
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: cerebro-hive
+
+---
+# Allow monitoring namespace to scrape metrics
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-monitoring
+  namespace: cerebro-hive
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cerebro-hive-monitoring
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090   # Prometheus scrape
+        - protocol: TCP
+          port: 4317   # OTLP gRPC
+        - protocol: TCP
+          port: 4318   # OTLP HTTP
