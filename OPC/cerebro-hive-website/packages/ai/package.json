@@ -9,7 +9,7 @@
     "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
-    "ai": "^4.0.0",
+    "ai": "^5.0.52",
     "@ai-sdk/openai": "^1.0.0",
     "@ai-sdk/anthropic": "^1.0.0"
   },
