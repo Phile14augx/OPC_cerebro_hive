@@ -1,3 +1,0 @@
-module.exports=[273636,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Learning Paths — CerebroHive Academy",description:"Follow curated AI learning paths — AI Developer, AI Architect, and AI Product Manager tracks designed to take you from foundations to production systems."}])},244697,a=>{a.n(a.i(273636))}];
-
-//# sourceMappingURL=apps_studio_app_academy_learning-paths_layout_tsx_0dy1nf6._.js.map

@@ -1,3 +1,0 @@
-module.exports=[989577,a=>{"use strict";let b=(0,a.i(700600).default)("arrow-left",[["path",{d:"m12 19-7-7 7-7",key:"1l729n"}],["path",{d:"M19 12H5",key:"x3x0zl"}]]);a.s(["ArrowLeft",0,b],989577)},398450,a=>{"use strict";let b=(0,a.i(700600).default)("chevron-right",[["path",{d:"m9 18 6-6-6-6",key:"mthhwq"}]]);a.s(["ChevronRight",0,b],398450)}];
-
-//# sourceMappingURL=0f7g_lucide-react_dist_esm_icons_150y1b6._.js.map

@@ -1,3 +1,0 @@
-module.exports=[428415,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"AI Solution Finder — CerebroHive",description:"Answer a few questions about your business challenge and get a curated set of CerebroHive AI solutions, products, and services matched to your needs."}])},946892,a=>{a.n(a.i(428415))}];
-
-//# sourceMappingURL=apps_studio_app_tools_solution-finder_layout_tsx_0a4fzrq._.js.map

@@ -1,3 +1,0 @@
-module.exports=[247064,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Client Case Studies — CerebroHive AI Results",description:"Real-world outcomes from CerebroHive AI deployments — sales pipeline automation, logistics support, enterprise AI training, and more."}])},222963,a=>{a.n(a.i(247064))}];
-
-//# sourceMappingURL=apps_studio_app_case-studies_layout_tsx_0mwk0tm._.js.map

@@ -1,3 +1,0 @@
-module.exports=[613022,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Corporate AI Training — CerebroHive Case Study",description:"How CerebroHive designed and delivered a corporate AI training program for 500+ employees across engineering, product, and operations teams."}])},112784,a=>{a.n(a.i(613022))}];
-
-//# sourceMappingURL=apps_studio_app_case-studies_corporate-ai-training_layout_tsx_0_pwygf._.js.map

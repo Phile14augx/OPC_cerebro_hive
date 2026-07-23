@@ -1,3 +1,0 @@
-module.exports=[253799,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"AI Whitepapers — CerebroHive",description:"In-depth AI whitepapers on enterprise architecture, LLM deployment, RAG systems, AI governance, and digital transformation — authored by the CerebroHive team."}])},657356,a=>{a.n(a.i(253799))}];
-
-//# sourceMappingURL=apps_studio_app_resources_whitepapers_layout_tsx_1wgy0_f._.js.map

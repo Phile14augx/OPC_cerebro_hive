@@ -1,3 +1,0 @@
-module.exports=[407915,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsxs)("div",{className:"min-h-screen bg-black text-white p-8 font-sans",children:[(0,b.jsxs)("header",{className:"mb-8 border-b border-white/10 pb-4",children:[(0,b.jsx)("h1",{className:"text-3xl font-bold tracking-tight",children:"Engineering Command Center"}),(0,b.jsx)("p",{className:"text-gray-400 mt-2",children:"CerebroHive Autonomous Operational Intelligence"})]}),(0,b.jsx)("main",{children:a})]})}])},668443,a=>{a.n(a.i(407915))}];
-
-//# sourceMappingURL=apps_studio_app_%28internal%29_metrics_layout_tsx_1k_vzur._.js.map

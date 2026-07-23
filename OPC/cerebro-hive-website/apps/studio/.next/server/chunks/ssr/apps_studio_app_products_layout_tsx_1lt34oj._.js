@@ -1,3 +1,0 @@
-module.exports=[111930,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Platform & Products — CerebroHive",description:"CerebroHive's enterprise AI platform: 6 software products (Quantiva ERP, AgentOS, Automation Studio, and more) and 10 proprietary AI frameworks for building production-grade intelligent systems."}])},471089,a=>{a.n(a.i(111930))}];
-
-//# sourceMappingURL=apps_studio_app_products_layout_tsx_1lt34oj._.js.map

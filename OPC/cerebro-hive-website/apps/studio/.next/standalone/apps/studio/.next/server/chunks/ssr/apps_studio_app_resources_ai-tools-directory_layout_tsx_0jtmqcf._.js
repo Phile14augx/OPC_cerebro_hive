@@ -1,3 +1,0 @@
-module.exports=[819149,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"AI Tools Directory — CerebroHive",description:"A curated directory of enterprise AI tools across LLMs, vector databases, orchestration frameworks, observability, and data infrastructure — reviewed by the CerebroHive team."}])},197139,a=>{a.n(a.i(819149))}];
-
-//# sourceMappingURL=apps_studio_app_resources_ai-tools-directory_layout_tsx_0jtmqcf._.js.map

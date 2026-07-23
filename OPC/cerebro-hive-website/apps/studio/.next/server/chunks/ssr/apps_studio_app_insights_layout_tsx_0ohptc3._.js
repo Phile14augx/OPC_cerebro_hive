@@ -1,3 +1,0 @@
-module.exports=[77556,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"AI Intelligence Hub — CerebroHive Insights",description:"Enterprise AI market intelligence, trend analysis, weekly briefings, and strategic research from the CerebroHive team."}])},850898,a=>{a.n(a.i(77556))}];
-
-//# sourceMappingURL=apps_studio_app_insights_layout_tsx_0ohptc3._.js.map

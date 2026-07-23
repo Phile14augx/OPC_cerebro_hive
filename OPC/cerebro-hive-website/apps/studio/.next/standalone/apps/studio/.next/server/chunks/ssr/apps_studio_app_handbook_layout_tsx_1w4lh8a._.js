@@ -1,3 +1,0 @@
-module.exports=[984364,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Company Handbook — CerebroHive",description:"The CerebroHive operating handbook — how we work, our engineering principles, delivery standards, and culture documentation."}])},424855,a=>{a.n(a.i(984364))}];
-
-//# sourceMappingURL=apps_studio_app_handbook_layout_tsx_1w4lh8a._.js.map

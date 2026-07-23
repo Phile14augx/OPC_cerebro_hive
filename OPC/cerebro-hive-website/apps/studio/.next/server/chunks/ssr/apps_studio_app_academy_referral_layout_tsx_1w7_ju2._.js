@@ -1,3 +1,0 @@
-module.exports=[374808,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Referral Program — CerebroHive Academy",description:"Refer colleagues and earn rewards. Help grow the CerebroHive AI education community."}])},522025,a=>{a.n(a.i(374808))}];
-
-//# sourceMappingURL=apps_studio_app_academy_referral_layout_tsx_1w7_ju2._.js.map

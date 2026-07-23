@@ -1,3 +1,0 @@
-module.exports=[201350,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"Community Hub — CerebroHive",description:"Join the CerebroHive community of AI practitioners, researchers, and enterprise leaders. Discussions, events, open-source projects, and peer learning."}])},232074,a=>{a.n(a.i(201350))}];
-
-//# sourceMappingURL=apps_studio_app_community_layout_tsx_155jurp._.js.map

@@ -1,3 +1,0 @@
-module.exports=[232029,a=>{"use strict";var b=a.i(673133);a.s(["default",0,function({children:a}){return(0,b.jsx)(b.Fragment,{children:a})},"metadata",0,{title:"AI Courses — CerebroHive Academy",description:"Browse and enroll in AI courses covering LangChain, LLM fine-tuning, RAG pipelines, prompt engineering, and enterprise AI deployment."}])},465484,a=>{a.n(a.i(232029))}];
-
-//# sourceMappingURL=apps_studio_app_academy_courses_layout_tsx_04_rwsb._.js.map
