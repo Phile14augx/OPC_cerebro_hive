@@ -172,7 +172,7 @@ services:
       - nats_data:/data
 
   platform:
-    build: ${APP_DIR}/platform
+    build: ${APP_DIR}/apps/studio/platform
     container_name: cerebrohive-platform
     restart: always
     depends_on:
@@ -193,7 +193,7 @@ services:
       - "127.0.0.1:8090:8090"
 
   agentos:
-    build: ${APP_DIR}/agentos
+    build: ${APP_DIR}/apps/studio/agentos
     container_name: cerebrohive-agentos
     restart: always
     depends_on:
