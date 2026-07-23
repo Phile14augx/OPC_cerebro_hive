@@ -482,6 +482,22 @@ model OutboxEvent {
   @@index([status])
 }
 
+model IdempotencyRecord {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId     String    @db.Uuid
+  workspaceId  String?   @db.Uuid
+  operation    String
+  requestHash  String
+  responseHash String?
+  status       String    @default("pending") // pending | completed | failed
+  createdAt    DateTime  @default(now())
+  expiresAt    DateTime?
+
+  @@unique([tenantId, requestHash])
+  @@index([requestHash])
+}
+
+
 // -----------------------------------------------------------------------------
 // PHASE 4: PROJECT & SOFTWARE ENGINEERING DOMAIN
 // -----------------------------------------------------------------------------

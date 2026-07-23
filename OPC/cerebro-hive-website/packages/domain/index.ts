@@ -1,3 +1,10 @@
+// Errors & DTOs
+export * from './src/errors/DomainError';
+export * from './src/dto/Result';
+
+// Metrics
+export * from './src/metrics/DomainMetrics';
+
 // Events
 export * from './src/events/DomainEvent';
 export * from './src/events/EventBus';

@@ -1,10 +1,12 @@
-import { WorkflowRepository, RequestContext } from '@cerebro/database';
+import { WorkflowRepository, RequestContext, IdempotencyRepository } from '@cerebro/database';
 import { UnitOfWork } from '../transactions/UnitOfWork';
 import { OutboxPublisher } from '../events/OutboxPublisher';
 import { AuditLogger } from '../audit/AuditLogger';
 import { PolicyEngine } from '../policies/PolicyEngine';
 import { WorkflowValidator } from '../validators/WorkflowValidator';
 import { DomainEvent } from '../events/DomainEvent';
+import { Result } from '../dto/Result';
+import { AuthorizationError, ValidationError, DuplicateCommandError } from '../errors/DomainError';
 
 export class WorkflowPublishedEvent extends DomainEvent {
   constructor(
@@ -25,29 +27,47 @@ export class WorkflowApplicationService {
     private readonly outboxPublisher: OutboxPublisher,
     private readonly auditLogger: AuditLogger,
     private readonly policyEngine: PolicyEngine,
-    private readonly validator: WorkflowValidator
+    private readonly validator: WorkflowValidator,
+    private readonly idempotencyRepo: IdempotencyRepository
   ) {}
 
   async publishVersion(
     workflowId: string, 
     input: { nodes: any[]; edges: any[] },
-    context: RequestContext
-  ) {
+    context: RequestContext,
+    idempotencyKey?: string
+  ): Promise<Result<any>> {
     // 1. Policy check
     const decision = await this.policyEngine.evaluate('CanPublishWorkflow', context, { workflowId });
     if (!decision.allowed) {
-      throw new Error(`Access Denied: ${decision.reason}`);
+      return Result.fail(new AuthorizationError(`Access Denied: ${decision.reason}`));
     }
 
     // 2. Validation
-    this.validator.validatePublish(input.nodes, input.edges);
+    try {
+      this.validator.validatePublish(input.nodes, input.edges);
+    } catch (e: any) {
+      return Result.fail(new ValidationError(e.message));
+    }
 
     // 3. Execute Transaction
     return this.uow.execute(async (tx) => {
-      // 3a. Save entity
+      // 3a. Idempotency Check
+      if (idempotencyKey) {
+        const existing = await this.idempotencyRepo.findRecord(idempotencyKey, { context, tx: tx as any });
+        if (existing) {
+          if (existing.status === 'completed') {
+            return Result.ok(existing.responseHash ? JSON.parse(existing.responseHash) : null);
+          }
+          return Result.fail(new DuplicateCommandError('Operation is currently in progress or failed.'));
+        }
+        await this.idempotencyRepo.createRecord({ operation: 'publishWorkflowVersion', requestHash: idempotencyKey }, { context, tx: tx as any });
+      }
+
+      // 3b. Save entity
       const newVersion = await this.workflowRepo.publishVersion(workflowId, input, { context, tx: tx as any });
 
-      // 3b. Save audit log
+      // 3c. Save audit log
       await this.auditLogger.logAction(
         'publish_version', 
         'Workflow', 
@@ -57,7 +77,7 @@ export class WorkflowApplicationService {
         tx
       );
 
-      // 3c. Save outbox event
+      // 3d. Save outbox event
       const event = new WorkflowPublishedEvent(
         workflowId, 
         newVersion.version, 
@@ -67,7 +87,8 @@ export class WorkflowApplicationService {
       );
       await this.outboxPublisher.publish(event, context, tx);
 
-      return newVersion;
+      return Result.ok(newVersion);
     });
   }
 }
+

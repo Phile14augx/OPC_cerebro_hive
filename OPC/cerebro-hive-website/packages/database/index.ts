@@ -20,5 +20,7 @@ export * from './src/repositories/KnowledgeRepository';
 export * from './src/repositories/ProjectRepository';
 export * from './src/repositories/AuditRepository';
 export * from './src/repositories/OutboxRepository';
+export * from './src/repositories/IdempotencyRepository';
+
 
 
