@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, String
+from sqlalchemy import DateTime, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db import Base
@@ -36,5 +36,11 @@ class APIKey(Base):
     key: Mapped[str] = mapped_column(String, unique=True, index=True)
     owner: Mapped[str] = mapped_column(String)
     trust_level: Mapped[str] = mapped_column(String, default="standard")
+    # Tenant scope for every multi-tenant domain module (finance/ERP, etc).
+    # Nullable for backward compatibility with keys minted before this column
+    # existed; POST /auth/api-keys now always sets it (auto-creating an
+    # Organization if the caller doesn't pass one), so this should only ever
+    # be null for pre-existing rows in an old database.
+    organization_id: Mapped[str | None] = mapped_column(String, ForeignKey("organizations.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=_now)
     revoked: Mapped[bool] = mapped_column(default=False)

@@ -1,15 +1,22 @@
 {
   "name": "@cerebro/telemetry",
   "version": "1.0.0",
-  "private": true,
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "dev": "tsc --watch",
     "lint": "eslint \"src/**/*.ts\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "@opentelemetry/api": "^1.8.0",
+    "@opentelemetry/sdk-node": "^0.51.1",
+    "@opentelemetry/auto-instrumentations-node": "^0.47.1",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.51.1",
+    "@opentelemetry/exporter-metrics-otlp-grpc": "^0.51.1"
+  },
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "@cerebro/config": "workspace:*",
+    "typescript": "^5.4.5"
   }
 }

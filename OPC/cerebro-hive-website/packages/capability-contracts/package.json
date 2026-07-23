@@ -1,0 +1,12 @@
+{
+  "name": "@cerebro/capability-contracts",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "@cerebro/domain": "workspace:*",
+    "@cerebro/database": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

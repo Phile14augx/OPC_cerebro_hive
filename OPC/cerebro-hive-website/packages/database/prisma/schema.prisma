@@ -324,6 +324,9 @@ model AgentConversation {
 
   messages AgentMessage[]
 
+  memory   Json? // Stores working memory and long-term memory context
+  artifacts Json? // Stores generated artifacts (e.g. files, charts)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -334,7 +337,10 @@ model AgentMessage {
   conversation   AgentConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   role           String
   content        String            @db.Text
-  metadata       Json?
+  
+  toolInvocations Json? // Stores tool calls (requests and results)
+  metadata        Json? // Token usage, latency, etc.
+
   createdAt      DateTime          @default(now())
 }
 
@@ -347,6 +353,32 @@ model WorkflowTemplate {
   name       String
   definition Json
   workflows  Workflow[]
+}
+
+model WorkflowExecution {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId     String    @db.Uuid
+  status         String    // 'running', 'completed', 'failed', 'paused'
+  startedAt      DateTime  @default(now())
+  completedAt    DateTime?
+  state          Json?     // Persistent state of the workflow
+  
+  steps          WorkflowStepExecution[]
+}
+
+model WorkflowStepExecution {
+  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflowExecutionId String            @db.Uuid
+  workflowExecution   WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+  
+  stepId              String            // Corresponds to the step ID in the WorkflowTemplate DAG
+  status              String            // 'pending', 'running', 'completed', 'failed'
+  startedAt           DateTime          @default(now())
+  completedAt         DateTime?
+  
+  input               Json?
+  output              Json?
+  error               String?           @db.Text
 }
 
 model Workflow {
@@ -470,16 +502,25 @@ model Queue {
 
 model OutboxEvent {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  eventType     String
-  aggregateType String
   aggregateId   String
+  aggregateType String
+  eventType     String
   payload       Json
+  headers       Json     @default("{}")
+  traceId       String?
+  correlationId String?
+  tenantId      String?  @db.Uuid
+  partitionKey  String?
+  schemaVersion String   @default("1.0")
+  retryCount    Int      @default(0)
   status        String   @default("pending") // pending | published | failed
   error         String?  @db.Text
   createdAt     DateTime @default(now())
   publishedAt   DateTime?
 
   @@index([status])
+  @@index([createdAt])
+  @@index([tenantId])
 }
 
 model IdempotencyRecord {

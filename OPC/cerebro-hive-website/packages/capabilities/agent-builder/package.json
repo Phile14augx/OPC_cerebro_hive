@@ -4,7 +4,8 @@
   "main": "index.ts",
   "dependencies": {
     "@cerebro/domain": "workspace:*",
-    "@cerebro/database": "workspace:*"
+    "@cerebro/database": "workspace:*",
+    "@cerebro/capability-contracts": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

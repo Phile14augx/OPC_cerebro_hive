@@ -49,6 +49,10 @@ from app.api.routers import (
     workflows,
 )
 
+# Finance/ERP domain module — real double-entry ledger + automated
+# categorize/governance/post pipeline for invoices (app/finance/).
+from app.finance import router as finance
+
 configure_logging()
 settings = get_settings()
 
@@ -127,6 +131,7 @@ def root() -> dict:
             "shield": "/api/shield",
             "ops": "/api/ops",
             "platform": "/api/platform",
+            "finance": "/finance",
         },
     }
 
@@ -152,3 +157,6 @@ app.include_router(observability.router)
 app.include_router(cortex.router)
 app.include_router(simulator.router)
 app.include_router(marketplace.router)
+
+# Finance/ERP domain module
+app.include_router(finance.router)

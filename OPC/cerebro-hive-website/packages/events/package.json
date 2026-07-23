@@ -1,0 +1,20 @@
+{
+  "name": "@cerebro/events",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "types": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "@cerebro/core-bus": "workspace:*",
+    "@cerebro/database": "workspace:*",
+    "nats": "^2.29.3"
+  },
+  "devDependencies": {
+    "@cerebro/config": "workspace:*",
+    "typescript": "^5.4.5"
+  }
+}

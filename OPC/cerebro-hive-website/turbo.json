@@ -3,7 +3,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -14,6 +14,21 @@
     },
     "test": {
       "dependsOn": ["^test"]
+    },
+    "generate": {
+      "cache": false
     }
-  }
+  },
+  "globalEnv": [
+    "AI_PROVIDER",
+    "AI_MODEL_ID",
+    "ANTHROPIC_API_KEY",
+    "OPENAI_API_KEY",
+    "FORGE_API_PORT",
+    "NEXT_PUBLIC_FORGE_API_URL",
+    "DATABASE_URL",
+    "REDIS_URL",
+    "NODE_ENV",
+    "FORGE_DEFAULT_WORKSPACE_ID"
+  ]
 }

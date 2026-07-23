@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { platformNavigation } from "../navigation";
-import { 
-  Building2, ChevronDown, ChevronRight, Pin, PanelLeftClose, PanelLeft, Star
+import { platformNavigation, forgeNavigation } from "../navigation";
+import {
+  Building2, ChevronDown, ChevronRight, Pin, PanelLeftClose, PanelLeft, Star, Hammer
 } from "lucide-react";
 import { cn } from "./ui/utils";
 import { useSidebar } from "./SidebarContext";
@@ -14,6 +14,9 @@ export function Sidebar() {
   const pathname = usePathname();
   const { isCollapsed, toggleCollapse } = useSidebar();
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const [forgeOpen, setForgeOpen] = useState(false);
+
+  const isForgeActive = pathname.startsWith("/app/forge");
 
   // Group items by their section to match the new 10/10 hierarchy
   const sections = [
@@ -119,6 +122,54 @@ export function Sidebar() {
               </Link>
             ))}
           </div>
+        </div>
+
+        {/* CerebroForge™ — AI Software Factory */}
+        <div className="px-3 py-3 border-t border-border/50">
+          <button
+            onClick={() => setForgeOpen(prev => !prev)}
+            title={isCollapsed ? "CerebroForge" : undefined}
+            className={cn(
+              "w-full flex items-center justify-between rounded-lg text-sm transition-colors group border",
+              isForgeActive
+                ? "bg-amber-500/10 text-amber-400 border-amber-500/20 font-bold"
+                : "text-text-secondary hover:bg-surface hover:text-text-primary border-transparent",
+              isCollapsed ? "justify-center p-2.5" : "px-3 py-2"
+            )}
+          >
+            <div className="flex items-center gap-3">
+              <Hammer size={20} className={cn("shrink-0", isForgeActive ? "text-amber-400" : "text-text-muted group-hover:text-text-primary")} />
+              {!isCollapsed && <span className="font-bold">CerebroForge™</span>}
+            </div>
+            {!isCollapsed && (
+              <ChevronDown size={14} className={cn("text-text-muted transition-transform", (forgeOpen || isForgeActive) && "rotate-180")} />
+            )}
+          </button>
+
+          {!isCollapsed && (forgeOpen || isForgeActive) && (
+            <div className="mt-1 space-y-0.5">
+              {forgeNavigation.items.map((item, i) => {
+                const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                return (
+                  <Link
+                    key={i}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg text-sm transition-colors group px-3 py-1.5 border",
+                      isActive
+                        ? "bg-amber-500/10 text-amber-400 border-amber-500/20 font-bold"
+                        : "text-text-secondary hover:bg-surface hover:text-text-primary border-transparent"
+                    )}
+                  >
+                    {item.icon && (
+                      <item.icon size={16} className={cn("shrink-0", isActive ? "text-amber-400" : "text-text-muted group-hover:text-text-primary")} />
+                    )}
+                    <span>{item.title}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Navigation Sections */}

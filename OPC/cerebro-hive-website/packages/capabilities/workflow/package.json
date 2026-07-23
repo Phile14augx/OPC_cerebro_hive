@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
+    "@cerebro/database": "workspace:*",
     "@cerebro/domain": "workspace:*",
-    "@cerebro/database": "workspace:*"
+    "@temporalio/client": "^1.20.3",
+    "@temporalio/workflow": "^1.20.3"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

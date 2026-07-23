@@ -8,6 +8,8 @@ from app.core import governance_engine
 from app.core import runtime as runtime_core
 from app.core import workflow_engine
 from app.db import get_db
+from app.finance import automation as finance_automation
+from app.finance.models import Invoice
 from app.models.identity import APIKey
 from app.models.execution import Run, WorkflowRun
 from app.models.governance import Approval, AuditLog, Policy
@@ -171,5 +173,20 @@ def decide_approval(
             workflow_run = db.query(WorkflowRun).filter(WorkflowRun.id == approval.run_id).first()
             if workflow_run is not None and workflow_run.status == "paused":
                 workflow_engine.step(db, workflow_run)
+            else:
+                # Same pattern, for the finance/ERP module: an Invoice paused
+                # at pending_approval (app/finance/automation.py) resumes and
+                # posts to the real ledger the moment its approval clears.
+                # Note: mirrors the pre-existing simplification above — if an
+                # invoice has multiple pending Approval rows (e.g. a
+                # governance policy AND the low-confidence-categorization
+                # safety rail both fired), approving any *one* of them
+                # resumes posting rather than waiting for all to clear.
+                invoice = db.query(Invoice).filter(Invoice.id == approval.run_id).first()
+                if invoice is not None and invoice.status == "pending_approval":
+                    try:
+                        finance_automation.resume_after_approval(db, invoice)
+                    except finance_automation.LedgerError as exc:
+                        raise HTTPException(400, f"approval recorded, but posting failed: {exc}") from exc
 
     return approval

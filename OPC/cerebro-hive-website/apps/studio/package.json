@@ -19,6 +19,7 @@
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "@react-three/postprocessing": "^3.0.4",
+    "@tanstack/react-query": "^5.101.4",
     "@types/three": "^0.184.1",
     "@vercel/functions": "^3.7.5",
     "@xyflow/react": "^12.11.2",
@@ -48,7 +49,8 @@
     "react-icons": "^5.7.0",
     "tailwind-merge": "^3.6.0",
     "three": "^0.184.0",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.2.10",

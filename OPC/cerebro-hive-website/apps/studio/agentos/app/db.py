@@ -51,5 +51,6 @@ def init_db() -> None:
         registry,
         tools,
     )
+    from app.finance import models as finance_models  # noqa: F401
 
     Base.metadata.create_all(bind=engine)

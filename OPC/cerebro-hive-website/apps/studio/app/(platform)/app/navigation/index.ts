@@ -1,7 +1,7 @@
-import { 
-  Home, Rocket, BrainCircuit, Box, Server, Database, 
-  ShieldCheck, Zap, FlaskConical, GraduationCap, 
-  Briefcase, MessageSquare, Settings, 
+import {
+  Home, Rocket, BrainCircuit, Box, Server, Database,
+  ShieldCheck, Zap, FlaskConical, GraduationCap,
+  Briefcase, MessageSquare, Settings,
   LayoutDashboard, Building2, FolderKanban, Users,
   Bot, GitMerge, Gamepad2, Network, Library, BookOpen, DatabaseZap,
   ShoppingCart, LayoutTemplate, Layers, Factory, Code2,
@@ -13,6 +13,10 @@ import {
   GraduationCap as GradIcon, Award, Beaker, Map,
   CreditCard, Receipt, FileStack, ReceiptText, Key,
   Sparkles, HelpCircle, Ticket, Users2, ActivitySquare, Target,
+  // CerebroForge icons
+  Hammer, Brain, PenTool, Smartphone, Globe, Monitor, MessageCircle,
+  FlaskConical as Flask, TestTube2, Truck, GitBranch, ScanSearch,
+  FileCode2, Cpu, Layers3, TerminalSquare, Webhook, Boxes,
   type LucideIcon
 } from "lucide-react";
 
@@ -196,8 +200,36 @@ export const talentNavigation: NavGroup = {
   ],
 };
 
+export const forgeNavigation: NavGroup = {
+  title: "CerebroForge",
+  href: "/app/forge",
+  icon: Hammer,
+  items: [
+    { title: "Forge Overview",        href: "/app/forge",              icon: LayoutDashboard },
+    { title: "AI Planner",            href: "/app/forge/planner",      icon: Brain },
+    { title: "Requirements Studio",   href: "/app/forge/requirements", icon: FileText },
+    { title: "Architecture Studio",   href: "/app/forge/architect",    icon: Layers3 },
+    { title: "UI/UX Studio",          href: "/app/forge/ui-studio",    icon: PenTool },
+    { title: "Code Generation",       href: "/app/forge/codegen",      icon: FileCode2 },
+    { title: "Backend Studio",        href: "/app/forge/backend",      icon: ServerCog },
+    { title: "Database Studio",       href: "/app/forge/database",     icon: Database },
+    { title: "API Studio",            href: "/app/forge/api",          icon: Webhook },
+    { title: "Mobile Studio",         href: "/app/forge/mobile",       icon: Smartphone },
+    { title: "Web Studio",            href: "/app/forge/web",          icon: Globe },
+    { title: "Desktop Studio",        href: "/app/forge/desktop",      icon: Monitor },
+    { title: "CerebroBots",           href: "/app/forge/bots",         icon: MessageCircle },
+    { title: "Testing Intelligence",  href: "/app/forge/testing",      icon: TestTube2 },
+    { title: "AI Code Review",        href: "/app/forge/review",       icon: ScanSearch },
+    { title: "Deployment Studio",     href: "/app/forge/deploy",       icon: Truck },
+    { title: "Repository Manager",    href: "/app/forge/repos",        icon: GitBranch },
+    { title: "AI Documentation",      href: "/app/forge/docs",         icon: BookOpen },
+    { title: "Monitoring & Ops",      href: "/app/forge/monitoring",   icon: Activity },
+  ],
+};
+
 export const platformNavigation: NavGroup[] = [
   workspaceNavigation,
+  forgeNavigation,
   aiNavigation,
   solutionsNavigation,
   infrastructureNavigation,

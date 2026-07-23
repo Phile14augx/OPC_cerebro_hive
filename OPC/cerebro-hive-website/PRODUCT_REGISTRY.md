@@ -99,6 +99,28 @@ Every product defined in this registry adheres to the following metadata schema:
 
 ---
 
+### CerebroForge™
+* **Product Family**: Cerebro Applications | **Category**: AI Software Engineering
+* **Tagline**: The AI Software Factory — describe software, ship software.
+* **Mission**: To collapse the full software development lifecycle into a single AI-native platform.
+* **Business Problem**: Building enterprise software takes months, requires large teams, and produces inconsistent quality. Existing AI code tools are point solutions; none own the full lifecycle from idea to deployment.
+* **Target Customer**: Enterprise Engineering Teams, ISVs, Product Companies, System Integrators.
+* **Personas**: CTOs, Software Architects, Product Managers, Developers, QA Engineers, DevOps.
+* **Core Capabilities**: Natural language project planning, requirements extraction, architecture design, multi-framework code generation, automated testing, CI/CD pipeline generation, AI code review.
+* **AI Capabilities**: Requirement Intelligence Engine, Solution Architect Agent, UX Designer Agent, Frontend/Backend/Mobile/Desktop Engineer Agents, QA Agent, Security Agent, DevOps Agent, Documentation Agent — all coordinated through a shared Project Graph.
+* **Modules**: AI Planner, Requirements Studio, Architecture Studio, UI/UX Studio, Code Generation Engine, Backend Studio, Database Studio, API Studio, Mobile Studio, Web Studio, Desktop Studio, CerebroBots, Testing Intelligence, AI Code Review, Deployment Studio, Repository Manager, AI Documentation.
+* **Integrations**: GitHub, GitLab, Jira, Figma, VS Code, AWS, GCP, Azure, DigitalOcean, Docker Hub.
+* **Dependencies**: HiveAPI, HiveIdentity, HiveStorage, HiveCompute, HiveOps.
+* **Technology Stack**: Next.js, NestJS, LangGraph, Python sandboxes, Docker, Kubernetes, pgvector.
+* **Deployment Model**: SaaS, Private Cloud, Air-gapped Enterprise.
+* **Security Classification**: Tier 1 - Mission Critical.
+* **Pricing Tier**: Enterprise, Enterprise Plus.
+* **Lifecycle Stage**: Beta.
+* **Roadmap**: Autonomous continuous improvement loop (observe → fix → PR → test → deploy).
+* **KPIs**: Projects shipped, Lines of production code generated, Agent task completion rate, Time-to-deployment vs. traditional.
+
+---
+
 ## Part 2: Hive Platform (Foundational Core)
 
 ### HiveForge™

@@ -86,9 +86,9 @@ export async function publishToLinkedIn(
       minTimeout: 5_000,
       maxTimeout: 2 * 60 * 60 * 1000, // 2 hours max
       factor: 6, // 5s → 30s → 3m → 18m → 2h
-      onFailedAttempt: (error: { attemptNumber: number; message: string; retriesLeft: number; retryDelay: number }) => {
+      onFailedAttempt: (error: any) => {
         logger.warn(
-          `LinkedIn publish attempt ${error.attemptNumber} failed: ${error.message}. Retrying in ${Math.round(error.retriesLeft > 0 ? error.retryDelay / 1000 : 0)}s...`
+          `LinkedIn publish attempt ${error.attemptNumber} failed: ${error.message}. Retrying...`
         );
       },
     }

@@ -10,11 +10,9 @@ export const logger = createLogger({
   format: format.combine(
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
     format.errors({ stack: true }),
-    format.printf(({ timestamp, level, message, stack }: { timestamp: string; level: string; message: string; stack?: string }) =>
-      stack
-        ? `${timestamp} [${level.toUpperCase()}] ${message}\n${stack}`
-        : `${timestamp} [${level.toUpperCase()}] ${message}`
-    )
+    format.printf((info: any) => {
+      return `${info.timestamp} [${info.level}]: ${info.message}${info.stack ? `\n${info.stack}` : ''}`;
+    })
   ),
   transports: [
     new transports.Console({

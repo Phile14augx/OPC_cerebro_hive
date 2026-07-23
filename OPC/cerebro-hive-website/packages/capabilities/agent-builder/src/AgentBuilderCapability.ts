@@ -1,10 +1,8 @@
 import { AgentApplicationService, Result, DomainError } from '@cerebro/domain';
 import { RequestContext } from '@cerebro/database';
+import { IAgentBuilderCapability, PublishAgentInput } from '@cerebro/capability-contracts';
 
-// Assume KnowledgeApplicationService and WorkflowApplicationService exist in domain layer
-// import { KnowledgeApplicationService, WorkflowApplicationService } from '@cerebro/domain';
-
-export class AgentBuilderCapability {
+export class AgentBuilderCapability implements IAgentBuilderCapability {
   constructor(
     private readonly agentAppService: AgentApplicationService,
     // private readonly knowledgeAppService: KnowledgeApplicationService,
@@ -17,7 +15,7 @@ export class AgentBuilderCapability {
    */
   async buildAndPublishAgent(
     agentId: string,
-    agentInput: { modelId: string; instructions: string; tools: any[] },
+    agentInput: PublishAgentInput,
     context: RequestContext,
     idempotencyKey?: string
   ): Promise<Result<any>> {

@@ -21,6 +21,7 @@ export * from './src/repositories/ProjectRepository';
 export * from './src/repositories/AuditRepository';
 export * from './src/repositories/OutboxRepository';
 export * from './src/repositories/IdempotencyRepository';
+export * from './src/transactions/PrismaUnitOfWork';
 
 
 

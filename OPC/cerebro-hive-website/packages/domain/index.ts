@@ -32,3 +32,4 @@ export * from './src/validators/WorkflowValidator';
 // Services
 export * from './src/services/AgentApplicationService';
 export * from './src/services/WorkflowApplicationService';
+export * from './src/context/AgentExecutionContext';

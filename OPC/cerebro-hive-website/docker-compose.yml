@@ -164,6 +164,37 @@ services:
       retries: 15
       start_period: 90s
 
+  # ─── CerebroForge™ API ────────────────────────────────────
+
+  forge-api:
+    build:
+      context: .
+      dockerfile: services/forge-api/Dockerfile
+    container_name: cerebrohive-forge-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cerebrohive}:${POSTGRES_PASSWORD:-supersecretpassword123}@db:5432/${POSTGRES_DB:-cerebrohive_db}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redispassword123}@redis:6379
+      FORGE_API_PORT: 4005
+      AI_PROVIDER: ${AI_PROVIDER:-anthropic}
+      AI_MODEL_ID: ${AI_MODEL_ID:-claude-sonnet-4-6}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      NODE_ENV: ${NODE_ENV:-development}
+    ports:
+      - "4005:4005"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:4005/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
   # ─── Tooling ───────────────────────────────────────────────
 
   pgadmin:
@@ -196,3 +227,96 @@ volumes:
 networks:
   default:
     name: cerebrohive-platform
+
+  # --- Observability (Phase 5) -------------------------------
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.96.0
+    container_name: cerebrohive-otel
+    restart: always
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./infra/docker/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+      - "8889:8889" # Prometheus metrics exporter
+
+  prometheus:
+    image: prom/prometheus:v2.50.1
+    container_name: cerebrohive-prometheus
+    restart: always
+    volumes:
+      - ./infra/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.55
+    container_name: cerebrohive-jaeger
+    restart: always
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686" # UI
+      - "4317"        # OTLP gRPC
+
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: cerebrohive-loki
+    restart: always
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  grafana:
+    image: grafana/grafana:10.3.3
+    container_name: cerebrohive-grafana
+    restart: always
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./infra/docker/grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - loki
+      - jaeger
+  prometheus_data:
+  grafana_data:
+
+  # --- Temporal (Phase 7) ------------------------------------
+
+  temporal:
+    container_name: cerebrohive-temporal
+    image: temporalio/auto-setup:1.24.2
+    restart: always
+    ports:
+      - "7233:7233"
+    environment:
+      - CASSANDRA_USER=temporal
+      - CASSANDRA_PASSWORD=temporal
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_SEEDS=db
+      - POSTGRES_USER=
+      - POSTGRES_PWD=
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+    depends_on:
+      db:
+        condition: service_healthy
+
+  temporal-ui:
+    container_name: cerebrohive-temporal-ui
+    image: temporalio/ui:2.27.1
+    restart: always
+    ports:
+      - "8081:8080"
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    depends_on:
+      - temporal
