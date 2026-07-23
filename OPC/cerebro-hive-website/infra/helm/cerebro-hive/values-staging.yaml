@@ -1,0 +1,110 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Staging Environment Values
+# Mirrors production config but with reduced resources and auto-canary promotion.
+# Secrets provided by External Secrets Operator → AWS Secrets Manager.
+# ──────────────────────────────────────────────────────────────────────────────
+
+global:
+  environment: staging
+  domain: staging.cerebrohive.com
+  appUrl: "https://app.staging.cerebrohive.com"
+  apiUrl: "https://api.staging.cerebrohive.com"
+  imagePullPolicy: Always
+  secretsBackend: aws-secrets-manager
+
+studio:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  hpa:
+    minReplicas: 2
+    maxReplicas: 6
+  ingress:
+    host: "app.staging.cerebrohive.com"
+
+forge:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  hpa:
+    minReplicas: 2
+    maxReplicas: 4
+  ingress:
+    host: "forge.staging.cerebrohive.com"
+
+platform_api:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 768Mi
+  hpa:
+    minReplicas: 2
+    maxReplicas: 6
+  ingress:
+    host: "api.staging.cerebrohive.com"
+
+forge_api:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  hpa:
+    minReplicas: 2
+    maxReplicas: 4
+
+ai_gateway:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 768Mi
+  hpa:
+    minReplicas: 2
+    maxReplicas: 8
+
+# Canary enabled in staging but auto-promotes (no manual gate)
+rollouts:
+  enabled: true
+  canary:
+    autoPromotionEnabled: true   # staging: auto-promote after analysis passes
+    steps:
+      - setWeight: 25
+      - pause: {duration: 2m}
+      - setWeight: 100
+    analysis:
+      enabled: true
+
+# Use RDS + ElastiCache in staging (not local)
+postgresql:
+  enabled: false
+redis:
+  enabled: false
+nats:
+  enabled: false
+
+ingress:
+  tls:
+    enabled: true
+    issuer: letsencrypt-staging
+    secretName: cerebro-hive-staging-tls

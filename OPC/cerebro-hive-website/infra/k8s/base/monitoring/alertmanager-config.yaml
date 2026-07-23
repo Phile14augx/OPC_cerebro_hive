@@ -1,0 +1,101 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# AlertmanagerConfig — per-namespace routing for cerebro-hive alerts.
+# Requires: kube-prometheus-stack with Alertmanager CRD support.
+# Global Alertmanager config is in infra/docker/alertmanager/alertmanager.yml
+# ──────────────────────────────────────────────────────────────────────────────
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: cerebro-hive-alerts
+  namespace: cerebro-hive
+  labels:
+    alertmanagerConfig: cerebro-hive
+spec:
+  route:
+    groupBy: ["alertname", "service", "severity"]
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 4h
+    receiver: "cerebro-hive-slack"
+    routes:
+      # P1: AI cost spike → immediate PagerDuty
+      - matchers:
+          - name: alertname
+            value: "AICostSpike"
+          - name: severity
+            value: "critical"
+        receiver: "cerebro-hive-pagerduty"
+        repeatInterval: 30m
+
+      # P1: Service down → PagerDuty
+      - matchers:
+          - name: alertname
+            value: "CerebroServiceDown"
+          - name: severity
+            value: "critical"
+        receiver: "cerebro-hive-pagerduty"
+        repeatInterval: 5m
+
+      # P2: High error rate → Slack #cerebro-alerts
+      - matchers:
+          - name: severity
+            value: "warning"
+        receiver: "cerebro-hive-slack"
+        repeatInterval: 2h
+
+      # AI cost tracking → dedicated channel
+      - matchers:
+          - name: alertname
+            value: "AICostBudgetWarning"
+        receiver: "cerebro-ai-costs-slack"
+        repeatInterval: 1h
+
+  receivers:
+    - name: "cerebro-hive-slack"
+      slackConfigs:
+        - apiURL:
+            name: alertmanager-secrets
+            key: SLACK_WEBHOOK_URL
+          channel: "#cerebro-alerts"
+          sendResolved: true
+          title: |
+            [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
+          text: |
+            {{ range .Alerts }}
+            *Service:* {{ .Labels.service }}
+            *Severity:* {{ .Labels.severity }}
+            *Summary:* {{ .Annotations.summary }}
+            *Description:* {{ .Annotations.description }}
+            {{ end }}
+          actions:
+            - type: button
+              text: "View in Grafana"
+              url: "https://grafana.cerebrohive.com/alerting"
+
+    - name: "cerebro-ai-costs-slack"
+      slackConfigs:
+        - apiURL:
+            name: alertmanager-secrets
+            key: SLACK_WEBHOOK_URL
+          channel: "#cerebro-ai-costs"
+          sendResolved: true
+          title: "AI Cost Alert: {{ .CommonLabels.alertname }}"
+          text: |
+            {{ range .Alerts }}
+            *Current spend:* {{ .Annotations.current_value }}
+            *Threshold:* {{ .Annotations.threshold }}
+            *Provider:* {{ .Labels.provider }}
+            {{ end }}
+
+    - name: "cerebro-hive-pagerduty"
+      pagerdutyConfigs:
+        - routingKey:
+            name: alertmanager-secrets
+            key: PAGERDUTY_ROUTING_KEY
+          severity: "{{ .CommonLabels.severity }}"
+          description: |
+            {{ .CommonLabels.alertname }}: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+          details:
+            namespace: "{{ .CommonLabels.namespace }}"
+            service: "{{ .CommonLabels.service }}"
+            runbook: "{{ .CommonAnnotations.runbook_url }}"

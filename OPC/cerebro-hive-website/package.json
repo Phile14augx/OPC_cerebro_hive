@@ -6,9 +6,11 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "test": "turbo test",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "validate:architecture": "depcruise --config .dependency-cruiser.js packages apps"
   },
   "devDependencies": {
+    "dependency-cruiser": "^18.1.0",
     "turbo": "^2.0.0",
     "typescript": "^5.0.0"
   },

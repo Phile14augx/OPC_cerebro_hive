@@ -58,6 +58,16 @@ resources:
   - monitoring/prometheus-rules.yaml
   - monitoring/alertmanager-config.yaml
 
+  # Istio service mesh (applied when istio-injection=enabled on namespace)
+  - istio/peer-authentication.yaml
+  - istio/destination-rules.yaml
+  - istio/virtual-services.yaml
+  - istio/authorization-policies.yaml
+
+  # External Secrets Operator (syncs AWS Secrets Manager → K8s Secrets)
+  - external-secrets/secret-store.yaml
+  - external-secrets/external-secrets.yaml
+
 commonLabels:
   app.kubernetes.io/part-of: cerebro-hive
   app.kubernetes.io/managed-by: argocd
