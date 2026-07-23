@@ -19,7 +19,7 @@
     "@fastify/swagger-ui": "^3.0.0",
     "@fastify/type-provider-typebox": "^6.1.0",
     "@sinclair/typebox": "^0.32.15",
-    "fastify": "^4.26.2"
+    "fastify": "^5.8.5"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
