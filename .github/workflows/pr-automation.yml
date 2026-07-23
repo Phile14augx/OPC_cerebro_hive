@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Auto-label PR on open
         if: github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'ready_for_review'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9
         with:
           script: |
             github.rest.issues.addLabels({
@@ -22,7 +22,7 @@ jobs:
             
       - name: Remove labels on close/merge
         if: github.event.action == 'closed'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9
         with:
           script: |
             try {
