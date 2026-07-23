@@ -1,0 +1,29 @@
+CerebroHive has been deployed!
+
+Environment: {{ .Values.global.environment }}
+Namespace:   {{ .Release.Namespace }}
+
+Services enabled:
+{{- if .Values.studio.enabled }}
+  ✓ CerebroStudio  →  https://{{ tpl .Values.studio.ingress.host . }}
+{{- end }}
+{{- if .Values.forge.enabled }}
+  ✓ HiveForge      →  https://{{ tpl .Values.forge.ingress.host . }}
+{{- end }}
+{{- if .Values.platform_api.enabled }}
+  ✓ Platform API   →  https://{{ tpl .Values.platform_api.ingress.host . }}
+{{- end }}
+{{- if .Values.forge_api.enabled }}
+  ✓ Forge API      →  (internal)
+{{- end }}
+{{- if .Values.ai_gateway.enabled }}
+  ✓ AI Gateway     →  https://gateway.{{ .Values.global.domain }}
+{{- end }}
+
+Progressive delivery: {{ if .Values.rollouts.enabled }}ENABLED (canary){{ else }}DISABLED (rolling update){{ end }}
+
+To check rollout status:
+  kubectl argo rollouts get rollout studio -n {{ .Release.Namespace }} --watch
+
+To check pod status:
+  kubectl get pods -n {{ .Release.Namespace }}

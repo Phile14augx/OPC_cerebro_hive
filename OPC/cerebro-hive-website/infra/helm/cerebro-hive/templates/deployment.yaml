@@ -1,0 +1,165 @@
+{{/*
+Deployments for all enabled services (when rollouts.enabled=false).
+When rollouts.enabled=true, the rollout.yaml template creates Rollout objects instead.
+*/}}
+
+{{- $services := dict
+  "studio"       .Values.studio
+  "forge"        .Values.forge
+  "platform-api" .Values.platform_api
+  "forge-api"    .Values.forge_api
+  "ai-gateway"   .Values.ai_gateway
+-}}
+
+{{- range $svcName, $cfg := $services }}
+{{- if and $cfg $cfg.enabled (not $.Values.rollouts.enabled) }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $svcName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.serviceLabels" (dict "root" $ "svc" $svcName) | nindent 4 }}
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+spec:
+  replicas: {{ $cfg.replicaCount | default 2 }}
+  selector:
+    matchLabels:
+      {{- include "cerebro-hive.serviceSelectorLabels" (dict "root" $ "svc" $svcName) | nindent 6 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        {{- include "cerebro-hive.serviceLabels" (dict "root" $ "svc" $svcName) | nindent 8 }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        kubectl.kubernetes.io/restartedAt: {{ now | date "2006-01-02T15:04:05Z07:00" | quote }}
+    spec:
+      serviceAccountName: {{ include "cerebro-hive.serviceAccountName" (dict "svc" $svcName "cfg" $cfg) }}
+      automountServiceAccountToken: false
+      {{- with $.Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- include "cerebro-hive.podSecurityContext" . | nindent 8 }}
+      terminationGracePeriodSeconds: {{ $cfg.terminationGracePeriodSeconds | default 60 }}
+      {{- if eq $svcName "platform-api" }}
+      initContainers:
+        - name: db-migrate
+          image: {{ include "cerebro-hive.image" (dict "registry" $.Values.global.imageRegistry "repository" (printf "%s/%s" $.Values.global.imageRepository $svcName) "tag" $.Values.global.imageTag) }}
+          imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
+          command: ["pnpm", "prisma", "migrate", "deploy"]
+          envFrom:
+            - secretRef:
+                name: cerebro-hive-secrets
+          securityContext:
+            {{- include "cerebro-hive.containerSecurityContext" . | nindent 12 }}
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+      {{- end }}
+      containers:
+        - name: {{ $svcName }}
+          image: {{ include "cerebro-hive.image" (dict "registry" $.Values.global.imageRegistry "repository" (printf "%s/%s" $.Values.global.imageRepository $svcName) "tag" $.Values.global.imageTag) }}
+          imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
+          securityContext:
+            {{- include "cerebro-hive.containerSecurityContext" . | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ $cfg.port }}
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep {{ $cfg.preStopSleep | default 5 }}"]
+          env:
+            - name: NODE_ENV
+              value: {{ $.Values.global.environment | quote }}
+            - name: PORT
+              value: {{ $cfg.port | quote }}
+            - name: APP_URL
+              value: {{ $.Values.global.appUrl | quote }}
+            - name: API_URL
+              value: {{ $.Values.global.apiUrl | quote }}
+            {{- include "cerebro-hive.otelEnv" $svcName | nindent 12 }}
+            {{- if $cfg.env }}
+            {{- range $k, $v := $cfg.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: cerebro-hive-secrets
+            {{- if or (eq $svcName "ai-gateway") (eq $svcName "forge-api") }}
+            - secretRef:
+                name: cerebro-hive-ai-secrets
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: {{ $cfg.probes.readiness.path | default "/health" }}
+              port: http
+            initialDelaySeconds: {{ $cfg.probes.readiness.initialDelaySeconds | default 15 }}
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: {{ $cfg.probes.liveness.path | default "/health" }}
+              port: http
+            initialDelaySeconds: {{ $cfg.probes.liveness.initialDelaySeconds | default 30 }}
+            periodSeconds: 30
+            failureThreshold: 3
+            timeoutSeconds: 5
+          startupProbe:
+            httpGet:
+              path: {{ $cfg.probes.readiness.path | default "/health" }}
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 24
+          resources:
+            {{- toYaml $cfg.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            {{- if eq $svcName "forge-api" }}
+            - name: scratch
+              mountPath: /app/scratch
+            {{- end }}
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        {{- if eq $svcName "forge-api" }}
+        - name: scratch
+          emptyDir:
+            sizeLimit: 2Gi
+        {{- end }}
+      topologySpreadConstraints:
+        {{- include "cerebro-hive.topologySpreadConstraints" $svcName | nindent 8 }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: {{ $svcName }}
+                topologyKey: kubernetes.io/hostname
+{{- end }}
+{{- end }}

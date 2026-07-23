@@ -1,0 +1,33 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Istio — mTLS PeerAuthentication
+# Enforces STRICT mTLS for all workloads in the cerebro-hive namespace.
+# Requires Istio sidecar injection (label: istio-injection=enabled on namespace).
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Namespace-wide STRICT mTLS
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: cerebro-hive-mtls
+  namespace: cerebro-hive
+spec:
+  mtls:
+    mode: STRICT
+
+---
+# Allow plaintext from prometheus scraping (metrics port only)
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: allow-metrics-plaintext
+  namespace: cerebro-hive
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: cerebro-hive
+  mtls:
+    mode: STRICT
+  portLevelMtls:
+    # Prometheus scrapes /metrics over plaintext from outside the mesh
+    9090:
+      mode: PERMISSIVE

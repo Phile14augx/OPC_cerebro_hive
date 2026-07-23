@@ -1,30 +1,88 @@
 name: Deploy to VPS via SSH
 
-# The VPS owns the build: this job simply triggers the idempotent one-shot
-# deploy script (git pull → docker stack → prisma → next build → PM2 → nginx →
-# certbot → health checks). Full log is echoed back into the Actions output.
 on:
   push:
     branches:
       - main
   workflow_dispatch:
 
-concurrency:
-  group: vps-deploy
-  cancel-in-progress: false
-
 jobs:
   deploy:
-    name: Run vps-deploy.sh on the VPS
+    name: Build & Deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+
     steps:
-    - name: Deploy over SSH
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 9.15.9
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'pnpm'
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build (standalone)
+      run: pnpm run build --filter @cerebro/studio
+      env:
+        IS_FTP_DEPLOY: "true"
+
+    - name: Prepare standalone bundle
+      run: |
+        cp -R apps/studio/public apps/studio/.next/standalone/apps/studio/public
+        cp -R apps/studio/.next/static apps/studio/.next/standalone/apps/studio/.next/static
+        cp -R scripts apps/studio/.next/standalone/
+        cp -R nginx apps/studio/.next/standalone/
+
+    - name: Setup SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Bootstrap VPS (first run)
       uses: appleboy/ssh-action@v1.2.0
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.VPS_SSH_KEY }}
-        command_timeout: 25m
+        script_stop: false
         script: |
-          bash /opt/cerebro/OPC/cerebro-hive-website/scripts/deploy/vps-deploy.sh
+          mkdir -p /var/www/cerebro-hive
+          command -v node &>/dev/null || (curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs)
+          command -v pm2 &>/dev/null || (npm install -g pm2 && pm2 startup systemd -u root --hp /root | tail -1 | bash)
+          command -v nginx &>/dev/null || (apt-get install -y nginx && systemctl enable nginx)
+          command -v ufw &>/dev/null && (ufw allow 80/tcp || true) && (ufw allow 443/tcp || true) || true
+          iptables -I INPUT -p tcp --dport 80 -j ACCEPT 2>/dev/null || true
+          iptables -I INPUT -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
+
+    - name: Upload build to VPS
+      run: |
+        rsync -az --delete \
+          -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+          ./apps/studio/.next/standalone/ \
+          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/cerebro-hive/
+
+    - name: Restart app with PM2
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: bash /var/www/cerebro-hive/scripts/vps-restart.sh
+
+    - name: Configure Nginx and provision HTTPS
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: bash /var/www/cerebro-hive/scripts/vps-nginx.sh

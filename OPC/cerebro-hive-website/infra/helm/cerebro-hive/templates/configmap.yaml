@@ -1,0 +1,45 @@
+{{/*
+Shared configuration ConfigMap for CerebroHive services.
+Non-secret runtime config injected as environment variables.
+*/}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cerebro-hive-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" . | nindent 4 }}
+data:
+  NODE_ENV: {{ .Values.global.environment | quote }}
+  APP_URL: {{ .Values.global.appUrl | quote }}
+  API_URL: {{ .Values.global.apiUrl | quote }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.global.otel.endpoint | quote }}
+  OTEL_TRACES_EXPORTER: "otlp"
+  OTEL_METRICS_EXPORTER: "otlp"
+  OTEL_LOGS_EXPORTER: "otlp"
+  LOG_LEVEL: {{ if eq .Values.global.environment "production" }}"info"{{ else }}"debug"{{ end }}
+  METRICS_PORT: "9090"
+
+---
+{{- if .Values.ai_gateway.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-gateway-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.serviceLabels" (dict "root" . "svc" "ai-gateway") | nindent 4 }}
+data:
+  ENABLE_STREAMING: {{ .Values.ai_gateway.config.enableStreaming | quote }}
+  ENABLE_COST_TRACKING: {{ .Values.ai_gateway.config.enableCostTracking | quote }}
+  ENABLE_CACHING: {{ .Values.ai_gateway.config.enableCaching | quote }}
+  CACHE_TTL_SECONDS: {{ .Values.ai_gateway.config.cacheTTL | quote }}
+  RATE_LIMIT_RPM: {{ .Values.ai_gateway.config.rateLimitRPM | quote }}
+  ANTHROPIC_MODEL: {{ .Values.ai_gateway.providers.anthropic.model | quote }}
+  OPENAI_MODEL: {{ .Values.ai_gateway.providers.openai.model | quote }}
+  GOOGLE_MODEL: {{ .Values.ai_gateway.providers.google.model | quote }}
+  ANTHROPIC_ENABLED: {{ .Values.ai_gateway.providers.anthropic.enabled | quote }}
+  OPENAI_ENABLED: {{ .Values.ai_gateway.providers.openai.enabled | quote }}
+  GOOGLE_ENABLED: {{ .Values.ai_gateway.providers.google.enabled | quote }}
+{{- end }}

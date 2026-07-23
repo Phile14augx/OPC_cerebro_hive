@@ -1,0 +1,130 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Istio — DestinationRules
+# Configures connection pool, outlier detection, and mTLS for each service.
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ─── Studio ──────────────────────────────────────────────────────────────────
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: studio
+  namespace: cerebro-hive
+spec:
+  host: studio.cerebro-hive.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    connectionPool:
+      http:
+        http1MaxPendingRequests: 1000
+        http2MaxRequests: 10000
+        maxRetries: 3
+    outlierDetection:
+      consecutive5xxErrors: 5
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50
+  subsets:
+    - name: stable
+      labels:
+        rollouts-pod-template-hash: stable
+    - name: canary
+      labels:
+        rollouts-pod-template-hash: canary
+
+---
+# ─── HiveForge ───────────────────────────────────────────────────────────────
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: forge
+  namespace: cerebro-hive
+spec:
+  host: forge.cerebro-hive.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    connectionPool:
+      http:
+        http1MaxPendingRequests: 500
+        http2MaxRequests: 5000
+    outlierDetection:
+      consecutive5xxErrors: 5
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50
+
+---
+# ─── Platform API ─────────────────────────────────────────────────────────────
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: platform-api
+  namespace: cerebro-hive
+spec:
+  host: platform-api.cerebro-hive.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        http1MaxPendingRequests: 1000
+        http2MaxRequests: 10000
+        h2UpgradePolicy: UPGRADE
+    outlierDetection:
+      consecutive5xxErrors: 5
+      interval: 30s
+      baseEjectionTime: 60s
+      maxEjectionPercent: 33
+
+---
+# ─── AI Gateway ───────────────────────────────────────────────────────────────
+# Long timeouts for LLM streaming responses
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: ai-gateway
+  namespace: cerebro-hive
+spec:
+  host: ai-gateway.cerebro-hive.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    connectionPool:
+      tcp:
+        maxConnections: 200
+        connectTimeout: 10s
+      http:
+        http1MaxPendingRequests: 500
+        http2MaxRequests: 5000
+        idleTimeout: 180s   # Keep connections alive for streaming
+    outlierDetection:
+      consecutive5xxErrors: 10  # Higher threshold — LLM errors are transient
+      interval: 60s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 25
+
+---
+# ─── Forge API ────────────────────────────────────────────────────────────────
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: forge-api
+  namespace: cerebro-hive
+spec:
+  host: forge-api.cerebro-hive.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    connectionPool:
+      http:
+        http1MaxPendingRequests: 500
+        http2MaxRequests: 2000
+        idleTimeout: 200s   # Long-running agent tasks
+    outlierDetection:
+      consecutive5xxErrors: 5
+      interval: 30s
+      baseEjectionTime: 60s
+      maxEjectionPercent: 50

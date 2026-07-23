@@ -1,0 +1,175 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Istio — VirtualServices
+# Controls traffic routing, retries, timeouts, and fault injection.
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ─── Studio ──────────────────────────────────────────────────────────────────
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: studio
+  namespace: cerebro-hive
+spec:
+  hosts:
+    - studio.cerebro-hive.svc.cluster.local
+    - app.cerebrohive.com
+  gateways:
+    - cerebro-hive-gateway
+    - mesh
+  http:
+    - match:
+        - uri:
+            prefix: /api/health
+      route:
+        - destination:
+            host: studio.cerebro-hive.svc.cluster.local
+            port:
+              number: 3000
+      timeout: 5s
+    - route:
+        - destination:
+            host: studio.cerebro-hive.svc.cluster.local
+            port:
+              number: 3000
+      timeout: 30s
+      retries:
+        attempts: 3
+        perTryTimeout: 10s
+        retryOn: "gateway-error,connect-failure,retriable-4xx"
+
+---
+# ─── HiveForge ────────────────────────────────────────────────────────────────
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: forge
+  namespace: cerebro-hive
+spec:
+  hosts:
+    - forge.cerebro-hive.svc.cluster.local
+    - forge.cerebrohive.com
+  gateways:
+    - cerebro-hive-gateway
+    - mesh
+  http:
+    - route:
+        - destination:
+            host: forge.cerebro-hive.svc.cluster.local
+            port:
+              number: 3001
+      timeout: 30s
+      retries:
+        attempts: 3
+        perTryTimeout: 10s
+        retryOn: "gateway-error,connect-failure"
+
+---
+# ─── Platform API ─────────────────────────────────────────────────────────────
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: platform-api
+  namespace: cerebro-hive
+spec:
+  hosts:
+    - platform-api.cerebro-hive.svc.cluster.local
+    - api.cerebrohive.com
+  gateways:
+    - cerebro-hive-gateway
+    - mesh
+  http:
+    - match:
+        - uri:
+            prefix: /health
+      route:
+        - destination:
+            host: platform-api.cerebro-hive.svc.cluster.local
+            port:
+              number: 4000
+      timeout: 5s
+    - route:
+        - destination:
+            host: platform-api.cerebro-hive.svc.cluster.local
+            port:
+              number: 4000
+      timeout: 30s
+      retries:
+        attempts: 3
+        perTryTimeout: 10s
+        retryOn: "gateway-error,connect-failure,retriable-4xx"
+      headers:
+        response:
+          set:
+            X-Content-Type-Options: nosniff
+            X-Frame-Options: DENY
+
+---
+# ─── AI Gateway ───────────────────────────────────────────────────────────────
+# Long timeout for LLM streaming; no retries on POST (non-idempotent)
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: ai-gateway
+  namespace: cerebro-hive
+spec:
+  hosts:
+    - ai-gateway.cerebro-hive.svc.cluster.local
+    - gateway.cerebrohive.com
+  gateways:
+    - cerebro-hive-gateway
+    - mesh
+  http:
+    - match:
+        - uri:
+            prefix: /health
+      route:
+        - destination:
+            host: ai-gateway.cerebro-hive.svc.cluster.local
+            port:
+              number: 4010
+      timeout: 5s
+    - match:
+        - uri:
+            prefix: /v1/chat/stream
+      route:
+        - destination:
+            host: ai-gateway.cerebro-hive.svc.cluster.local
+            port:
+              number: 4010
+      # No timeout on streaming endpoint — let the gateway manage it
+      timeout: 0s
+    - route:
+        - destination:
+            host: ai-gateway.cerebro-hive.svc.cluster.local
+            port:
+              number: 4010
+      timeout: 120s
+
+---
+# ─── Istio Ingress Gateway ────────────────────────────────────────────────────
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: cerebro-hive-gateway
+  namespace: cerebro-hive
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: cerebro-hive-tls
+      hosts:
+        - "*.cerebrohive.com"
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      tls:
+        httpsRedirect: true
+      hosts:
+        - "*.cerebrohive.com"

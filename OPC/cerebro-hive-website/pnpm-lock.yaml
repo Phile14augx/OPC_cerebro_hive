@@ -418,7 +418,23 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  packages/capability-core:
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
   packages/config: {}
+
+  packages/config-core:
+    dependencies:
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
 
   packages/contracts:
     dependencies:
@@ -469,6 +485,12 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  packages/domain-graph:
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
   packages/events:
     dependencies:
       '@cerebro/core-bus':
@@ -504,6 +526,26 @@ importers:
 
   packages/icons-web: {}
 
+  packages/identity-core:
+    dependencies:
+      '@cerebro/config-core':
+        specifier: workspace:*
+        version: link:../config-core
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
+  packages/kernel-core:
+    dependencies:
+      '@cerebro/config-core':
+        specifier: workspace:*
+        version: link:../config-core
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
   packages/policy:
     devDependencies:
       '@cerebro/config':
@@ -524,6 +566,12 @@ importers:
       '@cerebro/domain':
         specifier: workspace:*
         version: link:../domain
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
+  packages/runtime-core:
     devDependencies:
       typescript:
         specifier: ^5.0.0
@@ -561,6 +609,12 @@ importers:
         version: link:../config
       typescript:
         specifier: ^5.4.5
+        version: 5.9.3
+
+  packages/telemetry-core:
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
         version: 5.9.3
 
   packages/ui:

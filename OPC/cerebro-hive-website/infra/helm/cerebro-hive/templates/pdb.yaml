@@ -1,0 +1,35 @@
+{{/*
+PodDisruptionBudgets for all enabled services with PDB configured.
+*/}}
+
+{{- $services := dict
+  "studio"       .Values.studio
+  "forge"        .Values.forge
+  "platform-api" .Values.platform_api
+  "forge-api"    .Values.forge_api
+  "ai-gateway"   .Values.ai_gateway
+-}}
+
+{{- range $svcName, $cfg := $services }}
+{{- if and $cfg $cfg.enabled $cfg.pdb $cfg.pdb.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $svcName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.serviceLabels" (dict "root" $ "svc" $svcName) | nindent 4 }}
+spec:
+  {{- if $cfg.pdb.minAvailable }}
+  minAvailable: {{ $cfg.pdb.minAvailable }}
+  {{- else if $cfg.pdb.maxUnavailable }}
+  maxUnavailable: {{ $cfg.pdb.maxUnavailable }}
+  {{- else }}
+  minAvailable: 1
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "cerebro-hive.serviceSelectorLabels" (dict "root" $ "svc" $svcName) | nindent 6 }}
+{{- end }}
+{{- end }}

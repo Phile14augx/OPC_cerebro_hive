@@ -1,0 +1,104 @@
+{{/*
+Ingress — routes for studio, forge, platform-api, ai-gateway.
+*/}}
+{{- if .Values.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "cerebro-hive.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" . | nindent 4 }}
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+    nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+    nginx.ingress.kubernetes.io/enable-owasp-core-rules: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
+      more_set_headers "Permissions-Policy: camera=(), microphone=(), geolocation=()";
+    {{- if .Values.ingress.tls.enabled }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.issuer }}
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        {{- if .Values.studio.enabled }}
+        - {{ tpl .Values.studio.ingress.host . }}
+        {{- end }}
+        {{- if .Values.forge.enabled }}
+        - {{ tpl .Values.forge.ingress.host . }}
+        {{- end }}
+        {{- if .Values.platform_api.enabled }}
+        - {{ tpl .Values.platform_api.ingress.host . }}
+        {{- end }}
+        {{- if .Values.ai_gateway.enabled }}
+        - {{ tpl (printf "gateway.%s" .Values.global.domain) . }}
+        {{- end }}
+      secretName: {{ .Values.ingress.tls.secretName }}
+  {{- end }}
+  rules:
+    {{- if .Values.studio.enabled }}
+    - host: {{ tpl .Values.studio.ingress.host . }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: studio
+                port:
+                  name: http
+    {{- end }}
+
+    {{- if .Values.forge.enabled }}
+    - host: {{ tpl .Values.forge.ingress.host . }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: forge
+                port:
+                  name: http
+    {{- end }}
+
+    {{- if .Values.platform_api.enabled }}
+    - host: {{ tpl .Values.platform_api.ingress.host . }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: platform-api
+                port:
+                  name: http
+    {{- end }}
+
+    {{- if .Values.ai_gateway.enabled }}
+    - host: {{ printf "gateway.%s" .Values.global.domain }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ai-gateway
+                port:
+                  name: http
+    {{- end }}
+{{- end }}

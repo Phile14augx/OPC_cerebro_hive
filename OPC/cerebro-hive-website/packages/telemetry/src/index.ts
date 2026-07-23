@@ -1,38 +1,53 @@
-import { NodeSDK } from '@opentelemetry/sdk-node';
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
-import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-grpc';
-import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
+// =============================================================================
+// @cerebro/telemetry — Public API
+// =============================================================================
 
-let sdk: NodeSDK | undefined;
+// SDK init + shutdown
+export { initTelemetry, shutdownTelemetry } from './tracer';
+export type { TelemetryConfig } from './tracer';
 
-export function initTelemetry(serviceName: string) {
-  if (sdk) return;
+// Span utilities
+export {
+  getTracer,
+  withSpan,
+  withAISpan,
+  extractContext,
+  injectContext,
+  getCurrentTraceContext,
+  AI_ATTRS,
+} from './spans';
+export type { AISpanOptions, AISpanResult } from './spans';
 
-  const traceExporter = new OTLPTraceExporter({
-    url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'grpc://localhost:4317',
-  });
+// Metrics
+export {
+  getMeter,
+  getAIMetrics,
+  getHttpMetrics,
+  getBusinessMetrics,
+  recordAIRequest,
+} from './metrics';
+export type { AIMetrics, HttpMetrics, BusinessMetrics } from './metrics';
 
-  const metricExporter = new OTLPMetricExporter({
-    url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'grpc://localhost:4317',
-  });
+// HTTP middleware
+export {
+  expressTelemetryMiddleware,
+  withNextTelemetry,
+  isUntracedPath,
+} from './middleware';
 
-  const metricReader = new PeriodicExportingMetricReader({
-    exporter: metricExporter,
-    exportIntervalMillis: 10000,
-  });
+// Correlation / context propagation
+export { correlationStorage, withCorrelationId, getCorrelationId } from './correlation';
 
-  sdk = new NodeSDK({
-    traceExporter,
-    metricReader,
-    instrumentations: [getNodeAutoInstrumentations()],
-  });
+// Structured logger with trace context injection
+export { logger } from './logger';
 
-  sdk.start();
-  
-  process.on('SIGTERM', () => {
-    sdk?.shutdown().then(() => console.log('Tracing terminated')).catch(console.error);
-  });
-}
-
-export * from '@opentelemetry/api';
+// Re-export OTel API for convenience
+export {
+  trace,
+  metrics,
+  context,
+  propagation,
+  SpanStatusCode,
+  SpanKind,
+} from '@opentelemetry/api';
+export type { Span, Tracer, Meter, Attributes } from '@opentelemetry/api';

@@ -1,66 +1,35 @@
-export interface AIModel {
-  id: string;
-  provider: string; // 'anthropic', 'openai', etc.
-  modelName: string;
-  contextWindow: number;
-  costPer1kInputTokens: number;
-  costPer1kOutputTokens: number;
-  isActive: boolean;
-}
+// =============================================================================
+// @cerebro/ai-gateway — Public API
+// =============================================================================
 
-export class ModelRegistry {
-  private models: Map<string, AIModel> = new Map();
+// Main gateway class + factory
+export { AIGateway, createGateway } from './gateway';
 
-  register(model: AIModel) {
-    this.models.set(model.id, model);
-  }
+// Types
+export type {
+  ChatRequest,
+  ChatResponse,
+  StreamChunk,
+  GatewayConfig,
+  ProviderConfig,
+  ProviderName,
+  ChatMessage,
+} from './types';
+export { GatewayError, GATEWAY_ERRORS } from './types';
 
-  getModel(id: string): AIModel | undefined {
-    return this.models.get(id);
-  }
+// Provider interface (for custom providers)
+export type { AIProvider } from './providers/base.provider';
 
-  listModels(): AIModel[] {
-    return Array.from(this.models.values());
-  }
-}
+// Circuit breaker (exported for monitoring)
+export { CircuitBreaker } from './circuit-breaker';
+export type { CircuitState } from './circuit-breaker';
 
-export interface PromptTemplate {
-  id: string;
-  version: string;
-  content: string;
-  variables: string[];
-}
+// Rate limiter
+export { RateLimiter } from './rate-limiter';
 
-export class PromptRegistry {
-  private prompts: Map<string, PromptTemplate[]> = new Map();
+// Cache
+export { ResponseCache } from './cache';
 
-  register(prompt: PromptTemplate) {
-    const versions = this.prompts.get(prompt.id) || [];
-    versions.push(prompt);
-    this.prompts.set(prompt.id, versions);
-  }
-
-  getPrompt(id: string, version?: string): PromptTemplate | undefined {
-    const versions = this.prompts.get(id);
-    if (!versions) return undefined;
-    if (version) return versions.find(p => p.version === version);
-    // Return latest
-    return versions[versions.length - 1];
-  }
-}
-
-export class CostTracker {
-  calculateCost(model: AIModel, inputTokens: number, outputTokens: number): number {
-    const inputCost = (inputTokens / 1000) * model.costPer1kInputTokens;
-    const outputCost = (outputTokens / 1000) * model.costPer1kOutputTokens;
-    return inputCost + outputCost;
-  }
-}
-
-export class AIGateway {
-  constructor(
-    public readonly models: ModelRegistry,
-    public readonly prompts: PromptRegistry,
-    public readonly costs: CostTracker
-  ) {}
-}
+// Routing infrastructure (from existing files)
+export { ModelRouter } from './routing/ModelRouter';
+export { ModelRegistry } from './routing/ModelRegistry';

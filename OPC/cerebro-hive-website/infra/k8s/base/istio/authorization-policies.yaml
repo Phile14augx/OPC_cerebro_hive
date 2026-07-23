@@ -1,0 +1,156 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Istio — AuthorizationPolicies
+# Zero-trust: deny all → allow per-service per-method.
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Default deny all traffic in the namespace
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: deny-all
+  namespace: cerebro-hive
+spec:
+  {}  # No rules = deny all
+
+---
+# Allow ingress gateway → all services (HTTPS only)
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingress-gateway
+  namespace: cerebro-hive
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+      to:
+        - operation:
+            methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+
+---
+# Allow studio → platform-api (REST calls)
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-studio-to-platform-api
+  namespace: cerebro-hive
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: platform-api
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/cerebro-hive/sa/studio"
+      to:
+        - operation:
+            methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
+            paths: ["/api/*", "/health"]
+
+---
+# Allow forge → platform-api
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-forge-to-platform-api
+  namespace: cerebro-hive
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: platform-api
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/cerebro-hive/sa/forge"
+      to:
+        - operation:
+            methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
+            paths: ["/api/*"]
+
+---
+# Allow forge → forge-api (workflow execution)
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-forge-to-forge-api
+  namespace: cerebro-hive
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: forge-api
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/cerebro-hive/sa/forge"
+              - "cluster.local/ns/cerebro-hive/sa/studio"
+              - "cluster.local/ns/cerebro-hive/sa/platform-api"
+      to:
+        - operation:
+            methods: ["GET", "POST"]
+            paths: ["/workflows/*", "/agents/*", "/health"]
+
+---
+# Allow forge-api → ai-gateway ONLY (DDD boundary: no direct provider calls)
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-services-to-ai-gateway
+  namespace: cerebro-hive
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ai-gateway
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/cerebro-hive/sa/forge-api"
+              - "cluster.local/ns/cerebro-hive/sa/platform-api"
+      to:
+        - operation:
+            methods: ["POST", "GET"]
+            paths: ["/v1/*", "/health", "/models"]
+
+---
+# Allow Prometheus → all services (metrics scraping)
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-prometheus-scrape
+  namespace: cerebro-hive
+spec:
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces: ["monitoring"]
+      to:
+        - operation:
+            methods: ["GET"]
+            paths: ["/metrics"]
+            ports: ["9090"]
+
+---
+# Allow health probes from kubelet (no principal)
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-health-probes
+  namespace: cerebro-hive
+spec:
+  action: ALLOW
+  rules:
+    - to:
+        - operation:
+            methods: ["GET"]
+            paths: ["/health", "/healthz", "/ready", "/live", "/api/health"]

@@ -1,0 +1,41 @@
+{{/*
+Services for all enabled application components.
+*/}}
+
+{{- $services := dict
+  "studio"       .Values.studio
+  "forge"        .Values.forge
+  "platform-api" .Values.platform_api
+  "forge-api"    .Values.forge_api
+  "ai-gateway"   .Values.ai_gateway
+-}}
+
+{{- range $svcName, $cfg := $services }}
+{{- if and $cfg $cfg.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $svcName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.serviceLabels" (dict "root" $ "svc" $svcName) | nindent 4 }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9090"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "cerebro-hive.serviceSelectorLabels" (dict "root" $ "svc" $svcName) | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ $cfg.port }}
+      targetPort: http
+      protocol: TCP
+    - name: metrics
+      port: 9090
+      targetPort: metrics
+      protocol: TCP
+{{- end }}
+{{- end }}

@@ -1,0 +1,166 @@
+{{/*
+Argo Rollout resources — replaces Deployments when rollouts.enabled=true.
+Only studio and ai-gateway use canary rollouts; others use Deployment.
+*/}}
+
+{{- if .Values.rollouts.enabled }}
+
+{{- $rolloutServices := dict
+  "studio"     .Values.studio
+  "ai-gateway" .Values.ai_gateway
+-}}
+
+{{- range $svcName, $cfg := $rolloutServices }}
+{{- if and $cfg $cfg.enabled }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ $svcName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.serviceLabels" (dict "root" $ "svc" $svcName) | nindent 4 }}
+spec:
+  replicas: {{ $cfg.replicaCount | default 2 }}
+  selector:
+    matchLabels:
+      {{- include "cerebro-hive.serviceSelectorLabels" (dict "root" $ "svc" $svcName) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "cerebro-hive.serviceLabels" (dict "root" $ "svc" $svcName) | nindent 8 }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      serviceAccountName: {{ include "cerebro-hive.serviceAccountName" (dict "svc" $svcName "cfg" $cfg) }}
+      automountServiceAccountToken: false
+      {{- with $.Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- include "cerebro-hive.podSecurityContext" . | nindent 8 }}
+      terminationGracePeriodSeconds: {{ $cfg.terminationGracePeriodSeconds | default 60 }}
+      containers:
+        - name: {{ $svcName }}
+          image: {{ include "cerebro-hive.image" (dict "registry" $.Values.global.imageRegistry "repository" (printf "%s/%s" $.Values.global.imageRepository $svcName) "tag" $.Values.global.imageTag) }}
+          imagePullPolicy: {{ $.Values.global.imagePullPolicy }}
+          securityContext:
+            {{- include "cerebro-hive.containerSecurityContext" . | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ $cfg.port }}
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep {{ $cfg.preStopSleep | default 10 }}"]
+          env:
+            - name: NODE_ENV
+              value: {{ $.Values.global.environment | quote }}
+            - name: PORT
+              value: {{ $cfg.port | quote }}
+            {{- include "cerebro-hive.otelEnv" $svcName | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: cerebro-hive-config
+            - secretRef:
+                name: cerebro-hive-secrets
+            {{- if eq $svcName "ai-gateway" }}
+            - configMapRef:
+                name: ai-gateway-config
+            - secretRef:
+                name: cerebro-hive-ai-secrets
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: {{ $cfg.probes.readiness.path | default "/health" }}
+              port: http
+            initialDelaySeconds: {{ $cfg.probes.readiness.initialDelaySeconds | default 15 }}
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: {{ $cfg.probes.liveness.path | default "/health" }}
+              port: http
+            initialDelaySeconds: {{ $cfg.probes.liveness.initialDelaySeconds | default 30 }}
+            periodSeconds: 30
+            failureThreshold: 3
+          resources:
+            {{- toYaml $cfg.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      topologySpreadConstraints:
+        {{- include "cerebro-hive.topologySpreadConstraints" $svcName | nindent 8 }}
+  strategy:
+    canary:
+      canaryService: {{ $svcName }}-canary
+      stableService: {{ $svcName }}-stable
+      trafficRouting:
+        nginx:
+          stableIngress: {{ include "cerebro-hive.fullname" $ }}
+      steps:
+        {{- toYaml $.Values.rollouts.canary.steps | nindent 8 }}
+      autoPromotionEnabled: {{ $.Values.rollouts.canary.autoPromotionEnabled | default false }}
+      {{- if $.Values.rollouts.canary.analysis.enabled }}
+      analysis:
+        templates:
+          - templateName: http-error-rate
+          - templateName: response-time-p99
+          - templateName: pod-readiness
+        startingStep: 1
+      {{- end }}
+{{- end }}
+{{- end }}
+
+# Canary + Stable services for traffic splitting
+{{- $trafficSvcs := dict
+  "studio"     .Values.studio
+  "ai-gateway" .Values.ai_gateway
+-}}
+{{- range $svcName, $cfg := $trafficSvcs }}
+{{- if and $cfg $cfg.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $svcName }}-stable
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.serviceLabels" (dict "root" $ "svc" $svcName) | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "cerebro-hive.serviceSelectorLabels" (dict "root" $ "svc" $svcName) | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ $cfg.port }}
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $svcName }}-canary
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.serviceLabels" (dict "root" $ "svc" $svcName) | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "cerebro-hive.serviceSelectorLabels" (dict "root" $ "svc" $svcName) | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ $cfg.port }}
+      targetPort: http
+{{- end }}
+{{- end }}
+
+{{- end }}
