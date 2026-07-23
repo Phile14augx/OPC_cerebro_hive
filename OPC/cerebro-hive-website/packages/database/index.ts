@@ -18,3 +18,7 @@ export * from './src/repositories/ToolRepository';
 export * from './src/repositories/WorkflowRepository';
 export * from './src/repositories/KnowledgeRepository';
 export * from './src/repositories/ProjectRepository';
+export * from './src/repositories/AuditRepository';
+export * from './src/repositories/OutboxRepository';
+
+

@@ -468,9 +468,26 @@ model Queue {
   createdAt DateTime @default(now())
 }
 
+model OutboxEvent {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  eventType     String
+  aggregateType String
+  aggregateId   String
+  payload       Json
+  status        String   @default("pending") // pending | published | failed
+  error         String?  @db.Text
+  createdAt     DateTime @default(now())
+  publishedAt   DateTime?
+
+  @@index([status])
+}
+
 // -----------------------------------------------------------------------------
 // PHASE 4: PROJECT & SOFTWARE ENGINEERING DOMAIN
 // -----------------------------------------------------------------------------
+
+// ForgePhase: idea → planning → architecture → design → implementation → testing → deployment → monitoring
+// ForgeStatus: draft | active | paused | completed | failed
 
 model Project {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -479,12 +496,39 @@ model Project {
   name        String
   description String?
 
-  repositories Repository[]
-  sprints      Sprint[]
-  milestones   Milestone[]
+  // CerebroForge fields
+  prompt       String?   @db.Text         // original natural-language build prompt
+  forgeStatus  String    @default("draft") // draft | planning | architecting | designing | generating | testing | deploying | completed
+  forgePhase   String    @default("idea")  // idea | planning | architecture | design | implementation | testing | deployment
+  stack        Json?                       // { frontend, backend, mobile, database, infra }
+  frameworks   String[]  @default([])
+  actorList    String[]  @default([])
+  totalModules Int       @default(0)
+  totalStories Int       @default(0)
+  totalApis    Int       @default(0)
+  planJson     Json?                       // full structured plan from AI Planner
+  archJson     Json?                       // architecture decisions JSON
+  designTokens Json?                       // color palette, typography, etc.
+  repoOwner    String?                     // GitHub owner/org
+  repoName     String?                     // GitHub repo name
+  repoUrl      String?
+  activeAgents String[]  @default([])
+
+  repositories  Repository[]
+  sprints       Sprint[]
+  milestones    Milestone[]
+  modules       Module[]
+  requirements  Requirement[]
+  agentRuns     ForgeAgentRun[]
+  artifacts     GeneratedArtifact[]
+  forgeSessions ForgeSession[]
+  archDecisions ArchitectureDecision[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([workspaceId])
+  @@index([forgeStatus])
 }
 
 model Repository {
@@ -492,9 +536,13 @@ model Repository {
   projectId String  @db.Uuid
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   url       String
+  provider  String  @default("github") // github | gitlab | bitbucket
+  defaultBranch String @default("main")
 
   branches Branch[]
   commits  Commit[]
+
+  @@index([projectId])
 }
 
 model Branch {
@@ -502,6 +550,7 @@ model Branch {
   repositoryId String     @db.Uuid
   repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
   name         String
+  isDefault    Boolean    @default(false)
 }
 
 model Commit {
@@ -511,21 +560,40 @@ model Commit {
   hash         String
   message      String
   author       String
+  agentType    String?    // which agent made this commit
   createdAt    DateTime   @default(now())
+
+  @@index([repositoryId])
 }
 
 model Module {
-  id       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name     String
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId   String   @db.Uuid
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name        String
+  description String?  @db.Text
+  priority    String   @default("medium") // critical | high | medium | low
+  storyCount  Int      @default(0)
+  apiCount    Int      @default(0)
+  status      String   @default("pending") // pending | generating | done
+
   features Feature[]
+
+  @@unique([projectId, name])
+  @@index([projectId])
 }
 
 model Feature {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  moduleId String @db.Uuid
-  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  name     String
+  id              String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  moduleId        String  @db.Uuid
+  module          Module  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  name            String
+  description     String? @db.Text
+  acceptanceCriteria String? @db.Text
+  status          String  @default("pending")
   tasks    Task[]
+
+  @@index([moduleId])
 }
 
 model Task {
@@ -535,7 +603,11 @@ model Task {
   sprintId  String?  @db.Uuid
   sprint    Sprint?  @relation(fields: [sprintId], references: [id], onDelete: SetNull)
   title     String
-  status    String
+  status    String   @default("todo") // todo | in_progress | done
+  agentType String?
+  estimatedHours Float?
+
+  @@index([featureId])
 }
 
 model Sprint {
@@ -543,7 +615,12 @@ model Sprint {
   projectId String  @db.Uuid
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   name      String
+  goal      String?
+  startDate DateTime?
+  endDate   DateTime?
   tasks     Task[]
+
+  @@index([projectId])
 }
 
 model Milestone {
@@ -552,27 +629,100 @@ model Milestone {
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
   title     String
   dueDate   DateTime?
+  weekLabel String?   // e.g. "Week 1-2"
+  order     Int       @default(0)
+
+  @@index([projectId])
 }
 
 model Requirement {
-  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId   String  @db.Uuid
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type        String  // functional | non_functional | actor | entity | api_contract
   title       String
-  description String @db.Text
+  description String? @db.Text
+  priority    String  @default("medium")
+
+  @@index([projectId])
+  @@index([type])
 }
 
 model ArchitectureDecision {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title    String
-  context  String @db.Text
-  decision String @db.Text
-  status   String
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId String  @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title     String
+  context   String  @db.Text
+  decision  String  @db.Text
+  status    String  @default("accepted") // proposed | accepted | deprecated | superseded
+  pattern   String?  // microservices | monolith | ddd | cqrs | event_driven | hexagonal
+  techStack Json?
+
+  @@index([projectId])
 }
 
 model GeneratedArtifact {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  type      String
-  content   String   @db.Text
-  createdAt DateTime @default(now())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId   String   @db.Uuid
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type        String   // file | test | migration | dockerfile | k8s_manifest | terraform | openapi
+  filePath    String?  // relative path in repo, e.g. "src/patients/patient.service.ts"
+  language    String?  // typescript | python | go | sql | yaml | hcl
+  serviceId   String?  // which microservice this belongs to
+  content     String   @db.Text
+  lineCount   Int      @default(0)
+  status      String   @default("pending") // pending | generating | done | failed
+  agentType   String?  // which agent produced this
+  commitHash  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([projectId, filePath])
+  @@index([projectId])
+  @@index([status])
+  @@index([serviceId])
+}
+
+// Tracks every AI agent invocation within a forge project
+model ForgeAgentRun {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId    String   @db.Uuid
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  agentType    String   // pm | architect | ux | frontend | backend | mobile | desktop | chatbot | database | qa | security | devops | docs
+  phase        String   // which ForgePhase triggered this run
+  status       String   @default("queued") // queued | running | completed | failed
+  systemPrompt String   @db.Text
+  userPrompt   String   @db.Text
+  response     String?  @db.Text
+  tokensIn     Int      @default(0)
+  tokensOut    Int      @default(0)
+  durationMs   Int?
+  model        String?  // which AI model was used
+  errorMessage String?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime @default(now())
+
+  @@index([projectId])
+  @@index([agentType])
+  @@index([status])
+}
+
+// Active forge session — tracks SSE/WS connections
+model ForgeSession {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId   String   @db.Uuid
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId      String?  @db.Uuid
+  phase       String   // current active phase
+  isActive    Boolean  @default(true)
+  clientId    String?  // SSE/WS client identifier
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([isActive])
 }
 
 // -----------------------------------------------------------------------------
