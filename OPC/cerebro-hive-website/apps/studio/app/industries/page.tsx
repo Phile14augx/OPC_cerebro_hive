@@ -4,8 +4,8 @@ import React, { Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IndustryExplorerProvider, useIndustryExplorer } from '@/components/industries/IndustryExplorerContext';
 import { InteractiveIndustryExplorer } from '@/components/industries/InteractiveIndustryExplorer';
-import { SectionHeading } from '@/components/ui/SectionHeading';
-import { AnimatedButton as Button } from '@/components/ui/AnimatedButton';
+import { SectionHeading } from '@/components/cerebro/SectionHeading';
+import { AnimatedButton as Button } from '@/components/cerebro/AnimatedButton';
 import { Grid, Layers, BrainCircuit, Box, Search, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 

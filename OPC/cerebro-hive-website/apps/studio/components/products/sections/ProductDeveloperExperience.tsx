@@ -3,10 +3,10 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { Terminal, Code2, ShieldCheck, Box } from "lucide-react";
-import { TrackedLink } from "@/components/ui/TrackedLink";
-import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { AnimatedButton } from "@/components/cerebro/AnimatedButton";
 
 export const ProductDeveloperExperience = ({ product }: { product: PackagedProduct }) => {
   const hasSdk = product.sdkLanguages && product.sdkLanguages.length > 0;

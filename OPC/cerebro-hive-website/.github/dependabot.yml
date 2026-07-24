@@ -1,0 +1,154 @@
+version: 2
+
+updates:
+  # ── pnpm workspace (root + all packages) ──────────────────────────────────
+  - package-ecosystem: npm
+    directory:         "/"
+    schedule:
+      interval: weekly
+      day:      monday
+      time:     "06:00"
+      timezone: UTC
+    open-pull-requests-limit: 10
+    target-branch: develop
+    labels:
+      - dependencies
+      - javascript
+    groups:
+      # Group TypeScript tooling updates
+      typescript-tooling:
+        patterns:
+          - "typescript"
+          - "@typescript-eslint/*"
+          - "ts-*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group testing frameworks
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "jest*"
+          - "@jest/*"
+          - "supertest"
+          - "playwright"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group NestJS (forge-api)
+      nestjs:
+        patterns:
+          - "@nestjs/*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group Prisma
+      prisma:
+        patterns:
+          - "prisma"
+          - "@prisma/*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group AWS SDKs
+      aws-sdk:
+        patterns:
+          - "@aws-sdk/*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group OpenTelemetry
+      opentelemetry:
+        patterns:
+          - "@opentelemetry/*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group Temporal
+      temporal:
+        patterns:
+          - "@temporalio/*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Pin Next.js major — manual upgrade process
+      - dependency-name: "next"
+        update-types:    ["version-update:semver-major"]
+      # Pin React major
+      - dependency-name: "react"
+        update-types:    ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types:    ["version-update:semver-major"]
+    reviewers:
+      - cerebro-hive/platform-team
+    commit-message:
+      prefix:            "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include:           "scope"
+
+  # ── GitHub Actions ────────────────────────────────────────────────────────
+  - package-ecosystem: github-actions
+    directory:         "/"
+    schedule:
+      interval: weekly
+      day:      monday
+      time:     "06:00"
+      timezone: UTC
+    open-pull-requests-limit: 5
+    target-branch: develop
+    labels:
+      - dependencies
+      - github-actions
+    groups:
+      github-actions-all:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    reviewers:
+      - cerebro-hive/platform-team
+    commit-message:
+      prefix: "chore(ci)"
+
+  # ── Docker (base images) ──────────────────────────────────────────────────
+  - package-ecosystem: docker
+    directory:         "/services/platform-api"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - docker
+    commit-message:
+      prefix: "chore(docker)"
+
+  - package-ecosystem: docker
+    directory:         "/services/forge-api"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - docker
+    commit-message:
+      prefix: "chore(docker)"
+
+  - package-ecosystem: docker
+    directory:         "/services/studio"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - docker
+
+  # ── Terraform providers ───────────────────────────────────────────────────
+  - package-ecosystem: terraform
+    directory:         "/infra/terraform"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - terraform
+    commit-message:
+      prefix: "chore(terraform)"

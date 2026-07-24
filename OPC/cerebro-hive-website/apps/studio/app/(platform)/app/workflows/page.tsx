@@ -22,8 +22,8 @@ export default function WorkflowsPage() {
         <div className="text-muted-foreground">Loading workflows...</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {workflows?.map(workflow => (
-            <Link key={workflow.id} href={`/workflows/${workflow.id}`}>
+          {workflows?.data?.map(workflow => (
+            <Link key={workflow.id} href={`/app/workflows/${workflow.id}`}>
               <div className="border border-border bg-muted/5 rounded-xl p-5 hover:bg-muted/10 transition-colors cursor-pointer flex flex-col h-full">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-semibold text-lg">{workflow.name}</h3>

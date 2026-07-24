@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 
 export const ProductExecutiveSummary = ({ product }: { product: PackagedProduct }) => {
   return (

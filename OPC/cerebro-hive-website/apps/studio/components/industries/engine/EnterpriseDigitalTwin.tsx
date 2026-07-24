@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DigitalTwinConfig, NodeState, TwinNode, TwinConnection, TwinEvent } from "@/lib/data/industries/types";
 import { Activity, Database, Server, Bot, Hexagon, Maximize2, Zap, LayoutDashboard } from "lucide-react";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { IntelligentOrb } from "@/components/motion/primitives/IntelligentOrb";
 import { HoverCard } from "@/components/motion/primitives/HoverCard";
 import { AnimatedConnector } from "@/components/motion/primitives/AnimatedConnector";

@@ -6,7 +6,7 @@ import { ChevronDown, Quote, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { withBasePath, cn } from "@/lib/utils";
 import { executiveProfile } from "@/lib/content/company/leadership";
-import { SectionMetadata } from "@/components/ui/SectionMetadata";
+import { SectionMetadata } from "@/components/cerebro/SectionMetadata";
 import { motionPresets } from "@/lib/motion";
 
 export const CEOMessage = () => {

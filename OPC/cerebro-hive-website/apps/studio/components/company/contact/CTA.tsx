@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Terminal, CheckCircle2, Circle } from "lucide-react";
-import { AnimatedButton } from "@/components/ui/AnimatedButton";
-import { NeuralOrb } from "@/components/ui/NeuralOrb";
+import { AnimatedButton } from "@/components/cerebro/AnimatedButton";
+import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
 import { cn } from "@/lib/utils";
 
 // ============================================================================

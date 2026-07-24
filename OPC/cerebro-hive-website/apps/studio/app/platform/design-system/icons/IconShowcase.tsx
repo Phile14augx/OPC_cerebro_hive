@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import * as Icons from "@/components/ui/icons";
-import { iconRegistry, IconSize, IconVariant, IconAnimation } from "@/components/ui/icons";
+import * as Icons from "@/components/cerebro/icons";
+import { iconRegistry, IconSize, IconVariant, IconAnimation } from "@/components/cerebro/icons";
 
 export function IconShowcase() {
   const [search, setSearch] = useState("");

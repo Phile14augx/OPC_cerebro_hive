@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { visionMission } from "@/lib/content/company/company";
-import { NeuralOrb } from "@/components/ui/NeuralOrb";
+import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
 import { motionPresets } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { 
@@ -250,7 +250,7 @@ export const VisionMission = () => {
             <div className="lg:col-span-7">
               <div className="flex items-center gap-3 mb-10">
                 <div className="w-12 h-12 rounded-2xl border border-blue-500/20 bg-blue-500/10 flex items-center justify-center">
-                  {React.createElement(getIcon(visionMission.vision.presentation.icon), { size: 20, className: "text-blue-400", "aria-hidden": "true" })}
+                  {(() => { const VisionIcon = getIcon(visionMission.vision.presentation.icon); return <VisionIcon size={20} className="text-blue-400" aria-hidden="true" />; })()}
                 </div>
                 <span className="text-[10px] font-space font-bold uppercase tracking-[0.2em] text-blue-400">Our Vision</span>
               </div>

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SectionHeading } from '../ui/SectionHeading';
+import { SectionHeading } from '../cerebro/SectionHeading';
 import { CheckCircle2, ChevronRight } from 'lucide-react';
 
 const coreCapabilities = [

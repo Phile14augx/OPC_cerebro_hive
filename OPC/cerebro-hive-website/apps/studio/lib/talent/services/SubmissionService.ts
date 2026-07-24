@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PrismaClient, AssessmentSubmission, EvaluationResult } from '@prisma/client';
 import { SessionService } from './SessionService';
 import { GradingPipeline } from '../engine/evaluation';

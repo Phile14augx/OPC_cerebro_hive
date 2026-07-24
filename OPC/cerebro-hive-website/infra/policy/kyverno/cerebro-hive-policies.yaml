@@ -1,0 +1,267 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# PolicyOps — Kyverno Admission Policies
+# Enforces security and operational standards on every K8s resource.
+# Apply: kubectl apply -f infra/policy/kyverno/cerebro-hive-policies.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ── 1. Require cost allocation labels ────────────────────────────────────────
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-cost-labels
+  annotations:
+    policies.kyverno.io/title: "Require Cost Allocation Labels"
+    policies.kyverno.io/category: "FinOps"
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/description: >
+      All pods must carry cost allocation labels for FinOps attribution.
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: check-cost-labels
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces: [cerebro-hive]
+      validate:
+        message: "Pods must have labels: app.kubernetes.io/name, app.kubernetes.io/component, cost-center"
+        pattern:
+          metadata:
+            labels:
+              app.kubernetes.io/name: "?*"
+              app.kubernetes.io/component: "?*"
+
+---
+# ── 2. Disallow latest image tag ──────────────────────────────────────────────
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-latest-tag
+  annotations:
+    policies.kyverno.io/title: "Disallow Latest Tag"
+    policies.kyverno.io/category: "DevSecOps"
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: check-image-tag
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces: [cerebro-hive]
+      validate:
+        message: "Image tag ':latest' is not allowed in production. Use immutable SHA or semver tags."
+        foreach:
+          - list: "request.object.spec.containers"
+            deny:
+              conditions:
+                any:
+                  - key: "{{ element.image }}"
+                    operator: Equals
+                    value: "*:latest"
+
+---
+# ── 3. Require readOnly root filesystem ──────────────────────────────────────
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-readonly-rootfs
+  annotations:
+    policies.kyverno.io/title: "Require Read-Only Root Filesystem"
+    policies.kyverno.io/category: "Pod Security"
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: check-readonly-rootfs
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces: [cerebro-hive]
+      validate:
+        message: "Container must set securityContext.readOnlyRootFilesystem=true"
+        pattern:
+          spec:
+            containers:
+              - securityContext:
+                  readOnlyRootFilesystem: true
+
+---
+# ── 4. Require resource limits ───────────────────────────────────────────────
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-resource-limits
+  annotations:
+    policies.kyverno.io/title: "Require CPU and Memory Limits"
+    policies.kyverno.io/category: "Resource Management"
+    policies.kyverno.io/severity: medium
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: check-limits
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces: [cerebro-hive]
+      validate:
+        message: "All containers must define CPU and memory limits."
+        pattern:
+          spec:
+            containers:
+              - resources:
+                  limits:
+                    cpu: "?*"
+                    memory: "?*"
+
+---
+# ── 5. Disallow privileged containers ────────────────────────────────────────
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-privileged-containers
+  annotations:
+    policies.kyverno.io/title: "Disallow Privileged Containers"
+    policies.kyverno.io/category: "Pod Security"
+    policies.kyverno.io/severity: critical
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: check-privileged
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces: [cerebro-hive]
+      validate:
+        message: "Privileged containers are not allowed."
+        pattern:
+          spec:
+            =(initContainers):
+              - =(securityContext):
+                  =(privileged): "false"
+            containers:
+              - =(securityContext):
+                  =(privileged): "false"
+
+---
+# ── 6. Require non-root user ─────────────────────────────────────────────────
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-non-root-user
+  annotations:
+    policies.kyverno.io/title: "Require Non-Root User"
+    policies.kyverno.io/category: "Pod Security"
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: check-run-as-non-root
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces: [cerebro-hive]
+      validate:
+        message: "Pods must run as non-root (runAsNonRoot: true)"
+        pattern:
+          spec:
+            securityContext:
+              runAsNonRoot: true
+
+---
+# ── 7. Require PDB for multi-replica services ─────────────────────────────────
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-pdb
+  annotations:
+    policies.kyverno.io/title: "Require PodDisruptionBudget"
+    policies.kyverno.io/category: "Availability"
+    policies.kyverno.io/severity: medium
+spec:
+  validationFailureAction: Audit  # Audit only — enforcing causes chicken-and-egg
+  background: true
+  rules:
+    - name: check-pdb-exists
+      match:
+        any:
+          - resources:
+              kinds: [Deployment]
+              namespaces: [cerebro-hive]
+      preconditions:
+        all:
+          - key: "{{ request.object.spec.replicas }}"
+            operator: GreaterThan
+            value: 1
+      validate:
+        message: "Deployments with replicas > 1 should have a matching PodDisruptionBudget."
+        deny:
+          conditions:
+            all:
+              - key: "{{ request.object.metadata.name }}"
+                operator: AnyNotIn
+                value: "{{ request.object.metadata.namespace }}.poddisruptionbudgets[].metadata.name"
+
+---
+# ── 8. Auto-add Istio sidecar injection label ─────────────────────────────────
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-istio-injection
+  annotations:
+    policies.kyverno.io/title: "Auto-add Istio Sidecar Label"
+    policies.kyverno.io/category: "Service Mesh"
+spec:
+  rules:
+    - name: add-istio-label
+      match:
+        any:
+          - resources:
+              kinds: [Namespace]
+              names: [cerebro-hive]
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              istio-injection: enabled
+
+---
+# ── 9. Restrict host paths ───────────────────────────────────────────────────
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-host-path
+  annotations:
+    policies.kyverno.io/title: "Disallow HostPath Volumes"
+    policies.kyverno.io/category: "Pod Security"
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: check-host-path
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces: [cerebro-hive]
+      validate:
+        message: "HostPath volumes are not allowed."
+        deny:
+          conditions:
+            any:
+              - key: "{{ request.object.spec.volumes[].hostPath | length(@) }}"
+                operator: GreaterThan
+                value: 0

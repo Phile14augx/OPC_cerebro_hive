@@ -8,7 +8,7 @@ import {
   Users, Briefcase, Activity, Globe2, ChevronRight, ChevronDown, CheckCircle2, Circle, Search,
   Workflow, History, LayoutGrid, FileText
 } from "lucide-react";
-import { NeuralOrb } from "@/components/ui/NeuralOrb";
+import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
 
 // ============================================================================
 // STORY MODE DATA

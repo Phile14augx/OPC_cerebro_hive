@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type WorkflowTab = 'canvas' | 'simulate' | 'trace';
+type WorkflowTab = 'canvas' | 'simulate' | 'trace' | 'deploy';
 
 interface WorkflowStudioState {
   selectedWorkflowId: string | null;

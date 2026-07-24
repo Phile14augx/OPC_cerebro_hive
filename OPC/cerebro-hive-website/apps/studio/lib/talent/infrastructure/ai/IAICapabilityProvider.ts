@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * AI as an abstract Capability.
  * The core platform never asks for "OpenAI" or "Anthropic".

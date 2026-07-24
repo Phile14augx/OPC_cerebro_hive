@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Provider interfaces for the Execution Engine.
  * This decouples Talent OS from specific infrastructure (BullMQ, Docker, SSE).

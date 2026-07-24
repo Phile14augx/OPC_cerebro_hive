@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { cn, withBasePath } from "@/lib/utils";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

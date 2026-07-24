@@ -7,7 +7,7 @@ import { withBasePath } from "@/lib/utils";
 import dynamic from 'next/dynamic';
 
 const BackgroundEngine = dynamic(
-  () => import("@/components/ui/BackgroundEngine").then((mod) => mod.BackgroundEngine),
+  () => import("@/components/cerebro/BackgroundEngine").then((mod) => mod.BackgroundEngine),
   { ssr: false }
 );
 

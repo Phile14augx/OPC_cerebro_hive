@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Filter, ChevronDown, Download, FileText, Database, Code2, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const GITHUB_ORG = "https://github.com/Phile14augx";
 

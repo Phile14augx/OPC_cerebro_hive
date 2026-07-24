@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { CheckCircle2, Cpu } from "lucide-react";
 import { cn } from "@/lib/utils";
 

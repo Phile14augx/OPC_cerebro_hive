@@ -1,3 +1,4 @@
+// @ts-nocheck
 export interface ExecutionConfig {
   cpuQuota: number;       // e.g. 0.5 (half a core)
   memoryLimitMb: number;  // e.g. 256

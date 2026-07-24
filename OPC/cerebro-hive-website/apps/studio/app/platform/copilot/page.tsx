@@ -120,7 +120,7 @@ function ContextPanel({ online }: { online: boolean | null }) {
   );
 }
 
-const TABS: [Tab, string, React.ComponentType<{ size?: number; className?: string }>][] = [
+const TABS: [Tab, string, React.ComponentType<{ size?: number | string; className?: string }>][] = [
   ["ask", "Ask", MessageSquare],
   ["context", "Context", Layers],
 ];

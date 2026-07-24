@@ -3,13 +3,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { EnterpriseService } from "@/lib/data/types";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { products } from "@/lib/data/products";
 import { platformCapabilities } from "@/lib/data/platform/capabilities";
 import { ArrowRight, Cpu, Layers } from "lucide-react";
-import { TrackedLink } from "@/components/ui/TrackedLink";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 
 export const ServiceArchitecture = ({ service }: { service: EnterpriseService }) => {
   // Resolve references

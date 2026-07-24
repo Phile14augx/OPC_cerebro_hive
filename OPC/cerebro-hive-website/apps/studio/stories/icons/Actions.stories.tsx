@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Sparkles as SparklesIcon, Zap as ZapIcon, Refresh as RefreshIcon, Copy as CopyIcon } from '../../components/ui/icons/actions';
+import { Sparkles as SparklesIcon, Zap as ZapIcon, Refresh as RefreshIcon, Copy as CopyIcon } from '../../components/cerebro/icons/actions';
 
 const meta: Meta = {
   title: 'Icons/Actions',

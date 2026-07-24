@@ -3,17 +3,19 @@ version: '3.8'
 # ============================================================
 # CerebroHive Platform — Local Development Stack
 # ============================================================
-# Services:
-#   Core:       PostgreSQL + pgvector, Redis
-#   Events:     NATS JetStream
-#   Search:     OpenSearch
-#   Storage:    MinIO
-#   Identity:   Keycloak
-#   Tooling:    pgAdmin
+# Core:         PostgreSQL + pgvector, Redis
+# Events:       NATS JetStream
+# Search:       OpenSearch
+# Storage:      MinIO
+# Identity:     Keycloak
+# Observability: OTel → Prometheus + Tempo + Loki → Grafana
+# Workflow:     Temporal
+# Tooling:      pgAdmin
 #
 # Usage:
-#   docker compose up -d           # Start all
-#   docker compose up -d db redis  # Start only core
+#   docker compose up -d              # Full stack
+#   docker compose up -d db redis     # Core only
+#   docker compose --profile obs up -d # With observability
 # ============================================================
 
 services:
@@ -195,6 +197,160 @@ services:
       retries: 5
       start_period: 30s
 
+  # ─── Workflow Engine ───────────────────────────────────────
+
+  temporal:
+    container_name: cerebrohive-temporal
+    image: temporalio/auto-setup:1.24.2
+    restart: always
+    ports:
+      - "7233:7233"
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_SEEDS=db
+      - POSTGRES_USER=${POSTGRES_USER:-cerebrohive}
+      - POSTGRES_PWD=${POSTGRES_PASSWORD:-supersecretpassword123}
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+    depends_on:
+      db:
+        condition: service_healthy
+
+  temporal-ui:
+    container_name: cerebrohive-temporal-ui
+    image: temporalio/ui:2.27.1
+    restart: always
+    ports:
+      - "8081:8080"
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    depends_on:
+      - temporal
+
+  # ─── Observability ─────────────────────────────────────────
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.96.0
+    container_name: cerebrohive-otel
+    restart: always
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./infra/docker/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "8889:8889"   # Prometheus metrics exporter
+    profiles: ["obs", "full"]
+
+  prometheus:
+    image: prom/prometheus:v2.50.1
+    container_name: cerebrohive-prometheus
+    restart: always
+    volumes:
+      - ./infra/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+      - "--web.enable-remote-write-receiver"
+    profiles: ["obs", "full"]
+
+  tempo:
+    image: grafana/tempo:2.4.1
+    container_name: cerebrohive-tempo
+    restart: always
+    command: -config.file=/etc/tempo/tempo-config.yaml
+    ports:
+      - "3200:3200"   # HTTP API
+    volumes:
+      - ./infra/docker/tempo/tempo-config.yaml:/etc/tempo/tempo-config.yaml:ro
+      - tempo_data:/var/tempo
+    profiles: ["obs", "full"]
+
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: cerebrohive-loki
+    restart: always
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./infra/docker/loki/loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    profiles: ["obs", "full"]
+
+  alertmanager:
+    image: prom/alertmanager:v0.26.0
+    container_name: cerebrohive-alertmanager
+    restart: always
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./infra/docker/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    environment:
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+      PAGERDUTY_ROUTING_KEY: ${PAGERDUTY_ROUTING_KEY:-}
+    profiles: ["obs", "full"]
+
+  grafana:
+    image: grafana/grafana:10.3.3
+    container_name: cerebrohive-grafana
+    restart: always
+    ports:
+      - "3333:3000"   # Avoid conflict with Next.js on 3000/3001
+    volumes:
+      - ./infra/docker/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
+      GF_AUTH_DISABLE_LOGIN_FORM: "false"
+      GF_FEATURE_TOGGLES_ENABLE: "traceqlEditor"
+      GF_INSTALL_PLUGINS: "grafana-piechart-panel"
+      GF_SERVER_ROOT_URL: "http://localhost:3333"
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+      - alertmanager
+    profiles: ["obs", "full"]
+
+  # ─── Exporters ─────────────────────────────────────────────
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: cerebrohive-postgres-exporter
+    restart: always
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-cerebrohive}:${POSTGRES_PASSWORD:-supersecretpassword123}@db:5432/${POSTGRES_DB:-cerebrohive_db}?sslmode=disable"
+    ports:
+      - "9187:9187"
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles: ["obs", "full"]
+
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: cerebrohive-redis-exporter
+    restart: always
+    environment:
+      REDIS_ADDR: "redis://redis:6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispassword123}
+    ports:
+      - "9121:9121"
+    depends_on:
+      redis:
+        condition: service_healthy
+    profiles: ["obs", "full"]
+
   # ─── Tooling ───────────────────────────────────────────────
 
   pgadmin:
@@ -221,168 +377,13 @@ volumes:
   opensearch_data:
   minio_data:
   pgadmin_data:
+  prometheus_data:
+  grafana_data:
+  loki_data:
+  tempo_data:
 
 # ─── Networks ──────────────────────────────────────────────
 
 networks:
   default:
     name: cerebrohive-platform
-
-  # --- Observability (Phase 5) -------------------------------
-
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.96.0
-    container_name: cerebrohive-otel
-    restart: always
-    command: ["--config=/etc/otel-collector-config.yaml"]
-    volumes:
-      - ./infra/docker/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
-    ports:
-      - "4317:4317" # OTLP gRPC
-      - "4318:4318" # OTLP HTTP
-      - "8889:8889" # Prometheus metrics exporter
-
-  prometheus:
-    image: prom/prometheus:v2.50.1
-    container_name: cerebrohive-prometheus
-    restart: always
-    volumes:
-      - ./infra/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    ports:
-      - "9090:9090"
-
-  jaeger:
-    image: jaegertracing/all-in-one:1.55
-    container_name: cerebrohive-jaeger
-    restart: always
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-    ports:
-      - "16686:16686" # UI
-      - "4317"        # OTLP gRPC
-
-  loki:
-    image: grafana/loki:2.9.4
-    container_name: cerebrohive-loki
-    restart: always
-    ports:
-      - "3100:3100"
-    command: -config.file=/etc/loki/local-config.yaml
-    volumes:
-      - ./infra/docker/loki/loki-config.yaml:/etc/loki/local-config.yaml:ro
-      - loki_data:/loki
-
-  tempo:
-    image: grafana/tempo:latest
-    container_name: cerebrohive-tempo
-    restart: always
-    command: -config.file=/etc/tempo/tempo-config.yaml
-    ports:
-      - "3200:3200"   # HTTP API
-      - "4317"        # OTLP gRPC (internal, shared with OTel collector)
-    volumes:
-      - ./infra/docker/tempo/tempo-config.yaml:/etc/tempo/tempo-config.yaml:ro
-      - tempo_data:/var/tempo
-
-  alertmanager:
-    image: prom/alertmanager:latest
-    container_name: cerebrohive-alertmanager
-    restart: always
-    ports:
-      - "9093:9093"
-    volumes:
-      - ./infra/docker/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
-    command:
-      - "--config.file=/etc/alertmanager/alertmanager.yml"
-      - "--storage.path=/alertmanager"
-    environment:
-      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
-      PAGERDUTY_ROUTING_KEY: ${PAGERDUTY_ROUTING_KEY:-}
-
-  grafana:
-    image: grafana/grafana:10.3.3
-    container_name: cerebrohive-grafana
-    restart: always
-    ports:
-      - "3001:3000"
-    volumes:
-      - ./infra/docker/grafana/provisioning:/etc/grafana/provisioning:ro
-      - grafana_data:/var/lib/grafana
-    environment:
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
-      GF_AUTH_DISABLE_LOGIN_FORM: "false"
-      GF_FEATURE_TOGGLES_ENABLE: "traceqlEditor"
-      GF_INSTALL_PLUGINS: "grafana-piechart-panel"
-    depends_on:
-      - prometheus
-      - loki
-      - tempo
-      - alertmanager
-
-  # ─── Exporters ─────────────────────────────────────────────────────────────
-
-  postgres-exporter:
-    image: prometheuscommunity/postgres-exporter:latest
-    container_name: cerebrohive-postgres-exporter
-    restart: always
-    environment:
-      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-cerebrohive}:${POSTGRES_PASSWORD:-supersecretpassword123}@db:5432/${POSTGRES_DB:-cerebrohive_db}?sslmode=disable"
-    ports:
-      - "9187:9187"
-    depends_on:
-      db:
-        condition: service_healthy
-
-  redis-exporter:
-    image: oliver006/redis_exporter:latest
-    container_name: cerebrohive-redis-exporter
-    restart: always
-    environment:
-      REDIS_ADDR: "redis://redis:6379"
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispassword123}
-    ports:
-      - "9121:9121"
-    depends_on:
-      redis:
-        condition: service_healthy
-  prometheus_data:
-  grafana_data:
-  loki_data:
-  tempo_data:
-
-  # --- Temporal (Phase 7) ------------------------------------
-
-  temporal:
-    container_name: cerebrohive-temporal
-    image: temporalio/auto-setup:1.24.2
-    restart: always
-    ports:
-      - "7233:7233"
-    environment:
-      - CASSANDRA_USER=temporal
-      - CASSANDRA_PASSWORD=temporal
-      - POSTGRES_USER=temporal
-      - POSTGRES_PWD=temporal
-      - DB=postgresql
-      - DB_PORT=5432
-      - POSTGRES_SEEDS=db
-      - POSTGRES_USER=
-      - POSTGRES_PWD=
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
-    depends_on:
-      db:
-        condition: service_healthy
-
-  temporal-ui:
-    container_name: cerebrohive-temporal-ui
-    image: temporalio/ui:2.27.1
-    restart: always
-    ports:
-      - "8081:8080"
-    environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
-    depends_on:
-      - temporal

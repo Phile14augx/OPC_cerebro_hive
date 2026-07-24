@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Message as MessageIcon, MessageDots as MessageDotsIcon, Send as SendIcon, BotAvatar as BotAvatarIcon, UserAvatar as UserAvatarIcon } from '../../components/ui/icons/chat';
+import { Message as MessageIcon, MessageDots as MessageDotsIcon, Send as SendIcon, BotAvatar as BotAvatarIcon, UserAvatar as UserAvatarIcon } from '../../components/cerebro/icons/chat';
 
 const meta: Meta = {
   title: 'Icons/Chat',

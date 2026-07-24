@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Building2, Calculator, Users, Briefcase, Cog, Package, Scale, Cpu, BrainCircuit, Target, ArrowRight } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 // Nodes configuration
 const departments = [

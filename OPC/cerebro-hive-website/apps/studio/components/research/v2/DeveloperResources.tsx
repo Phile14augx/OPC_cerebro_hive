@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Code2, Terminal, Book, Box, ArrowRight } from "lucide-react";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const resources = [
   { icon: Terminal, title: "API Explorer", desc: "Interactive playground for CerebroOS endpoints.", href: "/platform/live-runtime" },

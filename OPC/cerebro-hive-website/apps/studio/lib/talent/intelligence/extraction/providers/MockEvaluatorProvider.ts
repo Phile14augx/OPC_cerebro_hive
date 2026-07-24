@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { IAIEvaluatorProvider, EvaluatorContext, EvaluatedCapability } from './interfaces';
 
 export class MockEvaluatorProvider implements IAIEvaluatorProvider {

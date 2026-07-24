@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { typeTokens, spacingTokens } from "@/lib/design-system/tokens";
 
 export function EnterprisePlatformCTA() {

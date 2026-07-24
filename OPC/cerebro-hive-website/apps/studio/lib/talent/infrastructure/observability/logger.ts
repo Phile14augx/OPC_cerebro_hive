@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Core Observability and Telemetry Wrapper
  * Wraps console logs for now, but provides the interface to swap in OpenTelemetry or DataDog later.

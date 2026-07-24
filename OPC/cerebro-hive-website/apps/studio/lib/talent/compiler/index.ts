@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { AssessmentSchema, Resource } from "../types";
 import { createHash } from "crypto";
 

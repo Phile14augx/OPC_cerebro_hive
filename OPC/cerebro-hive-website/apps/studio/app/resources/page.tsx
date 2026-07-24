@@ -4,7 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, FileText, BookOpen, Wrench, LayoutTemplate, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const hubs = [
   {

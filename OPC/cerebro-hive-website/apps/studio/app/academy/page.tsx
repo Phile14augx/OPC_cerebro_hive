@@ -1,7 +1,7 @@
 "use client";
 import { BookOpen, Compass, GraduationCap, Award, ArrowRight, Zap, HelpCircle, Clock, CheckCircle, Star, Users, Code, BarChart2, Shield, Brain, Layers, Database, Cpu, FileCode } from "lucide-react";
 import Link from "next/link";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { useState } from "react";
 import { courses } from "@/lib/data/academy/courses";
 
@@ -36,7 +36,7 @@ const academyPaths = [
 ];
 
 // Icon and color map for courses (UI-only, kept in the client component)
-const courseUiConfig: Record<string, { icon: React.ComponentType<{ size?: number; color?: string }>; color: string }> = {
+const courseUiConfig: Record<string, { icon: React.ComponentType<{ size?: number | string; color?: string }>; color: string }> = {
   pe101: { icon: Brain, color: "#00E5FF" },
   bg201: { icon: Layers, color: "#7B61FF" },
   rp301: { icon: Database, color: "#FF8A00" },

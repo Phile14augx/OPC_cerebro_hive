@@ -8,7 +8,7 @@ interface TemplateItem {
   id: string;
   title: string;
   description: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
   fileContent: string;
   fileName: string;
 }

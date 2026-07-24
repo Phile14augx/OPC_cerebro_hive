@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -15,7 +15,7 @@ import { StatCard } from "../../components/ui/StatCard";
 import { useForgeProject, useForgeActions } from "@/lib/forge/hooks";
 import type { TestingResult, TestSuite } from "@/lib/forge/api-client";
 
-export default function TestingIntelligencePage() {
+function TestingIntelligencePageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -242,5 +242,13 @@ export default function TestingIntelligencePage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function TestingIntelligencePage() {
+  return (
+    <Suspense fallback={null}>
+      <TestingIntelligencePageInner />
+    </Suspense>
   );
 }

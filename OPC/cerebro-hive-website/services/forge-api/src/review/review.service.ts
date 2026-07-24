@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { FORGE_REVIEW_SCHEMA } from '@cerebro/ai';
 import { projectGraph } from '@cerebro/workflow';
 import { AgentOrchestratorService } from '../agent/agent-orchestrator.service';
 
@@ -44,74 +45,49 @@ export class ReviewService {
     const fileCount = ctx.generatedFiles.length;
     const lineCount = ctx.generatedFiles.reduce((s, f) => s + f.lineCount, 0);
 
-    const userPrompt = `Perform a comprehensive AI code review for this project:
+    const userPrompt = `Perform a comprehensive code review for this project.
+
 Project: ${ctx.prompt}
-${ctx.architecture ? `Architecture: ${ctx.architecture.pattern}
-Services: ${ctx.architecture.services.map(s => s.name).join(', ')}` : ''}
-Generated files: ${fileCount} files, ~${lineCount} lines of code
+${ctx.architecture ? `Architecture pattern: ${ctx.architecture.pattern}
+Services: ${ctx.architecture.services.map(s => s.name).join(', ')}
+Tech stack: ${JSON.stringify(ctx.architecture.techStack)}` : ''}
+Generated: ${fileCount} files, ~${lineCount} lines of code
 
-Review across all 6 dimensions:
-1. Security — OWASP Top 10, secrets, injection, auth
-2. Architecture — SOLID, DRY, separation of concerns, patterns
-3. Performance — N+1 queries, missing indexes, memory leaks, caching
-4. Code Quality — complexity, naming, dead code, type safety
-5. Test Coverage — missing tests, untested edge cases
-6. Documentation — missing JSDoc, unclear APIs
+Review all 6 dimensions and return structured JSON:
+1. Security (weight 25%) — OWASP Top 10, secrets in code, injection, auth bypass, missing authz
+2. Architecture (weight 20%) — SOLID, DRY, coupling, cohesion, layering violations
+3. Performance (weight 20%) — N+1 queries, missing DB indexes, blocking I/O, no caching
+4. Code Quality (weight 15%) — cyclomatic complexity, naming, dead code, type safety, error handling
+5. Test Coverage (weight 12%) — missing tests, edge cases, assertion quality, test isolation
+6. Documentation (weight 8%) — missing JSDoc, unclear APIs, missing README sections
 
-For each finding: severity (critical/high/medium/low/info), category, file path if applicable, exact description, and auto-fix suggestion.`;
+Scoring rules:
+- Each category score is 0–100
+- overallScore = weighted average using the weights above (round to integer)
+- grade: A ≥ 90, B ≥ 80, C ≥ 70, D ≥ 60, F < 60
+- findings.id must be unique (e.g. "sec-1", "arch-1")
+- autoFixable = count of findings where suggestion is a single-line code change
+- reviewedFiles = ${Math.max(fileCount, 1)}
+- reviewedLines = ${Math.max(lineCount, 1)}
+
+Produce 3–8 findings total; prioritise high/critical issues. Be specific about file paths and line numbers where known.`;
 
     projectGraph.advancePhase(projectId, 'review');
 
-    const [secResult, archResult] = await Promise.all([
-      this.orchestrator.runAgent<string>({
-        projectId,
-        agentType: 'security',
-        phase: 'review',
-        userPrompt: `Security review: ${userPrompt}`,
-      }),
-      this.orchestrator.runAgent<string>({
-        projectId,
-        agentType: 'architect',
-        phase: 'review',
-        userPrompt: `Architecture review: ${userPrompt}`,
-      }),
-    ]);
+    const result = await this.orchestrator.runAgent<ReviewResult>({
+      projectId,
+      agentType: 'security',
+      phase: 'review',
+      userPrompt,
+      schema: FORGE_REVIEW_SCHEMA,
+      schemaDescription: 'ReviewResult — scored categories, actionable findings, grade',
+    });
 
     await this.prisma.project.update({
       where: { id: projectId },
       data: { forgePhase: 'review' },
     });
 
-    // Derive score from actual findings (simplified scoring model)
-    const categories: ReviewCategory[] = [
-      { name: 'Security',       score: 82, findings: 3, severity: 'medium' },
-      { name: 'Architecture',   score: 91, findings: 1, severity: 'low'    },
-      { name: 'Performance',    score: 78, findings: 4, severity: 'medium' },
-      { name: 'Code Quality',   score: 95, findings: 2, severity: 'low'    },
-      { name: 'Test Coverage',  score: 72, findings: 5, severity: 'medium' },
-      { name: 'Documentation',  score: 68, findings: 6, severity: 'medium' },
-    ];
-
-    const overallScore = Math.round(categories.reduce((s, c) => s + c.score, 0) / categories.length);
-    const grade = overallScore >= 90 ? 'A' : overallScore >= 80 ? 'B' : overallScore >= 70 ? 'C' : overallScore >= 60 ? 'D' : 'F';
-
-    const findings: ReviewFinding[] = [
-      { id: '1', category: 'Security',      severity: 'high',     title: 'Missing rate limiting on auth endpoints',   description: 'Login endpoint has no throttle — brute-forceable.', suggestion: 'Add @Throttle(5, 60) decorator from @nestjs/throttler.' },
-      { id: '2', category: 'Security',      severity: 'medium',   title: 'JWT secret falls back to hardcoded value',  description: 'process.env.JWT_SECRET ?? "secret" in auth.service.ts', suggestion: 'Remove the fallback; throw if JWT_SECRET is not set.' },
-      { id: '3', category: 'Performance',   severity: 'high',     title: 'N+1 query in patient list endpoint',        description: 'Fetching appointments separately for each patient in a loop.', suggestion: 'Use Prisma include: { appointments: true } in the main query.' },
-      { id: '4', category: 'Test Coverage', severity: 'medium',   title: 'No tests for billing calculation logic',    description: 'BillingService.calculateTotal() has 0% test coverage.', suggestion: 'Add unit tests covering tax, discount, and insurance deduction paths.' },
-      { id: '5', category: 'Architecture',  severity: 'low',      title: 'Business logic leaking into controller',    description: 'PatientController directly accesses repository.', suggestion: 'Move logic to PatientService; controller should only handle HTTP concerns.' },
-      { id: '6', category: 'Security',      severity: 'medium',   title: 'User enumeration via error message',        description: '"User not found" vs "Invalid password" exposes valid emails.', suggestion: 'Return generic "Invalid credentials" for all auth failures.' },
-    ];
-
-    return {
-      overallScore,
-      grade,
-      categories,
-      findings,
-      autoFixable: findings.filter(f => f.suggestion).length,
-      reviewedFiles: Math.max(fileCount, 12),
-      reviewedLines: Math.max(lineCount, 3400),
-    };
+    return result.output;
   }
 }

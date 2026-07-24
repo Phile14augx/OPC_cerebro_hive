@@ -1,29 +1,10 @@
-export type IdentityType = 'Human' | 'Service' | 'Robot';
-
-export interface BaseIdentity {
-  id: string;
-  type: IdentityType;
-  tenantId: string;
-  roles: string[];
-}
-
-export interface HumanIdentity extends BaseIdentity {
-  type: 'Human';
-  email: string;
-  displayName: string;
-  organizationId: string;
-}
-
-export interface ServiceIdentity extends BaseIdentity {
-  type: 'Service';
-  serviceName: string;
-  permissions: string[];
-}
-
-export interface RobotIdentity extends BaseIdentity {
-  type: 'Robot';
-  agentId: string;
-  ownerId: string;
-}
-
-export type PlatformIdentity = HumanIdentity | ServiceIdentity | RobotIdentity;
+export * from './principals/Principal';
+export * from './tenancy/Tenancy';
+export * from './context/IdentityContext';
+export * from './context/IdentityResolver';
+export * from './repository/IdentityRepository';
+export * from './sessions/Session';
+export * from './credentials/CredentialProvider';
+export * from './authorization/AuthorizationProvider';
+export * from './resolution/IdentityResolver';
+export * from './events/IdentityEvents';

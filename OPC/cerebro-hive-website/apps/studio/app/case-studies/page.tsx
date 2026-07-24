@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, TrendingUp, Clock, Building2, ChevronRight, BarChart3, Filter } from "lucide-react";
 import Link from "next/link";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const filters = ["All", "AI & Automation", "Sales Intelligence", "Enterprise Training", "Logistics"];
 

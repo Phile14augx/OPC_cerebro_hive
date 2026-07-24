@@ -4,16 +4,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronRight, Play, Database, BrainCircuit, Bot, Network, Lightbulb, Target } from "lucide-react";
 import dynamic from 'next/dynamic';
-import { TrackedLink } from "@/components/ui/TrackedLink";
-import { TrackedButton } from "@/components/ui/TrackedButton";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 
 const BackgroundEngine = dynamic(
-  () => import("@/components/ui/BackgroundEngine").then((mod) => mod.BackgroundEngine),
+  () => import("@/components/cerebro/BackgroundEngine").then((mod) => mod.BackgroundEngine),
   { ssr: false }
 );
 
-const stages = [
+const stages: { id: string; title: string; icon: React.ComponentType<{ size?: number | string; className?: string }>; color: string }[] = [
   { id: "disconnected", title: "Disconnected Enterprise", icon: Database, color: "text-warning" },
   { id: "unified", title: "Unified Knowledge", icon: BrainCircuit, color: "text-accent-secondary" },
   { id: "agents", title: "Intelligent Agents", icon: Bot, color: "text-[#7B61FF]" },
@@ -122,10 +122,10 @@ export default function HomeHero() {
                 transition={{ duration: 0.5 }}
                 className="relative flex flex-col items-center text-center"
               >
-                {React.createElement(stages[activeStage].icon, {
-                  size: 80,
-                  className: `mb-6 ${stages[activeStage].color} drop-shadow-[0_0_30px_currentColor]`
-                })}
+                {(() => {
+                  const StageIcon = stages[activeStage].icon;
+                  return <StageIcon size={80} className={`mb-6 ${stages[activeStage].color} drop-shadow-[0_0_30px_currentColor]`} />;
+                })()}
                 <h3 className="text-3xl font-space font-bold text-text-primary tracking-wide">
                   {stages[activeStage].title}
                 </h3>

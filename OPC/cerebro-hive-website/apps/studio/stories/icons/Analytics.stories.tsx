@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ChartBar as ChartBarIcon, ChartPie as ChartPieIcon } from '../../components/ui/icons/analytics';
+import { ChartBar as ChartBarIcon, ChartPie as ChartPieIcon } from '../../components/cerebro/icons/analytics';
 
 const meta: Meta = {
   title: 'Icons/Analytics',

@@ -1,0 +1,686 @@
+// ──────────────────────────────────────────────────────────────────────────────
+// @cerebro/db — Prisma Schema
+// PostgreSQL 16 + pgvector. All timestamps are UTC ISO 8601.
+// ──────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/client"
+  previewFeatures = ["postgresqlExtensions", "relationJoins", "nativeDistinct"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [uuidOssp(map: "uuid-ossp"), vector(map: "vector"), pgTrgm(map: "pg_trgm")]
+}
+
+// ── Enums ─────────────────────────────────────────────────────────────────────
+
+enum UserStatus {
+  ACTIVE
+  INVITED
+  SUSPENDED
+  DELETED
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+  BILLING_ADMIN
+}
+
+enum AuthProvider {
+  KEYCLOAK
+  GOOGLE
+  GITHUB
+  MICROSOFT
+  EMAIL
+}
+
+enum OrgStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING_DELETION
+  DELETED
+}
+
+enum PlanTier {
+  FREE
+  STARTER
+  PRO
+  ENTERPRISE
+  ENTERPRISE_PLUS
+}
+
+enum WorkflowStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  DEPRECATED
+}
+
+enum ExecutionStatus {
+  QUEUED
+  RUNNING
+  WAITING_FOR_HUMAN
+  COMPLETED
+  FAILED
+  TIMEOUT
+  CANCELLED
+}
+
+enum AgentStatus {
+  ACTIVE
+  INACTIVE
+  DEPRECATED
+  BETA
+  DRAFT
+}
+
+enum DocumentStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+  DELETED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  TRIALING
+  INCOMPLETE
+}
+
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  UNCOLLECTIBLE
+  VOID
+}
+
+enum AuditSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+// ── User ──────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String       @id @default(dbgenerated("('usr_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  email         String       @unique
+  name          String
+  avatarUrl     String?
+  status        UserStatus   @default(ACTIVE)
+  emailVerified Boolean      @default(false)
+  authProvider  AuthProvider @default(EMAIL)
+  externalId    String?      // Keycloak sub / OAuth subject
+  passwordHash  String?
+  lastLoginAt   DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  metadata      Json         @default("{}")
+
+  memberships    OrgMembership[]
+  createdWorkflows Workflow[]   @relation("WorkflowCreatedBy")
+  updatedWorkflows Workflow[]   @relation("WorkflowUpdatedBy")
+  executions     WorkflowExecution[]
+  apiKeys        ApiKey[]
+  auditEvents    AuditEvent[]
+  invitations    Invitation[]  @relation("InvitedBy")
+
+  @@index([email])
+  @@index([externalId])
+  @@index([status])
+  @@map("users")
+}
+
+// ── Organization ──────────────────────────────────────────────────────────────
+
+model Organization {
+  id           String    @id @default(dbgenerated("('org_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  name         String
+  slug         String    @unique
+  logoUrl      String?
+  status       OrgStatus @default(ACTIVE)
+  plan         PlanTier  @default(FREE)
+  ownerId      String
+  billingEmail String?
+  taxId        String?   // encrypted
+  settings     Json      @default("{}")
+  limits       Json      @default("{}")
+  stripeCustomerId String? @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  memberships    OrgMembership[]
+  workflows      Workflow[]
+  agents         Agent[]
+  apiKeys        ApiKey[]
+  auditEvents    AuditEvent[]
+  subscriptions  Subscription[]
+  invoices       Invoice[]
+  usageBudget    UsageBudget?
+  knowledge      KnowledgeCollection[]
+  aiUsage        AIUsageRecord[]
+  invitations    Invitation[]
+  prompts        Prompt[]
+  evalDatasets   EvalDataset[]
+  evalRuns       EvalRun[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([plan])
+  @@map("organizations")
+}
+
+model OrgMembership {
+  userId   String
+  orgId    String
+  role     UserRole  @default(MEMBER)
+  joinedAt DateTime  @default(now())
+
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  org      Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@id([userId, orgId])
+  @@index([orgId, role])
+  @@map("org_memberships")
+}
+
+model Invitation {
+  id          String    @id @default(uuid())
+  orgId       String
+  email       String
+  role        UserRole
+  invitedById String
+  token       String    @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  org         Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  invitedBy   User         @relation("InvitedBy", fields: [invitedById], references: [id])
+
+  @@index([orgId, email])
+  @@index([token])
+  @@map("invitations")
+}
+
+// ── API Keys ──────────────────────────────────────────────────────────────────
+
+model ApiKey {
+  id          String    @id @default(dbgenerated("('key_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  orgId       String
+  userId      String
+  name        String
+  keyPrefix   String    // first 12 chars (display only)
+  keyHash     String    @unique
+  scopes      String[]
+  expiresAt   DateTime?
+  lastUsedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  org         Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id])
+
+  @@index([orgId])
+  @@index([keyHash])
+  @@map("api_keys")
+}
+
+// ── Workflows ─────────────────────────────────────────────────────────────────
+
+model Workflow {
+  id          String         @id @default(dbgenerated("('wf_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  orgId       String
+  name        String
+  description String         @default("")
+  version     Int            @default(1)
+  status      WorkflowStatus @default(DRAFT)
+  definition  Json           // full step DAG
+  variables   Json           @default("[]")
+  triggers    Json           @default("[]")
+  settings    Json           @default("{}")
+  tags        String[]       @default([])
+  createdById String
+  updatedById String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  publishedAt DateTime?
+
+  org         Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  createdBy   User               @relation("WorkflowCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User               @relation("WorkflowUpdatedBy", fields: [updatedById], references: [id])
+  executions  WorkflowExecution[]
+
+  @@index([orgId, status])
+  @@index([orgId, tags])
+  @@index([createdAt])
+  @@map("workflows")
+}
+
+model WorkflowExecution {
+  id                  String          @id @default(dbgenerated("('exec_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  workflowId          String
+  orgId               String
+  triggeredById       String?
+  triggerType         String          @default("manual")
+  status              ExecutionStatus @default(QUEUED)
+  input               Json            @default("{}")
+  output              Json?
+  stepExecutions      Json            @default("[]")
+  startedAt           DateTime        @default(now())
+  completedAt         DateTime?
+  durationMs          Int?
+  aiCallsCount        Int             @default(0)
+  totalTokensUsed     Int             @default(0)
+  totalCostUsd        Decimal         @default(0) @db.Decimal(12, 6)
+  error               Json?
+  parentExecutionId   String?
+  temporalWorkflowId  String?
+  temporalRunId       String?
+  testMode            Boolean         @default(false)
+  createdAt           DateTime        @default(now())
+
+  workflow      Workflow      @relation(fields: [workflowId], references: [id])
+  triggeredBy   User?         @relation(fields: [triggeredById], references: [id])
+  parent        WorkflowExecution? @relation("SubworkflowExecutions", fields: [parentExecutionId], references: [id])
+  children      WorkflowExecution[] @relation("SubworkflowExecutions")
+
+  @@index([workflowId, status])
+  @@index([orgId, startedAt])
+  @@index([status, startedAt])
+  @@index([temporalWorkflowId])
+  @@map("workflow_executions")
+}
+
+// ── Agents ────────────────────────────────────────────────────────────────────
+
+model Agent {
+  id             String      @id @default(dbgenerated("('agt_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  orgId          String
+  name           String
+  slug           String
+  version        String      @default("1.0.0")
+  description    String      @default("")
+  capabilities   String[]    @default([])
+  tools          Json        @default("[]")   // AgentToolManifest[]
+  model          String
+  systemPrompt   String
+  maxIterations  Int         @default(10)
+  timeoutMs      Int         @default(60000)
+  status         AgentStatus @default(DRAFT)
+  isBuiltin      Boolean     @default(false)
+  tags           String[]    @default([])
+  metrics        Json        @default("{}")
+  createdById    String?
+  updatedById    String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  org            Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  runs           AgentRun[]
+
+  @@unique([orgId, slug, version])
+  @@index([orgId, status])
+  @@map("agents")
+}
+
+model AgentRun {
+  id            String       @id @default(dbgenerated("('run_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  agentId       String
+  orgId         String
+  executionId   String?
+  sessionId     String
+  status        ExecutionStatus
+  input         String
+  output        String?
+  messages      Json         @default("[]")
+  toolCalls     Json         @default("[]")
+  iterations    Int          @default(0)
+  inputTokens   Int          @default(0)
+  outputTokens  Int          @default(0)
+  costUsd       Decimal      @default(0) @db.Decimal(12, 6)
+  startedAt     DateTime     @default(now())
+  completedAt   DateTime?
+  durationMs    Int?
+  error         String?
+
+  agent         Agent        @relation(fields: [agentId], references: [id])
+
+  @@index([agentId, startedAt])
+  @@index([orgId, startedAt])
+  @@index([executionId])
+  @@map("agent_runs")
+}
+
+// ── Knowledge ─────────────────────────────────────────────────────────────────
+
+model KnowledgeCollection {
+  id                String           @id @default(dbgenerated("('col_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  orgId             String
+  name              String
+  description       String           @default("")
+  embeddingModel    String           @default("text-embedding-3-large")
+  embeddingDim      Int              @default(1536)
+  chunkingStrategy  String           @default("semantic")
+  chunkSize         Int              @default(1000)
+  chunkOverlap      Int              @default(200)
+  isPublic          Boolean          @default(false)
+  tags              String[]         @default([])
+  createdById       String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  org               Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  documents         KnowledgeDocument[]
+
+  @@unique([orgId, name])
+  @@index([orgId])
+  @@map("knowledge_collections")
+}
+
+model KnowledgeDocument {
+  id            String         @id @default(dbgenerated("('doc_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  collectionId  String
+  orgId         String
+  title         String
+  sourceUrl     String?
+  sourceType    String
+  mimeType      String?
+  contentHash   String
+  charCount     Int            @default(0)
+  chunkCount    Int            @default(0)
+  status        DocumentStatus @default(PENDING)
+  error         String?
+  metadata      Json           @default("{}")
+  tags          String[]       @default([])
+  uploadedById  String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  indexedAt     DateTime?
+
+  collection    KnowledgeCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, contentHash])
+  @@index([collectionId, status])
+  @@index([orgId, status])
+  @@map("knowledge_documents")
+}
+
+// ── AI Usage ──────────────────────────────────────────────────────────────────
+
+model AIUsageRecord {
+  id            String   @id @default(uuid())
+  orgId         String
+  workflowId    String?
+  executionId   String?
+  agentId       String?
+  userId        String?
+  provider      String
+  model         String
+  inputTokens   Int
+  outputTokens  Int
+  totalTokens   Int
+  costUsd       Decimal  @db.Decimal(12, 6)
+  durationMs    Int
+  ttftMs        Int?
+  cached        Boolean  @default(false)
+  streamed      Boolean  @default(false)
+  error         String?
+  finishReason  String?
+  requestId     String
+  traceId       String?
+  createdAt     DateTime @default(now())
+
+  org           Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt])
+  @@index([orgId, provider, model])
+  @@index([executionId])
+  @@map("ai_usage_records")
+}
+
+// ── Billing ───────────────────────────────────────────────────────────────────
+
+model Subscription {
+  id                   String             @id @default(uuid())
+  orgId                String
+  stripeSubscriptionId String             @unique
+  plan                 String
+  status               SubscriptionStatus
+  interval             String
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean            @default(false)
+  canceledAt           DateTime?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  seats                Int                @default(1)
+  addons               Json               @default("[]")
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  org                  Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  invoices             Invoice[]
+
+  @@index([orgId, status])
+  @@map("subscriptions")
+}
+
+model Invoice {
+  id                String        @id @default(uuid())
+  orgId             String
+  subscriptionId    String?
+  stripeInvoiceId   String        @unique
+  status            InvoiceStatus
+  amount            Int           // cents
+  currency          String        @default("usd")
+  tax               Int           @default(0)
+  periodStart       DateTime
+  periodEnd         DateTime
+  paidAt            DateTime?
+  invoiceUrl        String?
+  pdfUrl            String?
+  lineItems         Json          @default("[]")
+  createdAt         DateTime      @default(now())
+
+  org               Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  subscription      Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  @@index([orgId, status])
+  @@map("invoices")
+}
+
+model UsageBudget {
+  orgId           String   @id
+  monthlyCapUsd   Decimal  @db.Decimal(10, 2)
+  alertThreshold  Decimal  @db.Decimal(4, 3) @default(0.8)
+  alertEmail      String
+  hardCap         Boolean  @default(false)
+  currentSpendUsd Decimal  @default(0) @db.Decimal(12, 6)
+  periodStart     DateTime
+  periodEnd       DateTime
+  updatedAt       DateTime @updatedAt
+
+  org             Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@map("usage_budgets")
+}
+
+// ── Audit Log ─────────────────────────────────────────────────────────────────
+
+model AuditEvent {
+  id           String        @id @default(dbgenerated("('aud_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  orgId        String
+  actorId      String?
+  actorType    String        @default("user")
+  actorEmail   String?
+  type         String        // AuditEventType
+  severity     AuditSeverity @default(INFO)
+  resourceType String?
+  resourceId   String?
+  description  String
+  before       Json?
+  after        Json?
+  metadata     Json          @default("{}")
+  ipAddress    String?
+  userAgent    String?
+  traceId      String?
+  createdAt    DateTime      @default(now())
+
+  org          Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  actor        User?         @relation(fields: [actorId], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([orgId, type])
+  @@index([actorId, createdAt])
+  @@index([resourceType, resourceId])
+  @@map("audit_events")
+}
+
+// ── Feature Flags ─────────────────────────────────────────────────────────────
+
+model FeatureFlag {
+  id          String   @id
+  name        String   @unique
+  description String   @default("")
+  enabled     Boolean  @default(false)
+  rules       Json     @default("[]")   // targeting rules
+  variants    Json     @default("{}")   // variant weights for A/B
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("feature_flags")
+}
+
+// ── Prompt Registry ───────────────────────────────────────────────────────────
+
+model Prompt {
+  id            String          @id @default(uuid())
+  orgId         String
+  name          String
+  slug          String
+  description   String          @default("")
+  status        String          @default("DRAFT")   // DRAFT | PUBLISHED | DEPRECATED
+  category      String          @default("general")
+  tags          String[]        @default([])
+  activeVersion Int             @default(1)
+  createdById   String?
+  updatedById   String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  org       Organization    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  versions  PromptVersion[]
+  evalRuns  EvalRun[]
+
+  @@unique([orgId, slug])
+  @@index([orgId, status])
+  @@index([orgId, category])
+  @@map("prompts")
+}
+
+model PromptVersion {
+  id           String   @id @default(uuid())
+  promptId     String
+  orgId        String
+  version      Int
+  content      String                        // rendered template string
+  model        String
+  variables    String[] @default([])
+  description  String   @default("")
+  changelog    String   @default("")
+  contentHash  String
+  tags         String[] @default([])
+  isActive     Boolean  @default(false)
+  createdBy    String?
+  metrics      Json?                         // { successRate, avgTokens, avgLatencyMs, runs }
+  createdAt    DateTime @default(now())
+
+  prompt  Prompt  @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  @@unique([promptId, version])
+  @@index([promptId, isActive])
+  @@map("prompt_versions")
+}
+
+// ── LLM Evaluations ───────────────────────────────────────────────────────────
+
+model EvalDataset {
+  id          String    @id @default(uuid())
+  orgId       String
+  name        String
+  description String    @default("")
+  rowCount    Int       @default(0)
+  schema      Json      @default("{}")      // column definitions
+  sourceType  String    @default("manual")  // manual | upload | synthetic
+  storageKey  String?                       // S3/blob key
+  createdById String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  org      Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  evalRuns EvalRun[]
+
+  @@index([orgId])
+  @@map("eval_datasets")
+}
+
+model EvalRun {
+  id           String    @id @default(uuid())
+  orgId        String
+  name         String
+  promptId     String?
+  promptSlug   String    @default("")
+  datasetId    String?
+  model        String
+  status       String    @default("QUEUED") // QUEUED | RUNNING | COMPLETED | FAILED | CANCELLED
+  samples      Int       @default(0)
+  passed       Int       @default(0)
+  metrics      Json      @default("{}")     // { accuracy, faithfulness, answer_relevance, … }
+  errorMsg     String?
+  createdById  String?
+  startedAt    DateTime?
+  completedAt  DateTime?
+
+  org     Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  prompt  Prompt?      @relation(fields: [promptId], references: [id])
+  dataset EvalDataset? @relation(fields: [datasetId], references: [id])
+
+  @@index([orgId, status])
+  @@index([orgId, promptId])
+  @@map("eval_runs")
+}
+
+// ── Model Catalog ─────────────────────────────────────────────────────────────
+
+model ModelEntry {
+  id               String   @id @default(cuid())
+  orgId            String?
+  modelId          String   @unique  // canonical model identifier (e.g. "claude-sonnet-5")
+  displayName      String
+  provider         String
+  description      String   @default("")
+  contextWindow    Int      @default(0)
+  maxOutput        Int      @default(0)
+  inputPricePer1M  Decimal  @default(0) @db.Decimal(10, 4)
+  outputPricePer1M Decimal  @default(0) @db.Decimal(10, 4)
+  capabilities     String[] @default([])  // vision | function_call | streaming | json_mode | reasoning
+  status           String   @default("ACTIVE")  // ACTIVE | DEPRECATED | INACTIVE
+  metadata         Json     @default("{}")
+  addedAt          DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([provider, status])
+  @@map("model_entries")
+}

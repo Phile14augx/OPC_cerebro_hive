@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Code2, Star, GitFork, Download, TerminalSquare } from "lucide-react";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const GITHUB_ORG = "https://github.com/Phile14augx";
 

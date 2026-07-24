@@ -1,25 +1,84 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
-    },
-    "lint": {
-      "dependsOn": ["^lint"]
+      "inputs": ["$TURBO_DEFAULT$", ".env.local", ".env.production"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**", "*.tsbuildinfo"],
+      "env": [
+        "NODE_ENV",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_FORGE_API_URL",
+        "NEXT_PUBLIC_APP_VERSION",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_FLAGD_URL",
+        "NEXT_PUBLIC_POSTHOG_KEY"
+      ]
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig*.json"],
+      "outputs": ["*.tsbuildinfo"]
+    },
+    "lint": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".eslintrc*", "eslint.config.*", "../../.eslintrc.base.json"]
     },
     "test": {
-      "dependsOn": ["^test"]
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "jest.config.*",
+        "vitest.config.*",
+        "**/*.test.ts",
+        "**/*.spec.ts",
+        "**/*.test.tsx",
+        "**/*.spec.tsx"
+      ],
+      "outputs": ["coverage/**"],
+      "env": ["CI", "DATABASE_URL", "REDIS_URL", "ANTHROPIC_API_KEY", "VITEST_POOL"]
+    },
+    "test:integration": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "env": ["DATABASE_URL", "REDIS_URL", "NATS_URL", "ANTHROPIC_API_KEY"]
+    },
+    "test:e2e": {
+      "dependsOn": ["build"],
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    },
+    "prisma:generate": {
+      "inputs": ["prisma/schema.prisma"],
+      "outputs": ["node_modules/.prisma/**", "src/generated/**"]
+    },
+    "prisma:migrate:deploy": {
+      "cache": false,
+      "dependsOn": ["prisma:generate"]
+    },
+    "eval:run": {
+      "cache": false,
+      "env": ["ANTHROPIC_API_KEY", "EVAL_PASS_THRESHOLD", "EVAL_MIN_PASS_RATE"]
+    },
+    "policy:check": {
+      "cache": false
     },
     "generate": {
+      "dependsOn": ["^generate"],
       "cache": false
     }
   },
   "globalEnv": [
+    "CI",
+    "NODE_ENV",
     "AI_PROVIDER",
     "AI_MODEL_ID",
     "ANTHROPIC_API_KEY",
@@ -28,7 +87,14 @@
     "NEXT_PUBLIC_FORGE_API_URL",
     "DATABASE_URL",
     "REDIS_URL",
-    "NODE_ENV",
+    "NATS_URL",
     "FORGE_DEFAULT_WORKSPACE_ID"
+  ],
+  "globalPassThroughEnv": [
+    "OTEL_EXPORTER_OTLP_ENDPOINT",
+    "OTEL_SERVICE_NAME",
+    "OTEL_RESOURCE_ATTRIBUTES",
+    "OTEL_TRACES_SAMPLER",
+    "OTEL_TRACES_SAMPLER_ARG"
   ]
 }

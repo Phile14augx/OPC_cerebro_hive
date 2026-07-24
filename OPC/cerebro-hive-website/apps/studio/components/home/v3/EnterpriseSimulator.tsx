@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { Settings, FileDown, Target, Building2, Server, CheckCircle2, Bot, Network, Layers, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
-import { Stack } from "@/components/ui/primitives/Stack";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
+import { Stack } from "@/components/cerebro/primitives/Stack";
 
 export default function EnterpriseSimulator() {
   const [step, setStep] = useState(1);

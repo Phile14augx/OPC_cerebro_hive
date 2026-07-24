@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   MessageCircle, Sparkles, Play, CheckCircle2, Loader2,
@@ -37,7 +37,7 @@ const botFeatures = [
   "Tool Calling (Book Appointment)", "Analytics Dashboard",
 ];
 
-export default function CerebroBotsPage() {
+function CerebroBotsPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -151,5 +151,13 @@ export default function CerebroBotsPage() {
         </Button>
       </div>
     </div>
+  );
+}
+
+export default function CerebroBotsPage() {
+  return (
+    <Suspense fallback={null}>
+      <CerebroBotsPageInner />
+    </Suspense>
   );
 }

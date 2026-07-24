@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import { Database, BrainCircuit, Bot, Building2, Server, ArrowDown, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
-import { Stack } from "@/components/ui/primitives/Stack";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
+import { Stack } from "@/components/cerebro/primitives/Stack";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const layers = [
   {

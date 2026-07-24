@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Menu as MenuIcon, SidebarLeft as SidebarLeftIcon, Settings as SettingsIcon, Search as SearchIcon } from '../../components/ui/icons/navigation';
+import { Menu as MenuIcon, SidebarLeft as SidebarLeftIcon, Settings as SettingsIcon, Search as SearchIcon } from '../../components/cerebro/icons/navigation';
 
 const meta: Meta = {
   title: 'Icons/Navigation',

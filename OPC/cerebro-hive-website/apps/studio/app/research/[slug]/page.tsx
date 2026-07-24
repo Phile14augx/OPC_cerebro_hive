@@ -2,7 +2,7 @@ import { researchPrograms } from "@/lib/data/research";
 import { Metadata } from 'next';
 import { notFound } from "next/navigation";
 import React from 'react';
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { CheckCircle2 } from "lucide-react";
 
 export async function generateStaticParams() {

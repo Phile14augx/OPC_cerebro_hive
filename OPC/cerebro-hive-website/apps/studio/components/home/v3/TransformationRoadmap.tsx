@@ -3,12 +3,12 @@
 import React, { useState } from "react";
 import { ArrowRight, FileSearch, PenTool, FlaskConical, Rocket, Network } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { cn } from "@/lib/utils";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
-import { Stack } from "@/components/ui/primitives/Stack";
-import { cardVariants } from "@/components/ui/primitives/Card";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
+import { Stack } from "@/components/cerebro/primitives/Stack";
+import { cardVariants } from "@/components/cerebro/primitives/Card";
 
 const roadmap = [
   {

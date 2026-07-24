@@ -1,0 +1,149 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# FinOps — Vertical Pod Autoscaler (VPA) Configurations
+# Mode: "Off" = recommendations only (no auto-apply in production).
+# Apply: kubectl apply -f infra/finops/vpa.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ── studio ────────────────────────────────────────────────────────────────────
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: studio-vpa
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: studio
+    app.kubernetes.io/component: frontend
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: studio
+  updatePolicy:
+    updateMode: "Off"   # Recommendations only — apply via GitOps after review
+  resourcePolicy:
+    containerPolicies:
+      - containerName: studio
+        minAllowed:
+          cpu: 50m
+          memory: 128Mi
+        maxAllowed:
+          cpu: 2000m
+          memory: 2Gi
+        controlledResources: ["cpu", "memory"]
+        controlledValues: RequestsAndLimits
+
+---
+# ── forge ─────────────────────────────────────────────────────────────────────
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: forge-vpa
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: forge
+    app.kubernetes.io/component: workflow-builder
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: forge
+  updatePolicy:
+    updateMode: "Off"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: forge
+        minAllowed:
+          cpu: 50m
+          memory: 128Mi
+        maxAllowed:
+          cpu: 2000m
+          memory: 2Gi
+        controlledResources: ["cpu", "memory"]
+        controlledValues: RequestsAndLimits
+
+---
+# ── platform-api ──────────────────────────────────────────────────────────────
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: platform-api-vpa
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: platform-api
+    app.kubernetes.io/component: api
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: platform-api
+  updatePolicy:
+    updateMode: "Off"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: platform-api
+        minAllowed:
+          cpu: 100m
+          memory: 256Mi
+        maxAllowed:
+          cpu: 4000m
+          memory: 4Gi
+        controlledResources: ["cpu", "memory"]
+        controlledValues: RequestsAndLimits
+
+---
+# ── forge-api ─────────────────────────────────────────────────────────────────
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: forge-api-vpa
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: forge-api
+    app.kubernetes.io/component: ai-orchestration
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: forge-api
+  updatePolicy:
+    updateMode: "Off"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: forge-api
+        minAllowed:
+          cpu: 200m
+          memory: 512Mi
+        maxAllowed:
+          cpu: 8000m
+          memory: 8Gi
+        controlledResources: ["cpu", "memory"]
+        controlledValues: RequestsAndLimits
+
+---
+# ── ai-gateway ────────────────────────────────────────────────────────────────
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: ai-gateway-vpa
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: ai-gateway
+    app.kubernetes.io/component: llm-router
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ai-gateway
+  updatePolicy:
+    updateMode: "Off"
+  resourcePolicy:
+    containerPolicies:
+      - containerName: ai-gateway
+        minAllowed:
+          cpu: 100m
+          memory: 256Mi
+        maxAllowed:
+          cpu: 4000m
+          memory: 4Gi
+        controlledResources: ["cpu", "memory"]
+        controlledValues: RequestsAndLimits

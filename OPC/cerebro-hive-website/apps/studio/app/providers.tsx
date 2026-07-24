@@ -1,4 +1,6 @@
 'use client';
+import { MotionProvider } from '@/components/motion/foundation/MotionProvider';
+import { LanguageProvider } from '@/components/layout/LanguageContext';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -17,7 +19,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
+      <LanguageProvider>
+        <MotionProvider>
+          {children}
+        </MotionProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
+
+

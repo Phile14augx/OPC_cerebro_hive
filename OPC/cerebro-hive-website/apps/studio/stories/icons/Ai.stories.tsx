@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { AiBrain as AiBrainIcon } from '../../components/ui/icons/ai';
+import { AiBrain as AiBrainIcon } from '../../components/cerebro/icons/ai';
 
 const meta: Meta = {
   title: 'Icons/Ai',

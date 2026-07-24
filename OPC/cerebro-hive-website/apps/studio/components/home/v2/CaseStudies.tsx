@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { motion, useInView, animate } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, TrendingUp, Clock, ShieldCheck, Activity } from "lucide-react";
 

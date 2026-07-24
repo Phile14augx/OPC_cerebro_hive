@@ -4,10 +4,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { TrendingDown, Bot, Rocket, Settings2, ShieldCheck, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
-import { Stack } from "@/components/ui/primitives/Stack";
-import { cardVariants } from "@/components/ui/primitives/Card";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
+import { Stack } from "@/components/cerebro/primitives/Stack";
+import { cardVariants } from "@/components/cerebro/primitives/Card";
 
 const outcomes = [
   {

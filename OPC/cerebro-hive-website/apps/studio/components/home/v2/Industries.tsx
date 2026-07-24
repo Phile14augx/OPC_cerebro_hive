@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { 
   Landmark, HeartPulse, Factory, ShoppingBag, Zap, Shield, 
   ArrowRight, ChevronRight, Activity, Database, Network,

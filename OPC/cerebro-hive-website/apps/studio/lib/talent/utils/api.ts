@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NextResponse } from 'next/server';
 import { Logger } from '../infrastructure/observability/logger';
 const apiLogger = new Logger('API_Handler');

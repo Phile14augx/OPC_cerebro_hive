@@ -41,9 +41,9 @@ export function StudioShell({ children }: { children: React.ReactNode }) {
           <div className="flex-1" />
           
           {/* Bottom Activity Icons */}
-          <Link href="/trust" className={cn(
+          <Link href="/app/trust" className={cn(
             "w-10 h-10 flex items-center justify-center rounded-md transition-colors",
-            pathname.startsWith("/trust") ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-primary/10"
+            pathname.startsWith("/app/trust") ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-primary/10"
           )} title="Trust & Governance">
             <ShieldAlert size={20} />
           </Link>

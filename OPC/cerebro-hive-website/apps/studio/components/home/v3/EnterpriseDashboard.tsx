@@ -3,9 +3,9 @@
 import React from "react";
 import { Activity, Database, Bot, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
-import { cardVariants } from "@/components/ui/primitives/Card";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
+import { cardVariants } from "@/components/cerebro/primitives/Card";
 
 const metrics = [
   {

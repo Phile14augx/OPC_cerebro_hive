@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import {
   ServerCog, Sparkles, CheckCircle2, Loader2, Server,
   Database, Shield, Zap, GitBranch, ChevronRight, Package,
@@ -30,7 +30,7 @@ const generatedModules = [
   { name: "Notification Module", files: 6,  pattern: "Queue + email/SMS" },
 ];
 
-export default function BackendStudioPage() {
+function BackendStudioPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -109,5 +109,13 @@ export default function BackendStudioPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BackendStudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <BackendStudioPageInner />
+    </Suspense>
   );
 }

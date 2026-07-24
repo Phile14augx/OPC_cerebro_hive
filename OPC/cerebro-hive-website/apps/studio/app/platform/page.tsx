@@ -130,7 +130,7 @@ const LAUNCHER_CATEGORIES: { id: LauncherCategory; label: string }[] = [
 
 interface WorkspaceTile {
   title: string; subtitle: string; href: string; category: Exclude<LauncherCategory, "all">;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
   border: string; iconColor: string; glow: string; featured?: boolean;
 }
 

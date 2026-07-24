@@ -27,7 +27,7 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     if (activeView !== view) {
-      router.push(`/analytics/${activeView}`);
+      router.push(`/app/analytics/${activeView}`);
     }
   }, [activeView, view, router]);
 

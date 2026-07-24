@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
-import { AnimatedButton } from "@/components/ui/AnimatedButton";
-import { Logo } from "@/components/ui/Logo";
-import ThemeToggle from "@/components/ui/ThemeToggle";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { AnimatedButton } from "@/components/cerebro/AnimatedButton";
+import { Logo } from "@/components/cerebro/Logo";
+import ThemeToggle from "@/components/cerebro/ThemeToggle";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { Menu, X } from "lucide-react";
 
 import { mainNavigation } from "@/lib/data/navigation";

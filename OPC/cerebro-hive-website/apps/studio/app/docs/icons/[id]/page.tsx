@@ -1,4 +1,4 @@
-import { iconRegistry } from "@/components/ui/icons/IconRegistry";
+import { iconRegistry } from "@/components/cerebro/icons/IconRegistry";
 import { notFound } from "next/navigation";
 import React from "react";
 
@@ -22,7 +22,7 @@ export default async function IconDocumentationPage({ params }: { params: Promis
   // we could just show the metadata and code snippets.
   
   const componentName = meta.displayName || iconId;
-  const importStatement = `import { ${componentName} } from "@/components/ui/icons/${meta.category}";`;
+  const importStatement = `import { ${componentName} } from "@/components/cerebro/icons/${meta.category}";`;
   
   return (
     <div className="max-w-4xl mx-auto py-12 px-6">

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { GlassCard } from "@/components/ui/GlassCard";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
+import { GlassCard } from "@/components/cerebro/GlassCard";
 import { cn } from "@/lib/utils";
 
 const capabilities = [

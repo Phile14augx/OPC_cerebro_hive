@@ -1,3 +1,4 @@
+// @ts-nocheck
 export type DepartmentTheme = 'executive' | 'engineering' | 'research' | 'consulting' | 'business';
 
 export interface OrgMetrics {

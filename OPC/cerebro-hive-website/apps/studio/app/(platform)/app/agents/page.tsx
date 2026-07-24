@@ -22,8 +22,8 @@ export default function AgentsPage() {
         <div className="text-muted-foreground">Loading agents...</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {agents?.map(agent => (
-            <Link key={agent.id} href={`/agents/${agent.id}`}>
+          {agents?.data?.map(agent => (
+            <Link key={agent.id} href={`/app/agents/${agent.id}`}>
               <div className="border border-border bg-muted/5 rounded-xl p-5 hover:bg-muted/10 transition-colors cursor-pointer flex flex-col h-full">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-semibold text-lg">{agent.name}</h3>

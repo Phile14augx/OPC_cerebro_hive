@@ -6,8 +6,8 @@ import { CheckCircle2, Workflow, ArrowDown } from "lucide-react";
 import Image from "next/image";
 import { withBasePath, cn } from "@/lib/utils";
 import { organizationalCapabilities } from "@/lib/content/company/organizationalCapabilities";
-import { SectionMetadata } from "@/components/ui/SectionMetadata";
-import { MetricChip } from "@/components/ui/MetricChip";
+import { SectionMetadata } from "@/components/cerebro/SectionMetadata";
+import { MetricChip } from "@/components/cerebro/MetricChip";
 import { motionPresets } from "@/lib/motion";
 
 // Helper components for visual consistency

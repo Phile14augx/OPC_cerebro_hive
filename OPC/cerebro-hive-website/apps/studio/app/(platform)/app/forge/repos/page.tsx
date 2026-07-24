@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import {
   GitBranch, GitCommit, GitMerge, CheckCircle2,
   Clock, Users, Plus, ChevronRight, Loader2, ExternalLink,
@@ -27,7 +27,7 @@ const recentCommits = [
   { sha: "e8b1c5d", msg: "test(patient): add E2E tests for patient registration",author: "QA Agent",      time: "1h ago" },
 ];
 
-export default function RepositoryManagerPage() {
+function RepositoryManagerPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -117,5 +117,13 @@ export default function RepositoryManagerPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RepositoryManagerPage() {
+  return (
+    <Suspense fallback={null}>
+      <RepositoryManagerPageInner />
+    </Suspense>
   );
 }

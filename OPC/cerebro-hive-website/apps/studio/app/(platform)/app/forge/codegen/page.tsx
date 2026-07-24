@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   FileCode2, Sparkles, Play, ChevronRight, CheckCircle2,
@@ -14,7 +14,7 @@ import { StatCard } from "../../components/ui/StatCard";
 import { useCodegen } from "@/lib/forge/hooks";
 import { useForgeProject } from "@/lib/forge/hooks";
 
-export default function CodeGenerationPage() {
+function CodeGenerationPageInner() {
   const searchParams = useSearchParams();
   const projectId = searchParams.get("projectId");
   const { project } = useForgeProject(projectId ?? "");
@@ -32,11 +32,6 @@ export default function CodeGenerationPage() {
   };
 
   const selectedContent = selectedFile ? (state.files[selectedFile] ?? "") : "";
-  const [frameworks_, setFrameworks] = useState(frameworks);
-  const [running, setRunning] = useState(true);
-  const [copied, setCopied] = useState(false);
-
-  const toggleFramework = (i: number) => {
   const [copied, setCopied] = useState(false);
 
   return (
@@ -197,5 +192,13 @@ export default function CodeGenerationPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function CodeGenerationPage() {
+  return (
+    <Suspense fallback={null}>
+      <CodeGenerationPageInner />
+    </Suspense>
   );
 }

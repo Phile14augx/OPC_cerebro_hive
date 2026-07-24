@@ -106,7 +106,7 @@ export default function OriginStory() {
                   className="relative z-10"
                 >
                   <div className={`w-16 h-16 rounded-2xl bg-surface-elevated flex items-center justify-center mb-8 border border-border ${storySteps[activeStep].color}`}>
-                    {React.createElement(storySteps[activeStep].icon, { size: 32 })}
+                    {(() => { const StepIcon = storySteps[activeStep].icon; return <StepIcon size={32} />; })()}
                   </div>
                   <h4 className="text-2xl font-space font-bold text-text-primary mb-6">{storySteps[activeStep].title}</h4>
                   <p className="text-xl text-text-secondary leading-relaxed font-inter font-light">

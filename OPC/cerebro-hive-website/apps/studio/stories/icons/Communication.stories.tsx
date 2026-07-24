@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ThumbsUp as ThumbsUpIcon, ThumbsDown as ThumbsDownIcon } from '../../components/ui/icons/communication';
+import { ThumbsUp as ThumbsUpIcon, ThumbsDown as ThumbsDownIcon } from '../../components/cerebro/icons/communication';
 
 const meta: Meta = {
   title: 'Icons/Communication',

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -16,7 +16,7 @@ import { StatCard } from "../../components/ui/StatCard";
 import { useForgeProject, useForgeActions } from "@/lib/forge/hooks";
 import type { DeploymentResult, CIPipelineStep } from "@/lib/forge/api-client";
 
-const INFRA_ICONS: Record<string, React.ElementType> = {
+const INFRA_ICONS: Record<string, React.ComponentType<{ size?: number | string; className?: string }>> = {
   "AWS EKS": Cloud,
   "GCP GKE": Cloud,
   "Azure AKS": Cloud,
@@ -25,7 +25,7 @@ const INFRA_ICONS: Record<string, React.ElementType> = {
   "Docker Compose": Package,
 };
 
-const ARTIFACT_ICONS: Record<string, React.ElementType> = {
+const ARTIFACT_ICONS: Record<string, React.ComponentType<{ size?: number | string; className?: string }>> = {
   dockerfile: Container,
   kubernetes: Server,
   terraform: Globe,
@@ -33,7 +33,7 @@ const ARTIFACT_ICONS: Record<string, React.ElementType> = {
   ci_pipeline: GitBranch,
 };
 
-export default function DeploymentStudioPage() {
+function DeploymentStudioPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -246,5 +246,13 @@ export default function DeploymentStudioPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function DeploymentStudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <DeploymentStudioPageInner />
+    </Suspense>
   );
 }

@@ -82,12 +82,12 @@ export async function getLocalSession() {
     
     const user = await prisma.user.findUnique({
       where: { id: payload.userId },
-      select: { organizationId: true }
+      select: { tenantMembers: { take: 1, select: { tenantId: true } } }
     });
-    
-    return { 
-      userId: payload.userId, 
-      organizationId: user?.organizationId || '' 
+
+    return {
+      userId: payload.userId,
+      organizationId: user?.tenantMembers[0]?.tenantId || ''
     };
   } catch (err) {
     return null;

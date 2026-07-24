@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ChevronDown, Layers, Terminal, Database, Cloud, Zap, ArrowDown, Activity, Code, Paintbrush, Monitor, Cpu, Workflow, Network, Brain, Bot, Box, Share2, Search as SearchIcon, GitMerge, Snowflake, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 
 // --- Data Models ---
 const architectureLayers = [

@@ -87,7 +87,7 @@ export const ArchitectureStudio = () => {
 
                 <div className="flex items-center gap-4 mb-8">
                   <div className="p-3 rounded-xl bg-[#00E5FF]/10 text-accent-secondary">
-                    {React.createElement(steps[currentStep].icon, { size: 32 })}
+                    {(() => { const StepIcon = steps[currentStep].icon; return <StepIcon size={32} />; })()}
                   </div>
                   <h3 className="text-3xl font-space font-bold text-text-primary">Select {steps[currentStep].label}</h3>
                 </div>

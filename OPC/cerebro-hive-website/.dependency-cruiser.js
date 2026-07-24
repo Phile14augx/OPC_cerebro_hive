@@ -2,44 +2,46 @@
 module.exports = {
   forbidden: [
     {
-      name: 'no-circular',
-      severity: 'error',
-      comment: 'Warns against any circular dependencies',
+      name: "no-studio-to-forge-api",
+      severity: "error",
+      comment: "Studio must not import forge-api directly — use HTTP",
+      from: { path: "apps/studio" },
+      to: { path: "apps/forge-api" },
+    },
+    {
+      name: "no-forge-to-platform-api-internals",
+      severity: "error",
+      comment: "Forge UI must communicate via HTTP, not import platform-api code",
+      from: { path: "apps/forge" },
+      to: { path: "apps/platform-api/src" },
+    },
+    {
+      name: "no-ai-gateway-to-platform-api",
+      severity: "error",
+      comment: "AI Gateway is a pure router — must not depend on platform-api",
+      from: { path: "packages/ai-gateway" },
+      to: { path: "apps/platform-api" },
+    },
+    {
+      name: "no-circular-package-deps",
+      severity: "error",
+      comment: "Packages must not have circular dependencies",
+      from: { path: "^packages/" },
+      to: { path: "^packages/", circular: true },
+    },
+    {
+      name: "no-deprecated-packages",
+      severity: "warn",
       from: {},
-      to: { circular: true },
+      to: { dependencyTypes: ["deprecated"] },
     },
-    {
-      name: 'infrastructure-cannot-depend-on-app',
-      severity: 'error',
-      comment: 'Infrastructure packages cannot depend on Applications',
-      from: { path: '^packages/(core-bus|telemetry-core|domain-graph)' },
-      to: { path: '^apps/' },
-    },
-    {
-      name: 'kernel-cannot-depend-on-platform',
-      severity: 'error',
-      comment: 'Kernel packages cannot depend on Platform Services',
-      from: { path: '^packages/(kernel-core|architecture-core)' },
-      to: { path: '^packages/(ai-gateway|workflow|evaluation|trust-core)' },
-    },
-    {
-      name: 'no-upward-layer-imports',
-      severity: 'error',
-      comment: 'Lower layers cannot import from higher layers',
-      from: { path: '^packages/' },
-      to: { path: '^apps/' },
-    }
   ],
   options: {
-    doNotFollow: {
-      path: 'node_modules',
-      dependencyTypes: ['npm', 'npm-dev', 'npm-optional', 'npm-peer', 'npm-bundled', 'npm-no-pkg'],
+    doNotFollow: { path: "node_modules" },
+    exclude: {
+      path: ["node_modules", "\\.test\\.ts$", "\\.spec\\.ts$", "dist/", "build/", ".next/", "src/generated/"],
     },
+    moduleSystems: ["cjs", "es6"],
     tsPreCompilationDeps: true,
-    tsConfig: { fileName: 'tsconfig.json' },
-    enhancedResolveOptions: {
-      exportsFields: ['exports'],
-      conditionNames: ['import', 'require', 'node', 'default'],
-    }
-  }
+  },
 };

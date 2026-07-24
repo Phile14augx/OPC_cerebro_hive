@@ -1,6 +1,6 @@
 import React from "react";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
+import { AnimatedButton } from "@/components/cerebro/AnimatedButton";
 
 const papers = [
   { title: "Agentic Orchestration in ERP Systems", type: "Research Paper", date: "Jul 2026" },

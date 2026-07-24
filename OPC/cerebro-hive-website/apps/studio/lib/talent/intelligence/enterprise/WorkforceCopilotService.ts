@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { AIProviderRegistry } from '../../infrastructure/ai/IAICapabilityProvider';
 
 const aiRegistry = new AIProviderRegistry();

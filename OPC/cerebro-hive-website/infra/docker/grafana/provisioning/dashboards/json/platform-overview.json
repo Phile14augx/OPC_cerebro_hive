@@ -1,0 +1,229 @@
+{
+  "title": "CerebroHive — Platform Overview",
+  "uid": "cerebro-platform-overview",
+  "tags": ["cerebro-hive", "platform", "slo"],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "refresh": "15s",
+  "time": { "from": "now-1h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "service",
+        "label": "Service",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "query": "label_values(http_server_requests_total, service)",
+        "multi": true,
+        "includeAll": true,
+        "current": { "selected": true, "text": "All", "value": "$__all" }
+      },
+      {
+        "name": "interval",
+        "label": "Interval",
+        "type": "interval",
+        "options": [
+          { "selected": false, "text": "30s", "value": "30s" },
+          { "selected": true,  "text": "1m",  "value": "1m" },
+          { "selected": false, "text": "5m",  "value": "5m" }
+        ],
+        "current": { "selected": true, "text": "1m", "value": "1m" }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Service Health",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 24, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "up{job=\"studio\"}", "legendFormat": "Studio" },
+        { "expr": "up{job=\"forge\"}", "legendFormat": "Forge" },
+        { "expr": "up{job=\"platform-api\"}", "legendFormat": "Platform API" },
+        { "expr": "up{job=\"forge-api\"}", "legendFormat": "Forge API" },
+        { "expr": "up{job=\"ai-gateway\"}", "legendFormat": "AI Gateway" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            { "type": "value", "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } } }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }]
+          }
+        }
+      },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "orientation": "horizontal" }
+    },
+    {
+      "id": 2,
+      "title": "Request Rate (req/s) by Service",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum by (service) (rate(http_server_requests_total{service=~\"$service\",status_code!~\"5..\"}[$interval]))",
+          "legendFormat": "{{service}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 5 } }
+      }
+    },
+    {
+      "id": 3,
+      "title": "HTTP Error Rate by Service",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum by (service) (rate(http_server_requests_total{service=~\"$service\",status_code=~\"5..\"}[$interval])) / sum by (service) (rate(http_server_requests_total{service=~\"$service\"}[$interval]))",
+          "legendFormat": "{{service}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "custom": { "lineWidth": 2 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.01 },
+              { "color": "red", "value": 0.05 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "P99 Latency by Service (ms)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum by (le, service) (rate(http_server_request_duration_ms_bucket{service=~\"$service\"}[$interval])))",
+          "legendFormat": "P99 {{service}}"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, service) (rate(http_server_request_duration_ms_bucket{service=~\"$service\"}[$interval])))",
+          "legendFormat": "P95 {{service}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "ms", "custom": { "lineWidth": 2 } }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Pod Count by Service",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "count by (pod) (kube_pod_status_ready{namespace=\"cerebro-hive\",condition=\"true\"})",
+          "legendFormat": "{{pod}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "custom": { "lineWidth": 1, "fillOpacity": 20 } }
+      }
+    },
+    {
+      "id": 6,
+      "title": "CPU Usage by Service",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"cerebro-hive\",container!=\"\"}[$interval]))",
+          "legendFormat": "{{pod}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percentunit", "custom": { "lineWidth": 1 } }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Memory Usage by Service",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"cerebro-hive\",container!=\"\"})",
+          "legendFormat": "{{pod}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes", "custom": { "lineWidth": 1 } }
+      }
+    },
+    {
+      "id": 8,
+      "title": "DB Connection Pool (platform-api)",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 28 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "pg_stat_database_numbackends{datname=\"cerebrohive_db\"}",
+          "legendFormat": "Active connections"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short" }
+      }
+    },
+    {
+      "id": 9,
+      "title": "Redis Memory Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 28 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "redis_memory_used_bytes",
+          "legendFormat": "Used"
+        },
+        {
+          "expr": "redis_memory_max_bytes",
+          "legendFormat": "Max"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      }
+    },
+    {
+      "id": 10,
+      "title": "NATS Messages/s",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 28 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "rate(nats_server_in_msgs_total[$interval])",
+          "legendFormat": "In"
+        },
+        {
+          "expr": "rate(nats_server_out_msgs_total[$interval])",
+          "legendFormat": "Out"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short" }
+      }
+    }
+  ]
+}

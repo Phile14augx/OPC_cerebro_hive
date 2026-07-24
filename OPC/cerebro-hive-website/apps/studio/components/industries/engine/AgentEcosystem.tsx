@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { AI_Agent, EngineConfig } from '@/lib/data/industries/types';
-import { SectionHeading } from '@/components/ui/SectionHeading';
+import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BrainCircuit, X } from 'lucide-react';
 

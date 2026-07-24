@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run tests for changed packages before push
+pnpm turbo test --filter='[origin/main]' --continue

@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { ServiceMorphBackground } from "@/components/services/ServiceMorphBackground";
 import { ArrowRight, Brain } from "lucide-react";
 import { ExecutiveSummary } from "@/components/services/ExecutiveSummary";
@@ -16,9 +16,9 @@ import { ResearchInnovation } from "@/components/services/ResearchInnovation";
 import { ServiceCardProgressive, ProgressiveServiceProps } from "@/components/services/ServiceCardProgressive";
 import { ServiceAnimationProvider } from "@/components/services/ServiceAnimationContext";
 import { services } from "@/lib/data/services";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
-import { Stack } from "@/components/ui/primitives/Stack";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
+import { Stack } from "@/components/cerebro/primitives/Stack";
 
 // Map the new data model to the existing progressive service props
 const servicesData: ProgressiveServiceProps[] = services.map(s => ({

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -27,7 +27,7 @@ interface ServiceHealth {
   latencyMs: number;
   uptimePct: number;
   lastChecked: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
 }
 
 const ALERT_SEVERITIES = ["critical", "warning", "info"] as const;
@@ -64,13 +64,13 @@ const STATUS_CONFIG: Record<HealthStatus, { variant: "success" | "warning" | "de
   down:     { variant: "destructive", color: "text-red-400",    dot: "bg-red-400" },
 };
 
-const ALERT_CONFIG: Record<AlertSeverity, { variant: "destructive" | "warning" | "info"; icon: React.ElementType }> = {
+const ALERT_CONFIG: Record<AlertSeverity, { variant: "destructive" | "warning" | "info"; icon: React.ComponentType<{ size?: number | string; className?: string }> }> = {
   critical: { variant: "destructive", icon: AlertCircle },
   warning:  { variant: "warning",     icon: AlertTriangle },
   info:     { variant: "info",        icon: Activity },
 };
 
-export default function MonitoringPage() {
+function MonitoringPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -331,5 +331,13 @@ export default function MonitoringPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function MonitoringPage() {
+  return (
+    <Suspense fallback={null}>
+      <MonitoringPageInner />
+    </Suspense>
   );
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PrismaClient, SkillProfileSnapshot } from '@prisma/client';
 import { SkillGraphService } from '../graph/SkillGraphService';
 

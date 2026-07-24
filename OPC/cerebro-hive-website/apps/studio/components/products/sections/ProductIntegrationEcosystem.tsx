@@ -3,9 +3,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { Cable, Layers, Cpu, ArrowRight } from "lucide-react";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { platformCapabilities } from "@/lib/data/platform/capabilities";
 import { services } from "@/lib/data/services";
 

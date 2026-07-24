@@ -2,8 +2,8 @@
 
 import { BrainCircuit } from "lucide-react";
 import { ecosystemIntegrations } from "@/lib/config/ecosystem";
-import { Node } from "@/components/ui/visualization/Node";
-import { Edge } from "@/components/ui/visualization/Edge";
+import { Node } from "@/components/cerebro/visualization/Node";
+import { Edge } from "@/components/cerebro/visualization/Edge";
 
 export function IntegrationIntelligence() {
   const categories = Array.from(new Set(ecosystemIntegrations.map((i) => i.category)));

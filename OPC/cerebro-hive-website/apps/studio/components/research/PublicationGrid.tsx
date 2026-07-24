@@ -5,7 +5,7 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { allResearchData } from '@/lib/content/research';
 import { ResearchCategory, ResearchDomain } from '@/lib/content/research/types';
 import { PublicationCard } from './PublicationCard';
-import { SectionHeading } from '../ui/SectionHeading';
+import { SectionHeading } from '../cerebro/SectionHeading';
 import { Search, Filter, X } from 'lucide-react';
 
 const ALL_CATEGORIES = Array.from(new Set(allResearchData.map(r => r.category)));

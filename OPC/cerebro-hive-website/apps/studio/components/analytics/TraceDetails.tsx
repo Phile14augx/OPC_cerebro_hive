@@ -52,7 +52,7 @@ export function TraceDetails() {
                   
                   return (
                     <div key={span.id} className="text-xs group hover:bg-muted/30 p-1.5 rounded flex items-center relative">
-                      <div className="flex-1 flex items-center" style={{ paddingLeft: \`\${depth * 16}px\` }}>
+                      <div className="flex-1 flex items-center" style={{ paddingLeft: `${depth * 16}px` }}>
                         <span className="w-1.5 h-1.5 rounded-full bg-primary/60 mr-2"></span>
                         <div className="flex flex-col">
                           <span className="font-medium truncate">{span.name}</span>
@@ -65,7 +65,7 @@ export function TraceDetails() {
                       
                       {/* Gantt Bar Mock */}
                       <div className="absolute left-0 bottom-0 h-0.5 bg-primary/20 rounded-full w-full opacity-0 group-hover:opacity-100 transition-opacity">
-                         <div className="h-full bg-primary rounded-full" style={{ width: \`\${percentage}%\`, marginLeft: \`\${depth * 5}%\` }}></div>
+                         <div className="h-full bg-primary rounded-full" style={{ width: `${percentage}%`, marginLeft: `${depth * 5}%` }}></div>
                       </div>
                     </div>
                   );

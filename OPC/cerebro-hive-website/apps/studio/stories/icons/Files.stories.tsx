@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Document as DocumentIcon, Attachment as AttachmentIcon, FileCode as FileCodeIcon, FileJson as FileJsonIcon } from '../../components/ui/icons/files';
+import { Document as DocumentIcon, Attachment as AttachmentIcon, FileCode as FileCodeIcon, FileJson as FileJsonIcon } from '../../components/cerebro/icons/files';
 
 const meta: Meta = {
   title: 'Icons/Files',

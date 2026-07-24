@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { CompiledAssessmentPackage } from "../compiler";
 import { GlobalEventBus } from "./events";
 

@@ -2,9 +2,9 @@
 
 import { motion } from "framer-motion";
 import { typeTokens, spacingTokens } from "@/lib/design-system/tokens";
-import { Node } from "@/components/ui/visualization/Node";
-import { Edge } from "@/components/ui/visualization/Edge";
-import { GlowLayer } from "@/components/ui/visualization/GlowLayer";
+import { Node } from "@/components/cerebro/visualization/Node";
+import { Edge } from "@/components/cerebro/visualization/Edge";
+import { GlowLayer } from "@/components/cerebro/visualization/GlowLayer";
 import { Brain, Database, Cloud, Code, Network } from "lucide-react";
 
 export function LivingEnterpriseBrain() {

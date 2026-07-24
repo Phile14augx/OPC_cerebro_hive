@@ -1,0 +1,254 @@
+# OpenTelemetry Collector — Full pipeline configuration
+# Receives OTLP from all services, processes, and exports to Grafana stack.
+
+receivers:
+  # ── OTLP (primary receiver for all services) ───────────────────────────────
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+        max_recv_msg_size_mib: 32
+        keepalive:
+          server_parameters:
+            max_connection_age: 600s
+            max_connection_age_grace: 30s
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "https://*.cerebro-hive.io"
+            - "http://localhost:*"
+
+  # ── Prometheus scrape (sidecar metrics from internal services) ─────────────
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name:        otel-collector-self
+          scrape_interval: 30s
+          static_configs:
+            - targets: [localhost:8888]
+        - job_name:        platform-api
+          scrape_interval: 15s
+          kubernetes_sd_configs:
+            - role: pod
+              namespaces: { names: [cerebro-prod, cerebro-staging] }
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+              action: keep
+              regex: "true"
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+              action: replace
+              target_label: __address__
+              regex: (.+)
+              replacement: $1
+
+  # ── Jaeger (legacy support) ────────────────────────────────────────────────
+  jaeger:
+    protocols:
+      thrift_http:
+        endpoint: 0.0.0.0:14268
+      grpc:
+        endpoint: 0.0.0.0:14250
+
+  # ── Kubernetes events ─────────────────────────────────────────────────────
+  k8s_events:
+    namespaces:
+      - cerebro-prod
+      - cerebro-staging
+      - monitoring
+
+  # ── Host metrics ──────────────────────────────────────────────────────────
+  hostmetrics:
+    collection_interval: 30s
+    scrapers:
+      cpu:        { metrics: { system.cpu.utilization: { enabled: true } } }
+      memory:     { metrics: { system.memory.utilization: { enabled: true } } }
+      disk:       {}
+      filesystem: {}
+      network:    {}
+      load:       {}
+
+processors:
+  # ── Batch (essential for throughput) ──────────────────────────────────────
+  batch:
+    timeout:            10s
+    send_batch_size:    1024
+    send_batch_max_size: 4096
+
+  # ── Memory limiter (prevent OOM) ──────────────────────────────────────────
+  memory_limiter:
+    check_interval:          5s
+    limit_percentage:        80
+    spike_limit_percentage:  25
+
+  # ── Resource detection (auto-tag with cloud metadata) ─────────────────────
+  resourcedetection:
+    detectors: [env, eks, ec2, system]
+    timeout: 10s
+    override: false
+
+  # ── Resource attributes (enrich all telemetry with platform metadata) ──────
+  resource:
+    attributes:
+      - key:    platform
+        value:  cerebro-hive
+        action: upsert
+      - key:    environment
+        value:  ${env:ENVIRONMENT}
+        action: upsert
+
+  # ── Attributes processor (PII scrubbing + normalization) ──────────────────
+  attributes:
+    actions:
+      # Scrub auth tokens from trace attributes
+      - key:    http.request.header.authorization
+        action: delete
+      - key:    http.request.header.x-api-key
+        action: delete
+      # Normalize status codes to strings
+      - key:    http.status_code
+        action: convert
+        converted_type: string
+
+  # ── Transform (Prometheus metric naming normalization) ────────────────────
+  transform/metrics:
+    error_mode: ignore
+    metric_statements:
+      - context: metric
+        statements:
+          - set(description, "") where description == "Migrated from OpenCensus"
+      - context: datapoint
+        statements:
+          - set(attributes["service_name"], resource.attributes["service.name"])
+
+  # ── Filter (drop noisy health check spans) ────────────────────────────────
+  filter/traces:
+    error_mode: ignore
+    traces:
+      span:
+        - 'attributes["http.route"] == "/health"'
+        - 'attributes["http.route"] == "/health/ready"'
+        - 'attributes["http.route"] == "/metrics"'
+
+  # ── Tail sampling (keep errors, slow spans, and a fraction of rest) ───────
+  tail_sampling:
+    decision_wait:                30s
+    num_traces:                   50000
+    expected_new_traces_per_sec:  200
+    policies:
+      - name:      keep-errors
+        type:      status_code
+        status_code: { status_codes: [ERROR] }
+      - name:      keep-slow-traces
+        type:      latency
+        latency:   { threshold_ms: 500 }
+      - name:      keep-debug-traces
+        type:      string_attribute
+        string_attribute: { key: "debug", values: ["true"] }
+      - name:      probabilistic-sample
+        type:      probabilistic
+        probabilistic: { sampling_percentage: 10 }
+
+  # ── Span metrics (derive RED metrics from traces) ─────────────────────────
+  spanmetrics:
+    metrics_exporter:  prometheus
+    latency_histogram_buckets: [1ms, 5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s, 5s, 10s]
+    dimensions:
+      - name:    http.method
+      - name:    http.status_code
+      - name:    service.name
+    exemplars:
+      enabled: true
+
+exporters:
+  # ── Tempo (distributed tracing) ───────────────────────────────────────────
+  otlp/tempo:
+    endpoint: tempo.monitoring.svc.cluster.local:4317
+    tls:
+      insecure: true
+    sending_queue:
+      enabled:       true
+      num_consumers: 4
+      queue_size:    10000
+    retry_on_failure:
+      enabled:          true
+      initial_interval: 5s
+      max_interval:     30s
+      max_elapsed_time: 300s
+
+  # ── Prometheus (metrics) ───────────────────────────────────────────────────
+  prometheus:
+    endpoint:    "0.0.0.0:8889"
+    namespace:   cerebro
+    const_labels:
+      platform: cerebro-hive
+    send_timestamps:    true
+    metric_expiration:  60m
+    enable_open_metrics: true
+    resource_to_telemetry_conversion:
+      enabled: true
+
+  # ── Loki (logs) ───────────────────────────────────────────────────────────
+  loki:
+    endpoint: http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
+    tls:
+      insecure: true
+    labels:
+      attributes:
+        service.name:     service_name
+        service.version:  service_version
+        level:            level
+      resource:
+        k8s.namespace.name: namespace
+        k8s.pod.name:       pod
+      record:
+        traceID: traceID
+    sending_queue:
+      enabled:       true
+      num_consumers: 2
+
+  # ── Debug (development only) ───────────────────────────────────────────────
+  debug:
+    verbosity:         basic
+    sampling_initial:  5
+    sampling_thereafter: 200
+
+  # ── Collector self-observability ───────────────────────────────────────────
+  prometheus/self:
+    endpoint: "0.0.0.0:8888"
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+    path:     /health
+  pprof:
+    endpoint: 0.0.0.0:1777
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+service:
+  extensions: [health_check, pprof, zpages]
+
+  pipelines:
+    traces:
+      receivers:  [otlp, jaeger]
+      processors: [memory_limiter, resourcedetection, resource, attributes, filter/traces, tail_sampling, batch]
+      exporters:  [otlp/tempo]
+
+    metrics:
+      receivers:  [otlp, prometheus, hostmetrics]
+      processors: [memory_limiter, resourcedetection, resource, transform/metrics, batch]
+      exporters:  [prometheus]
+
+    logs:
+      receivers:  [otlp, k8s_events]
+      processors: [memory_limiter, resourcedetection, resource, attributes, batch]
+      exporters:  [loki]
+
+  telemetry:
+    logs:
+      level:     info
+      encoding:  json
+    metrics:
+      level:   detailed
+      address: 0.0.0.0:8888

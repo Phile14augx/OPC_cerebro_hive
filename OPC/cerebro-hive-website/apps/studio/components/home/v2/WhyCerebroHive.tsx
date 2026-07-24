@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useSpring, useTransform, AnimatePresence } from "framer-motion";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { Database, Cloud, LineChart, Sparkles, Bot, BrainCircuit, CheckCircle2, Server, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 

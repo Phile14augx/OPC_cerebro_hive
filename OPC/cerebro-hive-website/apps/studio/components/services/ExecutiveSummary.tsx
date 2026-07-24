@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Target } from "lucide-react";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 
 export function ExecutiveSummary() {
   return (

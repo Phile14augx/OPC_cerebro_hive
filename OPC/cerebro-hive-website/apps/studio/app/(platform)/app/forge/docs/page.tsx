@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -15,7 +15,7 @@ import { StatCard } from "../../components/ui/StatCard";
 import { useForgeProject, useForgeActions } from "@/lib/forge/hooks";
 import type { DocsResult, DocSection } from "@/lib/forge/api-client";
 
-const SECTION_ICONS: Record<string, React.ElementType> = {
+const SECTION_ICONS: Record<string, React.ComponentType<{ size?: number | string; className?: string }>> = {
   api_reference: Globe,
   architecture: Code2,
   user_manual: Users,
@@ -33,7 +33,7 @@ const SECTION_COLORS: Record<string, string> = {
   changelog: "text-rose-400",
 };
 
-export default function AIDocumentationPage() {
+function AIDocumentationPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -192,5 +192,13 @@ export default function AIDocumentationPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AIDocumentationPage() {
+  return (
+    <Suspense fallback={null}>
+      <AIDocumentationPageInner />
+    </Suspense>
   );
 }

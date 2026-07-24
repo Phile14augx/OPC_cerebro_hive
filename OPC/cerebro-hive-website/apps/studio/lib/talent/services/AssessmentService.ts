@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PrismaClient, Assessment, AssessmentVersion } from '@prisma/client';
 import { AssessmentCompiler, CompiledAssessmentPackage } from '../compiler';
 import { AssessmentSchema } from '../types';

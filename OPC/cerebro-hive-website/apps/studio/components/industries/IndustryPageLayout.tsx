@@ -7,7 +7,7 @@ import { industriesData } from '@/lib/data/industries';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { ArchitectureCanvas } from '../architecture/ArchitectureCanvas';
-import { SectionHeading } from '../ui/SectionHeading';
+import { SectionHeading } from '../cerebro/SectionHeading';
 import { CheckCircle2, ChevronRight, Activity, Cpu, ShieldCheck } from 'lucide-react';
 
 // Sticky Navigator

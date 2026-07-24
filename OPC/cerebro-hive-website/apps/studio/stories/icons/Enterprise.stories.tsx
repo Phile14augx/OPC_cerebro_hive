@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Users as UsersIcon, Building as BuildingIcon } from '../../components/ui/icons/enterprise';
+import { Users as UsersIcon, Building as BuildingIcon } from '../../components/cerebro/icons/enterprise';
 
 const meta: Meta = {
   title: 'Icons/Enterprise',

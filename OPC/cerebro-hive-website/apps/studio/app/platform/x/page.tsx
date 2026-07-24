@@ -120,7 +120,7 @@ function RouterPanel({ online }: { online: boolean | null }) {
   );
 }
 
-const TABS: [Tab, string, React.ComponentType<{ size?: number; className?: string }>][] = [
+const TABS: [Tab, string, React.ComponentType<{ size?: number | string; className?: string }>][] = [
   ["observability", "Observability", Activity],
   ["router", "Model Router", Route],
 ];

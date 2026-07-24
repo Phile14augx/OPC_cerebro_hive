@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { AnimatedButton } from "@/components/cerebro/AnimatedButton";
 import dynamic from "next/dynamic";
 
 // Dynamically import the 3D scene to avoid SSR issues and improve initial load performance

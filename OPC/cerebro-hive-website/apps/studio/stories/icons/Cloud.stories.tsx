@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Cloud as CloudIcon, CloudCompute as CloudComputeIcon } from '../../components/ui/icons/cloud';
+import { Cloud as CloudIcon, CloudCompute as CloudComputeIcon } from '../../components/cerebro/icons/cloud';
 
 const meta: Meta = {
   title: 'Icons/Cloud',

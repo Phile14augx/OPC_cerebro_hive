@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { engineeringFramework } from "@/lib/content/company/engineering";
-import { SectionMetadata } from "@/components/ui/SectionMetadata";
-import { MetricChip } from "@/components/ui/MetricChip";
-import { NeuralOrb } from "@/components/ui/NeuralOrb";
+import { SectionMetadata } from "@/components/cerebro/SectionMetadata";
+import { MetricChip } from "@/components/cerebro/MetricChip";
+import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
 import { motionPresets } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { CheckCircle2 } from "lucide-react";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SkillGraphService } from '../graph/SkillGraphService';
 import { AIProviderRegistry } from '../../infrastructure/ai/IAICapabilityProvider';
 

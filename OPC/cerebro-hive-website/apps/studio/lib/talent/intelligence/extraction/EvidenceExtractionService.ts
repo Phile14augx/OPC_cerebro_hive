@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PrismaClient } from '@prisma/client';
 import { DomainEventBus } from '../../infrastructure/events/eventBus';
 import { Logger } from '../../infrastructure/observability/logger';

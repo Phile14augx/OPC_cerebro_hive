@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import {
   Webhook, Sparkles, CheckCircle2, Loader2, Copy,
   ChevronRight, Download, Shield, Zap, Globe,
@@ -35,7 +35,7 @@ const methodColors: Record<string, string> = {
   DELETE: "text-red-400 bg-red-400/10 border-red-400/20",
 };
 
-export default function APIStudioPage() {
+function APIStudioPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -124,5 +124,13 @@ export default function APIStudioPage() {
         <Button variant="secondary" className="gap-2"><Globe size={14} /> Open Swagger UI</Button>
       </div>
     </div>
+  );
+}
+
+export default function APIStudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <APIStudioPageInner />
+    </Suspense>
   );
 }

@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-type IconComponent = React.ComponentType<{ size?: number; color?: string; className?: string }>;
+type IconComponent = React.ComponentType<{ size?: number | string; color?: string; className?: string }>;
 
 interface Metric {
   label: string;

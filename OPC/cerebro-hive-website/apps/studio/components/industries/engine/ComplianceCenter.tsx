@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { SectionHeading } from '@/components/ui/SectionHeading';
+import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { motion } from 'framer-motion';
 import { ShieldCheck } from 'lucide-react';
 

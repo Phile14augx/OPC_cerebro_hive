@@ -181,6 +181,114 @@ resource "aws_secretsmanager_secret" "redis" {
   recovery_window_in_days = 7
 }
 
+# ── IRSA Roles ────────────────────────────────────────────────────────────────
+
+module "irsa_platform_api" {
+  source = "../../modules/irsa"
+
+  service_name         = "platform-api"
+  service_account_name = "platform-api"
+  namespace            = "cerebro-hive"
+  oidc_provider_arn    = module.kubernetes.oidc_provider_arn
+  environment          = "production"
+
+  inline_policies = {
+    secrets-manager-read = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect   = "Allow"
+          Action   = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
+          Resource = "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:cerebro-hive/production/*"
+        }
+      ]
+    })
+    s3-documents = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect   = "Allow"
+          Action   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"]
+          Resource = [
+            aws_s3_bucket.documents.arn,
+            "${aws_s3_bucket.documents.arn}/*",
+          ]
+        }
+      ]
+    })
+  }
+}
+
+module "irsa_ai_gateway" {
+  source = "../../modules/irsa"
+
+  service_name         = "ai-gateway"
+  service_account_name = "ai-gateway"
+  namespace            = "cerebro-hive"
+  oidc_provider_arn    = module.kubernetes.oidc_provider_arn
+  environment          = "production"
+
+  inline_policies = {
+    secrets-manager-ai-keys = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect   = "Allow"
+          Action   = ["secretsmanager:GetSecretValue"]
+          Resource = "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:cerebro-hive/production/ai-providers*"
+        }
+      ]
+    })
+    bedrock-inference = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect   = "Allow"
+          Action   = ["bedrock:InvokeModel", "bedrock:InvokeModelWithResponseStream"]
+          Resource = "arn:aws:bedrock:${var.aws_region}::foundation-model/*"
+        }
+      ]
+    })
+    s3-ai-outputs = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect   = "Allow"
+          Action   = ["s3:PutObject"]
+          Resource = "${aws_s3_bucket.ai_outputs.arn}/*"
+        }
+      ]
+    })
+  }
+}
+
+module "irsa_eso" {
+  source = "../../modules/irsa"
+
+  service_name         = "external-secrets"
+  service_account_name = "external-secrets"
+  namespace            = "external-secrets"
+  oidc_provider_arn    = module.kubernetes.oidc_provider_arn
+  environment          = "production"
+
+  inline_policies = {
+    secrets-manager-list-get = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect = "Allow"
+          Action = [
+            "secretsmanager:GetSecretValue",
+            "secretsmanager:DescribeSecret",
+            "secretsmanager:ListSecretVersionIds"
+          ]
+          Resource = "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:cerebro-hive/production/*"
+        }
+      ]
+    })
+  }
+}
+
 # ── S3 Buckets ────────────────────────────────────────────────────────────────
 
 resource "aws_s3_bucket" "documents" {

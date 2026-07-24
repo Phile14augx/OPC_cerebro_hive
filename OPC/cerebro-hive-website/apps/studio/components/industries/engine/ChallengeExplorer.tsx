@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { IndustryChallenge, EngineConfig } from '@/lib/data/industries/types';
-import { SectionHeading } from '@/components/ui/SectionHeading';
+import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShieldAlert, 

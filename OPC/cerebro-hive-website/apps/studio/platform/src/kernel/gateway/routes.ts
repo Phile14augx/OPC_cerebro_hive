@@ -495,6 +495,63 @@ export function registerRoutes(app: FastifyInstance, p: Platform): void {
     return { decisions: await p.router.history(ctx(req), q.limit ? Number(q.limit) : undefined) };
   });
 
+  // ---------------- Models (catalog view over the Router's model list, for Studio's Models page) ----------------
+  // Context window / max output are each model's published spec (not tracked by the router, which only
+  // reasons about quality/cost/speed for routing decisions) — kept here since nothing else needs them.
+  const MODEL_SPECS: Record<string, { contextWindow: number; maxOutput: number; description: string }> = {
+    "gpt-4o": { contextWindow: 128_000, maxOutput: 16_384, description: "OpenAI's flagship multimodal model." },
+    "gpt-4o-mini": { contextWindow: 128_000, maxOutput: 16_384, description: "Smaller, faster, cheaper GPT-4o variant." },
+    "claude-sonnet-5": { contextWindow: 200_000, maxOutput: 64_000, description: "Anthropic's balanced flagship model." },
+    "claude-haiku-4-5-20251001": { contextWindow: 200_000, maxOutput: 64_000, description: "Anthropic's fastest, most cost-efficient model." },
+    "gemini-1.5-pro": { contextWindow: 2_000_000, maxOutput: 8_192, description: "Google's large-context multimodal model." },
+    "llama3.2": { contextWindow: 128_000, maxOutput: 4_096, description: "Meta's open-weight model, runs locally." },
+    "mistral-large": { contextWindow: 128_000, maxOutput: 4_096, description: "Mistral AI's flagship model." },
+    "deepseek-v3": { contextWindow: 128_000, maxOutput: 8_192, description: "DeepSeek's efficient MoE model." },
+    "qwen2.5-72b": { contextWindow: 131_072, maxOutput: 8_192, description: "Alibaba's open-weight model." },
+    "command-r-plus": { contextWindow: 128_000, maxOutput: 4_096, description: "Cohere's retrieval-augmented model." },
+    "phi-4": { contextWindow: 16_384, maxOutput: 4_096, description: "Microsoft's small, efficient model, runs locally." },
+    "granite-3": { contextWindow: 128_000, maxOutput: 4_096, description: "IBM's enterprise-focused model." },
+    "mixtral-8x22b": { contextWindow: 65_536, maxOutput: 4_096, description: "Mistral AI's open-weight MoE model, runs locally." },
+    "cerebro-mock-1": { contextWindow: 8_192, maxOutput: 2_048, description: "Offline mock model used when no provider API keys are configured." },
+  };
+  function toModelEntry(m: ReturnType<Platform["router"]["catalog"]>[number]) {
+    const spec = MODEL_SPECS[m.id] ?? { contextWindow: 32_768, maxOutput: 4_096, description: `${m.family} model.` };
+    return {
+      id: m.id,
+      provider: m.family,
+      name: m.id,
+      description: spec.description,
+      contextWindow: spec.contextWindow,
+      maxOutput: spec.maxOutput,
+      inputPricePer1M: Number((m.costPer1kIn * 1000).toFixed(2)),
+      outputPricePer1M: Number((m.costPer1kOut * 1000).toFixed(2)),
+      capabilities: m.strengths,
+      status: "ACTIVE" as const,
+      metadata: { quality: m.quality, speedMsPer1k: m.speedMsPer1k, local: m.local },
+      available: true,
+      latencyMs: m.speedMsPer1k,
+      addedAt: "2026-01-01T00:00:00.000Z",
+      updatedAt: "2026-01-01T00:00:00.000Z",
+    };
+  }
+  app.get("/v1/models", async req => {
+    ctx(req);
+    const q = req.query as { provider?: string; status?: string; capability?: string };
+    let items = p.router.catalog().map(toModelEntry);
+    if (q.provider) items = items.filter(m => m.provider === q.provider);
+    if (q.status) items = items.filter(m => m.status === q.status);
+    if (q.capability) items = items.filter(m => m.capabilities.includes(q.capability as never));
+    return { items, total: items.length };
+  });
+  app.get("/v1/models/:id", async req => {
+    ctx(req);
+    const { id } = req.params as { id: string };
+    const model = p.router.catalog().find(m => m.id === id);
+    if (!model) throw PlatformError.notFound("Model", id);
+    return toModelEntry(model);
+  });
+  app.post("/v1/models/cache/invalidate", async req => { ctx(req); return { invalidated: true }; });
+
   // ---------------- Cerebro Compiler (NL goal -> plan -> workflow -> execution graph) ----------------
   app.post("/v1/compiler/compile", async req => {
     const body = parse(z.object({

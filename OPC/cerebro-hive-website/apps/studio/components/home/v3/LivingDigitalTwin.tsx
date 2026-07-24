@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { UserX, Bot, ArrowRight, Zap, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
-import { Stack } from "@/components/ui/primitives/Stack";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
+import { Stack } from "@/components/cerebro/primitives/Stack";
 
 const workflows = [
   {

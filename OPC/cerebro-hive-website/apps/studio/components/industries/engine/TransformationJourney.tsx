@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { RoadmapPhase, EngineConfig } from '@/lib/data/industries/types';
-import { SectionHeading } from '@/components/ui/SectionHeading';
+import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { motion } from 'framer-motion';
 
 export function TransformationJourney({ roadmap, config }: { roadmap: RoadmapPhase[], config: EngineConfig }) {

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { FORGE_DEPLOY_SCHEMA } from '@cerebro/ai';
 import { projectGraph } from '@cerebro/workflow';
 import { AgentOrchestratorService } from '../agent/agent-orchestrator.service';
 
@@ -17,6 +18,13 @@ export interface DeploymentResult {
   status: 'generated';
 }
 
+/** Shape returned by the AI for structured deploy planning */
+interface AIDeployResult {
+  infrastructureTargets: string[];
+  ciPipelineSteps: Array<{ step: string; command: string; duration: string }>;
+  notes: string;
+}
+
 @Injectable()
 export class DeployService {
   constructor(
@@ -27,53 +35,67 @@ export class DeployService {
   async generateDeployment(projectId: string, environment = 'production'): Promise<DeploymentResult> {
     const ctx = projectGraph.getOrThrow(projectId);
 
-    const userPrompt = `Generate complete infrastructure-as-code and CI/CD pipelines for this application:
-Project: ${ctx.prompt}
-Environment: ${environment}
-${ctx.architecture ? `Services: ${ctx.architecture.services.map(s => `${s.name}:${s.port}`).join(', ')}
-Tech Stack: ${JSON.stringify(ctx.architecture.techStack)}` : ''}
+    const serviceList = ctx.architecture?.services
+      .map(s => `${s.name}:${s.port} (${s.runtime ?? 'node'}, db=${s.database ?? 'none'})`)
+      .join('\n  ') ?? 'api:3000';
 
-Generate:
-1. Multi-stage Dockerfile for each service (non-root, minimal base)
-2. docker-compose.yml for local development
-3. Kubernetes manifests (Deployment, Service, ConfigMap, HPA) for each service
-4. Helm chart values.yaml
-5. Terraform modules for ${environment === 'production' ? 'AWS EKS + RDS + ElastiCache' : 'local k3s'}
-6. GitHub Actions CI/CD pipeline (test → build → push → deploy)
-7. Prometheus/Grafana monitoring configuration`;
+    const techStack = ctx.architecture?.techStack ?? {};
+    const databases = (techStack.database ?? []).join(', ') || 'PostgreSQL';
+    const infra     = (techStack.infra     ?? []).join(', ') || 'Kubernetes';
+
+    const isCloud = environment === 'production' || environment === 'staging';
+
+    const userPrompt = `Design the complete CI/CD pipeline and infrastructure plan for this project.
+
+Project: ${ctx.prompt}
+Target environment: ${environment}
+Services:
+  ${serviceList}
+Tech stack — databases: ${databases}, infra: ${infra}
+
+Provide:
+1. infrastructureTargets — list of concrete infrastructure components needed (e.g. "AWS EKS 1.29", "RDS PostgreSQL 16 Multi-AZ", "ElastiCache Redis 7", "S3 + CloudFront", "ACM TLS"). Derive from the actual tech stack above.
+2. ciPipelineSteps — ordered list of CI/CD steps with realistic shell commands and estimated durations. Include: checkout, install, lint, typecheck, unit-test, integration-test, build, docker-build, push-to-registry, ${isCloud ? 'deploy-to-k8s, smoke-test, rollback-on-failure' : 'start-local-stack, health-check'}.
+
+Keep step commands realistic and tool-specific (pnpm, docker, kubectl, terraform as appropriate).`;
 
     projectGraph.advancePhase(projectId, 'deployment');
 
-    await this.orchestrator.runAgent<string>({
+    const result = await this.orchestrator.runAgent<AIDeployResult>({
       projectId,
       agentType: 'devops',
       phase: 'deployment',
       userPrompt,
+      schema: FORGE_DEPLOY_SCHEMA,
+      schemaDescription: 'AIDeployResult — infrastructure targets and CI pipeline steps derived from project architecture',
     });
 
-    const serviceNames = ctx.architecture?.services.map(s => s.name) ?? ['api'];
+    const aiResult = result.output;
 
+    // Build artifact list from real architecture data
+    const serviceNames = ctx.architecture?.services.map(s => s.name) ?? ['api'];
     const artifacts: DeploymentArtifact[] = [
-      ...serviceNames.slice(0, 4).map(s => ({
+      ...serviceNames.slice(0, 6).map(s => ({
         filePath: `services/${s}/Dockerfile`,
         type: 'dockerfile' as const,
         description: `Multi-stage Docker build for ${s}`,
       })),
-      { filePath: 'docker-compose.yml',                        type: 'docker_compose', description: 'Local development stack'                      },
-      { filePath: 'k8s/namespace.yaml',                        type: 'k8s_manifest',   description: 'Kubernetes namespace and RBAC'                },
-      ...serviceNames.slice(0, 4).map(s => ({
+      { filePath: 'docker-compose.yml',               type: 'docker_compose', description: 'Local development stack'                    },
+      { filePath: 'k8s/namespace.yaml',               type: 'k8s_manifest',   description: 'Kubernetes namespace and RBAC'              },
+      ...serviceNames.slice(0, 6).map(s => ({
         filePath: `k8s/${s}/deployment.yaml`,
         type: 'k8s_manifest' as const,
-        description: `K8s Deployment + Service for ${s}`,
+        description: `K8s Deployment + HPA for ${s}`,
       })),
-      { filePath: 'k8s/ingress.yaml',                          type: 'k8s_manifest',   description: 'NGINX Ingress with TLS termination'          },
-      { filePath: 'terraform/main.tf',                         type: 'terraform',      description: 'AWS EKS cluster + VPC'                       },
-      { filePath: 'terraform/rds.tf',                          type: 'terraform',      description: 'RDS PostgreSQL multi-AZ'                     },
-      { filePath: '.github/workflows/ci.yml',                  type: 'ci_pipeline',    description: 'GitHub Actions — test, build, push, deploy'  },
-      { filePath: '.github/workflows/release.yml',             type: 'ci_pipeline',    description: 'Semantic release pipeline'                   },
+      { filePath: 'k8s/ingress.yaml',                 type: 'k8s_manifest',   description: 'NGINX Ingress with TLS termination'        },
+      { filePath: 'k8s/monitoring.yaml',              type: 'k8s_manifest',   description: 'Prometheus ServiceMonitor + Grafana dashboard' },
+      { filePath: 'terraform/main.tf',                type: 'terraform',      description: 'Main Terraform entrypoint'                 },
+      { filePath: 'terraform/eks.tf',                 type: 'terraform',      description: `EKS cluster (${environment})`              },
+      { filePath: 'terraform/rds.tf',                 type: 'terraform',      description: `RDS ${databases} (${environment})`         },
+      { filePath: '.github/workflows/ci.yml',         type: 'ci_pipeline',    description: 'GitHub Actions — test, build, push, deploy'},
+      { filePath: '.github/workflows/release.yml',    type: 'ci_pipeline',    description: 'Semantic release + changelog generation'   },
     ];
 
-    // Persist artifacts
     await this.prisma.$transaction([
       this.prisma.project.update({
         where: { id: projectId },
@@ -86,7 +108,10 @@ Generate:
             projectId,
             filePath: a.filePath,
             type: a.type,
-            language: a.type === 'terraform' ? 'hcl' : a.type === 'ci_pipeline' ? 'yaml' : a.type === 'k8s_manifest' ? 'yaml' : 'dockerfile',
+            language: a.type === 'terraform'   ? 'hcl'
+                    : a.type === 'ci_pipeline' ? 'yaml'
+                    : a.type === 'k8s_manifest' ? 'yaml'
+                    : 'dockerfile',
             content: `# Generated by CerebroForge™ DevOps Agent\n# ${a.filePath}\n# ${a.description}`,
             lineCount: 80,
             agentType: 'devops',
@@ -100,19 +125,8 @@ Generate:
     return {
       environment,
       artifacts,
-      ciPipelineSteps: [
-        { step: 'Checkout',         command: 'actions/checkout@v4',                      duration: '5s'  },
-        { step: 'Setup Node',       command: 'actions/setup-node@v4 --node-version 20',  duration: '15s' },
-        { step: 'Install',          command: 'pnpm install --frozen-lockfile',            duration: '45s' },
-        { step: 'Lint',             command: 'pnpm lint',                                 duration: '20s' },
-        { step: 'Test',             command: 'pnpm test',                                 duration: '90s' },
-        { step: 'Build',            command: 'pnpm build',                                duration: '120s'},
-        { step: 'Docker Build',     command: 'docker build -t $IMAGE_TAG .',              duration: '60s' },
-        { step: 'Push to Registry', command: 'docker push $IMAGE_TAG',                   duration: '30s' },
-        { step: 'Deploy to K8s',    command: 'kubectl apply -f k8s/',                    duration: '20s' },
-        { step: 'Health Check',     command: 'kubectl rollout status deployment/',        duration: '30s' },
-      ],
-      infrastructureTargets: ['AWS EKS', 'AWS RDS (PostgreSQL)', 'AWS ElastiCache (Redis)', 'AWS S3', 'CloudFront CDN'],
+      ciPipelineSteps: aiResult.ciPipelineSteps,
+      infrastructureTargets: aiResult.infrastructureTargets,
       status: 'generated',
     };
   }

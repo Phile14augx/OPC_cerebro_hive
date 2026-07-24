@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { EnterpriseService } from "@/lib/data/types";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { ChevronDown } from "lucide-react";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 
 export const ServiceFAQ = ({ service }: { service: EnterpriseService }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);

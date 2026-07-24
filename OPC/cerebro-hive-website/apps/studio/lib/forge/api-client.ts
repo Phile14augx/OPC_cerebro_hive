@@ -39,6 +39,8 @@ export interface ForgeProjectDetail extends ForgeProject {
   requirements: ForgeRequirement[];
   agentRuns: ForgeAgentRun[];
   artifacts: ForgeArtifact[];
+  archJson?: unknown;
+  planJson?: unknown;
 }
 
 export interface ForgeModule {

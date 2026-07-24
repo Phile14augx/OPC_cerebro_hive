@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import {
   Globe, Sparkles, CheckCircle2, Loader2, LayoutDashboard,
   Users, Shield, CreditCard, Bell, Settings, ChevronRight, Plus,
@@ -34,7 +34,7 @@ const generatedPages = [
   { name: "API Keys Management",   status: "queued",     auth: true  },
 ];
 
-export default function WebStudioPage() {
+function WebStudioPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -117,5 +117,13 @@ export default function WebStudioPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function WebStudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <WebStudioPageInner />
+    </Suspense>
   );
 }

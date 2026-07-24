@@ -3,9 +3,9 @@
 import React from "react";
 import { Check } from "lucide-react";
 import { motion } from "framer-motion";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
-import { Stack } from "@/components/ui/primitives/Stack";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
+import { Stack } from "@/components/cerebro/primitives/Stack";
 
 const capabilities = [
   { name: "AI Strategy", phases: [true, false, false, false, false] },

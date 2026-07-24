@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Compass, Scale, PenTool, Rocket, ShieldCheck, ArrowRight, FileText, FileSpreadsheet, FileBox, Cpu, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const phases = [
   {
@@ -147,7 +147,7 @@ export const MethodologyVisualizer = () => {
                     className="bg-surface-elevated border border-border rounded-xl p-6 flex items-center gap-4 min-w-[280px] group hover:border-[#00E5FF]/50 transition-colors cursor-pointer"
                   >
                     <div className="w-12 h-12 rounded-lg bg-[#00E5FF]/10 text-accent-secondary flex items-center justify-center shrink-0">
-                      {React.createElement(phases[activePhase].deliverableIcon, { size: 24 })}
+                      {(() => { const DeliverableIcon = phases[activePhase].deliverableIcon; return <DeliverableIcon size={24} />; })()}
                     </div>
                     <div>
                       <div className="text-xs font-mono text-accent-secondary mb-1">Generated Deliverable</div>

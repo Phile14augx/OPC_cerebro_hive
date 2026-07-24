@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { Box, Code, Cpu, Database, Network, Shield, Workflow, PlayCircle, Server, DollarSign, Map, Copy, Zap, User, UserCheck, Activity, BookOpen, Lightbulb, Award } from "lucide-react";
 
 const getIcon = (name: string) => {

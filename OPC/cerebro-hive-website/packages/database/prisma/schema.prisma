@@ -355,32 +355,6 @@ model WorkflowTemplate {
   workflows  Workflow[]
 }
 
-model WorkflowExecution {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  templateId     String    @db.Uuid
-  status         String    // 'running', 'completed', 'failed', 'paused'
-  startedAt      DateTime  @default(now())
-  completedAt    DateTime?
-  state          Json?     // Persistent state of the workflow
-  
-  steps          WorkflowStepExecution[]
-}
-
-model WorkflowStepExecution {
-  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workflowExecutionId String            @db.Uuid
-  workflowExecution   WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
-  
-  stepId              String            // Corresponds to the step ID in the WorkflowTemplate DAG
-  status              String            // 'pending', 'running', 'completed', 'failed'
-  startedAt           DateTime          @default(now())
-  completedAt         DateTime?
-  
-  input               Json?
-  output              Json?
-  error               String?           @db.Text
-}
-
 model Workflow {
   id          String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   workspaceId String            @db.Uuid
@@ -934,12 +908,21 @@ model Region {
 }
 
 model Resource {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  regionId String @db.Uuid
-  region   Region @relation(fields: [regionId], references: [id], onDelete: Cascade)
-  type     String
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  regionId    String? @db.Uuid
+  region      Region? @relation(fields: [regionId], references: [id], onDelete: Cascade)
+  type        String?
+  workspaceId String? @db.Uuid
+  blueprintId String? @db.Uuid
+  status      String  @default("pending")
+  config      Json?
+  cost        Float?
 
   deployments Deployment[]
+  operations  Operation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Deployment {
@@ -947,8 +930,28 @@ model Deployment {
   resourceId String   @db.Uuid
   resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   status     String
+  config     Json?
 
-  versions DeploymentVersion[]
+  versions   DeploymentVersion[]
+  operations Operation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// HiveForge deployment orchestration — tracks execution of a Deployment
+// against a Resource (queued/running/completed/failed lifecycle).
+model Operation {
+  id           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resourceId   String      @db.Uuid
+  resource     Resource    @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  deploymentId String?     @db.Uuid
+  deployment   Deployment? @relation(fields: [deploymentId], references: [id], onDelete: Cascade)
+  status       String
+  type         String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model DeploymentVersion {
@@ -1183,4 +1186,39 @@ model DeploymentTarget {
   id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name String
   url  String
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 12: RUNTIME ENGINE
+// -----------------------------------------------------------------------------
+
+/// Immutable append-only events generated during executions.
+model ExecutionEvent {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId     String   @db.Uuid // For tenant isolation
+  executionId     String   @db.Uuid // Loose relation to WorkflowExecution or AgentExecution
+  eventType       String   // e.g., ExecutionStarted, ToolInvoked
+  eventSource     String   // e.g., AgentRuntime, WorkflowRuntime
+  payload         Json     // Event-specific data payload
+  timestamp       DateTime @default(now())
+
+  @@index([executionId])
+  @@index([workspaceId])
+  @@index([eventType])
+}
+
+/// Structured checkpoints for pausing/resuming executions.
+model ExecutionCheckpoint {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId     String   @db.Uuid
+  executionId     String   @db.Uuid // Loose relation to WorkflowExecution or AgentExecution
+  currentNode     String?  // Step or Node ID currently executing
+  completedSteps  String[] // Array of completed step/node IDs
+  contextSnapshot Json     // Snapshot of ExecutionContext
+  variables       Json?    // Execution variables
+  pendingActions  Json?    // Queue of pending actions
+  eventOffset     Int      // Number of events processed at this checkpoint
+  createdAt       DateTime @default(now())
+
+  @@index([executionId])
 }

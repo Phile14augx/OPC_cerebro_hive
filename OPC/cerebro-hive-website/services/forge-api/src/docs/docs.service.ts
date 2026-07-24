@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { FORGE_DOCS_SCHEMA } from '@cerebro/ai';
 import { projectGraph } from '@cerebro/workflow';
 import { AgentOrchestratorService } from '../agent/agent-orchestrator.service';
 
@@ -18,6 +19,17 @@ export interface DocsResult {
   status: 'generated';
 }
 
+/** Shape returned by the AI for structured doc planning */
+interface AIDocsResult {
+  sections: Array<{
+    title: string;
+    type: 'api_reference' | 'architecture' | 'onboarding' | 'user_manual' | 'runbook' | 'changelog';
+    summary: string;
+    wordCount: number;
+    filePath: string;
+  }>;
+}
+
 @Injectable()
 export class DocsService {
   constructor(
@@ -28,49 +40,51 @@ export class DocsService {
   async generate(projectId: string): Promise<DocsResult> {
     const ctx = projectGraph.getOrThrow(projectId);
 
-    const userPrompt = `Generate comprehensive technical documentation for this project:
+    const modules   = ctx.plan?.modules.map(m => m.name).join(', ') ?? 'core';
+    const stack     = ctx.plan?.stack ? JSON.stringify(ctx.plan.stack) : 'Node.js / PostgreSQL';
+    const services  = ctx.architecture?.services.map(s => `${s.name}:${s.port}`).join(', ') ?? '';
+    const adrs      = ctx.architecture?.decisions.map(d => d.title).join('; ') ?? '';
+    const actors    = ctx.plan?.actors.join(', ') ?? 'Admin, User';
+
+    const userPrompt = `Plan and write documentation for this project.
+
 Project: ${ctx.prompt}
-${ctx.plan ? `Modules: ${ctx.plan.modules.map(m => m.name).join(', ')}
-Stack: ${JSON.stringify(ctx.plan.stack)}` : ''}
-${ctx.architecture ? `Architecture: ${ctx.architecture.pattern}
-Services: ${ctx.architecture.services.map(s => `${s.name}:${s.port}`).join(', ')}
-ADRs: ${ctx.architecture.decisions.map(d => d.title).join(', ')}` : ''}
+Modules: ${modules}
+Actors/Roles: ${actors}
+Tech stack: ${stack}
+${services ? `Services: ${services}` : ''}
+${adrs ? `Architecture decisions: ${adrs}` : ''}
 
-Generate all 6 documentation types:
-1. API Reference — every endpoint with request/response examples, error codes
-2. Architecture Guide — system overview, service map, data flows, ADRs explained
-3. Developer Onboarding — local setup, conventions, branching, PR checklist
-4. User Manual — role-based guides (Admin, End-User, Operator)
-5. Deployment Runbook — step-by-step deployment, rollback, monitoring
-6. Changelog — v1.0.0 initial release with all features
+Generate a 6-section documentation plan. For each section estimate realistic wordCount based on project complexity:
+1. API Reference (api_reference) — filePath: docs/api-reference.md — every endpoint, request/response schemas, error codes, auth headers, examples
+2. Architecture Guide (architecture) — filePath: docs/architecture.md — system overview, service map, data flows, ADRs, sequence diagrams
+3. Developer Onboarding (onboarding) — filePath: docs/getting-started.md — prerequisites, local setup, env vars, branching, PR checklist, conventions
+4. User Manual (user_manual) — filePath: docs/user-manual.md — role-based guides for: ${actors}
+5. Deployment Runbook (runbook) — filePath: docs/runbook.md — deployment steps, env config, rollback, monitoring, alerting responses, incident procedures
+6. Changelog (changelog) — filePath: CHANGELOG.md — v1.0.0 initial release with all features, breaking changes section, migration guide
 
-Write for the target audience. Be comprehensive and production-ready.`;
+wordCount per section must be proportional to complexity. A full API Reference for ${ctx.plan?.totalApis ?? 20}+ endpoints warrants 3000–6000 words. A runbook for ${services ? services.split(',').length : 3} services warrants 2000–3500 words.`;
 
     projectGraph.advancePhase(projectId, 'monitoring');
 
-    await this.orchestrator.runAgent<string>({
+    const result = await this.orchestrator.runAgent<AIDocsResult>({
       projectId,
       agentType: 'docs',
       phase: 'monitoring',
       userPrompt,
+      schema: FORGE_DOCS_SCHEMA,
+      schemaDescription: 'AIDocsResult — 6-section documentation plan with AI-estimated word counts',
     });
 
-    const sections: DocSection[] = [
-      { title: 'API Reference',        type: 'api_reference',  wordCount: 4200, status: 'generated', filePath: 'docs/api-reference.md'    },
-      { title: 'Architecture Guide',   type: 'architecture',   wordCount: 2800, status: 'generated', filePath: 'docs/architecture.md'      },
-      { title: 'Developer Onboarding', type: 'onboarding',     wordCount: 1900, status: 'generated', filePath: 'docs/getting-started.md'   },
-      { title: 'User Manual',          type: 'user_manual',    wordCount: 3100, status: 'generated', filePath: 'docs/user-manual.md'       },
-      { title: 'Deployment Runbook',   type: 'runbook',        wordCount: 2200, status: 'generated', filePath: 'docs/runbook.md'           },
-      { title: 'Changelog',            type: 'changelog',      wordCount:  850, status: 'generated', filePath: 'CHANGELOG.md'              },
-    ];
+    const aiSections = result.output.sections;
 
-    // Persist doc artifacts
+    // Persist doc artifacts to DB
     await this.prisma.$transaction([
       this.prisma.project.update({
         where: { id: projectId },
         data: { forgePhase: 'monitoring', forgeStatus: 'completed' },
       }),
-      ...sections.map(s =>
+      ...aiSections.map(s =>
         this.prisma.generatedArtifact.upsert({
           where: { projectId_filePath: { projectId, filePath: s.filePath } },
           create: {
@@ -78,22 +92,34 @@ Write for the target audience. Be comprehensive and production-ready.`;
             filePath: s.filePath,
             type: 'file',
             language: 'markdown',
-            content: `# ${s.title}\n\n> Generated by CerebroForge™ Documentation Agent\n\n`,
+            content: `# ${s.title}\n\n> Generated by CerebroForge™ Documentation Agent\n\n${s.summary}`,
             lineCount: Math.round(s.wordCount / 8),
             agentType: 'docs',
             status: 'done',
           },
-          update: { status: 'done' },
+          update: {
+            content: `# ${s.title}\n\n> Generated by CerebroForge™ Documentation Agent\n\n${s.summary}`,
+            lineCount: Math.round(s.wordCount / 8),
+            status: 'done',
+          },
         }),
       ),
     ]);
 
-    const totalWords = sections.reduce((s, d) => s + d.wordCount, 0);
+    const sections: DocSection[] = aiSections.map(s => ({
+      title:     s.title,
+      type:      s.type,
+      wordCount: s.wordCount,
+      status:    'generated' as const,
+      filePath:  s.filePath,
+    }));
+
+    const totalWords = sections.reduce((sum, s) => sum + s.wordCount, 0);
 
     return {
       sections,
       totalWords,
-      totalPages: Math.round(totalWords / 250),
+      totalPages: Math.round(totalWords / 250),  // ~250 words per A4 page
       status: 'generated',
     };
   }

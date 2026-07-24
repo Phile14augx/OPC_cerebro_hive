@@ -33,8 +33,7 @@ export async function getMe(): Promise<{ data?: UserProfile; error?: string }> {
         id: true,
         email: true,
         name: true,
-        role: true,
-        organizationId: true,
+        tenantMembers: { take: 1, select: { tenantId: true, role: { select: { name: true } } } },
       }
     });
 
@@ -42,14 +41,16 @@ export async function getMe(): Promise<{ data?: UserProfile; error?: string }> {
       return { error: 'User not found.' };
     }
 
-    return { 
+    const membership = user.tenantMembers[0];
+
+    return {
       data: {
         id: user.id,
         email: user.email,
         full_name: user.name || '',
-        role: user.role,
-        organizationId: user.organizationId,
-      } 
+        role: membership?.role.name || '',
+        organizationId: membership?.tenantId,
+      }
     };
   } catch (err) {
     console.error('getMe error:', err);

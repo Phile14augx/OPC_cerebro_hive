@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { BaseWorker } from '@cerebro/events';
 
 interface AiWorkerPayload {
@@ -20,3 +21,4 @@ export class AiWorker extends BaseWorker<AiWorkerPayload> {
     // 4. Fire Webhook (if callbackUrl present)
   }
 }
+

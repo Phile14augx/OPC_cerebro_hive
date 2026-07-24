@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { MatrixItem, EngineConfig } from '@/lib/data/industries/types';
-import { SectionHeading } from '@/components/ui/SectionHeading';
+import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { ArchitectureCanvas } from '@/components/architecture/ArchitectureCanvas';
 import { Sparkles, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';

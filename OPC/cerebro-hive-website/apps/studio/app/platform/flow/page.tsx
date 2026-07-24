@@ -229,7 +229,7 @@ function ApprovalsPanel({ online }: { online: boolean | null }) {
   );
 }
 
-const TABS: [Tab, string, React.ComponentType<{ size?: number; className?: string }>][] = [
+const TABS: [Tab, string, React.ComponentType<{ size?: number | string; className?: string }>][] = [
   ["workflows", "Workflows", GitBranch],
   ["integrations", "Integrations", Plug],
   ["approvals", "Approvals", ClipboardCheck],

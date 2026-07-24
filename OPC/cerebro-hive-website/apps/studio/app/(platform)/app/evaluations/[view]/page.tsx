@@ -28,7 +28,7 @@ export default function EvaluationStudioPage() {
 
   useEffect(() => {
     if (activeView !== view) {
-      router.push(`/evaluations/${activeView}`);
+      router.push(`/app/evaluations/${activeView}`);
     }
   }, [activeView, view, router]);
 

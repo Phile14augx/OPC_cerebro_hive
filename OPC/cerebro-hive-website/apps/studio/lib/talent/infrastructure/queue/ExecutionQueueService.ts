@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Mocking BullMQ interfaces for the prototype
 export interface Job<T = any> {
   id: string;

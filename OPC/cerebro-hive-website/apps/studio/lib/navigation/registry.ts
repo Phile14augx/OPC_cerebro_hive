@@ -4,7 +4,7 @@ import React from "react";
 export type NavItem = {
   label: string;
   href: string;
-  icon?: React.ElementType;
+  icon?: React.ComponentType<{ size?: number | string; className?: string }>;
 };
 
 export type NavGroup = {
@@ -22,32 +22,32 @@ export type ModuleNavigation = {
 // Trust & Governance Module
 export const TrustNavigation: ModuleNavigation = {
   id: "trust",
-  basePath: "/trust",
+  basePath: "/app/trust",
   title: "Trust Console",
   groups: [
     {
       label: "Overview",
       items: [
-        { label: "Executive Dashboard", href: "/trust", icon: LayoutDashboard },
-        { label: "Alert Center", href: "/trust/alerts", icon: Bell },
+        { label: "Executive Dashboard", href: "/app/trust", icon: LayoutDashboard },
+        { label: "Alert Center", href: "/app/trust/alerts", icon: Bell },
       ]
     },
     {
       label: "Governance",
       items: [
-        { label: "Security Posture", href: "/trust/security", icon: Shield },
-        { label: "Compliance", href: "/trust/compliance", icon: ShieldCheck },
-        { label: "Policies", href: "/trust/policies", icon: FileText },
-        { label: "AI Safety", href: "/trust/safety", icon: Scale },
+        { label: "Security Posture", href: "/app/trust/security", icon: Shield },
+        { label: "Compliance", href: "/app/trust/compliance", icon: ShieldCheck },
+        { label: "Policies", href: "/app/trust/policies", icon: FileText },
+        { label: "AI Safety", href: "/app/trust/safety", icon: Scale },
       ]
     },
     {
       label: "Operations",
       items: [
-        { label: "Risk Heatmap", href: "/trust/risk", icon: AlertTriangle },
-        { label: "Incidents", href: "/trust/incidents", icon: Activity },
-        { label: "Audit Timeline", href: "/trust/audit", icon: Server },
-        { label: "Provider Health", href: "/trust/providers", icon: PlayCircle },
+        { label: "Risk Heatmap", href: "/app/trust/risk", icon: AlertTriangle },
+        { label: "Incidents", href: "/app/trust/incidents", icon: Activity },
+        { label: "Audit Timeline", href: "/app/trust/audit", icon: Server },
+        { label: "Provider Health", href: "/app/trust/providers", icon: PlayCircle },
       ]
     }
   ]
@@ -56,14 +56,14 @@ export const TrustNavigation: ModuleNavigation = {
 // Analytics Module (Example placeholder)
 export const AnalyticsNavigation: ModuleNavigation = {
   id: "analytics",
-  basePath: "/analytics",
+  basePath: "/app/analytics",
   title: "Analytics",
   groups: [
     {
       label: "Dashboards",
       items: [
-        { label: "Overview", href: "/analytics" },
-        { label: "Usage", href: "/analytics/usage" },
+        { label: "Overview", href: "/app/analytics" },
+        { label: "Usage", href: "/app/analytics/usage" },
       ]
     }
   ]

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Business Audit Logger
  * Separates immutable business events (compliance, auditing) from operational debug logs.

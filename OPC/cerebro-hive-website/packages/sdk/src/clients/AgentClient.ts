@@ -1,3 +1,5 @@
+import { BaseClient } from './BaseClient';
+
 export interface AgentMetadata {
   id: string;
   name: string;
@@ -45,82 +47,33 @@ export interface AgentConfiguration {
   evaluationProfile: string[];
 }
 
-export class AgentClient {
-  constructor(private baseUrl: string, private headers?: Record<string, string>) {}
+export class AgentClient extends BaseClient {
+  constructor(baseUrl: string, headers?: Record<string, string>) {
+    super(baseUrl, headers);
+  }
 
-  async listAgents(): Promise<AgentMetadata[]> {
-    return [
-      {
-        id: 'a-1',
-        name: 'Customer Support Bot',
-        description: 'Handles frontline customer queries and billing issues.',
-        version: '1.2.0',
-        owner: 'support-team',
-        tags: ['support', 'external'],
-        status: 'published',
-        visibility: 'public',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: 'a-2',
-        name: 'Code Reviewer',
-        description: 'Analyzes pull requests for security flaws.',
-        version: '0.9.1',
-        owner: 'engineering',
-        tags: ['internal', 'security'],
-        status: 'draft',
-        visibility: 'team',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ];
+  async listAgents(params?: { page?: number; limit?: number; search?: string }): Promise<{ data: AgentMetadata[]; meta: any }> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.search) queryParams.append('search', params.search);
+
+    const query = queryParams.toString();
+    const endpoint = `/api/v1/agents${query ? `?${query}` : ''}`;
+    
+    return this.fetchJson<{ data: AgentMetadata[]; meta: any }>(endpoint);
   }
 
   async getAgent(id: string): Promise<AgentConfiguration | null> {
-    return {
-      id,
-      metadata: {
-        id,
-        name: 'Customer Support Bot',
-        description: 'Handles frontline customer queries and billing issues.',
-        version: '1.2.0',
-        owner: 'support-team',
-        tags: ['support', 'external'],
-        status: 'published',
-        visibility: 'public',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      },
-      promptReference: {
-        templateId: 'p-1',
-      },
-      modelConfig: {
-        provider: 'openai',
-        model: 'gpt-4o',
-        temperature: 0.7,
-        topP: 1,
-        maxTokens: 2000
-      },
-      memoryStrategy: {
-        useWorkingMemory: true,
-        useConversationMemory: true,
-        useSemanticMemory: true,
-        knowledgeSources: ['kb-support-docs']
-      },
-      tools: [
-        { toolId: 'tool-search', enabled: true, timeoutMs: 5000, retryPolicy: 'exponential' },
-        { toolId: 'tool-billing', enabled: true, timeoutMs: 10000, retryPolicy: 'none' }
-      ],
-      policies: {
-        allowedTools: ['tool-search', 'tool-billing']
-      },
-      evaluationProfile: ['safety', 'grounding', 'quality']
-    };
+    const res = await this.fetchJson<{ success: boolean; data: AgentConfiguration }>(`/api/v1/agents/${id}`);
+    return res.data;
   }
 
-  async createAgent(data: any) {
-    // Scaffold: POST /api/v1/agents
-    return { id: 'mock-agent-id', ...data };
+  async createAgent(data: any): Promise<AgentConfiguration> {
+    const res = await this.fetchJson<{ success: boolean; data: AgentConfiguration }>('/api/v1/agents', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return res.data;
   }
 }

@@ -1,0 +1,103 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# FinOps — Kubecost Helm Values
+# Provides real-time K8s cost allocation at namespace/label/pod granularity.
+# Install: helm install kubecost cost-analyzer/cost-analyzer -f this-file -n kubecost
+# ──────────────────────────────────────────────────────────────────────────────
+
+global:
+  prometheus:
+    # Federate from our existing Prometheus instead of deploying a new one
+    fqdn: http://prometheus.monitoring.svc.cluster.local:9090
+    enabled: false  # don't deploy bundled Prometheus
+  grafana:
+    enabled: false  # use our existing Grafana
+    proxy: false
+    fqdn: http://grafana.monitoring.svc.cluster.local:3000
+
+kubecostToken: ""  # set via ExternalSecret
+
+# Cost model — AWS us-east-1 pricing
+kubecostModel:
+  image:
+    tag: prod-2.3
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  # AWS pricing integration
+  cloudCost:
+    enabled: true
+    labelMappingConfigs:
+      enabled: true
+
+  # Tag the aggregations we care about
+  allocationNodeLabels:
+    - "kubernetes.io/hostname"
+    - "topology.kubernetes.io/zone"
+
+# Cost allocation — align with our label taxonomy
+kubecostAllocationEndpoint: /model/allocation
+serviceAccount:
+  create: true
+  name: kubecost
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/cerebro-hive-kubecost-irsa
+
+# S3 integration for cost and usage reports
+kubecostS3:
+  enabled: true
+  bucket: cerebro-hive-cur-reports
+  region: us-east-1
+
+# Alerts — webhook to Slack
+notifications:
+  alertConfigs:
+    alerts:
+      # Alert when any namespace exceeds $500/day
+      - type: budget
+        threshold: 500
+        window: daily
+        aggregation: namespace
+        filter: "cerebro-hive"
+        ownerContact: ["platform@cerebrohive.com"]
+      # Alert when cluster efficiency drops below 50%
+      - type: efficiency
+        threshold: 0.50
+        window: daily
+        aggregation: cluster
+        ownerContact: ["platform@cerebrohive.com"]
+      # Alert if spend growth exceeds 20% week-over-week
+      - type: spendChange
+        relativeThreshold: 0.20
+        window: "7d"
+        aggregation: cluster
+        ownerContact: ["platform@cerebrohive.com"]
+    globalSlackWebhookUrl: "${SLACK_WEBHOOK_URL}"
+
+# Cost allocation labels — matches CerebroHive label taxonomy
+costAnalyzer:
+  labels:
+    app: kubecost-cost-analyzer
+  networkPolicy:
+    enabled: true
+
+# Savings insights — automated rightsizing recommendations
+savings:
+  enabled: true
+  requestSizingSettings:
+    targetCPUUtilization: 0.7   # rightsize to 70% utilization target
+    targetRAMUtilization: 0.7
+
+# Reporting periods
+reports:
+  - title: "CerebroHive Weekly Cost Report"
+    window: "lastweek"
+    aggregateBy: "namespace,label:app.kubernetes.io/component"
+    idle: true
+    idleByNode: false
+    shareIdle: false
+    shareSplit: "weighted"

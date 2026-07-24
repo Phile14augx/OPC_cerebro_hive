@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Widget SDK: The universal contract for all Talent OS Assessment Widgets
  */

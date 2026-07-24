@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Robot } from '../../components/ui/icons/agents';
+import { Robot } from '../../components/cerebro/icons/agents';
 
 const meta: Meta = {
   title: 'Icons/Agents',

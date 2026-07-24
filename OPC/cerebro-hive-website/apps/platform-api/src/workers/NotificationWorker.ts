@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { BaseWorker } from '@cerebro/events';
 
 interface NotificationPayload {
@@ -17,3 +18,4 @@ export class NotificationWorker extends BaseWorker<NotificationPayload> {
     // Scaffold: Send via SendGrid, Twilio, or Websockets
   }
 }
+

@@ -1,0 +1,83 @@
+{
+  "expectation_suite_name": "ai_usage_suite",
+  "meta": {
+    "great_expectations_version": "0.18.x",
+    "description": "Data quality checks for AI usage analytics",
+    "owner": "platform-team"
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": { "min_value": 1, "max_value": null },
+      "meta": { "notes": "AI usage table must never be empty" }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": { "column": "usage_date" },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": { "column": "organization_id" },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "provider",
+        "value_set": ["anthropic", "openai", "google", "bedrock", "cohere"]
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "total_cost_usd",
+        "min_value": 0,
+        "max_value": 10000
+      },
+      "meta": { "notes": "Daily cost per org+provider+model should be < $10k — flag outliers" }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "error_rate_pct",
+        "min_value": 0,
+        "max_value": 100
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "cache_hit_rate_pct",
+        "min_value": 0,
+        "max_value": 100
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "p99_duration_ms",
+        "min_value": 0,
+        "max_value": 300000
+      },
+      "meta": { "notes": "P99 latency over 5 minutes is an anomaly worth investigating" }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": { "column": "total_tokens" },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_pair_values_A_to_be_greater_than_B",
+      "kwargs": {
+        "column_A": "total_tokens",
+        "column_B": "total_input_tokens",
+        "or_equal": true
+      },
+      "meta": { "notes": "Total tokens must be >= input tokens" }
+    }
+  ]
+}

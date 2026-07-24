@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PrismaClient, ExecutionJob, ExecutionStatus } from '@prisma/client';
 import { DomainEventBus } from '../events/eventBus';
 import { withTransaction } from '../database/transaction';

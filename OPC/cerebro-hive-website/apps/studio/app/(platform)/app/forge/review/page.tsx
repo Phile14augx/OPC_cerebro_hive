@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -15,7 +15,7 @@ import { StatCard } from "../../components/ui/StatCard";
 import { useForgeProject, useForgeActions } from "@/lib/forge/hooks";
 import type { ReviewResult, ReviewFinding } from "@/lib/forge/api-client";
 
-const CATEGORY_ICONS: Record<string, React.ElementType> = {
+const CATEGORY_ICONS: Record<string, React.ComponentType<{ size?: number | string; className?: string }>> = {
   architecture: Layers,
   performance: Zap,
   security: Shield,
@@ -37,7 +37,7 @@ const GRADE_COLOR: Record<string, string> = {
   D: "text-orange-400", F: "text-red-400",
 };
 
-export default function AICodeReviewPage() {
+function AICodeReviewPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -240,5 +240,14 @@ export default function AICodeReviewPage() {
         )}
       </div>
     </div>
+  );
+}
+
+
+export default function AICodeReviewPage() {
+  return (
+    <Suspense fallback={null}>
+      <AICodeReviewPageInner />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   Layers3, Sparkles, ChevronRight, Server, Network,
@@ -23,7 +23,7 @@ const PATTERN_LABELS: Record<string, string> = {
   clean:         "Clean Architecture",
 };
 
-export default function ArchitectureStudioPage() {
+function ArchitectureStudioPageInner() {
   const searchParams = useSearchParams();
   const projectId = searchParams.get("projectId");
 
@@ -252,5 +252,13 @@ export default function ArchitectureStudioPage() {
         </motion.div>
       )}
     </div>
+  );
+}
+
+export default function ArchitectureStudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <ArchitectureStudioPageInner />
+    </Suspense>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { ArrowRight, Target, Lightbulb, Users, Globe, Rocket, Shield } from "lucide-react";
 
 

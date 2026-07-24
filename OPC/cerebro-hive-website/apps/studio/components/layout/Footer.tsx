@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView, animate } from "framer-motion";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { CheckCircle2, ChevronDown, ChevronRight, Globe, BookOpen, Quote } from "lucide-react";
 import { cn } from "@/lib/utils";
 

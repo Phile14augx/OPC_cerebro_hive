@@ -167,7 +167,7 @@ const CapabilityNetwork = () => {
             viewport={{ once: true }}
           >
             <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center mb-4", getColorClasses(architecture.color))}>
-              {React.createElement(getIcon(architecture.icon), { size: 28 })}
+              {(() => { const ArchIcon = getIcon(architecture.icon); return <ArchIcon size={28} />; })()}
             </div>
             <h3 className="text-2xl font-space font-bold text-text-primary mb-2">{architecture.title}</h3>
             <span className="text-[10px] font-mono uppercase text-orange-400 mb-4">{architecture.subtitle}</span>

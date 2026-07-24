@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Home as HomeIcon } from '../../components/ui/icons/dashboard';
+import { Home as HomeIcon } from '../../components/cerebro/icons/dashboard';
 
 const meta: Meta = {
   title: 'Icons/Dashboard',

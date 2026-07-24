@@ -3,11 +3,11 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { EnterpriseService } from "@/lib/data/types";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { cn } from "@/lib/utils";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
-import { cardVariants } from "@/components/ui/primitives/Card";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
+import { cardVariants } from "@/components/cerebro/primitives/Card";
 
 export const ServiceMethodology = ({ service }: { service: EnterpriseService }) => {
   const containerRef = useRef<HTMLDivElement>(null);

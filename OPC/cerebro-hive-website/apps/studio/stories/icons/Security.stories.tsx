@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Shield as ShieldIcon, Lock as LockIcon } from '../../components/ui/icons/security';
+import { Shield as ShieldIcon, Lock as LockIcon } from '../../components/cerebro/icons/security';
 
 const meta: Meta = {
   title: 'Icons/Security',

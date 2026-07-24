@@ -302,3 +302,89 @@ export const FORGE_ARCHITECTURE_SCHEMA = `{
   ],
   "folderStructure": "string"
 }`;
+
+// ── Review schema ─────────────────────────────────────────────────────────────
+
+export const FORGE_REVIEW_SCHEMA = `{
+  "overallScore": number,
+  "grade": "A | B | C | D | F",
+  "categories": [
+    {
+      "name": "string",
+      "score": number,
+      "findings": number,
+      "severity": "clean | low | medium | high | critical"
+    }
+  ],
+  "findings": [
+    {
+      "id": "string",
+      "category": "string",
+      "severity": "info | low | medium | high | critical",
+      "title": "string",
+      "description": "string",
+      "filePath": "string | null",
+      "line": "number | null",
+      "suggestion": "string"
+    }
+  ],
+  "autoFixable": number,
+  "reviewedFiles": number,
+  "reviewedLines": number
+}`;
+
+// ── Testing schema ────────────────────────────────────────────────────────────
+
+export const FORGE_TEST_SCHEMA = `{
+  "suites": [
+    {
+      "name": "string",
+      "framework": "string",
+      "type": "unit | integration | e2e | performance | security",
+      "testCount": number,
+      "passingCount": number,
+      "failingCount": number,
+      "coverage": "number | null",
+      "status": "pending | running | passed | failed",
+      "artifacts": ["string"]
+    }
+  ],
+  "overallCoverage": number,
+  "securityFindings": [
+    {
+      "severity": "critical | high | medium | low | info",
+      "title": "string",
+      "location": "string"
+    }
+  ],
+  "totalTests": number,
+  "passingTests": number
+}`;
+
+// ── Deploy schema ─────────────────────────────────────────────────────────────
+
+export const FORGE_DEPLOY_SCHEMA = `{
+  "infrastructureTargets": ["string"],
+  "ciPipelineSteps": [
+    {
+      "step": "string",
+      "command": "string",
+      "duration": "string"
+    }
+  ],
+  "notes": "string"
+}`;
+
+// ── Docs schema ───────────────────────────────────────────────────────────────
+
+export const FORGE_DOCS_SCHEMA = `{
+  "sections": [
+    {
+      "title": "string",
+      "type": "api_reference | architecture | onboarding | user_manual | runbook | changelog",
+      "summary": "string",
+      "wordCount": number,
+      "filePath": "string"
+    }
+  ]
+}`;

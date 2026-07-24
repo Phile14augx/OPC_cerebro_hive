@@ -175,7 +175,7 @@ function RuntimePanel({ online }: { online: boolean | null }) {
   );
 }
 
-const TABS: [Tab, string, React.ComponentType<{ size?: number; className?: string }>][] = [
+const TABS: [Tab, string, React.ComponentType<{ size?: number | string; className?: string }>][] = [
   ["mesh", "Agent Mesh", Network],
   ["runtime", "Runtime", PlayCircle],
 ];

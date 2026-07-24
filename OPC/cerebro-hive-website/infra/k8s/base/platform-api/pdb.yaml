@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: platform-api
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: platform-api
+    app.kubernetes.io/component: platform-api
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: platform-api
+      app.kubernetes.io/component: platform-api

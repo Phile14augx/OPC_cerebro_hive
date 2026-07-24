@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { IndustryHero as IHero, EngineConfig } from '@/lib/data/industries/types';
-import { AnimatedButton } from '@/components/ui/AnimatedButton';
-import { TrackedLink } from '@/components/ui/TrackedLink';
+import { AnimatedButton } from '@/components/cerebro/AnimatedButton';
+import { TrackedLink } from '@/components/cerebro/TrackedLink';
 import { motion } from 'framer-motion';
 
 export function IndustryHero({ hero, config }: { hero: IHero, config: EngineConfig }) {

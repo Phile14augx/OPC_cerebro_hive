@@ -1,0 +1,92 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Error Budget Policy
+# Defines what happens at each error budget consumption threshold.
+# Referenced by AIOps triage workflow and engineering runbooks.
+# ──────────────────────────────────────────────────────────────────────────────
+
+apiVersion: cerebro-hive.io/v1
+kind: ErrorBudgetPolicy
+metadata:
+  name: cerebro-hive-error-budget-policy
+
+spec:
+  # Budget is calculated monthly (30-day rolling window)
+  window: 30d
+
+  thresholds:
+    # ── Green: 0–25% consumed ────────────────────────────────────────────────
+    - name: healthy
+      consumed_max_percent: 25
+      actions:
+        - type: allow
+          description: "Normal development velocity. Feature work continues."
+        - type: allow_risky_changes: true
+
+    # ── Yellow: 25–50% consumed ──────────────────────────────────────────────
+    - name: caution
+      consumed_min_percent: 25
+      consumed_max_percent: 50
+      actions:
+        - type: notify
+          channels: ["#cerebro-sre"]
+          message: "Error budget 25% consumed. Monitor velocity."
+        - type: require_approval
+          description: "Medium-risk changes require SRE review."
+
+    # ── Orange: 50–75% consumed ──────────────────────────────────────────────
+    - name: warning
+      consumed_min_percent: 50
+      consumed_max_percent: 75
+      actions:
+        - type: notify
+          channels: ["#cerebro-alerts", "#cerebro-sre"]
+          message: "Error budget 50% consumed. Slow feature work."
+        - type: freeze
+          description: "Pause non-critical feature deploys. Reliability work only."
+        - type: require_postmortem
+          description: "Any SLO-impacting incident requires blameless postmortem."
+
+    # ── Red: 75–100% consumed ────────────────────────────────────────────────
+    - name: critical
+      consumed_min_percent: 75
+      consumed_max_percent: 100
+      actions:
+        - type: notify
+          channels: ["#cerebro-alerts", "#cerebro-sre", "#cerebro-leadership"]
+          severity: critical
+          message: "Error budget critically low. Feature freeze in effect."
+        - type: freeze
+          scope: all
+          exceptions: ["security-patches", "reliability-fixes"]
+        - type: sre_ownership
+          description: "SRE team owns all production changes until budget replenishes."
+        - type: page
+          oncall: platform-sre
+
+    # ── Exhausted: 100%+ consumed ────────────────────────────────────────────
+    - name: exhausted
+      consumed_min_percent: 100
+      actions:
+        - type: notify
+          channels: ["#cerebro-alerts", "#cerebro-leadership", "#cerebro-engineering"]
+          severity: page
+          message: "SLO BREACH: Error budget exhausted. SLA at risk."
+        - type: war_room
+          description: "Initiate war room. All hands on reliability."
+        - type: page
+          oncall: ["platform-sre", "engineering-vp"]
+        - type: freeze
+          scope: all
+          no_exceptions: true
+
+  # Tracking cadence
+  reporting:
+    weekly_digest:
+      enabled: true
+      channel: "#cerebro-sre"
+      day: monday
+      time: "09:00"
+    monthly_review:
+      enabled: true
+      channel: "#cerebro-leadership"
+      stakeholders: ["CTO", "VP Engineering", "SRE Lead"]

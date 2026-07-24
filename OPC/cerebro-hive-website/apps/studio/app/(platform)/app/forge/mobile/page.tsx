@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   Smartphone, Sparkles, Play, CheckCircle2, Loader2,
@@ -38,7 +38,7 @@ const screens = [
   "Pharmacy Order", "Lab Results", "Billing", "Profile & Settings",
 ];
 
-export default function MobileStudioPage() {
+function MobileStudioPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -158,5 +158,13 @@ export default function MobileStudioPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MobileStudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <MobileStudioPageInner />
+    </Suspense>
   );
 }

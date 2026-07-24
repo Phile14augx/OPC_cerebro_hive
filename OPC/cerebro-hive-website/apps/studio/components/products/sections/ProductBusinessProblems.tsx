@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { AlertCircle } from "lucide-react";
 
 export const ProductBusinessProblems = ({ product }: { product: PackagedProduct }) => {

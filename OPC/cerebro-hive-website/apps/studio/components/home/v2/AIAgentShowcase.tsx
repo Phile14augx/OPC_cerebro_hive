@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { 
   Users, DollarSign, TrendingUp, Megaphone, ShoppingCart, Headset,
   Scale, Database, ShieldCheck, BarChart, Calendar, Settings,

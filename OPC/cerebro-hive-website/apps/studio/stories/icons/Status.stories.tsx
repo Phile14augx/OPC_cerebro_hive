@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { StatusOnline as StatusOnlineIcon, StatusOffline as StatusOfflineIcon, Loader as LoaderIcon } from '../../components/ui/icons/status';
+import { StatusOnline as StatusOnlineIcon, StatusOffline as StatusOfflineIcon, Loader as LoaderIcon } from '../../components/cerebro/icons/status';
 
 const meta: Meta = {
   title: 'Icons/Status',

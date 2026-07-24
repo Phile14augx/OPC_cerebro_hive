@@ -1,0 +1,95 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# MLOps — MLflow Helm Values
+# Experiment tracking, model registry, and artifact storage.
+# Chart: community/mlflow or run-ai/mlflow
+# Install: helm install mlflow run-ai/mlflow -f this-file -n mlops
+# ──────────────────────────────────────────────────────────────────────────────
+
+replicaCount: 2
+
+image:
+  repository: ghcr.io/mlflow/mlflow
+  tag: "2.14.3"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 5000
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: mlflow-basic-auth
+  hosts:
+    - host: mlflow.cerebrohive.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: mlflow-tls
+      hosts: [mlflow.cerebrohive.com]
+
+# Backend store — PostgreSQL (reuse platform database)
+backendStore:
+  databaseDriver: postgresql
+  databaseConnectionCheck: true
+  postgres:
+    enabled: true
+    host: ${DB_HOST}
+    port: 5432
+    database: mlflow
+    user: mlflow
+    password: ${MLFLOW_DB_PASSWORD}
+
+# Artifact store — S3
+artifactRoot: s3://cerebro-hive-mlflow-artifacts/
+
+serviceAccount:
+  create: true
+  name: mlflow
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/cerebro-hive-mlflow-irsa
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  readOnlyRootFilesystem: true
+
+# Autoscaling
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+# Prometheus metrics
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+
+# Environment variables
+extraEnvVars:
+  - name: MLFLOW_S3_ENDPOINT_URL
+    value: ""  # empty = real AWS S3
+  - name: AWS_DEFAULT_REGION
+    value: us-east-1
+  - name: MLFLOW_TRACKING_SERVER_CERT_PATH
+    value: ""
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "5000"
+  prometheus.io/path: "/metrics"

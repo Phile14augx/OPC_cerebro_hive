@@ -9,7 +9,7 @@ import { NodeState } from "@/lib/data/industries/types";
 export interface IntelligentOrbProps {
   state?: NodeState;
   colorVariant?: "knowledge" | "reasoning" | "agent" | "automation" | "alert" | "executive" | "default";
-  icon?: React.ElementType<{ size?: number; style?: React.CSSProperties }>;
+  icon?: React.ElementType<{ size?: number | string; style?: React.CSSProperties }>;
   size?: "sm" | "md" | "lg";
   className?: string;
   onClick?: () => void;

@@ -7,7 +7,10 @@ import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { requestContextHook } from './middleware/RequestContextMiddleware';
 import { ErrorMapper } from './errors/ErrorMapper';
 import agentRoutes from './modules/agents/agents.routes';
+import workflowsRoutes from './modules/workflows/workflows.routes';
+import telemetryRoutes from './modules/telemetry/telemetry.routes';
 import healthRoutes from './modules/health/health.routes';
+import runtimeRoutes from './modules/runtime/runtime.routes';
 import { CommandBus } from '@cerebro/core-bus';
 
 export async function bootstrap(bus: CommandBus) {
@@ -49,6 +52,9 @@ export async function bootstrap(bus: CommandBus) {
   // Routes
   server.register(healthRoutes, { prefix: '/' });
   server.register(agentRoutes, { prefix: '/api/v1/agents', bus });
+  server.register(workflowsRoutes, { prefix: '/api/v1/workflows' });
+  server.register(telemetryRoutes, { prefix: '/api/v1/telemetry' });
+  server.register(runtimeRoutes, { prefix: '/api/v1/runtime' });
 
   return server;
 }

@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { careerDomains, CareerDomain } from "@/lib/content/company/careers";
 import { ArrowRight, Briefcase, Network, Atom, Cpu, Cloud, LayoutGrid, X, CheckCircle2, ChevronRight, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { NeuralOrb } from "@/components/ui/NeuralOrb";
+import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
 import { cn } from "@/lib/utils";
 
 // Icon Mapper
-type IconComponent = React.ComponentType<{ size?: number; className?: string }>;
+type IconComponent = React.ComponentType<{ size?: number | string; className?: string }>;
 const IconMap: Record<string, IconComponent> = {
   Network,
   Atom,
@@ -210,7 +210,7 @@ export const CareersPreview = () => {
               <div className="sticky top-0 bg-[#05080f]/90 backdrop-blur-md border-b border-border p-6 flex justify-between items-center z-10">
                 <div className="flex items-center gap-3">
                   <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center border", themeConfig[activeDomain.theme].bg, themeConfig[activeDomain.theme].border, themeConfig[activeDomain.theme].text)}>
-                    {React.createElement(IconMap[activeDomain.iconName] || Briefcase, { size: 16 })}
+                    {(() => { const DomainIcon = IconMap[activeDomain.iconName] || Briefcase; return <DomainIcon size={16} />; })()}
                   </div>
                   <h3 className="text-lg font-space font-bold text-text-primary">{activeDomain.domain}</h3>
                 </div>

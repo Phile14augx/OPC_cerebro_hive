@@ -100,7 +100,7 @@ class MockTrustClient {
       rbac: 'Strict',
       secrets: 'HashiCorp Vault',
       encryption: 'AES-256 (Rest), TLS 1.3 (Transit)',
-      certificates: 'Automated (Let\\'s Encrypt)',
+      certificates: "Automated (Let's Encrypt)",
       apiKeys: 'Rotated (30 days)',
       sessionHealth: 'Monitored',
       serviceAccounts: 'Least Privilege',

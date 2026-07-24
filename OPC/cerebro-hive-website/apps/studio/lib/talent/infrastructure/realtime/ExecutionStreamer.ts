@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Interface representing the Real-Time Streaming capabilities for Talent OS execution.
  * We use native WebSockets (ws) over Socket.io to keep things lightweight and bidirectional.

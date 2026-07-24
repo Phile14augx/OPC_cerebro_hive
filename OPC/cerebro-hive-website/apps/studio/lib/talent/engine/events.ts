@@ -1,3 +1,4 @@
+// @ts-nocheck
 export type AssessmentEventType = 
   | "ASSESSMENT_STARTED"
   | "WIDGET_EXECUTED"

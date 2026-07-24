@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Terminal as TerminalIcon, Api as ApiIcon } from '../../components/ui/icons/developer';
+import { Terminal as TerminalIcon, Api as ApiIcon } from '../../components/cerebro/icons/developer';
 
 const meta: Meta = {
   title: 'Icons/Developer',

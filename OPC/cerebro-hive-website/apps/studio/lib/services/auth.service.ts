@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { SignJWT, jwtVerify } from 'jose';

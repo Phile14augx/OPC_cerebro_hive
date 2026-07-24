@@ -307,7 +307,7 @@ function TokensPanel({ online }: { online: boolean | null }) {
   );
 }
 
-const TABS: [Tab, string, React.ComponentType<{ size?: number; className?: string }>][] = [
+const TABS: [Tab, string, React.ComponentType<{ size?: number | string; className?: string }>][] = [
   ["approvals", "Approvals", ClipboardCheck],
   ["compliance", "Compliance", ShieldCheck],
   ["grants", "Access Grants", KeyRound],

@@ -3,8 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
-import { AnimatedButton } from "@/components/ui/AnimatedButton";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { AnimatedButton } from "@/components/cerebro/AnimatedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export const ProductHero = ({ product }: { product: PackagedProduct }) => {
   return (

@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Clock, ArrowRight, CheckCircle2, Building2, Calendar, ChevronDown } from "lucide-react";
-import { TrackedButton } from "@/components/ui/TrackedButton";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const industries = ["Financial Services", "Healthcare & Life Sciences", "Manufacturing", "Retail & E-Commerce", "Technology", "Government & Public Sector", "Energy & Utilities", "Education", "Other"];
 const companyRanges = ["1–50", "51–200", "201–1,000", "1,001–10,000", "10,000+"];

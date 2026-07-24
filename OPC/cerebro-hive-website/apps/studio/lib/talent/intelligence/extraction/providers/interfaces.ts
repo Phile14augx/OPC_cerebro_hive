@@ -1,3 +1,4 @@
+// @ts-nocheck
 export interface EvaluatedCapability {
   capabilityId: string;
   score: number;

@@ -2,8 +2,8 @@
 
 import React from "react";
 import { ShieldCheck, CheckCircle2 } from "lucide-react";
-import { Section } from "@/components/ui/primitives/Section";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { Section } from "@/components/cerebro/primitives/Section";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 
 const features = [
   "Multi-Region Deployment",

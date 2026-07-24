@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { WorkflowNodes as WorkflowNodesIcon, Pipeline as PipelineIcon } from '../../components/ui/icons/workflow';
+import { WorkflowNodes as WorkflowNodesIcon, Pipeline as PipelineIcon } from '../../components/cerebro/icons/workflow';
 
 const meta: Meta = {
   title: 'Icons/Workflow',

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import {
   Monitor, Sparkles, CheckCircle2, Loader2, HardDrive,
   Printer, Wifi, Database, Package, ChevronRight, Download,
@@ -27,7 +27,7 @@ const nativeFeatures = [
   { name: "Auto Updates",        icon: Package,   done: false },
 ];
 
-export default function DesktopStudioPage() {
+function DesktopStudioPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -130,5 +130,13 @@ export default function DesktopStudioPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DesktopStudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <DesktopStudioPageInner />
+    </Suspense>
   );
 }

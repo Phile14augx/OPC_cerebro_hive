@@ -1,0 +1,364 @@
+---
+# Prometheus Alert Rules — CerebroHive Platform
+# Coverage: SLO burn rate, AI cost, security events, infrastructure, business KPIs
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cerebro-alert-rules
+  namespace: monitoring
+  labels:
+    prometheus: kube-prometheus
+    role:       alert-rules
+    release:    kube-prometheus-stack
+spec:
+  groups:
+
+    # ── SLO Burn Rate Alerts (multi-window, multi-burn) ────────────────────────
+    - name: cerebro.slo.burn
+      rules:
+        - alert: CerebroHighErrorBurnRate
+          expr: |
+            cerebro:slo:availability:burn_rate_1h > 14.4
+            and
+            cerebro:slo:availability:burn_rate_6h > 6
+          for: 2m
+          labels:
+            severity:    critical
+            team:        sre
+            slo:         availability
+          annotations:
+            summary:     "CRITICAL: SLO error budget burning too fast (>14.4x in 1h)"
+            description: |
+              Error burn rate is {{ $value | humanize }}x over the last hour.
+              At this rate the 30-day error budget will be exhausted in < 2 hours.
+            runbook_url: https://runbooks.cerebro-hive.io/slo/high-error-burn-rate
+
+        - alert: CerebroMediumErrorBurnRate
+          expr: |
+            cerebro:slo:availability:burn_rate_6h > 6
+            and
+            cerebro:slo:availability:burn_rate_1d > 3
+          for: 15m
+          labels:
+            severity:    warning
+            team:        sre
+            slo:         availability
+          annotations:
+            summary:     "WARNING: SLO error budget burn rate elevated"
+            description: |
+              Error burn rate is {{ $value | humanize }}x over 6h.
+              At this rate the 30-day error budget will be exhausted in < 5 days.
+
+        - alert: CerebroLatencySLOViolation
+          expr: |
+            cerebro:slo:latency_slo_compliance:rate5m < 0.95
+          for: 5m
+          labels:
+            severity: warning
+            team:     sre
+            slo:      latency
+          annotations:
+            summary:     "Latency SLO degraded"
+            description: "Only {{ $value | humanizePercentage }} of requests served within 500ms (target: 95%)"
+
+    # ── HTTP / API ─────────────────────────────────────────────────────────────
+    - name: cerebro.http
+      rules:
+        - alert: CerebroHighErrorRate
+          expr: cerebro:http:error_rate:rate5m > 0.05
+          for: 5m
+          labels:
+            severity: critical
+            team:     backend
+          annotations:
+            summary:     "High HTTP error rate for {{ $labels.service }}"
+            description: "Error rate is {{ $value | humanizePercentage }} (threshold: 5%)"
+
+        - alert: CerebroHighLatencyP99
+          expr: |
+            cerebro:http:request_duration_p99:rate5m > 2
+          for: 5m
+          labels:
+            severity: warning
+            team:     backend
+          annotations:
+            summary:     "P99 latency > 2s for {{ $labels.service }}"
+            description: "P99 latency is {{ $value | humanizeDuration }}"
+
+        - alert: CerebroAPIDown
+          expr: up{job=~"cerebro-.*"} == 0
+          for: 2m
+          labels:
+            severity: critical
+            team:     oncall
+          annotations:
+            summary:     "CerebroHive service {{ $labels.job }} is down"
+            description: "{{ $labels.job }} has been unreachable for 2+ minutes"
+
+    # ── AI Cost Anomalies ──────────────────────────────────────────────────────
+    - name: cerebro.ai.cost
+      rules:
+        - alert: CerebroAICostSpike
+          expr: |
+            cerebro:ai:cost_per_hour:rate1h > 500
+          for: 5m
+          labels:
+            severity: warning
+            team:     finops
+          annotations:
+            summary:     "AI spend rate spike: ${{ $value }}/hour"
+            description: |
+              Current AI spend rate is ${{ $value }}/hour.
+              Check for runaway workflows or model misconfiguration.
+            runbook_url: https://runbooks.cerebro-hive.io/finops/ai-cost-spike
+
+        - alert: CerebroAICriticalCostSpike
+          expr: |
+            cerebro:ai:cost_per_hour:rate1h > 2000
+          for: 2m
+          labels:
+            severity: critical
+            team:     finops
+          annotations:
+            summary:     "CRITICAL: AI spend rate > $2000/hour"
+            description:  "Potential runaway AI usage. Immediate investigation required."
+
+        - alert: CerebroAIHighErrorRate
+          expr: cerebro:ai:error_rate:rate5m > 0.1
+          for: 5m
+          labels:
+            severity: warning
+            team:     mlops
+          annotations:
+            summary:     "AI request error rate elevated"
+            description: "AI error rate is {{ $value | humanizePercentage }} (threshold: 10%)"
+
+        - alert: CerebroAIHighLatency
+          expr: cerebro:ai:request_latency_p99:rate5m > 30
+          for: 5m
+          labels:
+            severity: warning
+            team:     mlops
+          annotations:
+            summary:     "AI gateway P99 latency > 30s"
+            description: "AI requests are taking {{ $value | humanizeDuration }} at P99"
+
+    # ── Workflow Execution ─────────────────────────────────────────────────────
+    - name: cerebro.workflow
+      rules:
+        - alert: CerebroWorkflowHighFailureRate
+          expr: |
+            1 - cerebro:workflow:success_rate:rate5m > 0.1
+          for: 5m
+          labels:
+            severity: warning
+            team:     backend
+          annotations:
+            summary:     "Workflow failure rate > 10%"
+            description: "{{ $value | humanizePercentage }} of workflows are failing"
+
+        - alert: CerebroWorkflowQueueDepthHigh
+          expr: cerebro:workflow:queue_depth > 1000
+          for: 10m
+          labels:
+            severity: warning
+            team:     backend
+          annotations:
+            summary:     "Workflow queue depth > 1000"
+            description: "{{ $value }} workflows are pending execution. Consider scaling temporal-worker."
+
+        - alert: CerebroWorkflowLongRunning
+          expr: |
+            cerebro:workflow:duration_p95:rate5m > 3600
+          for: 5m
+          labels:
+            severity: warning
+            team:     backend
+          annotations:
+            summary:     "Workflow P95 duration > 1 hour"
+            description: "P95 workflow duration is {{ $value | humanizeDuration }}"
+
+    # ── Database ───────────────────────────────────────────────────────────────
+    - name: cerebro.database
+      rules:
+        - alert: CerebroDBConnectionPoolNearExhaustion
+          expr: cerebro:db:connection_pool_utilization > 0.85
+          for: 5m
+          labels:
+            severity: warning
+            team:     dba
+          annotations:
+            summary:     "DB connection pool {{ $value | humanizePercentage }} utilized"
+            description: "Connection pool is almost exhausted. Risk of connection failures."
+
+        - alert: CerebroDBHighQueryLatency
+          expr: cerebro:db:query_duration_p99:rate5m > 500
+          for: 5m
+          labels:
+            severity: warning
+            team:     dba
+          annotations:
+            summary:     "DB P99 query latency > 500ms"
+            description: "Database P99 latency is {{ $value }}ms"
+
+        - alert: CerebroDBHighCPU
+          expr: cerebro:db:rds_cpu:avg5m > 80
+          for: 10m
+          labels:
+            severity: warning
+            team:     dba
+          annotations:
+            summary:     "RDS CPU utilization > 80%"
+            description: "RDS is under heavy load: {{ $value | humanizePercentage }}"
+
+    # ── NATS JetStream ─────────────────────────────────────────────────────────
+    - name: cerebro.nats
+      rules:
+        - alert: CerebroNATSConsumerLagHigh
+          expr: cerebro:nats:consumer_lag:total > 5000
+          for: 10m
+          labels:
+            severity: warning
+            team:     backend
+          annotations:
+            summary:     "NATS consumer lag > 5000 for {{ $labels.stream_name }}/{{ $labels.consumer_name }}"
+            description: "Messages are not being processed fast enough. {{ $value }} messages pending."
+
+        - alert: CerebroNATSDown
+          expr: up{job="nats-exporter"} == 0
+          for: 2m
+          labels:
+            severity: critical
+            team:     oncall
+          annotations:
+            summary:     "NATS monitoring endpoint is down"
+
+    # ── Security Events ────────────────────────────────────────────────────────
+    - name: cerebro.security
+      rules:
+        - alert: CerebroFalcoHighSeverityEvent
+          expr: |
+            rate(falco_events_total{priority="CRITICAL"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: critical
+            team:     security
+          annotations:
+            summary:     "Falco CRITICAL security event detected"
+            description: "{{ $value }} critical Falco events/sec. Immediate investigation required."
+            runbook_url: https://runbooks.cerebro-hive.io/security/falco-critical
+
+        - alert: CerebroHighAuthFailureRate
+          expr: |
+            sum(rate(http_requests_total{
+              job=~"cerebro-.*",
+              status_code="401"
+            }[5m])) > 50
+          for: 5m
+          labels:
+            severity: warning
+            team:     security
+          annotations:
+            summary:     "High authentication failure rate: {{ $value }} 401s/sec"
+            description: "May indicate brute force attack or misconfigured client."
+
+        - alert: CerebroSuspiciousAPIKeyUsage
+          expr: |
+            sum by (org_id) (
+              rate(cerebro_api_key_usage_total[5m])
+            ) > 100
+          for: 2m
+          labels:
+            severity: warning
+            team:     security
+          annotations:
+            summary:     "Unusual API key usage rate for org {{ $labels.org_id }}"
+            description: "API key request rate is {{ $value }}/sec — possible abuse."
+
+    # ── Infrastructure ─────────────────────────────────────────────────────────
+    - name: cerebro.infrastructure
+      rules:
+        - alert: CerebroNodeDiskPressure
+          expr: |
+            kubelet_node_condition{condition="DiskPressure"} == 1
+          for: 2m
+          labels:
+            severity: critical
+            team:     infra
+          annotations:
+            summary:     "Node {{ $labels.node }} has disk pressure"
+
+        - alert: CerebroNamespaceCPUThrottled
+          expr: |
+            sum by (namespace) (
+              rate(container_cpu_cfs_throttled_seconds_total{namespace=~"cerebro-.*"}[5m])
+            ) > 0.5
+          for: 10m
+          labels:
+            severity: warning
+            team:     infra
+          annotations:
+            summary:     "Heavy CPU throttling in {{ $labels.namespace }}"
+            description: "Containers in {{ $labels.namespace }} are throttled {{ $value | humanizePercentage }} of time."
+
+        - alert: CerbroPVCNearFull
+          expr: |
+            kubelet_volume_stats_available_bytes /
+            kubelet_volume_stats_capacity_bytes < 0.1
+          for: 5m
+          labels:
+            severity: critical
+            team:     infra
+          annotations:
+            summary:     "PVC {{ $labels.persistentvolumeclaim }} is 90%+ full"
+            description: "Only {{ $value | humanizePercentage }} of volume capacity remaining."
+
+    # ── Temporal ───────────────────────────────────────────────────────────────
+    - name: cerebro.temporal
+      rules:
+        - alert: CerebroTemporalHighScheduleToStartLatency
+          expr: cerebro:temporal:schedule_to_start_p99:rate5m > 5
+          for: 5m
+          labels:
+            severity: warning
+            team:     backend
+          annotations:
+            summary:     "Temporal P99 schedule-to-start latency > 5s"
+            description: "Temporal worker may be overwhelmed. P99 latency: {{ $value | humanizeDuration }}"
+
+        - alert: CerebroTemporalActivityHighFailRate
+          expr: |
+            sum by (activity_type) (
+              cerebro:temporal:activity_failed_rate:rate5m
+            ) > 1
+          for: 5m
+          labels:
+            severity: warning
+            team:     backend
+          annotations:
+            summary:     "Temporal activity {{ $labels.activity_type }} failing at {{ $value }}/sec"
+
+    # ── Business KPIs ──────────────────────────────────────────────────────────
+    - name: cerebro.business
+      rules:
+        - alert: CerebroActiveOrgsDrop
+          expr: |
+            cerebro:business:active_orgs_1d < 10
+          for: 30m
+          labels:
+            severity: warning
+            team:     product
+          annotations:
+            summary:     "Active orgs dropped to {{ $value }} in last 24h"
+            description: "Unusually low organization activity — check for systemic issues."
+
+        - alert: CerebroAPICallRateDrop
+          expr: |
+            cerebro:business:api_calls_per_minute:rate5m < 10
+          for: 15m
+          labels:
+            severity: warning
+            team:     oncall
+          annotations:
+            summary:     "API call rate dropped to {{ $value }}/min — may indicate outage"

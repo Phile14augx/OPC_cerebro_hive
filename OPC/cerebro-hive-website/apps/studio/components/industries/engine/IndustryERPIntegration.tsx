@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { EngineConfig } from '@/lib/data/industries/types';
-import { SectionHeading } from '@/components/ui/SectionHeading';
+import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { motion } from 'framer-motion';
 import { Layers, ArrowDown } from 'lucide-react';
 

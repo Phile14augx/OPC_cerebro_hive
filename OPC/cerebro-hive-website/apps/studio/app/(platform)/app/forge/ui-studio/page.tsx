@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   PenTool, Sparkles, ChevronRight, Palette, Type, Grid,
@@ -56,7 +56,7 @@ const features = [
   { label: "Storybook Docs",        done: false },
 ];
 
-export default function UIStudioPage() {
+function UIStudioPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -203,5 +203,13 @@ export default function UIStudioPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function UIStudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <UIStudioPageInner />
+    </Suspense>
   );
 }

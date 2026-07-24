@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Database as DatabaseIcon } from '../../components/ui/icons/database';
+import { Database as DatabaseIcon } from '../../components/cerebro/icons/database';
 
 const meta: Meta = {
   title: 'Icons/Database',

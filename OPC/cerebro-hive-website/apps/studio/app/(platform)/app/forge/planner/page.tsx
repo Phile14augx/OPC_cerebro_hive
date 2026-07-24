@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   Brain, Sparkles, Play, ChevronRight, FolderKanban,
@@ -25,7 +25,7 @@ const planningPhases = [
   { label: "Development Plan",         icon: Calendar,     key: "plan"       },
 ];
 
-export default function AIPlannerPage() {
+function AIPlannerPageInner() {
   const searchParams = useSearchParams();
   const projectId = searchParams.get("projectId");
 
@@ -216,5 +216,13 @@ export default function AIPlannerPage() {
         </motion.div>
       )}
     </div>
+  );
+}
+
+export default function AIPlannerPage() {
+  return (
+    <Suspense fallback={null}>
+      <AIPlannerPageInner />
+    </Suspense>
   );
 }

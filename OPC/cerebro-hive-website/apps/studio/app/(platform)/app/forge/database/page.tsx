@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import {
   Database, Sparkles, CheckCircle2, Loader2, GitMerge,
   Link2, Shield, Zap, ChevronRight, Download,
@@ -31,7 +31,7 @@ const entities = [
   { name: "LabTest",       fields: 8,  relations: ["Patient", "LabResult"],             pk: "UUID" },
 ];
 
-export default function DatabaseStudioPage() {
+function DatabaseStudioPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId") ?? "";
@@ -121,5 +121,13 @@ export default function DatabaseStudioPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DatabaseStudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <DatabaseStudioPageInner />
+    </Suspense>
   );
 }

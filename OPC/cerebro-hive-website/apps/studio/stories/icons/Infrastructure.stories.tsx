@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Server as ServerIcon } from '../../components/ui/icons/infrastructure';
+import { Server as ServerIcon } from '../../components/cerebro/icons/infrastructure';
 
 const meta: Meta = {
   title: 'Icons/Infrastructure',

@@ -2,8 +2,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { SectionHeading } from '../ui/SectionHeading';
-import { AnimatedButton } from '../ui/AnimatedButton';
+import { SectionHeading } from '../cerebro/SectionHeading';
+import { AnimatedButton } from '../cerebro/AnimatedButton';
 import { Download, Mail, Calendar, Calculator, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

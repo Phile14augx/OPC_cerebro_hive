@@ -3,9 +3,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { EnterpriseService } from "@/lib/data/types";
-import { AnimatedButton } from "@/components/ui/AnimatedButton";
-import { TrackedLink } from "@/components/ui/TrackedLink";
-import { PageContainer } from "@/components/ui/primitives/PageContainer";
+import { AnimatedButton } from "@/components/cerebro/AnimatedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 
 export const ServiceHero = ({ service }: { service: EnterpriseService }) => {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   FileText, Sparkles, ChevronRight, Users, Shield,
@@ -36,7 +36,7 @@ function reqItems(reqs: ForgeRequirements, key: TabKey): string[] {
   }
 }
 
-export default function RequirementsStudioPage() {
+function RequirementsStudioPageInner() {
   const searchParams = useSearchParams();
   const projectId = searchParams.get("projectId");
 
@@ -214,5 +214,13 @@ export default function RequirementsStudioPage() {
         </motion.div>
       )}
     </div>
+  );
+}
+
+export default function RequirementsStudioPage() {
+  return (
+    <Suspense fallback={null}>
+      <RequirementsStudioPageInner />
+    </Suspense>
   );
 }

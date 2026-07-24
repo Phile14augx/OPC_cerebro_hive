@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SectionHeading } from '../ui/SectionHeading';
+import { SectionHeading } from '../cerebro/SectionHeading';
 import { allResearchData } from '@/lib/content/research';
 import { BenchmarkData } from '@/lib/content/research/types';
 import { ArrowRight, BarChart2, Info } from 'lucide-react';

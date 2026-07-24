@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SectionHeading } from '../ui/SectionHeading';
+import { SectionHeading } from '../cerebro/SectionHeading';
 import { ArrowRight, BookOpen, BrainCircuit, Code, Database, Globe, Network, Shield, Cpu, Binary, Cloud, Workflow, Eye, Lightbulb, Target, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ArrowRight, BookOpen, AlertTriangle, Lightbulb, Target } from "lucide-react";
-import { TrackedLink } from "@/components/ui/TrackedLink";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export const WeeklyBrief = () => {
   return (
