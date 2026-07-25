@@ -3,7 +3,7 @@ import { Space_Grotesk, Inter, IBM_Plex_Mono, JetBrains_Mono } from "next/font/g
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Providers } from "./providers";
-import { StudioShell } from "@/components/layout/StudioShell";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -41,7 +41,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${plexMono.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
-      <body className="bg-background text-text-primary antialiased selection:bg-primary-accent selection:text-text-primary overflow-hidden" suppressHydrationWarning>
+      <body className="bg-background text-text-primary antialiased selection:bg-primary-accent selection:text-text-primary" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -49,9 +49,9 @@ export default function RootLayout({
           disableTransitionOnChange={false}
         >
           <Providers>
-            <StudioShell>
+            <SiteChrome>
               {children}
-            </StudioShell>
+            </SiteChrome>
           </Providers>
         </ThemeProvider>
       </body>
