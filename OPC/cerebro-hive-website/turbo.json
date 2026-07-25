@@ -13,7 +13,9 @@
         "NEXT_PUBLIC_APP_VERSION",
         "NEXT_PUBLIC_SENTRY_DSN",
         "NEXT_PUBLIC_FLAGD_URL",
-        "NEXT_PUBLIC_POSTHOG_KEY"
+        "NEXT_PUBLIC_POSTHOG_KEY",
+        "IS_FTP_DEPLOY",
+        "GITHUB_ACTIONS"
       ]
     },
     "dev": {

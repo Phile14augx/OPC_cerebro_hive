@@ -82,6 +82,19 @@ export const mainNavigation: NavItem[] = [
       { label: "Careers", href: "/careers" },
       { label: "Contact", href: "/contact" },
     ]
+  },
+  {
+    label: "Workspace",
+    href: "/app",
+    children: [
+      { label: "Overview", href: "/app" },
+      { label: "Agents", href: "/app/agents" },
+      { label: "Workflows", href: "/app/workflows" },
+      { label: "Analytics", href: "/app/analytics" },
+      { label: "Forge", href: "/app/forge" },
+      { label: "Talent", href: "/app/talent" },
+      { label: "Trust & Governance", href: "/app/trust" },
+    ]
   }
 ];
 
