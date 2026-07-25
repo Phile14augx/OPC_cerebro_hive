@@ -93,3 +93,23 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.VPS_SSH_KEY }}
         script: bash /var/www/cerebro-hive/scripts/vps-nginx.sh
+
+    - name: Diagnose deployment (temporary)
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: |
+          echo "--- pm2 describe ---"
+          pm2 describe cerebro-hive
+          echo "--- server.js locations on disk ---"
+          find /var/www/cerebro-hive -maxdepth 3 -iname "server.js" -exec ls -la {} \;
+          echo "--- deployed nav file fingerprint ---"
+          find /var/www/cerebro-hive/apps/studio/.next/server -iname "*.js" | xargs grep -l "nav_dashboard_click" 2>/dev/null | head -3
+          echo "--- local curl through nginx target port ---"
+          curl -s http://localhost:3000/ | grep -o "Solutions\|Resources\|Platform" | sort -u
+          echo "--- nginx sites-enabled ---"
+          ls -la /etc/nginx/sites-enabled/
+          echo "--- process listening on 3000 ---"
+          (ss -ltnp 2>/dev/null | grep 3000) || (netstat -ltnp 2>/dev/null | grep 3000) || true
