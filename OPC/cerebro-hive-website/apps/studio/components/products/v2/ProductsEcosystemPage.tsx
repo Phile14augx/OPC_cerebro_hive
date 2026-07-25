@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Globe2, Archive, Code2, Workflow, BarChart2, MessageSquare, Server, Shield, Cpu, Zap, ChevronRight, Database } from "lucide-react";
+import { ArrowRight, Globe2, Archive, Code2, Workflow, BarChart2, MessageSquare, Server, Shield, Cpu, Zap, ChevronRight, Database, Cloud, Lock, ShieldCheck, Check } from "lucide-react";
 import { EcosystemArchitectureDiagram } from "./EcosystemArchitectureDiagram";
 import { ecosystemTiers } from "@/lib/data/products";
 
@@ -72,6 +72,37 @@ const sharedServices = [
   "Observability Stack",
   "Billing & Licensing",
   "Plugin Marketplace",
+];
+
+const deploymentModels = [
+  {
+    title: "SaaS Cloud",
+    tagline: "Managed by CerebroHive",
+    desc: "Launch in minutes with a fully managed platform across AWS, Azure, or Google Cloud.",
+    icon: Cloud,
+    features: ["SOC2 Ready", "Multi-region", "Autoscaling", "99.95% SLA"],
+  },
+  {
+    title: "Private Cloud",
+    tagline: "Dedicated to your account",
+    desc: "Dedicated VPC deployment inside your own cloud account, with full data isolation.",
+    icon: Lock,
+    features: ["Your VPC", "Customer-held keys", "Private networking", "Dedicated cluster"],
+  },
+  {
+    title: "On-Premises",
+    tagline: "Self-hosted",
+    desc: "Self-hosted on Kubernetes inside your data center, with complete infrastructure control.",
+    icon: Server,
+    features: ["Kubernetes", "GPU ready", "Offline models", "Enterprise integrations"],
+  },
+  {
+    title: "Air-Gapped",
+    tagline: "Regulated & defense",
+    desc: "Fully disconnected deployment built for regulated, defense, and classified environments.",
+    icon: ShieldCheck,
+    features: ["Defense-grade", "Government ready", "Classified networks", "Zero internet"],
+  },
 ];
 
 export function ProductsEcosystemPage() {
@@ -429,27 +460,52 @@ export function ProductsEcosystemPage() {
       </section>
 
       {/* DEPLOYMENT */}
-      <section className="section-pad border-b border-border">
-        <div className="container-wide">
-          <div className="text-center mb-16">
+      <section className="relative section-pad border-b border-border overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_0%,rgba(0,229,255,0.06),transparent)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:56px_56px]" />
+        </div>
+        <div className="container-wide relative">
+          <div className="text-center mb-14">
             <div className="text-[10px] font-bold tracking-widest uppercase text-primary-accent mb-4">Deployment Models</div>
-            <h2 className="text-4xl font-space font-bold text-text-primary mb-6">
-              Deploy Where Your Data Lives
+            <h2 className="text-4xl md:text-5xl font-space font-bold tracking-tight leading-[0.95] text-text-primary mb-5">
+              Deploy AI Where Your Enterprise Operates
             </h2>
+            <p className="text-text-secondary max-w-xl mx-auto">
+              Choose the deployment model that matches your security, compliance, and infrastructure requirements.
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { title: "SaaS Cloud", desc: "Fully managed on AWS, GCP, or Azure. Fastest time to value.", icon: "☁️" },
-              { title: "Private Cloud", desc: "Dedicated VPC deployment within your cloud account. Full data isolation.", icon: "🔐" },
-              { title: "On-Premises", desc: "Self-hosted Kubernetes deployment in your data center.", icon: "🏢" },
-              { title: "Air-Gapped", desc: "Fully disconnected deployment for regulated and defense environments.", icon: "🛡️" },
-            ].map((model, i) => (
-              <div key={i} className="p-6 rounded-2xl border border-border bg-surface text-center hover:border-primary-accent/40 transition-colors">
-                <div className="text-3xl mb-4">{model.icon}</div>
-                <h3 className="font-space font-bold text-text-primary mb-3">{model.title}</h3>
-                <p className="text-sm text-text-secondary leading-relaxed">{model.desc}</p>
-              </div>
-            ))}
+            {deploymentModels.map((model, i) => {
+              const Icon = model.icon;
+              return (
+                <motion.div
+                  key={model.title}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08, duration: 0.4 }}
+                  whileHover={{ y: -10, scale: 1.02 }}
+                  className="group relative flex flex-col p-7 rounded-2xl border border-white/[0.08] bg-[#0D1117] hover:border-primary-accent/35 shadow-[0_0_0_rgba(0,255,136,0)] hover:shadow-[0_20px_80px_rgba(0,255,136,0.18)] transition-[border-color,box-shadow] duration-300"
+                >
+                  <div className="absolute inset-0 rounded-2xl bg-primary-accent/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  <div className="relative w-14 h-14 rounded-xl bg-primary-accent/[0.08] border border-primary-accent/[0.12] flex items-center justify-center mb-6 backdrop-blur-sm">
+                    <Icon size={24} className="text-primary-accent" />
+                  </div>
+                  <h3 className="relative font-space font-bold text-lg text-text-primary mb-1">{model.title}</h3>
+                  <div className="relative text-xs text-text-muted mb-4">{model.tagline}</div>
+                  <p className="relative text-sm text-text-secondary leading-relaxed mb-6">{model.desc}</p>
+                  <div className="relative mt-auto pt-5 border-t border-white/[0.06] flex flex-col gap-2">
+                    {model.features.map((feature) => (
+                      <div key={feature} className="flex items-center gap-2 text-xs text-text-secondary">
+                        <Check size={13} className="text-primary-accent shrink-0" />
+                        {feature}
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
