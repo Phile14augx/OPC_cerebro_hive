@@ -56,7 +56,7 @@ export const visualTokens = {
 
 // --- TYPOGRAPHY TOKENS --- //
 export const typeTokens = {
-  hero: "text-5xl md:text-7xl font-space font-bold tracking-tight leading-tight",
+  hero: "text-5xl md:text-7xl font-space font-bold tracking-tighter leading-[0.9]",
   heading1: "text-4xl md:text-5xl font-space font-bold tracking-tight",
   heading2: "text-3xl md:text-4xl font-space font-semibold",
   heading3: "text-2xl md:text-3xl font-space font-medium",
