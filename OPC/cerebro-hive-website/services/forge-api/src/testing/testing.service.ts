@@ -109,13 +109,14 @@ totalTests = sum of all testCounts; passingTests = sum of all passingCounts.`;
 
     const artifactsToSave = allArtifacts.length > 0 ? allArtifacts : defaultArtifacts;
 
-    await this.prisma.$transaction([
-      this.prisma.project.update({
+    const p = this.prisma as any;
+    await p.$transaction([
+      p.project.update({
         where: { id: projectId },
         data: { forgePhase: 'testing' },
       }),
       ...artifactsToSave.slice(0, 10).map(filePath =>
-        this.prisma.generatedArtifact.upsert({
+        p.generatedArtifact.upsert({
           where: { projectId_filePath: { projectId, filePath } },
           create: {
             projectId,

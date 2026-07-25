@@ -8,6 +8,7 @@ export enum ExecutionState {
   NeedsApproval = "NeedsApproval",
   Completed = "Completed",
   Failed = "Failed",
+  Replanning = "Replanning",
   RollingBack = "RollingBack",
   Recovered = "Recovered",
   Cancelled = "Cancelled"
@@ -25,6 +26,7 @@ export class ExecutionStateMachine {
       ExecutionState.Streaming,
       ExecutionState.Waiting,
       ExecutionState.NeedsApproval,
+      ExecutionState.Replanning,
       ExecutionState.Completed,
       ExecutionState.Failed,
       ExecutionState.Cancelled
@@ -33,7 +35,8 @@ export class ExecutionStateMachine {
     [ExecutionState.Waiting]: [ExecutionState.Running, ExecutionState.Failed, ExecutionState.Cancelled],
     [ExecutionState.NeedsApproval]: [ExecutionState.Running, ExecutionState.Cancelled], // Approved -> Running, Rejected -> Cancelled
     [ExecutionState.Completed]: [], // Terminal state
-    [ExecutionState.Failed]: [ExecutionState.RollingBack, ExecutionState.Recovered],
+    [ExecutionState.Failed]: [ExecutionState.Replanning, ExecutionState.RollingBack, ExecutionState.Recovered],
+    [ExecutionState.Replanning]: [ExecutionState.Running, ExecutionState.Failed, ExecutionState.Cancelled],
     [ExecutionState.RollingBack]: [ExecutionState.Failed, ExecutionState.Recovered],
     [ExecutionState.Recovered]: [ExecutionState.Running],
     [ExecutionState.Cancelled]: [] // Terminal state

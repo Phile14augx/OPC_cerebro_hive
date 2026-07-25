@@ -16,6 +16,9 @@ import {
   type ConsumerMessages,
   StringCodec,
   type NatsError,
+  StorageType,
+  AckPolicy,
+  DeliverPolicy,
 } from "nats";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -86,7 +89,7 @@ export class EventsService implements OnModuleInit, OnModuleDestroy {
         subjects:    ["cerebro.>"],
         max_age:     24 * 60 * 60 * 1e9,   // 24h in nanoseconds
         max_msgs:    5_000_000,
-        storage:     "file" as const,
+        storage:     StorageType.File,
         num_replicas: 1,
       });
     }
@@ -100,8 +103,8 @@ export class EventsService implements OnModuleInit, OnModuleDestroy {
     try {
       await this.jsm?.consumers.add("CEREBRO", {
         durable_name:    "forge-api-events-fan-out",
-        ack_policy:      "explicit" as const,
-        deliver_policy:  "new" as const,
+        ack_policy:      AckPolicy.Explicit,
+        deliver_policy:  DeliverPolicy.New,
         filter_subject:  "cerebro.>",
         max_ack_pending: 1000,
       });

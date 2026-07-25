@@ -56,13 +56,14 @@ actors with permissions, database entities, API contracts, and user stories.`;
       })),
     ];
 
-    await this.prisma.$transaction([
-      this.prisma.project.update({
+    const p = this.prisma as any;
+    await p.$transaction([
+      p.project.update({
         where: { id: projectId },
         data: { forgePhase: 'requirements' },
       }),
-      this.prisma.requirement.deleteMany({ where: { projectId } }),
-      this.prisma.requirement.createMany({ data: reqRows }),
+      p.requirement.deleteMany({ where: { projectId } }),
+      p.requirement.createMany({ data: reqRows }),
     ]);
 
     projectGraph.setRequirements(projectId, reqs);

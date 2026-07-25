@@ -83,7 +83,7 @@ Produce 3–8 findings total; prioritise high/critical issues. Be specific about
       schemaDescription: 'ReviewResult — scored categories, actionable findings, grade',
     });
 
-    await this.prisma.project.update({
+    await (this.prisma as any).project.update({
       where: { id: projectId },
       data: { forgePhase: 'review' },
     });

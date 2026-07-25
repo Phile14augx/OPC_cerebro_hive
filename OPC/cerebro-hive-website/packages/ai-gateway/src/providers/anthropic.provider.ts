@@ -9,6 +9,11 @@ import { calculateCost } from './base.provider';
 import type { ChatRequest, ChatResponse, ProviderConfig, StreamChunk } from '../types';
 import { GatewayError, GATEWAY_ERRORS } from '../types';
 
+/** Narrow an unknown catch value to an API status error shape */
+function isApiError(e: unknown): e is { status: number; message: string } {
+  return typeof e === 'object' && e !== null && 'status' in e && 'message' in e;
+}
+
 export class AnthropicProvider implements AIProvider {
   readonly name = 'anthropic';
   private client: Anthropic;
@@ -66,7 +71,7 @@ export class AnthropicProvider implements AIProvider {
           response.stop_reason === 'max_tokens' ? 'max_tokens' : 'stop',
       };
     } catch (err) {
-      if (err instanceof Anthropic.APIStatusError) {
+      if (isApiError(err)) {
         const retryable = err.status === 429 || err.status >= 500;
         throw new GatewayError(
           `Anthropic API error: ${err.message}`,
@@ -126,7 +131,7 @@ export class AnthropicProvider implements AIProvider {
         cost: calculateCost(inputTokens, outputTokens, this.config),
       };
     } catch (err) {
-      if (err instanceof Anthropic.APIStatusError) {
+      if (isApiError(err)) {
         throw new GatewayError(
           `Anthropic stream error: ${err.message}`,
           GATEWAY_ERRORS.PROVIDER_ERROR,
@@ -140,7 +145,12 @@ export class AnthropicProvider implements AIProvider {
 
   async healthCheck(): Promise<boolean> {
     try {
-      await this.client.models.list({ limit: 1 });
+      // Minimal API call to verify connectivity
+      await this.client.messages.create({
+        model: this.config.defaultModel ?? 'claude-3-haiku-20240307',
+        max_tokens: 1,
+        messages: [{ role: 'user', content: 'ping' }],
+      });
       return true;
     } catch {
       return false;

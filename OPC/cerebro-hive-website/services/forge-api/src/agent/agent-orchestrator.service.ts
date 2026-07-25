@@ -49,7 +49,8 @@ export class AgentOrchestratorService {
     this.events.emit('agent.started', { projectId, agentType, phase });
 
     // Create DB run record
-    const run = await this.prisma.forgeAgentRun.create({
+    const p = this.prisma as any;
+    const run = await p.forgeAgentRun.create({
       data: {
         projectId,
         agentType,
@@ -93,7 +94,8 @@ export class AgentOrchestratorService {
       const durationMs = Date.now() - startedAt;
 
       // Persist result
-      await this.prisma.forgeAgentRun.update({
+      const p = this.prisma as any;
+      await p.forgeAgentRun.update({
         where: { id: run.id },
         data: {
           status: 'completed',
@@ -113,7 +115,8 @@ export class AgentOrchestratorService {
       const message = err instanceof Error ? err.message : String(err);
       this.logger.error(`Agent ${agentType} failed for project ${projectId}: ${message}`);
 
-      await this.prisma.forgeAgentRun.update({
+      const p = this.prisma as any;
+      await p.forgeAgentRun.update({
         where: { id: run.id },
         data: { status: 'failed', errorMessage: message, completedAt: new Date() },
       });
@@ -132,7 +135,8 @@ export class AgentOrchestratorService {
     projectGraph.setAgentStatus(projectId, agentType, 'running');
     this.events.emit('agent.started', { projectId, agentType, phase });
 
-    const run = await this.prisma.forgeAgentRun.create({
+    const p = this.prisma as any;
+    const run = await p.forgeAgentRun.create({
       data: {
         projectId,
         agentType,
@@ -161,7 +165,8 @@ export class AgentOrchestratorService {
       const response = chunks.join('');
       const durationMs = Date.now() - startedAt;
 
-      await this.prisma.forgeAgentRun.update({
+      const p = this.prisma as any;
+      await p.forgeAgentRun.update({
         where: { id: run.id },
         data: { status: 'completed', response, durationMs, completedAt: new Date() },
       });
@@ -170,7 +175,8 @@ export class AgentOrchestratorService {
       this.events.emit('agent.completed', { projectId, agentType, phase, durationMs });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      await this.prisma.forgeAgentRun.update({
+      const p = this.prisma as any;
+      await p.forgeAgentRun.update({
         where: { id: run.id },
         data: { status: 'failed', errorMessage: message, completedAt: new Date() },
       });

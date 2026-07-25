@@ -9,6 +9,10 @@ import { calculateCost, estimateTokens } from './base.provider';
 import type { ChatRequest, ChatResponse, ProviderConfig, StreamChunk } from '../types';
 import { GatewayError, GATEWAY_ERRORS } from '../types';
 
+function isApiError(e: unknown): e is { status: number; message: string } {
+  return typeof e === 'object' && e !== null && 'status' in e && 'message' in e;
+}
+
 export class OpenAIProvider implements AIProvider {
   readonly name = 'openai';
   private client: OpenAI;
@@ -59,7 +63,7 @@ export class OpenAIProvider implements AIProvider {
         finishReason: choice.finish_reason === 'length' ? 'max_tokens' : 'stop',
       };
     } catch (err) {
-      if (err instanceof OpenAI.APIStatusError) {
+      if (isApiError(err)) {
         throw new GatewayError(
           `OpenAI API error: ${err.message}`,
           err.status === 429 ? GATEWAY_ERRORS.RATE_LIMITED : GATEWAY_ERRORS.PROVIDER_ERROR,
@@ -105,7 +109,7 @@ export class OpenAIProvider implements AIProvider {
         cost: calculateCost(inputTokens, outputTokens, this.config),
       };
     } catch (err) {
-      if (err instanceof OpenAI.APIStatusError) {
+      if (isApiError(err)) {
         throw new GatewayError(`OpenAI stream error: ${err.message}`, GATEWAY_ERRORS.PROVIDER_ERROR, 'openai', err.status >= 500);
       }
       throw err;

@@ -7,7 +7,7 @@ import type { NextFunction, Request, Response } from "express";
 import { apiKeyRepository } from "@cerebro/db";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { safeVerifyJWT, type CerebroJWTPayload, hasRealmRole, isSystemAdmin } from "../jwt/verify.js";
-import { PERMISSION_MAP, type Permission, type OrgRole } from "../rbac/permissions.js";
+import { PERMISSION_MAP, type RBACPermission, type OrgRole } from "../rbac/permissions.js";
 
 // ── Augment Express Request ───────────────────────────────────────────────────
 
@@ -180,7 +180,7 @@ export function requireRole(...roles: string[]) {
  * Requires a fine-grained permission (RBAC).
  * Must be composed after requireAuth.
  */
-export function requirePermission(permission: Permission) {
+export function requirePermission(permission: RBACPermission) {
   return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.auth) { unauthorized(res); return; }
     if (req.auth.isAdmin) { next(); return; }
@@ -188,7 +188,7 @@ export function requirePermission(permission: Permission) {
     const role = req.auth.orgRole;
     if (!role) { forbidden(res); return; }
 
-    const allowed = PERMISSION_MAP[role] ?? new Set<Permission>();
+    const allowed = PERMISSION_MAP[role] ?? new Set<RBACPermission>();
     if (allowed.has(permission)) {
       next();
     } else {

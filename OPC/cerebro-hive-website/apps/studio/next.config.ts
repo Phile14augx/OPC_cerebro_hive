@@ -35,4 +35,4 @@ const nextConfig: NextConfig = {
   }),
 };
 
-export default withBundleAnalyzer(nextConfig);
+export default withBundleAnalyzer(nextConfig as Parameters<typeof withBundleAnalyzer>[0]) as unknown as NextConfig;

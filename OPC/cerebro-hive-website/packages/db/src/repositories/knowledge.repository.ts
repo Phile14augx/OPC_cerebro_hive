@@ -61,11 +61,9 @@ export const collectionRepository = {
     return { items, total };
   },
 
-  async incrementDocumentCount(id: string, delta: number = 1): Promise<void> {
-    await prisma.knowledgeCollection.update({
-      where: { id },
-      data:  { documentCount: { increment: delta } },
-    });
+  // documentCount is not a schema field — KnowledgeCollection tracks documents via relations
+  async getDocumentCount(id: string): Promise<number> {
+    return prisma.knowledgeDocument.count({ where: { collectionId: id } });
   },
 
   async delete(id: string): Promise<void> {
@@ -78,12 +76,12 @@ export const collectionRepository = {
 export interface CreateDocumentInput {
   collectionId: string;
   orgId:        string;
-  name:         string;
+  title:        string;   // required by schema
   sourceType:   string;
   sourceUrl?:   string;
   mimeType?:    string;
-  sizeBytes?:   number;
-  metadata?:    Prisma.JsonValue;
+  contentHash:  string;   // required by schema
+  metadata?:    Prisma.InputJsonValue;
   uploadedById: string;
 }
 
@@ -120,7 +118,7 @@ export const documentRepository = {
     return prisma.knowledgeDocument.update({
       where: { id },
       data: {
-        status:           status as Prisma.EnumDocumentStatusFilter,
+        status: status as import("../client/index.js").DocumentStatus,
         ...(extra?.chunkCount      !== undefined && { chunkCount:      extra.chunkCount }),
         ...(extra?.processingError !== undefined && { processingError: extra.processingError }),
         ...(extra?.indexedAt       !== undefined && { indexedAt:       extra.indexedAt }),

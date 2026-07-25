@@ -12,8 +12,12 @@ import telemetryRoutes from './modules/telemetry/telemetry.routes';
 import healthRoutes from './modules/health/health.routes';
 import runtimeRoutes from './modules/runtime/runtime.routes';
 import { CommandBus } from '@cerebro/core-bus';
+import { registerMockProviders } from './modules/runtime/providers/MockProviders';
 
 export async function bootstrap(bus: CommandBus) {
+  // Initialize Runtime Registry and Mock Providers
+  registerMockProviders();
+
   const server = Fastify({ logger: true }).withTypeProvider<TypeBoxTypeProvider>();
 
   // Plugins

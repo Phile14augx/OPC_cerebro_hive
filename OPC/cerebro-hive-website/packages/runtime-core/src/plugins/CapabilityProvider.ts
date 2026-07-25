@@ -1,4 +1,6 @@
 import { ExecutionContext } from '../context/ExecutionContext';
+import { Goal } from '../planning/Goal';
+import { ExecutionPlan } from '../planning/ExecutionPlan';
 
 export type CapabilityType = 
   | 'LLMProvider' 
@@ -43,8 +45,12 @@ export interface PolicyProvider extends CapabilityProvider {
   evaluate(action: string, resource: string, context: ExecutionContext): Promise<{ allowed: boolean; reason?: string }>;
 }
 
+export interface EvaluationProvider extends CapabilityProvider {
+  evaluatePlans(plans: ExecutionPlan[], goal: Goal, context: ExecutionContext, policy: import('../planning/EvaluationPolicy').EvaluationPolicy): Promise<import('../planning/PlanningSession').ScoredPlan[]>;
+}
+
 export interface PlannerProvider extends CapabilityProvider {
-  createPlan(goal: string, context: ExecutionContext): Promise<string[]>;
+  createPlan(goal: Goal, context: ExecutionContext): Promise<ExecutionPlan>;
 }
 
 export interface AgentProvider extends CapabilityProvider {

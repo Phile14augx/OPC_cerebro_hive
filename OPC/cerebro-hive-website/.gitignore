@@ -20,6 +20,9 @@ out/
 # turborepo
 .turbo/
 
+# generated prisma clients (packages that output outside node_modules/.prisma)
+**/src/generated/
+
 # production
 /build
 

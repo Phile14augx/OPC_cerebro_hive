@@ -7,28 +7,42 @@ import { type AIUsageRecord, type AuditEvent, type Prisma, prisma } from "../cli
 // ── Audit Event repository ────────────────────────────────────────────────────
 
 export interface CreateAuditEventInput {
-  orgId:       string;
-  actorId?:    string;
-  actorType?:  string;
-  actorEmail?: string;
-  actorIp?:    string;
-  userAgent?:  string;
-  eventType:   string;
+  orgId:        string;
+  actorId?:     string;
+  actorType?:   string;
+  actorEmail?:  string;
+  type:         string;  // schema field
+  severity?:    string;
   resourceType?: string;
-  resourceId?:   string;
-  action:      string;
-  outcome:     string;
-  severity?:   string;
-  details?:    Prisma.JsonValue;
-  traceId?:    string;
+  resourceId?:  string;
+  description:  string;  // schema field (not `action`)
+  metadata?:    Prisma.InputJsonValue;
+  before?:      Prisma.InputJsonValue;
+  after?:       Prisma.InputJsonValue;
+  ipAddress?:   string;
+  userAgent?:   string;
+  traceId?:     string;
 }
 
 export const auditRepository = {
   async create(input: CreateAuditEventInput): Promise<AuditEvent> {
     return prisma.auditEvent.create({
       data: {
-        ...input,
-        severity: input.severity ?? "info",
+        orgId:        input.orgId,
+        actorId:      input.actorId,
+        actorType:    input.actorType ?? "user",
+        actorEmail:   input.actorEmail,
+        type:         input.type,
+        severity:     (input.severity?.toUpperCase() ?? "INFO") as import("../client/index.js").AuditSeverity,
+        resourceType: input.resourceType,
+        resourceId:   input.resourceId,
+        description:  input.description,
+        metadata:     input.metadata ?? {},
+        before:       input.before,
+        after:        input.after,
+        ipAddress:    input.ipAddress,
+        userAgent:    input.userAgent,
+        traceId:      input.traceId,
       },
     });
   },
@@ -58,11 +72,11 @@ export const auditRepository = {
     const where: Prisma.AuditEventWhereInput = {
       orgId,
       ...(actorId    && { actorId }),
-      ...(eventType  && { eventType }),
+      ...(eventType  && { type: eventType }),
       ...(resourceId && { resourceId }),
-      ...(severity?.length && { severity: { in: severity } }),
+      ...(severity?.length && { severity: { in: severity.map(s => s.toUpperCase()) as import("../client/index.js").AuditSeverity[] } }),
       ...(from || to) && {
-        timestamp: {
+        createdAt: {
           ...(from && { gte: from }),
           ...(to   && { lte: to }),
         },
@@ -70,7 +84,7 @@ export const auditRepository = {
     };
 
     const [items, total] = await Promise.all([
-      prisma.auditEvent.findMany({ where, skip, take: limit, orderBy: { timestamp: "desc" } }),
+      prisma.auditEvent.findMany({ where, skip, take: limit, orderBy: { createdAt: "desc" } }),
       prisma.auditEvent.count({ where }),
     ]);
 
@@ -81,33 +95,32 @@ export const auditRepository = {
 // ── AI Usage repository ───────────────────────────────────────────────────────
 
 export interface CreateAIUsageInput {
-  orgId:           string;
-  userId?:         string;
-  workflowId?:     string;
-  executionId?:    string;
-  agentId?:        string;
-  provider:        string;
-  modelId:         string;
-  promptTokens:    number;
-  completionTokens: number;
-  totalTokens:     number;
-  costUsd:         number | string;
-  durationMs?:     number;
-  cacheHit?:       boolean;
-  cacheTokens?:    number;
-  requestId?:      string;
-  traceId?:        string;
+  orgId:        string;
+  userId?:      string;
+  workflowId?:  string;
+  executionId?: string;
+  agentId?:     string;
+  provider:     string;
+  model:        string;   // schema field is `model`, not `modelId`
+  inputTokens:  number;   // schema field
+  outputTokens: number;   // schema field
+  totalTokens:  number;
+  costUsd:      number | string;
+  durationMs:   number;
+  cached?:      boolean;  // schema field is `cached`, not `cacheHit`
+  requestId:    string;
+  traceId?:     string;
 }
 
 export const aiUsageRepository = {
   async create(input: CreateAIUsageInput): Promise<AIUsageRecord> {
-    return prisma.aIUsageRecord.create({ data: input as Prisma.AIUsageRecordCreateInput });
+    return prisma.aIUsageRecord.create({ data: input as unknown as Prisma.AIUsageRecordUncheckedCreateInput });
   },
 
   /** Batch insert for high-throughput pipelines. */
   async createMany(records: CreateAIUsageInput[]): Promise<number> {
     const result = await prisma.aIUsageRecord.createMany({
-      data:           records as Prisma.AIUsageRecordCreateManyInput[],
+      data:           records as unknown as Prisma.AIUsageRecordCreateManyInput[],
       skipDuplicates: true,
     });
     return result.count;
@@ -130,17 +143,17 @@ export const aiUsageRepository = {
     const agg = await prisma.aIUsageRecord.aggregate({
       where: {
         orgId,
-        timestamp:  { gte: from, lte: to },
-        ...(modelId  && { modelId }),
+        createdAt:  { gte: from, lte: to },
+        ...(modelId  && { model: modelId }),
         ...(provider && { provider }),
       },
-      _sum:   { totalTokens: true, promptTokens: true, completionTokens: true, cacheTokens: true },
+      _sum:   { totalTokens: true, inputTokens: true, outputTokens: true },
       _count: { id: true },
       _avg:   { durationMs: true },
     });
 
     const cacheHits = await prisma.aIUsageRecord.count({
-      where: { orgId, timestamp: { gte: from, lte: to }, cacheHit: true },
+      where: { orgId, createdAt: { gte: from, lte: to }, cached: true },
     });
 
     // costUsd is Decimal — must use raw aggregation for sum
@@ -148,19 +161,19 @@ export const aiUsageRepository = {
       SELECT COALESCE(SUM(cost_usd), 0)::text AS total_cost
       FROM "ai_usage_records"
       WHERE org_id = ${orgId}
-        AND timestamp >= ${from}
-        AND timestamp <= ${to}
-        ${modelId  ? prisma.$queryRaw`AND model_id  = ${modelId}`  : prisma.$queryRaw``}
+        AND created_at >= ${from}
+        AND created_at <= ${to}
+        ${modelId  ? prisma.$queryRaw`AND model     = ${modelId}`  : prisma.$queryRaw``}
         ${provider ? prisma.$queryRaw`AND provider = ${provider}` : prisma.$queryRaw``}
     `;
 
-    const requestCount = agg._count.id;
+    const requestCount = agg._count?.id ?? 0;
 
     return {
-      totalTokens:  agg._sum.totalTokens ?? 0,
+      totalTokens:  agg._sum?.totalTokens ?? 0,
       totalCostUsd: parseFloat(costRow[0]?.total_cost ?? "0"),
       requestCount,
-      avgLatencyMs: agg._avg.durationMs,
+      avgLatencyMs: agg._avg?.durationMs ?? null,
       cacheHitRate: requestCount > 0 ? cacheHits / requestCount : 0,
     };
   },
@@ -178,13 +191,13 @@ export const aiUsageRepository = {
 
     const where: Prisma.AIUsageRecordWhereInput = {
       orgId,
-      ...((from || to) && { timestamp: { ...(from && { gte: from }), ...(to && { lte: to }) } }),
+      ...((from || to) && { createdAt: { ...(from && { gte: from }), ...(to && { lte: to }) } }),
       ...(workflowId && { workflowId }),
       ...(agentId    && { agentId }),
     };
 
     const [items, total] = await Promise.all([
-      prisma.aIUsageRecord.findMany({ where, skip, take: limit, orderBy: { timestamp: "desc" } }),
+      prisma.aIUsageRecord.findMany({ where, skip, take: limit, orderBy: { createdAt: "desc" } }),
       prisma.aIUsageRecord.count({ where }),
     ]);
 

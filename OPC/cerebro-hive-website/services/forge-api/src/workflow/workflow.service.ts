@@ -1,13 +1,22 @@
-/**
- * forge-api — WorkflowService
- * Starts, queries, signals, and cancels Temporal workflow executions.
- */
-
 import { Injectable, Logger } from "@nestjs/common";
 import { TemporalService } from "../temporal/temporal.service.js";
 import { executionRepository } from "@cerebro/db";
-import { queue, SUBJECTS } from "@cerebro/queue";
+import { connect, StringCodec } from "nats";
 import { randomUUID } from "node:crypto";
+
+/** Fire-and-forget NATS publish — never throws */
+async function natsPublish(subject: string, payload: unknown): Promise<void> {
+  try {
+    const nc = await connect({ servers: process.env["NATS_URL"] ?? "nats://localhost:4222" });
+    const sc = StringCodec();
+    nc.publish(subject, sc.encode(JSON.stringify(payload)));
+    await nc.flush();
+    await nc.close();
+  } catch {
+    // Non-critical: event bus may be unavailable
+  }
+}
+
 
 export interface StartWorkflowOptions {
   workflowId:   string;
@@ -52,11 +61,10 @@ export class WorkflowService {
       });
 
       await executionRepository.update(opts.executionId, {
-        status:             "RUNNING",
-        temporalWorkflowId: temporalId,
+        status: "RUNNING",
       });
 
-      await queue.publish(SUBJECTS.WORKFLOW.EXECUTION_STARTED, {
+      void natsPublish("cerebro.workflow.execution.started", {
         id:          randomUUID(),
         orgId:       opts.orgId,
         workflowId:  opts.workflowId,

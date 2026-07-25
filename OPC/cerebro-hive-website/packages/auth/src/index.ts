@@ -5,6 +5,6 @@ export * from './providers/MockAuthProvider';
 export * from './hooks';
 
 // ── Server-side auth (JWT, RBAC, middleware) ──────────────────────────────────
-export * from "./jwt/verify.js";
-export * from "./rbac/permissions.js";
-export * from "./middleware/express.js";
+export * from "./jwt/verify";
+export * from "./rbac/permissions";
+export * from "./middleware/express";

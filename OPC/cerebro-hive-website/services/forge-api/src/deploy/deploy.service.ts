@@ -96,13 +96,14 @@ Keep step commands realistic and tool-specific (pnpm, docker, kubectl, terraform
       { filePath: '.github/workflows/release.yml',    type: 'ci_pipeline',    description: 'Semantic release + changelog generation'   },
     ];
 
-    await this.prisma.$transaction([
-      this.prisma.project.update({
+    const p = this.prisma as any;
+    await p.$transaction([
+      p.project.update({
         where: { id: projectId },
         data: { forgePhase: 'deployment', forgeStatus: 'deploying' },
       }),
       ...artifacts.map(a =>
-        this.prisma.generatedArtifact.upsert({
+        p.generatedArtifact.upsert({
           where: { projectId_filePath: { projectId, filePath: a.filePath } },
           create: {
             projectId,

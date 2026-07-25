@@ -4,7 +4,7 @@
  */
 
 import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from "@nestjs/common";
-import { Connection, Client, type WorkflowHandle, type WorkflowStartOptions } from "@temporalio/client";
+import { Connection, Client, type WorkflowHandle } from "@temporalio/client";
 import { getForgeApiConfig } from "@cerebro/config";
 
 @Injectable()
@@ -43,13 +43,14 @@ export class TemporalService implements OnModuleInit, OnModuleDestroy {
     return this.client;
   }
 
-  async startWorkflow<A extends unknown[]>(
+  async startWorkflow(
     workflowType: string,
-    opts: Omit<WorkflowStartOptions<(...args: A) => unknown>, "workflowType"> & { args: A },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    opts: Record<string, any>,
   ): Promise<WorkflowHandle> {
     return this.getClient().workflow.start(workflowType as never, {
-      taskQueue: this.taskQueue,
       ...opts,
+      taskQueue: opts["taskQueue"] ?? this.taskQueue,
     } as never);
   }
 

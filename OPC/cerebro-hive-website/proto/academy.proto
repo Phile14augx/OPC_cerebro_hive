@@ -1,0 +1,311 @@
+syntax = "proto3";
+package cerebro.academy.v1;
+
+option java_package = "com.cerebro.proto.academy";
+option java_multiple_files = true;
+
+service AcademyService {
+  // Catalog
+  rpc ListCourses(ListCoursesRequest) returns (ListCoursesResponse);
+  rpc GetCourse(GetCourseRequest) returns (Course);
+  rpc ListLearningPaths(ListLearningPathsRequest) returns (ListLearningPathsResponse);
+  rpc GetLearningPath(GetLearningPathRequest) returns (LearningPath);
+
+  // Enrollment
+  rpc Enroll(EnrollRequest) returns (Enrollment);
+  rpc GetEnrollment(GetEnrollmentRequest) returns (Enrollment);
+  rpc ListEnrollments(ListEnrollmentsRequest) returns (ListEnrollmentsResponse);
+  rpc UnenrollCourse(UnenrollRequest) returns (UnenrollResponse);
+
+  // Progress
+  rpc UpdateProgress(UpdateProgressRequest) returns (Progress);
+  rpc GetProgress(GetProgressRequest) returns (Progress);
+
+  // Certificates
+  rpc IssueCertificate(IssueCertificateRequest) returns (Certificate);
+  rpc GetCertificate(GetCertificateRequest) returns (Certificate);
+  rpc ListCertificates(ListCertificatesRequest) returns (ListCertificatesResponse);
+  rpc VerifyCertificate(VerifyCertificateRequest) returns (VerifyCertificateResponse);
+
+  // Corporate licenses
+  rpc CreateLicense(CreateLicenseRequest) returns (CorporateLicense);
+  rpc GetLicense(GetLicenseRequest) returns (CorporateLicense);
+  rpc AssignLicense(AssignLicenseRequest) returns (AssignLicenseResponse);
+  rpc RevokeLicense(RevokeLicenseRequest) returns (RevokeLicenseResponse);
+}
+
+// ─── Catalog ─────────────────────────────────────────────────────────────────
+
+enum CourseLevel {
+  LEVEL_UNSPECIFIED = 0;
+  LEVEL_FOUNDATION = 1;
+  LEVEL_PRACTITIONER = 2;
+  LEVEL_ADVANCED = 3;
+  LEVEL_EXPERT = 4;
+}
+
+enum CourseCategory {
+  CATEGORY_UNSPECIFIED = 0;
+  CATEGORY_STRATEGY = 1;
+  CATEGORY_ENGINEERING = 2;
+  CATEGORY_OPERATIONS = 3;
+  CATEGORY_SECURITY = 4;
+}
+
+message Course {
+  string id = 1;
+  string code = 2;
+  string slug = 3;
+  string name = 4;
+  string description = 5;
+  CourseLevel level = 6;
+  CourseCategory category = 7;
+  int32 duration_minutes = 8;
+  int32 price_cents = 9;
+  repeated string modules = 10;
+  repeated string outcomes = 11;
+  bool has_lab = 12;
+  bool active = 13;
+  int64 created_at = 14;
+}
+
+message ListCoursesRequest {
+  optional CourseCategory category = 1;
+  optional CourseLevel level = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ListCoursesResponse {
+  repeated Course courses = 1;
+  int32 total = 2;
+}
+
+message GetCourseRequest {
+  oneof identifier {
+    string id = 1;
+    string code = 2;
+    string slug = 3;
+  }
+}
+
+message LearningPath {
+  string id = 1;
+  string code = 2;
+  string slug = 3;
+  string name = 4;
+  string certification_title = 5;
+  string description = 6;
+  CourseLevel level = 7;
+  int32 duration_weeks_min = 8;
+  int32 duration_weeks_max = 9;
+  repeated string course_ids = 10;
+  repeated string outcomes = 11;
+  int32 price_cents = 12;
+  bool active = 13;
+}
+
+message ListLearningPathsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message ListLearningPathsResponse {
+  repeated LearningPath paths = 1;
+  int32 total = 2;
+}
+
+message GetLearningPathRequest {
+  oneof identifier {
+    string id = 1;
+    string code = 2;
+    string slug = 3;
+  }
+}
+
+// ─── Enrollment ──────────────────────────────────────────────────────────────
+
+enum EnrollmentStatus {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_ACTIVE = 1;
+  STATUS_PAUSED = 2;
+  STATUS_COMPLETED = 3;
+  STATUS_EXPIRED = 4;
+  STATUS_CANCELLED = 5;
+}
+
+message Enrollment {
+  string id = 1;
+  string user_id = 2;
+  string course_id = 3;
+  optional string learning_path_id = 4;
+  EnrollmentStatus status = 5;
+  int64 enrolled_at = 6;
+  optional int64 completed_at = 7;
+  optional int64 expires_at = 8;
+}
+
+message EnrollRequest {
+  string user_id = 1;
+  oneof target {
+    string course_id = 2;
+    string learning_path_id = 3;
+  }
+  optional string license_id = 4; // Corporate license
+}
+
+message GetEnrollmentRequest {
+  string enrollment_id = 1;
+}
+
+message ListEnrollmentsRequest {
+  string user_id = 1;
+  optional EnrollmentStatus status = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ListEnrollmentsResponse {
+  repeated Enrollment enrollments = 1;
+  int32 total = 2;
+}
+
+message UnenrollRequest {
+  string enrollment_id = 1;
+  string user_id = 2;
+}
+
+message UnenrollResponse {
+  bool success = 1;
+}
+
+// ─── Progress ────────────────────────────────────────────────────────────────
+
+message Progress {
+  string id = 1;
+  string enrollment_id = 2;
+  string user_id = 3;
+  string course_id = 4;
+  int32 percent_complete = 5;
+  repeated string completed_modules = 6;
+  int32 last_score = 7;
+  int64 last_accessed_at = 8;
+  int32 total_time_minutes = 9;
+}
+
+message UpdateProgressRequest {
+  string enrollment_id = 1;
+  string user_id = 2;
+  string module_id = 3;
+  bool completed = 4;
+  optional int32 score = 5;
+  int32 time_spent_minutes = 6;
+}
+
+message GetProgressRequest {
+  string enrollment_id = 1;
+  string user_id = 2;
+}
+
+// ─── Certificates ────────────────────────────────────────────────────────────
+
+message Certificate {
+  string id = 1;
+  string credential_id = 2; // Public verifiable ID, e.g. "CHA-ENG-2025-ABC123"
+  string user_id = 3;
+  string user_name = 4;
+  oneof subject {
+    string course_id = 5;
+    string learning_path_id = 6;
+  }
+  string subject_name = 7;
+  int64 issued_at = 8;
+  optional int64 expires_at = 9;
+  string verify_url = 10;
+}
+
+message IssueCertificateRequest {
+  string user_id = 1;
+  string enrollment_id = 2;
+}
+
+message GetCertificateRequest {
+  oneof identifier {
+    string id = 1;
+    string credential_id = 2;
+  }
+}
+
+message ListCertificatesRequest {
+  string user_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListCertificatesResponse {
+  repeated Certificate certificates = 1;
+  int32 total = 2;
+}
+
+message VerifyCertificateRequest {
+  string credential_id = 1;
+}
+
+message VerifyCertificateResponse {
+  bool valid = 1;
+  optional Certificate certificate = 2;
+}
+
+// ─── Corporate Licenses ───────────────────────────────────────────────────────
+
+enum LicenseTier {
+  LICENSE_UNSPECIFIED = 0;
+  LICENSE_TEAM = 1;       // 5–25 seats
+  LICENSE_DEPARTMENT = 2; // 26–100 seats
+  LICENSE_ENTERPRISE = 3; // 100+ seats
+}
+
+message CorporateLicense {
+  string id = 1;
+  string organization_id = 2;
+  string organization_name = 3;
+  LicenseTier tier = 2;
+  int32 total_seats = 3;
+  int32 used_seats = 4;
+  int64 valid_from = 5;
+  int64 valid_until = 6;
+  bool custom_curriculum = 7;
+  bool active = 8;
+}
+
+message CreateLicenseRequest {
+  string organization_id = 1;
+  string organization_name = 2;
+  LicenseTier tier = 3;
+  int32 seats = 4;
+  int32 duration_months = 5;
+  bool custom_curriculum = 6;
+}
+
+message GetLicenseRequest {
+  string license_id = 1;
+}
+
+message AssignLicenseRequest {
+  string license_id = 1;
+  string user_email = 2;
+}
+
+message AssignLicenseResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message RevokeLicenseRequest {
+  string license_id = 1;
+  string user_id = 2;
+}
+
+message RevokeLicenseResponse {
+  bool success = 1;
+}

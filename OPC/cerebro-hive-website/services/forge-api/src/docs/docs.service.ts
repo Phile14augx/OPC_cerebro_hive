@@ -79,13 +79,14 @@ wordCount per section must be proportional to complexity. A full API Reference f
     const aiSections = result.output.sections;
 
     // Persist doc artifacts to DB
-    await this.prisma.$transaction([
-      this.prisma.project.update({
+    const p = this.prisma as any;
+    await p.$transaction([
+      p.project.update({
         where: { id: projectId },
         data: { forgePhase: 'monitoring', forgeStatus: 'completed' },
       }),
       ...aiSections.map(s =>
-        this.prisma.generatedArtifact.upsert({
+        p.generatedArtifact.upsert({
           where: { projectId_filePath: { projectId, filePath: s.filePath } },
           create: {
             projectId,

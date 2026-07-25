@@ -34,7 +34,7 @@ export const TrackedLink = React.forwardRef<HTMLAnchorElement, TrackedLinkProps>
 
     return (
       <Link href={href} ref={ref} onClick={handleClick} {...props}>
-        {children}
+        <>{children}</>
       </Link>
     );
   }

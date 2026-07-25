@@ -19,10 +19,10 @@ export interface CreateWorkflowInput {
 export interface UpdateWorkflowInput {
   name?:        string;
   description?: string;
-  definition?:  Prisma.JsonValue;
-  variables?:   Prisma.JsonValue;
-  triggers?:    Prisma.JsonValue;
-  settings?:    Prisma.JsonValue;
+  definition?:  Prisma.InputJsonValue;
+  variables?:   Prisma.InputJsonValue;
+  triggers?:    Prisma.InputJsonValue;
+  settings?:    Prisma.InputJsonValue;
   tags?:        string[];
   updatedById:  string;
 }

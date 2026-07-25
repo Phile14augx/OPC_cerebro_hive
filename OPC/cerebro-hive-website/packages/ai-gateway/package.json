@@ -9,8 +9,11 @@
     "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
     "@cerebro/ai": "workspace:*",
-    "@cerebro/database": "workspace:*"
+    "@cerebro/database": "workspace:*",
+    "@cerebro/telemetry": "workspace:*",
+    "openai": "^4.75.0"
   },
   "devDependencies": {
     "@cerebro/config": "workspace:*",

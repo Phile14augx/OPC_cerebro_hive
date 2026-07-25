@@ -1,0 +1,26 @@
+/* ============================================================
+   CEREBRO HIVE DESIGN SYSTEM v2 — Typography Tokens
+   ============================================================ */
+
+:root {
+  --font-weight-body: 400;
+  --font-weight-heading: 700;
+  --font-weight-heavy: 700;
+  --line-height-body: 1.6;
+  --letter-spacing-heading: -0.01em;
+}
+
+.dark {
+  --font-weight-body: 500;
+  --font-weight-heading: 800;
+  --font-weight-heavy: 900;
+  --line-height-body: 1.5;
+  --letter-spacing-heading: -0.02em;
+}
+
+@theme {
+  --font-space: var(--font-space), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
+  --font-plex: var(--font-plex), monospace;
+  --font-jetbrains: var(--font-jetbrains), monospace;
+}

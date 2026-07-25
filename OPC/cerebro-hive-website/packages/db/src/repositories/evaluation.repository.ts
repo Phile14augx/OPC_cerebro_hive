@@ -69,7 +69,7 @@ export const evaluationRepository = {
         name:        input.name,
         description: input.description ?? "",
         rowCount:    input.rowCount ?? 0,
-        schema:      input.schema ?? {},
+        schema:      (input.schema ?? {}) as import("@prisma/client").Prisma.InputJsonValue,
         sourceType:  input.sourceType ?? "manual",
         storageKey:  input.storageKey,
         createdById: input.createdById,

@@ -19,19 +19,20 @@ export class ProjectsService implements OnModuleInit {
     }
 
     // Otherwise auto-provision a dev workspace
-    let workspace = await this.prisma.workspace.findFirst({
+    const p = this.prisma as any;
+    let workspace = await p.workspace.findFirst({
       where: { slug: 'forge-dev' },
     });
 
     if (!workspace) {
       this.logger.log('Provisioning default forge-dev workspace…');
-      let tenant = await this.prisma.tenant.findFirst({ where: { slug: 'forge-dev' } });
+      let tenant = await p.tenant.findFirst({ where: { slug: 'forge-dev' } });
       if (!tenant) {
-        tenant = await this.prisma.tenant.create({
+        tenant = await p.tenant.create({
           data: { name: 'CerebroForge Dev', slug: 'forge-dev', billingPlan: 'enterprise' },
         });
       }
-      workspace = await this.prisma.workspace.create({
+      workspace = await p.workspace.create({
         data: { name: 'Forge Dev', slug: 'forge-dev', tenantId: tenant.id },
       });
       this.logger.log(`Created workspace ${workspace.id}`);
@@ -45,7 +46,8 @@ export class ProjectsService implements OnModuleInit {
     const workspaceId = dto.workspaceId ?? this.defaultWorkspaceId;
     if (!workspaceId) throw new Error('No workspace available — set FORGE_DEFAULT_WORKSPACE_ID');
 
-    const project = await this.prisma.project.create({
+    const p = this.prisma as any;
+    const project = await p.project.create({
       data: {
         name: dto.name,
         prompt: dto.prompt,
@@ -65,7 +67,8 @@ export class ProjectsService implements OnModuleInit {
 
   async findAll(workspaceId?: string) {
     const wsId = workspaceId ?? this.defaultWorkspaceId;
-    return this.prisma.project.findMany({
+    const p = this.prisma as any;
+    return p.project.findMany({
       where: {
         forgeStatus: { not: 'deleted' },
         ...(wsId ? { workspaceId: wsId } : {}),
@@ -89,7 +92,8 @@ export class ProjectsService implements OnModuleInit {
   }
 
   async findOne(id: string) {
-    const project = await this.prisma.project.findUnique({
+    const p = this.prisma as any;
+    const project = await p.project.findUnique({
       where: { id },
       include: {
         modules: true,
@@ -104,14 +108,17 @@ export class ProjectsService implements OnModuleInit {
   }
 
   async updatePhase(id: string, phase: string) {
-    return this.prisma.project.update({ where: { id }, data: { forgePhase: phase } });
+    const p = this.prisma as any;
+    return p.project.update({ where: { id }, data: { forgePhase: phase } });
   }
 
   async updateStatus(id: string, status: string) {
-    return this.prisma.project.update({ where: { id }, data: { forgeStatus: status } });
+    const p = this.prisma as any;
+    return p.project.update({ where: { id }, data: { forgeStatus: status } });
   }
 
   async delete(id: string) {
-    return this.prisma.project.update({ where: { id }, data: { forgeStatus: 'deleted' } });
+    const p = this.prisma as any;
+    return p.project.update({ where: { id }, data: { forgeStatus: 'deleted' } });
   }
 }

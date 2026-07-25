@@ -13,11 +13,11 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-grpc';
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import { Resource } from '@opentelemetry/resources';
 import {
-  Resource,
-  ATTR_SERVICE_NAME,
-  ATTR_SERVICE_VERSION,
-} from '@opentelemetry/resources';
+  SEMRESATTRS_SERVICE_NAME,
+  SEMRESATTRS_SERVICE_VERSION,
+} from '@opentelemetry/semantic-conventions';
 import {
   W3CTraceContextPropagator,
   CompositePropagator,
@@ -51,8 +51,8 @@ export function initTelemetry(config: TelemetryConfig): NodeSDK {
 
   // Resource attributes
   const resource = new Resource({
-    [ATTR_SERVICE_NAME]: serviceName,
-    [ATTR_SERVICE_VERSION]: serviceVersion,
+    [SEMRESATTRS_SERVICE_NAME]: serviceName,
+    [SEMRESATTRS_SERVICE_VERSION]: serviceVersion,
     'deployment.environment': environment,
     'service.namespace': 'cerebro-hive',
   });
@@ -65,17 +65,18 @@ export function initTelemetry(config: TelemetryConfig): NodeSDK {
   // Metric exporter
   const metricExporter = new OTLPMetricExporter({ url: otlpEndpoint });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sdk = new NodeSDK({
     resource,
     spanProcessor: new BatchSpanProcessor(traceExporter, {
       maxQueueSize: 2048,
       maxExportBatchSize: 512,
       scheduledDelayMillis: 5000,
-    }),
+    }) as any,
     metricReader: new PeriodicExportingMetricReader({
-      exporter: metricExporter,
+      exporter: metricExporter as any,
       exportIntervalMillis: 10_000,
-    }),
+    }) as any,
     textMapPropagator: new CompositePropagator({
       propagators: [
         new W3CTraceContextPropagator(),

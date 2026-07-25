@@ -22,8 +22,10 @@ import {
 } from './types';
 
 // Lazy-import telemetry so gateway can be used without OTel configured
-let telemetry: typeof import('@cerebro/telemetry') | undefined;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let telemetry: any;
 try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   telemetry = require('@cerebro/telemetry');
 } catch {
   // telemetry not available — run silent
@@ -122,7 +124,7 @@ export class AIGateway {
           workflowId: request.workflowId,
           agentId: request.agentId,
         },
-        (result) => ({
+        (result: ChatResponse) => ({
           inputTokens: result.usage.inputTokens,
           outputTokens: result.usage.outputTokens,
           costUSD: result.cost.totalCostUSD,

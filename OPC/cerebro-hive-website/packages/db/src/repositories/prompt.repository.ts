@@ -54,6 +54,7 @@ export interface ListPromptsOptions {
 // ── Metric update ─────────────────────────────────────────────────────────────
 
 export interface PromptVersionMetrics {
+  [key: string]: number | undefined; // index signature required for Prisma InputJsonObject
   successRate:  number;
   avgTokens:    number;
   avgLatencyMs: number;

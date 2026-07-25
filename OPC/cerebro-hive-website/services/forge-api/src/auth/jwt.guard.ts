@@ -41,7 +41,7 @@ export class JwtGuard implements CanActivate {
     req.auth = {
       userId:     p.sub,
       orgId:      p.org_id ?? null,
-      orgRole:    p.org_role ?? null,
+      orgRole:    (p.org_role as any) ?? null,
       email:      p.email   ?? null,
       name:       p.name    ?? null,
       isAdmin:    isSystemAdmin(p),

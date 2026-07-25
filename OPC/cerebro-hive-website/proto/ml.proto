@@ -1,0 +1,206 @@
+syntax = "proto3";
+package cerebro.ml.v1;
+
+option java_package = "com.cerebro.proto.ml";
+option java_multiple_files = true;
+
+// ─── ML/Compute Service — C++ gRPC server ────────────────────────────────────
+
+service MlService {
+  // Vector search (HNSW approximate nearest neighbor)
+  rpc IndexVector(IndexVectorRequest) returns (IndexVectorResponse);
+  rpc SearchVectors(SearchVectorsRequest) returns (SearchVectorsResponse);
+  rpc DeleteVector(DeleteVectorRequest) returns (DeleteVectorResponse);
+  rpc GetIndexStats(GetIndexStatsRequest) returns (IndexStats);
+
+  // Content recommendations
+  rpc GetRecommendations(GetRecommendationsRequest) returns (GetRecommendationsResponse);
+  rpc TrackInteraction(TrackInteractionRequest) returns (TrackInteractionResponse);
+
+  // Lead scoring (ML inference)
+  rpc ScoreLead(MlScoreLeadRequest) returns (MlScoreLeadResponse);
+
+  // Document classification
+  rpc ClassifyDocument(ClassifyDocumentRequest) returns (ClassifyDocumentResponse);
+
+  // Embedding generation
+  rpc GenerateEmbedding(GenerateEmbeddingRequest) returns (GenerateEmbeddingResponse);
+  rpc BatchGenerateEmbeddings(BatchGenerateEmbeddingsRequest) returns (BatchGenerateEmbeddingsResponse);
+}
+
+// ─── Vector Search ───────────────────────────────────────────────────────────
+
+enum DistanceMetric {
+  DISTANCE_UNSPECIFIED = 0;
+  DISTANCE_COSINE = 1;
+  DISTANCE_EUCLIDEAN = 2;
+  DISTANCE_DOT_PRODUCT = 3;
+}
+
+message IndexVectorRequest {
+  string namespace = 1;     // e.g. "products", "content", "users"
+  string id = 2;
+  repeated float vector = 3;
+  map<string, string> metadata = 4;
+}
+
+message IndexVectorResponse {
+  bool success = 1;
+  string id = 2;
+}
+
+message SearchVectorsRequest {
+  string namespace = 1;
+  repeated float query_vector = 2;
+  int32 top_k = 3;
+  DistanceMetric metric = 4;
+  map<string, string> metadata_filter = 5;
+  float min_score = 6;
+}
+
+message VectorMatch {
+  string id = 1;
+  float score = 2;
+  map<string, string> metadata = 3;
+}
+
+message SearchVectorsResponse {
+  repeated VectorMatch matches = 1;
+  int32 total_searched = 2;
+  double latency_ms = 3;
+}
+
+message DeleteVectorRequest {
+  string namespace = 1;
+  string id = 2;
+}
+
+message DeleteVectorResponse {
+  bool success = 1;
+}
+
+message GetIndexStatsRequest {
+  string namespace = 1;
+}
+
+message IndexStats {
+  string namespace = 1;
+  int64 vector_count = 2;
+  int32 dimensions = 3;
+  double avg_search_latency_ms = 4;
+  int64 index_size_bytes = 5;
+}
+
+// ─── Recommendations ─────────────────────────────────────────────────────────
+
+enum RecommendationType {
+  REC_UNSPECIFIED = 0;
+  REC_PRODUCTS = 1;
+  REC_COURSES = 2;
+  REC_SOLUTIONS = 3;
+  REC_INDUSTRIES = 4;
+}
+
+message GetRecommendationsRequest {
+  string user_id = 1;
+  RecommendationType type = 2;
+  optional string context_id = 3;  // current page/item the user is viewing
+  int32 limit = 4;
+  repeated string exclude_ids = 5; // already seen/enrolled
+}
+
+message Recommendation {
+  string id = 1;
+  string type = 2;
+  float confidence = 3;
+  string reason = 4;
+}
+
+message GetRecommendationsResponse {
+  repeated Recommendation recommendations = 1;
+  string model_version = 2;
+}
+
+message TrackInteractionRequest {
+  string user_id = 1;
+  string item_id = 2;
+  string item_type = 3;
+  string interaction = 4; // "view", "click", "enroll", "purchase", "complete"
+  int64 timestamp = 5;
+  map<string, string> context = 6;
+}
+
+message TrackInteractionResponse {
+  bool success = 1;
+}
+
+// ─── Lead Scoring ────────────────────────────────────────────────────────────
+
+message MlScoreLeadRequest {
+  string company = 1;
+  string role = 2;
+  string email_domain = 3;
+  string engagement_type = 4;
+  optional string message = 5;
+  optional string utm_source = 6;
+  repeated string past_interactions = 7;
+}
+
+message MlScoreLeadResponse {
+  int32 score = 1;             // 0–100
+  float confidence = 2;        // 0.0–1.0
+  repeated string signals = 3; // positive/negative signals
+  string recommendation = 4;   // "high_priority", "nurture", "disqualify"
+  string model_version = 5;
+}
+
+// ─── Document Classification ──────────────────────────────────────────────────
+
+message ClassifyDocumentRequest {
+  bytes content = 1;
+  string content_type = 2; // "text/plain", "application/pdf", etc.
+  string namespace = 3;    // classification taxonomy
+  int32 top_k = 4;
+}
+
+message DocumentClass {
+  string label = 1;
+  float confidence = 2;
+}
+
+message ClassifyDocumentResponse {
+  repeated DocumentClass classes = 1;
+  string model_version = 2;
+  double latency_ms = 3;
+}
+
+// ─── Embeddings ──────────────────────────────────────────────────────────────
+
+enum EmbeddingModel {
+  EMBEDDING_UNSPECIFIED = 0;
+  EMBEDDING_MINI_LM = 1;      // 384-dim, fast
+  EMBEDDING_E5_LARGE = 2;     // 1024-dim, high quality
+  EMBEDDING_VOYAGE_CODE = 3;  // 1536-dim, code-optimized
+}
+
+message GenerateEmbeddingRequest {
+  string text = 1;
+  EmbeddingModel model = 2;
+}
+
+message GenerateEmbeddingResponse {
+  repeated float embedding = 1;
+  int32 dimensions = 2;
+  EmbeddingModel model_used = 3;
+  double latency_ms = 4;
+}
+
+message BatchGenerateEmbeddingsRequest {
+  repeated string texts = 1;
+  EmbeddingModel model = 2;
+}
+
+message BatchGenerateEmbeddingsResponse {
+  repeated GenerateEmbeddingResponse embeddings = 1;
+  double total_latency_ms = 2;
+}

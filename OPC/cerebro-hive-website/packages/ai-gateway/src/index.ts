@@ -32,4 +32,4 @@ export { ResponseCache } from './cache';
 
 // Routing infrastructure (from existing files)
 export { ModelRouter } from './routing/ModelRouter';
-export { ModelRegistry } from './routing/ModelRegistry';
+export { ModelRegistry } from './registry/ModelRegistry';

@@ -41,14 +41,15 @@ ports, databases, tech stack per layer, and Architecture Decision Records.`;
     const arch = result.output;
 
     // Persist ADRs as ArchitectureDecision records
-    await this.prisma.$transaction([
-      this.prisma.project.update({
+    const p = this.prisma as any;
+    await p.$transaction([
+      p.project.update({
         where: { id: projectId },
         data: { archJson: arch as any, forgePhase: 'architecture' },
       }),
-      this.prisma.architectureDecision.deleteMany({ where: { projectId } }),
+      p.architectureDecision.deleteMany({ where: { projectId } }),
       ...arch.decisions.map(d =>
-        this.prisma.architectureDecision.create({
+        p.architectureDecision.create({
           data: {
             projectId,
             title: d.title,

@@ -1,18 +1,18 @@
 /**
  * @cerebro/db — User, Organization & Membership Repositories
+ * Aligned to actual Prisma schema field names.
  */
 
-import { type Prisma, type User, type Organization, type OrgMembership, prisma } from "../client/index.js";
+import { type Prisma, type User, type Organization, type OrgMembership, type UserRole, prisma } from "../client/index.js";
 
 // ── User repository ───────────────────────────────────────────────────────────
 
 export interface CreateUserInput {
-  email:          string;
-  displayName:    string;
-  avatarUrl?:     string;
-  authProvider?:  string;
-  authProviderId?: string;
-  keycloakId?:    string;
+  email:         string;
+  name:          string;
+  avatarUrl?:    string;
+  authProvider?: import("../client/index.js").AuthProvider;
+  externalId?:   string;
 }
 
 export const userRepository = {
@@ -28,8 +28,8 @@ export const userRepository = {
     return prisma.user.findUnique({ where: { email } });
   },
 
-  async findByKeycloakId(keycloakId: string): Promise<User | null> {
-    return prisma.user.findFirst({ where: { keycloakId } });
+  async findByExternalId(externalId: string): Promise<User | null> {
+    return prisma.user.findFirst({ where: { externalId } });
   },
 
   async findByIdOrThrow(id: string): Promise<User> {
@@ -38,14 +38,14 @@ export const userRepository = {
     return user;
   },
 
-  async update(id: string, data: Partial<Pick<User, "displayName" | "avatarUrl" | "lastActiveAt">>): Promise<User> {
+  async update(id: string, data: Partial<Pick<User, "name" | "avatarUrl" | "lastLoginAt">>): Promise<User> {
     return prisma.user.update({ where: { id }, data: { ...data, updatedAt: new Date() } });
   },
 
   async recordLogin(id: string): Promise<void> {
     await prisma.user.update({
       where: { id },
-      data:  { lastActiveAt: new Date(), loginCount: { increment: 1 } },
+      data:  { lastLoginAt: new Date() },
     });
   },
 
@@ -53,10 +53,10 @@ export const userRepository = {
     await prisma.user.delete({ where: { id } });
   },
 
-  async findMemberships(userId: string): Promise<(OrgMembership & { organization: Organization })[]> {
+  async findMemberships(userId: string): Promise<(OrgMembership & { org: Organization })[]> {
     return prisma.orgMembership.findMany({
-      where:   { userId, status: "ACTIVE" },
-      include: { organization: true },
+      where:   { userId },
+      include: { org: true },
     });
   },
 };
@@ -64,11 +64,11 @@ export const userRepository = {
 // ── Organization repository ───────────────────────────────────────────────────
 
 export interface CreateOrgInput {
-  name:        string;
-  slug:        string;
-  ownerId:     string;
-  plan?:       string;
-  avatarUrl?:  string;
+  name:       string;
+  slug:       string;
+  ownerId:    string;
+  plan?:      string;
+  logoUrl?:   string;  // schema field is `logoUrl`, not `avatarUrl`
 }
 
 export const orgRepository = {
@@ -76,11 +76,11 @@ export const orgRepository = {
     return prisma.$transaction(async (tx) => {
       const org = await tx.organization.create({
         data: {
-          name:      input.name,
-          slug:      input.slug,
-          ownerId:   input.ownerId,
-          plan:      (input.plan ?? "FREE") as Prisma.EnumPlanTierFilter,
-          avatarUrl: input.avatarUrl,
+          name:    input.name,
+          slug:    input.slug,
+          ownerId: input.ownerId,
+          plan:    (input.plan ?? "FREE") as Prisma.EnumPlanTierFieldUpdateOperationsInput["set"],
+          logoUrl: input.logoUrl,
         },
       });
 
@@ -90,7 +90,6 @@ export const orgRepository = {
           orgId:  org.id,
           userId: input.ownerId,
           role:   "OWNER",
-          status: "ACTIVE",
         },
       });
 
@@ -112,7 +111,13 @@ export const orgRepository = {
     return org;
   },
 
-  async update(id: string, data: Partial<Pick<Organization, "name" | "avatarUrl" | "settings" | "limits">>): Promise<Organization> {
+  async update(
+    id: string,
+    data: Partial<Pick<Organization, "name" | "logoUrl">> & {
+      settings?: Prisma.InputJsonValue;
+      limits?:   Prisma.InputJsonValue;
+    }
+  ): Promise<Organization> {
     return prisma.organization.update({ where: { id }, data: { ...data, updatedAt: new Date() } });
   },
 
@@ -122,35 +127,34 @@ export const orgRepository = {
 
   async getMembers(orgId: string): Promise<(OrgMembership & { user: User })[]> {
     return prisma.orgMembership.findMany({
-      where:   { orgId, status: "ACTIVE" },
+      where:   { orgId },
       include: { user: true },
       orderBy: { joinedAt: "asc" },
     });
   },
 
   async getMembership(orgId: string, userId: string): Promise<OrgMembership | null> {
-    return prisma.orgMembership.findFirst({ where: { orgId, userId, status: "ACTIVE" } });
+    return prisma.orgMembership.findFirst({ where: { orgId, userId } });
   },
 
   async addMember(orgId: string, userId: string, role: string = "MEMBER"): Promise<OrgMembership> {
     return prisma.orgMembership.upsert({
-      where:  { orgId_userId: { orgId, userId } },
-      create: { orgId, userId, role: role as Prisma.EnumMemberRoleFilter, status: "ACTIVE" },
-      update: { role: role as Prisma.EnumMemberRoleFilter, status: "ACTIVE" },
+      where:  { userId_orgId: { orgId, userId } },
+      create: { orgId, userId, role: role as UserRole },
+      update: { role: role as UserRole },
     });
   },
 
   async removeMember(orgId: string, userId: string): Promise<void> {
-    await prisma.orgMembership.update({
-      where: { orgId_userId: { orgId, userId } },
-      data:  { status: "REMOVED", leftAt: new Date() },
+    await prisma.orgMembership.delete({
+      where: { userId_orgId: { orgId, userId } },
     });
   },
 
   async updateMemberRole(orgId: string, userId: string, role: string): Promise<OrgMembership> {
     return prisma.orgMembership.update({
-      where: { orgId_userId: { orgId, userId } },
-      data:  { role: role as Prisma.EnumMemberRoleFilter },
+      where: { userId_orgId: { orgId, userId } },
+      data:  { role: role as UserRole },
     });
   },
 };
@@ -173,12 +177,12 @@ export const apiKeyRepository = {
   },
 
   async findByPrefix(keyPrefix: string) {
-    return prisma.apiKey.findFirst({ where: { keyPrefix, status: "ACTIVE" } });
+    return prisma.apiKey.findFirst({ where: { keyPrefix } });
   },
 
   async findByOrgId(orgId: string) {
     return prisma.apiKey.findMany({
-      where:   { orgId, status: "ACTIVE" },
+      where:   { orgId },
       orderBy: { createdAt: "desc" },
     });
   },
@@ -186,14 +190,15 @@ export const apiKeyRepository = {
   async recordUsage(id: string): Promise<void> {
     await prisma.apiKey.update({
       where: { id },
-      data:  { lastUsedAt: new Date(), requestCount: { increment: 1 } },
+      data:  { lastUsedAt: new Date() },
     });
   },
 
   async revoke(id: string, orgId: string): Promise<void> {
+    void orgId; // kept for call-site compatibility
     await prisma.apiKey.update({
       where: { id },
-      data:  { status: "REVOKED", revokedAt: new Date() },
+      data:  { revokedAt: new Date() },
     });
   },
 };

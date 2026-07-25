@@ -9,7 +9,7 @@ export type OrgRole = "OWNER" | "ADMIN" | "DEVELOPER" | "ANALYST" | "VIEWER";
 
 // ── Permissions ───────────────────────────────────────────────────────────────
 
-export type Permission =
+export type RBACPermission =
   // Organization
   | "org:read"
   | "org:update"
@@ -56,9 +56,9 @@ export type Permission =
   | "settings:read"
   | "settings:update";
 
-// ── Role → Permission mapping ─────────────────────────────────────────────────
+// ── Role → RBACPermission mapping ─────────────────────────────────────────────────
 
-const OWNER_PERMISSIONS = new Set<Permission>([
+const OWNER_PERMISSIONS = new Set<RBACPermission>([
   "org:read", "org:update", "org:delete", "org:manage_billing",
   "members:read", "members:invite", "members:remove", "members:manage_roles",
   "api_keys:read", "api_keys:create", "api_keys:revoke",
@@ -71,7 +71,7 @@ const OWNER_PERMISSIONS = new Set<Permission>([
   "settings:read", "settings:update",
 ]);
 
-const ADMIN_PERMISSIONS = new Set<Permission>([
+const ADMIN_PERMISSIONS = new Set<RBACPermission>([
   "org:read", "org:update",
   "members:read", "members:invite", "members:remove", "members:manage_roles",
   "api_keys:read", "api_keys:create", "api_keys:revoke",
@@ -84,7 +84,7 @@ const ADMIN_PERMISSIONS = new Set<Permission>([
   "settings:read", "settings:update",
 ]);
 
-const DEVELOPER_PERMISSIONS = new Set<Permission>([
+const DEVELOPER_PERMISSIONS = new Set<RBACPermission>([
   "org:read",
   "members:read",
   "api_keys:read", "api_keys:create",
@@ -96,7 +96,7 @@ const DEVELOPER_PERMISSIONS = new Set<Permission>([
   "settings:read",
 ]);
 
-const ANALYST_PERMISSIONS = new Set<Permission>([
+const ANALYST_PERMISSIONS = new Set<RBACPermission>([
   "org:read",
   "members:read",
   "workflows:read", "workflows:execute",
@@ -106,7 +106,7 @@ const ANALYST_PERMISSIONS = new Set<Permission>([
   "settings:read",
 ]);
 
-const VIEWER_PERMISSIONS = new Set<Permission>([
+const VIEWER_PERMISSIONS = new Set<RBACPermission>([
   "org:read",
   "members:read",
   "workflows:read",
@@ -115,7 +115,7 @@ const VIEWER_PERMISSIONS = new Set<Permission>([
   "settings:read",
 ]);
 
-export const PERMISSION_MAP: Record<OrgRole, Set<Permission>> = {
+export const PERMISSION_MAP: Record<OrgRole, Set<RBACPermission>> = {
   OWNER:     OWNER_PERMISSIONS,
   ADMIN:     ADMIN_PERMISSIONS,
   DEVELOPER: DEVELOPER_PERMISSIONS,
@@ -123,11 +123,11 @@ export const PERMISSION_MAP: Record<OrgRole, Set<Permission>> = {
   VIEWER:    VIEWER_PERMISSIONS,
 };
 
-export function hasPermission(role: OrgRole, permission: Permission): boolean {
+export function hasPermission(role: OrgRole, permission: RBACPermission): boolean {
   return PERMISSION_MAP[role]?.has(permission) ?? false;
 }
 
-export function getPermissions(role: OrgRole): Permission[] {
+export function getPermissions(role: OrgRole): RBACPermission[] {
   return Array.from(PERMISSION_MAP[role] ?? []);
 }
 

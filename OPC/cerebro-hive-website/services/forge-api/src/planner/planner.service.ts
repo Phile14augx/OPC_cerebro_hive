@@ -16,7 +16,8 @@ export class PlannerService {
     // Ensure graph context exists
     let ctx = projectGraph.get(projectId);
     if (!ctx) {
-      const project = await this.prisma.project.findUniqueOrThrow({ where: { id: projectId } });
+      const p = this.prisma as any;
+      const project = await p.project.findUniqueOrThrow({ where: { id: projectId } });
       ctx = projectGraph.init(projectId, project.name, prompt ?? (project.prompt ?? ''));
     }
 
@@ -34,8 +35,9 @@ export class PlannerService {
     const plan = result.output;
 
     // Persist plan back to project and modules
-    await this.prisma.$transaction([
-      this.prisma.project.update({
+    const p = this.prisma as any;
+    await p.$transaction([
+      p.project.update({
         where: { id: projectId },
         data: {
           planJson: plan as any,
@@ -49,7 +51,7 @@ export class PlannerService {
         },
       }),
       ...plan.modules.map(m =>
-        this.prisma.module.upsert({
+        p.module.upsert({
           where: { projectId_name: { projectId, name: m.name } },
           create: {
             projectId,
