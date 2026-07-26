@@ -351,6 +351,196 @@ services:
         condition: service_healthy
     profiles: ["obs", "full"]
 
+  # ─── New Backend Services ──────────────────────────────────
+
+  # Rust API Gateway (port 8900)
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    container_name: cerebrohive-gateway
+    restart: unless-stopped
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "8900"
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: cerebro
+      KEYCLOAK_CLIENT_ID: cerebro-gateway
+      PLATFORM_SVC_URL: http://platform-svc:8081
+      ACADEMY_SVC_URL: http://academy-svc:8082
+      CRM_SVC_URL: http://crm-svc:8083
+      ML_SVC_GRPC_URL: http://ml-svc:50051
+      PLATFORM_API_URL: http://platform-api:4000
+      FORGE_API_URL: http://forge-api:4005
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cerebrohive}:${POSTGRES_PASSWORD:-supersecretpassword123}@db:5432/${POSTGRES_DB:-cerebrohive_db}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redispassword123}@redis:6379
+      NATS_URL: nats://nats:4222
+      ALLOWED_ORIGINS: "http://localhost:3000,https://cerebrohive.com"
+      RATE_LIMIT_RPS: "100"
+      RATE_LIMIT_BURST: "200"
+      RUST_LOG: info
+    ports:
+      - "8900:8900"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:8900/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # Java Platform Service (port 8901)
+  platform-svc:
+    build:
+      context: services/platform-svc
+      dockerfile: Dockerfile
+    container_name: cerebrohive-platform-svc
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-cerebrohive_db}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-cerebrohive}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-supersecretpassword123}
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: cerebro
+      REDIS_URL: redis://redis:6379
+      NATS_URL: nats://nats:4222
+      ML_SVC_ADDR: static://ml-svc:50051
+      SERVER_PORT: "8081"
+    ports:
+      - "8901:8081"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:8081/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  # Java Academy Service (port 8902)
+  academy-svc:
+    build:
+      context: services/academy-svc
+      dockerfile: Dockerfile
+    container_name: cerebrohive-academy-svc
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-cerebrohive_db}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-cerebrohive}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-supersecretpassword123}
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: cerebro
+      REDIS_URL: redis://redis:6379
+      NATS_URL: nats://nats:4222
+      ML_SVC_ADDR: static://ml-svc:50051
+      SERVER_PORT: "8082"
+    ports:
+      - "8902:8082"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:8082/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  # Java CRM Service (port 8903)
+  crm-svc:
+    build:
+      context: services/crm-svc
+      dockerfile: Dockerfile
+    container_name: cerebrohive-crm-svc
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-cerebrohive_db}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-cerebrohive}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-supersecretpassword123}
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: cerebro
+      REDIS_URL: redis://redis:6379
+      NATS_URL: nats://nats:4222
+      ML_SVC_ADDR: static://ml-svc:50051
+      SERVER_PORT: "8083"
+    ports:
+      - "8903:8083"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:8083/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  # C++ ML Service (gRPC port 50051)
+  ml-svc:
+    build:
+      context: .
+      dockerfile: services/ml-svc/Dockerfile
+    container_name: cerebrohive-ml-svc
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cerebrohive}:${POSTGRES_PASSWORD:-supersecretpassword123}@db:5432/${POSTGRES_DB:-cerebrohive_db}
+      GRPC_ADDR: "0.0.0.0:50051"
+      LOG_LEVEL: info
+    ports:
+      - "50051:50051"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "grpc_health_probe", "-addr=:50051"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # Next.js Marketing Site (port 3000)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: cerebrohive-web
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8900/api/v1}
+      NEXT_PUBLIC_KEYCLOAK_URL: ${KEYCLOAK_URL:-http://localhost:8080}
+      NEXT_PUBLIC_KEYCLOAK_REALM: ${KEYCLOAK_REALM:-cerebro}
+      NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-cerebro-web}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - gateway
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
   # ─── Tooling ───────────────────────────────────────────────
 
   pgadmin:
@@ -367,6 +557,240 @@ services:
         condition: service_healthy
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+
+# ─── HiveSwarm Services ────────────────────────────────────
+
+  swarm-api:
+    build:
+      context: ./services/swarm-api
+      dockerfile: Dockerfile
+    container_name: cerebrohive-swarm-api
+    restart: unless-stopped
+    ports:
+      - "8910:8910"
+    environment:
+      PORT: "8910"
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispassword123}
+      NATS_URL: nats://nats:4222
+      LOG_LEVEL: info
+    depends_on:
+      redis:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8910/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  swarm-runtime:
+    build:
+      context: ./services/swarm-runtime
+      dockerfile: Dockerfile
+    container_name: cerebrohive-swarm-runtime
+    restart: unless-stopped
+    environment:
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispassword123}
+      NATS_URL: nats://nats:4222
+      TEMPORAL_HOST: temporal:7233
+      SWARM_API_URL: http://swarm-api:8910
+      WORKER_CONCURRENCY: "20"
+      LOG_LEVEL: info
+    depends_on:
+      redis:
+        condition: service_healthy
+      nats:
+        condition: service_started
+      swarm-api:
+        condition: service_healthy
+
+  # ─── HiveSwarm M6: Learning Service ───────────────────────
+
+  learning-service:
+    build:
+      context: ./services/learning-service
+      dockerfile: Dockerfile
+    container_name: cerebrohive-learning
+    restart: unless-stopped
+    ports:
+      - "8950:8950"
+    environment:
+      AI_PROVIDER: ${AI_PROVIDER:-anthropic}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      DATABASE_URL: postgres://${POSTGRES_USER:-cerebrohive}:${POSTGRES_PASSWORD:-supersecretpassword123}@db:5432/${POSTGRES_DB:-cerebrohive_db}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redispassword123}@redis:6379
+      LOG_LEVEL: info
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8950/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # ─── HiveSwarm M4/M5: Tool Gateway ────────────────────────
+
+  tool-gateway:
+    build:
+      context: ./services/tool-gateway
+      dockerfile: Dockerfile
+    container_name: cerebrohive-tool-gateway
+    restart: unless-stopped
+    ports:
+      - "8940:8940"
+    environment:
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispassword123}
+      TOOL_GATEWAY_PORT: "8940"
+      LOG_LEVEL: info
+      # Tool credentials — set these in your .env
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN:-}
+      JIRA_BASE_URL: ${JIRA_BASE_URL:-}
+      JIRA_EMAIL: ${JIRA_EMAIL:-}
+      JIRA_API_KEY: ${JIRA_API_KEY:-}
+      SERPER_API_KEY: ${SERPER_API_KEY:-}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8940/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # ─── HiveSwarm M3: Memory Service ─────────────────────────
+
+  memory-service:
+    build:
+      context: ./services/memory-service
+      dockerfile: Dockerfile
+    container_name: cerebrohive-memory
+    restart: unless-stopped
+    ports:
+      - "8930:8930"
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-cerebrohive}:${POSTGRES_PASSWORD:-supersecretpassword123}@db:5432/${POSTGRES_DB:-cerebrohive_db}
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispassword123}
+      MEMORY_PORT: "8930"
+      LOG_LEVEL: info
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8930/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # ─── HiveSwarm M2: Intelligence Layer ─────────────────────
+
+  planner-service:
+    build:
+      context: ./services/planner-service
+      dockerfile: Dockerfile
+    container_name: cerebrohive-planner
+    restart: unless-stopped
+    ports:
+      - "8920:8920"
+    environment:
+      AI_PROVIDER: ${AI_PROVIDER:-anthropic}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redispassword123}@redis:6379
+      LOG_LEVEL: info
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8920/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  router-service:
+    build:
+      context: ./services/router-service
+      dockerfile: Dockerfile
+    container_name: cerebrohive-router
+    restart: unless-stopped
+    ports:
+      - "8921:8921"
+    environment:
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispassword123}
+      ROUTER_PORT: "8921"
+      LOG_LEVEL: info
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8921/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  evaluation-service:
+    build:
+      context: ./services/evaluation-service
+      dockerfile: Dockerfile
+    container_name: cerebrohive-evaluator
+    restart: unless-stopped
+    ports:
+      - "8922:8922"
+    environment:
+      AI_PROVIDER: ${AI_PROVIDER:-anthropic}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      LOG_LEVEL: info
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8922/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  agent-runner:
+    build:
+      context: ./services/agent-runner
+      dockerfile: Dockerfile
+    container_name: cerebrohive-agent-runner
+    restart: unless-stopped
+    ports:
+      - "8960:8960"
+    environment:
+      PORT: 8960
+      HOST: "0.0.0.0"
+      SWARM_API_URL: http://swarm-api:8910
+      AGENT_RUNNER_ENDPOINT: http://agent-runner:8960
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ORCHESTRATOR_MODEL: ${ORCHESTRATOR_MODEL:-claude-sonnet-4-6}
+      CRITIC_MODEL: ${CRITIC_MODEL:-claude-sonnet-4-6}
+      CODING_MODEL: ${CODING_MODEL:-claude-sonnet-4-6}
+      RESEARCH_MODEL: ${RESEARCH_MODEL:-claude-sonnet-4-6}
+      MAX_TOKENS: 4096
+      TEMPERATURE: "0.3"
+      AGENT_CONCURRENCY: 5
+      LOG_LEVEL: info
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8960/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - swarm-api
 
 # ─── Volumes ───────────────────────────────────────────────
 

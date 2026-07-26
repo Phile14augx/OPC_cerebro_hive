@@ -46,6 +46,23 @@ resources:
   - ai-gateway/hpa.yaml
   - ai-gateway/pdb.yaml
 
+  # New backend services
+  - gateway/deployment.yaml
+  - gateway/service.yaml
+  - gateway/hpa.yaml
+
+  - platform-svc/deployment.yaml
+  - platform-svc/service.yaml
+  - platform-svc/hpa.yaml
+
+  - academy-svc/deployment.yaml
+
+  - crm-svc/deployment.yaml
+
+  - ml-svc/deployment.yaml
+
+  - web/deployment.yaml
+
   # Ingress + TLS
   - ingress/certificate.yaml
   - ingress/ingress.yaml

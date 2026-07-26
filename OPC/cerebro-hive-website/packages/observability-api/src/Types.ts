@@ -1,0 +1,1 @@
+export interface Trace { traceId: string; rootSpan: string; durationMs: number; error: boolean; }

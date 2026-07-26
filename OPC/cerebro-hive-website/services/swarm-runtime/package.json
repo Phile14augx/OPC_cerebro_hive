@@ -1,0 +1,9 @@
+{
+  "name": "@cerebro/swarm-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@cerebro/swarm-sdk": "workspace:*"
+  }
+}

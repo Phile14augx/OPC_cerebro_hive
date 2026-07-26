@@ -1,1 +1,3 @@
-export * from './workers/BaseWorker';
+
+export * from './EventTypes';
+export * from './EventBus';

@@ -1,0 +1,10 @@
+{
+  "name": "@cerebro/telemetry-api",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "@cerebro/events": "workspace:*"
+  }
+}

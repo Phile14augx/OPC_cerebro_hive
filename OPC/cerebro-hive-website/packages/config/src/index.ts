@@ -1,5 +1,2 @@
-/**
- * @cerebro/config — Public API
- */
-
-export * from "./env.js";
+// @cerebro/config
+export {};

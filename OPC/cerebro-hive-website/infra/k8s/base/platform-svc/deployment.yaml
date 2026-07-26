@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-svc
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: platform-svc
+    app.kubernetes.io/component: platform-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: platform-svc
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: platform-svc
+        app.kubernetes.io/component: platform-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8081"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      serviceAccountName: platform-svc
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: platform-svc
+          image: cerebrohive/platform-svc:latest
+          ports:
+            - containerPort: 8081
+              name: http
+              protocol: TCP
+          env:
+            - name: DATABASE_URL
+              value: jdbc:postgresql://$(POSTGRES_HOST):5432/$(POSTGRES_DB)
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: postgres-host
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: postgres-db
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: postgres-user
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: postgres-password
+            - name: KEYCLOAK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: keycloak-url
+            - name: KEYCLOAK_REALM
+              value: cerebro
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: redis-url
+            - name: NATS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: nats-url
+            - name: ML_SVC_ADDR
+              value: static://ml-svc:50051
+            - name: JAVA_OPTS
+              value: "-XX:+UseZGC -XX:MaxRAMPercentage=75"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8081
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8081
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+      terminationGracePeriodSeconds: 60

@@ -3,10 +3,11 @@
 # CerebroHive — NGINX Ingress
 #
 # Routing:
-#   app.cerebrohive.com       → studio (Next.js)
+#   cerebrohive.com           → web (Next.js marketing site)
+#   app.cerebrohive.com       → studio (Next.js product app)
 #   forge.cerebrohive.com     → forge (Next.js workflow builder)
-#   api.cerebrohive.com       → platform-api (REST API)
-#   gateway.cerebrohive.com   → ai-gateway (internal — IP allowlisted)
+#   api.cerebrohive.com/api   → gateway (Rust API gateway → Java/C++ services)
+#   api.cerebrohive.com       → platform-api (existing REST API)
 # ──────────────────────────────────────────────────────────────────────────────
 
 apiVersion: networking.k8s.io/v1
@@ -56,12 +57,36 @@ metadata:
 spec:
   tls:
     - hosts:
+        - cerebrohive.com
+        - www.cerebrohive.com
         - app.cerebrohive.com
         - forge.cerebrohive.com
         - api.cerebrohive.com
       secretName: cerebro-hive-tls
 
   rules:
+    # Marketing website
+    - host: cerebrohive.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  name: http
+    - host: www.cerebrohive.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  name: http
+
     # CerebroStudio — main product frontend
     - host: app.cerebrohive.com
       http:
@@ -86,10 +111,17 @@ spec:
                 port:
                   name: http
 
-    # Platform API
+    # API — new Rust gateway handles /api/v1/*; existing platform-api handles rest
     - host: api.cerebrohive.com
       http:
         paths:
+          - path: /api/v1
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway
+                port:
+                  name: http
           - path: /
             pathType: Prefix
             backend:

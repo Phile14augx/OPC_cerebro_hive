@@ -24,6 +24,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.1",
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
@@ -52,25 +53,76 @@
     }
   },
   "lint-staged": {
-    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
-    "*.{js,jsx,json,md,yaml,yml}": ["prettier --write"],
-    "*.{tf,tfvars}": ["terraform fmt -"],
-    "*.rego": ["opa fmt -w"]
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx,json,md,yaml,yml}": [
+      "prettier --write"
+    ],
+    "*.{tf,tfvars}": [
+      "terraform fmt -"
+    ],
+    "*.rego": [
+      "opa fmt -w"
+    ]
   },
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"],
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
     "rules": {
-      "type-enum": [2, "always", [
-        "feat", "fix", "docs", "style", "refactor", "perf",
-        "test", "build", "ci", "chore", "revert", "infra", "security"
-      ]],
-      "scope-enum": [1, "always", [
-        "studio", "forge", "platform-api", "forge-api", "ai-gateway",
-        "telemetry", "db", "auth", "queue", "config", "shared-types",
-        "llmops", "agent-ops", "knowledge-ops",
-        "k8s", "helm", "terraform", "argocd", "ci", "deps", "release"
-      ]],
-      "body-max-line-length": [1, "always", 200]
+      "type-enum": [
+        2,
+        "always",
+        [
+          "feat",
+          "fix",
+          "docs",
+          "style",
+          "refactor",
+          "perf",
+          "test",
+          "build",
+          "ci",
+          "chore",
+          "revert",
+          "infra",
+          "security"
+        ]
+      ],
+      "scope-enum": [
+        1,
+        "always",
+        [
+          "studio",
+          "forge",
+          "platform-api",
+          "forge-api",
+          "ai-gateway",
+          "telemetry",
+          "db",
+          "auth",
+          "queue",
+          "config",
+          "shared-types",
+          "llmops",
+          "agent-ops",
+          "knowledge-ops",
+          "k8s",
+          "helm",
+          "terraform",
+          "argocd",
+          "ci",
+          "deps",
+          "release"
+        ]
+      ],
+      "body-max-line-length": [
+        1,
+        "always",
+        200
+      ]
     }
   }
 }

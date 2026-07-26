@@ -1,0 +1,11 @@
+{
+  "name": "@cerebro/widgets-aiops",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@cerebro/aiops-sdk": "workspace:*",
+    "@cerebro/plugins": "workspace:*",
+    "@cerebro/ui": "workspace:*"
+  }
+}

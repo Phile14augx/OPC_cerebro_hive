@@ -1,0 +1,11 @@
+{
+  "name": "@cerebro/widgets-governance",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@cerebro/governance-sdk": "workspace:*",
+    "@cerebro/plugins": "workspace:*",
+    "@cerebro/ui": "workspace:*"
+  }
+}

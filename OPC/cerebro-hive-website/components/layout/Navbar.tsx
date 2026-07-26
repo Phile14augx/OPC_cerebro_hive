@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import { Menu, X, ChevronDown, Sun, Moon, User, LogIn } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth";
 
 const NAV = [
   {
@@ -69,6 +70,42 @@ function ThemeToggle() {
   );
 }
 
+function AuthButton() {
+  const { isAuthenticated, isLoading, user, login, logout } = useAuth();
+
+  if (isLoading) return null;
+
+  if (isAuthenticated) {
+    return (
+      <div className="flex items-center gap-2">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors"
+        >
+          <User size={15} />
+          <span className="hidden xl:inline">{user?.given_name ?? "Account"}</span>
+        </Link>
+        <button
+          onClick={logout}
+          className="text-xs text-text-secondary/60 hover:text-text-secondary transition-colors"
+        >
+          Sign out
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={login}
+      className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors"
+    >
+      <LogIn size={15} />
+      <span className="hidden xl:inline">Sign in</span>
+    </button>
+  );
+}
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [dropdown, setDropdown] = useState<string | null>(null);
@@ -128,6 +165,7 @@ export default function Navbar() {
 
           {/* Right actions */}
           <div className="hidden lg:flex items-center gap-3">
+            <AuthButton />
             <ThemeToggle />
             <Link
               href="/contact"

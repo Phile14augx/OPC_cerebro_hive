@@ -83,12 +83,31 @@
       "Bash(mv app/platform/forge/* __TRACKED_VAR__/app-platform-forge/)",
       "Bash(mv platform/src/domains/cerebroforge/* __TRACKED_VAR__/domains-cerebroforge/)",
       "Bash(mv platform/src/domains/hivecloud/* __TRACKED_VAR__/domains-hivecloud/)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(GITHUB_ACTIONS=true IS_FTP_DEPLOY=true node -e ' *)",
+      "Bash(rm -rf \"d:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/.next\" \"d:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/out\")",
+      "PowerShell(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Where-Object {$_.LocalPort -in 3000,3001,3002,3003} | Select-Object LocalPort,OwningProcess)",
+      "Bash(rm -rf \"d:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/.next\")",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:3000\" -TimeoutSec 20 -UseBasicParsing; Write-Host \"STATUS: $\\($r.StatusCode\\)\" } catch { Write-Host \"FAILED: $\\($_.Exception.Message\\)\"; if \\($_.Exception.Response\\) { $stream = $_.Exception.Response.GetResponseStream\\(\\); $reader = New-Object System.IO.StreamReader\\($stream\\); Write-Host $reader.ReadToEnd\\(\\) } })",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(grep -c \"mainNavigation\\\\|Platform</\\\\|Products</\\\\|Company</\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/app/)",
+      "Bash(curl -s http://localhost:3000/app/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code}\\\\n\" https://cerebropchive.org/)",
+      "Bash(curl -s https://cerebropchive.org/)",
+      "Bash(node -e ' *)",
+      "Bash(xargs -I{} find {} -type f)",
+      "Bash(curl -sI https://cerebropchive.org/)",
+      "Bash(curl -s \"https://cerebropchive.org/?cachebust=$\\(date +%s\\)\" -H \"Cache-Control: no-cache\")",
+      "Bash(curl -s -o /dev/null -w \"local:%{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(ps -W)",
+      "Bash(curl -s -o /dev/null -w \"products:%{http_code}\\\\n\" http://localhost:3000/products/)"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows",
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\OPC\\cerebro-hive-website\\app\\products",
-      "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\OPC\\cerebro-hive-website\\lib\\data"
+      "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\OPC\\cerebro-hive-website\\lib\\data",
+      "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\OPC\\cerebro-hive-website\\apps\\studio\\.next"
     ]
   }
 }

@@ -1,0 +1,9 @@
+{
+  "name": "@cerebro/icons",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "lucide-react": "^0.300.0"
+  }
+}

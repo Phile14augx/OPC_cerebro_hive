@@ -1,56 +1,38 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { ThemeDefinition, themes } from './theme-metadata';
 
-export interface ThemeConfig {
-  theme: 'light' | 'dark' | 'system';
-  accent: 'blue' | 'purple' | 'emerald' | 'rose' | 'amber';
-  density: 'compact' | 'comfortable' | 'spacious';
-  motion: 'reduced' | 'full';
-  layout: 'fluid' | 'boxed';
-  radius: 'none' | 'sm' | 'md' | 'lg' | 'full';
-  typography: 'inter' | 'roboto' | 'system';
+interface ThemeContextType {
+  currentTheme: ThemeDefinition;
+  setTheme: (themeId: string) => void;
 }
-
-interface ThemeContextType extends ThemeConfig {
-  setThemeConfig: (config: Partial<ThemeConfig>) => void;
-}
-
-const defaultTheme: ThemeConfig = {
-  theme: 'dark',
-  accent: 'blue',
-  density: 'comfortable',
-  motion: 'full',
-  layout: 'fluid',
-  radius: 'md',
-  typography: 'inter',
-};
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [config, setConfig] = useState<ThemeConfig>(defaultTheme);
-
-  const setThemeConfig = (updates: Partial<ThemeConfig>) => {
-    setConfig(prev => ({ ...prev, ...updates }));
-  };
+export function ThemeProvider({ children, defaultTheme = 'dark' }: { children: React.ReactNode, defaultTheme?: string }) {
+  const [themeId, setThemeId] = useState(defaultTheme);
 
   useEffect(() => {
+    // Inject the data-theme attribute on the root html element so CSS variable selectors match
     const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(config.theme === 'system' ? 'dark' : config.theme);
-    root.setAttribute('data-accent', config.accent);
-    root.setAttribute('data-density', config.density);
-    root.setAttribute('data-radius', config.radius);
-  }, [config]);
+    root.setAttribute('data-theme', themeId);
+  }, [themeId]);
+
+  const value = {
+    currentTheme: themes[themeId] || themes.dark,
+    setTheme: setThemeId
+  };
 
   return (
-    <ThemeContext.Provider value={{ ...config, setThemeConfig }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
-};
+}
 
-export const useTheme = () => {
+export function useTheme() {
   const context = useContext(ThemeContext);
-  if (context === undefined) throw new Error('useTheme must be used within ThemeProvider');
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
   return context;
-};
+}

@@ -144,3 +144,98 @@ export const SCHEMA_REGISTRY = {
   "cerebro.ai.budget.warning":            AIBudgetWarningSchema,
   "cerebro.audit.event":                  AuditEventSchema,
 } as const;
+
+// ── HiveSwarm events ──────────────────────────────────────────────────────────
+
+const SwarmBaseEvent = z.object({
+  id:         z.string().min(1),
+  type:       z.string().min(1),
+  tenantId:   z.string().min(1),
+  traceId:    z.string().optional(),
+  occurredAt: z.string().datetime(),
+});
+
+export const SwarmRunCreatedSchema = SwarmBaseEvent.extend({
+  type:   z.literal("swarm.run.created"),
+  payload: z.object({
+    runId:  z.string(),
+    dagId:  z.string(),
+    userId: z.string(),
+    input:  z.record(z.unknown()).default({}),
+  }),
+});
+
+export const SwarmRunCompletedSchema = SwarmBaseEvent.extend({
+  type:   z.literal("swarm.run.completed"),
+  payload: z.object({
+    runId:        z.string(),
+    dagId:        z.string(),
+    durationMs:   z.number().nonnegative(),
+    totalCostUsd: z.number().nonnegative(),
+    totalTokens:  z.number().int().nonnegative(),
+  }),
+});
+
+export const SwarmRunFailedSchema = SwarmBaseEvent.extend({
+  type:   z.literal("swarm.run.failed"),
+  payload: z.object({
+    runId:        z.string(),
+    dagId:        z.string(),
+    failedTaskId: z.string().optional(),
+    errorCode:    z.string(),
+    errorMessage: z.string(),
+  }),
+});
+
+export const SwarmTaskCompletedSchema = SwarmBaseEvent.extend({
+  type:   z.literal("swarm.task.completed"),
+  payload: z.object({
+    taskId:     z.string(),
+    runId:      z.string(),
+    agentId:    z.string().optional(),
+    durationMs: z.number().nonnegative(),
+    tokensUsed: z.number().int().nonnegative(),
+    costUsd:    z.number().nonnegative(),
+    success:    z.boolean(),
+  }),
+});
+
+export const SwarmAgentRegisteredSchema = SwarmBaseEvent.extend({
+  type:   z.literal("swarm.agent.registered"),
+  payload: z.object({
+    agentId:      z.string(),
+    agentName:    z.string(),
+    capabilities: z.array(z.string()),
+    version:      z.string(),
+    endpoint:     z.string(),
+  }),
+});
+
+export const SwarmApprovalRequestedSchema = SwarmBaseEvent.extend({
+  type:   z.literal("swarm.approval.requested"),
+  payload: z.object({
+    taskId:    z.string(),
+    runId:     z.string(),
+    approvers: z.array(z.string()),
+    summary:   z.string(),
+    expiresAt: z.string().datetime(),
+  }),
+});
+
+// Type exports
+export type SwarmRunCreatedMessage       = z.infer<typeof SwarmRunCreatedSchema>;
+export type SwarmRunCompletedMessage     = z.infer<typeof SwarmRunCompletedSchema>;
+export type SwarmRunFailedMessage        = z.infer<typeof SwarmRunFailedSchema>;
+export type SwarmTaskCompletedMessage    = z.infer<typeof SwarmTaskCompletedSchema>;
+export type SwarmAgentRegisteredMessage  = z.infer<typeof SwarmAgentRegisteredSchema>;
+export type SwarmApprovalRequestedMessage = z.infer<typeof SwarmApprovalRequestedSchema>;
+
+// Extend the schema registry
+export const SWARM_SCHEMA_REGISTRY = {
+  "swarm.run.created":         SwarmRunCreatedSchema,
+  "swarm.run.completed":       SwarmRunCompletedSchema,
+  "swarm.run.failed":          SwarmRunFailedSchema,
+  "swarm.task.completed":      SwarmTaskCompletedSchema,
+  "swarm.agent.registered":    SwarmAgentRegisteredSchema,
+  "swarm.approval.requested":  SwarmApprovalRequestedSchema,
+} as const;

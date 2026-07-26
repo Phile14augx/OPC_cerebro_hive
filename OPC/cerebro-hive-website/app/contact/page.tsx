@@ -2,18 +2,22 @@
 
 import { useState } from "react";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import { api } from "@/lib/api-client";
 
 const ENGAGEMENT_TYPES = [
-  "AI Strategy Engagement",
-  "Platform / Product Demo",
-  "Professional Services Scoping",
-  "Academy / Training",
-  "Partnership",
-  "General Inquiry",
+  { label: "AI Strategy Engagement",         value: "enterprise_ai" },
+  { label: "Platform / Product Demo",        value: "ml_infrastructure" },
+  { label: "Professional Services Scoping",  value: "digital_transform" },
+  { label: "Workforce Automation",           value: "workforce_automation" },
+  { label: "Security & Compliance",          value: "security_compliance" },
+  { label: "Academy / Training",             value: "academy" },
+  { label: "General Inquiry",                value: "general" },
 ];
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -29,10 +33,28 @@ export default function ContactPage() {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Static export — form submissions handled externally (Netlify Forms / Formspree / etc.)
-    setSubmitted(true);
+    setSubmitting(true);
+    setError(null);
+    try {
+      const [firstName, ...rest] = form.name.trim().split(" ");
+      await api.crm.submitLead({
+        email: form.email,
+        firstName: firstName ?? form.name,
+        lastName: rest.join(" ") || "—",
+        company: form.company,
+        jobTitle: form.role,
+        engagementType: form.engagementType || "general",
+        message: form.message,
+        source: "website-contact",
+      });
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try emailing hello@cerebrohive.com directly.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -63,8 +85,13 @@ export default function ContactPage() {
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4" data-netlify="true" name="contact">
-              <input type="hidden" name="form-name" value="contact" />
+            <>
+            {error && (
+              <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-4 mb-4 text-sm text-red-400">
+                {error}
+              </div>
+            )}
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-xs font-semibold text-text-secondary mb-1.5">
@@ -136,8 +163,8 @@ export default function ContactPage() {
                 >
                   <option value="">Select engagement type...</option>
                   {ENGAGEMENT_TYPES.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
+                    <option key={t.value} value={t.value}>
+                      {t.label}
                     </option>
                   ))}
                 </select>
@@ -157,11 +184,13 @@ export default function ContactPage() {
               </div>
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary-accent text-background font-bold text-sm hover:opacity-90 transition-opacity w-full sm:w-auto justify-center"
+                disabled={submitting}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary-accent text-background font-bold text-sm hover:opacity-90 transition-opacity w-full sm:w-auto justify-center disabled:opacity-60"
               >
-                Book a Discovery Call <ArrowRight size={14} />
+                {submitting ? "Sending…" : <><span>Book a Discovery Call</span><ArrowRight size={14} /></>}
               </button>
             </form>
+            </>
           )}
         </div>
 

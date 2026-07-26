@@ -1,0 +1,17 @@
+{
+  "name": "@cerebro/tokens",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "node --experimental-strip-types build.ts",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "vitest": "^1.0.0"
+  }
+}

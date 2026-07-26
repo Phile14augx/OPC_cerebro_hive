@@ -1,0 +1,11 @@
+{
+  "name": "@cerebro/widgets-intelligence",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@cerebro/intelligence-api": "workspace:*",
+    "@cerebro/experience": "workspace:*",
+    "@cerebro/ui": "workspace:*"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@cerebro/widgets-studio",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@cerebro/plugins": "workspace:*",
+    "@cerebro/ui": "workspace:*"
+  }
+}
