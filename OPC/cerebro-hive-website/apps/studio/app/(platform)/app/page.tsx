@@ -60,17 +60,17 @@ export default function DashboardHome() {
           >
             <div className="absolute -inset-1 bg-gradient-to-r from-primary-accent/40 via-purple-500/40 to-blue-500/40 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
             <div className="relative bg-surface border-2 border-border group-hover:border-primary-accent/40 rounded-2xl overflow-hidden transition-colors shadow-elevated">
-              <div className="flex items-center px-4 py-3">
-                <Sparkles className="text-primary-accent shrink-0 ml-2" size={24} />
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-3">
+                <Sparkles className="text-primary-accent shrink-0 ml-1 sm:ml-2" size={24} />
                 <input
                   type="text"
                   value={commandInput}
                   onChange={(e) => setCommandInput(e.target.value)}
-                  placeholder="e.g. Deploy an HR Agent with the employee handbook..."
-                  className="w-full bg-transparent border-none focus:outline-none focus:ring-0 text-text-primary placeholder:text-text-muted text-lg lg:text-xl px-4 py-4 font-medium"
+                  placeholder="e.g. Deploy an HR Agent..."
+                  className="w-full min-w-0 flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-text-primary placeholder:text-text-muted text-base sm:text-lg lg:text-xl px-2 sm:px-4 py-4 font-medium"
                 />
-                <Button className="shrink-0 h-12 px-6 rounded-xl font-bold text-base gap-2">
-                  Execute <Play size={16} fill="currentColor" />
+                <Button className="shrink-0 h-10 sm:h-12 px-4 sm:px-6 rounded-xl font-bold text-sm sm:text-base gap-1.5 sm:gap-2">
+                  <span className="hidden sm:inline">Execute</span> <Play size={16} fill="currentColor" />
                 </Button>
               </div>
               
@@ -108,17 +108,19 @@ export default function DashboardHome() {
           </motion.div>
 
           {/* AI Context Prompt */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="mt-4 flex items-center gap-3 px-4 py-3 bg-blue-500/10 border border-blue-500/20 rounded-xl"
+            className="mt-4 flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3 bg-blue-500/10 border border-blue-500/20 rounded-xl"
           >
-            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shrink-0" />
-            <p className="text-sm text-text-primary flex-1">
-              <span className="font-bold text-blue-400">Context aware:</span> You uploaded 12 PDFs yesterday to 'HR Docs'. Would you like to create a Knowledge Base from them?
-            </p>
-            <Button size="sm" variant="secondary" className="border-blue-500/30 hover:bg-blue-500/20 text-blue-400 shrink-0">
+            <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
+              <div className="w-2 h-2 mt-1.5 sm:mt-0 rounded-full bg-blue-500 animate-pulse shrink-0" />
+              <p className="text-sm text-text-primary">
+                <span className="font-bold text-blue-400">Context aware:</span> You uploaded 12 PDFs yesterday to 'HR Docs'. Would you like to create a Knowledge Base from them?
+              </p>
+            </div>
+            <Button size="sm" variant="secondary" className="border-blue-500/30 hover:bg-blue-500/20 text-blue-400 shrink-0 w-full sm:w-auto">
               Create Knowledge Base
             </Button>
           </motion.div>

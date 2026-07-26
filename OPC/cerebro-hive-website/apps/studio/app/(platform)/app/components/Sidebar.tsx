@@ -5,14 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { platformNavigation, forgeNavigation } from "../navigation";
 import {
-  Building2, ChevronDown, ChevronRight, Pin, PanelLeftClose, PanelLeft, Star, Hammer
+  Building2, ChevronDown, ChevronRight, Pin, PanelLeftClose, PanelLeft, Star, Hammer, X
 } from "lucide-react";
 import { cn } from "./ui/utils";
 import { useSidebar } from "./SidebarContext";
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { isCollapsed, toggleCollapse } = useSidebar();
+  const { isCollapsed, toggleCollapse, isMobileOpen, closeMobile } = useSidebar();
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [forgeOpen, setForgeOpen] = useState(false);
 
@@ -38,25 +38,49 @@ export function Sidebar() {
   ];
 
   return (
-    <aside 
-      className={cn(
-        "fixed top-0 left-0 h-screen bg-background border-r border-border flex flex-col transition-all duration-300 z-40 hidden lg:flex",
-        isCollapsed ? "w-[72px]" : "w-[280px]"
+    <>
+      {/* Mobile backdrop — click to close the drawer */}
+      {isMobileOpen && (
+        <div
+          onClick={closeMobile}
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          aria-hidden
+        />
       )}
-    >
+
+      <aside
+        className={cn(
+          "fixed top-0 left-0 h-screen bg-background border-r border-border flex flex-col transition-transform lg:transition-all duration-300 z-50",
+          // Width: full drawer width on mobile; collapsible rail on desktop
+          "w-[280px]",
+          isCollapsed ? "lg:w-[72px]" : "lg:w-[280px]",
+          // Slide in/out on mobile; always visible + static on desktop
+          isMobileOpen ? "translate-x-0" : "-translate-x-full",
+          "lg:translate-x-0",
+          isMobileOpen && "shadow-2xl lg:shadow-none"
+        )}
+      >
       {/* Header & Collapse Toggle */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-border shrink-0">
-        <Link href="/app" className="flex items-center gap-3">
+        <Link href="/app" className="flex items-center gap-3" onClick={closeMobile}>
           <div className="w-8 h-8 rounded-xl bg-primary-accent text-background flex items-center justify-center font-bold text-lg">
             H
           </div>
           {!isCollapsed && <span className="font-space font-bold text-lg text-text-primary">HivePulse</span>}
         </Link>
-        <button 
+        {/* Desktop collapse toggle */}
+        <button
           onClick={toggleCollapse}
-          className="p-1.5 text-text-muted hover:text-text-primary hover:bg-surface rounded-md transition-colors"
+          className="hidden lg:flex p-1.5 text-text-muted hover:text-text-primary hover:bg-surface rounded-md transition-colors"
         >
           {isCollapsed ? <PanelLeft size={18} /> : <PanelLeftClose size={18} />}
+        </button>
+        {/* Mobile close button */}
+        <button
+          onClick={closeMobile}
+          className="lg:hidden p-1.5 text-text-muted hover:text-text-primary hover:bg-surface rounded-md transition-colors"
+        >
+          <X size={18} />
         </button>
       </div>
 
@@ -104,9 +128,10 @@ export function Sidebar() {
           )}
           <div className="space-y-1">
             {pinnedFavorites.map((fav, i) => (
-              <Link 
-                key={i} 
+              <Link
+                key={i}
                 href={fav.href}
+                onClick={closeMobile}
                 title={isCollapsed ? fav.title : undefined}
                 className={cn(
                   "flex items-center gap-3 rounded-lg text-sm transition-colors group relative",
@@ -154,6 +179,7 @@ export function Sidebar() {
                   <Link
                     key={i}
                     href={item.href}
+                    onClick={closeMobile}
                     className={cn(
                       "flex items-center gap-3 rounded-lg text-sm transition-colors group px-3 py-1.5 border",
                       isActive
@@ -188,6 +214,7 @@ export function Sidebar() {
                     <Link
                       key={itemIdx}
                       href={item.href}
+                      onClick={closeMobile}
                       title={isCollapsed ? item.title : undefined}
                       className={cn(
                         "flex items-center gap-3 rounded-lg text-sm transition-colors group",
@@ -213,6 +240,7 @@ export function Sidebar() {
           )
         ))}
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }
