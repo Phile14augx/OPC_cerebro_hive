@@ -1,15 +1,16 @@
-# Task Tracker: Milestone 15 - Autonomous Multi-Agent Intelligence
+# Task Tracker: Milestone 16 - Multi-Layered Memory System
 
-## Phase 1: Core System Agents (services/planner-service)
-- `[x]` Scaffold `MissionPlanner`: Breaks high-level user goals into typed `ExecutionPlan` / Initial Workflow
-- `[x]` Scaffold `AgentAllocator`: Queries an `AgentRegistry` to assign tasks to specialized agents
-- `[x]` Scaffold `ReviewerAgent` & `CriticAgent`: Quality review and consensus strategies implemented as standard executable tasks
+## Phase 1: Memory Models & SDK (`packages/memory-sdk`)
+- `[x]` Define Memory Type schemas (`WorkingMemory`, `ConversationMemory`, `TaskMemory`, `EpisodicMemory`)
+- `[x]` Define the `MemoryConsolidator` interface for semantic extraction
 
-## Phase 2: Autonomous Engine Capabilities (services/swarm-runtime)
-- `[x]` Implement `ReflectionEngine`: A separate layer outside the deterministic executor that evaluates results and decides to Continue or Replan
-- `[x]` Implement Immutable Replanning: `Replan Request` creates a *new* Workflow Revision (linked to parent) rather than mutating the active DAG
-- `[x]` Implement `AgentRegistry` Index: capability matching, latency, and reliability tracking
+## Phase 2: Memory Service Core (`services/memory-service`)
+- `[x]` Scaffold `MemoryService` to handle creation and retrieval of distinct memory types
+- `[x]` Implement `WorkingMemoryStore` (Ephemeral Redis-like KV logic)
+- `[x]` Implement `EpisodicMemoryStore` (Persistent structured experience database)
+- `[x]` Implement `MemoryRetrievalPipeline` (Query -> Retriever -> Ranker -> Context Builder)
 
-## Phase 3: Integration & Knowledge Persistence
-- `[x]` Wire `DecisionEngine` into the Orchestrator loop
-- `[x]` Persist `ImprovementRecord` to KnowledgeOps after Reflection runs
+## Phase 3: Runtime Integration (`services/swarm-runtime`)
+- `[x]` Integrate `WorkingMemoryStore` with `ExecutionEngine`: create transient state during task execution
+- `[x]` Implement Snapshotting: Trigger a snapshot to `EpisodicMemory` on task/workflow completion, then wipe `WorkingMemory`
+- `[x]` Implement Consolidation Hook: Push structured episodes to `KnowledgeOps` for semantic fact extraction
