@@ -1,4 +1,106 @@
+const fs = require('fs');
+const path = require('path');
 
+const packagesDir = path.join('d:', '{MY_PROJECTS}', '{OPC_cerebro_hive}', 'OPC', 'cerebro-hive-website', 'packages');
+const servicesDir = path.join('d:', '{MY_PROJECTS}', '{OPC_cerebro_hive}', 'OPC', 'cerebro-hive-website', 'services');
+
+// ----------------------------------------------------
+// PHASE 1: CORE MODELS & SDK UPDATES
+// ----------------------------------------------------
+const swarmSdkSrc = path.join(packagesDir, 'swarm-sdk', 'src');
+
+fs.writeFileSync(path.join(swarmSdkSrc, 'DAG.ts'), `
+export type TaskStatus = 'PENDING' | 'READY' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'RETRYING' | 'SKIPPED' | 'CANCELLED';
+
+export interface RetryPolicy {
+  maxAttempts: number;
+  backoffMs: number;
+}
+
+export interface ExecutionProfile {
+  cpu: number;
+  memory: number;
+  timeoutMs: number;
+  priority: number;
+  retryPolicy: RetryPolicy;
+}
+
+export interface TaskNode {
+  id: string;
+  agentId?: string;
+  intent: string;
+  status: TaskStatus;
+  dependencies: string[]; // Parent IDs
+  profile: ExecutionProfile;
+}
+
+export interface TaskEdge {
+  from: string;
+  to: string;
+}
+
+export interface TaskDAG {
+  id: string;
+  nodes: TaskNode[];
+  edges: TaskEdge[];
+}
+`);
+
+
+// ----------------------------------------------------
+// PHASE 2 & 3 & 4: EXECUTION ENGINE DEEP DIVE
+// ----------------------------------------------------
+const swarmRuntimeSrc = path.join(servicesDir, 'swarm-runtime', 'src');
+
+fs.writeFileSync(path.join(swarmRuntimeSrc, 'ExecutionStateStore.ts'), `
+// Mock PostgreSQL backed state store
+export class ExecutionStateStore {
+  private states = new Map<string, any>();
+  
+  async saveContext(taskId: string, context: any) {
+    this.states.set(taskId, context);
+  }
+  
+  async getContext(taskId: string) {
+    return this.states.get(taskId) || {};
+  }
+}
+
+// Mock Blob Storage for large artifacts
+export class ArtifactStore {
+  async saveArtifact(payload: any): Promise<string> {
+    const ref = \`art-\${Date.now()}\`;
+    console.log(\`[ArtifactStore] Saved large payload to object storage. Ref: \${ref}\`);
+    return ref;
+  }
+}
+`);
+
+fs.writeFileSync(path.join(swarmRuntimeSrc, 'WorkerPool.ts'), `
+import { ExecutionProfile } from '@cerebro/swarm-sdk';
+
+export class WorkerPool {
+  private availableCpu = 1000; // Mock units
+  private availableMemory = 4096; // MB
+
+  hasCapacity(profile: ExecutionProfile): boolean {
+    return this.availableCpu >= profile.cpu && this.availableMemory >= profile.memory;
+  }
+
+  allocate(profile: ExecutionProfile) {
+    if (!this.hasCapacity(profile)) throw new Error('Insufficient Capacity');
+    this.availableCpu -= profile.cpu;
+    this.availableMemory -= profile.memory;
+  }
+
+  release(profile: ExecutionProfile) {
+    this.availableCpu += profile.cpu;
+    this.availableMemory += profile.memory;
+  }
+}
+`);
+
+fs.writeFileSync(path.join(swarmRuntimeSrc, 'ExecutionEngine.ts'), `
 import { TaskDAG, TaskNode, emitSwarmEvent } from '@cerebro/swarm-sdk';
 import { ExecutionStateStore, ArtifactStore } from './ExecutionStateStore';
 import { WorkerPool } from './WorkerPool';
@@ -23,7 +125,7 @@ export class WorkerThreadProvider implements ExecutionProvider {
       throw new Error('Simulated Execution Failure');
     }
 
-    return { result: `Output of ${node.id}`, someContext: context };
+    return { result: \`Output of \${node.id}\`, someContext: context };
   }
 }
 
@@ -164,7 +266,7 @@ export class ExecutionEngine {
 
   private transitionState(node: TaskNode, newState: TaskStatus) {
     node.status = newState;
-    emitSwarmEvent(`NODE_${newState}`, { taskId: node.id });
+    emitSwarmEvent(\`NODE_\${newState}\`, { taskId: node.id });
     
     if (newState === 'READY') {
       this.readyQueue.push(node);
@@ -176,3 +278,12 @@ export class ExecutionEngine {
     emitSwarmEvent('WORKFLOW_FAILED', { reason: 'Cancelled by operator' });
   }
 }
+`);
+
+fs.writeFileSync(path.join(swarmRuntimeSrc, 'index.ts'), `
+export * from './ExecutionEngine';
+export * from './ExecutionStateStore';
+export * from './WorkerPool';
+`);
+
+console.log('M15 AgentOps Deep Dive Scaffolded Successfully');

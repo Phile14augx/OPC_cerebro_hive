@@ -1,18 +1,20 @@
-# Task Tracker: Milestone 14 Execution
+# Task Tracker: AgentOps HiveSwarm Execution Engine Deep Dive
 
-## Phase 1: Epic 1 - Enterprise Marketplace (Backend)
-- `[x]` Scaffold `services/marketplace-api` and `@cerebro/marketplace-sdk`
-- `[x]` Define polymorphic `MarketplaceAsset` model (Agent, Prompt, Tool, Workflow)
-- `[x]` Implement Hybrid Versioning (Semantic Version + Immutable Revision ID)
-- `[x]` Integrate Governed Lifecycle (`Draft` -> `Validation` -> `Evaluation` -> `Governance Review` -> `Approved`)
+## Phase 1: Core Models & SDK Updates (packages/swarm-sdk)
+- `[x]` Update `DAG.ts` to include full Node State Machine (`PENDING`, `READY`, `RUNNING`, `COMPLETED`, `FAILED`, `RETRYING`, `SKIPPED`, `CANCELLED`)
+- `[x]` Define `ExecutionProfile` (cpu, memory, timeout, retryPolicy)
+- `[x]` Define `TaskContext` and `ExecutionState` models
+- `[x]` Define structured Event taxonomy (`NODE_READY`, `TASK_SKIPPED`, etc.)
 
-## Phase 2: Epic 2 - Workflow Composition Engine (Backend)
-- `[x]` Scaffold `services/workflow-api`
-- `[x]` Define typed `WorkflowDefinition` model (Nodes, Edges, Variables, Triggers)
-- `[x]` Implement `WorkflowCompiler` (Validation, Compilation, Optimization)
-- `[x]` Implement `TemporalAdapter` proxy for Durable Execution (Mocking Temporal Client)
+## Phase 2: State & Artifact Management (services/swarm-runtime)
+- `[x]` Implement `ExecutionStateStore` (PostgreSQL/Mock backed)
+- `[x]` Implement `ArtifactStore` (Object storage reference system)
 
-## Phase 3: Epic 3 - Marketplace & Studio Dashboards (UI)
-- `[x]` Scaffold `@cerebro/widgets-marketplace` Plugin (`AssetExplorerWidget`, `AssetPublishingWidget`)
-- `[x]` Scaffold `@cerebro/widgets-studio` Plugin (`VisualDagComposerWidget`)
-- `[x]` Register `/dashboard/marketplace` and `/dashboard/studio` routes via PluginManifests
+## Phase 3: Resource-Aware Scheduler (services/swarm-runtime)
+- `[x]` Implement `WorkerPool` with CPU/Memory capacity tracking
+- `[x]` Implement `DagOrchestrator` (In-degree calculation, Ready Queue, Branch-local failures)
+- `[x]` Implement Event-Driven Dispatch Loop (`dispatch()` triggers on capacity or ready tasks)
+
+## Phase 4: Execution Engine Integration
+- `[x]` Wire `DagOrchestrator`, `WorkerPool`, `ExecutionStateStore`, and `ExecutionProvider` together
+- `[x]` Support Cooperative Cancellation (Cancellation Tokens)

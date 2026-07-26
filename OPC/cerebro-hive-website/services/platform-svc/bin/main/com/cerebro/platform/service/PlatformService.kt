@@ -138,13 +138,13 @@ class PlatformService(
             products   = products.search(query, pageable).content.map { it.toSearchResult() },
             services   = services.findByActive(true, pageable).filter {
                 it.name.contains(query, ignoreCase = true) || it.description.contains(query, ignoreCase = true)
-            }.map { it.toSearchResult() },
+            }.map { it.toSearchResult() }.toList(),
             industries = industries.findByActive(true, pageable).filter {
                 it.name.contains(query, ignoreCase = true)
-            }.map { it.toSearchResult() },
+            }.map { it.toSearchResult() }.toList(),
             solutions  = solutions.findByActive(true, pageable).filter {
                 it.name.contains(query, ignoreCase = true)
-            }.map { it.toSearchResult() },
+            }.map { it.toSearchResult() }.toList(),
         )
     }
 }

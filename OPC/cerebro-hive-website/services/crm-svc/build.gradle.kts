@@ -30,7 +30,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:10.18.0")
 
     // gRPC client (calls ml-svc for lead scoring)
-    implementation("net.devh:grpc-client-spring-boot-starter:3.1.0")
+    implementation("net.devh:grpc-client-spring-boot-starter:3.1.0.RELEASE")
 
     implementation("io.nats:jnats:2.20.4")
     implementation("io.micrometer:micrometer-registry-prometheus")
