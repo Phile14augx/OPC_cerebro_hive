@@ -1,16 +1,16 @@
-# Task Tracker: Milestone 19 - AI Application Builder
+# Task Tracker: Milestone 20 - Enterprise Control Plane
 
-## Phase 1: Application Registry & Schema (`services/app-builder-api`)
-- `[x]` Scaffold `ApplicationRegistry` (Draft, Publish, Immutable Versioning)
-- `[x]` Define `ApplicationGraph` visual schema (Nodes, Edges, Metadata)
-- `[x]` Define Intermediate Representation (IR) models
+## Phase 1: Policy Engine & Secrets Vault (`services/enterprise-control-plane`)
+- `[x]` Scaffold `EnterpriseControlPlane` core service
+- `[x]` Implement `PolicyEngine` (Centralized RBAC, ABAC, and Governance evaluation)
+- `[x]` Implement `SecretsManager` with abstract `SecretProvider` interface (never exposing secrets in logs)
 
-## Phase 2: Compiler Pipeline
-- `[x]` Implement `VisualToIrCompiler` (Visual Graph -> IR)
-- `[x]` Implement `IrOptimizer` (Semantic Validation, Dead Node Removal)
-- `[x]` Implement `IrToDagCompiler` (IR -> HiveSwarm TaskDAG)
+## Phase 2: FinOps & Budgeting
+- `[x]` Implement `BudgetManager` with hierarchical budgets (Org -> Dept -> App -> User)
+- `[x]` Implement `CostEstimator` (Tokens, Duration, GPUs)
+- `[x]` Implement Graceful Budget Enforcement (Stop scheduler, complete active nodes)
 
-## Phase 3: Runtime Integration & Deployment
-- `[x]` Implement `DynamicAppRouter` (`POST /api/apps/{appId}/invoke`) which looks up the version and dispatches to `HiveSwarm`
-- `[x]` Scaffold Governance Pipeline hooks (Validation -> Security Scan -> Cost -> Publish)
-- `[x]` Scaffold the 3-Tier Code Execution boundary (Marketplace, Approved, Sandboxed)
+## Phase 3: Compliance & Audit
+- `[x]` Scaffold `ComplianceEngine` (Generic framework mapping to SOC2, GDPR, HIPAA)
+- `[x]` Implement `AuditService` with immutable, forensic traceability (Trace ID, Span ID, Risk Score)
+- `[x]` Scaffold `RiskEngine` (PII Scanning, Prompt Injection, Data Exfiltration checks)

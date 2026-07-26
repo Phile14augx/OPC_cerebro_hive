@@ -113,6 +113,16 @@ helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
 
 ---
 
+## Step 7 — Enable workflow write permissions (required for self-healing)
+
+Go to **GitHub → Settings → Actions → General** and set:
+- **Workflow permissions** → "Read and write permissions"
+- **Allow GitHub Actions to create and approve pull requests** → ✅ checked
+
+This is required for `self-heal.yml` to commit fixes and for `cleanup-runs.yml` to delete runs.
+
+---
+
 ## What runs automatically after setup
 
 | Event | What triggers |
@@ -120,6 +130,8 @@ helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
 | Push to `main` | `ci.yml` — typecheck, lint, unit tests, Go/Python/JVM builds, bundle analysis, Storybook |
 | Push to `main` | `docker-build.yml` — builds and pushes all 18 Docker images to GHCR |
 | Push to `main` | ArgoCD auto-syncs staging within ~2 min |
+| CI fails | `deploy-watchdog.yml` → routes to `self-heal.yml` (code fix + recommit) or blind retry |
+| CI succeeds | `cleanup-runs.yml` → deletes all failed/cancelled runs for that workflow + branch |
 | PR touching `infra/` | `policy-gate.yml` — OPA Conftest on Terraform, Helm, K8s; Kyverno validate |
 | Every Tue + Thu 10:00 UTC | `release-train.yml` — full test suite → staging deploy → smoke tests → release PR |
 | Release PR merged | `release-train.yml` → semantic-release tag → production deploy via ArgoCD + Argo Rollouts canary |

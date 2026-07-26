@@ -561,6 +561,90 @@ Triggered by: https://github.com/${{ github.repository }}/actions/runs/${{ steps
             console.log(`Opened escalation issue #${issue.number}`);
             core.setFailed(`HealBot escalated after ${cycle} cycles. Issue: #${issue.number}`);
 
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # CLEANUP — purge all failed/cancelled heal-cycle runs on success
+      # Runs after a fix was committed. The next CI will be green; at that
+      # point cleanup-runs.yml handles the broader purge. But we also delete
+      # the failed HealBot runs right here so they don't linger.
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      - name: Purge failed HealBot runs for this branch
+        # Only purge when we actually produced a fix (not when escalating)
+        if: >
+          steps.commit.outputs.changed == 'true' ||
+          steps.classify.outputs.error_type == 'transient'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = '${{ steps.meta.outputs.branch }}';
+
+            // IDs to always keep: the original failing CI run + this healer run
+            const keepIds = new Set([
+              parseInt('${{ steps.meta.outputs.run_id }}'),
+              context.runId,
+            ]);
+
+            const DELETE_CONCLUSIONS = new Set([
+              'failure', 'cancelled', 'timed_out', 'action_required',
+            ]);
+
+            // Workflows to clean on this branch after a successful heal
+            const workflowFiles = [
+              'self-heal.yml',
+              'deploy-watchdog.yml',
+              'ci.yml',
+            ];
+
+            let deleted = 0;
+
+            for (const wfFile of workflowFiles) {
+              // Resolve workflow ID
+              const { data: wfs } = await github.rest.actions.listRepoWorkflows({
+                owner: context.repo.owner,
+                repo:  context.repo.repo,
+              });
+              const wf = wfs.workflows.find(w => w.path.endsWith(wfFile));
+              if (!wf) continue;
+
+              let page = 1;
+              while (true) {
+                const { data } = await github.rest.actions.listWorkflowRuns({
+                  owner:       context.repo.owner,
+                  repo:        context.repo.repo,
+                  workflow_id: wf.id,
+                  branch,
+                  per_page:    100,
+                  page,
+                });
+
+                if (!data.workflow_runs.length) break;
+
+                for (const run of data.workflow_runs) {
+                  if (keepIds.has(run.id))         continue; // keep the original + self
+                  if (run.status !== 'completed')   continue; // never touch in-progress
+                  if (!DELETE_CONCLUSIONS.has(run.conclusion)) continue; // keep successes
+
+                  try {
+                    await github.rest.actions.deleteWorkflowRun({
+                      owner:  context.repo.owner,
+                      repo:   context.repo.repo,
+                      run_id: run.id,
+                    });
+                    console.log(`🗑️  Deleted ${wfFile} #${run.run_number} (${run.conclusion})`);
+                    deleted++;
+                    await new Promise(r => setTimeout(r, 80)); // avoid rate limit
+                  } catch (e) {
+                    console.log(`Could not delete run ${run.id}: ${e.message}`);
+                  }
+                }
+
+                if (data.workflow_runs.length < 100) break;
+                page++;
+              }
+            }
+
+            console.log(`\n✅ HealBot cleanup: deleted ${deleted} failed runs on branch "${branch}"`);
+
       # ── Summary ─────────────────────────────────────────────────────────────
       - name: Write job summary
         if: always()
