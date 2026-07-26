@@ -1,16 +1,16 @@
-# Task Tracker: Milestone 17 - Reasoning Engine
+# Task Tracker: Milestone 18 - Enterprise Knowledge Graph
 
-## Phase 1: Core Reasoning Models & SDK (`packages/reasoning-sdk`)
-- `[x]` Define `ReasoningStrategy` interface (initialize, execute, evaluate, finalize)
-- `[x]` Define structured telemetry events (`REASONING_STARTED`, `BRANCH_EXPANDED`, `CONSENSUS_REACHED`, etc.)
-- `[x]` Define `ReasoningSummary` payload for Episodic Memory integration
+## Phase 1: Ontology & Graph SDK (`packages/ontology-sdk`)
+- `[ ]` Define Entity schemas (Organization, Technology, Business domains)
+- `[ ]` Define Relationship schemas (`BELONGS_TO`, `OWNS`, `USES`, `DEPENDS_ON`, `GENERATES`)
+- `[ ]` Add Temporal and Provenance metadata to nodes and edges
 
-## Phase 2: Reasoning Service Core (`services/reasoning-service`)
-- `[x]` Scaffold `ReasoningService` as a standalone cognitive subsystem
-- `[x]` Implement `SelfConsistencyStrategy` (Parallel LLM calls, confidence aggregation)
-- `[x]` Implement `TreeOfThoughtsStrategy` (Branch expansion, evaluation, pruning)
-- `[x]` Implement `DebateStrategy` (Agent A vs Agent B, Critic judgement)
+## Phase 2: Graph Persistence (`services/knowledge-ops`)
+- `[ ]` Scaffold the `GraphStore` abstraction interface
+- `[ ]` Implement `PostgresGraphStore` (relational graph backing using Postgres)
+- `[ ]` Scaffold the Event-Driven Ingestion Pipeline (Entity & Relationship Extraction)
+- `[ ]` Implement Hybrid Entity Resolution (Deterministic match -> Probabilistic fallback)
 
-## Phase 3: Integration with HiveSwarm (`services/swarm-runtime`)
-- `[x]` Implement `ReasoningProvider` which proxies execution to the standalone Reasoning Engine
-- `[x]` Ensure transient reasoning "scratchpads" are dropped by default, keeping only the structured `ReasoningSummary` for Episodic Memory
+## Phase 3: Query & Reasoning Integration
+- `[ ]` Expose `QueryKnowledgeGraph` tool for Agents
+- `[ ]` Update `ContextBuilder` to fuse Graph Traversal, Vector Search, and Memory Retrieval into a single context payload

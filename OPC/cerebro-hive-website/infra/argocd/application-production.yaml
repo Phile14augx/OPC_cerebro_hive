@@ -1,0 +1,87 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# ArgoCD Application — CerebroHive Production
+# GitOps: manual sync only, triggered by release-train workflow on PR merge.
+# Argo Rollouts canary: 5% → 25% → 50% → 100% with pause steps.
+# ──────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cerebro-hive-production
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: cerebro-hive
+    environment: production
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: cerebro-deployments
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: cerebro-alerts-critical
+    notifications.argoproj.io/subscribe.on-health-degraded.slack: cerebro-alerts-critical
+    notifications.argoproj.io/subscribe.on-deployed.slack: cerebro-deployments
+spec:
+  project: cerebro-hive
+
+  source:
+    repoURL: https://github.com/cerebrohive/cerebro-hive-website
+    targetRevision: main
+    path: infra/helm/cerebro-hive
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        # Pinned versions — updated by release-train workflow via semantic-release tag
+        - name: studio.image.tag
+          value: "1.0.0"
+        - name: forge.image.tag
+          value: "1.0.0"
+        - name: platformApi.image.tag
+          value: "1.0.0"
+        - name: forgeApi.image.tag
+          value: "1.0.0"
+        - name: aiGateway.image.tag
+          value: "1.0.0"
+        - name: swarmApi.image.tag
+          value: "1.0.0"
+        - name: swarmRuntime.image.tag
+          value: "1.0.0"
+        - name: agentRunner.image.tag
+          value: "1.0.0"
+        - name: plannerService.image.tag
+          value: "1.0.0"
+        - name: memoryService.image.tag
+          value: "1.0.0"
+        - name: toolGateway.image.tag
+          value: "1.0.0"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cerebro-hive
+
+  syncPolicy:
+    # NO automated sync in production — only triggered explicitly by release-train
+    automated: null
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 2
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m
+
+  revisionHistoryLimit: 10
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    # Ignore Rollouts-managed fields
+    - group: argoproj.io
+      kind: Rollout
+      jsonPointers:
+        - /spec/replicas
+        - /spec/template/spec/containers/0/image
