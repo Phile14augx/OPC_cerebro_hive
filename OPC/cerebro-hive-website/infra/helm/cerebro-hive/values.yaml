@@ -1,317 +1,426 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# CerebroHive — Helm Chart Default Values
-# Override per environment with values-dev.yaml / values-staging.yaml / values-production.yaml
+# CerebroHive Helm Chart — Default Values (production)
 # ──────────────────────────────────────────────────────────────────────────────
 
 global:
   imageRegistry: ghcr.io
-  imageRepository: cerebro-hive/cerebro-hive
-  imagePullPolicy: Always
-  imagePullSecrets:
-    - name: ghcr-credentials
-
-  # Image tags — overridden by deploy pipeline with sha-<short>
-  imageTag: latest
-
-  # Environment-specific config
-  environment: dev
+  imageOrg: cerebrohive
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+  environment: production
   domain: cerebrohive.com
-  appUrl: "https://app.cerebrohive.com"
-  apiUrl: "https://api.cerebrohive.com"
-
-  # Observability
-  otel:
+  tls:
     enabled: true
-    endpoint: "http://otel-collector:4317"
+    certManager: true
+    issuer: letsencrypt-prod
 
-  # Secrets backend (kubernetes | aws-secrets-manager | vault)
-  secretsBackend: kubernetes
+  # Shared labels applied to all resources
+  commonLabels:
+    app.kubernetes.io/part-of: cerebro-hive
+    app.kubernetes.io/managed-by: Helm
 
-# ──────────────────────────────────────────────────────────────────────────────
-# CerebroStudio
-# ──────────────────────────────────────────────────────────────────────────────
-studio:
-  enabled: true
-  name: studio
-  image:
-    repository: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}/studio"
-    tag: "{{ .Values.global.imageTag }}"
-    pullPolicy: "{{ .Values.global.imagePullPolicy }}"
-  replicaCount: 2
-  port: 3000
+  # Resource policy (override per-service)
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: "100m"
+      memory: "128Mi"
     limits:
-      cpu: 500m
-      memory: 512Mi
-  hpa:
+      cpu: "500m"
+      memory: "512Mi"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Services
+# ──────────────────────────────────────────────────────────────────────────────
+
+studio:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/studio
+    tag: ""          # set at deploy time
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 3000
+  env:
+    NODE_ENV: production
+    NEXT_TELEMETRY_DISABLED: "1"
+    PORT: "3000"
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  autoscaling:
     enabled: true
     minReplicas: 2
     maxReplicas: 10
     targetCPUUtilizationPercentage: 70
-  pdb:
-    enabled: true
-    minAvailable: 1
-  serviceAccount:
-    create: true
-    name: studio
-    annotations: {}
-  env:
-    NEXT_TELEMETRY_DISABLED: "1"
   ingress:
-    host: "app.{{ .Values.global.domain }}"
+    enabled: true
+    host: app.cerebrohive.com
+    path: /
   probes:
-    readiness:
-      path: /api/health
-      initialDelaySeconds: 15
-    liveness:
-      path: /api/health
-      initialDelaySeconds: 30
+    liveness:  { path: /api/health, initialDelaySeconds: 30 }
+    readiness: { path: /api/health, initialDelaySeconds: 10 }
 
-# ──────────────────────────────────────────────────────────────────────────────
-# HiveForge
-# ──────────────────────────────────────────────────────────────────────────────
 forge:
   enabled: true
-  name: forge
   image:
-    repository: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}/forge"
-    tag: "{{ .Values.global.imageTag }}"
-    pullPolicy: "{{ .Values.global.imagePullPolicy }}"
-  replicaCount: 2
+    repository: ghcr.io/cerebrohive/cerebro-hive/forge
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
   port: 3001
   resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  hpa:
+    requests: { cpu: "200m", memory: "256Mi" }
+    limits:   { cpu: "1000m", memory: "1Gi" }
+  autoscaling:
     enabled: true
     minReplicas: 2
     maxReplicas: 8
     targetCPUUtilizationPercentage: 70
-  pdb:
-    enabled: true
-    minAvailable: 1
   ingress:
-    host: "forge.{{ .Values.global.domain }}"
+    enabled: true
+    host: forge.cerebrohive.com
+    path: /
   probes:
-    readiness:
-      path: /api/health
-      initialDelaySeconds: 15
-    liveness:
-      path: /api/health
-      initialDelaySeconds: 30
+    liveness:  { path: /api/health, initialDelaySeconds: 30 }
+    readiness: { path: /api/health, initialDelaySeconds: 10 }
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Platform API
-# ──────────────────────────────────────────────────────────────────────────────
-platform_api:
+platformApi:
   enabled: true
-  name: platform-api
   image:
-    repository: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}/platform-api"
-    tag: "{{ .Values.global.imageTag }}"
-    pullPolicy: "{{ .Values.global.imagePullPolicy }}"
-  replicaCount: 2
+    repository: ghcr.io/cerebrohive/cerebro-hive/platform-api
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
   port: 4000
   resources:
-    requests:
-      cpu: 200m
-      memory: 384Mi
-    limits:
-      cpu: 1000m
-      memory: 768Mi
-  hpa:
+    requests: { cpu: "200m", memory: "256Mi" }
+    limits:   { cpu: "500m", memory: "512Mi" }
+  autoscaling:
     enabled: true
     minReplicas: 2
-    maxReplicas: 12
-    targetCPUUtilizationPercentage: 70
-  pdb:
-    enabled: true
-    minAvailable: 1
-  migrations:
-    runOnDeploy: true
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 75
   ingress:
-    host: "api.{{ .Values.global.domain }}"
+    enabled: true
+    host: api.cerebrohive.com
+    path: /
   probes:
-    readiness:
-      path: /health
-      initialDelaySeconds: 15
-    liveness:
-      path: /health
-      initialDelaySeconds: 30
+    liveness:  { path: /health, initialDelaySeconds: 20 }
+    readiness: { path: /health, initialDelaySeconds: 10 }
 
-# ──────────────────────────────────────────────────────────────────────────────
-# ForgeAPI (NestJS orchestration)
-# ──────────────────────────────────────────────────────────────────────────────
-forge_api:
+forgeApi:
   enabled: true
-  name: forge-api
   image:
-    repository: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}/forge-api"
-    tag: "{{ .Values.global.imageTag }}"
-    pullPolicy: "{{ .Values.global.imagePullPolicy }}"
-  replicaCount: 2
+    repository: ghcr.io/cerebrohive/cerebro-hive/forge-api
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
   port: 4005
   resources:
-    requests:
-      cpu: 250m
-      memory: 512Mi
-    limits:
-      cpu: 2000m
-      memory: 1Gi
-  hpa:
+    requests: { cpu: "200m", memory: "256Mi" }
+    limits:   { cpu: "1000m", memory: "512Mi" }
+  autoscaling:
     enabled: true
     minReplicas: 2
-    maxReplicas: 8
-    targetCPUUtilizationPercentage: 65
-  pdb:
-    enabled: true
-    minAvailable: 1
-  terminationGracePeriodSeconds: 180
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 75
+  ingress:
+    enabled: false
   probes:
-    readiness:
-      path: /health
-      initialDelaySeconds: 20
-    liveness:
-      path: /health
-      initialDelaySeconds: 40
+    liveness:  { path: /health, initialDelaySeconds: 20 }
+    readiness: { path: /health, initialDelaySeconds: 10 }
 
-# ──────────────────────────────────────────────────────────────────────────────
-# AI Gateway
-# ──────────────────────────────────────────────────────────────────────────────
-ai_gateway:
+aiGateway:
   enabled: true
-  name: ai-gateway
   image:
-    repository: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}/ai-gateway"
-    tag: "{{ .Values.global.imageTag }}"
-    pullPolicy: "{{ .Values.global.imagePullPolicy }}"
-  replicaCount: 2
-  port: 4010
+    repository: ghcr.io/cerebrohive/cerebro-hive/ai-gateway
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 3
+  port: 8080
   resources:
-    requests:
-      cpu: 200m
-      memory: 256Mi
-    limits:
-      cpu: 1000m
-      memory: 768Mi
-  hpa:
+    requests: { cpu: "200m", memory: "256Mi" }
+    limits:   { cpu: "2000m", memory: "1Gi" }
+  autoscaling:
     enabled: true
-    minReplicas: 2
+    minReplicas: 3
     maxReplicas: 20
     targetCPUUtilizationPercentage: 60
-  pdb:
+  ingress:
     enabled: true
-    minAvailable: 1
-  terminationGracePeriodSeconds: 120  # Long for streaming LLM responses
-  config:
-    enableStreaming: true
-    enableCostTracking: true
-    enableCaching: true
-    cacheTTL: 300
-    rateLimitRPM: 1000
-  # Providers — API keys injected from secrets
-  providers:
-    anthropic:
-      enabled: true
-      model: claude-sonnet-4-6
-    openai:
-      enabled: true
-      model: gpt-4o
-    google:
-      enabled: true
-      model: gemini-2.0-flash
-    azure:
-      enabled: false
-    ollama:
-      enabled: false
-      endpoint: "http://ollama:11434"
+    host: gateway.cerebrohive.com
+    path: /
   probes:
-    readiness:
-      path: /health
-      initialDelaySeconds: 10
-    liveness:
-      path: /health
-      initialDelaySeconds: 20
+    liveness:  { path: /health, initialDelaySeconds: 15 }
+    readiness: { path: /health/ready, initialDelaySeconds: 5 }
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Ingress (shared)
-# ──────────────────────────────────────────────────────────────────────────────
-ingress:
+swarmApi:
   enabled: true
-  className: nginx
-  tls:
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/swarm-api
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8910
+  resources:
+    requests: { cpu: "100m", memory: "64Mi" }
+    limits:   { cpu: "500m", memory: "256Mi" }
+  autoscaling:
     enabled: true
-    secretName: cerebro-hive-tls
-    issuer: letsencrypt-prod
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-    nginx.ingress.kubernetes.io/limit-rps: "100"
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 10 }
+    readiness: { path: /health, initialDelaySeconds: 5 }
+
+swarmRuntime:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/swarm-runtime
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 3
+  port: 8911
+  resources:
+    requests: { cpu: "200m", memory: "128Mi" }
+    limits:   { cpu: "1000m", memory: "512Mi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 30
+    targetCPUUtilizationPercentage: 65
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 10 }
+    readiness: { path: /health, initialDelaySeconds: 5 }
+
+agentRunner:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/agent-runner
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 3
+  port: 8960
+  resources:
+    requests: { cpu: "200m", memory: "256Mi" }
+    limits:   { cpu: "2000m", memory: "2Gi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 50
+    targetCPUUtilizationPercentage: 60
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 20 }
+    readiness: { path: /health, initialDelaySeconds: 10 }
+
+plannerService:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/planner-service
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8920
+  resources:
+    requests: { cpu: "200m", memory: "512Mi" }
+    limits:   { cpu: "2000m", memory: "4Gi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 65
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 30 }
+    readiness: { path: /health, initialDelaySeconds: 15 }
+
+memoryService:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/memory-service
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8930
+  resources:
+    requests: { cpu: "100m", memory: "128Mi" }
+    limits:   { cpu: "500m", memory: "512Mi" }
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 10 }
+    readiness: { path: /health, initialDelaySeconds: 5 }
+
+toolGateway:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/tool-gateway
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8940
+  resources:
+    requests: { cpu: "100m", memory: "64Mi" }
+    limits:   { cpu: "500m", memory: "256Mi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 10 }
+    readiness: { path: /health, initialDelaySeconds: 5 }
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Secrets — secret names (values must exist before deploy)
+# Infrastructure dependencies
 # ──────────────────────────────────────────────────────────────────────────────
-secrets:
-  cerebro-hive-secrets:
-    name: cerebro-hive-secrets
-    # Keys expected: DATABASE_URL, REDIS_URL, JWT_SECRET, NEXTAUTH_SECRET
-  cerebro-hive-ai-secrets:
-    name: cerebro-hive-ai-secrets
-    # Keys expected: ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_AI_API_KEY
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Progressive Delivery (Argo Rollouts)
-# ──────────────────────────────────────────────────────────────────────────────
-rollouts:
-  enabled: false   # Enable in production overlay
-  strategy: canary
-  canary:
-    steps:
-      - setWeight: 5
-      - pause: {duration: 2m}
-      - setWeight: 25
-      - pause: {duration: 3m}
-      - setWeight: 50
-      - pause: {duration: 5m}
-      - setWeight: 100
-    autoPromotionEnabled: false
-    analysis:
-      enabled: true
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Optional dependencies (disabled for external managed services in production)
-# ──────────────────────────────────────────────────────────────────────────────
 postgresql:
-  enabled: false   # Use RDS in production
+  enabled: false    # Use managed RDS in production
   auth:
-    database: cerebrohive_db
-    username: cerebrohive
-    existingSecret: cerebro-hive-secrets
-    secretKeys:
-      userPasswordKey: POSTGRES_PASSWORD
+    postgresPassword: ""
+    database: cerebrohive
+  primary:
+    persistence:
+      size: 100Gi
 
 redis:
-  enabled: false   # Use ElastiCache in production
+  enabled: false    # Use managed ElastiCache in production
   auth:
     enabled: true
-    existingSecret: cerebro-hive-secrets
-    existingSecretPasswordKey: REDIS_PASSWORD
+    password: ""
+  master:
+    persistence:
+      size: 10Gi
 
-nats:
-  enabled: false   # Use managed NATS or self-hosted per environment
+# ──────────────────────────────────────────────────────────────────────────────
+# Shared secrets (mounted from K8s Secret)
+# ──────────────────────────────────────────────────────────────────────────────
 
-certManager:
-  install: false   # Assume cert-manager pre-installed
+secrets:
+  # Name of the pre-existing K8s Secret containing all credentials
+  # Create with: kubectl create secret generic cerebro-hive-secrets --from-env-file=.env
+  existingSecret: "cerebro-hive-secrets"
 
-argoRollouts:
-  install: false   # Assume argo-rollouts pre-installed
+# ──────────────────────────────────────────────────────────────────────────────
+# Network policy
+# ──────────────────────────────────────────────────────────────────────────────
+
+networkPolicy:
+  enabled: true
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Pod Disruption Budgets
+# ──────────────────────────────────────────────────────────────────────────────
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ServiceAccount
+# ──────────────────────────────────────────────────────────────────────────────
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: "cerebro-hive"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Observability — Prometheus + Grafana
+# ──────────────────────────────────────────────────────────────────────────────
+
+prometheus:
+  enabled: true
+  # kube-prometheus-stack is the recommended operator-based install
+  # Set to false to use a standalone Prometheus instead
+  useOperator: true
+  retention: "15d"
+  storageSize: "50Gi"
+  # ServiceMonitor selectors — auto-discovers all CerebroHive services
+  serviceMonitorSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: cerebro-hive
+  resources:
+    requests: { cpu: "200m", memory: "512Mi" }
+    limits:   { cpu: "1000m", memory: "2Gi" }
+  ingress:
+    enabled: false   # Internal only — access via kubectl port-forward or Grafana
+
+grafana:
+  enabled: true
+  adminPassword: ""   # Set via secret: cerebro-hive-secrets key grafana-admin-password
+  existingSecret: "cerebro-hive-secrets"
+  adminPasswordKey: "grafana-admin-password"
+  replicas: 1
+  persistence:
+    enabled: true
+    size: "10Gi"
+  resources:
+    requests: { cpu: "100m", memory: "256Mi" }
+    limits:   { cpu: "500m", memory: "512Mi" }
+  ingress:
+    enabled: true
+    host: grafana.cerebrohive.com
+    path: /
+  # Pre-provisioned datasources
+  datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-operated:9090
+      isDefault: true
+    - name: Loki
+      type: loki
+      url: http://loki:3100
+  # Pre-provisioned dashboard folders
+  dashboards:
+    cerebro-hive:
+      swarm-overview:    { url: "https://grafana.com/api/dashboards/12345/revisions/1/download" }
+      k8s-cluster:       { gnetId: 15661, revision: 1, datasource: Prometheus }
+      node-exporter:     { gnetId: 1860,  revision: 37, datasource: Prometheus }
+      nextjs-metrics:    { gnetId: 13659, revision: 1, datasource: Prometheus }
+
+alertmanager:
+  enabled: true
+  config:
+    global:
+      resolve_timeout: 5m
+    receivers:
+      - name: "null"
+      - name: slack-alerts
+        slack_configs:
+          - channel: "#cerebro-alerts"
+            send_resolved: true
+            title: '{{ .GroupLabels.alertname }}'
+            text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    route:
+      group_by: ["alertname", "cluster", "service"]
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: slack-alerts
+      routes:
+        - match: { severity: critical }
+          receiver: slack-alerts
+          repeat_interval: 1h

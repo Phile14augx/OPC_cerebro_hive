@@ -1,13 +1,10 @@
-{{/*
-NetworkPolicies — default-deny all + per-service ingress rules.
-*/}}
-
-# Default deny all ingress and egress
+{{- if .Values.networkPolicy.enabled }}
 ---
+# Default deny-all ingress for the namespace
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: default-deny-all
+  name: default-deny-ingress
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "cerebro-hive.labels" . | nindent 4 }}
@@ -15,55 +12,8 @@ spec:
   podSelector: {}
   policyTypes:
     - Ingress
-    - Egress
-
-# Allow DNS egress for all pods
 ---
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-dns-egress
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "cerebro-hive.labels" . | nindent 4 }}
-spec:
-  podSelector: {}
-  policyTypes:
-    - Egress
-  egress:
-    - ports:
-        - port: 53
-          protocol: UDP
-        - port: 53
-          protocol: TCP
-
-# Allow intra-namespace communication
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-intra-namespace
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "cerebro-hive.labels" . | nindent 4 }}
-spec:
-  podSelector: {}
-  policyTypes:
-    - Ingress
-    - Egress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-  egress:
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-
-# Allow ingress from nginx / istio-gateway
----
+# Allow ingress from nginx ingress controller
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -72,7 +22,9 @@ metadata:
   labels:
     {{- include "cerebro-hive.labels" . | nindent 4 }}
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: cerebro-hive
   policyTypes:
     - Ingress
   ingress:
@@ -80,12 +32,44 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: ingress-nginx
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: istio-system
-
-# Allow Prometheus scraping
 ---
+# Allow intra-platform communication
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-platform
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: cerebro-hive
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: cerebro-hive
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: cerebro-hive
+    # Allow DNS
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    # Allow external HTTPS (for LLM APIs)
+    - ports:
+        - port: 443
+          protocol: TCP
+---
+# Allow Prometheus to scrape all pods
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -94,7 +78,9 @@ metadata:
   labels:
     {{- include "cerebro-hive.labels" . | nindent 4 }}
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: cerebro-hive
   policyTypes:
     - Ingress
   ingress:
@@ -102,50 +88,10 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: monitoring
-      ports:
-        - port: 9090
-          protocol: TCP
-
-# Allow OTel egress to collector
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-otel-egress
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "cerebro-hive.labels" . | nindent 4 }}
-spec:
-  podSelector: {}
-  policyTypes:
-    - Egress
-  egress:
-    - to:
-        - namespaceSelector:
+        - podSelector:
             matchLabels:
-              kubernetes.io/metadata.name: monitoring
+              app.kubernetes.io/name: prometheus
       ports:
-        - port: 4317
-          protocol: TCP
-        - port: 4318
-          protocol: TCP
-
-# Allow external HTTPS egress (AI providers, AWS APIs)
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-external-https-egress
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "cerebro-hive.labels" . | nindent 4 }}
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: ai-gateway
-  policyTypes:
-    - Egress
-  egress:
-    - ports:
-        - port: 443
-          protocol: TCP
+        - protocol: TCP
+          port: 9090
+{{- end }}

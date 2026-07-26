@@ -1,110 +1,120 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# CerebroHive — Staging Environment Values
-# Mirrors production config but with reduced resources and auto-canary promotion.
-# Secrets provided by External Secrets Operator → AWS Secrets Manager.
+# CerebroHive Helm Chart — Staging Overrides
+# Merged on top of values.yaml at deploy time.
 # ──────────────────────────────────────────────────────────────────────────────
 
 global:
   environment: staging
   domain: staging.cerebrohive.com
-  appUrl: "https://app.staging.cerebrohive.com"
-  apiUrl: "https://api.staging.cerebrohive.com"
-  imagePullPolicy: Always
-  secretsBackend: aws-secrets-manager
+  tls:
+    issuer: letsencrypt-staging
 
 studio:
-  replicaCount: 2
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  hpa:
-    minReplicas: 2
-    maxReplicas: 6
+  replicas: 1
   ingress:
-    host: "app.staging.cerebrohive.com"
+    host: app.staging.cerebrohive.com
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 3
+  resources:
+    requests: { cpu: "100m", memory: "128Mi" }
+    limits:   { cpu: "500m", memory: "512Mi" }
 
 forge:
-  replicaCount: 2
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  hpa:
-    minReplicas: 2
-    maxReplicas: 4
+  replicas: 1
   ingress:
-    host: "forge.staging.cerebrohive.com"
+    host: forge.staging.cerebrohive.com
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 2
 
-platform_api:
-  replicaCount: 2
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 500m
-      memory: 768Mi
-  hpa:
-    minReplicas: 2
-    maxReplicas: 6
+platformApi:
+  replicas: 1
   ingress:
-    host: "api.staging.cerebrohive.com"
+    host: api.staging.cerebrohive.com
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 2
 
-forge_api:
-  replicaCount: 2
-  resources:
-    requests:
-      cpu: 100m
-      memory: 512Mi
-    limits:
-      cpu: 1000m
-      memory: 1Gi
-  hpa:
-    minReplicas: 2
+forgeApi:
+  replicas: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 2
+
+aiGateway:
+  replicas: 1
+  ingress:
+    host: gateway.staging.cerebrohive.com
+  autoscaling:
+    minReplicas: 1
     maxReplicas: 4
-
-ai_gateway:
-  replicaCount: 2
   resources:
-    requests:
-      cpu: 200m
-      memory: 256Mi
-    limits:
-      cpu: 1000m
-      memory: 768Mi
-  hpa:
-    minReplicas: 2
-    maxReplicas: 8
+    limits: { cpu: "1000m", memory: "512Mi" }
 
-# Canary enabled in staging but auto-promotes (no manual gate)
-rollouts:
-  enabled: true
-  canary:
-    autoPromotionEnabled: true   # staging: auto-promote after analysis passes
-    steps:
-      - setWeight: 25
-      - pause: {duration: 2m}
-      - setWeight: 100
-    analysis:
-      enabled: true
+swarmApi:
+  replicas: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 3
 
-# Use RDS + ElastiCache in staging (not local)
+swarmRuntime:
+  replicas: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 5
+
+agentRunner:
+  replicas: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 10
+  resources:
+    limits: { cpu: "1000m", memory: "1Gi" }
+
+plannerService:
+  replicas: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 3
+
+memoryService:
+  replicas: 1
+
+toolGateway:
+  replicas: 1
+
+# Use in-cluster Postgres + Redis in staging (cheaper than managed)
 postgresql:
-  enabled: false
-redis:
-  enabled: false
-nats:
-  enabled: false
+  enabled: true
+  auth:
+    postgresPassword: "staging-only-password"
+    database: cerebrohive
+  primary:
+    persistence:
+      size: 20Gi
 
-ingress:
-  tls:
-    enabled: true
-    issuer: letsencrypt-staging
-    secretName: cerebro-hive-staging-tls
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  master:
+    persistence:
+      size: 2Gi
+
+# Leaner observability in staging
+prometheus:
+  retention: "7d"
+  storageSize: "20Gi"
+  resources:
+    limits: { cpu: "500m", memory: "1Gi" }
+
+grafana:
+  replicas: 1
+  ingress:
+    host: grafana.staging.cerebrohive.com
+  persistence:
+    size: "5Gi"
+
+alertmanager:
+  enabled: false   # No alerts in staging

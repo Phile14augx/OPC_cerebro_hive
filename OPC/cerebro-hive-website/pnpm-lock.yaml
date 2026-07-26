@@ -458,6 +458,8 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  packages/aiops-sdk: {}
+
   packages/architecture-core:
     dependencies:
       zod:
@@ -743,11 +745,22 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  packages/evaluation-sdk: {}
+
   packages/events:
     dependencies:
       mitt:
         specifier: ^3.0.1
         version: 3.0.1
+
+  packages/execution-providers:
+    dependencies:
+      '@cerebro/events':
+        specifier: workspace:*
+        version: link:../events
+      '@cerebro/swarm-sdk':
+        specifier: workspace:*
+        version: link:../swarm-sdk
 
   packages/experience:
     dependencies:
@@ -808,6 +821,8 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
+
+  packages/governance-sdk: {}
 
   packages/icons:
     dependencies:
@@ -878,6 +893,12 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
+
+  packages/knowledge-sdk: {}
+
+  packages/marketplace-sdk: {}
+
+  packages/memory-sdk: {}
 
   packages/motion:
     devDependencies:
@@ -968,6 +989,8 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
+
+  packages/prompt-sdk: {}
 
   packages/query:
     dependencies:
@@ -1083,19 +1106,9 @@ importers:
 
   packages/swarm-sdk:
     dependencies:
-      '@cerebro/core-bus':
+      '@cerebro/events':
         specifier: workspace:*
-        version: link:../core-bus
-    devDependencies:
-      '@cerebro/config':
-        specifier: workspace:*
-        version: link:../config
-      typescript:
-        specifier: ^5.6.0
-        version: 5.9.3
-      vitest:
-        specifier: ^1.6.0
-        version: 1.6.1(@types/node@20.19.43)(lightningcss@1.32.0)(terser@5.49.0)
+        version: link:../events
 
   packages/tables:
     devDependencies:
@@ -1246,6 +1259,15 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  services/aiops-api:
+    dependencies:
+      '@cerebro/aiops-sdk':
+        specifier: workspace:*
+        version: link:../../packages/aiops-sdk
+      '@cerebro/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+
   services/contentops:
     dependencies:
       '@anthropic-ai/sdk':
@@ -1285,6 +1307,12 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
+
+  services/evaluation-api:
+    dependencies:
+      '@cerebro/evaluation-sdk':
+        specifier: workspace:*
+        version: link:../../packages/evaluation-sdk
 
   services/forge-api:
     dependencies:
@@ -1364,6 +1392,60 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
+
+  services/governance-api:
+    dependencies:
+      '@cerebro/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@cerebro/governance-sdk':
+        specifier: workspace:*
+        version: link:../../packages/governance-sdk
+
+  services/knowledge-api:
+    dependencies:
+      '@cerebro/knowledge-sdk':
+        specifier: workspace:*
+        version: link:../../packages/knowledge-sdk
+
+  services/llm-gateway:
+    dependencies:
+      '@cerebro/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@cerebro/prompt-sdk':
+        specifier: workspace:*
+        version: link:../../packages/prompt-sdk
+
+  services/marketplace-api:
+    dependencies:
+      '@cerebro/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@cerebro/marketplace-sdk':
+        specifier: workspace:*
+        version: link:../../packages/marketplace-sdk
+
+  services/memory-service:
+    dependencies:
+      '@cerebro/memory-sdk':
+        specifier: workspace:*
+        version: link:../../packages/memory-sdk
+
+  services/swarm-runtime:
+    dependencies:
+      '@cerebro/swarm-sdk':
+        specifier: workspace:*
+        version: link:../../packages/swarm-sdk
+
+  services/workflow-api:
+    dependencies:
+      '@cerebro/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@cerebro/marketplace-sdk':
+        specifier: workspace:*
+        version: link:../../packages/marketplace-sdk
 
 packages:
 

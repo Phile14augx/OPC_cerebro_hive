@@ -1,0 +1,273 @@
+name: DockerOps — Build & Push Images
+
+# Builds multi-arch Docker images for all services and pushes to GHCR.
+# Triggered on push to main (latest tag) and on version tags (vX.Y.Z).
+# Uses build matrix so each service is built in parallel.
+
+on:
+  push:
+    branches: ["main"]
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      services:
+        description: "Comma-separated services to build (leave empty for all)"
+        required: false
+        default: ""
+      push:
+        description: "Push images to registry"
+        type: boolean
+        default: true
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: false   # Never cancel a push in flight
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write   # OIDC for AWS ECR if needed later
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/cerebro-hive
+
+jobs:
+  # ── Resolve metadata (tag, sha, push flag) ─────────────────────────────────
+  meta:
+    name: Resolve Build Metadata
+    runs-on: ubuntu-latest
+    outputs:
+      version:    ${{ steps.meta.outputs.version }}
+      tags_json:  ${{ steps.meta.outputs.tags }}
+      labels_json: ${{ steps.meta.outputs.labels }}
+      push:       ${{ steps.push.outputs.push }}
+      sha_short:  ${{ steps.sha.outputs.sha_short }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Short SHA
+        id: sha
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Resolve push flag
+        id: push
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "push=${{ inputs.push }}" >> $GITHUB_OUTPUT
+          else
+            echo "push=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Docker meta (version + labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_PREFIX }}/placeholder
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=ref,event=branch
+            type=sha,prefix=sha-,format=short
+
+  # ── Build matrix ───────────────────────────────────────────────────────────
+  build:
+    name: Build ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    needs: meta
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ── Next.js / Node apps ─────────────────────────────────────────────
+          - name: studio
+            context: .
+            dockerfile: apps/studio/Dockerfile
+            image: studio
+            platforms: linux/amd64,linux/arm64
+
+          - name: forge
+            context: .
+            dockerfile: apps/forge/Dockerfile
+            image: forge
+            platforms: linux/amd64,linux/arm64
+
+          - name: platform-api
+            context: .
+            dockerfile: apps/platform-api/Dockerfile
+            image: platform-api
+            platforms: linux/amd64,linux/arm64
+
+          # ── NestJS services ─────────────────────────────────────────────────
+          - name: forge-api
+            context: .
+            dockerfile: services/forge-api/Dockerfile
+            image: forge-api
+            platforms: linux/amd64,linux/arm64
+
+          # ── AI Gateway (Node) ───────────────────────────────────────────────
+          - name: ai-gateway
+            context: .
+            dockerfile: packages/ai-gateway/Dockerfile
+            image: ai-gateway
+            platforms: linux/amd64,linux/arm64
+
+          # ── Go services ─────────────────────────────────────────────────────
+          - name: swarm-api
+            context: services/swarm-api
+            dockerfile: services/swarm-api/Dockerfile
+            image: swarm-api
+            platforms: linux/amd64,linux/arm64
+
+          - name: swarm-runtime
+            context: services/swarm-runtime
+            dockerfile: services/swarm-runtime/Dockerfile
+            image: swarm-runtime
+            platforms: linux/amd64,linux/arm64
+
+          - name: memory-service
+            context: services/memory-service
+            dockerfile: services/memory-service/Dockerfile
+            image: memory-service
+            platforms: linux/amd64,linux/arm64
+
+          - name: router-service
+            context: services/router-service
+            dockerfile: services/router-service/Dockerfile
+            image: router-service
+            platforms: linux/amd64,linux/arm64
+
+          - name: tool-gateway
+            context: services/tool-gateway
+            dockerfile: services/tool-gateway/Dockerfile
+            image: tool-gateway
+            platforms: linux/amd64,linux/arm64
+
+          - name: gateway
+            context: services/gateway
+            dockerfile: services/gateway/Dockerfile
+            image: gateway
+            platforms: linux/amd64,linux/arm64
+
+          # ── Python services ─────────────────────────────────────────────────
+          - name: agent-runner
+            context: services/agent-runner
+            dockerfile: services/agent-runner/Dockerfile
+            image: agent-runner
+            platforms: linux/amd64,linux/arm64
+
+          - name: planner-service
+            context: services/planner-service
+            dockerfile: services/planner-service/Dockerfile
+            image: planner-service
+            platforms: linux/amd64,linux/arm64
+
+          - name: evaluation-service
+            context: services/evaluation-service
+            dockerfile: services/evaluation-service/Dockerfile
+            image: evaluation-service
+            platforms: linux/amd64,linux/arm64
+
+          - name: learning-service
+            context: services/learning-service
+            dockerfile: services/learning-service/Dockerfile
+            image: learning-service
+            platforms: linux/amd64,linux/arm64
+
+          # ── JVM services ─────────────────────────────────────────────────────
+          - name: academy-svc
+            context: services/academy-svc
+            dockerfile: services/academy-svc/Dockerfile
+            image: academy-svc
+            platforms: linux/amd64,linux/arm64
+
+          - name: crm-svc
+            context: services/crm-svc
+            dockerfile: services/crm-svc/Dockerfile
+            image: crm-svc
+            platforms: linux/amd64,linux/arm64
+
+          - name: platform-svc
+            context: services/platform-svc
+            dockerfile: services/platform-svc/Dockerfile
+            image: platform-svc
+            platforms: linux/amd64,linux/arm64
+
+          # ── ML service (C++) ─────────────────────────────────────────────────
+          - name: ml-svc
+            context: services/ml-svc
+            dockerfile: services/ml-svc/Dockerfile
+            image: ml-svc
+            platforms: linux/amd64   # arm64 cross-compile for C++ is complex
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU (multi-arch)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          buildkitd-flags: --debug
+
+      - name: Log in to GHCR
+        if: needs.meta.outputs.push == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker metadata for ${{ matrix.name }}
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_PREFIX }}/${{ matrix.image }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=ref,event=branch
+            type=sha,prefix=sha-,format=short
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+          labels: |
+            org.opencontainers.image.title=CerebroHive ${{ matrix.name }}
+            org.opencontainers.image.vendor=CerebroHive
+            com.cerebrohive.service=${{ matrix.name }}
+
+      - name: Build and push ${{ matrix.name }}
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: ${{ matrix.platforms }}
+          push: ${{ needs.meta.outputs.push == 'true' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+          build-args: |
+            BUILD_DATE=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+            GIT_SHA=${{ needs.meta.outputs.sha_short }}
+            GIT_REF=${{ github.ref_name }}
+
+      - name: Image digest
+        run: echo "Pushed ${{ matrix.name }} → ${{ steps.meta.outputs.tags }}"
+
+  # ── Summary ────────────────────────────────────────────────────────────────
+  summary:
+    name: Build Summary
+    runs-on: ubuntu-latest
+    needs: [meta, build]
+    if: always()
+    steps:
+      - name: Summarize
+        run: |
+          echo "## Docker Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| SHA | \`${{ needs.meta.outputs.sha_short }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Pushed | ${{ needs.meta.outputs.push }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Registry | \`${{ env.REGISTRY }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build result | ${{ needs.build.result }} |" >> $GITHUB_STEP_SUMMARY

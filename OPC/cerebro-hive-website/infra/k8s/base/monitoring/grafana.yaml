@@ -1,0 +1,261 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: cerebro-hive
+    app.kubernetes.io/managed-by: argocd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: grafana
+        app.kubernetes.io/part-of: cerebro-hive
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 472
+        fsGroup: 472
+      containers:
+        - name: grafana
+          image: grafana/grafana:11.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              value: admin
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-hive-secrets
+                  key: grafana-admin-password
+                  optional: false
+            - name: GF_USERS_ALLOW_SIGN_UP
+              value: "false"
+            - name: GF_AUTH_ANONYMOUS_ENABLED
+              value: "false"
+            - name: GF_SECURITY_DISABLE_GRAVATAR
+              value: "true"
+            - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH
+              value: /var/lib/grafana/dashboards/cerebro-hive/overview.json
+            - name: GF_SMTP_ENABLED
+              value: "false"
+            - name: GF_SERVER_ROOT_URL
+              value: "https://grafana.cerebrohive.com"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          livenessProbe:
+            httpGet: { path: /api/health, port: http }
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet: { path: /api/health, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          volumeMounts:
+            - name: grafana-storage
+              mountPath: /var/lib/grafana
+            - name: grafana-datasources
+              mountPath: /etc/grafana/provisioning/datasources
+              readOnly: true
+            - name: grafana-dashboard-provider
+              mountPath: /etc/grafana/provisioning/dashboards
+              readOnly: true
+            - name: grafana-dashboards
+              mountPath: /var/lib/grafana/dashboards/cerebro-hive
+              readOnly: true
+      volumes:
+        - name: grafana-storage
+          persistentVolumeClaim:
+            claimName: grafana-pvc
+        - name: grafana-datasources
+          configMap:
+            name: grafana-datasources
+        - name: grafana-dashboard-provider
+          configMap:
+            name: grafana-dashboard-provider
+        - name: grafana-dashboards
+          configMap:
+            name: grafana-dashboards-cerebro-hive
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: monitoring
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: cerebro-hive
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: grafana
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: monitoring
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+    - hosts: [grafana.cerebrohive.com]
+      secretName: grafana-tls
+  rules:
+    - host: grafana.cerebrohive.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port: { name: http }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: cerebro-hive
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-operated.monitoring.svc.cluster.local:9090
+        isDefault: true
+        access: proxy
+        editable: false
+        jsonData:
+          timeInterval: "30s"
+      - name: Loki
+        type: loki
+        url: http://loki.monitoring.svc.cluster.local:3100
+        access: proxy
+        editable: false
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-provider
+  namespace: monitoring
+data:
+  dashboards.yaml: |
+    apiVersion: 1
+    providers:
+      - name: cerebro-hive
+        orgId: 1
+        type: file
+        disableDeletion: false
+        updateIntervalSeconds: 30
+        allowUiUpdates: true
+        options:
+          path: /var/lib/grafana/dashboards/cerebro-hive
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards-cerebro-hive
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/part-of: cerebro-hive
+data:
+  overview.json: |
+    {
+      "title": "CerebroHive — Platform Overview",
+      "uid": "cerebro-hive-overview",
+      "schemaVersion": 38,
+      "version": 1,
+      "refresh": "30s",
+      "time": { "from": "now-1h", "to": "now" },
+      "panels": [
+        {
+          "id": 1, "title": "Services Up", "type": "stat",
+          "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+          "targets": [{ "expr": "count(up{job=~\"cerebro-hive.*\"} == 1)", "legendFormat": "Up" }],
+          "options": { "colorMode": "background", "thresholds": { "steps": [{ "color": "green", "value": null }] } }
+        },
+        {
+          "id": 2, "title": "Total Request Rate (rps)", "type": "stat",
+          "gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+          "targets": [{ "expr": "sum(rate(http_requests_total{job=~\"cerebro-hive.*\"}[5m]))", "legendFormat": "rps" }]
+        },
+        {
+          "id": 3, "title": "P99 Latency (all services)", "type": "stat",
+          "gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+          "targets": [{ "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=~\"cerebro-hive.*\"}[5m])) by (le))", "legendFormat": "p99" }]
+        },
+        {
+          "id": 4, "title": "HiveSwarm Queue Depth", "type": "gauge",
+          "gridPos": { "x": 12, "y": 0, "w": 4, "h": 4 },
+          "targets": [{ "expr": "swarm_queue_depth", "legendFormat": "Queue" }],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "thresholds": { "steps": [{ "color": "green", "value": 0 }, { "color": "yellow", "value": 500 }, { "color": "red", "value": 1000 }] } }
+        },
+        {
+          "id": 5, "title": "Request Rate by Service", "type": "timeseries",
+          "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+          "targets": [{ "expr": "sum by (job) (rate(http_requests_total{job=~\"cerebro-hive.*\"}[5m]))", "legendFormat": "{{ job }}" }]
+        },
+        {
+          "id": 6, "title": "5xx Error Rate by Service", "type": "timeseries",
+          "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+          "targets": [{ "expr": "100 * sum by (job) (rate(http_requests_total{job=~\"cerebro-hive.*\",status=~\"5..\"}[5m])) / sum by (job) (rate(http_requests_total{job=~\"cerebro-hive.*\"}[5m]))", "legendFormat": "{{ job }}" }],
+          "fieldConfig": { "defaults": { "unit": "percent", "thresholds": { "steps": [{ "color": "green", "value": 0 }, { "color": "yellow", "value": 1 }, { "color": "red", "value": 5 }] } } }
+        },
+        {
+          "id": 7, "title": "LLM Token Rate", "type": "timeseries",
+          "gridPos": { "x": 0, "y": 12, "w": 8, "h": 6 },
+          "targets": [{ "expr": "rate(llm_tokens_total[1m]) * 60", "legendFormat": "tokens/min" }]
+        },
+        {
+          "id": 8, "title": "Swarm Agent Success Rate", "type": "gauge",
+          "gridPos": { "x": 8, "y": 12, "w": 4, "h": 6 },
+          "targets": [{ "expr": "100 * (1 - rate(swarm_agent_failures_total[5m]) / rate(swarm_agent_tasks_total[5m]))", "legendFormat": "Success %" }]
+        },
+        {
+          "id": 9, "title": "Pod Restarts (last 1h)", "type": "table",
+          "gridPos": { "x": 12, "y": 12, "w": 12, "h": 6 },
+          "targets": [{ "expr": "increase(kube_pod_container_status_restarts_total{namespace=\"cerebro-hive\"}[1h]) > 0", "legendFormat": "{{ pod }}" }]
+        }
+      ]
+    }

@@ -1,0 +1,211 @@
+{{/*
+─────────────────────────────────────────────────────────────────────────────
+Observability — Prometheus ServiceMonitors + Grafana resources
+─────────────────────────────────────────────────────────────────────────────
+*/}}
+
+{{- if .Values.prometheus.enabled }}
+---
+# PrometheusRule — CerebroHive platform alerts
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cerebro-hive-alerts
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" . | nindent 4 }}
+    prometheus: kube-prometheus
+    role: alert-rules
+spec:
+  groups:
+    - name: cerebro-hive.availability
+      interval: 30s
+      rules:
+        - alert: ServiceDown
+          expr: up{job=~"cerebro-hive.*"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "CerebroHive service {{ "{{" }} $labels.job {{ "}}" }} is down"
+            description: "{{ "{{" }} $labels.job {{ "}}" }} has been down for more than 2 minutes."
+
+        - alert: HighErrorRate
+          expr: |
+            rate(http_requests_total{job=~"cerebro-hive.*",status=~"5.."}[5m])
+            / rate(http_requests_total{job=~"cerebro-hive.*"}[5m]) > 0.05
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High error rate on {{ "{{" }} $labels.job {{ "}}" }}"
+            description: "Error rate is {{ "{{" }} $value | humanizePercentage {{ "}}" }} over the last 5m."
+
+        - alert: HighLatencyP99
+          expr: |
+            histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{job=~"cerebro-hive.*"}[5m])) > 2
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "P99 latency high on {{ "{{" }} $labels.job {{ "}}" }}"
+            description: "P99 latency is {{ "{{" }} $value | humanizeDuration {{ "}}" }}."
+
+    - name: cerebro-hive.swarm
+      rules:
+        - alert: SwarmQueueBacklog
+          expr: swarm_queue_depth > 1000
+          for: 3m
+          labels:
+            severity: warning
+          annotations:
+            summary: "HiveSwarm queue backlog is high"
+            description: "Queue depth is {{ "{{" }} $value {{ "}}" }} tasks."
+
+        - alert: AgentRunnerOOM
+          expr: |
+            container_memory_usage_bytes{container="agent-runner"}
+            / container_spec_memory_limit_bytes{container="agent-runner"} > 0.9
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "agent-runner near OOM"
+            description: "Memory usage at {{ "{{" }} $value | humanizePercentage {{ "}}" }} of limit."
+
+    - name: cerebro-hive.aigateway
+      rules:
+        - alert: LLMTokenBudgetExceeded
+          expr: rate(llm_tokens_total[1h]) > 1000000
+          for: 0m
+          labels:
+            severity: warning
+          annotations:
+            summary: "LLM token usage spike"
+            description: "Token rate: {{ "{{" }} $value {{ "}}" }} tokens/hour."
+
+---
+# ServiceMonitor — auto-scrape all CerebroHive services
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cerebro-hive
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: cerebro-hive
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+{{- end }}
+
+{{- if .Values.grafana.enabled }}
+---
+# Grafana datasource ConfigMap (used by grafana-operator or kube-prometheus-stack)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources-cerebro-hive
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" . | nindent 4 }}
+    grafana_datasource: "1"
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-operated.{{ .Release.Namespace }}.svc.cluster.local:9090
+        isDefault: true
+        access: proxy
+        editable: false
+      - name: Loki
+        type: loki
+        url: http://loki.{{ .Release.Namespace }}.svc.cluster.local:3100
+        access: proxy
+        editable: false
+---
+# Grafana dashboard ConfigMap — CerebroHive overview
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-cerebro-hive-overview
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" . | nindent 4 }}
+    grafana_dashboard: "1"
+data:
+  cerebro-hive-overview.json: |
+    {
+      "title": "CerebroHive — Platform Overview",
+      "uid": "cerebro-hive-overview",
+      "schemaVersion": 38,
+      "version": 1,
+      "refresh": "30s",
+      "panels": [
+        {
+          "id": 1,
+          "title": "Services Up",
+          "type": "stat",
+          "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+          "targets": [{
+            "expr": "count(up{job=~\"cerebro-hive.*\"} == 1)",
+            "legendFormat": "Up"
+          }]
+        },
+        {
+          "id": 2,
+          "title": "Request Rate (all services)",
+          "type": "timeseries",
+          "gridPos": { "x": 4, "y": 0, "w": 10, "h": 8 },
+          "targets": [{
+            "expr": "sum by (job) (rate(http_requests_total{job=~\"cerebro-hive.*\"}[5m]))",
+            "legendFormat": "{{ "{{" }} job {{ "}}" }}"
+          }]
+        },
+        {
+          "id": 3,
+          "title": "Error Rate %",
+          "type": "timeseries",
+          "gridPos": { "x": 14, "y": 0, "w": 10, "h": 8 },
+          "targets": [{
+            "expr": "100 * sum by (job) (rate(http_requests_total{job=~\"cerebro-hive.*\",status=~\"5..\"}[5m])) / sum by (job) (rate(http_requests_total{job=~\"cerebro-hive.*\"}[5m]))",
+            "legendFormat": "{{ "{{" }} job {{ "}}" }}"
+          }]
+        },
+        {
+          "id": 4,
+          "title": "HiveSwarm — Queue Depth",
+          "type": "gauge",
+          "gridPos": { "x": 0, "y": 8, "w": 6, "h": 6 },
+          "targets": [{ "expr": "swarm_queue_depth", "legendFormat": "Queue" }]
+        },
+        {
+          "id": 5,
+          "title": "LLM Token Rate (tokens/min)",
+          "type": "timeseries",
+          "gridPos": { "x": 6, "y": 8, "w": 10, "h": 6 },
+          "targets": [{ "expr": "rate(llm_tokens_total[1m]) * 60", "legendFormat": "tokens/min" }]
+        },
+        {
+          "id": 6,
+          "title": "P99 Latency by Service",
+          "type": "timeseries",
+          "gridPos": { "x": 16, "y": 8, "w": 8, "h": 6 },
+          "targets": [{
+            "expr": "histogram_quantile(0.99, sum by (job, le) (rate(http_request_duration_seconds_bucket{job=~\"cerebro-hive.*\"}[5m])))",
+            "legendFormat": "{{ "{{" }} job {{ "}}" }} p99"
+          }]
+        }
+      ]
+    }
+{{- end }}
