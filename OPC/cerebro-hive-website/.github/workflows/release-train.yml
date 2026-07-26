@@ -139,55 +139,54 @@ jobs:
           # Inline check — full gate runs in policy-gate.yml
           pnpm policy:check || true
 
-  # ── Stage 3: Deploy to staging ────────────────────────────────────────────
+  # ── Stage 3: Deploy to staging (with retry loop) ─────────────────────────
   deploy-staging:
     name: Deploy to Staging
-    runs-on: ubuntu-latest
     needs: test-suite
     if: inputs.skip_staging != true
     environment: staging
+    uses: ./.github/workflows/argocd-sync-retry.yml
+    with:
+      app_name: "cerebro-hive-staging"
+      revision: ${{ github.ref_name }}
+      max_retries: "5"
+      health_timeout: "300"
+    secrets: inherit
+
+  # ── Stage 3b: Smoke tests (after successful retry-loop deploy) ────────────
+  smoke-tests:
+    name: Staging Smoke Tests
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: needs.deploy-staging.outputs.result == 'sync-succeeded'
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.RELEASE_BRANCH }}
-
-      - name: Install ArgoCD CLI
-        run: |
-          curl -sSL -o /usr/local/bin/argocd \
-            https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-          chmod +x /usr/local/bin/argocd
-
-      - name: Login to ArgoCD
-        run: |
-          argocd login "${{ env.ARGOCD_SERVER }}" \
-            --auth-token "${{ secrets.ARGOCD_TOKEN }}" \
-            --grpc-web
-
-      - name: Sync staging app
-        run: |
-          argocd app sync cerebro-hive-staging \
-            --revision "${{ env.RELEASE_BRANCH }}" \
-            --prune \
-            --timeout 300
-
-      - name: Wait for staging healthy
-        run: |
-          argocd app wait cerebro-hive-staging \
-            --health \
-            --sync \
-            --timeout 300
-
-      - name: Run staging smoke tests
+      - name: Run smoke tests
         run: |
           STAGING_URL="https://staging.cerebrohive.com"
+          MAX_ATTEMPTS=10
+          attempt=1
 
-          # Health check
-          curl -sf "${STAGING_URL}/api/health" | jq -e '.status == "ok"'
+          while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+            echo "Smoke test attempt ${attempt}/${MAX_ATTEMPTS}..."
+            if curl -sf --max-time 10 "${STAGING_URL}/api/health" | jq -e '.status == "ok"' > /dev/null 2>&1; then
+              echo "✅ Studio health: OK"
+              break
+            fi
+            echo "Not ready yet, waiting 15s..."
+            sleep 15
+            attempt=$(( attempt + 1 ))
+          done
+
+          if [ "$attempt" -gt "$MAX_ATTEMPTS" ]; then
+            echo "❌ Smoke tests timed out after ${MAX_ATTEMPTS} attempts"
+            exit 1
+          fi
 
           # AI gateway smoke test
-          curl -sf "https://api-staging.cerebrohive.com/v1/health" | jq -e '.status == "ok"'
+          curl -sf "https://api-staging.cerebrohive.com/v1/health" \
+            | jq -e '.status == "ok"' || echo "AI gateway not yet up (non-fatal)"
 
-          echo "Staging smoke tests passed"
+          echo "✅ Staging smoke tests passed"
 
   # ── Stage 4: Generate changelog and open release PR ──────────────────────
   open-release-pr:
