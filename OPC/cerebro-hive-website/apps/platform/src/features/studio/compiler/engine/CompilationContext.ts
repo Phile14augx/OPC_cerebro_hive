@@ -27,6 +27,7 @@ export interface DebugMetadata {
 export interface CompilationArtifacts {
   symbolTable: Record<string, Symbol>;
   debugMap: Record<string, DebugMetadata>;
+  workflowDiff?: any;
 }
 
 export interface CompilerMetrics {

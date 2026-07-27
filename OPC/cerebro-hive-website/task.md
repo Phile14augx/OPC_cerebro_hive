@@ -1,16 +1,15 @@
-# Task Tracker: Milestone 23.1 & 24 - Pluggable Types and Incremental Compilation
+# Task Tracker: Milestone 25 - Workflow Versioning & Semantic Migrations
 
-## Phase 1: M23.1 Declarative Type Registry
-- `[x]` Define `CompatibilityRule` interface
-- `[x]` Refactor `TypeRegistry` into a declarative, pluggable rules engine
-- `[x]` Introduce `GenericType` and `UnionType` skeleton interfaces
+## Phase 1: Semantic Diffing & Compatibility
+- `[x]` Scaffold `WorkflowDiff` as a first-class compilation artifact
+- `[x]` Implement `SemanticDiffEngine` to compute structural/dependency diffs
+- `[x]` Implement `CompatibilityAnalyzerPass` to classify changes (Patch, Minor, Major)
 
-## Phase 2: M24 Incremental Compilation State
-- `[x]` Elevate `DependencyGraph` to a first-class Compilation Artifact
-- `[x]` Introduce `CompilationCache` for persisting Versioned Symbol Snapshots
-- `[x]` Implement `DirtyNodePropagation` logic based on AST diffs
+## Phase 2: Migration Framework
+- `[x]` Scaffold a dedicated `MigrationEngine` separate from the compiler
+- `[x]` Define `MigrationProvider` interface for node-specific migration logic
+- `[x]` Implement graceful fallback for partial migrations
 
-## Phase 3: M24 Engine Orchestration
-- `[x]` Centralize dirty-tracking in the `CompilerEngine`
-- `[x]` Update engine to execute passes selectively on affected subgraphs
-- `[x]` Ensure Passes remain pure and ignorant of incremental logic
+## Phase 3: Workflow Lifecycle & Persistence
+- `[x]` Define `WorkflowVersion` model wrapping all immutable release artifacts
+- `[x]` Implement basic lifecycle states (Draft, Published, Deprecated)
