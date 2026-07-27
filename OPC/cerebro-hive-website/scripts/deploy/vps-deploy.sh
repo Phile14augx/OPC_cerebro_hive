@@ -399,8 +399,30 @@ echo "--- pm2 ---";     pm2 ls
 echo "--- docker ---";  docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
 echo "--- next (127.0.0.1:3000) ---"
 curl -s -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" http://127.0.0.1:3000/ || true
+
+# AgentOS health check: this one gates the deploy. Previously a single
+# best-effort curl (`|| true`) that only logged the status, meaning a deploy
+# was reported successful even if the agentos container never came up
+# healthy — see audit/AGENTOS-DEPLOYMENT-CONSISTENCY-AUDIT.md. Retry for up
+# to 90s (real FastAPI startup + Postgres role/DB bootstrap can take a few
+# seconds); fail the whole deploy if it never returns 200.
 echo "--- agentos (127.0.0.1:8088) ---"
-curl -s -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" http://127.0.0.1:8088/ || true
+AGENTOS_HEALTHY=false
+for i in $(seq 1 30); do
+  AGENTOS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8088/health || echo "000")
+  if [ "${AGENTOS_CODE}" = "200" ]; then
+    echo "HTTP 200 (attempt ${i}/30)"
+    AGENTOS_HEALTHY=true
+    break
+  fi
+  sleep 3
+done
+if [ "${AGENTOS_HEALTHY}" != "true" ]; then
+  echo "FAILED: agentos did not return HTTP 200 on /health within 90s (last code: ${AGENTOS_CODE:-none})"
+  docker logs --tail 50 cerebrohive-agentos || true
+  exit 1
+fi
+
 echo "--- platform (127.0.0.1:8090) ---"
 curl -s -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" http://127.0.0.1:8090/health || true
 echo "--- https://${DOMAIN}/ ---"

@@ -1,10 +1,16 @@
-"""CerebroHive Platform API — Modular Monolith.
+"""CerebroHive Platform API — currently a single FastAPI deployment serving
+the AgentOS v1 route set below, plus a Finance/ERP module.
 
-Architecture: one FastAPI deployment, organized into domain modules.
-Each domain has its own router prefix (/api/<domain>/...) enabling
-clean service extraction later without a routing redesign.
+Currently registered routers (see the `app.include_router(...)` calls below
+for the exact list): auth, agents, runtime, memory, tools, skills, knowledge,
+context, workflows, governance, observability, cortex, simulator,
+marketplace, and finance. These are mounted at their original top-level
+paths (e.g. `/agents`, `/runtime`, `/governance`) — there is no `/api/<domain>`
+prefix in the currently-registered routes.
 
-Domain Modules:
+Planned architecture (not yet implemented — no router below is mounted
+under these prefixes today): a longer-term reorganization into domain-
+prefixed modules —
   /api/platform  — Identity, Auth, Orgs, Billing, Audit
   /api/archive   — CerebroArchive™: Documents, Prompts, Models, Datasets
   /api/runtime   — HivePulse™: Agent Execution, Plans, Tools
@@ -14,9 +20,8 @@ Domain Modules:
   /api/insight   — CerebroInsight™: Analytics, Dashboards
   /api/shield    — HiveShield™: Governance, Policies, Compliance
   /api/ops       — HiveOps™: Observability, Deployments
-
-Legacy routes (agentos v1) are maintained at their original paths for
-backward compatibility during the migration period.
+When that migration happens, the routers below become the "legacy agentos v1"
+compatibility layer this docstring used to describe as already in effect.
 """
 
 from contextlib import asynccontextmanager

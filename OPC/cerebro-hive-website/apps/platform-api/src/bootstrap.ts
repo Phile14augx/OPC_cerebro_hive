@@ -7,6 +7,7 @@ import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { requestContextHook } from './middleware/RequestContextMiddleware';
 import { requireAuthHook } from './middleware/AuthMiddleware';
 import { createRequireWorkspaceAccessHook } from './middleware/WorkspaceAccessMiddleware';
+import { onRequestLog, onSendLog } from './middleware/RequestLogger';
 import type { WorkspaceRepository } from '@cerebro/database';
 import { ErrorMapper } from './errors/ErrorMapper';
 import agentRoutes from './modules/agents/agents.routes';
@@ -56,8 +57,10 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
     routePrefix: '/docs',
   });
 
-  // Global Middleware
+  // Global Middleware — order matters: context first, then timing, then auth.
   server.addHook('preHandler', requestContextHook);
+  server.addHook('onRequest', onRequestLog);
+  server.addHook('onSend', onSendLog);
 
   // Global Error Handler
   server.setErrorHandler((error, request, reply) => {

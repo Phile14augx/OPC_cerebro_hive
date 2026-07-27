@@ -1,4 +1,3 @@
-
 import { TaskDAG, TaskNode, emitSwarmEvent } from '@cerebro/swarm-sdk';
 import { ExecutionStateStore, ArtifactStore } from './ExecutionStateStore';
 import { WorkerPool } from './WorkerPool';
@@ -8,22 +7,10 @@ export interface ExecutionProvider {
 }
 
 export class WorkerThreadProvider implements ExecutionProvider {
+  constructor(private pool: WorkerPool) {}
+
   async execute(node: TaskNode, context: any, cancelToken: { cancelled: boolean }): Promise<any> {
-    emitSwarmEvent('TASK_STARTED', { taskId: node.id });
-    
-    // Simulate Work
-    await new Promise(r => setTimeout(r, 800));
-    
-    if (cancelToken.cancelled) {
-      throw new Error('Cancelled by coordinator');
-    }
-
-    // Simulate Failure for specific node to test cascades
-    if (node.intent.includes('FAIL_ME')) {
-      throw new Error('Simulated Execution Failure');
-    }
-
-    return { result: `Output of ${node.id}`, someContext: context };
+    return this.pool.dispatchToWorker(node, context, cancelToken);
   }
 }
 
@@ -39,6 +26,7 @@ export class ExecutionEngine {
   private activeTasks = new Set<string>();
   private cancelTokens = new Map<string, { cancelled: boolean }>();
   private dagMap = new Map<string, TaskNode>();
+  private retryCounts = new Map<string, number>();
 
   constructor(private provider: ExecutionProvider) {}
 
@@ -95,12 +83,9 @@ export class ExecutionEngine {
     this.cancelTokens.set(node.id, cancelToken);
 
     try {
-      // Resolve Context from parents
       const context = await this.resolveContext(node);
-      
       const result = await this.provider.execute(node, context, cancelToken);
       
-      // Save small context, large output to artifact store (Mock)
       const artifactRef = await this.artifactStore.saveArtifact(result);
       await this.stateStore.saveContext(node.id, { artifactRef, summary: 'Task completed' });
 
@@ -110,17 +95,28 @@ export class ExecutionEngine {
       if (err.message.includes('Cancelled')) {
         this.transitionState(node, 'CANCELLED');
       } else {
-        // Evaluate Retry Policy
-        // For simplicity, failing immediately
-        this.transitionState(node, 'FAILED');
-        this.handleTaskFailure(node);
+        await this.handleTaskError(node, err);
       }
     } finally {
       this.workerPool.release(node.profile);
       this.activeTasks.delete(node.id);
-      
-      // Wake up loop for new capacity or new ready tasks
       this.dispatchLoop();
+    }
+  }
+
+  private async handleTaskError(node: TaskNode, err: Error) {
+    const retries = this.retryCounts.get(node.id) || 0;
+    const maxRetries = node.profile.retryLimit || 3;
+
+    if (retries < maxRetries && err.name !== 'FatalError') {
+      this.retryCounts.set(node.id, retries + 1);
+      const backoff = Math.pow(2, retries) * 1000;
+      await new Promise(resolve => setTimeout(resolve, backoff));
+      this.transitionState(node, 'READY');
+    } else {
+      await this.artifactStore.moveToDeadLetterQueue(node.id, err);
+      this.transitionState(node, 'FAILED');
+      this.handleTaskFailure(node);
     }
   }
 
@@ -141,7 +137,6 @@ export class ExecutionEngine {
       
       if (currentInDegree === 0) {
         const childNode = this.dagMap.get(childId)!;
-        // Only mark ready if it wasn't skipped
         if (childNode.status === 'PENDING') {
           this.transitionState(childNode, 'READY');
         }
@@ -150,13 +145,11 @@ export class ExecutionEngine {
   }
 
   private handleTaskFailure(node: TaskNode) {
-    // Branch-Local Failure Cascades
     const children = this.adjacencyList.get(node.id) || [];
     for (const childId of children) {
       const childNode = this.dagMap.get(childId)!;
       if (childNode.status === 'PENDING') {
         this.transitionState(childNode, 'SKIPPED');
-        // Recursively skip descendants
         this.handleTaskFailure(childNode);
       }
     }

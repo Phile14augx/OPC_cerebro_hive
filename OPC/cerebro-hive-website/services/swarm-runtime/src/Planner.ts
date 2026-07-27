@@ -1,26 +1,25 @@
-
-import { TaskDAG, TaskNode } from '@cerebro/swarm-sdk';
-
+/**
+ * DEAD CODE — not used in production. See audit/RESILIENCE-AUDIT.md.
+ *
+ * This class was never exported from index.ts and always returns the same
+ * hardcoded 3-node DAG regardless of the `intent` argument. Real planning
+ * is performed by the compiler's RuntimePlanner
+ * (apps/platform/src/features/studio/backend-runtime/planner/RuntimePlanner.ts)
+ * which produces a RuntimeIR that the TemporalInterpreter executes.
+ *
+ * This file is retained to prevent import-resolution failures in any file
+ * that may reference it, but the class should not be instantiated in new
+ * code. Removal is tracked as a follow-up cleanup once all references have
+ * been verified to be absent.
+ */
 export class PlannerService {
-  compile(intent: string): TaskDAG {
-    console.log('[Planner] 1. Normalizing intent...');
-    console.log('[Planner] 2. Task Analysis...');
-    console.log('[Planner] 3. Dependency Analysis...');
-    console.log('[Planner] 4. Resource Planning & Agent Selection...');
-    console.log('[Planner] 5. Compiling DAG...');
-    
-    // Mocking the generated DAG for "Analyze Q3 spending"
-    return {
-      nodes: [
-        { id: 'extract-data', intent: 'Fetch Q3 spending logs', status: 'pending', dependencies: [] },
-        { id: 'analyze-data', intent: 'Calculate aggregate costs', status: 'pending', dependencies: ['extract-data'] },
-        { id: 'generate-report', intent: 'Generate PDF Report', status: 'pending', dependencies: ['analyze-data'] }
-      ],
-      edges: [
-        { from: 'extract-data', to: 'analyze-data' },
-        { from: 'analyze-data', to: 'generate-report' }
-      ]
-    };
+  /** @deprecated — returns a hardcoded stub; use RuntimePlanner instead. */
+  compile(_intent: string): never {
+    throw new Error(
+      '[PlannerService] Dead code invoked. Use RuntimePlanner in backend-runtime instead.',
+    );
   }
 }
+
+/** @deprecated — see PlannerService above. */
 export const Planner = new PlannerService();

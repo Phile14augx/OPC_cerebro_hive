@@ -70,4 +70,19 @@ Mechanically: `helm template` renders fine without a live cluster, so this doesn
 7. Deploy to staging first, confirm behavior matches the rendered manifest (this is also the point to run the four auth-verification tests from Milestone 25.5 that were left inconclusive earlier).
 8. Promote to production once staging confirms no regression, ideally via the existing canary mechanism if §3 keeps it.
 
-Nothing above has been executed — this is the plan only, per your instruction to draft rather than implement.
+## Migration log
+
+**Step 4 executed.** Deleted `infra/helm/cerebro-hive/templates/service.yaml`, `deployment.yaml`, and `rollout.yaml`.
+
+Reason for removal: these templates implemented a second, snake_case/`.replicaCount` schema (Set 1) that called at least six Helm helper templates (`cerebro-hive.serviceLabels`, `.serviceSelectorLabels`, `.image`, `.podSecurityContext`, `.containerSecurityContext`, `.otelEnv`) that are not defined anywhere in this chart — `helm template`/`helm install` would fail on the first unresolvable `include`, so this generation could never have rendered, let alone been deployed. The chart now has a single authoritative deployment path: the macro-based `deployments.yaml`, using the camelCase values schema (`values.yaml`, `values-staging.yaml`, the rewritten `values-production.yaml`).
+
+Pre-deletion verification (per the explicit checklist this removal was gated on):
+- No `.github/workflows` file references `deployment.yaml`, `service.yaml`, `rollout.yaml`, or the snake_case schema keys (`replicaCount`, `platform_api`, `forge_api`, `ai_gateway`) — confirmed clean.
+- No documentation instructs users to use those templates.
+- No tests or scripts reference them — confirmed while reading through `scripts/deploy/` in full during the deployment-architecture investigation (`audit/DEPLOYMENT-ARCHITECTURE-DISCOVERY.md`); `vps-deploy.sh` and `ssh-deploy.yml` deploy an entirely separate, non-Kubernetes system and never touch the Helm chart.
+
+This repo has no chart-level `README.md` under `infra/helm/cerebro-hive/` and no repository-wide `CHANGELOG.md` to update alongside this change — this migration log entry is the record of the change until/unless one of those is introduced.
+
+**New finding surfaced while verifying the deletion, not yet acted on**: `templates/hpa.yaml` and `templates/pdb.yaml` are separate top-level templates that appear to be leftovers from the same Set-1 schema generation that was just removed. They key off `.Values.platform_api`/`.Values.forge_api`/`.Values.ai_gateway` (snake_case — nonexistent in the current schema, so those three services are silently skipped) and off a per-service `$cfg.hpa.enabled` / `$cfg.pdb.enabled` field that isn't set anywhere in `values.yaml`, `values-staging.yaml`, or the rewritten `values-production.yaml` — meaning, as far as could be determined by reading the values files, these two templates currently render nothing for any service, for any environment. This wasn't part of what was approved for deletion (the three named Set 1 files), so it hasn't been touched — flagging it as a likely-dead-code finding for a follow-up decision rather than deleting unilaterally. If confirmed dead, removing them would be the same class of cleanup as this one; `deployments.yaml`'s macro already renders its own HPA (`$cfg.autoscaling`) and PDB (chart-global `podDisruptionBudget`) blocks, so nothing would be lost.
+
+Nothing else in this plan has been executed — the rest remains a plan, per the original instruction to draft rather than implement beyond this approved step.
