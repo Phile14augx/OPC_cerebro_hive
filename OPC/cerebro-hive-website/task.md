@@ -1,17 +1,20 @@
-# Task Tracker: Milestone 25.3 - Runtime Optimization & Execution Intelligence
+# Task Tracker: Milestone 25.4 - Adaptive Runtime & Execution Intelligence
 
-## Phase 1: Planning & Optimization
-- `[x]` Scaffold `RuntimePlanner` (Dependency, Critical Path, Cost Estimation)
-- `[x]` Scaffold `RuntimeOptimizer` (Dead Node Elimination, Parallel Merge, Activity Fusion)
+## Phase 1: Execution Intelligence & Aggregation
+- `[x]` Scaffold `ExecutionIntelligenceStore` (Aggregates by Capability, Worker, Pattern, Tenant)
+- `[x]` Scaffold `AggregationJob` pipeline to separate operational metrics from intelligence
+- `[x]` Scaffold `PerformanceDriftDetector` to detect and invalidate obsolete optimizations
 
-## Phase 2: Scheduling & Workers
-- `[x]` Scaffold `WorkerPoolManager` (Registration, Heartbeat, Health, Capabilities)
-- `[x]` Scaffold `AdaptiveScheduler` (Worker Selection, Queue Balancing, Backpressure)
+## Phase 2: Pluggable Optimization & Explainability
+- `[x]` Refactor into an extensible `OptimizationPipeline` using the `OptimizationPass` interface
+- `[x]` Implement Multi-objective optimization (Latency, Cost, Quota)
+- `[x]` Generate `PlanningExplanation` with explicit Confidence Scores for every routing decision
+- `[x]` Implement Graph Pattern Learning (optimizing sequences of nodes)
 
-## Phase 3: Reliability & Caching
-- `[x]` Scaffold `IntelligentRetryEngine` (Transient vs Permanent Classification)
-- `[x]` Scaffold `ExecutionCache` (Node Results, Prompts, Artifacts)
+## Phase 3: Resource Admission & Caching
+- `[x]` Extend `AdmissionController` to reserve GPU, VRAM, API Quotas, and Token Budgets
+- `[x]` Scaffold `CachePolicyEngine` supporting TTL, Invalidation, and Capability-defined policies
 
-## Phase 4: Diagnostics & Timeline
-- `[x]` Scaffold `RuntimeDiagnostics` (Pre-execution validation)
-- `[x]` Scaffold `ExecutionTimelineGenerator` (Gantt chart generation)
+## Phase 4: Deterministic Replay Subsystem
+- `[x]` Scaffold `ReplayEngine` requiring strictly frozen inputs (Snapshots, Random Seeds)
+- `[x]` Scaffold `EffectRecorder` and `VirtualEffectLayer` to safely stub external side effects during replay

@@ -1,0 +1,38 @@
+# Milestone 25.5: Production Readiness Audit
+
+Scope: only the 11 services confirmed deployed in Milestone 25.4C. Question per the user's framing: is the production system robust, not what does it contain.
+
+## CRITICAL: Rust Gateway auth-bypass — resolved, split finding
+
+Not a uniform Scenario A or B. It splits by service, confirmed through two independent methods (source grep for auth patterns, and a full read of each service's `package.json` dependency list) plus a full read of the Helm Ingress template.
+
+**The shared Ingress (`infra/helm/cerebro-hive/templates/ingress.yaml`) that fronts `studio`, `forge`, `platform-api`, and `ai-gateway` has no authentication annotation of any kind.** It has real WAF (`enable-modsecurity` + OWASP Core Rule Set), real rate limiting (`limit-rps: "100"`, one shared value across all four hosts), real TLS (cert-manager/Let's Encrypt), and real security headers (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy). None of that is authentication — there's no `auth-url`/`auth-signin` annotation, no OAuth2-proxy, no mTLS requirement. Whatever authenticates a caller has to live inside each service.
+
+There is a real, shared, well-built internal auth package: **`@cerebro/auth`**, exposing `safeVerifyJWT`, `isSystemAdmin`, and a `CerebroJWTPayload` type.
+
+- **`services/forge-api`: uses it correctly.** `src/auth/jwt.guard.ts` is a NestJS `CanActivate` guard that extracts the Bearer token, calls `safeVerifyJWT`, throws `UnauthorizedException` on missing/expired/invalid tokens, and populates a rich `req.auth` context (userId, orgId, orgRole, isAdmin, traceId). Applied via `@UseGuards(JwtGuard)` on at least the workflow and streaming controllers. This is Scenario A: a real, independent, correctly-applied auth layer, gateway or no gateway.
+- **`apps/platform-api`: does not.** Zero matches for any auth pattern in source (`authenticate`, `requireAuth`, `verifyToken`, `jwt.verify`, `passport`, `@fastify/jwt`). Its full `package.json` dependency list is agent-builder-capability, ai-gateway, capability-contracts, core-bus, database, domain, query, runtime-core, plus `@fastify/cors`/`@fastify/swagger`/`@fastify/type-provider-typebox`/`fastify`/`typebox`. **No `@cerebro/auth`, no `@fastify/jwt`, no auth library of any kind is even present as a dependency** — there is no library available to verify a token even if custom code tried to. This is Scenario B: `api.cerebrohive.com` is directly reachable via Ingress, with no gateway, no ingress-level auth, and no in-process auth.
+- **`packages/ai-gateway`: does not.** Same check, same result. Dependencies are `@anthropic-ai/sdk`, `@cerebro/ai`, `@cerebro/database`, `@cerebro/telemetry`, `openai` — no auth library. `gateway.cerebrohive.com` is directly reachable with no confirmed authentication. It does have `RATE_LIMIT_RPM` as a configured in-process throttle (visible in the Helm `configmap.yaml`), which is a real mitigant against unbounded abuse, but a rate limit is not authentication — it caps how fast an unauthenticated caller can spend the org's own Anthropic/OpenAI budget, it doesn't stop them from doing it.
+- **`apps/studio` / `apps/forge`**: no `middleware.ts` (the usual Next.js edge-auth convention) at the app root. Not conclusive on its own — auth could live deeper in Server Components or route handlers — but nothing surfaced it, and a full check is inside the already-planned `apps/studio` audit (task #35), not repeated here.
+
+**Bottom line: this is confirmed from source code and dependency manifests, to the strongest degree possible without hitting the live cluster.** The one thing that can't be ruled out from this repo alone is an out-of-band protection layer that isn't part of this codebase's IaC — a service-mesh `AuthorizationPolicy` (Istio/Linkerd), for instance, would live in cluster config this repo doesn't contain. But the `NetworkPolicy` template that does exist here is plain Kubernetes `NetworkPolicy` (pod-to-pod, not identity-aware), so there's no evidence of such a layer, only an inability to fully rule it out. Recommended immediate action: confirm directly with whoever manages the live cluster whether `api.cerebrohive.com` and `gateway.cerebrohive.com` require a token today. If they don't, this is a live gap, not a theoretical one.
+
+## Observability — more mature than expected, largely real
+
+`templates/observability.yaml`: a real `PrometheusRule` with 5 concrete alerts — `ServiceDown` (any `up{job=~"cerebro-hive.*"}==0` for 2m), `HighErrorRate` (5xx ratio > 5% for 5m), `HighLatencyP99` (>2s for 5m), plus two **HiveSwarm-specific** alerts (`SwarmQueueBacklog`, `AgentRunnerOOM` at 90% memory) and one **ai-gateway-specific** alert (`LLMTokenBudgetExceeded`). A `ServiceMonitor` auto-scrapes every pod labeled `app.kubernetes.io/part-of: cerebro-hive` on `/metrics` every 30s. A Grafana dashboard ConfigMap defines 6 real panels (services up, request rate, error rate, HiveSwarm queue depth, LLM token rate, p99 latency by service) against Prometheus + Loki datasources.
+
+`templates/configmap.yaml` confirms OTEL is wired at the platform level: `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_TRACES_EXPORTER`/`OTEL_METRICS_EXPORTER`/`OTEL_LOGS_EXPORTER` all set to `otlp`, `LOG_LEVEL` correctly environment-gated (`info` in prod, `debug` elsewhere), and a dedicated `ai-gateway-config` ConfigMap with real feature flags (`ENABLE_STREAMING`, `ENABLE_COST_TRACKING`, `ENABLE_CACHING`, `CACHE_TTL_SECONDS`, `RATE_LIMIT_RPM`, per-provider enable flags for Anthropic/OpenAI/Google).
+
+This is a real, coherent observability setup, not scaffolding. Not yet verified: whether each of the 11 services actually emits OTEL spans/metrics in its own source code (the ConfigMap sets the exporter target; it doesn't prove every service's code calls the SDK), and whether `/metrics` actually exists as an endpoint on every service the ServiceMonitor expects it on.
+
+## Network policy — real, sound baseline
+
+Default-deny-all ingress, explicit allow from the `ingress-nginx` namespace, explicit allow for intra-platform pod-to-pod traffic (plus DNS and outbound 443 for LLM APIs), explicit allow for Prometheus scraping. This is a legitimate zero-trust-ish baseline. It governs which pods can reach which — it doesn't and can't substitute for the missing per-caller authentication above.
+
+## Secrets — pattern identified, not fully traced
+
+`values.yaml` references a single `existingSecret: cerebro-hive-secrets`, created out-of-band (`kubectl create secret generic ... --from-env-file=.env`, per its own comment) rather than managed by this Helm chart. Reasonable pattern (secrets aren't supposed to live in git), but not yet traced: which services actually mount it, whether each only gets the keys it needs or the whole secret is mounted everywhere (a real least-privilege question), and whether any of the docker-compose env vars seen earlier (`GITHUB_TOKEN`, `SLACK_BOT_TOKEN`, `JIRA_*`, `SERPER_API_KEY`, `AWS_*` on `tool-gateway`) have a production equivalent at all, since `tool-gateway` doesn't have its own values.yaml `secrets` block distinct from the shared one.
+
+## Not yet covered this pass
+
+Resilience (circuit breakers, retries, timeouts), per-service structured logging, config management beyond the ConfigMap/Secret split, failure-handling / graceful degradation, and SLO definitions — task #41, deeper per-service source reads still to come. Health check paths were already captured per-service in `values.yaml` during M25.4C (liveness/readiness paths exist for all 11 services); not yet verified that the paths actually resolve to real handlers in each service's source.

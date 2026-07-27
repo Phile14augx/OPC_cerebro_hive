@@ -107,6 +107,7 @@ export default function Navbar() {
           <button
             className="lg:hidden p-2 text-text-primary hover:text-primary-accent transition-colors"
             onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Open navigation menu"
           >
             <Menu size={24} />
           </button>
@@ -179,6 +180,7 @@ export default function Navbar() {
                 <button
                   className="p-2 text-text-primary hover:text-primary-accent transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
+                  aria-label="Close navigation menu"
                 >
                   <X size={24} />
                 </button>

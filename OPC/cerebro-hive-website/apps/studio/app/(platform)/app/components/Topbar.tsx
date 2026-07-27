@@ -161,6 +161,7 @@ function NotificationsMenu() {
       <button
         onClick={() => setOpen((v) => !v)}
         className="p-2 text-text-secondary hover:text-text-primary hover:bg-surface rounded-full transition-colors relative"
+        aria-label="Notifications"
       >
         <Bell size={18} />
         {unread > 0 && (
@@ -241,6 +242,7 @@ function UserMenu() {
           "p-1 hover:bg-surface rounded-full transition-colors",
           open && "bg-surface"
         )}
+        aria-label="Account menu"
       >
         <UserCircle size={28} className="text-text-secondary" />
       </button>
