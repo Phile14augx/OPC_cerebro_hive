@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
 import { PaginationQuery } from '../common/pagination';
+import { requirePermission } from '../../middleware/AuthMiddleware';
 
 const prisma = new PrismaClient();
 
@@ -72,6 +73,7 @@ export default async function workflowsRoutes(fastify: FastifyInstance) {
   // EXECUTE WORKFLOW
   fastify.post(
     '/:id/execute',
+    { preHandler: requirePermission('workflows:execute') },
     async (request, reply) => {
       const workspaceId = request.cerebroContext.workspaceId;
       const { id } = request.params as { id: string };

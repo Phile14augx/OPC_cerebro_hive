@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/discovery";
-import { buildPersonSchema, buildOrganizationSchema } from "@/lib/discovery";
+import { buildPersonSchema } from "@/lib/discovery";
 
 export const metadata: Metadata = {
   title: "About CerebroHive | Enterprise AI Company",
@@ -33,21 +33,10 @@ const founderSchema = buildPersonSchema({
   ],
 });
 
-const orgSchema = {
-  ...buildOrganizationSchema(),
-  foundingDate: "2023",
-  numberOfEmployees: { "@type": "QuantitativeValue", minValue: 1 },
-  knowsAbout: [
-    "Enterprise AI", "AI Agents", "RAG", "LLMs", "MLOps",
-    "AI Governance", "Knowledge Engineering", "AI Platform Engineering",
-  ],
-};
-
 export default function AboutLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <JsonLd schema={founderSchema} />
-      <JsonLd schema={orgSchema} />
       {children}
     </>
   );

@@ -3,6 +3,7 @@ import { Type } from '@sinclair/typebox';
 import { AgentRuntimeService } from '@cerebro/agent-builder-capability';
 import { AgentRepository } from '@cerebro/database';
 import { AgentExecutionContext } from '@cerebro/domain';
+import { requirePermission } from '../../middleware/AuthMiddleware';
 
 export interface ConversationsRouteOptions extends FastifyPluginOptions {
   agentRuntimeService: AgentRuntimeService;
@@ -22,6 +23,11 @@ export interface ConversationsRouteOptions extends FastifyPluginOptions {
  */
 export default async function conversationsRoutes(fastify: FastifyInstance, opts: ConversationsRouteOptions) {
   const { agentRuntimeService, agentRepository } = opts;
+
+  // Both routes below trigger real (billed) LLM execution — gate on ai:chat,
+  // not just "authenticated", consistent with @cerebro/auth's own
+  // permission map (packages/auth/src/rbac/permissions.ts).
+  fastify.addHook('preHandler', requirePermission('ai:chat'));
 
   fastify.post(
     '/',

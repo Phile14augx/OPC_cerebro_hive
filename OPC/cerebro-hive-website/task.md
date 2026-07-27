@@ -1,20 +1,13 @@
-# Task Tracker: Milestone 25.4 - Adaptive Runtime & Execution Intelligence
+# Task Tracker: Milestone 25.5 - Predictive Optimization & Governance
 
-## Phase 1: Execution Intelligence & Aggregation
-- `[x]` Scaffold `ExecutionIntelligenceStore` (Aggregates by Capability, Worker, Pattern, Tenant)
-- `[x]` Scaffold `AggregationJob` pipeline to separate operational metrics from intelligence
-- `[x]` Scaffold `PerformanceDriftDetector` to detect and invalidate obsolete optimizations
+## Phase 1: Predictive Execution & Versioned Models
+- `[x]` Scaffold `ForecastingEngine` (Queue saturation, GPU contention, Token budget)
+- `[x]` Scaffold `IntelligenceModel` and `ModelRegistry` (Version lifecycle, A/B evaluation)
 
-## Phase 2: Pluggable Optimization & Explainability
-- `[x]` Refactor into an extensible `OptimizationPipeline` using the `OptimizationPass` interface
-- `[x]` Implement Multi-objective optimization (Latency, Cost, Quota)
-- `[x]` Generate `PlanningExplanation` with explicit Confidence Scores for every routing decision
-- `[x]` Implement Graph Pattern Learning (optimizing sequences of nodes)
+## Phase 2: Governance & Tracing
+- `[x]` Scaffold `EnterprisePolicyEngine` (Cost, Compliance, Tenant, Provider constraints)
+- `[x]` Scaffold `PlannerTrace` (Decision graph, Explainability metadata)
 
-## Phase 3: Resource Admission & Caching
-- `[x]` Extend `AdmissionController` to reserve GPU, VRAM, API Quotas, and Token Budgets
-- `[x]` Scaffold `CachePolicyEngine` supporting TTL, Invalidation, and Capability-defined policies
-
-## Phase 4: Deterministic Replay Subsystem
-- `[x]` Scaffold `ReplayEngine` requiring strictly frozen inputs (Snapshots, Random Seeds)
-- `[x]` Scaffold `EffectRecorder` and `VirtualEffectLayer` to safely stub external side effects during replay
+## Phase 3: Validation & Simulation
+- `[x]` Scaffold `OptimizationValidator` (Predicted vs Actual, Confidence, Drift measurement)
+- `[x]` Scaffold `SimulationOrchestrator` (Historical replay, What-if analysis, Safe testing)

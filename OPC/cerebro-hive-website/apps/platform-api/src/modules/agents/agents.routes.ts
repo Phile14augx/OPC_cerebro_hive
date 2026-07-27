@@ -3,6 +3,7 @@ import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
 import { PaginationQuery } from '../common/pagination';
 import { AgentRepository } from '@cerebro/database';
+import { requirePermission } from '../../middleware/AuthMiddleware';
 
 const prisma = new PrismaClient();
 
@@ -83,6 +84,7 @@ export default async function agentRoutes(fastify: FastifyInstance, opts: Agents
   // behind it. That repository already wraps both writes in one call.
   fastify.post(
     '/',
+    { preHandler: requirePermission('agents:create') },
     async (request, reply) => {
       const cerebroContext = request.cerebroContext;
       const body = request.body as any;

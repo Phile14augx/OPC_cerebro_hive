@@ -100,6 +100,15 @@ async fn main() -> Result<()> {
 
 /// Creates a catch-all router that proxies every request to `base_url`.
 fn proxy_router(state: Arc<AppState>, base_url: String) -> Router<Arc<AppState>> {
+    // Separate owned copies for the second closure below. Both `.route()`
+    // closures are `move`, and each needs its own capture of state/base_url
+    // — the first closure takes ownership of the originals, so the second
+    // one referencing the same identifiers again would not compile (this is
+    // also almost certainly why the previous fix attempt here settled for
+    // `String::new()` instead of a second `.clone()` on the same binding).
+    let state_root    = state.clone();
+    let base_url_root = base_url.clone();
+
     Router::new()
         .route("/{*path}", any(move |req: axum::extract::Request| {
             let state = state.clone();
@@ -109,8 +118,11 @@ fn proxy_router(state: Arc<AppState>, base_url: String) -> Router<Arc<AppState>>
             }
         }))
         .route("/", any(move |req: axum::extract::Request| {
-            let state = state.clone();
-            let base   = /* base_url captured in outer scope */ String::new(); // placeholder
+            let state = state_root.clone();
+            // Was `String::new()` — a placeholder that made every downstream
+            // service's root path proxy to an empty base URL instead of the
+            // real one (flagged in the original M25.4A audit, fixed here).
+            let base   = base_url_root.clone();
             async move { forward(&state, req, &base).await }
         }))
 }

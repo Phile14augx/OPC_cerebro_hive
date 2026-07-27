@@ -51,6 +51,20 @@ spec:
         fsGroup: 1001
         seccompProfile:
           type: RuntimeDefault
+      {{- if eq $name "platform-api" }}
+      initContainers:
+        - name: db-migrate
+          image: "{{ $cfg.image.repository }}:{{ $cfg.image.tag | default $root.Chart.AppVersion }}"
+          imagePullPolicy: {{ $cfg.image.pullPolicy | default "IfNotPresent" }}
+          command: ["pnpm", "prisma", "migrate", "deploy"]
+          envFrom:
+            - secretRef:
+                name: {{ $root.Values.secrets.existingSecret }}
+                optional: true
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { cpu: 200m, memory: 256Mi }
+      {{- end }}
       containers:
         - name: {{ $name }}
           image: "{{ $cfg.image.repository }}:{{ $cfg.image.tag | default $root.Chart.AppVersion }}"
@@ -62,6 +76,13 @@ spec:
           env:
             - name: NODE_ENV
               value: {{ $root.Values.global.environment | default "production" }}
+            # PORT was never injected here — the app's own listen() call had
+            # to fall back to a hardcoded default that didn't match this
+            # containerPort, so the Service/probes and the actual listening
+            # socket disagreed. See audit/P0-AUTH-AUTHZ-GAP.md and
+            # audit/INFRA-RECONCILIATION-PLAN.md for the full trace.
+            - name: PORT
+              value: {{ $cfg.port | quote }}
             {{- range $k, $v := $cfg.env }}
             - name: {{ $k }}
               value: {{ $v | quote }}
@@ -70,6 +91,21 @@ spec:
             - secretRef:
                 name: {{ $root.Values.secrets.existingSecret }}
                 optional: true
+            {{- /* ai-gateway and forge-api already needed this; platform-api
+                   needed it too (it's the one that actually constructs the
+                   AIGateway client) but was missing from the equivalent list
+                   in the other template generation. See
+                   audit/INFRA-RECONCILIATION-PLAN.md's "new finding". */}}
+            {{- if or (eq $name "ai-gateway") (eq $name "forge-api") (eq $name "platform-api") }}
+            - secretRef:
+                name: cerebro-hive-ai-secrets
+                optional: true
+            {{- end }}
+            {{- if eq $name "ai-gateway" }}
+            - configMapRef:
+                name: ai-gateway-config
+                optional: true
+            {{- end }}
           resources:
             {{- toYaml ($cfg.resources | default $root.Values.global.resources) | nindent 12 }}
           securityContext:
@@ -108,6 +144,15 @@ spec:
                   matchLabels:
                     app.kubernetes.io/name: {{ $name }}
                 topologyKey: kubernetes.io/hostname
+      # NOTE: deliberately not adding a topologySpreadConstraints block that
+      # calls a "cerebro-hive.topologySpreadConstraints" helper — that helper
+      # is referenced by Set 1's deployment.yaml/rollout.yaml/service.yaml
+      # but is NOT defined anywhere in _helpers.tpl. See the new finding in
+      # audit/INFRA-RECONCILIATION-PLAN.md: Set 1 calls at least 6 helper
+      # templates that don't exist in this chart at all, which would make it
+      # fail to render outright, not just diverge from Set 2. Don't repeat
+      # that mistake here — left as a real follow-up (define the helper
+      # properly) rather than a broken reference.
       terminationGracePeriodSeconds: 30
 ---
 apiVersion: v1

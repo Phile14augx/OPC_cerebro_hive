@@ -11,6 +11,7 @@
   "dependencies": {
     "@cerebro/agent-builder-capability": "workspace:*",
     "@cerebro/ai-gateway": "workspace:*",
+    "@cerebro/auth": "workspace:*",
     "@cerebro/capability-contracts": "workspace:*",
     "@cerebro/core-bus": "workspace:*",
     "@cerebro/database": "workspace:*",
