@@ -50,7 +50,7 @@ jobs:
       matrix: ${{ steps.matrix.outputs.value }}
       sha_short: ${{ steps.meta.outputs.sha_short }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Compute short SHA
         id: meta
@@ -95,7 +95,7 @@ jobs:
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Set up QEMU for multi-arch emulation
       - name: Set up QEMU
@@ -224,7 +224,7 @@ jobs:
           fi
 
       - name: Trigger deploy workflow
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             await github.rest.actions.createWorkflowDispatch({
