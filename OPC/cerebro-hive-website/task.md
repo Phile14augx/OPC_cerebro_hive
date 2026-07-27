@@ -1,16 +1,15 @@
-# Task Tracker: Milestone 20 - Enterprise Control Plane
+# Task Tracker: CerebroStudio Compiler Deep Dive
 
-## Phase 1: Policy Engine & Secrets Vault (`services/enterprise-control-plane`)
-- `[x]` Scaffold `EnterpriseControlPlane` core service
-- `[x]` Implement `PolicyEngine` (Centralized RBAC, ABAC, and Governance evaluation)
-- `[x]` Implement `SecretsManager` with abstract `SecretProvider` interface (never exposing secrets in logs)
+## Phase 1: Core Architecture
+- `[x]` Scaffold `features/studio` domain architecture
+- `[x]` Implement `useStudioStore.ts` utilizing `StudioGraph` domain model instead of React Flow nodes
+- `[x]` Implement `NodeRegistry` plugin system
 
-## Phase 2: FinOps & Budgeting
-- `[x]` Implement `BudgetManager` with hierarchical budgets (Org -> Dept -> App -> User)
-- `[x]` Implement `CostEstimator` (Tokens, Duration, GPUs)
-- `[x]` Implement Graceful Budget Enforcement (Stop scheduler, complete active nodes)
+## Phase 2: The Compiler Pipeline
+- `[x]` Implement `CompilerPipeline` (Normalize -> Validate -> Optimize -> Compile)
+- `[x]` Implement `Diagnostics` system (Error, Warning, Hint)
+- `[x]` Implement `LLMNode` and `MemoryNode` plugins with dedicated validators and compilers
 
-## Phase 3: Compliance & Audit
-- `[x]` Scaffold `ComplianceEngine` (Generic framework mapping to SOC2, GDPR, HIPAA)
-- `[x]` Implement `AuditService` with immutable, forensic traceability (Trace ID, Span ID, Risk Score)
-- `[x]` Scaffold `RiskEngine` (PII Scanning, Prompt Injection, Data Exfiltration checks)
+## Phase 3: Validation & UI Integration
+- `[x]` Wire `ReactFlowRenderer.tsx` to the `useStudioStore`
+- `[x]` Implement Two-Stage Validation (Live vs Full Deployment Validation)
