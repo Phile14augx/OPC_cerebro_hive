@@ -1,17 +1,18 @@
-# Task Tracker: Milestone 25.1 - Enterprise Release Management
+# Task Tracker: Track B - Runtime Foundation
 
-## Phase 1: Immutable Versions & Canonical Hashing
-- `[x]` Introduce `Workflow.lock` with comprehensive environment & runtime metadata
-- `[x]` Implement `CanonicalHasher` to hash normalized ASTs (tamper-evident identity)
-- `[x]` Define robust Supply-Chain `Provenance` models (Signatures, Roles, SBOM)
+## Phase 1: Execution Gateway & Scheduling
+- `[x]` Scaffold `ExecutionGateway` that consumes `ExecutionDescriptor`s via a `ReleaseResolver`
+- `[x]` Scaffold `ExecutionScheduler` to handle diverse triggers (API, Cron, Webhook)
 
-## Phase 2: Releases & Promotions
-- `[x]` Scaffold `WorkflowRelease` model (mutable deployment envelope around immutable version)
-- `[x]` Implement Environment Promotion (`Dev` -> `QA` -> `Prod`)
-- `[x]` Implement Promotion-Based Rollback (Append-only history)
-- `[x]` Implement Progressive Delivery strategies (Canary, Blue/Green, Shadow) delegating networking to the Gateway
+## Phase 2: Runtime IR & Context
+- `[x]` Define `RuntimeIR` (Linear Stages, Parallel Groups) as the execution payload
+- `[x]` Define the immutable `ExecutionContext` abstraction
 
-## Phase 3: Release Manager Orchestration
-- `[x]` Scaffold `ReleaseManager` and its decoupled services (`PromotionService`, `DeploymentService`, etc.)
-- `[x]` Implement `ReleaseNotesService` with layered risk/security analysis
-- `[x]` Delegate Approval Enforcements to the `PolicyAdapter` (OPA)
+## Phase 3: Capability & Artifact Management
+- `[x]` Scaffold Versioned `CapabilityRegistry` (mapping `capability.version` to implementations)
+- `[x]` Implement `ArtifactStore` and `ArtifactReference` patterns to keep Temporal payloads light
+
+## Phase 4: State, Events, & Telemetry
+- `[x]` Scaffold `ExecutionStateStore` for queryable runtime state tracking
+- `[x]` Define rich `DomainEvent` taxonomy (separate from OpenTelemetry metrics pipeline)
+- `[x]` Scaffold the `TemporalInterpreter` mock that orchestrates the above components
