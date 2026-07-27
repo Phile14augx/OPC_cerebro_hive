@@ -1,6 +1,4 @@
 
-import { Diagnostic } from '../CompilerErrors';
-
 export interface DataSchema {
   id: string;
   name: string;
@@ -15,18 +13,28 @@ export interface Resource {
   provider: string;
   identifier: string;
   quantity: number;
-  estimatedCost: number;
+}
+
+export interface RetryPolicy {
+  maxAttempts: number;
+  backoffMultiplier: number;
 }
 
 export interface Stage {
   id: string;
   level: number;
   parallel: boolean;
-  nodes: string[]; // Node IDs executed in this stage
+  nodes: string[];
   inputs: DataSchema[];
   outputs: DataSchema[];
-  estimatedDurationMs: number;
-  estimatedCost: number;
+  
+  // Enriched Metadata
+  retryPolicy?: RetryPolicy;
+  timeoutMs?: number;
+  priority?: number;
+  concurrencyLimit?: number;
+  schedulingClass?: string;
+  cacheable?: boolean;
 }
 
 export interface StageDependency {
@@ -35,17 +43,30 @@ export interface StageDependency {
   type: 'Data' | 'Control' | 'Event' | 'Approval';
 }
 
-export interface ExecutionPlan {
+export interface CostEstimate {
+  llmCost: number;
+  apiCost: number;
+  computeCost: number;
+  storageCost: number;
+  networkCost: number;
+  humanReviewCost: number;
+  totalCost: number;
+}
+
+export interface ExecutionPlanMetadata {
   version: string;
+  compatibility: string;
+  compilerVersion: string;
+  generatedAt: string;
+  sourceHash: string;
+}
+
+export interface ExecutionPlan {
+  metadata: ExecutionPlanMetadata;
   workflowId: string;
   executionMode: 'simulation' | 'production';
-  graph: any; // The original optimized StudioGraph
   stages: Stage[];
   dependencies: StageDependency[];
   resources: Resource[];
-  estimates: {
-    totalDurationMs: number;
-    totalCost: number;
-  };
-  diagnostics: Diagnostic[];
+  estimates: CostEstimate;
 }
