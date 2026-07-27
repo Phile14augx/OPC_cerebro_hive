@@ -20,9 +20,31 @@ export function IntegrationIntelligence() {
           </p>
         </div>
 
-        {/* Abstract Constellation Layout */}
-        <div className="relative max-w-5xl mx-auto aspect-video rounded-3xl border border-border bg-surface-elevated p-8 lg:p-16 flex items-center justify-center">
-          
+        {/* Mobile: simple stacked category list, no absolute/trig positioning */}
+        <div className="md:hidden flex flex-col items-center gap-6 max-w-sm mx-auto rounded-3xl border border-border bg-surface-elevated p-6">
+          <Node icon={<BrainCircuit />} label="Cerebro OS" isActive size="lg" />
+          <div className="w-full grid grid-cols-2 gap-3">
+            {categories.map((category) => {
+              const integrations = ecosystemIntegrations.filter(i => i.category === category);
+              return (
+                <div key={category} className="bg-surface border border-border rounded-xl p-3">
+                  <h3 className="text-[11px] font-bold uppercase tracking-wider text-text-muted mb-2 text-center">{category}</h3>
+                  <div className="flex flex-col gap-1.5">
+                    {integrations.map(integration => (
+                      <div key={integration.id} className="text-xs text-text-secondary bg-background/40 px-2 py-1 rounded-md border border-border text-center truncate">
+                        {integration.name}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Abstract Constellation Layout (desktop/tablet) */}
+        <div className="hidden md:flex relative max-w-5xl mx-auto aspect-video rounded-3xl border border-border bg-surface-elevated p-8 lg:p-16 items-center justify-center">
+
           {/* Central Cerebro OS Node */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
             <Node icon={<BrainCircuit />} label="Cerebro OS" isActive size="lg" />

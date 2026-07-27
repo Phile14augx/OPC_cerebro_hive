@@ -30,8 +30,9 @@ export function LivingEnterpriseBrain() {
         </motion.p>
       </div>
 
-      <div className="relative w-full max-w-4xl aspect-[2/1] md:aspect-[3/1] mt-8 flex items-center justify-center z-10">
-        
+      {/* Desktop/tablet: orbital diagram */}
+      <div className="relative hidden md:flex w-full max-w-4xl aspect-[3/1] mt-8 items-center justify-center z-10">
+
         {/* Ambient Glow */}
         <div className="absolute inset-0 flex items-center justify-center">
            <GlowLayer color="primary" className="w-64 h-64" intensity={0.6} />
@@ -48,11 +49,11 @@ export function LivingEnterpriseBrain() {
 
         {/* Center Node */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-          <Node 
-            icon={<Brain className="w-8 h-8" />} 
-            label="Cerebro OS" 
-            size="lg" 
-            isActive 
+          <Node
+            icon={<Brain className="w-8 h-8" />}
+            label="Cerebro OS"
+            size="lg"
+            isActive
             delay={1.0}
           />
         </div>
@@ -61,17 +62,40 @@ export function LivingEnterpriseBrain() {
         <div className="absolute top-[10%] left-[15%] z-20">
           <Node icon={<Database />} label="ERP System" size="md" delay={0.2} />
         </div>
-        
+
         <div className="absolute top-[10%] right-[15%] z-20">
           <Node icon={<Cloud />} label="Cloud Storage" size="md" delay={0.4} />
         </div>
-        
+
         <div className="absolute bottom-[10%] left-[15%] z-20">
           <Node icon={<Code />} label="CRM Platform" size="md" delay={0.6} />
         </div>
-        
+
         <div className="absolute bottom-[10%] right-[15%] z-20">
           <Node icon={<Network />} label="API Gateway" size="md" delay={0.8} />
+        </div>
+      </div>
+
+      {/* Mobile: stacked hub-and-spoke, no absolute positioning */}
+      <div className="relative flex md:hidden w-full max-w-sm flex-col items-center gap-8 mt-4 z-10">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <GlowLayer color="primary" className="w-48 h-48" intensity={0.5} />
+        </div>
+
+        <Node
+          icon={<Brain className="w-7 h-7" />}
+          label="Cerebro OS"
+          size="lg"
+          isActive
+          delay={0.2}
+          className="z-10"
+        />
+
+        <div className="relative z-10 grid grid-cols-2 gap-x-8 gap-y-6">
+          <Node icon={<Database />} label="ERP System" size="md" delay={0.3} />
+          <Node icon={<Cloud />} label="Cloud Storage" size="md" delay={0.4} />
+          <Node icon={<Code />} label="CRM Platform" size="md" delay={0.5} />
+          <Node icon={<Network />} label="API Gateway" size="md" delay={0.6} />
         </div>
       </div>
     </section>
