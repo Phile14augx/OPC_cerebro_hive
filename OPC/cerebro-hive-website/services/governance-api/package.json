@@ -1,5 +1,5 @@
 {
-  "name": "@cerebro/governance-api",
+  "name": "@cerebro/governance-policy-service",
   "version": "0.1.0",
   "private": true,
   "main": "src/index.ts",
