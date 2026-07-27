@@ -2,14 +2,18 @@
 import { StudioGraph } from '../../graph/GraphModel';
 import { ExecutionPlan } from '../ir/ExecutionPlan';
 import { Diagnostic } from '../CompilerErrors';
+import { DataType } from '../types/TypeSystem';
 
 export interface Symbol {
   id: string;
   category: 'variable' | 'node' | 'stage';
   scope: string;
-  type: string;
-  producer: string; // Node ID that produced this
-  consumers: string[]; // Node IDs that consume this
+  type: DataType;
+  producer: string; 
+  consumers: string[];
+  nullable: boolean;
+  mutable: boolean;
+  schema?: any; // JSON schema if structured output
 }
 
 export interface DebugMetadata {
@@ -22,7 +26,7 @@ export interface DebugMetadata {
 
 export interface CompilationArtifacts {
   symbolTable: Record<string, Symbol>;
-  debugMap: Record<string, DebugMetadata>; // Maps Stage ID -> Debug info
+  debugMap: Record<string, DebugMetadata>;
 }
 
 export interface CompilerMetrics {

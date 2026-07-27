@@ -34,4 +34,9 @@ export class ToolRegistry {
   getExecutor(name: string): IToolExecutor | undefined {
     return this.executors.get(name);
   }
+
+  /** All registered tool names — backs ToolProvider.listAvailableTools(). */
+  listNames(): string[] {
+    return Array.from(this.metadata.keys());
+  }
 }

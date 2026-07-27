@@ -3,7 +3,8 @@ import { bootstrap } from './bootstrap';
 
 import { AgentRepository, IdempotencyRepository, OutboxRepository, AuditRepository, PrismaUnitOfWork } from '@cerebro/database';
 import { AgentApplicationService, UnitOfWork, OutboxPublisher, AuditLogger, PolicyEngine, AgentValidator } from '@cerebro/domain';
-import { AgentBuilderCapability } from '@cerebro/agent-builder-capability';
+import { AgentBuilderCapability, AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
+import { createGateway } from '@cerebro/ai-gateway';
 
 import { CommandBus, QueryBus, DomainEventBus } from '@cerebro/core-bus';
 import { CreateAgentCommand } from './modules/agents/agents.commands';
@@ -39,16 +40,33 @@ async function main() {
   // 4. Capability Layer
   const agentBuilderCapability = new AgentBuilderCapability(agentAppService);
 
+  // 4b. Agent Runtime. AgentRuntimeService no longer holds AIGateway
+  // directly — it resolves an LLMProvider via the shared RuntimeRegistry
+  // (packages/runtime-core). The gateway is still constructed here and
+  // handed to bootstrap(), which registers it into that registry alongside
+  // the mock providers (see AIGatewayProviders.ts / MockProviders.ts). Tool
+  // execution is wired but no tools are registered yet — see M10.2/M10.3.
+  const aiGateway = createGateway();
+  const toolRegistry = new ToolRegistry();
+  const toolRuntime = new ToolRuntime(toolRegistry);
+  const agentRuntimeService = new AgentRuntimeService();
+
   // 5. Message Buses
   const commandBus = new CommandBus();
   const queryBus = new QueryBus();
   const eventBus = new DomainEventBus();
-  
+
   // Register Handlers
   commandBus.register('CreateAgentCommand', new CreateAgentCommandHandler(agentBuilderCapability));
 
   // 6. Bootstrap Fastify
-  const server = await bootstrap(commandBus);
+  const server = await bootstrap(commandBus, {
+    agentRuntimeService,
+    agentRepository: agentRepo,
+    aiGateway,
+    toolRuntime,
+    toolRegistry,
+  });
 
   try {
     await server.listen({ port: 3000, host: '0.0.0.0' });

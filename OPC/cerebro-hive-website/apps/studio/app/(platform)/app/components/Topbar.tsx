@@ -336,16 +336,19 @@ export function Topbar() {
         </div>
 
         {/* Command Palette / Search (Center) */}
-        <div className="flex-1 max-w-xl px-4">
+        <div className="flex-1 min-w-0 max-w-xl px-2 sm:px-4">
           <button
             onClick={() => setCmdOpen(true)}
-            className="w-full flex items-center justify-between px-4 py-2 bg-surface border border-border hover:border-primary-accent/40 rounded-xl text-text-muted transition-colors group"
+            className="w-full flex items-center justify-between gap-2 px-3 sm:px-4 py-2 bg-surface border border-border hover:border-primary-accent/40 rounded-xl text-text-muted transition-colors group"
           >
-            <div className="flex items-center gap-2">
-              <Search size={16} className="group-hover:text-primary-accent transition-colors" />
-              <span className="text-sm">Search, command, or jump to...</span>
+            <div className="flex items-center gap-2 min-w-0">
+              <Search size={16} className="shrink-0 group-hover:text-primary-accent transition-colors" />
+              <span className="text-sm truncate whitespace-nowrap">
+                <span className="hidden sm:inline">Search, command, or jump to...</span>
+                <span className="sm:hidden">Search</span>
+              </span>
             </div>
-            <div className="hidden sm:flex items-center gap-1 text-[10px] font-bold">
+            <div className="hidden sm:flex items-center gap-1 text-[10px] font-bold shrink-0">
               <kbd className="px-1.5 py-0.5 bg-background rounded border border-border">Ctrl</kbd>
               <kbd className="px-1.5 py-0.5 bg-background rounded border border-border">K</kbd>
             </div>

@@ -1,5 +1,6 @@
-import { 
-  LLMProvider, 
+import {
+  LLMProvider,
+  LLMMessage,
   PlannerProvider,
   ExecutionContext,
   CapabilityDescriptor,
@@ -17,7 +18,7 @@ export class MockLLMProvider implements LLMProvider {
     console.log('[MockLLMProvider] Disposed.');
   }
 
-  public async invokeModel(prompt: string, context: ExecutionContext, onToken?: (token: string) => void): Promise<string> {
+  public async invokeModel(messages: LLMMessage[], context: ExecutionContext, onToken?: (token: string) => void): Promise<string> {
     const text = "This is a mock LLM response based on the capability architecture.";
     if (onToken) {
       const words = text.split(' ');

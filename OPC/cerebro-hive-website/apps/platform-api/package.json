@@ -5,10 +5,12 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test": "vitest run"
   },
   "dependencies": {
     "@cerebro/agent-builder-capability": "workspace:*",
+    "@cerebro/ai-gateway": "workspace:*",
     "@cerebro/capability-contracts": "workspace:*",
     "@cerebro/core-bus": "workspace:*",
     "@cerebro/database": "workspace:*",
@@ -25,6 +27,7 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "tsx": "^4.7.1",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
   }
 }

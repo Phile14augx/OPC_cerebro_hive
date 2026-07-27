@@ -27,8 +27,13 @@ export interface CapabilityProvider {
   dispose?(): Promise<void>;
 }
 
+export interface LLMMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
+
 export interface LLMProvider extends CapabilityProvider {
-  invokeModel(prompt: string, context: ExecutionContext, onToken?: (token: string) => void): Promise<string>;
+  invokeModel(messages: LLMMessage[], context: ExecutionContext, onToken?: (token: string) => void): Promise<string>;
 }
 
 export interface ToolProvider extends CapabilityProvider {

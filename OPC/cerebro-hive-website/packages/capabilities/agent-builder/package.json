@@ -2,12 +2,17 @@
   "name": "@cerebro/agent-builder-capability",
   "version": "1.0.0",
   "main": "index.ts",
+  "scripts": {
+    "test": "vitest run"
+  },
   "dependencies": {
     "@cerebro/domain": "workspace:*",
     "@cerebro/database": "workspace:*",
-    "@cerebro/capability-contracts": "workspace:*"
+    "@cerebro/capability-contracts": "workspace:*",
+    "@cerebro/runtime-core": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
   }
 }

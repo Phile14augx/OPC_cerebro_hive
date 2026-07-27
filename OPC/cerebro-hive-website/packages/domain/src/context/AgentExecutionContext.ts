@@ -1,6 +1,7 @@
 export interface AgentExecutionContext {
   conversationId: string;
   tenantId: string;
+  workspaceId: string;
   userId: string;
   
   traceId: string;

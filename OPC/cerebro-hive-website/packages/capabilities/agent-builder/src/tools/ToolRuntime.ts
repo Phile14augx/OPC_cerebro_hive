@@ -1,10 +1,18 @@
 import { ToolRegistry } from './ToolRegistry';
-import { AgentExecutionContext } from '@cerebro/domain';
 
 export class ToolRuntime {
   constructor(private registry: ToolRegistry) {}
 
-  async executeTool(name: string, args: any, context: AgentExecutionContext): Promise<any> {
+  /**
+   * `context` is intentionally untyped (matches IToolExecutor.execute's own
+   * `context: any`) — ToolRuntime never reads any specific field of it
+   * itself, only passes it through to the executor. It previously required
+   * @cerebro/domain's AgentExecutionContext specifically, which was an
+   * accidental coupling: it blocked this class from being reused from
+   * anywhere that has a different context shape (e.g. runtime-core's
+   * ExecutionContext, via ToolRuntimeToolProvider).
+   */
+  async executeTool(name: string, args: any, context: any): Promise<any> {
     const metadata = this.registry.getMetadata(name);
     if (!metadata) {
       throw new Error(`Tool ${name} not found in registry`);
@@ -25,7 +33,7 @@ export class ToolRuntime {
     }
   }
 
-  private async executeSync(metadata: any, executor: any, args: any, context: AgentExecutionContext): Promise<any> {
+  private async executeSync(metadata: any, executor: any, args: any, context: any): Promise<any> {
     // In a real system, enforce timeoutMs here
     try {
       const result = await executor.execute(args, context);
@@ -37,12 +45,12 @@ export class ToolRuntime {
     }
   }
 
-  private async executeAsync(metadata: any, executor: any, args: any, context: AgentExecutionContext): Promise<any> {
+  private async executeAsync(metadata: any, executor: any, args: any, context: any): Promise<any> {
     // In an async execution, we would typically submit a job to a queue or temporal workflow,
     // and return a job ID immediately. The LLM would see the job ID, and when the job completes,
     // an event would wake up the conversation.
     // For scaffolding, we mock the job submission.
-    
+
     return {
       status: 'accepted',
       jobId: `job-${Math.random().toString(36).substring(7)}`,

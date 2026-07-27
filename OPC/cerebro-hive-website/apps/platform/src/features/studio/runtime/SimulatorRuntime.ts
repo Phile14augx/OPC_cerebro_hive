@@ -1,113 +1,92 @@
-
-import { ExecutionPlan, Stage } from '../compiler/ir/ExecutionPlan';
-import { CompilationArtifacts } from '../compiler/engine/CompilationContext';
-import { ExecutionEvent, ExecutionEventType, ExecutionSnapshot, ExecutionRecording } from './ExecutionEvents';
-
-type RuntimeState = 'IDLE' | 'RUNNING' | 'PAUSED' | 'FINISHED' | 'ERROR';
+/**
+ * M24 — SimulatorRuntime
+ *
+ * Now a thin public API shell over ExecutionKernel.
+ * All orchestration logic lives in the kernel; this class only:
+ *   1. Constructs and wires the kernel with default plugins + executors
+ *   2. Exposes the clean public API surface for UI / zustand slice
+ *   3. Forwards subscriptions to the EventDispatcher
+ *
+ * Future runtimes (Streaming, Distributed, Replay) reuse the same kernel.
+ */
+import { ExecutionContext } from './execution/ExecutionContext';
+import { ExecutionKernel } from './kernel/ExecutionKernel';
+import { RuntimeCapabilityRegistry } from './kernel/RuntimeCapabilityRegistry';
+import { PluginPipeline } from './plugins/RuntimePlugin';
+import { MetricsPlugin } from './plugins/MetricsPlugin';
+import { TracePlugin } from './plugins/TracePlugin';
+import { LoggerPlugin } from './plugins/LoggerPlugin';
+import { DebugPlugin } from './plugins/DebugPlugin';
+import { CachePlugin } from './plugins/CachePlugin';
+import { LlmExecutor } from './executors/LlmExecutor';
+import { MemoryExecutor } from './executors/MemoryExecutor';
+import { ToolExecutor } from './executors/ToolExecutor';
+import { FallbackExecutor } from './executors/FallbackExecutor';
+import { EventDispatcher, DispatchedEvent } from './observability/EventDispatcher';
+import { ExecutionEventType } from './ExecutionEvents';
+import { ExecutionRecording } from './replay/Recording';
 
 export class SimulatorRuntime {
-  private plan: ExecutionPlan;
-  private artifacts: CompilationArtifacts;
-  
-  private state: RuntimeState = 'IDLE';
-  private eventLog: ExecutionEvent[] = [];
-  private snapshots: ExecutionSnapshot[] = [];
-  
-  private breakpoints: Set<string> = new Set(); // Node IDs to pause before/after
+  private kernel: ExecutionKernel;
+  private debugPlugin: DebugPlugin;
 
-  // Subscribers (e.g. Debugger UI)
-  private listeners: ((event: ExecutionEvent) => void)[] = [];
+  constructor(context: ExecutionContext) {
+    // ── Build plugin pipeline ──────────────────────────────────────────────
+    const plugins = new PluginPipeline();
+    plugins.install(new LoggerPlugin());
+    plugins.install(new MetricsPlugin());
+    plugins.install(new TracePlugin());
+    const debugPlugin = new DebugPlugin();
+    plugins.install(debugPlugin);
+    plugins.install(new CachePlugin());
+    this.debugPlugin = debugPlugin;
 
-  constructor(plan: ExecutionPlan, artifacts: CompilationArtifacts) {
-    this.plan = plan;
-    this.artifacts = artifacts;
+    // ── Build capability registry ──────────────────────────────────────────
+    const registry = new RuntimeCapabilityRegistry();
+    registry.register(new LlmExecutor());
+    registry.register(new MemoryExecutor());
+    registry.register(new ToolExecutor());
+    registry.register(new FallbackExecutor()); // must be last
+
+    // ── Build event dispatcher ─────────────────────────────────────────────
+    const dispatcher = new EventDispatcher();
+
+    // ── Build kernel ───────────────────────────────────────────────────────
+    this.kernel = new ExecutionKernel(context, registry, plugins, dispatcher);
+
+    // Wire debug plugin pause signal → kernel
+    debugPlugin.onPause(() => this.kernel.pause());
   }
 
-  public subscribe(listener: (event: ExecutionEvent) => void) {
-    this.listeners.push(listener);
+  // ── Event subscriptions ───────────────────────────────────────────────────
+
+  /** Subscribe to all events (returns unsubscribe function). */
+  subscribe(listener: (event: DispatchedEvent) => void): () => void {
+    return this.kernel.eventDispatcher.onAny(listener);
   }
 
-  private emit(type: ExecutionEventType, payload: any = {}, stageId?: string, nodeId?: string) {
-    const event: ExecutionEvent = {
-      id: crypto.randomUUID(),
-      timestamp: Date.now(),
-      type,
-      payload,
-      stageId,
-      nodeId
-    };
-    this.eventLog.push(event);
-    this.listeners.forEach(l => l(event));
-    
-    // Event-Sourced Checkpointing: Create a snapshot every 20 events
-    if (this.eventLog.length % 20 === 0) {
-      this.createSnapshot();
-    }
+  /** Subscribe to a specific event type. */
+  on(type: ExecutionEventType, listener: (event: DispatchedEvent) => void): () => void {
+    return this.kernel.eventDispatcher.on(type, listener);
   }
 
-  private createSnapshot() {
-    this.snapshots.push({
-      snapshotId: crypto.randomUUID(),
-      eventIndex: this.eventLog.length - 1,
-      memoryState: {}, // MOCK: Clone current memory
-      activeStages: []
-    });
-  }
+  // ── Execution control ─────────────────────────────────────────────────────
 
-  // Debugger Controls
-  public async run() {
-    this.state = 'RUNNING';
-    this.emit('ExecutionStarted');
-    // MOCK: Loop through stages...
-    for (const stage of this.plan.stages) {
-      if (this.state === 'PAUSED') break;
-      await this.executeStage(stage);
-    }
-    if (this.state === 'RUNNING') {
-      this.state = 'FINISHED';
-      this.emit('ExecutionFinished');
-    }
-  }
+  async run(): Promise<void> { return this.kernel.start(); }
+  async step(): Promise<void> { return this.kernel.step(); }
+  pause(reason = 'User Paused'): void { void reason; this.kernel.pause(); }
+  resume(): void { this.kernel.start(); }
+  cancel(): void { this.kernel.cancel(); }
+  stop(): void { this.kernel.reset(); }
 
-  private async executeStage(stage: Stage) {
-    this.emit('StageStarted', {}, stage.id);
-    for (const nodeId of stage.nodes) {
-      if (this.breakpoints.has(nodeId)) {
-        this.pause(`BreakpointHit at ${nodeId}`);
-        return;
-      }
-      this.emit('NodeStarted', {}, stage.id, nodeId);
-      // Simulate node execution
-      this.emit('NodeCompleted', {}, stage.id, nodeId);
-    }
-  }
+  // ── Debugger controls ─────────────────────────────────────────────────────
 
-  public pause(reason: string = 'User Paused') {
-    this.state = 'PAUSED';
-    this.emit('ExecutionPaused', { reason });
-  }
+  addBreakpoint(nodeId: string): void { this.kernel.addBreakpoint(nodeId); this.debugPlugin.addBreakpoint(nodeId); }
+  removeBreakpoint(nodeId: string): void { this.kernel.removeBreakpoint(nodeId); this.debugPlugin.removeBreakpoint(nodeId); }
 
-  public resume() {
-    if (this.state !== 'PAUSED') return;
-    this.emit('ExecutionResumed');
-    this.run();
-  }
+  // ── State & recording ─────────────────────────────────────────────────────
 
-  public step() {
-    // Moves execution forward by one node/stage
-  }
-
-  public stop() {
-    this.state = 'IDLE';
-    this.eventLog = [];
-  }
-
-  public getRecording(): ExecutionRecording {
-    return {
-      executionPlanId: this.plan.metadata.version,
-      events: this.eventLog,
-      snapshots: this.snapshots,
-      metrics: { durationMs: 0, totalCost: 0 }
-    };
-  }
+  get state() { return this.kernel.state; }
+  getRecording(): ExecutionRecording { return this.kernel.getRecording() as any; }
+  getEventLog(): DispatchedEvent[] { return this.kernel.eventDispatcher.getLog(); }
 }

@@ -1,26 +1,50 @@
+/**
+ * M24 — ExecutionEvents (full lifecycle)
+ *
+ * Extended from M22 to cover the complete node execution lifecycle:
+ * Queued → Scheduled → InputResolved → Running → OutputProduced → Completed
+ * plus Streaming, Retrying, TimedOut, Cancelled, Skipped
+ */
 
-export type ExecutionEventType = 
+export type ExecutionEventType =
+  // Execution lifecycle
   | 'ExecutionStarted'
+  | 'ExecutionPaused'
+  | 'ExecutionResumed'
+  | 'ExecutionFinished'
+  | 'ExecutionCancelled'
+  // Stage lifecycle
   | 'StageStarted'
+  | 'StageCompleted'
+  // Node lifecycle (full)
+  | 'NodeQueued'
+  | 'NodeScheduled'
+  | 'NodeInputResolved'
   | 'NodeStarted'
+  | 'NodeStreaming'       // LLM token-by-token output
+  | 'NodeOutputProduced'
   | 'NodeCompleted'
+  | 'NodeCancelled'
+  | 'NodeSkipped'
+  | 'NodeRetrying'
+  | 'NodeTimedOut'
+  // Data
   | 'VariableCreated'
   | 'VariableUpdated'
+  // Tools & Memory
   | 'ToolCalled'
   | 'ToolReturned'
   | 'MemoryRead'
   | 'MemoryWrite'
+  // Debug
   | 'BreakpointHit'
-  | 'ErrorRaised'
-  | 'ExecutionPaused'
-  | 'ExecutionResumed'
-  | 'ExecutionFinished';
+  | 'ErrorRaised';
 
 export interface ExecutionEvent {
   id: string;
   timestamp: number;
   type: ExecutionEventType;
-  payload: any;
+  payload: unknown;
   stageId?: string;
   nodeId?: string;
   symbolId?: string;
@@ -28,17 +52,25 @@ export interface ExecutionEvent {
 
 export interface ExecutionSnapshot {
   snapshotId: string;
-  eventIndex: number; // The index in the event log this snapshot represents
-  memoryState: Record<string, any>;
+  eventIndex: number;
+  timestamp: number;
+  memoryState: Record<string, unknown>;
   activeStages: string[];
+  cursorSnapshot: { stageIdx: number; nodeIdx: number };
 }
 
 export interface ExecutionRecording {
+  executionId: string;
   executionPlanId: string;
+  simulationMode: string;
+  startedAt: number;
+  finishedAt: number;
   events: ExecutionEvent[];
   snapshots: ExecutionSnapshot[];
   metrics: {
     durationMs: number;
-    totalCost: number;
+    totalTokens: number;
+    totalCostUsd: number;
+    nodeCount: number;
   };
 }

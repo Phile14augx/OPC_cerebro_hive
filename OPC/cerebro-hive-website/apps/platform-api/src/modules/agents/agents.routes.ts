@@ -2,10 +2,17 @@
 import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
 import { PaginationQuery } from '../common/pagination';
+import { AgentRepository } from '@cerebro/database';
 
 const prisma = new PrismaClient();
 
-export default async function agentRoutes(fastify: FastifyInstance) {
+export interface AgentsRouteOptions {
+  agentRepository: AgentRepository;
+}
+
+export default async function agentRoutes(fastify: FastifyInstance, opts: AgentsRouteOptions) {
+  const { agentRepository } = opts;
+
   // LIST AGENTS
   fastify.get(
     '/',
@@ -70,24 +77,39 @@ export default async function agentRoutes(fastify: FastifyInstance) {
     }
   );
 
-  // CREATE AGENT
+  // CREATE AGENT — goes through AgentRepository.createAgent() so every
+  // agent is created together with a runnable initial AgentVersion
+  // (modelId + instructions), instead of a bare Agent row with nothing
+  // behind it. That repository already wraps both writes in one call.
   fastify.post(
     '/',
     async (request, reply) => {
-      const workspaceId = request.cerebroContext.workspaceId;
+      const cerebroContext = request.cerebroContext;
       const body = request.body as any;
 
-      const agent = await prisma.agent.create({
-        data: {
-          workspaceId,
+      if (!body.name || !body.modelId || !body.instructions) {
+        return reply.code(400).send({
+          success: false,
+          error: {
+            code: 'INVALID_AGENT_INPUT',
+            message: 'name, modelId, and instructions are required to create an agent with a runnable version.',
+            requestId: cerebroContext.traceId,
+          }
+        });
+      }
+
+      const { agent, initialVersion } = await agentRepository.createAgent(
+        {
           name: body.name,
           description: body.description,
-          isActive: body.isActive ?? true,
-        }
-      });
+          avatarUrl: body.avatarUrl,
+          modelId: body.modelId,
+          instructions: body.instructions,
+        },
+        { context: cerebroContext }
+      );
 
-      return reply.code(201).send({ success: true, data: agent });
+      return reply.code(201).send({ success: true, data: { ...agent, versions: [initialVersion] } });
     }
   );
 }
-
