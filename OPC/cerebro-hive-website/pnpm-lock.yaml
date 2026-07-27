@@ -921,6 +921,8 @@ importers:
         specifier: ^5.0.0
         version: 5.101.4(react@19.2.4)
 
+  packages/ontology-sdk: {}
+
   packages/operational-intelligence-core:
     dependencies:
       '@cerebro/aiops-core':
@@ -1007,6 +1009,8 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
+
+  packages/reasoning-sdk: {}
 
   packages/recommendation-api:
     dependencies:
@@ -1268,6 +1272,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/events
 
+  services/app-builder-api: {}
+
   services/contentops:
     dependencies:
       '@anthropic-ai/sdk':
@@ -1307,6 +1313,8 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
+
+  services/enterprise-control-plane: {}
 
   services/evaluation-api:
     dependencies:
@@ -1431,6 +1439,12 @@ importers:
       '@cerebro/memory-sdk':
         specifier: workspace:*
         version: link:../../packages/memory-sdk
+
+  services/reasoning-service:
+    dependencies:
+      '@cerebro/reasoning-sdk':
+        specifier: workspace:*
+        version: link:../../packages/reasoning-sdk
 
   services/swarm-runtime:
     dependencies:

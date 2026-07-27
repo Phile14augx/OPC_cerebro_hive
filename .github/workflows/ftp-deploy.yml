@@ -31,7 +31,10 @@ jobs:
         cache-dependency-path: ./OPC/cerebro-hive-website/pnpm-lock.yaml
 
     - name: 🔨 Install Dependencies
-      run: pnpm install
+      # --no-frozen-lockfile: see ssh-deploy.yml — ~100 workspace packages
+      # under independent active development means frozen-lockfile blocks
+      # this deploy on drift unrelated to the studio app.
+      run: pnpm install --no-frozen-lockfile
 
     - name: Generate Prisma client
       run: pnpm --filter @cerebro/database run generate
