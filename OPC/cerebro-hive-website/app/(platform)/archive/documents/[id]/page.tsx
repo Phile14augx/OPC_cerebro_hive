@@ -1,7 +1,17 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { StudioShell } from '../../../studio/components/StudioShell';
 import { WorkspaceCard } from '../../../studio/components/WorkspaceCard';
 import { MetricCard } from '../../../studio/components/MetricCard';
+
+// Internal knowledge-asset viewer — noindexed since each document is
+// authenticated internal content, not public marketing material.
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  return {
+    title: `Document ${params.id} — Knowledge Asset`,
+    robots: { index: false, follow: false },
+  };
+}
 
 export default function DocumentKnowledgePage({ params }: { params: { id: string } }) {
   return (

@@ -1,18 +1,17 @@
-# Task Tracker: Track B - Runtime Foundation
+# Task Tracker: Milestone 25.3 - Runtime Optimization & Execution Intelligence
 
-## Phase 1: Execution Gateway & Scheduling
-- `[x]` Scaffold `ExecutionGateway` that consumes `ExecutionDescriptor`s via a `ReleaseResolver`
-- `[x]` Scaffold `ExecutionScheduler` to handle diverse triggers (API, Cron, Webhook)
+## Phase 1: Planning & Optimization
+- `[x]` Scaffold `RuntimePlanner` (Dependency, Critical Path, Cost Estimation)
+- `[x]` Scaffold `RuntimeOptimizer` (Dead Node Elimination, Parallel Merge, Activity Fusion)
 
-## Phase 2: Runtime IR & Context
-- `[x]` Define `RuntimeIR` (Linear Stages, Parallel Groups) as the execution payload
-- `[x]` Define the immutable `ExecutionContext` abstraction
+## Phase 2: Scheduling & Workers
+- `[x]` Scaffold `WorkerPoolManager` (Registration, Heartbeat, Health, Capabilities)
+- `[x]` Scaffold `AdaptiveScheduler` (Worker Selection, Queue Balancing, Backpressure)
 
-## Phase 3: Capability & Artifact Management
-- `[x]` Scaffold Versioned `CapabilityRegistry` (mapping `capability.version` to implementations)
-- `[x]` Implement `ArtifactStore` and `ArtifactReference` patterns to keep Temporal payloads light
+## Phase 3: Reliability & Caching
+- `[x]` Scaffold `IntelligentRetryEngine` (Transient vs Permanent Classification)
+- `[x]` Scaffold `ExecutionCache` (Node Results, Prompts, Artifacts)
 
-## Phase 4: State, Events, & Telemetry
-- `[x]` Scaffold `ExecutionStateStore` for queryable runtime state tracking
-- `[x]` Define rich `DomainEvent` taxonomy (separate from OpenTelemetry metrics pipeline)
-- `[x]` Scaffold the `TemporalInterpreter` mock that orchestrates the above components
+## Phase 4: Diagnostics & Timeline
+- `[x]` Scaffold `RuntimeDiagnostics` (Pre-execution validation)
+- `[x]` Scaffold `ExecutionTimelineGenerator` (Gantt chart generation)

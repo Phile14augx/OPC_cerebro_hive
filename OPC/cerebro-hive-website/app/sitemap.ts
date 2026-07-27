@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cerebro-hive.com";
 
-// ── Platform product slugs (50 products) ──────────────────────────────────────
+// ── Platform product slugs (51 products) ──────────────────────────────────────
 const PLATFORM_SLUGS = [
   // T0 — Foundation
   "identity", "govern",
@@ -11,7 +11,7 @@ const PLATFORM_SLUGS = [
   // T2 — Data & Intelligence
   "data", "vector", "knowledge", "analytics", "observatory", "quality",
   // T3 — AI Runtime
-  "models", "agents", "forge", "flow", "automation", "planner", "reasoner", "semantic", "evaluation", "gateway",
+  "models", "agents", "forge", "flow", "automation", "planner", "reasoner", "semantic", "evaluation", "gateway", "api",
   // T4 — Cerebro Applications
   "studio", "agent", "search", "archive", "insight", "copilot", "customer360", "compliance", "console", "ops",
   // T5 — Enterprise & Ecosystem

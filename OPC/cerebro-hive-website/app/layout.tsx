@@ -50,6 +50,22 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cerebro-hive.com";
+
+// Organization structured data — read by search and answer engines (Google
+// Knowledge Panel, AI Overviews, ChatGPT/Perplexity-style answer engines) to
+// establish CerebroHive as a real, citable entity independent of any single
+// page's copy.
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "CerebroHive",
+  url: SITE_URL,
+  description:
+    "CerebroHive architects enterprise AI systems — AI Strategy, Platform Engineering, AI Agents, RAG, Knowledge Engineering, and AI Governance — serving 16+ industries worldwide.",
+  sameAs: [] as string[],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -62,6 +78,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="bg-background text-text-primary antialiased" suppressHydrationWarning>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <ThemeProvider>
           <AuthProvider>
             <Navbar />
