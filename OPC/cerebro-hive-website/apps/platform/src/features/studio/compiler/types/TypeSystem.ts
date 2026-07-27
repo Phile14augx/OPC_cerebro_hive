@@ -1,47 +1,59 @@
 
-export type TypeCategory = 'Primitive' | 'Structured' | 'AI' | 'Collection' | 'Generic' | 'Unknown';
+export type TypeCategory = 'Primitive' | 'Structured' | 'AI' | 'Collection' | 'Generic' | 'Union' | 'Unknown';
 
 export interface DataType {
   id: string;
   name: string;
   category: TypeCategory;
-  parameters?: DataType[]; // For generics like Array<String>
 }
 
-// Built-in Types
+// Skeletons for Future Expansion
+export interface GenericType extends DataType {
+  category: 'Generic';
+  baseType: DataType;
+  typeArguments: DataType[];
+}
+
+export interface UnionType extends DataType {
+  category: 'Union';
+  memberTypes: DataType[];
+}
+
+// Built-in Types (abridged)
 export const Types = {
   String: { id: 'primitive.string', name: 'String', category: 'Primitive' } as DataType,
-  Integer: { id: 'primitive.int', name: 'Integer', category: 'Primitive' } as DataType,
-  Float: { id: 'primitive.float', name: 'Float', category: 'Primitive' } as DataType,
-  Boolean: { id: 'primitive.bool', name: 'Boolean', category: 'Primitive' } as DataType,
-  
   JSON: { id: 'structured.json', name: 'JSON', category: 'Structured' } as DataType,
-  Table: { id: 'structured.table', name: 'Table', category: 'Structured' } as DataType,
-  
-  Prompt: { id: 'ai.prompt', name: 'Prompt', category: 'AI' } as DataType,
-  Embedding: { id: 'ai.embedding', name: 'Embedding', category: 'AI' } as DataType,
-  Image: { id: 'ai.image', name: 'Image', category: 'AI' } as DataType,
   Document: { id: 'ai.document', name: 'Document', category: 'AI' } as DataType,
-  
   Unknown: { id: 'sys.unknown', name: 'Unknown', category: 'Unknown' } as DataType
 };
 
-// Type Compatibility Registry
+// Declarative Compatibility Registry
 export type CompatibilityResult = 'Compatible' | 'Implicit' | 'Explicit' | 'Invalid';
 
+export interface CompatibilityRule {
+  sourceType: string;
+  targetType: string;
+  compatibilityKind: CompatibilityResult;
+  diagnosticHint?: string;
+}
+
 export class TypeRegistry {
-  private customTypes: Map<string, DataType> = new Map();
+  private static rules: CompatibilityRule[] = [];
+
+  static registerRule(rule: CompatibilityRule) {
+    this.rules.push(rule);
+  }
 
   static checkCompatibility(source: DataType, target: DataType): CompatibilityResult {
     if (source.id === target.id) return 'Compatible';
     if (source.id === 'sys.unknown' || target.id === 'sys.unknown') return 'Implicit';
+
+    const rule = this.rules.find(r => r.sourceType === source.id && r.targetType === target.id);
+    if (rule) return rule.compatibilityKind;
     
-    if (source.id === 'primitive.int' && target.id === 'primitive.float') return 'Implicit';
-    if (source.id === 'primitive.float' && target.id === 'primitive.int') return 'Explicit'; // Lossy
-    
-    if (source.id === 'primitive.string' && target.id === 'ai.document') return 'Implicit';
-    if (source.id === 'ai.image' && target.id === 'structured.table') return 'Invalid';
-    
-    return 'Invalid';
+    return 'Invalid'; // Default to strict safety
   }
 }
+
+// Register default rules
+TypeRegistry.registerRule({ sourceType: 'primitive.string', targetType: 'ai.document', compatibilityKind: 'Implicit', diagnosticHint: 'Implicit safe conversion applied.' });

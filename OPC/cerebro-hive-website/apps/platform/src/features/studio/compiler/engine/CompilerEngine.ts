@@ -1,116 +1,75 @@
-/**
- * M24 — CompilerEngine (real implementation)
- *
- * Replaces the mock `return {} as any` with real pass execution:
- *   1. Initialize CompilationContext from the graph
- *   2. Sort registered passes in topological order (respecting `requires`)
- *   3. Run each pass, accumulate diagnostics, track per-pass timing
- *   4. Detect circular pass dependencies (throws with clear message)
- *   5. Return fully populated CompilationContext
- */
+
 import { CompilationContext, CompilerPass } from './CompilationContext';
 import { StudioGraph } from '../../graph/GraphModel';
+import { DependencyGraph } from '../cache/DependencyGraph';
+import { CompilationCache, CacheSnapshot } from '../cache/CompilationCache';
 
 export class CompilerEngine {
-  private passes: Map<string, CompilerPass> = new Map();
+  private passes: CompilerPass[] = [];
+  private cache = new CompilationCache();
 
-  public registerPass(pass: CompilerPass): void {
-    this.passes.set(pass.id, pass);
+  public registerPass(pass: CompilerPass) {
+    this.passes.push(pass);
   }
 
-  // Topological sort with cycle detection
-  private sortPasses(): CompilerPass[] {
-    const sorted: CompilerPass[] = [];
-    const visited = new Set<string>();
-    const visiting = new Set<string>(); // cycle detection
-
-    const visit = (passId: string): void => {
-      if (visited.has(passId)) return;
-      if (visiting.has(passId)) {
-        throw new Error(`[CompilerEngine] Circular dependency detected at pass: "${passId}"`);
-      }
-      visiting.add(passId);
-      const pass = this.passes.get(passId);
-      if (pass) {
-        pass.requires.forEach(req => visit(req));
-        visited.add(passId);
-        sorted.push(pass);
-      }
-      visiting.delete(passId);
-    };
-
-    for (const passId of this.passes.keys()) visit(passId);
-    return sorted;
+  // Helper to hash node state
+  private hashNode(node: any): string {
+    return JSON.stringify(node); // Naive hash for demonstration
   }
 
   public compile(graph: StudioGraph, workflowId: string): CompilationContext {
-    const t0 = performance.now();
+    const prevSnapshot = this.cache.getSnapshot();
+    const newSnapshot: CacheSnapshot = { versionId: crypto.randomUUID(), nodeHashes: {}, symbolTable: { ...prevSnapshot.symbolTable } };
+    
+    const depGraph = new DependencyGraph();
+    depGraph.buildFromEdges(graph.edges);
 
-    // Initialize a fresh context
-    let ctx: CompilationContext = {
-      graph,
-      plan: {
-        metadata: {
-          version: workflowId,
-          compatibility: '1.0',
-          compilerVersion: 'm24',
-          generatedAt: new Date().toISOString(),
-          sourceHash: workflowId,
-        },
-        workflowId,
-        executionMode: 'simulation',
-        stages: [],
-        dependencies: [],
-        resources: [],
-        estimates: {
-          llmCost: 0, apiCost: 0, computeCost: 0,
-          storageCost: 0, networkCost: 0, humanReviewCost: 0, totalCost: 0,
-        },
-      },
-      diagnostics: [],
-      artifacts: { symbolTable: {}, debugMap: {} },
-      metrics: {
-        compilationTimeMs: 0,
-        passTimings: {},
-        nodeCount: graph.nodes.length,
-        stageCount: 0,
-        optimizationCount: 0,
-      },
+    // 1. Identify explicitly changed nodes
+    const explicitlyDirty = new Set<string>();
+    graph.nodes.forEach(node => {
+      const hash = this.hashNode(node);
+      newSnapshot.nodeHashes[node.id] = hash;
+      
+      if (prevSnapshot.nodeHashes[node.id] !== hash) {
+        explicitlyDirty.add(node.id);
+      }
+    });
+
+    // 2. Propagate Dirtiness Downstream
+    const dirtyNodes = new Set<string>();
+    explicitlyDirty.forEach(id => {
+      depGraph.getDownstreamRecursive(id).forEach(downstreamId => dirtyNodes.add(downstreamId));
+    });
+
+    // 3. Prune Orphaned Symbols (Versioned Snapshotting)
+    // We clear symbols for any dirty node so they can be freshly recomputed.
+    dirtyNodes.forEach(id => {
+      Object.keys(newSnapshot.symbolTable).forEach(symKey => {
+        if (newSnapshot.symbolTable[symKey].producer === id) {
+          delete newSnapshot.symbolTable[symKey];
+        }
+      });
+    });
+
+    console.log(`[Incremental] ${dirtyNodes.size} nodes marked dirty.`);
+
+    // 4. Centralized Pass Orchestration
+    // Pass gets ONLY the dirty nodes. Passes remain pure and ignorant of caching.
+    let context: any = {
+      graph: { ...graph, nodes: graph.nodes.filter(n => dirtyNodes.has(n.id)) },
+      artifacts: { symbolTable: newSnapshot.symbolTable, dependencyGraph: depGraph }
     };
 
-    const orderedPasses = this.sortPasses();
-    console.info(
-      `[CompilerEngine] Compiling "${workflowId}" | ${graph.nodes.length} nodes | ` +
-      `${orderedPasses.length} passes: ${orderedPasses.map(p => p.id).join(' → ')}`,
-    );
-
-    for (const pass of orderedPasses) {
-      const pt0 = performance.now();
-      try {
-        const result = pass.run(ctx);
-        // Merge returned context immutably
-        ctx = result.context;
-        ctx.diagnostics = [...ctx.diagnostics, ...result.diagnostics];
-      } catch (err) {
-        console.error(`[CompilerEngine] Pass "${pass.id}" threw:`, err);
-        ctx.diagnostics.push({
-          level: 'Error',
-          message: `Pass "${pass.id}" failed: ${String(err)}`,
-          nodeId: undefined,
-        });
+    if (dirtyNodes.size > 0) {
+      for (const pass of this.passes) {
+         const result = pass.run(context);
+         context = result.context; // Immutable update
       }
-      ctx.metrics.passTimings[pass.id] = parseFloat((performance.now() - pt0).toFixed(2));
     }
 
-    ctx.metrics.compilationTimeMs = parseFloat((performance.now() - t0).toFixed(2));
-    ctx.metrics.stageCount = ctx.plan.stages.length;
+    // 5. Commit Cache
+    this.cache.commitSnapshot(newSnapshot);
 
-    const errors = ctx.diagnostics.filter(d => d.level === 'Error');
-    console.info(
-      `[CompilerEngine] Done in ${ctx.metrics.compilationTimeMs}ms | ` +
-      `${ctx.diagnostics.length} diagnostics (${errors.length} errors)`,
-    );
-
-    return ctx;
+    return context;
   }
 }
