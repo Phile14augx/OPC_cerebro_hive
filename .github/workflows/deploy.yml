@@ -72,7 +72,7 @@ jobs:
     needs: [approval]
     if: always() && (inputs.environment != 'production' || needs.approval.result == 'success')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           token: ${{ secrets.GITOPS_TOKEN || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
@@ -202,7 +202,7 @@ jobs:
         continue-on-error: true
 
       - name: Create GitHub deployment status
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const deployment = await github.rest.repos.createDeployment({

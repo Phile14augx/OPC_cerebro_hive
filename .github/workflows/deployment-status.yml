@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Report Deployment to Issue/PR
         if: github.event.deployment_status.state == 'success'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9
         with:
           script: |
             // Attempt to find an associated PR for this deployment
