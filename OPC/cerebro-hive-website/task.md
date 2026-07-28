@@ -1,23 +1,18 @@
-# Task Tracker: Milestone 26.1 - Engineering Review Assistant
+# Task Tracker: M26.1 Implementation Execution
 
-## Phase 1: Core Orchestration & Session Management
-- `[x]` Scaffold `EngineeringReviewOrchestrator` (top-level coordinator)
-- `[x]` Scaffold `EngineeringReviewSession` (multi-report lifecycle, immutable history)
+## 1. Domain Model
+- `[x]` Implement `EngineeringReviewReport` Aggregate Root (Lifecycle transitions, immutability)
+- `[x]` Implement Value Objects: `ReviewManifest`, `ReviewProvenance`, `ReviewFinding`, `ReviewRecommendation`, `EvidenceReference`, `ReviewVerdict`
+- `[x]` Implement `EvidenceGraph`, `EvidenceNode`, `EvidenceEdge` as immutable structures
 
-## Phase 2: Semantic Analysis
-- `[x]` Scaffold `WorkflowChangeAnalyzer` (SemanticChangeset: capability, edge, topology, resource diffs)
-- `[x]` Scaffold `ImpactAssessor` (cost/latency delta with uncertainty ranges + confidence)
+## 2. Ports / Interfaces
+- `[x]` Define `IEngineeringReviewRepository` and `IEvidenceStore`
+- `[x]` Define `IReviewContributor` and `ContributorResult`
 
-## Phase 3: Governance & Risk
-- `[x]` Scaffold `GovernanceReviewer` (delegates to PolicyEngine, produces explainability chain)
-- `[x]` Scaffold `OperationalRiskPredictor` (layered L1→L3 similarity: capability, topology, data movement)
+## 3. Application Services
+- `[x]` Implement `EngineeringReviewOrchestrator` (Strict 9-step execution sequence)
+- `[x]` Implement Domain Events (Domain: `Started`, `Completed`, `Published`, `MarkedStale` | Integration: `Published`, `Stale`)
 
-## Phase 4: Confidence, Recommendations & Freshness
-- `[x]` Scaffold `ConfidenceAggregationEngine` (calibrated overall confidence from subsystems)
-- `[x]` Scaffold `ReviewRecommendationEngine` (evidence-backed remediation guidance)
-- `[x]` Scaffold `ReviewFreshnessEvaluator` (deterministic freshness: Current/PolicyChanged/Expired)
-
-## Phase 5: Evidence Graph & Contributor SDK
-- `[x]` Scaffold `EvidenceGraph` (platform-wide provenance model with typed nodes + derivation edges)
-- `[x]` Scaffold `EngineeringReviewContributor` interface + SDK (extensible plugin system)
-- `[x]` Compose into immutable `EngineeringReviewReport` with platformStateSnapshot
+## 4. Domain Services
+- `[x]` Implement `ConfidenceAggregationEngine`
+- `[x]` Implement `ReviewFreshnessEvaluator`
