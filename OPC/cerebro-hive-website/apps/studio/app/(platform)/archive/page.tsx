@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { 
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import {
   Library, FileText, Search, Plus, 
   Settings, Bot, FileDigit, Database, 
   ArrowRight, ShieldCheck
@@ -62,13 +63,23 @@ export default function ArchiveOverviewPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Link href="/archive/documents/new" className="bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+          <TrackedLink
+            href="/archive/documents/new"
+            analyticsEvent="archive_add_knowledge_click"
+            analyticsCategory="archive"
+            analyticsLabel="Add Knowledge"
+            className="bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm shadow-primary/20"
+          >
             <Plus size={18} />
             Add Knowledge
-          </Link>
-          <button className="bg-surface hover:bg-surface-hover border border-border text-text-primary px-4 py-2.5 rounded-lg font-medium transition-colors">
+          </TrackedLink>
+          <TrackedButton
+            eventCategory="archive"
+            eventLabel="Archive Settings"
+            className="bg-surface hover:bg-surface-hover border border-border text-text-primary px-4 py-2.5 rounded-lg font-medium transition-colors"
+          >
             <Settings size={18} />
-          </button>
+          </TrackedButton>
         </div>
       </div>
 
@@ -107,16 +118,22 @@ export default function ArchiveOverviewPage() {
       <h2 className="text-xl font-bold text-text-primary mb-6 font-space">Platform Modules</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {modules.map((mod, i) => (
-          <Link href={mod.href} key={i}>
+          <TrackedLink
+            href={mod.href}
+            key={i}
+            analyticsEvent="archive_module_click"
+            analyticsCategory="archive"
+            analyticsLabel={mod.title}
+          >
             <div className="bg-surface border border-border rounded-xl p-6 hover:border-primary/50 hover:shadow-md transition-all group h-full flex flex-col cursor-pointer relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/5 to-transparent rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
-              
+
               <div className="w-12 h-12 bg-background border border-border rounded-lg flex items-center justify-center mb-5 shrink-0 group-hover:scale-105 transition-transform shadow-sm">
                 {mod.icon}
               </div>
               <h3 className="text-lg font-bold text-text-primary mb-2 font-space group-hover:text-primary transition-colors">{mod.title}</h3>
               <p className="text-text-muted text-sm flex-1 leading-relaxed">{mod.description}</p>
-              
+
               <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
                 <span className="text-xs font-medium text-text-muted bg-background px-2 py-1 rounded border border-border/50">
                   {mod.stats}
@@ -124,7 +141,7 @@ export default function ArchiveOverviewPage() {
                 <ArrowRight size={16} className="text-text-muted group-hover:text-primary group-hover:translate-x-1 transition-all" />
               </div>
             </div>
-          </Link>
+          </TrackedLink>
         ))}
       </div>
 
@@ -140,9 +157,13 @@ export default function ArchiveOverviewPage() {
             </p>
           </div>
         </div>
-        <button className="bg-background border border-border text-text-primary px-4 py-2 rounded-lg text-sm font-medium hover:bg-surface transition-colors whitespace-nowrap">
+        <TrackedButton
+          eventCategory="archive"
+          eventLabel="View Audit Logs"
+          className="bg-background border border-border text-text-primary px-4 py-2 rounded-lg text-sm font-medium hover:bg-surface transition-colors whitespace-nowrap"
+        >
           View Audit Logs
-        </button>
+        </TrackedButton>
       </div>
     </div>
   );

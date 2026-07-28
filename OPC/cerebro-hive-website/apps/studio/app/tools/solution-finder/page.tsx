@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ArrowRight, ArrowLeft, Download, Calendar, CheckCircle, Brain, Sparkles, Network, Settings, BookOpen } from "lucide-react";
 import { generateSolutionFinderPDF } from "../../../lib/pdfReport";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface LeadData {
   name: string;
@@ -193,8 +194,11 @@ export default function SolutionFinderPage() {
                   {["Technology & SaaS", "Healthcare & Biotech", "Finance & Insurance", "Retail & E-commerce", "Logistics & Supply Chain", "Professional Services", "Manufacturing", "Other"].map((ind) => {
                     const isSelected = industry === ind;
                     return (
-                      <button
+                      <TrackedButton
                         key={ind}
+                        eventCategory="solution-finder"
+                        eventLabel={ind}
+                        eventAction="industry_select"
                         onClick={() => setIndustry(ind)}
                         style={{
                           textAlign: "left",
@@ -224,7 +228,7 @@ export default function SolutionFinderPage() {
                         }}
                       >
                         {ind}
-                      </button>
+                      </TrackedButton>
                     );
                   })}
                 </div>
@@ -239,8 +243,11 @@ export default function SolutionFinderPage() {
                   {["1 - 10 employees", "11 - 50 employees", "51 - 200 employees", "201 - 1,000 employees", "1,000+ employees"].map((size) => {
                     const isSelected = teamSize === size;
                     return (
-                      <button
+                      <TrackedButton
                         key={size}
+                        eventCategory="solution-finder"
+                        eventLabel={size}
+                        eventAction="team_size_select"
                         onClick={() => setTeamSize(size)}
                         style={{
                           textAlign: "left",
@@ -270,7 +277,7 @@ export default function SolutionFinderPage() {
                         }}
                       >
                         {size}
-                      </button>
+                      </TrackedButton>
                     );
                   })}
                 </div>
@@ -297,8 +304,11 @@ export default function SolutionFinderPage() {
                     const isSelected = goals.includes(goal);
                     const isMax = goals.length >= 3;
                     return (
-                      <button
+                      <TrackedButton
                         key={goal}
+                        eventCategory="solution-finder"
+                        eventLabel={goal}
+                        eventAction="goal_toggle"
                         disabled={!isSelected && isMax}
                         onClick={() => toggleGoal(goal)}
                         style={{
@@ -330,7 +340,7 @@ export default function SolutionFinderPage() {
                         }}
                       >
                         {goal}
-                      </button>
+                      </TrackedButton>
                     );
                   })}
                 </div>
@@ -350,8 +360,11 @@ export default function SolutionFinderPage() {
                   ].map((item) => {
                     const isSelected = maturity === item.title;
                     return (
-                      <button
+                      <TrackedButton
                         key={item.title}
+                        eventCategory="solution-finder"
+                        eventLabel={item.title}
+                        eventAction="maturity_select"
                         onClick={() => setMaturity(item.title)}
                         style={{
                           textAlign: "left",
@@ -382,7 +395,7 @@ export default function SolutionFinderPage() {
                       >
                         <span style={{ fontWeight: 700, fontSize: "1rem", color: isSelected ? "var(--neural-blue)" : "var(--text-primary)" }}>{item.title}</span>
                         <span style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.4 }}>{item.desc}</span>
-                      </button>
+                      </TrackedButton>
                     );
                   })}
                 </div>
@@ -397,8 +410,11 @@ export default function SolutionFinderPage() {
                   {["<$5,000/mo", "$5,000 - $20,000/mo", "$20,000 - $50,000/mo", "$50,000+/mo"].map((range) => {
                     const isSelected = budget === range;
                     return (
-                      <button
+                      <TrackedButton
                         key={range}
+                        eventCategory="solution-finder"
+                        eventLabel={range}
+                        eventAction="budget_select"
                         onClick={() => setBudget(range)}
                         style={{
                           textAlign: "left",
@@ -428,7 +444,7 @@ export default function SolutionFinderPage() {
                         }}
                       >
                         {range}
-                      </button>
+                      </TrackedButton>
                     );
                   })}
                 </div>
@@ -437,7 +453,9 @@ export default function SolutionFinderPage() {
 
             {/* Wizard Navigation Footer */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid rgba(255, 255, 255, 0.08)", paddingTop: "24px", marginTop: "40px" }}>
-              <button
+              <TrackedButton
+                eventCategory="solution-finder"
+                eventLabel="Back"
                 onClick={prevStep}
                 disabled={step === 1}
                 style={{
@@ -472,9 +490,12 @@ export default function SolutionFinderPage() {
                 }}
               >
                 <ArrowLeft size={14} /> Back
-              </button>
+              </TrackedButton>
 
-              <button
+              <TrackedButton
+                eventCategory="solution-finder"
+                eventLabel={step === 5 ? "Generate Report" : "Continue"}
+                eventAction="wizard_next"
                 onClick={nextStep}
                 className="btn-primary"
                 style={{
@@ -486,7 +507,7 @@ export default function SolutionFinderPage() {
                 }}
               >
                 {step === 5 ? "Generate Report" : "Continue"} <ArrowRight size={14} />
-              </button>
+              </TrackedButton>
             </div>
           </div>
         )}
@@ -575,7 +596,10 @@ export default function SolutionFinderPage() {
                 />
               </div>
 
-              <button
+              <TrackedButton
+                eventCategory="solution-finder"
+                eventLabel="View Diagnostics"
+                eventAction="lead_submit"
                 type="submit"
                 disabled={isSubmitting}
                 className="btn-primary"
@@ -587,7 +611,7 @@ export default function SolutionFinderPage() {
                 }}
               >
                 {isSubmitting ? "Generating Blueprint..." : "View Diagnostics"}
-              </button>
+              </TrackedButton>
             </form>
           </div>
         )}
@@ -605,7 +629,9 @@ export default function SolutionFinderPage() {
                   <h2 style={{ fontSize: "1.6rem", fontFamily: "var(--font-orbitron), sans-serif", fontWeight: 700, color: "var(--text-primary)", marginTop: "6px" }}>AI Integration Roadmap</h2>
                 </div>
                 <div>
-                  <button
+                  <TrackedButton
+                    eventCategory="solution-finder"
+                    eventLabel="Download Report"
                     onClick={handleDownloadReport}
                     style={{
                       display: "inline-flex",
@@ -634,7 +660,7 @@ export default function SolutionFinderPage() {
                     }}
                   >
                     <Download size={14} color="var(--neural-blue)" /> {downloadSuccess ? "Downloaded!" : "Download Report"}
-                  </button>
+                  </TrackedButton>
                 </div>
               </div>
 
@@ -704,7 +730,9 @@ export default function SolutionFinderPage() {
                   <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", marginTop: "4px", fontFamily: "var(--font-exo), sans-serif" }}>Schedule a free 30-minute validation call with our architecture team.</p>
                 </div>
                 <div>
-                  <button
+                  <TrackedButton
+                    eventCategory="solution-finder"
+                    eventLabel="Book Free Consultation"
                     onClick={handleBookMeeting}
                     disabled={bookedMeeting}
                     style={{
@@ -741,14 +769,16 @@ export default function SolutionFinderPage() {
                     }}
                   >
                     <Calendar size={16} /> {bookedMeeting ? "Meeting Requested!" : "Book Free Consultation"}
-                  </button>
+                  </TrackedButton>
                 </div>
               </div>
             </div>
 
             {/* Back Button */}
             <div style={{ textAlign: "center" }}>
-              <button
+              <TrackedButton
+                eventCategory="solution-finder"
+                eventLabel="Restart Diagnostics Wizard"
                 onClick={() => {
                   setStep(1);
                   setIndustry("");
@@ -774,7 +804,7 @@ export default function SolutionFinderPage() {
                 onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}
               >
                 Restart Diagnostics Wizard
-              </button>
+              </TrackedButton>
             </div>
           </div>
         )}

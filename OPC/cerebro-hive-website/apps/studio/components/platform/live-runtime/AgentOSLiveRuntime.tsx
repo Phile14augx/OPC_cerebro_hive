@@ -10,6 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import { runAgentOSTask, resetAgentOSSession } from "@/app/actions/agentos-runtime";
 import { AgentRunResult } from "@/lib/agentos/types";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const EXAMPLES = [
   { label: "Tool-Augmented Reasoning", value: "What is 12 * (7 + 3) - 4?" },
@@ -87,20 +88,24 @@ export const AgentOSLiveRuntime = () => {
               animation: every value you see is computed from your request, and Memory Fabric persists to disk across runs.
             </p>
           </div>
-          <button
+          <TrackedButton
+            eventCategory="agentos-live-runtime"
+            eventLabel="Reset Session"
             onClick={handleReset}
             disabled={loading}
             className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-surface text-xs font-bold uppercase tracking-widest text-text-secondary hover:text-text-primary hover:border-text-muted transition-colors disabled:opacity-40 shrink-0"
           >
             <RotateCcw size={14} /> Reset Session
-          </button>
+          </TrackedButton>
         </div>
 
         {/* Example prompts */}
         <div className="flex flex-wrap gap-2 mb-6">
           {EXAMPLES.map((ex) => (
-            <button
+            <TrackedButton
               key={ex.label}
+              eventCategory="agentos-live-runtime"
+              eventLabel={`Example - ${ex.label}`}
               onClick={() => {
                 setInput(ex.value);
                 handleRun(ex.value);
@@ -109,7 +114,7 @@ export const AgentOSLiveRuntime = () => {
               className="px-3 py-1.5 rounded-full text-[11px] font-space font-semibold bg-surface-elevated border border-border text-text-secondary hover:text-text-primary hover:border-primary-accent/50 transition-colors disabled:opacity-40"
             >
               {ex.label}
-            </button>
+            </TrackedButton>
           ))}
         </div>
 
@@ -122,14 +127,16 @@ export const AgentOSLiveRuntime = () => {
             placeholder="Give the runtime a task — a calculation, a comparison, a product question, a multi-step request…"
             className="flex-1 px-4 py-3.5 rounded-lg bg-surface border border-border text-text-primary placeholder:text-text-muted font-inter text-sm focus:outline-none focus:border-primary-accent/60"
           />
-          <button
+          <TrackedButton
+            eventCategory="agentos-live-runtime"
+            eventLabel="Run"
             onClick={() => handleRun()}
             disabled={loading || !input.trim()}
             className="px-6 py-3.5 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg transition-transform hover:-translate-y-0.5 shadow-elevated disabled:opacity-40 disabled:hover:translate-y-0 flex items-center justify-center gap-2 shrink-0"
           >
             {loading ? <Loader2 size={16} className="animate-spin" /> : <Cpu size={16} />}
             {loading ? "Executing…" : "Run"}
-          </button>
+          </TrackedButton>
         </div>
 
         {error && (

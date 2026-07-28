@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence, useInView, animate } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 // Animated Counter Hook
 function useAnimatedCounter(value: number, duration = 1.5, start = false) {
@@ -252,10 +254,15 @@ export default function Industries() {
             const isHovered = hoveredId === ind.id;
 
             return (
-              <motion.div 
+              <motion.div
                 layout
                 key={ind.id}
-                onClick={() => !isFocused && setFocusedId(ind.id)}
+                onClick={() => {
+                  if (!isFocused) {
+                    analytics.track({ eventName: 'click', category: 'industries', label: ind.name });
+                    setFocusedId(ind.id);
+                  }
+                }}
                 onMouseEnter={() => setHoveredId(ind.id)}
                 onMouseLeave={() => setHoveredId(null)}
                 className={cn(
@@ -307,9 +314,9 @@ export default function Industries() {
                     >
                       <div className="industries-expanded-content flex flex-col gap-10 md:gap-14 w-full min-w-0">
                         {/* Close Button - Absolute Positioned */}
-                        <button onClick={(e) => { e.stopPropagation(); setFocusedId(null); }} style={{ position: 'absolute', top: '24px', right: '24px' }} className="p-2 rounded-full bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface border border-border transition-colors z-30">
+                        <TrackedButton eventCategory="industries" eventLabel={`Close ${ind.name}`} onClick={(e) => { e.stopPropagation(); setFocusedId(null); }} style={{ position: 'absolute', top: '24px', right: '24px' }} className="p-2 rounded-full bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface border border-border transition-colors z-30">
                            <X size={20} />
-                        </button>
+                        </TrackedButton>
 
                       {/* Top Header Row */}
                       <div className="flex items-start min-w-0">
@@ -447,8 +454,9 @@ export default function Industries() {
                         </div>
 
                         {/* CTA */}
-                        <motion.button 
+                        <motion.button
                           initial={{ opacity: 0.4, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.4 }}
+                          onClick={() => analytics.track({ eventName: 'click', category: 'industries', label: ind.cta })}
                           className="shrink-0 px-8 py-4 lg:px-12 lg:py-5 bg-surface text-text-primary font-bold font-space text-sm flex items-center justify-center gap-3 hover:bg-primary-accent transition-colors rounded-xl group max-w-full"
                         >
                           <span className="truncate">{ind.cta}</span>

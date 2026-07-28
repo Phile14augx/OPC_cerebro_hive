@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { Clock, Calendar, User, ChevronRight, BookOpen } from "lucide-react";
 import { JsonLd } from "@/components/discovery";
 import { buildArticleSchema, buildBreadcrumbSchema } from "@/lib/discovery";
@@ -65,9 +65,9 @@ export default async function GuidePage({
         <div className="border-b border-border">
           <div className="container-wide py-4">
             <nav className="flex items-center gap-2 text-xs text-text-muted">
-              <Link href="/" className="hover:text-text-primary transition-colors">Home</Link>
+              <TrackedLink href="/" analyticsEvent="breadcrumb_click" analyticsCategory="resources" analyticsLabel="Home" className="hover:text-text-primary transition-colors">Home</TrackedLink>
               <ChevronRight size={12} />
-              <Link href="/resources" className="hover:text-text-primary transition-colors">Resources</Link>
+              <TrackedLink href="/resources" analyticsEvent="breadcrumb_click" analyticsCategory="resources" analyticsLabel="Resources" className="hover:text-text-primary transition-colors">Resources</TrackedLink>
               <ChevronRight size={12} />
               <span className="text-text-secondary truncate max-w-[200px]">{guide.title}</span>
             </nav>

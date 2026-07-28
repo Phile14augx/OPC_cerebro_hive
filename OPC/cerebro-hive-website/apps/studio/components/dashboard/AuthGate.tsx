@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Sparkles, Building, Mail, Lock, CreditCard, Calendar, ShieldCheck, ArrowRight, RefreshCw, CheckCircle2 } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface AuthGateProps {
   onAuthSuccess: (session: { email: string; company: string }) => void;
@@ -230,20 +231,22 @@ export default function AuthGate({ onAuthSuccess }: AuthGateProps) {
                 </div>
               )}
 
-              <button type="submit" className="btn-primary" style={{ width: "100%", marginTop: "10px" }}>
+              <TrackedButton eventCategory="auth-gate" eventLabel="Proceed to Payment Gate" eventAction="signup_submit" type="submit" className="btn-primary" style={{ width: "100%", marginTop: "10px" }}>
                 Proceed to Payment Gate <ArrowRight size={14} />
-              </button>
+              </TrackedButton>
             </form>
 
             <div style={{ textAlign: "center", marginTop: "10px" }}>
               <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                 Already have an active account?{" "}
-                <button
+                <TrackedButton
+                  eventCategory="auth-gate"
+                  eventLabel="Sign In"
                   onClick={() => setStep("login")}
                   style={{ background: "none", border: "none", color: "var(--neural-blue)", cursor: "pointer", fontWeight: 600, padding: 0 }}
                 >
                   Sign In
-                </button>
+                </TrackedButton>
               </span>
             </div>
           </div>
@@ -404,7 +407,10 @@ export default function AuthGate({ onAuthSuccess }: AuthGateProps) {
                 </div>
               )}
 
-              <button
+              <TrackedButton
+                eventCategory="auth-gate"
+                eventLabel="Activate License & Sign Code"
+                eventAction="payment_submit"
                 type="submit"
                 disabled={authorizing}
                 className="btn-orange"
@@ -419,7 +425,7 @@ export default function AuthGate({ onAuthSuccess }: AuthGateProps) {
                     Activate License & Sign Code <ArrowRight size={14} />
                   </>
                 )}
-              </button>
+              </TrackedButton>
             </form>
           </div>
         )}
@@ -509,9 +515,9 @@ export default function AuthGate({ onAuthSuccess }: AuthGateProps) {
                 </div>
               )}
 
-              <button type="submit" className="btn-primary" style={{ width: "100%", marginTop: "10px" }}>
+              <TrackedButton eventCategory="auth-gate" eventLabel="Decrypt & Enter Workspace" eventAction="login_submit" type="submit" className="btn-primary" style={{ width: "100%", marginTop: "10px" }}>
                 Decrypt & Enter Workspace <ArrowRight size={14} />
-              </button>
+              </TrackedButton>
             </form>
           </div>
         )}

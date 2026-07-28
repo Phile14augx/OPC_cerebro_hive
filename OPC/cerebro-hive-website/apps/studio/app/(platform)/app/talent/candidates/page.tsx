@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Search, Filter, Users, Download, ArrowUpRight } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { Badge } from "../../components/ui/Badge";
@@ -28,8 +28,8 @@ export default function CandidatesGrid() {
           <p className="text-text-secondary mt-1">View and analyze all candidate assessment results.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="secondary" className="gap-2"><Download size={16} /> Export CSV</Button>
-          <Button className="gap-2"><Users size={16} /> Invite Candidates</Button>
+          <Button variant="secondary" className="gap-2" analyticsCategory="talent" analyticsLabel="Export CSV"><Download size={16} /> Export CSV</Button>
+          <Button className="gap-2" analyticsCategory="talent" analyticsLabel="Invite Candidates"><Users size={16} /> Invite Candidates</Button>
         </div>
       </div>
 
@@ -44,9 +44,9 @@ export default function CandidatesGrid() {
           />
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="secondary" className="gap-2"><Filter size={16} /> Status</Button>
-          <Button variant="secondary" className="gap-2"><Filter size={16} /> Role</Button>
-          <Button variant="secondary" className="gap-2"><Filter size={16} /> Score &gt; 80</Button>
+          <Button variant="secondary" className="gap-2" analyticsCategory="talent" analyticsLabel="Filter: Status"><Filter size={16} /> Status</Button>
+          <Button variant="secondary" className="gap-2" analyticsCategory="talent" analyticsLabel="Filter: Role"><Filter size={16} /> Role</Button>
+          <Button variant="secondary" className="gap-2" analyticsCategory="talent" analyticsLabel="Filter: Score > 80"><Filter size={16} /> Score &gt; 80</Button>
         </div>
       </div>
 
@@ -74,9 +74,9 @@ export default function CandidatesGrid() {
                       <span className="text-sm font-bold">{candidate.name.charAt(0)}</span>
                     </div>
                     <div>
-                      <Link href={`/app/talent/candidates/${candidate.name.toLowerCase().replace(' ', '-')}`} className="font-bold text-text-primary text-sm hover:text-primary-accent transition-colors">
+                      <TrackedLink href={`/app/talent/candidates/${candidate.name.toLowerCase().replace(' ', '-')}`} analyticsEvent="candidate_row_click" analyticsCategory="talent" analyticsLabel={candidate.name} className="font-bold text-text-primary text-sm hover:text-primary-accent transition-colors">
                         {candidate.name}
-                      </Link>
+                      </TrackedLink>
                       <p className="text-xs text-text-secondary mt-0.5">{candidate.email}</p>
                     </div>
                   </div>
@@ -109,9 +109,9 @@ export default function CandidatesGrid() {
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <Link href={`/app/talent/candidates/${candidate.name.toLowerCase().replace(' ', '-')}`} className="w-8 h-8 rounded-md flex items-center justify-center text-text-muted hover:bg-surface-elevated hover:text-primary-accent transition-colors">
+                  <TrackedLink href={`/app/talent/candidates/${candidate.name.toLowerCase().replace(' ', '-')}`} analyticsEvent="candidate_row_open" analyticsCategory="talent" analyticsLabel={`Open — ${candidate.name}`} className="w-8 h-8 rounded-md flex items-center justify-center text-text-muted hover:bg-surface-elevated hover:text-primary-accent transition-colors">
                     <ArrowUpRight size={16} />
-                  </Link>
+                  </TrackedLink>
                 </TableCell>
               </TableRow>
             ))}

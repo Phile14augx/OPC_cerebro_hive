@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const milestones = [
   { year: "2024", label: "Foundation", title: "The Thesis", desc: "CerebroHive is founded on the premise that enterprise AI requires systems engineering, not just prompt engineering." },
@@ -30,8 +31,10 @@ export default function LivingTimeline() {
           <div className="absolute top-1/2 left-0 right-0 h-px bg-surface-elevated -translate-y-1/2" />
           <div className="flex justify-between relative z-10">
             {milestones.map((m, i) => (
-              <button 
+              <TrackedButton
                 key={i}
+                eventCategory="living-timeline"
+                eventLabel={`${m.year} ${m.title}`}
                 onClick={() => setActiveIndex(i)}
                 className="flex flex-col items-center gap-4 group w-32"
               >
@@ -42,7 +45,7 @@ export default function LivingTimeline() {
                 <div className={`text-xs font-bold uppercase tracking-widest transition-colors ${activeIndex === i ? 'text-accent-secondary' : 'text-transparent'}`}>
                   {m.label}
                 </div>
-              </button>
+              </TrackedButton>
             ))}
           </div>
         </div>
@@ -75,9 +78,11 @@ export default function LivingTimeline() {
 
         {/* Timeline Mobile */}
         <div className="md:hidden mt-12 flex justify-center gap-2">
-          {milestones.map((_, i) => (
-            <button
+          {milestones.map((m, i) => (
+            <TrackedButton
               key={i}
+              eventCategory="living-timeline"
+              eventLabel={`Mobile Dot ${m.year} ${m.title}`}
               onClick={() => setActiveIndex(i)}
               className={`w-2 h-2 rounded-full transition-colors ${activeIndex === i ? 'bg-[#00E5FF]' : 'bg-surface-elevated'}`}
             />

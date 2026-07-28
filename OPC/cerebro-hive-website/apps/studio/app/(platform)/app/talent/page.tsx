@@ -5,8 +5,9 @@ import {
   Users, Bot, Target, FileStack, TrendingUp, CheckCircle2, 
   ChevronRight, Calendar, Search, Filter, MoreVertical, Star
 } from "lucide-react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Badge } from "../components/ui/Badge";
@@ -30,8 +31,8 @@ export default function TalentDashboard() {
           <p className="text-text-secondary mt-1">Manage technical assessments and AI-driven candidate evaluations.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="secondary">Campaign Settings</Button>
-          <Button className="gap-2">
+          <Button variant="secondary" onClick={() => analytics.track({ eventName: 'click', category: 'talent', label: 'Campaign Settings' })}>Campaign Settings</Button>
+          <Button className="gap-2" onClick={() => analytics.track({ eventName: 'click', category: 'talent', label: 'Create Assessment' })}>
             Create Assessment
           </Button>
         </div>
@@ -50,8 +51,8 @@ export default function TalentDashboard() {
           <div className="flex items-center justify-between px-1">
             <h2 className="text-sm font-bold uppercase tracking-widest text-text-muted">Recent Assessments</h2>
             <div className="flex gap-2">
-              <Button variant="ghost" size="sm" className="h-8 text-xs text-text-muted"><Filter size={14} className="mr-2"/> Filter</Button>
-              <Button variant="ghost" size="sm" className="h-8 text-xs text-text-muted"><Search size={14} className="mr-2"/> Search</Button>
+              <Button variant="ghost" size="sm" className="h-8 text-xs text-text-muted" onClick={() => analytics.track({ eventName: 'click', category: 'talent', label: 'Filter' })}><Filter size={14} className="mr-2"/> Filter</Button>
+              <Button variant="ghost" size="sm" className="h-8 text-xs text-text-muted" onClick={() => analytics.track({ eventName: 'click', category: 'talent', label: 'Search' })}><Search size={14} className="mr-2"/> Search</Button>
             </div>
           </div>
           <Card className="overflow-hidden p-0">
@@ -78,9 +79,9 @@ export default function TalentDashboard() {
                           <span className="text-xs font-bold">{candidate.name.charAt(0)}</span>
                         </div>
                         <div>
-                          <Link href={`/app/talent/candidates/${candidate.name.toLowerCase().replace(' ', '-')}`} className="font-bold text-text-primary text-sm hover:text-primary-accent transition-colors">
+                          <TrackedLink href={`/app/talent/candidates/${candidate.name.toLowerCase().replace(' ', '-')}`} analyticsEvent="talent_candidate_click" analyticsCategory="talent" analyticsLabel={candidate.name} className="font-bold text-text-primary text-sm hover:text-primary-accent transition-colors">
                             {candidate.name}
-                          </Link>
+                          </TrackedLink>
                           <p className="text-xs text-text-secondary mt-0.5">{candidate.email}</p>
                         </div>
                       </div>
@@ -134,7 +135,7 @@ export default function TalentDashboard() {
                   </div>
                 </div>
               ))}
-              <Button variant="secondary" className="w-full text-xs">View Calendar</Button>
+              <Button variant="secondary" className="w-full text-xs" onClick={() => analytics.track({ eventName: 'click', category: 'talent', label: 'View Calendar' })}>View Calendar</Button>
             </Card>
           </div>
 
@@ -142,7 +143,7 @@ export default function TalentDashboard() {
           <div className="space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-text-muted px-1">Quick Links</h2>
             <div className="flex flex-col gap-2">
-              <Link href="/app/talent/builder">
+              <TrackedLink href="/app/talent/builder" analyticsEvent="talent_quick_link_click" analyticsCategory="talent" analyticsLabel="Assessment Builder">
                 <Card className="flex items-center justify-between p-3 hover:border-primary-accent/40 transition-colors group">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-surface-elevated border border-border flex items-center justify-center">
@@ -152,8 +153,8 @@ export default function TalentDashboard() {
                   </div>
                   <ChevronRight size={16} className="text-text-muted group-hover:text-primary-accent transition-colors" />
                 </Card>
-              </Link>
-              <Link href="/app/talent/questions">
+              </TrackedLink>
+              <TrackedLink href="/app/talent/questions" analyticsEvent="talent_quick_link_click" analyticsCategory="talent" analyticsLabel="Question Bank">
                 <Card className="flex items-center justify-between p-3 hover:border-primary-accent/40 transition-colors group">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-surface-elevated border border-border flex items-center justify-center">
@@ -163,7 +164,7 @@ export default function TalentDashboard() {
                   </div>
                   <ChevronRight size={16} className="text-text-muted group-hover:text-primary-accent transition-colors" />
                 </Card>
-              </Link>
+              </TrackedLink>
             </div>
           </div>
 

@@ -3,6 +3,8 @@
 import React, { useState, useMemo } from "react";
 import * as Icons from "@/components/cerebro/icons";
 import { iconRegistry, IconSize, IconVariant, IconAnimation } from "@/components/cerebro/icons";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 export function IconShowcase() {
   const [search, setSearch] = useState("");
@@ -64,13 +66,15 @@ export function IconShowcase() {
             <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Size</label>
             <div className="flex gap-2">
               {[16, 20, 24, 32, 48, 64].map(s => (
-                <button 
-                  key={s} 
+                <TrackedButton
+                  key={s}
+                  eventCategory="icon-showcase"
+                  eventLabel={`Size ${s}`}
                   onClick={() => setSize(s as IconSize)}
                   className={`px-2 py-1 text-sm rounded ${size === s ? "bg-[var(--primary-accent)] text-white" : "bg-[var(--bg-surface)]"}`}
                 >
                   {s}
-                </button>
+                </TrackedButton>
               ))}
             </div>
           </div>
@@ -79,13 +83,15 @@ export function IconShowcase() {
             <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Stroke</label>
             <div className="flex gap-2">
               {[1.5, 2, 2.5].map(w => (
-                <button 
-                  key={w} 
+                <TrackedButton
+                  key={w}
+                  eventCategory="icon-showcase"
+                  eventLabel={`Stroke ${w}`}
                   onClick={() => setStrokeWidth(w)}
                   className={`px-3 py-1 text-sm rounded ${strokeWidth === w ? "bg-[var(--primary-accent)] text-white" : "bg-[var(--bg-surface)]"}`}
                 >
                   {w}
-                </button>
+                </TrackedButton>
               ))}
             </div>
           </div>
@@ -118,9 +124,9 @@ export function IconShowcase() {
         <div className="flex items-center gap-4">
           <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Preview Surface:</span>
           <div className="flex gap-2 p-1 bg-[var(--bg-surface)] rounded-lg">
-            <button onClick={() => setBg("light")} className={`px-4 py-1 text-sm rounded-md \${bg === "light" ? "bg-white shadow" : "text-[var(--text-secondary)]"}`}>Light</button>
-            <button onClick={() => setBg("dark")} className={`px-4 py-1 text-sm rounded-md \${bg === "dark" ? "bg-slate-900 text-white shadow" : "text-[var(--text-secondary)]"}`}>Dark</button>
-            <button onClick={() => setBg("glass")} className={`px-4 py-1 text-sm rounded-md \${bg === "glass" ? "bg-gradient-to-r from-blue-500/20 to-emerald-500/20 shadow" : "text-[var(--text-secondary)]"}`}>Glass</button>
+            <TrackedButton eventCategory="icon-showcase" eventLabel="Light" onClick={() => setBg("light")} className={`px-4 py-1 text-sm rounded-md \${bg === "light" ? "bg-white shadow" : "text-[var(--text-secondary)]"}`}>Light</TrackedButton>
+            <TrackedButton eventCategory="icon-showcase" eventLabel="Dark" onClick={() => setBg("dark")} className={`px-4 py-1 text-sm rounded-md \${bg === "dark" ? "bg-slate-900 text-white shadow" : "text-[var(--text-secondary)]"}`}>Dark</TrackedButton>
+            <TrackedButton eventCategory="icon-showcase" eventLabel="Glass" onClick={() => setBg("glass")} className={`px-4 py-1 text-sm rounded-md \${bg === "glass" ? "bg-gradient-to-r from-blue-500/20 to-emerald-500/20 shadow" : "text-[var(--text-secondary)]"}`}>Glass</TrackedButton>
           </div>
         </div>
       </div>
@@ -136,7 +142,10 @@ export function IconShowcase() {
               <div 
                 key={meta.name} 
                 className="group relative flex flex-col items-center p-6 gap-4 rounded-2xl border border-transparent hover:border-current hover:bg-black/5 dark:hover:bg-white/5 transition-all cursor-pointer"
-                onClick={() => copyToClipboard(`<Icons.${meta.name} size={${size}} variant="${variant}" />`)}
+                onClick={() => {
+                  analytics.track({ eventName: 'click', category: 'icon-showcase', label: `Copy JSX: ${meta.name}` });
+                  copyToClipboard(`<Icons.${meta.name} size={${size}} variant="${variant}" />`);
+                }}
               >
                 <IconComponent size={size} strokeWidth={strokeWidth} variant={variant} animation={animation} />
                 <span className="text-xs font-medium text-center">{meta.name}</span>

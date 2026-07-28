@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Award, BookOpen, CheckCircle, Play, ExternalLink, Calendar, RefreshCw, X, ShieldCheck } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const allCourses = {
   "ai-foundations": {
@@ -126,13 +127,15 @@ export default function StudentDashboard() {
               </p>
             </div>
 
-            <button
+            <TrackedButton
+              eventCategory="learn"
+              eventLabel="Reset Enrollment State"
               onClick={handleReset}
               className="btn-ghost"
               style={{ fontSize: "0.75rem", padding: "8px 16px", display: "inline-flex", alignItems: "center", gap: "6px", opacity: 0.6 }}
             >
               <RefreshCw size={12} /> Reset Enrollment State
-            </button>
+            </TrackedButton>
           </div>
         </div>
       </section>
@@ -188,7 +191,9 @@ export default function StudentDashboard() {
                       </div>
 
                       {course.completed ? (
-                        <button
+                        <TrackedButton
+                          eventCategory="learn"
+                          eventLabel={`View Certificate — ${course.title}`}
                           onClick={() => setActiveCertificate(course)}
                           className="btn-primary"
                           style={{
@@ -197,15 +202,18 @@ export default function StudentDashboard() {
                           }}
                         >
                           <Award size={14} /> View Certificate
-                        </button>
+                        </TrackedButton>
                       ) : (
-                        <a
+                        <TrackedLink
                           href="/academy/courses"
+                          analyticsEvent="cta_click"
+                          analyticsCategory="learn"
+                          analyticsLabel={`Resume Course — ${course.title}`}
                           className="btn-ghost"
                           style={{ fontSize: "0.75rem", padding: "8px 18px", display: "inline-flex", alignItems: "center", gap: "6px", textDecoration: "none" }}
                         >
                           <Play size={12} /> Resume Course
-                        </a>
+                        </TrackedLink>
                       )}
                     </div>
 
@@ -256,9 +264,9 @@ export default function StudentDashboard() {
                   ))}
                 </div>
 
-                <Link href="/academy/learning-paths" className="btn-primary" style={{ width: "100%", justifyContent: "center", display: "inline-flex", gap: "6px", fontSize: "0.8rem" }}>
+                <TrackedLink href="/academy/learning-paths" analyticsEvent="cta_click" analyticsCategory="learn" analyticsLabel="View All Paths" className="btn-primary" style={{ width: "100%", justifyContent: "center", display: "inline-flex", gap: "6px", fontSize: "0.8rem" }}>
                   View All Paths <ExternalLink size={12} />
-                </Link>
+                </TrackedLink>
               </div>
             </div>
           </div>
@@ -282,7 +290,9 @@ export default function StudentDashboard() {
             borderRadius: "24px",
             animation: "fadeIn 0.25s ease-out",
           }}>
-            <button
+            <TrackedButton
+              eventCategory="learn"
+              eventLabel="Close Certificate Modal"
               onClick={() => setActiveCertificate(null)}
               style={{
                 position: "absolute", top: "24px", right: "24px",
@@ -291,7 +301,7 @@ export default function StudentDashboard() {
               }}
             >
               <X size={22} />
-            </button>
+            </TrackedButton>
 
             {/* Certificate Border decoration */}
             <div style={{ border: "1px solid rgba(0, 229, 255, 0.15)", borderRadius: "12px", padding: "36px", textAlign: "center" }}>

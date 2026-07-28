@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { ArrowRight, Clock, User, Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const featured = {
   category: "Applied Research",
@@ -27,15 +27,15 @@ export const FeaturedResearch = () => {
         
         <div className="flex items-center justify-between mb-10">
           <h2 className="text-2xl md:text-3xl font-space font-bold text-text-primary">Editorial Curation</h2>
-          <Link href="#research-archive" className="text-sm font-bold text-primary-accent hover:text-text-primary transition-colors flex items-center gap-2">
+          <TrackedLink href="#research-archive" analyticsEvent="research_view_all_click" analyticsCategory="research" analyticsLabel="View All Publications" className="text-sm font-bold text-primary-accent hover:text-text-primary transition-colors flex items-center gap-2">
             View All Publications <ArrowRight size={16} />
-          </Link>
+          </TrackedLink>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8">
 
           {/* Main Feature */}
-          <Link href="#research-archive" className="lg:col-span-8 group cursor-pointer block">
+          <TrackedLink href="#research-archive" analyticsEvent="research_featured_click" analyticsCategory="research" analyticsLabel={featured.title} className="lg:col-span-8 group cursor-pointer block">
             <div className="bg-surface border border-border rounded-2xl p-8 md:p-12 h-full flex flex-col justify-end relative overflow-hidden transition-all hover:border-primary-accent/50">
               
               <div className="absolute inset-0 bg-gradient-to-t from-[#0A0D14] via-[#0A0D14]/80 to-transparent z-10" />
@@ -59,7 +59,7 @@ export const FeaturedResearch = () => {
                 </div>
               </div>
             </div>
-          </Link>
+          </TrackedLink>
 
           {/* Trending List */}
           <div className="lg:col-span-4 flex flex-col gap-4">
@@ -70,13 +70,13 @@ export const FeaturedResearch = () => {
             </div>
 
             {trending.map((item, i) => (
-              <Link href="#research-archive" key={i} className="bg-surface border border-border rounded-xl p-6 group cursor-pointer hover:bg-surface transition-colors flex flex-col justify-between h-full">
+              <TrackedLink href="#research-archive" key={i} analyticsEvent="research_trending_click" analyticsCategory="research" analyticsLabel={item.title} className="bg-surface border border-border rounded-xl p-6 group cursor-pointer hover:bg-surface transition-colors flex flex-col justify-between h-full">
                 <div>
                   <div className="text-[10px] text-text-muted uppercase tracking-widest font-bold mb-3">{item.category}</div>
                   <h4 className="text-lg font-space font-bold text-text-primary mb-2 leading-snug group-hover:text-[#00E5FF] transition-colors">{item.title}</h4>
                 </div>
                 <div className="text-xs text-text-muted mt-4">{item.date}</div>
-              </Link>
+              </TrackedLink>
             ))}
           </div>
 

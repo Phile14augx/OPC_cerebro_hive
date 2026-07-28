@@ -21,8 +21,11 @@
     "tailwind-merge": "^2.0.0"
   },
   "devDependencies": {
+    "@storybook/react": "^10.5.5",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^18.2.0",
     "tailwindcss": "^3.4.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
   }
 }

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { MessageSquare, X, Send, Bot, FileText, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export const InsightsAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,12 +33,14 @@ export const InsightsAssistant = () => {
   return (
     <>
       {/* Floating Button */}
-      <button 
+      <TrackedButton
+        eventCategory="insights-assistant"
+        eventLabel="Open Executive Assistant"
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 w-14 h-14 bg-[#7B61FF] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(123,97,255,0.3)] hover:scale-110 transition-transform z-50 ${isOpen ? 'hidden' : 'flex'}`}
       >
         <MessageSquare size={24} className="text-text-primary" />
-      </button>
+      </TrackedButton>
 
       {/* Chat Window */}
       <AnimatePresence>
@@ -61,9 +64,14 @@ export const InsightsAssistant = () => {
                   </div>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="text-text-muted hover:text-text-primary transition-colors">
+              <TrackedButton
+                eventCategory="insights-assistant"
+                eventLabel="Close Executive Assistant"
+                onClick={() => setIsOpen(false)}
+                className="text-text-muted hover:text-text-primary transition-colors"
+              >
                 <X size={20} />
-              </button>
+              </TrackedButton>
             </div>
 
             {/* Messages Area */}
@@ -85,9 +93,15 @@ export const InsightsAssistant = () => {
             {messages.length === 1 && (
               <div className="px-4 pb-4 flex flex-wrap gap-2">
                 {suggestedActions.map((action, i) => (
-                  <button key={i} onClick={() => setInput(action.label)} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border hover:border-[#7B61FF]/50 hover:text-[#7B61FF] transition-colors text-xs text-text-muted">
+                  <TrackedButton
+                    key={i}
+                    eventCategory="insights-assistant"
+                    eventLabel={action.label}
+                    onClick={() => setInput(action.label)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border hover:border-[#7B61FF]/50 hover:text-[#7B61FF] transition-colors text-xs text-text-muted"
+                  >
                     <action.icon size={12} /> {action.label}
-                  </button>
+                  </TrackedButton>
                 ))}
               </div>
             )}
@@ -102,9 +116,15 @@ export const InsightsAssistant = () => {
                   placeholder="Ask a strategic question..."
                   className="w-full bg-surface border border-border rounded-xl py-3 pl-4 pr-12 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[#7B61FF]/50 transition-colors"
                 />
-                <button type="submit" disabled={!input.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-[#7B61FF] text-text-primary disabled:opacity-50 disabled:bg-surface-elevated disabled:text-text-muted transition-colors">
+                <TrackedButton
+                  type="submit"
+                  disabled={!input.trim()}
+                  eventCategory="insights-assistant"
+                  eventLabel="Send Message"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-[#7B61FF] text-text-primary disabled:opacity-50 disabled:bg-surface-elevated disabled:text-text-muted transition-colors"
+                >
                   <Send size={14} />
-                </button>
+                </TrackedButton>
               </form>
             </div>
 

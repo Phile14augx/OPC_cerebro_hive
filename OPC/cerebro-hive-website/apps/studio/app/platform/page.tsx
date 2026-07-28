@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, ChevronRight, Shield, Server, Zap, Database, Network, Globe2, Lock, Activity, Code, Search, Bell, Users, DollarSign, Cpu, Compass, Code2, FlaskConical, BarChart3, TrendingUp, Store, Boxes, LayoutGrid, Archive, MessageSquare, Radio, Route, GitBranch } from "lucide-react";
 import { EnterpriseIntegrations } from "@/components/platform/EnterpriseIntegrations";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 const archStack = [
   {
@@ -282,9 +284,12 @@ function WorkspaceLauncher() {
           {filtered.map(tile => {
             const Icon = tile.icon;
             return (
-              <Link
+              <TrackedLink
                 key={tile.href}
                 href={tile.href}
+                analyticsEvent="platform_workspace_tile_click"
+                analyticsCategory="platform"
+                analyticsLabel={tile.title}
                 className={`group flex min-h-[200px] flex-col justify-between rounded-2xl border border-border border-t-4 ${tile.border} bg-surface/60 p-7 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] ${tile.glow} ${
                   tile.featured ? "sm:col-span-2 xl:col-span-1" : ""
                 }`}
@@ -297,7 +302,7 @@ function WorkspaceLauncher() {
                 <div className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-text-secondary transition-all group-hover:gap-2.5 group-hover:text-primary-accent">
                   Open <ArrowRight size={14} />
                 </div>
-              </Link>
+              </TrackedLink>
             );
           })}
           {filtered.length === 0 && (
@@ -377,7 +382,10 @@ export default function PlatformPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                onClick={() => setActiveStack(activeStack === i ? null : i)}
+                onClick={() => {
+                  analytics.track({ eventName: 'click', category: 'platform', label: `Architecture Layer: ${layer.tier}` });
+                  setActiveStack(activeStack === i ? null : i);
+                }}
                 className={`rounded-2xl border p-6 cursor-pointer transition-all ${layer.color} ${activeStack === i ? "shadow-elevated" : "hover:shadow-sm"}`}
               >
                 <div className="flex items-center justify-between">
@@ -580,12 +588,12 @@ export default function PlatformPage() {
               Our enterprise architects will walk you through the platform architecture, map it to your specific environment, and design a deployment plan aligned with your data residency, compliance, and infrastructure requirements.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:-translate-y-1 shadow-elevated flex items-center gap-3 justify-center">
+              <TrackedLink href="/contact" analyticsEvent="platform_cta_click" analyticsCategory="platform" analyticsLabel="Request a Technical Briefing" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:-translate-y-1 shadow-elevated flex items-center gap-3 justify-center">
                 Request a Technical Briefing <ArrowRight size={16} />
-              </Link>
-              <Link href="/developers" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
+              </TrackedLink>
+              <TrackedLink href="/developers" analyticsEvent="platform_cta_click" analyticsCategory="platform" analyticsLabel="Developer Documentation" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
                 Developer Documentation
-              </Link>
+              </TrackedLink>
             </div>
           </div>
         </div>

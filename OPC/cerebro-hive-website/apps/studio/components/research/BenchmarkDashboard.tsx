@@ -6,8 +6,9 @@ import { SectionHeading } from '../cerebro/SectionHeading';
 import { allResearchData } from '@/lib/content/research';
 import { BenchmarkData } from '@/lib/content/research/types';
 import { ArrowRight, BarChart2, Info } from 'lucide-react';
-import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { TrackedButton } from '../cerebro/TrackedButton';
+import { TrackedLink } from '../cerebro/TrackedLink';
 
 export const BenchmarkDashboard = () => {
   // Find all benchmarks from the data layer
@@ -42,8 +43,10 @@ export const BenchmarkDashboard = () => {
           {/* Left Panel: Benchmark Selector */}
           <div className="col-span-1 lg:col-span-4 flex flex-col gap-2">
              {benchmarks.map((b) => (
-               <button
+               <TrackedButton
                  key={b.id}
+                 eventCategory="research"
+                 eventLabel={b.title.replace("Benchmark: ", "")}
                  onClick={() => setActiveBenchmarkId(b.id)}
                  className={cn(
                    "text-left p-5 rounded-xl border transition-all duration-300 flex flex-col gap-1",
@@ -61,7 +64,7 @@ export const BenchmarkDashboard = () => {
                  <span className="text-[10px] uppercase tracking-widest text-text-muted">
                    {b.domain}
                  </span>
-               </button>
+               </TrackedButton>
              ))}
           </div>
 
@@ -87,9 +90,9 @@ export const BenchmarkDashboard = () => {
                         </div>
                       </div>
                     </div>
-                    <Link href={`/research/benchmarks/${activeBenchmark.slug}`} className="shrink-0 p-3 bg-background border border-border rounded-full hover:bg-primary-accent hover:text-text-primary transition-colors">
+                    <TrackedLink href={`/research/benchmarks/${activeBenchmark.slug}`} analyticsEvent="benchmark_detail_click" analyticsCategory="research" analyticsLabel={`${activeBenchmark.title} detail`} className="shrink-0 p-3 bg-background border border-border rounded-full hover:bg-primary-accent hover:text-text-primary transition-colors">
                       <ArrowRight size={18} />
-                    </Link>
+                    </TrackedLink>
                   </div>
 
                   {/* Charts */}
@@ -117,9 +120,9 @@ export const BenchmarkDashboard = () => {
                       <BarChart2 size={16} className="text-text-muted" />
                       <span className="text-xs font-mono text-text-secondary">Dataset: {data.dataset}</span>
                     </div>
-                    <Link href={`/research/benchmarks/${activeBenchmark.slug}`} className="text-xs font-bold text-primary-accent hover:underline">
+                    <TrackedLink href={`/research/benchmarks/${activeBenchmark.slug}`} analyticsEvent="benchmark_methodology_click" analyticsCategory="research" analyticsLabel="Read Full Methodology" className="text-xs font-bold text-primary-accent hover:underline">
                       Read Full Methodology →
-                    </Link>
+                    </TrackedLink>
                   </div>
 
                 </motion.div>

@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { BookOpen, Search, Clock, Award, Star, CheckCircle, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const categories = ["All", "AI Foundations", "AI Agents", "LLM Engineering", "AI Product Management"];
 
@@ -124,9 +125,16 @@ export default function CoursesPage() {
               </p>
             </div>
             
-            <Link href="/learn" className="btn-ghost" style={{ borderStyle: "dashed", display: "inline-flex", gap: "8px", alignItems: "center" }}>
+            <TrackedLink
+              href="/learn"
+              analyticsEvent="academy_student_dashboard_click"
+              analyticsCategory="academy"
+              analyticsLabel="Go to Student Dashboard"
+              className="btn-ghost"
+              style={{ borderStyle: "dashed", display: "inline-flex", gap: "8px", alignItems: "center" }}
+            >
               Go to Student Dashboard <ArrowRight size={14} />
-            </Link>
+            </TrackedLink>
           </div>
         </div>
       </section>
@@ -148,8 +156,10 @@ export default function CoursesPage() {
 
             <div style={{ display: "flex", gap: "6px", overflowX: "auto", maxWidth: "100%" }}>
               {categories.map((cat) => (
-                <button
+                <TrackedButton
                   key={cat}
+                  eventCategory="academy"
+                  eventLabel={`Course Category - ${cat}`}
                   onClick={() => setSelectedCat(cat)}
                   style={{
                     padding: "8px 16px",
@@ -166,7 +176,7 @@ export default function CoursesPage() {
                   }}
                 >
                   {cat}
-                </button>
+                </TrackedButton>
               ))}
             </div>
           </div>
@@ -224,13 +234,15 @@ export default function CoursesPage() {
                       <CheckCircle size={16} /> Enrolled
                     </div>
                   ) : (
-                    <button
+                    <TrackedButton
+                      eventCategory="academy"
+                      eventLabel={`Enroll Now - ${course.title}`}
                       onClick={() => handleEnroll(course.id, course.title)}
                       className="btn-primary"
                       style={{ fontSize: "0.8rem", padding: "10px 24px" }}
                     >
                       Enroll Now
-                    </button>
+                    </TrackedButton>
                   )}
                 </div>
               </div>

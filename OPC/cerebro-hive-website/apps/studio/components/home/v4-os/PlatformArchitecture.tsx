@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { typeTokens, spacingTokens, motionTokens } from "@/lib/design-system/tokens";
 import { useState } from "react";
@@ -121,7 +121,13 @@ export function PlatformArchitecture() {
             onMouseEnter={() => setHoveredLayer(i)}
             onMouseLeave={() => setHoveredLayer(null)}
           >
-            <Link href={layer.href} className="flex items-center justify-between px-6 py-4">
+            <TrackedLink
+              href={layer.href}
+              analyticsEvent="platform_architecture_layer_click"
+              analyticsCategory="platform-architecture"
+              analyticsLabel={layer.name}
+              className="flex items-center justify-between px-6 py-4"
+            >
               <div className="flex items-center gap-4">
                 {/* Layer number */}
                 <span className="text-xs font-mono text-slate-500 w-5 text-right flex-shrink-0">
@@ -145,7 +151,7 @@ export function PlatformArchitecture() {
                 </div>
               </div>
               <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-slate-300 opacity-0 group-hover:opacity-100 transition-all duration-200 flex-shrink-0" />
-            </Link>
+            </TrackedLink>
           </motion.div>
         ))}
       </div>
@@ -163,13 +169,25 @@ export function PlatformArchitecture() {
           Run a live cognitive loop — retrieval, reasoning, planning, and execution — against real enterprise data.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/platform/live-runtime" className="btn-primary group inline-flex items-center gap-2">
+          <TrackedLink
+            href="/platform/live-runtime"
+            analyticsEvent="platform_architecture_run_demo_click"
+            analyticsCategory="platform-architecture"
+            analyticsLabel="Run Live Demo"
+            className="btn-primary group inline-flex items-center gap-2"
+          >
             Run Live Demo
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link href="/developers/architecture" className="btn-ghost inline-flex items-center gap-2">
+          </TrackedLink>
+          <TrackedLink
+            href="/developers/architecture"
+            analyticsEvent="platform_architecture_read_docs_click"
+            analyticsCategory="platform-architecture"
+            analyticsLabel="Read Architecture Docs"
+            className="btn-ghost inline-flex items-center gap-2"
+          >
             Read Architecture Docs
-          </Link>
+          </TrackedLink>
         </div>
       </motion.div>
     </section>

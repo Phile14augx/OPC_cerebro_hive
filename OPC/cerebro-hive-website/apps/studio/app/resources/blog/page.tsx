@@ -2,6 +2,8 @@
 import { BookOpen, ArrowRight, Zap, Clock } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const categories = ["All", "AI Agents", "LLMs", "Automation", "Data Engineering", "Consulting", "Academy"];
 

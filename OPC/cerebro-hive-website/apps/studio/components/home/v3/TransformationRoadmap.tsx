@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ArrowRight, FileSearch, PenTool, FlaskConical, Rocket, Network } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
@@ -87,7 +88,10 @@ export default function TransformationRoadmap() {
               const isPast = roadmap.findIndex(r => r.id === activePhase.id) > i;
 
               return (
-                <div key={phase.id} className="relative z-10 flex flex-row md:flex-col items-center gap-4 md:gap-4 mb-6 md:mb-0 cursor-pointer group" onClick={() => setActivePhase(phase)}>
+                <div key={phase.id} className="relative z-10 flex flex-row md:flex-col items-center gap-4 md:gap-4 mb-6 md:mb-0 cursor-pointer group" onClick={() => {
+                  analytics.track({ eventName: "click", category: "roadmap", label: phase.title });
+                  setActivePhase(phase);
+                }}>
                   <div className={`w-12 h-12 rounded-full border-4 flex items-center justify-center transition-colors ${
                     isActive ? `border-[#0A0D14] ${phase.bgColor} text-text-primary` :
                     isPast ? `border-[#0A0D14] bg-surface-elevated text-text-primary` :

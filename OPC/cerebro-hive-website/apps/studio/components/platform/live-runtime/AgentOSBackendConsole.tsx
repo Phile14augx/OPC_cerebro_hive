@@ -15,6 +15,7 @@ import {
   Lock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const DEFAULT_API_BASE = process.env.NEXT_PUBLIC_AGENTOS_API_URL || "http://localhost:8088";
 
@@ -262,9 +263,9 @@ export const AgentOSBackendConsole = ({ adminSecret }: { adminSecret?: string })
                 onChange={(e) => setApiBase(e.target.value)}
                 className="flex-1 px-3 py-2 bg-background border border-border rounded-lg text-sm text-text-primary"
               />
-              <button onClick={bootstrap} className="px-4 py-2 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg shrink-0">
+              <TrackedButton onClick={bootstrap} eventCategory="live-runtime" eventLabel="Retry" className="px-4 py-2 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg shrink-0">
                 Retry
-              </button>
+              </TrackedButton>
             </div>
           </div>
         </div>
@@ -276,9 +277,11 @@ export const AgentOSBackendConsole = ({ adminSecret }: { adminSecret?: string })
             <div className="text-[10px] uppercase tracking-widest text-text-muted font-bold">1. Choose a registered agent</div>
             <div className="flex flex-col gap-2">
               {agents.map((agent) => (
-                <button
+                <TrackedButton
                   key={agent.slug}
                   onClick={() => setSelectedSlug(agent.slug)}
+                  eventCategory="live-runtime"
+                  eventLabel={agent.name}
                   className={cn(
                     "text-left p-4 rounded-xl border transition-all",
                     selectedSlug === agent.slug ? "bg-primary-accent/10 border-primary-accent/50" : "bg-surface border-border hover:border-border-strong"
@@ -286,7 +289,7 @@ export const AgentOSBackendConsole = ({ adminSecret }: { adminSecret?: string })
                 >
                   <div className="font-space font-bold text-text-primary text-sm">{agent.name}</div>
                   <div className="text-xs text-text-muted mt-1">{agent.category}{agent.tools.length > 0 ? ` · ${agent.tools.join(", ")}` : ""}</div>
-                </button>
+                </TrackedButton>
               ))}
               {agents.length === 0 && (
                 <p className="text-xs text-text-muted">
@@ -304,14 +307,16 @@ export const AgentOSBackendConsole = ({ adminSecret }: { adminSecret?: string })
               className="p-4 bg-surface border border-border rounded-xl text-sm text-text-primary resize-none focus:outline-none focus:border-primary-accent"
             />
 
-            <button
+            <TrackedButton
               onClick={execute}
               disabled={busy || !selectedSlug || !goal.trim()}
+              eventCategory="live-runtime"
+              eventLabel="Execute on the backend"
               className="group px-6 py-3.5 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-surface disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {busy ? <Loader2 size={16} className="animate-spin" /> : <Play size={16} />}
               Execute on the backend
-            </button>
+            </TrackedButton>
 
             {error && <p className="text-xs text-red-400">{error}</p>}
           </div>
@@ -361,12 +366,12 @@ export const AgentOSBackendConsole = ({ adminSecret }: { adminSecret?: string })
                             <span className="font-bold text-text-primary">{a.policy_name}</span> — {a.reason}
                           </div>
                           <div className="flex gap-2 shrink-0">
-                            <button onClick={() => decide(a.id, "approve")} disabled={busy} className="px-4 py-2 bg-primary-accent text-text-primary text-xs font-bold uppercase tracking-widest rounded-lg">
+                            <TrackedButton onClick={() => decide(a.id, "approve")} disabled={busy} eventCategory="live-runtime" eventLabel="Approve" className="px-4 py-2 bg-primary-accent text-text-primary text-xs font-bold uppercase tracking-widest rounded-lg">
                               Approve
-                            </button>
-                            <button onClick={() => decide(a.id, "reject")} disabled={busy} className="px-4 py-2 bg-background border border-border text-text-secondary text-xs font-bold uppercase tracking-widest rounded-lg">
+                            </TrackedButton>
+                            <TrackedButton onClick={() => decide(a.id, "reject")} disabled={busy} eventCategory="live-runtime" eventLabel="Reject" className="px-4 py-2 bg-background border border-border text-text-secondary text-xs font-bold uppercase tracking-widest rounded-lg">
                               Reject
-                            </button>
+                            </TrackedButton>
                           </div>
                         </div>
                       ))}

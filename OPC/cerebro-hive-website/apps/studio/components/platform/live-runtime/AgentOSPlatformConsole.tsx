@@ -7,6 +7,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const DEFAULT_API_BASE = process.env.NEXT_PUBLIC_AGENTOS_API_URL || "http://localhost:8088";
 
@@ -102,8 +103,10 @@ export const AgentOSPlatformConsole = ({ adminSecret }: { adminSecret?: string }
     <div className="mt-10 flex flex-col gap-6">
       <div className="flex overflow-x-auto no-scrollbar gap-2 pb-1">
         {TABS.map((t) => (
-          <button
+          <TrackedButton
             key={t.id}
+            eventCategory="agentos-console"
+            eventLabel={t.label}
             onClick={() => setTab(t.id)}
             className={cn(
               "flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors border",
@@ -111,7 +114,7 @@ export const AgentOSPlatformConsole = ({ adminSecret }: { adminSecret?: string }
             )}
           >
             <t.icon size={14} /> {t.label}
-          </button>
+          </TrackedButton>
         ))}
       </div>
 
@@ -184,9 +187,9 @@ function ObservatoryPanel({ apiBase, apiKey }: { apiBase: string; apiKey: string
     <Card>
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-space font-bold text-text-primary text-sm">Cross-run analytics — real aggregates, computed live from stored spans</h3>
-        <button onClick={load} className="p-2 rounded-lg border border-border hover:border-primary-accent/50 text-text-muted">
+        <TrackedButton eventCategory="agentos-console" eventLabel="Refresh Observatory" onClick={load} className="p-2 rounded-lg border border-border hover:border-primary-accent/50 text-text-muted">
           {loading ? <Loader2 size={14} className="animate-spin" /> : <RotateCcw size={14} />}
-        </button>
+        </TrackedButton>
       </div>
       <ErrorBox error={error} />
       {summary && (
@@ -314,9 +317,9 @@ function GovernancePanel({ apiBase, apiKey }: { apiBase: string; apiKey: string 
             <option value="require_approval">require_approval</option>
             <option value="block">block</option>
           </select>
-          <button onClick={createPolicy} disabled={busy} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
+          <TrackedButton eventCategory="agentos-console" eventLabel="Create Policy" onClick={createPolicy} disabled={busy} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
             {busy ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />} Create Policy
-          </button>
+          </TrackedButton>
           <ErrorBox error={error} />
         </div>
         <div className="mt-6">
@@ -382,9 +385,9 @@ function ContextPanel({ apiBase, apiKey, agentSlugs }: { apiBase: string; apiKey
           {agentSlugs.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
         <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="query to assemble context for…" className="flex-1 px-3 py-2.5 bg-background border border-border rounded-lg text-sm text-text-primary" />
-        <button onClick={run} disabled={busy} className="px-5 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
+        <TrackedButton eventCategory="agentos-console" eventLabel="Assemble" onClick={run} disabled={busy} className="px-5 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
           {busy ? <Loader2 size={14} className="animate-spin" /> : "Assemble"}
-        </button>
+        </TrackedButton>
       </div>
       <ErrorBox error={error} />
       {result && (
@@ -452,20 +455,22 @@ function MeshPanel({ apiBase, apiKey, agentSlugs }: { apiBase: string; apiKey: s
       <h3 className="font-space font-bold text-text-primary text-sm mb-4">Fan a goal out to multiple agents and reach real consensus</h3>
       <div className="flex flex-wrap gap-2 mb-4">
         {agentSlugs.map((s) => (
-          <button
+          <TrackedButton
             key={s}
+            eventCategory="agentos-console"
+            eventLabel={`Toggle Agent: ${s}`}
             onClick={() => toggle(s)}
             className={cn("px-3 py-1.5 rounded-full text-xs font-bold border", selected.includes(s) ? "bg-primary-accent/10 border-primary-accent/50 text-primary-accent" : "bg-surface-elevated border-border text-text-secondary")}
           >
             {s}
-          </button>
+          </TrackedButton>
         ))}
       </div>
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <input value={goal} onChange={(e) => setGoal(e.target.value)} placeholder="shared goal for every selected agent…" className="flex-1 px-3 py-2.5 bg-background border border-border rounded-lg text-sm text-text-primary" />
-        <button onClick={run} disabled={busy || selected.length < 2} className="px-5 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
+        <TrackedButton eventCategory="agentos-console" eventLabel="Run Vote" onClick={run} disabled={busy || selected.length < 2} className="px-5 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
           {busy ? <Loader2 size={14} className="animate-spin" /> : "Run Vote"}
-        </button>
+        </TrackedButton>
       </div>
       <ErrorBox error={error} />
       {result && (
@@ -523,9 +528,9 @@ function CortexPanel({ apiBase, apiKey }: { apiBase: string; apiKey: string | nu
       <Card>
         <h3 className="font-space font-bold text-text-primary text-sm mb-4">Real least-squares forecast</h3>
         <input value={series} onChange={(e) => setSeries(e.target.value)} className="w-full px-3 py-2.5 bg-background border border-border rounded-lg text-sm text-text-primary mb-3" />
-        <button onClick={runForecast} disabled={busy} className="px-5 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
+        <TrackedButton eventCategory="agentos-console" eventLabel="Forecast" onClick={runForecast} disabled={busy} className="px-5 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
           {busy ? <Loader2 size={14} className="animate-spin" /> : "Forecast"}
-        </button>
+        </TrackedButton>
         {forecast && (
           <div className="mt-4 text-xs text-text-secondary flex flex-col gap-1">
             <div>slope <span className="text-text-primary font-bold">{String(forecast.slope)}</span>, r² <span className="text-text-primary font-bold">{String(forecast.r_squared)}</span></div>
@@ -538,9 +543,9 @@ function CortexPanel({ apiBase, apiKey }: { apiBase: string; apiKey: string | nu
         <textarea value={itemsJson} onChange={(e) => setItemsJson(e.target.value)} rows={3} className="w-full px-3 py-2.5 bg-background border border-border rounded-lg text-xs font-mono text-text-primary mb-3" />
         <div className="flex gap-3 mb-3">
           <input value={budget} onChange={(e) => setBudget(e.target.value)} className="w-28 px-3 py-2.5 bg-background border border-border rounded-lg text-sm text-text-primary" />
-          <button onClick={runOptimize} disabled={busy} className="px-5 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
+          <TrackedButton eventCategory="agentos-console" eventLabel="Optimize" onClick={runOptimize} disabled={busy} className="px-5 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
             {busy ? <Loader2 size={14} className="animate-spin" /> : "Optimize"}
-          </button>
+          </TrackedButton>
         </div>
         {optimize && (
           <div className="text-xs text-text-secondary">
@@ -596,9 +601,9 @@ function SimulatorPanel({ apiBase, apiKey }: { apiBase: string; apiKey: string |
           </div>
         ))}
       </div>
-      <button onClick={run} disabled={busy} className="px-5 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
+      <TrackedButton eventCategory="agentos-console" eventLabel="Run Simulation" onClick={run} disabled={busy} className="px-5 py-2.5 bg-primary-accent text-text-primary font-bold text-xs uppercase tracking-widest rounded-lg disabled:opacity-40">
         {busy ? <Loader2 size={14} className="animate-spin" /> : "Run Simulation"}
-      </button>
+      </TrackedButton>
       <ErrorBox error={error} />
       {result && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">

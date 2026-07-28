@@ -10,6 +10,8 @@ import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { Badge } from "../../components/ui/Badge";
 import { cn } from "../../components/ui/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 // Types simulating our backend schema
 type WidgetType = "markdown" | "code" | "sql" | "prompt";
@@ -60,7 +62,11 @@ export default function AssessmentBuilder() {
             <h1 className="text-sm font-bold text-text-primary">Backend Engineer Assessment</h1>
             <p className="text-xs text-text-muted mt-0.5">Version 3 • Draft</p>
           </div>
-          <Button size="sm" className="h-8 gap-2 px-3 text-xs">
+          <Button
+            size="sm"
+            className="h-8 gap-2 px-3 text-xs"
+            onClick={() => analytics.track({ eventName: 'click', category: 'talent-builder', label: 'Save' })}
+          >
             <Save size={14} /> Save
           </Button>
         </div>
@@ -81,9 +87,12 @@ export default function AssessmentBuilder() {
             </h3>
             
             {blocks.map((block, index) => (
-              <div 
+              <div
                 key={block.id}
-                onClick={() => setActiveBlockId(block.id)}
+                onClick={() => {
+                  analytics.track({ eventName: 'click', category: 'talent-builder', label: `Select Widget: ${block.title}` });
+                  setActiveBlockId(block.id);
+                }}
                 className={cn(
                   "group relative p-3 rounded-lg border cursor-pointer transition-all flex items-start gap-3",
                   activeBlockId === block.id 
@@ -109,39 +118,43 @@ export default function AssessmentBuilder() {
                   </h4>
                 </div>
                 
-                <button 
+                <TrackedButton
+                  eventCategory="talent-builder"
+                  eventLabel="Remove Widget"
                   onClick={(e) => removeBlock(block.id, e)}
                   className="opacity-0 group-hover:opacity-100 text-text-muted hover:text-red-400 transition-all p-1"
                 >
                   <Trash2 size={14} />
-                </button>
+                </TrackedButton>
               </div>
             ))}
 
             {/* Add Block Menu */}
             <div className="pt-2">
               {!showAddMenu ? (
-                <button 
+                <TrackedButton
+                  eventCategory="talent-builder"
+                  eventLabel="Add Activity Widget"
                   onClick={() => setShowAddMenu(true)}
                   className="w-full flex items-center gap-2 p-3 rounded-lg border border-dashed border-border text-text-muted hover:text-text-primary hover:border-text-muted hover:bg-surface transition-all text-sm font-bold justify-center"
                 >
                   <Plus size={16} /> Add Activity Widget
-                </button>
+                </TrackedButton>
               ) : (
                 <Card className="p-2 space-y-1 bg-surface-elevated animate-in fade-in slide-in-from-top-2">
                   <div className="text-xs font-bold text-text-muted px-2 py-1 uppercase tracking-wider">Widget Library</div>
-                  <button onClick={() => addBlock("markdown", "Instructions")} className="w-full flex items-center gap-3 p-2 rounded hover:bg-surface text-left text-sm text-text-primary transition-colors">
+                  <TrackedButton eventCategory="talent-builder" eventLabel="Markdown / Text" onClick={() => addBlock("markdown", "Instructions")} className="w-full flex items-center gap-3 p-2 rounded hover:bg-surface text-left text-sm text-text-primary transition-colors">
                     <Type size={16} className="text-purple-400" /> Markdown / Text
-                  </button>
-                  <button onClick={() => addBlock("code", "Code Implementation")} className="w-full flex items-center gap-3 p-2 rounded hover:bg-surface text-left text-sm text-text-primary transition-colors">
+                  </TrackedButton>
+                  <TrackedButton eventCategory="talent-builder" eventLabel="Code Editor" onClick={() => addBlock("code", "Code Implementation")} className="w-full flex items-center gap-3 p-2 rounded hover:bg-surface text-left text-sm text-text-primary transition-colors">
                     <Code2 size={16} className="text-blue-400" /> Code Editor
-                  </button>
-                  <button onClick={() => addBlock("sql", "Database Query")} className="w-full flex items-center gap-3 p-2 rounded hover:bg-surface text-left text-sm text-text-primary transition-colors">
+                  </TrackedButton>
+                  <TrackedButton eventCategory="talent-builder" eventLabel="SQL Sandbox" onClick={() => addBlock("sql", "Database Query")} className="w-full flex items-center gap-3 p-2 rounded hover:bg-surface text-left text-sm text-text-primary transition-colors">
                     <Database size={16} className="text-orange-400" /> SQL Sandbox
-                  </button>
-                  <button onClick={() => addBlock("prompt", "AI Prompting")} className="w-full flex items-center gap-3 p-2 rounded hover:bg-surface text-left text-sm text-text-primary transition-colors">
+                  </TrackedButton>
+                  <TrackedButton eventCategory="talent-builder" eventLabel="AI Prompt Engineer" onClick={() => addBlock("prompt", "AI Prompting")} className="w-full flex items-center gap-3 p-2 rounded hover:bg-surface text-left text-sm text-text-primary transition-colors">
                     <MessageSquare size={16} className="text-primary-accent" /> AI Prompt Engineer
-                  </button>
+                  </TrackedButton>
                 </Card>
               )}
             </div>
@@ -220,7 +233,12 @@ export default function AssessmentBuilder() {
                   </div>
                   <div>
                     <label className="text-xs font-bold text-text-muted uppercase tracking-wider block mb-1.5">Starter Code Resource</label>
-                    <Button variant="secondary" size="sm" className="w-full justify-start text-xs text-text-secondary bg-background">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="w-full justify-start text-xs text-text-secondary bg-background"
+                      onClick={() => analytics.track({ eventName: 'click', category: 'talent-builder', label: 'Select from Repository' })}
+                    >
                       <GitBranch size={14} className="mr-2" /> Select from Repository...
                     </Button>
                   </div>
@@ -235,7 +253,12 @@ export default function AssessmentBuilder() {
                       <div className="bg-background border border-border rounded p-2 text-xs text-text-secondary flex justify-between items-center">
                         Test 2: Eviction <CheckCircle2 size={12} className="text-green-400"/>
                       </div>
-                      <Button variant="secondary" size="sm" className="w-full h-7 text-xs border-dashed bg-transparent">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="w-full h-7 text-xs border-dashed bg-transparent"
+                        onClick={() => analytics.track({ eventName: 'click', category: 'talent-builder', label: 'Add Test Case' })}
+                      >
                         + Add Test Case
                       </Button>
                     </div>
@@ -263,7 +286,12 @@ export default function AssessmentBuilder() {
                     </div>
                     <p className="text-[11px] text-text-muted leading-tight">Must achieve O(1) time complexity for get and put operations.</p>
                   </div>
-                  <Button variant="secondary" size="sm" className="w-full text-xs gap-1 mt-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full text-xs gap-1 mt-2"
+                    onClick={() => analytics.track({ eventName: 'click', category: 'talent-builder', label: 'Configure Rubric' })}
+                  >
                     <Settings2 size={14} /> Configure Rubric
                   </Button>
                 </div>

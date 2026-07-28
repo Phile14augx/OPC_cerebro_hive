@@ -2,6 +2,8 @@
 import { BookOpen, Compass, GraduationCap, Award, ArrowRight, Zap, HelpCircle, Clock, CheckCircle, Star, Users, Code, BarChart2, Shield, Brain, Layers, Database, Cpu, FileCode } from "lucide-react";
 import Link from "next/link";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 import { useState } from "react";
 import { courses } from "@/lib/data/academy/courses";
 
@@ -177,7 +179,7 @@ export default function AcademyPage() {
             {academyPaths.map((path) => {
               const Icon = path.icon;
               return (
-                <Link key={path.title} href={path.href} style={{ textDecoration: "none" }}>
+                <TrackedLink key={path.title} href={path.href} analyticsEvent="academy_path_click" analyticsCategory="academy" analyticsLabel={path.title} style={{ textDecoration: "none" }}>
                   <div className="card-glass" style={{ padding: "36px 30px", display: "flex", flexDirection: "column", height: "100%" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
                       <div style={{ width: 44, height: 44, borderRadius: "10px", background: `${path.color}14`, border: `1px solid ${path.color}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -200,7 +202,7 @@ export default function AcademyPage() {
                       Explore Path <ArrowRight size={14} />
                     </div>
                   </div>
-                </Link>
+                </TrackedLink>
               );
             })}
           </div>
@@ -219,13 +221,13 @@ export default function AcademyPage() {
             </div>
             <div style={{ display: "flex", gap: "10px" }}>
               {(["courses", "bootcamps", "certs"] as const).map((tab) => (
-                <button key={tab} onClick={() => setActiveTab(tab)}
+                <TrackedButton key={tab} eventCategory="academy" eventLabel={tab === "courses" ? "All Courses" : tab === "bootcamps" ? "Bootcamps" : "Certifications"} eventAction="tab_switch" onClick={() => setActiveTab(tab)}
                   style={{ padding: "9px 20px", borderRadius: "8px", cursor: "pointer", fontFamily: "Orbitron, sans-serif", fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", transition: "all 0.2s",
                     background: activeTab === tab ? "rgba(123,97,255,0.12)" : "rgba(255,255,255,0.03)",
                     border: activeTab === tab ? "1px solid rgba(123,97,255,0.4)" : "1px solid rgba(255,255,255,0.06)",
                     color: activeTab === tab ? "var(--violet)" : "var(--text-muted)" }}>
                   {tab === "courses" ? "All Courses" : tab === "bootcamps" ? "Bootcamps" : "Certifications"}
-                </button>
+                </TrackedButton>
               ))}
             </div>
           </div>
@@ -240,7 +242,7 @@ export default function AcademyPage() {
                 const isExpanded = expandedCourse === course.id;
                 return (
                   <div key={course.id} className="card-glass"
-                    onClick={() => setExpandedCourse(isExpanded ? null : course.id)}
+                    onClick={() => { analytics.track({ eventName: 'click', category: 'academy', label: `Course Card — ${course.title}` }); setExpandedCourse(isExpanded ? null : course.id); }}
                     style={{ padding: "24px 28px", cursor: "pointer", transition: "border-color 0.2s", borderColor: isExpanded ? `${color}40` : "rgba(255,255,255,0.07)" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                       <div style={{ width: 40, height: 40, borderRadius: "10px", background: `${color}14`, border: `1px solid ${color}28`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -406,12 +408,12 @@ export default function AcademyPage() {
                 </h4>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
                   {[{ label: "Software Engineer / Dev", val: "developer" }, { label: "Product / Project Manager", val: "manager" }, { label: "Business Owner / Leader", val: "leader" }].map((opt) => (
-                    <button key={opt.val} onClick={() => handleQuizAnswer("role", opt.val)}
+                    <TrackedButton key={opt.val} eventCategory="academy" eventLabel={opt.label} eventAction="quiz_answer" onClick={() => handleQuizAnswer("role", opt.val)}
                       style={{ padding: "18px 16px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "var(--text-muted)", fontFamily: "Exo 2, sans-serif", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", textAlign: "left", transition: "all 0.2s" }}
                       onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(123,97,255,0.4)"; e.currentTarget.style.color = "var(--text-primary)"; }}
                       onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "var(--text-muted)"; }}>
                       {opt.label}
-                    </button>
+                    </TrackedButton>
                   ))}
                 </div>
               </div>
@@ -424,12 +426,12 @@ export default function AcademyPage() {
                 </h4>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
                   {[{ label: "None / Exploring tools", val: "beginner" }, { label: "Used pre-built API models", val: "intermediate" }, { label: "Built complex model pipelines", val: "advanced" }].map((opt) => (
-                    <button key={opt.val} onClick={() => handleQuizAnswer("exp", opt.val)}
+                    <TrackedButton key={opt.val} eventCategory="academy" eventLabel={opt.label} eventAction="quiz_answer" onClick={() => handleQuizAnswer("exp", opt.val)}
                       style={{ padding: "18px 16px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "var(--text-muted)", fontFamily: "Exo 2, sans-serif", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", textAlign: "left", transition: "all 0.2s" }}
                       onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(123,97,255,0.4)"; e.currentTarget.style.color = "var(--text-primary)"; }}
                       onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "var(--text-muted)"; }}>
                       {opt.label}
-                    </button>
+                    </TrackedButton>
                   ))}
                 </div>
               </div>
@@ -442,12 +444,12 @@ export default function AcademyPage() {
                 </h4>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px" }}>
                   {[{ label: "Build custom models & agents", val: "build" }, { label: "Design ETL & vector infrastructure", val: "infrastructure" }, { label: "Lead corporate adoption & strategy", val: "adoption" }, { label: "Address compliance & governance", val: "governance" }].map((opt) => (
-                    <button key={opt.val} onClick={() => handleQuizAnswer("obj", opt.val)}
+                    <TrackedButton key={opt.val} eventCategory="academy" eventLabel={opt.label} eventAction="quiz_answer" onClick={() => handleQuizAnswer("obj", opt.val)}
                       style={{ padding: "18px 16px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)", color: "var(--text-muted)", fontFamily: "Exo 2, sans-serif", fontSize: "0.875rem", fontWeight: 600, cursor: "pointer", textAlign: "left", transition: "all 0.2s" }}
                       onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(123,97,255,0.4)"; e.currentTarget.style.color = "var(--text-primary)"; }}
                       onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "var(--text-muted)"; }}>
                       {opt.label}
-                    </button>
+                    </TrackedButton>
                   ))}
                 </div>
               </div>
@@ -473,13 +475,13 @@ export default function AcademyPage() {
                   </p>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                  <Link href="/academy/learning-paths" className="btn-primary" style={{ display: "inline-flex", gap: "6px" }}>
+                  <TrackedLink href="/academy/learning-paths" analyticsEvent="cta_click" analyticsCategory="conversion" analyticsLabel="Begin Track — Academy Quiz" className="btn-primary" style={{ display: "inline-flex", gap: "6px" }}>
                     Begin Track <ArrowRight size={14} />
-                  </Link>
-                  <button onClick={resetQuiz}
+                  </TrackedLink>
+                  <TrackedButton eventCategory="academy" eventLabel="Retake Quiz" onClick={resetQuiz}
                     style={{ padding: "10px 20px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "var(--text-muted)", fontFamily: "Exo 2, sans-serif", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer" }}>
                     Retake Quiz
-                  </button>
+                  </TrackedButton>
                 </div>
               </div>
             )}

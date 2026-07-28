@@ -1,6 +1,7 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "./utils";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-accent disabled:pointer-events-none disabled:opacity-50",
@@ -32,16 +33,32 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  /** Optional analytics overrides — falls back to a generic tracked click if omitted. */
+  analyticsEvent?: string;
+  analyticsCategory?: string;
+  analyticsLabel?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, analyticsEvent, analyticsCategory, analyticsLabel, onClick, children, ...props }, ref) => {
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      analytics.track({
+        eventName: analyticsEvent || "click",
+        category: analyticsCategory || "platform-ui",
+        label: analyticsLabel || (typeof children === "string" ? children : "button"),
+      });
+      if (onClick) onClick(e);
+    };
+
     return (
       <button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        onClick={handleClick}
         {...props}
-      />
+      >
+        {children}
+      </button>
     );
   }
 );

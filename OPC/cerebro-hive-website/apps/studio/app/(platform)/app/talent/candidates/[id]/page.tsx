@@ -5,7 +5,7 @@ import {
   User, CheckCircle2, AlertTriangle, ArrowUpRight, 
   BrainCircuit, Database, Code2, Network, ChevronLeft, Calendar
 } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
@@ -26,9 +26,9 @@ export default function CandidateReport({ params }: { params: { id: string } }) 
 
       {/* Back & Header */}
       <div className="space-y-6">
-        <Link href="/app/talent" className="text-sm font-bold text-text-muted hover:text-text-primary flex items-center gap-2 transition-colors">
+        <TrackedLink href="/app/talent" analyticsEvent="back_to_pipeline_click" analyticsCategory="talent" analyticsLabel="Back to Pipeline" className="text-sm font-bold text-text-muted hover:text-text-primary flex items-center gap-2 transition-colors">
           <ChevronLeft size={16} /> Back to Pipeline
-        </Link>
+        </TrackedLink>
 
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -45,8 +45,8 @@ export default function CandidateReport({ params }: { params: { id: string } }) 
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="secondary" className="gap-2 text-red-400 hover:text-red-300 hover:bg-red-400/10">Reject</Button>
-            <Button className="gap-2 bg-green-500 hover:bg-green-600 text-background">
+            <Button variant="secondary" analyticsCategory="talent" analyticsLabel="Reject Candidate" className="gap-2 text-red-400 hover:text-red-300 hover:bg-red-400/10">Reject</Button>
+            <Button analyticsCategory="talent" analyticsLabel="Move to Offer" className="gap-2 bg-green-500 hover:bg-green-600 text-background">
               Move to Offer <ArrowUpRight size={16} />
             </Button>
           </div>
@@ -153,7 +153,7 @@ export default function CandidateReport({ params }: { params: { id: string } }) 
               </div>
               <h4 className="text-sm font-bold text-text-primary">{mod.title}</h4>
               <p className="text-xs text-text-muted mt-1">Time taken: {mod.time}</p>
-              <Button variant="secondary" size="sm" className="w-full mt-4 text-xs">Review Submission</Button>
+              <Button variant="secondary" size="sm" analyticsCategory="talent" analyticsLabel={`Review Submission — ${mod.title}`} className="w-full mt-4 text-xs">Review Submission</Button>
             </Card>
           ))}
         </div>

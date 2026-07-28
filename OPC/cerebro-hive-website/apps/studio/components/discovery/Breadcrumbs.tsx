@@ -1,6 +1,6 @@
-import Link from 'next/link';
 import { buildBreadcrumbSchema } from '@/lib/discovery';
 import { JsonLd } from './JsonLd';
+import { TrackedLink } from '@/components/cerebro/TrackedLink';
 
 interface BreadcrumbItem {
   label: string;
@@ -26,9 +26,9 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                 {item.label}
               </span>
             ) : (
-              <Link href={item.href} className="hover:text-foreground transition-colors">
+              <TrackedLink href={item.href} analyticsEvent="breadcrumb_click" analyticsCategory="breadcrumbs" analyticsLabel={item.label} className="hover:text-foreground transition-colors">
                 {item.label}
-              </Link>
+              </TrackedLink>
             )}
           </span>
         ))}

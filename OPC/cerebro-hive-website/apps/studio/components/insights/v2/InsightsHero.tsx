@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { BrainCircuit, TrendingUp, ArrowUpRight, ArrowRight, ShieldCheck, Activity, BarChart3 } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const dashboardMetrics = [
   { label: "AI Adoption", value: "76%", trend: "+23%", icon: TrendingUp, color: "text-accent-primary" },
@@ -55,13 +56,13 @@ export const InsightsHero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <button className="group px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-primary-accent shadow-lg">
+            <TrackedButton eventCategory="insights-hero" eventLabel="Read Weekly Brief" className="group px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-primary-accent shadow-lg">
               Read Weekly Brief
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </button>
-            <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-border-default hover:bg-surface transition-all flex items-center justify-center gap-2">
+            </TrackedButton>
+            <TrackedButton eventCategory="insights-hero" eventLabel="Explore Dashboards" className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-border-default hover:bg-surface transition-all flex items-center justify-center gap-2">
               <BarChart3 size={16} /> Explore Dashboards
-            </button>
+            </TrackedButton>
           </div>
           
         </div>

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import {
   Layers,
   Package,

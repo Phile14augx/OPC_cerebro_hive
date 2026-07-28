@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Building, Factory, Cloud, Database, Shield, Target, ArrowRight, Loader2, Download, Calendar, DollarSign, LayoutTemplate, Network } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const steps = [
   { id: "size", icon: Building, label: "Company Size", options: ["100-500", "501-2000", "2000-10000", "10000+"] },
@@ -94,14 +95,16 @@ export const ArchitectureStudio = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {steps[currentStep].options.map((option, i) => (
-                    <button
+                    <TrackedButton
                       key={i}
+                      eventCategory="architecture-studio"
+                      eventLabel={option}
                       onClick={() => handleSelect(option)}
                       className="p-6 rounded-xl border border-border bg-surface-elevated hover:bg-[#00E5FF]/5 hover:border-[#00E5FF]/30 text-left transition-all duration-300 group flex items-center justify-between"
                     >
                       <span className="text-lg font-medium text-text-primary group-hover:text-[#00E5FF]">{option}</span>
                       <ArrowRight size={18} className="text-transparent group-hover:text-[#00E5FF] -translate-x-4 group-hover:translate-x-0 transition-all" />
-                    </button>
+                    </TrackedButton>
                   ))}
                 </div>
 
@@ -152,12 +155,12 @@ export const ArchitectureStudio = () => {
                     <p className="text-sm text-text-secondary mt-1">Optimized for {selections.industry} • {selections.cloud} Deployment</p>
                   </div>
                   <div className="flex gap-3 w-full md:w-auto">
-                    <button className="flex-1 md:flex-none px-6 py-3 bg-surface-elevated border border-border text-text-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center gap-2 hover:bg-surface hover:text-text-primary transition-colors">
+                    <TrackedButton eventCategory="architecture-studio" eventLabel="Download PDF" className="flex-1 md:flex-none px-6 py-3 bg-surface-elevated border border-border text-text-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center gap-2 hover:bg-surface hover:text-text-primary transition-colors">
                       <Download size={14} /> PDF
-                    </button>
-                    <button className="flex-1 md:flex-none px-6 py-3 bg-primary-accent text-text-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center hover:bg-surface transition-colors shadow-lg">
+                    </TrackedButton>
+                    <TrackedButton eventCategory="architecture-studio" eventLabel="Book Strategy" className="flex-1 md:flex-none px-6 py-3 bg-primary-accent text-text-primary text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center hover:bg-surface transition-colors shadow-lg">
                       Book Strategy
-                    </button>
+                    </TrackedButton>
                   </div>
                 </div>
 
@@ -208,9 +211,9 @@ export const ArchitectureStudio = () => {
 
                 {/* Reset */}
                 <div className="p-4 border-t border-border bg-surface-elevated text-center">
-                  <button onClick={reset} className="text-xs text-text-muted hover:text-text-primary transition-colors underline underline-offset-4">
+                  <TrackedButton eventCategory="architecture-studio" eventLabel="Reconfigure Architecture" onClick={reset} className="text-xs text-text-muted hover:text-text-primary transition-colors underline underline-offset-4">
                     Reconfigure Architecture
-                  </button>
+                  </TrackedButton>
                 </div>
 
               </motion.div>

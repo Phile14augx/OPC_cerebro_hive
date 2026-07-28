@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { 
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import {
   Bot, Search, Plus, Filter, 
   Copy, Play, Star, Clock, 
   GitBranch, TerminalSquare, Settings2, MoreHorizontal
@@ -64,7 +66,7 @@ export default function PromptLibraryPage() {
   return (
     <div className="flex-1 p-8 max-w-7xl mx-auto w-full">
       <div className="flex items-center gap-2 text-sm text-text-muted mb-4 font-medium">
-        <Link href="/archive" className="hover:text-primary transition-colors">Archive</Link>
+        <TrackedLink href="/archive" analyticsEvent="breadcrumb_archive_click" analyticsCategory="archive-prompts" analyticsLabel="Archive" className="hover:text-primary transition-colors">Archive</TrackedLink>
         <span className="text-border">/</span>
         <span className="text-text-primary">Prompt Library</span>
       </div>
@@ -80,14 +82,14 @@ export default function PromptLibraryPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="bg-surface hover:bg-surface-hover border border-border text-text-primary px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
+          <TrackedButton eventCategory="archive-prompts" eventLabel="Configure" className="bg-surface hover:bg-surface-hover border border-border text-text-primary px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
             <Settings2 size={18} />
             Configure
-          </button>
-          <button className="bg-primary hover:bg-primary-hover text-white px-5 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+          </TrackedButton>
+          <TrackedButton eventCategory="archive-prompts" eventLabel="New Prompt" className="bg-primary hover:bg-primary-hover text-white px-5 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
             <Plus size={18} />
             New Prompt
-          </button>
+          </TrackedButton>
         </div>
       </div>
 
@@ -98,13 +100,15 @@ export default function PromptLibraryPage() {
             <h3 className="text-sm font-bold text-text-primary mb-4 uppercase tracking-wider font-space">Categories</h3>
             <div className="space-y-1">
               {categories.map(cat => (
-                <button 
+                <TrackedButton
                   key={cat}
+                  eventCategory="archive-prompts"
+                  eventLabel={cat}
                   onClick={() => setActiveCategory(cat)}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeCategory === cat ? 'bg-primary/10 text-primary' : 'text-text-muted hover:text-text-primary hover:bg-surface-hover'}`}
                 >
                   {cat}
-                </button>
+                </TrackedButton>
               ))}
             </div>
           </div>
@@ -113,9 +117,9 @@ export default function PromptLibraryPage() {
             <h3 className="text-sm font-bold text-text-primary mb-4 uppercase tracking-wider font-space">Popular Tags</h3>
             <div className="flex flex-wrap gap-2">
               {["core", "persona", "search", "code", "security", "email", "internal"].map(tag => (
-                <button key={tag} className="px-2 py-1 bg-background border border-border text-text-muted hover:text-primary hover:border-primary/50 text-xs font-medium rounded transition-colors">
+                <TrackedButton key={tag} eventCategory="archive-prompts" eventLabel={tag} className="px-2 py-1 bg-background border border-border text-text-muted hover:text-primary hover:border-primary/50 text-xs font-medium rounded transition-colors">
                   {tag}
-                </button>
+                </TrackedButton>
               ))}
             </div>
           </div>
@@ -136,9 +140,9 @@ export default function PromptLibraryPage() {
               onChange={(e) => setSearch(e.target.value)}
             />
             <div className="absolute inset-y-0 right-2 flex items-center">
-              <button className="p-2 text-text-muted hover:text-text-primary transition-colors">
+              <TrackedButton eventCategory="archive-prompts" eventLabel="Filter" className="p-2 text-text-muted hover:text-text-primary transition-colors">
                 <Filter size={18} />
-              </button>
+              </TrackedButton>
             </div>
           </div>
 
@@ -154,15 +158,15 @@ export default function PromptLibraryPage() {
                     <p className="text-xs text-text-muted font-mono mt-1">{prompt.slug}</p>
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="p-1.5 text-text-muted hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Test in Playground">
+                    <TrackedButton eventCategory="archive-prompts" eventLabel="Test in Playground" className="p-1.5 text-text-muted hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Test in Playground">
                       <Play size={16} />
-                    </button>
-                    <button className="p-1.5 text-text-muted hover:text-text-primary hover:bg-background rounded transition-colors" title="Copy Slug">
+                    </TrackedButton>
+                    <TrackedButton eventCategory="archive-prompts" eventLabel="Copy Slug" className="p-1.5 text-text-muted hover:text-text-primary hover:bg-background rounded transition-colors" title="Copy Slug">
                       <Copy size={16} />
-                    </button>
-                    <button className="p-1.5 text-text-muted hover:text-text-primary hover:bg-background rounded transition-colors">
+                    </TrackedButton>
+                    <TrackedButton eventCategory="archive-prompts" eventLabel="More Options" className="p-1.5 text-text-muted hover:text-text-primary hover:bg-background rounded transition-colors">
                       <MoreHorizontal size={16} />
-                    </button>
+                    </TrackedButton>
                   </div>
                 </div>
                 

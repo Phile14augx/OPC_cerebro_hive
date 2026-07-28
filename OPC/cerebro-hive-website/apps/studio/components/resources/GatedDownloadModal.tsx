@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { X, Mail, Shield, CheckCircle, Download } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 interface GatedDownloadModalProps {
   title: string;
@@ -52,7 +54,9 @@ export default function GatedDownloadModal({ title, onClose, onSuccess }: GatedD
         position: "relative",
         animation: "fadeIn 0.2s ease-out",
       }}>
-        <button
+        <TrackedButton
+          eventCategory="resources"
+          eventLabel="Close gated download modal"
           onClick={onClose}
           style={{
             position: "absolute", top: "20px", right: "20px",
@@ -61,7 +65,7 @@ export default function GatedDownloadModal({ title, onClose, onSuccess }: GatedD
           }}
         >
           <X size={20} />
-        </button>
+        </TrackedButton>
 
         {submitted ? (
           <div style={{ textAlign: "center", padding: "20px 0" }}>
@@ -79,15 +83,18 @@ export default function GatedDownloadModal({ title, onClose, onSuccess }: GatedD
             <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.875rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "20px" }}>
               Thank you. The whitepaper <strong>&quot;{title}&quot;</strong> has been unlocked.
             </p>
-            <a
+            <TrackedLink
               href={`/whitepapers/${title.toLowerCase().replace(/\s+/g, "-")}.pdf`}
+              analyticsEvent="whitepaper_download"
+              analyticsCategory="resources"
+              analyticsLabel={`Download PDF Now — ${title}`}
               download
               className="btn-primary"
               style={{ width: "100%", justifyContent: "center" }}
             >
               <Download size={16} />
               Download PDF Now
-            </a>
+            </TrackedLink>
           </div>
         ) : (
           <>
@@ -136,9 +143,9 @@ export default function GatedDownloadModal({ title, onClose, onSuccess }: GatedD
                 </span>
               </div>
 
-              <button type="submit" className="btn-primary" style={{ width: "100%", justifyContent: "center", padding: "12px", marginTop: "8px" }}>
+              <TrackedButton eventCategory="resources" eventLabel="Request Access" eventAction="gated_download_submit" type="submit" className="btn-primary" style={{ width: "100%", justifyContent: "center", padding: "12px", marginTop: "8px" }}>
                 Request Access →
-              </button>
+              </TrackedButton>
             </form>
           </>
         )}

@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 type Sender = "user" | "bot" | "system";
 
@@ -169,7 +171,10 @@ export default function CerebroChat() {
         {!isOpen && (
           <motion.button
             initial={{ scale: 0, opacity: 0.4 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }}
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              analytics.track({ eventName: 'click', category: 'cerebro-chat', label: 'Open Cerebro Chat' });
+              setIsOpen(true);
+            }}
             className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#050B14] border border-primary-accent/30 shadow-[0_0_30px_rgba(0,245,122,0.2)] flex items-center justify-center group z-50 overflow-hidden"
           >
             <div className="absolute inset-0 bg-primary-accent/10 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -222,9 +227,14 @@ export default function CerebroChat() {
                   <span>Knowledge Base: <strong className="text-text-secondary">12,420</strong></span>
                   <span>Research: <strong className="text-text-secondary">356</strong></span>
                 </div>
-                <button onClick={() => setIsOpen(false)} className="text-text-muted hover:text-text-primary transition-colors">
+                <TrackedButton
+                  eventCategory="cerebro-chat"
+                  eventLabel="Close Cerebro Chat"
+                  onClick={() => setIsOpen(false)}
+                  className="text-text-muted hover:text-text-primary transition-colors"
+                >
                   <X size={20} />
-                </button>
+                </TrackedButton>
               </div>
             </div>
 
@@ -236,14 +246,20 @@ export default function CerebroChat() {
                 <span className="text-[10px] uppercase tracking-widest text-text-muted font-bold mb-6">Navigator</span>
                 <div className="flex flex-col gap-2">
                   {navigatorItems.map(item => (
-                    <button key={item.id} style={{ padding: '12px 14px' }} className="nav-item flex flex-col text-left rounded-xl border border-transparent hover:border-primary-accent/30 hover:bg-primary-accent/5 transition-all group relative overflow-hidden">
+                    <TrackedButton
+                      key={item.id}
+                      eventCategory="cerebro-chat"
+                      eventLabel={item.label}
+                      style={{ padding: '12px 14px' }}
+                      className="nav-item flex flex-col text-left rounded-xl border border-transparent hover:border-primary-accent/30 hover:bg-primary-accent/5 transition-all group relative overflow-hidden"
+                    >
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary-accent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="flex items-center gap-2 mb-1">
                         <item.icon size={14} className="text-text-muted group-hover:text-primary-accent transition-colors shrink-0" />
                         <span className="text-xs font-bold text-text-secondary group-hover:text-text-primary transition-colors">{item.label}</span>
                       </div>
                       <span className="text-[10px] text-text-muted group-hover:text-text-secondary pl-5">{item.desc}</span>
-                    </button>
+                    </TrackedButton>
                   ))}
                 </div>
               </div>
@@ -326,10 +342,15 @@ export default function CerebroChat() {
                         {!msg.isGenerating && msg.actions && (
                           <div className="flex flex-wrap gap-2 mt-2">
                             {msg.actions.map(action => (
-                              <button key={action.label} className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface border border-border text-text-secondary text-[11px] font-bold hover:bg-primary-accent hover:border-primary-accent hover:text-text-primary transition-colors shadow-sm">
+                              <TrackedButton
+                                key={action.label}
+                                eventCategory="cerebro-chat"
+                                eventLabel={action.label}
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface border border-border text-text-secondary text-[11px] font-bold hover:bg-primary-accent hover:border-primary-accent hover:text-text-primary transition-colors shadow-sm"
+                              >
                                 <action.icon size={12} />
                                 {action.label}
-                              </button>
+                              </TrackedButton>
                             ))}
                           </div>
                         )}
@@ -341,13 +362,15 @@ export default function CerebroChat() {
                   {messages.length === 1 && (
                     <div className="mt-4 flex flex-wrap gap-2 pl-14">
                       {suggestedPrompts.map(prompt => (
-                        <button 
-                          key={prompt.id} 
+                        <TrackedButton
+                          key={prompt.id}
+                          eventCategory="cerebro-chat"
+                          eventLabel={prompt.text}
                           onClick={() => handleSend(prompt.text)}
                           className="prompt-chip px-3 py-1.5 rounded-full border border-border bg-surface hover:border-primary-accent/50 hover:bg-surface-elevated transition-all text-xs text-text-secondary"
                         >
                           {prompt.text}
-                        </button>
+                        </TrackedButton>
                       ))}
                     </div>
                   )}
@@ -372,17 +395,19 @@ export default function CerebroChat() {
                     />
                     <div className="toolbar flex items-center justify-between px-6 py-4 bg-surface-elevated/40 dark:bg-surface-elevated border-t border-border dark:border-transparent">
                       <div className="flex gap-2">
-                        <button className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Briefcase size={16}/></button>
-                        <button className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Network size={16}/></button>
-                        <button className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><FileText size={16}/></button>
+                        <TrackedButton eventCategory="cerebro-chat" eventLabel="Attach Briefcase" className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Briefcase size={16}/></TrackedButton>
+                        <TrackedButton eventCategory="cerebro-chat" eventLabel="Attach Network" className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Network size={16}/></TrackedButton>
+                        <TrackedButton eventCategory="cerebro-chat" eventLabel="Attach File" className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><FileText size={16}/></TrackedButton>
                       </div>
-                      <button 
+                      <TrackedButton
+                        eventCategory="cerebro-chat"
+                        eventLabel="Send"
                         onClick={() => handleSend(input)}
                         disabled={!input.trim()}
                         className="send-button px-6 py-2 bg-primary-accent text-text-primary text-sm font-bold rounded flex items-center gap-3 hover:bg-surface transition-colors disabled:opacity-50"
                       >
                         Send <Send size={14} />
-                      </button>
+                      </TrackedButton>
                     </div>
                   </div>
                 </div>
@@ -399,17 +424,19 @@ export default function CerebroChat() {
                      { id: "deployment", label: "Deployment" },
                      { id: "security", label: "Security" }
                    ].map(tab => (
-                     <button 
+                     <TrackedButton
                        key={tab.id}
+                       eventCategory="cerebro-chat"
+                       eventLabel={tab.label}
                        onClick={() => setActiveTab(tab.id as any)}
                        className={cn(
-                         "pb-3 text-[10px] uppercase tracking-widest font-bold transition-colors relative", 
+                         "pb-3 text-[10px] uppercase tracking-widest font-bold transition-colors relative",
                          activeTab === tab.id ? "text-primary-accent" : "text-text-muted hover:text-text-secondary"
                        )}
                      >
                        {tab.label}
                        {activeTab === tab.id && <motion.div layoutId="tabLine" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-accent" />}
-                     </button>
+                     </TrackedButton>
                    ))}
                 </div>
 

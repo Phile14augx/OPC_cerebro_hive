@@ -28,6 +28,7 @@ import { LiveMetricsPanel } from './overlays/LiveMetricsPanel';
 import { BackgroundGrid } from './overlays/BackgroundGrid';
 
 import { Play, Activity, Settings2 } from 'lucide-react';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 const nodeTypes = {
   client: ClientNode,
@@ -110,24 +111,30 @@ export function LivingArchitecture() {
 
       {/* Mode Controls */}
       <div className="absolute top-6 left-6 z-50 flex flex-col gap-2 bg-surface/80 backdrop-blur-md p-2 rounded-xl border border-border shadow-elevated">
-        <button 
+        <TrackedButton
+          eventCategory="architecture"
+          eventLabel="Topology View"
           onClick={() => setMode('topology')}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-colors \${mode === 'topology' ? 'bg-background text-text-primary border border-border' : 'text-text-muted hover:text-text-primary'}`}
         >
           <Settings2 size={14} /> Topology View
-        </button>
-        <button 
+        </TrackedButton>
+        <TrackedButton
+          eventCategory="architecture"
+          eventLabel="Live Traffic Mode"
           onClick={() => setMode('live')}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-colors \${mode === 'live' ? 'bg-primary-accent/10 text-primary-accent border border-primary-accent/30' : 'text-text-muted hover:text-text-primary'}`}
         >
           <Play size={14} /> Live Traffic Mode
-        </button>
-        <button 
+        </TrackedButton>
+        <TrackedButton
+          eventCategory="architecture"
+          eventLabel="AI Brain Mode"
           onClick={() => setMode('brain')}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-colors \${mode === 'brain' ? 'bg-secondary-accent/10 text-secondary-accent border border-secondary-accent/30' : 'text-text-muted hover:text-text-primary'}`}
         >
           <Activity size={14} /> AI Brain Mode
-        </button>
+        </TrackedButton>
       </div>
 
       <ReactFlow

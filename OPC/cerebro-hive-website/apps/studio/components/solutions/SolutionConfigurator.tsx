@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Settings2, ArrowRight, BrainCircuit, ShieldCheck, Download, Calendar, Users, BarChart3, ChevronRight, Activity } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const industries = ["Financial Services", "Healthcare", "Manufacturing", "Technology", "Retail"];
 const problems = ["Fragmented Knowledge", "High Operational Costs", "Slow Decision Making", "Legacy System Bottlenecks", "Compliance Risks"];
@@ -77,9 +78,9 @@ export function SolutionConfigurator() {
                   <p className="text-text-muted mb-8 text-sm">This determines the compliance baseline and regulatory requirements of your architecture.</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {industries.map(ind => (
-                      <button key={ind} onClick={() => handleSelect("industry", ind)} className="p-4 rounded-xl border border-border bg-surface text-left hover:border-primary-accent/50 hover:bg-surface-elevated transition-all font-medium text-text-secondary">
+                      <TrackedButton key={ind} eventCategory="solutions" eventLabel={ind} eventAction="industry_select" onClick={() => handleSelect("industry", ind)} className="p-4 rounded-xl border border-border bg-surface text-left hover:border-primary-accent/50 hover:bg-surface-elevated transition-all font-medium text-text-secondary">
                         {ind}
-                      </button>
+                      </TrackedButton>
                     ))}
                   </div>
                 </motion.div>
@@ -89,7 +90,7 @@ export function SolutionConfigurator() {
               {!result && !isGenerating && step === 2 && (
                 <motion.div key="step2" initial={{ opacity: 0.4, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                    <div className="flex items-center gap-2 mb-2">
-                    <button onClick={() => setStep(1)} className="text-xs text-text-muted hover:text-text-primary">Industry</button>
+                    <TrackedButton eventCategory="solutions" eventLabel="Industry (back)" onClick={() => setStep(1)} className="text-xs text-text-muted hover:text-text-primary">Industry</TrackedButton>
                     <ChevronRight size={12} className="text-text-muted" />
                     <span className="text-xs text-primary-accent">Primary Challenge</span>
                   </div>
@@ -97,9 +98,9 @@ export function SolutionConfigurator() {
                   <p className="text-text-muted mb-8 text-sm">We map this to specific AI foundation models and orchestration strategies.</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {problems.map(prob => (
-                      <button key={prob} onClick={() => handleSelect("problem", prob)} className="p-4 rounded-xl border border-border bg-surface text-left hover:border-primary-accent/50 hover:bg-surface-elevated transition-all font-medium text-text-secondary">
+                      <TrackedButton key={prob} eventCategory="solutions" eventLabel={prob} eventAction="problem_select" onClick={() => handleSelect("problem", prob)} className="p-4 rounded-xl border border-border bg-surface text-left hover:border-primary-accent/50 hover:bg-surface-elevated transition-all font-medium text-text-secondary">
                         {prob}
-                      </button>
+                      </TrackedButton>
                     ))}
                   </div>
                 </motion.div>
@@ -117,20 +118,22 @@ export function SolutionConfigurator() {
                   <p className="text-text-muted mb-8 text-sm">Determines the deployment strategy, change management complexity, and cluster sizing.</p>
                   <div className="grid grid-cols-2 gap-4 mb-8">
                     {sizes.map(size => (
-                      <button key={size} onClick={() => setSelections({...selections, size})} 
+                      <TrackedButton key={size} eventCategory="solutions" eventLabel={`${size} Employees`} eventAction="size_select" onClick={() => setSelections({...selections, size})}
                         className={`p-4 rounded-xl border transition-all font-medium ${selections.size === size ? "border-primary-accent bg-surface-elevated text-text-primary" : "border-border bg-surface text-text-secondary hover:border-primary-accent/50"}`}>
                         {size} Employees
-                      </button>
+                      </TrackedButton>
                     ))}
                   </div>
-                  
-                  <button 
+
+                  <TrackedButton
+                    eventCategory="solutions"
+                    eventLabel="Generate Reference Architecture"
                     disabled={!selections.size}
-                    onClick={handleGenerate} 
+                    onClick={handleGenerate}
                     className="w-full py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-elevated transition-all flex items-center justify-center gap-2"
                   >
                     Generate Reference Architecture <ArrowRight size={16} />
-                  </button>
+                  </TrackedButton>
                 </motion.div>
               )}
 
@@ -157,7 +160,7 @@ export function SolutionConfigurator() {
                       <h3 className="text-2xl font-space font-bold text-text-primary mb-1">Enterprise Cognitive Layer</h3>
                       <p className="text-sm text-text-secondary">Customized for {selections.industry} • {selections.size} Employees</p>
                     </div>
-                    <button onClick={reset} className="text-xs text-text-muted hover:text-text-primary underline">Start Over</button>
+                    <TrackedButton eventCategory="solutions" eventLabel="Start Over" onClick={reset} className="text-xs text-text-muted hover:text-text-primary underline">Start Over</TrackedButton>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -207,12 +210,12 @@ export function SolutionConfigurator() {
 
                   {/* Actions */}
                   <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-                    <button className="flex-1 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:shadow-elevated transition-all flex items-center justify-center gap-2">
+                    <TrackedButton eventCategory="solutions" eventLabel="Schedule Deep Dive" className="flex-1 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:shadow-elevated transition-all flex items-center justify-center gap-2">
                       Schedule Deep Dive <ArrowRight size={16} />
-                    </button>
-                    <button className="flex-1 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/50 hover:bg-surface-elevated transition-all flex items-center justify-center gap-2">
+                    </TrackedButton>
+                    <TrackedButton eventCategory="solutions" eventLabel="Download PDF Report" className="flex-1 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/50 hover:bg-surface-elevated transition-all flex items-center justify-center gap-2">
                       Download PDF Report <Download size={16} />
-                    </button>
+                    </TrackedButton>
                   </div>
                 </motion.div>
               )}

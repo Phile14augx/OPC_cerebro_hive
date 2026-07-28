@@ -3,8 +3,9 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Download } from "lucide-react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 // Animated counter component for metrics
 const Counter = ({ value, label }: { value: string, label: string }) => (
@@ -73,12 +74,12 @@ export const ResearchHero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4 pt-8">
-             <Link href="#publications" className="px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm rounded-sm transition-transform hover:-translate-y-1 flex items-center justify-center gap-2">
+             <TrackedLink href="#publications" analyticsEvent="cta_click" analyticsCategory="research-hero" analyticsLabel="Explore Publications" className="px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm rounded-sm transition-transform hover:-translate-y-1 flex items-center justify-center gap-2">
                Explore Publications <ArrowRight size={16} />
-             </Link>
-             <button className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm rounded-sm transition-colors hover:bg-surface flex items-center justify-center gap-2">
+             </TrackedLink>
+             <TrackedButton eventCategory="research-hero" eventLabel="Download Library" className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm rounded-sm transition-colors hover:bg-surface flex items-center justify-center gap-2">
                <Download size={16} /> Download Library
-             </button>
+             </TrackedButton>
           </div>
         </div>
 

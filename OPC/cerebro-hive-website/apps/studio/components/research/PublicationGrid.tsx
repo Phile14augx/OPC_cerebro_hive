@@ -7,6 +7,7 @@ import { ResearchCategory, ResearchDomain } from '@/lib/content/research/types';
 import { PublicationCard } from './PublicationCard';
 import { SectionHeading } from '../cerebro/SectionHeading';
 import { Search, Filter, X } from 'lucide-react';
+import { TrackedButton } from '../cerebro/TrackedButton';
 
 const ALL_CATEGORIES = Array.from(new Set(allResearchData.map(r => r.category)));
 const ALL_DOMAINS = Array.from(new Set(allResearchData.map(r => r.domain)));
@@ -72,12 +73,14 @@ export const PublicationGrid = () => {
               className="w-full bg-background border border-border rounded-full py-3 pl-12 pr-4 text-sm text-text-primary focus:outline-none focus:border-primary-accent transition-colors"
             />
             {searchQuery && (
-              <button 
+              <TrackedButton
+                eventCategory="research"
+                eventLabel="Clear search"
                 onClick={() => setSearchQuery('')}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary"
               >
                 <X size={16} />
-              </button>
+              </TrackedButton>
             )}
           </div>
         </div>
@@ -91,20 +94,26 @@ export const PublicationGrid = () => {
                 <Filter size={14} /> Filter by Domain
               </h4>
               <div className="flex flex-col gap-2">
-                <button 
+                <TrackedButton
+                  eventCategory="research"
+                  eventLabel="All Domains"
+                  eventAction="domain_filter"
                   onClick={() => setSelectedDomain(null)}
                   className={`text-left text-sm py-1.5 px-3 rounded ${!selectedDomain ? 'bg-primary-accent/10 text-primary-accent font-bold' : 'text-text-secondary hover:bg-surface'}`}
                 >
                   All Domains
-                </button>
+                </TrackedButton>
                 {ALL_DOMAINS.map(domain => (
-                  <button 
+                  <TrackedButton
                     key={domain}
+                    eventCategory="research"
+                    eventLabel={domain}
+                    eventAction="domain_filter"
                     onClick={() => setSelectedDomain(domain)}
                     className={`text-left text-sm py-1.5 px-3 rounded ${selectedDomain === domain ? 'bg-primary-accent/10 text-primary-accent font-bold' : 'text-text-secondary hover:bg-surface'}`}
                   >
                     {domain}
-                  </button>
+                  </TrackedButton>
                 ))}
               </div>
             </div>
@@ -114,20 +123,26 @@ export const PublicationGrid = () => {
                 <Filter size={14} /> Content Type
               </h4>
               <div className="flex flex-col gap-2">
-                <button 
+                <TrackedButton
+                  eventCategory="research"
+                  eventLabel="All Types"
+                  eventAction="category_filter"
                   onClick={() => setSelectedCategory(null)}
                   className={`text-left text-sm py-1.5 px-3 rounded ${!selectedCategory ? 'bg-primary-accent/10 text-primary-accent font-bold' : 'text-text-secondary hover:bg-surface'}`}
                 >
                   All Types
-                </button>
+                </TrackedButton>
                 {ALL_CATEGORIES.map(cat => (
-                  <button 
+                  <TrackedButton
                     key={cat}
+                    eventCategory="research"
+                    eventLabel={cat.replace('-', ' ')}
+                    eventAction="category_filter"
                     onClick={() => setSelectedCategory(cat)}
                     className={`text-left text-sm py-1.5 px-3 rounded capitalize ${selectedCategory === cat ? 'bg-primary-accent/10 text-primary-accent font-bold' : 'text-text-secondary hover:bg-surface'}`}
                   >
                     {cat.replace('-', ' ')}
-                  </button>
+                  </TrackedButton>
                 ))}
               </div>
             </div>
@@ -138,7 +153,9 @@ export const PublicationGrid = () => {
             <div className="mb-6 flex items-center justify-between">
               <span className="text-xs font-bold text-text-muted">{filteredData.length} Results Found</span>
               {(selectedCategory || selectedDomain || searchQuery) && (
-                <button 
+                <TrackedButton
+                  eventCategory="research"
+                  eventLabel="Clear all filters"
                   onClick={() => {
                     setSearchQuery('');
                     setSelectedCategory(null);
@@ -147,7 +164,7 @@ export const PublicationGrid = () => {
                   className="text-xs font-bold text-primary-accent hover:underline"
                 >
                   Clear all filters
-                </button>
+                </TrackedButton>
               )}
             </div>
 

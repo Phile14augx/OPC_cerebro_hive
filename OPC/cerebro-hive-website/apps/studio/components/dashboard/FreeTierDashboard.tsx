@@ -6,6 +6,7 @@ import {
   ShieldAlert, Mail, FileText, Database, UserCheck, CheckCircle2, DollarSign, Award, Clock,
   ArrowUpRight, Zap, Code, ShieldCheck, BookOpen, Layers, Bot, Workflow, HelpCircle, ChevronRight
 } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface SandboxItem {
   id: string;
@@ -571,13 +572,15 @@ Billing Audit Node`;
                     </div>
                     <h4 className="font-orbitron" style={{ fontSize: "1.05rem", fontWeight: 700, marginBottom: "8px" }}>{s.title}</h4>
                     <p className="font-exo" style={{ fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "20px", flex: 1 }}>{s.desc}</p>
-                    <button
+                    <TrackedButton
+                      eventCategory="free-tier-dashboard"
+                      eventLabel={`Launch Sandbox - ${s.title}`}
                       onClick={() => setActiveSandbox(s.id)}
                       className="btn-ghost"
                       style={{ padding: "8px 16px", fontSize: "0.75rem", width: "100%", justifyContent: "center" }}
                     >
                       Launch Sandbox
-                    </button>
+                    </TrackedButton>
                   </div>
                 );
               })}
@@ -604,13 +607,15 @@ Billing Audit Node`;
                     </div>
                     <h4 className="font-orbitron" style={{ fontSize: "1.05rem", fontWeight: 700, marginBottom: "8px" }}>{s.title}</h4>
                     <p className="font-exo" style={{ fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "20px", flex: 1 }}>{s.desc}</p>
-                    <button
+                    <TrackedButton
+                      eventCategory="free-tier-dashboard"
+                      eventLabel={`Launch Sandbox - ${s.title}`}
                       onClick={() => setActiveSandbox(s.id)}
                       className="btn-ghost"
                       style={{ padding: "8px 16px", fontSize: "0.75rem", width: "100%", justifyContent: "center", color: s.color, borderColor: s.color }}
                     >
                       Launch Sandbox
-                    </button>
+                    </TrackedButton>
                   </div>
                 );
               })}
@@ -637,13 +642,15 @@ Billing Audit Node`;
                     </div>
                     <h4 className="font-orbitron" style={{ fontSize: "1.05rem", fontWeight: 700, marginBottom: "8px" }}>{s.title}</h4>
                     <p className="font-exo" style={{ fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "20px", flex: 1 }}>{s.desc}</p>
-                    <button
+                    <TrackedButton
+                      eventCategory="free-tier-dashboard"
+                      eventLabel={`Launch Sandbox - ${s.title}`}
                       onClick={() => setActiveSandbox(s.id)}
                       className="btn-ghost"
                       style={{ padding: "8px 16px", fontSize: "0.75rem", width: "100%", justifyContent: "center", color: s.color, borderColor: s.color }}
                     >
                       Launch Sandbox
-                    </button>
+                    </TrackedButton>
                   </div>
                 );
               })}
@@ -658,7 +665,9 @@ Billing Audit Node`;
       {activeSandbox !== null && (
         <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
           {/* Back button */}
-          <button
+          <TrackedButton
+            eventCategory="free-tier-dashboard"
+            eventLabel="Back to Sandbox Directory"
             onClick={() => {
               setActiveSandbox(null);
               setMatchAudited(false);
@@ -676,7 +685,7 @@ Billing Audit Node`;
             style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "0.75rem", padding: "6px 14px", marginBottom: "28px" }}
           >
             <ArrowLeft size={12} /> Back to Sandbox Directory
-          </button>
+          </TrackedButton>
 
           {/* SIMULATOR: CerebroFlow */}
           {activeSandbox === "flow" && (
@@ -689,18 +698,18 @@ Billing Audit Node`;
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px" }}>
                 <div className="card-glass" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
                   <span className="font-orbitron" style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Add Pipeline Nodes</span>
-                  <button onClick={() => addFlowNode("Trigger", "Webhook API Received", "var(--hive-orange)")} className="btn-ghost" style={{ padding: "8px", fontSize: "0.75rem", borderColor: "rgba(255,138,0,0.3)", color: "var(--hive-orange)" }}>+ Webhook Trigger</button>
-                  <button onClick={() => addFlowNode("AI Node", "Sentiment Router", "var(--neural-blue)")} className="btn-ghost" style={{ padding: "8px", fontSize: "0.75rem", borderColor: "rgba(0,229,255,0.3)", color: "var(--neural-blue)" }}>+ AI Node</button>
-                  <button onClick={() => addFlowNode("Action", "Slack Alerts Node", "var(--violet)")} className="btn-ghost" style={{ padding: "8px", fontSize: "0.75rem", borderColor: "rgba(123,97,255,0.3)", color: "var(--violet)" }}>+ Action Node</button>
-                  <button onClick={clearFlowCanvas} className="btn-ghost" style={{ padding: "8px", fontSize: "0.75rem", color: "var(--text-muted)", borderColor: "rgba(255,255,255,0.1)" }}>Clear Nodes</button>
+                  <TrackedButton eventCategory="dashboard-flow" eventLabel="Add Webhook Trigger" onClick={() => addFlowNode("Trigger", "Webhook API Received", "var(--hive-orange)")} className="btn-ghost" style={{ padding: "8px", fontSize: "0.75rem", borderColor: "rgba(255,138,0,0.3)", color: "var(--hive-orange)" }}>+ Webhook Trigger</TrackedButton>
+                  <TrackedButton eventCategory="dashboard-flow" eventLabel="Add AI Node" onClick={() => addFlowNode("AI Node", "Sentiment Router", "var(--neural-blue)")} className="btn-ghost" style={{ padding: "8px", fontSize: "0.75rem", borderColor: "rgba(0,229,255,0.3)", color: "var(--neural-blue)" }}>+ AI Node</TrackedButton>
+                  <TrackedButton eventCategory="dashboard-flow" eventLabel="Add Action Node" onClick={() => addFlowNode("Action", "Slack Alerts Node", "var(--violet)")} className="btn-ghost" style={{ padding: "8px", fontSize: "0.75rem", borderColor: "rgba(123,97,255,0.3)", color: "var(--violet)" }}>+ Action Node</TrackedButton>
+                  <TrackedButton eventCategory="dashboard-flow" eventLabel="Clear Nodes" onClick={clearFlowCanvas} className="btn-ghost" style={{ padding: "8px", fontSize: "0.75rem", color: "var(--text-muted)", borderColor: "rgba(255,255,255,0.1)" }}>Clear Nodes</TrackedButton>
                 </div>
 
                 <div className="card-glass" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px", flex: 2 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span className="font-orbitron" style={{ fontSize: "0.75rem", color: "var(--text-primary)" }}>Canvas Map</span>
-                    <button onClick={runFlowSimulation} disabled={flowRunning || flowNodes.length === 0} className="btn-primary" style={{ padding: "6px 14px", fontSize: "0.75rem" }}>
+                    <TrackedButton eventCategory="dashboard-flow" eventLabel="Run Pipeline" onClick={runFlowSimulation} disabled={flowRunning || flowNodes.length === 0} className="btn-primary" style={{ padding: "6px 14px", fontSize: "0.75rem" }}>
                       <Play size={10} fill="#080B14" /> {flowRunning ? "Executing..." : "Run Pipeline"}
-                    </button>
+                    </TrackedButton>
                   </div>
 
                   {/* Node canvas blocks */}
@@ -754,9 +763,9 @@ Billing Audit Node`;
                       style={{ width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", padding: "10px", color: "var(--text-primary)", fontSize: "0.8rem", marginTop: "6px", fontFamily: "var(--font-exo)" }}
                     />
                   </div>
-                  <button onClick={runAgentSimulation} disabled={agentRunning} className="btn-primary" style={{ width: "100%", background: "linear-gradient(135deg, var(--violet), var(--hot-pink))", boxShadow: "0 0 20px rgba(123,97,255,0.3)" }}>
+                  <TrackedButton eventCategory="dashboard-agent" eventLabel="Deploy Swarm" onClick={runAgentSimulation} disabled={agentRunning} className="btn-primary" style={{ width: "100%", background: "linear-gradient(135deg, var(--violet), var(--hot-pink))", boxShadow: "0 0 20px rgba(123,97,255,0.3)" }}>
                     {agentRunning ? "Simulating Swarm..." : "Deploy Swarm"}
-                  </button>
+                  </TrackedButton>
 
                   <div style={{ marginTop: "12px", borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "12px" }}>
                     <span className="font-orbitron" style={{ fontSize: "0.65rem", color: "var(--text-muted)", display: "block", marginBottom: "8px" }}>Active Swarm Members</span>
@@ -819,9 +828,9 @@ Billing Audit Node`;
                   <p className="font-exo" style={{ fontSize: "0.85rem", color: "var(--text-muted)", maxWidth: "480px", margin: "0 auto 24px auto", lineHeight: 1.6 }}>
                     This mini quiz validates prompt architecture and multi-agent workflow integration concepts. Answer 100% correctly to generate your digital credentials.
                   </p>
-                  <button onClick={() => setQuizStep(1)} className="btn-primary" style={{ background: "linear-gradient(135deg, var(--hot-pink), var(--violet))", boxShadow: "0 0 20px rgba(255,46,209,0.3)" }}>
+                  <TrackedButton eventCategory="dashboard-quiz" eventLabel="Begin Assessment" onClick={() => setQuizStep(1)} className="btn-primary" style={{ background: "linear-gradient(135deg, var(--hot-pink), var(--violet))", boxShadow: "0 0 20px rgba(255,46,209,0.3)" }}>
                     Begin Assessment
-                  </button>
+                  </TrackedButton>
                 </div>
               )}
 
@@ -833,8 +842,10 @@ Billing Audit Node`;
                     <h4 className="font-orbitron" style={{ fontSize: "1rem", color: "var(--text-primary)" }}>{question.q}</h4>
                     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                       {question.options.map(opt => (
-                        <button
+                        <TrackedButton
                           key={opt.key}
+                          eventCategory="dashboard-quiz"
+                          eventLabel={`Quiz Q${question.id} Option ${opt.key.toUpperCase()}`}
                           onClick={() => {
                             setQuizAnswers(prev => ({ ...prev, [question.id]: opt.key }));
                             if (quizStep < 3) {
@@ -855,7 +866,7 @@ Billing Audit Node`;
                         >
                           <span className="font-orbitron" style={{ fontWeight: "bold", marginRight: "12px", color: "var(--hot-pink)" }}>{opt.key.toUpperCase()}</span>
                           <span className="font-exo">{opt.text}</span>
-                        </button>
+                        </TrackedButton>
                       ))}
                     </div>
                   </div>
@@ -880,12 +891,12 @@ Billing Audit Node`;
                         <span className="font-exo" style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block", marginTop: "6px" }}>Recipient: guest@cerebro-hive.com</span>
                       </div>
                       <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-                        <button onClick={handleDownloadCert} className="btn-primary" style={{ background: "linear-gradient(135deg, var(--amber), var(--hive-orange))" }}>
+                        <TrackedButton eventCategory="dashboard-quiz" eventLabel="Download Certificate File" onClick={handleDownloadCert} className="btn-primary" style={{ background: "linear-gradient(135deg, var(--amber), var(--hive-orange))" }}>
                           Download Certificate File
-                        </button>
-                        <button onClick={() => setQuizStep(0)} className="btn-ghost" style={{ color: "var(--text-primary)", borderColor: "rgba(255,255,255,0.1)" }}>
+                        </TrackedButton>
+                        <TrackedButton eventCategory="dashboard-quiz" eventLabel="Reset Quiz" onClick={() => setQuizStep(0)} className="btn-ghost" style={{ color: "var(--text-primary)", borderColor: "rgba(255,255,255,0.1)" }}>
                           Reset Quiz
-                        </button>
+                        </TrackedButton>
                       </div>
                     </>
                   ) : (
@@ -895,9 +906,9 @@ Billing Audit Node`;
                       <p className="font-exo" style={{ fontSize: "0.85rem", color: "var(--text-muted)", maxWidth: "400px", margin: "0 auto" }}>
                         Verification standards require a score of 100%. Review prompt engineering and LangGraph document files.
                       </p>
-                      <button onClick={() => { setQuizStep(0); setQuizAnswers({}); }} className="btn-primary" style={{ margin: "12px auto 0 auto" }}>
+                      <TrackedButton eventCategory="dashboard-quiz" eventLabel="Retry Assessment" onClick={() => { setQuizStep(0); setQuizAnswers({}); }} className="btn-primary" style={{ margin: "12px auto 0 auto" }}>
                         Retry Assessment
-                      </button>
+                      </TrackedButton>
                     </>
                   )}
                 </div>
@@ -945,8 +956,8 @@ Billing Audit Node`;
                         <td style={{ padding: "12px", textAlign: "right" }}>
                           {row.state === "pending" ? (
                             <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
-                              <button onClick={() => auditAction(row.id, "approve")} className="btn-primary" style={{ padding: "4px 8px", fontSize: "0.65rem", background: "#10B981", boxShadow: "none" }}>Approve</button>
-                              <button onClick={() => auditAction(row.id, "flag")} className="btn-ghost" style={{ padding: "4px 8px", fontSize: "0.65rem", color: "var(--hive-orange)", borderColor: "var(--hive-orange)" }}>Flag</button>
+                              <TrackedButton eventCategory="dashboard-erp" eventLabel={`Approve ${row.id}`} onClick={() => auditAction(row.id, "approve")} className="btn-primary" style={{ padding: "4px 8px", fontSize: "0.65rem", background: "#10B981", boxShadow: "none" }}>Approve</TrackedButton>
+                              <TrackedButton eventCategory="dashboard-erp" eventLabel={`Flag ${row.id}`} onClick={() => auditAction(row.id, "flag")} className="btn-ghost" style={{ padding: "4px 8px", fontSize: "0.65rem", color: "var(--hive-orange)", borderColor: "var(--hive-orange)" }}>Flag</TrackedButton>
                             </div>
                           ) : (
                             <span className="font-mono" style={{ fontSize: "0.7rem", color: "var(--text-dim)" }}>Processed</span>
@@ -980,9 +991,9 @@ Billing Audit Node`;
                   <p className="font-exo" style={{ fontSize: "0.85rem", color: "var(--text-muted)", maxWidth: "450px", margin: "0 auto 24px auto", lineHeight: 1.6 }}>
                     Evaluate your infrastructure across Data, Technology, Talent, and Process dimensions. Takes 2 minutes to generate audit roadmaps.
                   </p>
-                  <button onClick={() => setReadinessStep(1)} className="btn-primary" style={{ background: "linear-gradient(135deg, var(--neural-blue), var(--violet))" }}>
+                  <TrackedButton eventCategory="dashboard-readiness" eventLabel="Start Diagnostic" onClick={() => setReadinessStep(1)} className="btn-primary" style={{ background: "linear-gradient(135deg, var(--neural-blue), var(--violet))" }}>
                     Start Diagnostic
-                  </button>
+                  </TrackedButton>
                 </div>
               )}
 
@@ -993,8 +1004,10 @@ Billing Audit Node`;
                     <h4 className="font-orbitron" style={{ fontSize: "1rem", color: "var(--text-primary)" }}>{question.text}</h4>
                     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                       {question.options.map((opt, i) => (
-                        <button
+                        <TrackedButton
                           key={i}
+                          eventCategory="dashboard-readiness"
+                          eventLabel={`Readiness Q${question.id} - ${opt.text}`}
                           onClick={() => {
                             setReadinessAnswers(prev => ({ ...prev, [question.id]: opt.score }));
                             if (readinessStep < 4) {
@@ -1014,7 +1027,7 @@ Billing Audit Node`;
                           }}
                         >
                           <span className="font-exo">{opt.text}</span>
-                        </button>
+                        </TrackedButton>
                       ))}
                     </div>
                   </div>
@@ -1029,12 +1042,12 @@ Billing Audit Node`;
                     Diagnostics complete. Your company registers at the <strong style={{ color: "var(--text-primary)" }}>{handleReadinessScore() < 40 ? "Ad-Hoc" : handleReadinessScore() < 70 ? "Exploring" : "AI-Native"} Tier</strong>.
                   </p>
                   <div style={{ display: "flex", gap: "12px", justifyContent: "center", marginTop: "12px" }}>
-                    <button onClick={downloadReadinessReport} className="btn-primary">
+                    <TrackedButton eventCategory="dashboard-readiness" eventLabel="Download Readiness Report" onClick={downloadReadinessReport} className="btn-primary">
                       Download Readiness Report
-                    </button>
-                    <button onClick={() => { setReadinessStep(0); setReadinessAnswers({}); }} className="btn-ghost" style={{ color: "var(--text-primary)", borderColor: "rgba(255,255,255,0.1)" }}>
+                    </TrackedButton>
+                    <TrackedButton eventCategory="dashboard-readiness" eventLabel="Reset Audit" onClick={() => { setReadinessStep(0); setReadinessAnswers({}); }} className="btn-ghost" style={{ color: "var(--text-primary)", borderColor: "rgba(255,255,255,0.1)" }}>
                       Reset Audit
-                    </button>
+                    </TrackedButton>
                   </div>
                 </div>
               )}
@@ -1113,9 +1126,9 @@ Billing Audit Node`;
                   <span className="font-orbitron" style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Load Sample Template</span>
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     {supportTemplates.map((t, i) => (
-                      <button key={i} onClick={() => setSupportText(t.text)} className="btn-ghost" style={{ padding: "8px 12px", fontSize: "0.75rem", justifyContent: "flex-start", textAlign: "left", borderColor: "rgba(255,255,255,0.06)" }}>
+                      <TrackedButton key={i} eventCategory="dashboard-support" eventLabel={`Load Template - ${t.label}`} onClick={() => setSupportText(t.text)} className="btn-ghost" style={{ padding: "8px 12px", fontSize: "0.75rem", justifyContent: "flex-start", textAlign: "left", borderColor: "rgba(255,255,255,0.06)" }}>
                         {t.label}
-                      </button>
+                      </TrackedButton>
                     ))}
                   </div>
 
@@ -1127,9 +1140,9 @@ Billing Audit Node`;
                       style={{ width: "100%", height: "100px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", padding: "10px", color: "var(--text-primary)", fontSize: "0.8rem", marginTop: "6px", fontFamily: "var(--font-exo)", resize: "none" }}
                     />
                   </div>
-                  <button onClick={runSupportSimulation} disabled={supportRunning} className="btn-primary" style={{ width: "100%" }}>
+                  <TrackedButton eventCategory="dashboard-support" eventLabel="Analyze & Draft Auto-Reply" onClick={runSupportSimulation} disabled={supportRunning} className="btn-primary" style={{ width: "100%" }}>
                     {supportRunning ? "Analyzing Inbound..." : "Analyze & Draft Auto-Reply"}
-                  </button>
+                  </TrackedButton>
                 </div>
 
                 <div className="card-glass" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -1181,14 +1194,14 @@ Billing Audit Node`;
                 <div className="card-glass" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
                   <span className="font-orbitron" style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Select Sample Query</span>
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <button onClick={() => setRagQuery("What are the database backup rules?")} className="btn-ghost" style={{ padding: "6px", fontSize: "0.72rem", justifyContent: "flex-start", textAlign: "left", borderColor: "rgba(255,255,255,0.05)" }}>What are the database backup rules?</button>
-                    <button onClick={() => setRagQuery("What encryption protocols govern API nodes?")} className="btn-ghost" style={{ padding: "6px", fontSize: "0.72rem", justifyContent: "flex-start", textAlign: "left", borderColor: "rgba(255,255,255,0.05)" }}>What encryption protocols govern API nodes?</button>
-                    <button onClick={() => setRagQuery("Who maintains access keys for production storage?")} className="btn-ghost" style={{ padding: "6px", fontSize: "0.72rem", justifyContent: "flex-start", textAlign: "left", borderColor: "rgba(255,255,255,0.05)" }}>Who maintains access keys for production storage?</button>
+                    <TrackedButton eventCategory="dashboard-rag" eventLabel="Sample Query - Database Backup Rules" onClick={() => setRagQuery("What are the database backup rules?")} className="btn-ghost" style={{ padding: "6px", fontSize: "0.72rem", justifyContent: "flex-start", textAlign: "left", borderColor: "rgba(255,255,255,0.05)" }}>What are the database backup rules?</TrackedButton>
+                    <TrackedButton eventCategory="dashboard-rag" eventLabel="Sample Query - Encryption Protocols" onClick={() => setRagQuery("What encryption protocols govern API nodes?")} className="btn-ghost" style={{ padding: "6px", fontSize: "0.72rem", justifyContent: "flex-start", textAlign: "left", borderColor: "rgba(255,255,255,0.05)" }}>What encryption protocols govern API nodes?</TrackedButton>
+                    <TrackedButton eventCategory="dashboard-rag" eventLabel="Sample Query - Access Keys" onClick={() => setRagQuery("Who maintains access keys for production storage?")} className="btn-ghost" style={{ padding: "6px", fontSize: "0.72rem", justifyContent: "flex-start", textAlign: "left", borderColor: "rgba(255,255,255,0.05)" }}>Who maintains access keys for production storage?</TrackedButton>
                   </div>
 
-                  <button onClick={runRagSimulation} disabled={ragRunning} className="btn-primary" style={{ width: "100%", background: "linear-gradient(135deg, var(--violet), var(--neural-blue))" }}>
+                  <TrackedButton eventCategory="dashboard-rag" eventLabel="Execute Semantic Search" onClick={runRagSimulation} disabled={ragRunning} className="btn-primary" style={{ width: "100%", background: "linear-gradient(135deg, var(--violet), var(--neural-blue))" }}>
                     {ragRunning ? "Retrieving Embeddings..." : "Execute Semantic Search"}
-                  </button>
+                  </TrackedButton>
                 </div>
 
                 <div className="card-glass" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -1240,9 +1253,9 @@ Billing Audit Node`;
                       <option value="Lead MLOps Engineer" style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>Lead MLOps Engineer</option>
                     </select>
                   </div>
-                  <button onClick={runHrSimulation} disabled={hrRunning} className="btn-primary" style={{ width: "100%", background: "linear-gradient(135deg, var(--hot-pink), var(--violet))" }}>
+                  <TrackedButton eventCategory="dashboard-recruiter" eventLabel="Screen Applicants" onClick={runHrSimulation} disabled={hrRunning} className="btn-primary" style={{ width: "100%", background: "linear-gradient(135deg, var(--hot-pink), var(--violet))" }}>
                     {hrRunning ? "Screening Resumes..." : "Screen Applicants"}
-                  </button>
+                  </TrackedButton>
                 </div>
 
                 <div className="card-glass" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -1263,8 +1276,8 @@ Billing Audit Node`;
                           <div style={{ marginLeft: "12px" }}>
                             {c.status === "undecided" ? (
                               <div style={{ display: "flex", gap: "6px" }}>
-                                <button onClick={() => hrAction(c.name, "Shortlisted")} className="btn-primary" style={{ padding: "4px 8px", fontSize: "0.6rem", background: "var(--neural-blue)", boxShadow: "none" }}>Shortlist</button>
-                                <button onClick={() => hrAction(c.name, "Rejected")} className="btn-ghost" style={{ padding: "4px 8px", fontSize: "0.6rem", color: "var(--text-dim)", borderColor: "rgba(255,255,255,0.1)" }}>Reject</button>
+                                <TrackedButton eventCategory="dashboard-recruiter" eventLabel={`Shortlist ${c.name}`} onClick={() => hrAction(c.name, "Shortlisted")} className="btn-primary" style={{ padding: "4px 8px", fontSize: "0.6rem", background: "var(--neural-blue)", boxShadow: "none" }}>Shortlist</TrackedButton>
+                                <TrackedButton eventCategory="dashboard-recruiter" eventLabel={`Reject ${c.name}`} onClick={() => hrAction(c.name, "Rejected")} className="btn-ghost" style={{ padding: "4px 8px", fontSize: "0.6rem", color: "var(--text-dim)", borderColor: "rgba(255,255,255,0.1)" }}>Reject</TrackedButton>
                               </div>
                             ) : (
                               <span className="font-orbitron" style={{ fontSize: "0.65rem", color: c.status === "Shortlisted" ? "var(--neural-blue)" : "var(--text-dim)", textTransform: "uppercase" }}>{c.status}</span>
@@ -1328,18 +1341,18 @@ Billing Audit Node`;
                   <span className="font-orbitron" style={{ fontSize: "0.75rem", color: "var(--text-primary)" }}>Matcher Audit Findings</span>
 
                   {!matchAudited ? (
-                    <button onClick={runMatchAudit} className="btn-primary" style={{ width: "100%", background: "linear-gradient(135deg, var(--hive-orange), var(--violet))" }}>
+                    <TrackedButton eventCategory="dashboard-matcher" eventLabel="Run Match Audit" onClick={runMatchAudit} className="btn-primary" style={{ width: "100%", background: "linear-gradient(135deg, var(--hive-orange), var(--violet))" }}>
                       Run Match Audit
-                    </button>
+                    </TrackedButton>
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                       <div className="font-exo" style={{ fontSize: "0.8rem", color: "var(--hive-orange)", background: "rgba(255,138,0,0.08)", border: "1px solid var(--hive-orange)", borderRadius: "6px", padding: "12px", display: "flex", gap: "8px", alignItems: "flex-start" }}>
                         <ShieldAlert size={16} style={{ flexShrink: 0, marginTop: "2px" }} />
                         <span>{matchResult}</span>
                       </div>
-                      <button className="btn-primary" style={{ width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-primary)", boxShadow: "none" }}>
+                      <TrackedButton eventCategory="dashboard-matcher" eventLabel="Create Debit Note Ticket" className="btn-primary" style={{ width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-primary)", boxShadow: "none" }}>
                         Create Debit Note Ticket
-                      </button>
+                      </TrackedButton>
                     </div>
                   )}
                 </div>

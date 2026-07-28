@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { motionTokens } from "../foundation/tokens";
 import { useCerebroMotion } from "../foundation/MotionProvider";
 import { NodeState } from "@/lib/data/industries/types";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 export interface IntelligentOrbProps {
   state?: NodeState;
@@ -86,9 +87,16 @@ export function IntelligentOrb({
   const iconSize = size === "sm" ? 14 : size === "lg" ? 24 : 18;
   const { animate, transition } = getVariants();
 
+  const handleClick = onClick
+    ? () => {
+        analytics.track({ eventName: 'click', category: 'intelligent-orb', label: colorVariant });
+        onClick();
+      }
+    : undefined;
+
   return (
     <motion.button
-      onClick={onClick}
+      onClick={handleClick}
       className={`relative rounded-full flex items-center justify-center bg-surface border-2 z-10 transition-colors ${dimensions} ${className}`}
       style={{ borderColor: state === 'idle' ? 'var(--border)' : color }}
       animate={animate}

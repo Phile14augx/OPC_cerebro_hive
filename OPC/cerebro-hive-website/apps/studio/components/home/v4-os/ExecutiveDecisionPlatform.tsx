@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { executivePathways } from "@/lib/config/pathways";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export function ExecutiveDecisionPlatform() {
   return (
@@ -32,9 +32,12 @@ export function ExecutiveDecisionPlatform() {
               
               <div className="flex flex-col gap-4 flex-grow justify-end">
                 {pathway.actions.map((action, idx) => (
-                  <Link
+                  <TrackedLink
                     key={idx}
                     href={action.href}
+                    analyticsEvent="executive_pathway_action_click"
+                    analyticsCategory="executive-decision-platform"
+                    analyticsLabel={`${pathway.role} - ${action.label}`}
                     className={`w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-300 ${
                       action.primary
                         ? "bg-primary-accent text-background font-semibold hover:bg-primary-accent/90"
@@ -45,7 +48,7 @@ export function ExecutiveDecisionPlatform() {
                       <span>{action.label}</span>
                       <span className="opacity-50">→</span>
                     </div>
-                  </Link>
+                  </TrackedLink>
                 ))}
               </div>
             </div>
@@ -54,11 +57,11 @@ export function ExecutiveDecisionPlatform() {
 
         {/* Global Ecosystem Links */}
         <div className="mt-20 pt-10 border-t border-border flex flex-wrap justify-center gap-8 text-sm text-text-muted">
-          <Link href="/products/cerebro-archive" className="hover:text-text-primary transition-colors">CerebroArchive</Link>
-          <Link href="/research" className="hover:text-text-primary transition-colors">Research Hub</Link>
-          <Link href="/legal/security" className="hover:text-text-primary transition-colors">Enterprise Trust Center</Link>
-          <Link href="/tools/solution-finder" className="hover:text-text-primary transition-colors">ROI Calculator</Link>
-          <Link href="/platform/live-runtime" className="hover:text-text-primary transition-colors">Architecture Playground</Link>
+          <TrackedLink href="/products/cerebro-archive" analyticsEvent="ecosystem_link_click" analyticsCategory="executive-decision-platform" analyticsLabel="CerebroArchive" className="hover:text-text-primary transition-colors">CerebroArchive</TrackedLink>
+          <TrackedLink href="/research" analyticsEvent="ecosystem_link_click" analyticsCategory="executive-decision-platform" analyticsLabel="Research Hub" className="hover:text-text-primary transition-colors">Research Hub</TrackedLink>
+          <TrackedLink href="/legal/security" analyticsEvent="ecosystem_link_click" analyticsCategory="executive-decision-platform" analyticsLabel="Enterprise Trust Center" className="hover:text-text-primary transition-colors">Enterprise Trust Center</TrackedLink>
+          <TrackedLink href="/tools/solution-finder" analyticsEvent="ecosystem_link_click" analyticsCategory="executive-decision-platform" analyticsLabel="ROI Calculator" className="hover:text-text-primary transition-colors">ROI Calculator</TrackedLink>
+          <TrackedLink href="/platform/live-runtime" analyticsEvent="ecosystem_link_click" analyticsCategory="executive-decision-platform" analyticsLabel="Architecture Playground" className="hover:text-text-primary transition-colors">Architecture Playground</TrackedLink>
         </div>
 
       </div>

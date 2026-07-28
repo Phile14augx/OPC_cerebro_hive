@@ -1,6 +1,7 @@
 "use client";
 import { FileText, Download, ArrowRight, Zap, X, CheckCircle } from "lucide-react";
 import { useState } from "react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const whitepapers = [
   {
@@ -68,9 +69,9 @@ function GatedModal({ paper, onClose }: { paper: Whitepaper; onClose: () => void
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(8,11,20,0.85)", backdropFilter: "blur(8px)" }}>
       <div className="card-glass" style={{ padding: "44px", maxWidth: "480px", width: "90%", position: "relative" }}>
-        <button onClick={onClose} style={{ position: "absolute", top: "16px", right: "16px", background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)" }}>
+        <TrackedButton eventCategory="whitepapers" eventLabel="Close Download Modal" onClick={onClose} style={{ position: "absolute", top: "16px", right: "16px", background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)" }}>
           <X size={18} />
-        </button>
+        </TrackedButton>
         {!submitted ? (
           <>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
@@ -94,9 +95,9 @@ function GatedModal({ paper, onClose }: { paper: Whitepaper; onClose: () => void
                 <input key={field.placeholder} type={field.type} placeholder={field.placeholder} value={field.value} onChange={(e) => field.onChange(e.target.value)} required
                   style={{ padding: "11px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", color: "var(--text-primary)", fontFamily: "Exo 2, sans-serif", fontSize: "0.88rem", outline: "none" }} />
               ))}
-              <button type="submit" className="btn-primary" style={{ justifyContent: "center", gap: "6px" }}>
+              <TrackedButton eventCategory="whitepapers" eventLabel="Send Me the Report" type="submit" className="btn-primary" style={{ justifyContent: "center", gap: "6px" }}>
                 Send Me the Report <ArrowRight size={13} />
-              </button>
+              </TrackedButton>
             </form>
           </>
         ) : (
@@ -106,9 +107,9 @@ function GatedModal({ paper, onClose }: { paper: Whitepaper; onClose: () => void
             <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
               Check your inbox. The download link will arrive within 2 minutes. Check your spam folder if you do not see it.
             </p>
-            <button onClick={onClose} style={{ marginTop: "20px", padding: "10px 24px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "var(--text-muted)", fontFamily: "Exo 2, sans-serif", fontSize: "0.82rem", cursor: "pointer" }}>
+            <TrackedButton eventCategory="whitepapers" eventLabel="Close" onClick={onClose} style={{ marginTop: "20px", padding: "10px 24px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "6px", color: "var(--text-muted)", fontFamily: "Exo 2, sans-serif", fontSize: "0.82rem", cursor: "pointer" }}>
               Close
-            </button>
+            </TrackedButton>
           </div>
         )}
       </div>
@@ -184,10 +185,10 @@ export default function WhitepapersPage() {
                   ))}
                 </div>
 
-                <button onClick={() => setSelectedPaper(paper)}
+                <TrackedButton eventCategory="whitepapers" eventLabel={`Download Report — ${paper.title}`} onClick={() => setSelectedPaper(paper)}
                   style={{ display: "inline-flex", alignItems: "center", gap: "6px", cursor: "pointer", background: "none", border: "none", padding: 0, color: paper.color, fontSize: "0.82rem", fontFamily: "Exo 2, sans-serif", fontWeight: 600, transition: "gap 0.2s" }}>
                   <Download size={14} /> Download Report <ArrowRight size={14} />
-                </button>
+                </TrackedButton>
               </div>
             ))}
           </div>

@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { 
-  FileText, Search, Plus, Filter, 
-  MoreVertical, File, Download, Trash2, 
+import {
+  FileText, Search, Plus, Filter,
+  MoreVertical, File, Download, Trash2,
   RefreshCcw, FolderOpen, ArrowUpRight
 } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const DUMMY_DOCS = [
   { id: "1", title: "Q3 Earnings Report", type: "pdf", domain: "finance", status: "indexed", chunks: 142, date: "2026-07-15" },
@@ -31,7 +32,7 @@ export default function DocumentBrowserPage() {
   return (
     <div className="flex-1 p-8 max-w-7xl mx-auto w-full">
       <div className="flex items-center gap-2 text-sm text-text-muted mb-4 font-medium">
-        <Link href="/archive" className="hover:text-primary transition-colors">Archive</Link>
+        <TrackedLink href="/archive" analyticsEvent="archive_breadcrumb_click" analyticsCategory="archive-documents" analyticsLabel="Archive" className="hover:text-primary transition-colors">Archive</TrackedLink>
         <span className="text-border">/</span>
         <span className="text-text-primary">Documents</span>
       </div>
@@ -47,14 +48,14 @@ export default function DocumentBrowserPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="bg-surface hover:bg-surface-hover border border-border text-text-primary px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
+          <TrackedButton eventCategory="archive-documents" eventLabel="Filter" className="bg-surface hover:bg-surface-hover border border-border text-text-primary px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
             <Filter size={18} />
             Filter
-          </button>
-          <button className="bg-primary hover:bg-primary-hover text-white px-5 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+          </TrackedButton>
+          <TrackedButton eventCategory="archive-documents" eventLabel="Upload File" className="bg-primary hover:bg-primary-hover text-white px-5 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
             <Plus size={18} />
             Upload File
-          </button>
+          </TrackedButton>
         </div>
       </div>
 
@@ -100,10 +101,10 @@ export default function DocumentBrowserPage() {
                         <File className="w-4 h-4 text-text-muted" />
                       </div>
                       <div>
-                        <Link href={`/archive/documents/${doc.id}`} className="font-medium text-text-primary hover:text-primary transition-colors flex items-center gap-1">
+                        <TrackedLink href={`/archive/documents/${doc.id}`} analyticsEvent="document_open_click" analyticsCategory="archive-documents" analyticsLabel={doc.title} className="font-medium text-text-primary hover:text-primary transition-colors flex items-center gap-1">
                           {doc.title}
                           <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </Link>
+                        </TrackedLink>
                         <p className="text-xs text-text-muted uppercase mt-0.5">{doc.type}</p>
                       </div>
                     </div>
@@ -118,15 +119,15 @@ export default function DocumentBrowserPage() {
                   <td className="p-4 text-sm text-text-muted">{doc.date}</td>
                   <td className="p-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-1.5 text-text-muted hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Download Source">
+                      <TrackedButton eventCategory="archive-documents" eventLabel="Download Source" className="p-1.5 text-text-muted hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Download Source">
                         <Download size={16} />
-                      </button>
-                      <button className="p-1.5 text-text-muted hover:text-rose-500 hover:bg-rose-500/10 rounded transition-colors" title="Delete">
+                      </TrackedButton>
+                      <TrackedButton eventCategory="archive-documents" eventLabel="Delete" className="p-1.5 text-text-muted hover:text-rose-500 hover:bg-rose-500/10 rounded transition-colors" title="Delete">
                         <Trash2 size={16} />
-                      </button>
-                      <button className="p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-hover rounded transition-colors">
+                      </TrackedButton>
+                      <TrackedButton eventCategory="archive-documents" eventLabel="More Options" className="p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-hover rounded transition-colors">
                         <MoreVertical size={16} />
-                      </button>
+                      </TrackedButton>
                     </div>
                   </td>
                 </tr>
@@ -137,14 +138,14 @@ export default function DocumentBrowserPage() {
         
         {/* Pagination placeholder */}
         <div className="p-4 border-t border-border flex items-center justify-between bg-background/50">
-          <button className="px-3 py-1 text-sm text-text-muted border border-border rounded hover:bg-surface transition-colors disabled:opacity-50" disabled>Previous</button>
+          <TrackedButton eventCategory="archive-documents" eventLabel="Previous" className="px-3 py-1 text-sm text-text-muted border border-border rounded hover:bg-surface transition-colors disabled:opacity-50" disabled>Previous</TrackedButton>
           <div className="flex items-center gap-1">
-            <button className="w-8 h-8 flex items-center justify-center rounded bg-primary text-white text-sm font-medium">1</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-surface text-text-muted text-sm font-medium transition-colors">2</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-surface text-text-muted text-sm font-medium transition-colors">3</button>
+            <TrackedButton eventCategory="archive-documents" eventLabel="Page 1" className="w-8 h-8 flex items-center justify-center rounded bg-primary text-white text-sm font-medium">1</TrackedButton>
+            <TrackedButton eventCategory="archive-documents" eventLabel="Page 2" className="w-8 h-8 flex items-center justify-center rounded hover:bg-surface text-text-muted text-sm font-medium transition-colors">2</TrackedButton>
+            <TrackedButton eventCategory="archive-documents" eventLabel="Page 3" className="w-8 h-8 flex items-center justify-center rounded hover:bg-surface text-text-muted text-sm font-medium transition-colors">3</TrackedButton>
             <span className="text-text-muted">...</span>
           </div>
-          <button className="px-3 py-1 text-sm text-text-primary border border-border rounded hover:bg-surface transition-colors">Next</button>
+          <TrackedButton eventCategory="archive-documents" eventLabel="Next" className="px-3 py-1 text-sm text-text-primary border border-border rounded hover:bg-surface transition-colors">Next</TrackedButton>
         </div>
       </div>
     </div>

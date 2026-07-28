@@ -8,6 +8,7 @@ import { useOrganizationWorkspace } from './OrganizationWorkspaceContext';
 import { useReactFlow, MiniMap, Panel } from '@xyflow/react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 const themeColors: Record<string, string> = {
   executive: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
@@ -41,9 +42,9 @@ export const InspectorPanel = () => {
                 <h2 className="text-lg font-space font-bold text-text-primary mb-0.5 leading-tight">{node.title}</h2>
                 <p className="text-[11px] text-text-secondary font-inter line-clamp-1">{node.subtitle}</p>
               </div>
-              <button onClick={() => setSelectedNode(null)} className="p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-elevated rounded-md transition-colors">
+              <TrackedButton eventCategory="org-chart" eventLabel="Close inspector panel" onClick={() => setSelectedNode(null)} className="p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-elevated rounded-md transition-colors">
                 <X size={16} />
-              </button>
+              </TrackedButton>
             </div>
 
             {/* Scrollable Content */}
@@ -92,9 +93,9 @@ export const InspectorPanel = () => {
             </div>
             
             <div className="p-3 border-t border-border">
-              <button className="w-full py-2 bg-surface hover:bg-surface-elevated border border-border rounded-lg text-[11px] font-space font-bold text-text-primary transition-colors flex items-center justify-center gap-2">
+              <TrackedButton eventCategory="org-chart" eventLabel="Open Full Dashboard" className="w-full py-2 bg-surface hover:bg-surface-elevated border border-border rounded-lg text-[11px] font-space font-bold text-text-primary transition-colors flex items-center justify-center gap-2">
                 Open Full Dashboard <ExternalLink size={12} />
-              </button>
+              </TrackedButton>
             </div>
           </div>
         ) : (
@@ -132,19 +133,19 @@ export const InspectorPanel = () => {
       {/* Tools & MiniMap Card */}
       <div className="w-[340px] bg-background/80 backdrop-blur-2xl border border-border rounded-2xl shadow-xl flex flex-col overflow-hidden pointer-events-auto">
         <div className="p-2 border-b border-border flex justify-between gap-1 bg-surface-elevated">
-          <button onClick={() => fitView({ padding: 0.2, duration: 800 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors" title="Fit View">
+          <TrackedButton eventCategory="org-chart" eventLabel="Fit View" onClick={() => fitView({ padding: 0.2, duration: 800 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors" title="Fit View">
             <Maximize2 size={14} />
-          </button>
-          <button onClick={() => zoomIn({ duration: 400 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors" title="Zoom In">
+          </TrackedButton>
+          <TrackedButton eventCategory="org-chart" eventLabel="Zoom In" onClick={() => zoomIn({ duration: 400 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors" title="Zoom In">
             <ZoomIn size={14} />
-          </button>
-          <button onClick={() => zoomOut({ duration: 400 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors" title="Zoom Out">
+          </TrackedButton>
+          <TrackedButton eventCategory="org-chart" eventLabel="Zoom Out" onClick={() => zoomOut({ duration: 400 })} className="flex-1 py-1.5 flex justify-center items-center text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors" title="Zoom Out">
             <ZoomOut size={14} />
-          </button>
+          </TrackedButton>
           <div className="w-px bg-surface-elevated mx-1" />
-          <button className="flex-[2] py-1.5 flex justify-center items-center gap-1.5 text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors text-[10px] font-space uppercase font-bold" title="Export">
+          <TrackedButton eventCategory="org-chart" eventLabel="Export" className="flex-[2] py-1.5 flex justify-center items-center gap-1.5 text-text-muted hover:text-text-primary hover:bg-surface rounded transition-colors text-[10px] font-space uppercase font-bold" title="Export">
             <Download size={12} /> Export
-          </button>
+          </TrackedButton>
         </div>
 
         {/* Themed MiniMap */}

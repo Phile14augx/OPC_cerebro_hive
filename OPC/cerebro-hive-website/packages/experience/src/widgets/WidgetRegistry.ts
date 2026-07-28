@@ -6,9 +6,8 @@ export interface WidgetDefinition {
   title: string;
   category: string;
   icon: string;
-  defaultSize: { w: number, h: number };
-  minimumSize: { w: number, h: number };
-  supportedLayouts: ('grid' | 'stack' | 'panel')[];
+  columnSpan: number;
+  rowSpan: number;
   permissions: string[];
   defaultVisibility: boolean;
   refreshPolicy: RefreshPolicy;

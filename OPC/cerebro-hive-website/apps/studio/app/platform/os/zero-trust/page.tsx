@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, checkOnline, KEY } from "../lib";
 import { PillarShell } from "../PillarShell";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface ToolGrant { id: string; agentId: string; tool: string; allow: boolean }
 interface McpServer { id: string; name: string; riskTier: string; status: string }
@@ -50,8 +51,8 @@ export default function ZeroTrustPage() {
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-semibold text-text-primary">Tool grants &amp; MCP server governance</h2>
           <div className="flex gap-2">
-            <button onClick={() => void grantToolAccess()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40">Grant tool</button>
-            <button onClick={() => void registerMcpServer()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40">Register MCP</button>
+            <TrackedButton eventCategory="zero-trust" eventLabel="Grant tool" onClick={() => void grantToolAccess()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40">Grant tool</TrackedButton>
+            <TrackedButton eventCategory="zero-trust" eventLabel="Register MCP" onClick={() => void registerMcpServer()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40">Register MCP</TrackedButton>
           </div>
         </div>
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}

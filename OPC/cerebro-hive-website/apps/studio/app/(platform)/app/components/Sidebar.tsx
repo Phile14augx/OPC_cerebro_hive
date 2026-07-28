@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { platformNavigation, forgeNavigation } from "../navigation";
 import {
@@ -9,6 +8,8 @@ import {
 } from "lucide-react";
 import { cn } from "./ui/utils";
 import { useSidebar } from "./SidebarContext";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -62,34 +63,40 @@ export function Sidebar() {
       >
       {/* Header & Collapse Toggle */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-border shrink-0">
-        <Link href="/app" className="flex items-center gap-3" onClick={closeMobile}>
+        <TrackedLink href="/app" analyticsEvent="sidebar_logo_click" analyticsCategory="sidebar" analyticsLabel="HivePulse Home" className="flex items-center gap-3" onClick={closeMobile}>
           <div className="w-8 h-8 rounded-xl bg-primary-accent text-background flex items-center justify-center font-bold text-lg">
             H
           </div>
           {!isCollapsed && <span className="font-space font-bold text-lg text-text-primary">HivePulse</span>}
-        </Link>
+        </TrackedLink>
         {/* Desktop collapse toggle */}
-        <button
+        <TrackedButton
+          eventCategory="sidebar"
+          eventLabel={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           onClick={toggleCollapse}
           className="hidden lg:flex p-1.5 text-text-muted hover:text-text-primary hover:bg-surface rounded-md transition-colors"
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {isCollapsed ? <PanelLeft size={18} /> : <PanelLeftClose size={18} />}
-        </button>
+        </TrackedButton>
         {/* Mobile close button */}
-        <button
+        <TrackedButton
+          eventCategory="sidebar"
+          eventLabel="Close sidebar"
           onClick={closeMobile}
           className="lg:hidden p-1.5 text-text-muted hover:text-text-primary hover:bg-surface rounded-md transition-colors"
           aria-label="Close sidebar"
         >
           <X size={18} />
-        </button>
+        </TrackedButton>
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar overflow-x-hidden flex flex-col">
         {/* Workspace Switcher */}
         <div className="p-3">
-          <button 
+          <TrackedButton
+            eventCategory="sidebar"
+            eventLabel="Workspace switcher"
             onClick={() => setWorkspaceOpen(!workspaceOpen)}
             className={cn(
               "w-full flex items-center justify-between p-2 rounded-xl border border-transparent hover:bg-surface hover:border-border transition-all text-left",
@@ -110,13 +117,13 @@ export function Sidebar() {
             {!isCollapsed && (
               <ChevronDown size={14} className={cn("text-text-muted transition-transform", workspaceOpen && "rotate-180")} />
             )}
-          </button>
-          
+          </TrackedButton>
+
           {!isCollapsed && workspaceOpen && (
             <div className="mt-2 ml-4 pl-4 border-l border-border space-y-1">
-              <button className="w-full text-left text-sm px-2 py-1.5 text-text-secondary hover:text-primary-accent rounded-md transition-colors">Development</button>
-              <button className="w-full text-left text-sm px-2 py-1.5 text-text-secondary hover:text-primary-accent rounded-md transition-colors">Research</button>
-              <button className="w-full text-left text-sm px-2 py-1.5 text-text-secondary hover:text-primary-accent rounded-md transition-colors">Personal</button>
+              <TrackedButton eventCategory="sidebar" eventLabel="Development" className="w-full text-left text-sm px-2 py-1.5 text-text-secondary hover:text-primary-accent rounded-md transition-colors">Development</TrackedButton>
+              <TrackedButton eventCategory="sidebar" eventLabel="Research" className="w-full text-left text-sm px-2 py-1.5 text-text-secondary hover:text-primary-accent rounded-md transition-colors">Research</TrackedButton>
+              <TrackedButton eventCategory="sidebar" eventLabel="Personal" className="w-full text-left text-sm px-2 py-1.5 text-text-secondary hover:text-primary-accent rounded-md transition-colors">Personal</TrackedButton>
             </div>
           )}
         </div>
@@ -130,9 +137,12 @@ export function Sidebar() {
           )}
           <div className="space-y-1">
             {pinnedFavorites.map((fav, i) => (
-              <Link
+              <TrackedLink
                 key={i}
                 href={fav.href}
+                analyticsEvent="sidebar_pinned_click"
+                analyticsCategory="sidebar"
+                analyticsLabel={fav.title}
                 onClick={closeMobile}
                 title={isCollapsed ? fav.title : undefined}
                 className={cn(
@@ -142,18 +152,20 @@ export function Sidebar() {
                 )}
               >
                 {fav.icon && <fav.icon size={20} className={cn(
-                  "shrink-0 transition-colors", 
+                  "shrink-0 transition-colors",
                   pathname === fav.href ? "text-primary-accent" : "text-text-muted group-hover:text-text-primary"
                 )} />}
                 {!isCollapsed && <span>{fav.title}</span>}
-              </Link>
+              </TrackedLink>
             ))}
           </div>
         </div>
 
         {/* CerebroForge™ — AI Software Factory */}
         <div className="px-3 py-3 border-t border-border/50">
-          <button
+          <TrackedButton
+            eventCategory="sidebar"
+            eventLabel="CerebroForge"
             onClick={() => setForgeOpen(prev => !prev)}
             title={isCollapsed ? "CerebroForge" : undefined}
             className={cn(
@@ -171,16 +183,19 @@ export function Sidebar() {
             {!isCollapsed && (
               <ChevronDown size={14} className={cn("text-text-muted transition-transform", (forgeOpen || isForgeActive) && "rotate-180")} />
             )}
-          </button>
+          </TrackedButton>
 
           {!isCollapsed && (forgeOpen || isForgeActive) && (
             <div className="mt-1 space-y-0.5">
               {forgeNavigation.items.map((item, i) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
                 return (
-                  <Link
+                  <TrackedLink
                     key={i}
                     href={item.href}
+                    analyticsEvent="sidebar_forge_nav_click"
+                    analyticsCategory="sidebar"
+                    analyticsLabel={item.title}
                     onClick={closeMobile}
                     className={cn(
                       "flex items-center gap-3 rounded-lg text-sm transition-colors group px-3 py-1.5 border",
@@ -193,7 +208,7 @@ export function Sidebar() {
                       <item.icon size={16} className={cn("shrink-0", isActive ? "text-amber-400" : "text-text-muted group-hover:text-text-primary")} />
                     )}
                     <span>{item.title}</span>
-                  </Link>
+                  </TrackedLink>
                 );
               })}
             </div>
@@ -213,9 +228,12 @@ export function Sidebar() {
                 {section.items.map((item, itemIdx) => {
                   const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
                   return (
-                    <Link
+                    <TrackedLink
                       key={itemIdx}
                       href={item.href}
+                      analyticsEvent="sidebar_nav_click"
+                      analyticsCategory="sidebar"
+                      analyticsLabel={item.title}
                       onClick={closeMobile}
                       title={isCollapsed ? item.title : undefined}
                       className={cn(
@@ -225,8 +243,8 @@ export function Sidebar() {
                       )}
                     >
                       {item.icon && (
-                        <item.icon 
-                          size={20} 
+                        <item.icon
+                          size={20}
                           className={cn(
                             "shrink-0 transition-colors",
                             isActive ? "text-primary-accent" : "text-text-muted group-hover:text-text-primary"
@@ -234,7 +252,7 @@ export function Sidebar() {
                         />
                       )}
                       {!isCollapsed && <span>{item.title}</span>}
-                    </Link>
+                    </TrackedLink>
                   );
                 })}
               </div>

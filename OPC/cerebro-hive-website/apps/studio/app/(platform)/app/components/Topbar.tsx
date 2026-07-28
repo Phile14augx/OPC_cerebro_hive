@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bell,
@@ -88,7 +89,9 @@ function WorkspaceMenu() {
 
   return (
     <div className="relative" ref={ref}>
-      <button
+      <TrackedButton
+        eventCategory="topbar"
+        eventLabel="Workspace Switcher"
         onClick={() => setOpen((v) => !v)}
         className="hidden md:flex items-center gap-2 px-3 py-1.5 hover:bg-surface rounded-lg transition-colors border border-transparent hover:border-border"
       >
@@ -97,7 +100,7 @@ function WorkspaceMenu() {
         </div>
         <span className="text-sm font-medium text-text-primary">{active.name}</span>
         <ChevronDown size={14} className={cn("text-text-muted transition-transform", open && "rotate-180")} />
-      </button>
+      </TrackedButton>
 
       <AnimatePresence>
         {open && (
@@ -109,8 +112,10 @@ function WorkspaceMenu() {
               <p className="text-[10px] font-bold uppercase tracking-widest text-text-muted">Switch workspace</p>
             </div>
             {WORKSPACES.map((ws) => (
-              <button
+              <TrackedButton
                 key={ws.id}
+                eventCategory="topbar"
+                eventLabel={`${ws.name} — ${ws.env}`}
                 onClick={() => { setActiveId(ws.id); setOpen(false); }}
                 className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-surface transition-colors text-left"
               >
@@ -124,7 +129,7 @@ function WorkspaceMenu() {
                   </div>
                 </div>
                 {ws.id === activeId && <Check size={14} className="text-primary-accent shrink-0" />}
-              </button>
+              </TrackedButton>
             ))}
             <div className="border-t border-border px-4 py-2.5">
               <Link
@@ -158,7 +163,9 @@ function NotificationsMenu() {
 
   return (
     <div className="relative" ref={ref}>
-      <button
+      <TrackedButton
+        eventCategory="topbar"
+        eventLabel="Notifications"
         onClick={() => setOpen((v) => !v)}
         className="p-2 text-text-secondary hover:text-text-primary hover:bg-surface rounded-full transition-colors relative"
         aria-label="Notifications"
@@ -167,7 +174,7 @@ function NotificationsMenu() {
         {unread > 0 && (
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-background" />
         )}
-      </button>
+      </TrackedButton>
 
       <AnimatePresence>
         {open && (
@@ -184,18 +191,22 @@ function NotificationsMenu() {
                   </span>
                 )}
               </div>
-              <button
+              <TrackedButton
+                eventCategory="topbar"
+                eventLabel="Mark All Read"
                 onClick={() => setNotes((n) => n.map((x) => ({ ...x, read: true })))}
                 className="text-[11px] font-medium text-text-muted hover:text-primary-accent transition-colors"
               >
                 Mark all read
-              </button>
+              </TrackedButton>
             </div>
 
             <div className="max-h-80 overflow-y-auto custom-scrollbar divide-y divide-border">
               {notes.map((n) => (
-                <button
+                <TrackedButton
                   key={n.id}
+                  eventCategory="topbar"
+                  eventLabel={n.title}
                   onClick={() => setNotes((prev) => prev.map((x) => x.id === n.id ? { ...x, read: true } : x))}
                   className={cn(
                     "w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-surface transition-colors",
@@ -208,7 +219,7 @@ function NotificationsMenu() {
                     <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">{n.body}</p>
                     <p className="text-[10px] text-text-muted mt-1">{n.ts}</p>
                   </div>
-                </button>
+                </TrackedButton>
               ))}
             </div>
 
@@ -236,7 +247,9 @@ function UserMenu() {
 
   return (
     <div className="relative" ref={ref}>
-      <button
+      <TrackedButton
+        eventCategory="topbar"
+        eventLabel="Account Menu"
         onClick={() => setOpen((v) => !v)}
         className={cn(
           "p-1 hover:bg-surface rounded-full transition-colors",
@@ -245,7 +258,7 @@ function UserMenu() {
         aria-label="Account menu"
       >
         <UserCircle size={28} className="text-text-secondary" />
-      </button>
+      </TrackedButton>
 
       <AnimatePresence>
         {open && (
@@ -327,19 +340,23 @@ export function Topbar() {
       <header className="h-16 border-b border-border bg-background flex items-center justify-between px-4 lg:px-8 z-30 sticky top-0">
         {/* Mobile menu toggle + Organization Switcher (Left) */}
         <div className="flex items-center gap-2 lg:gap-4">
-          <button
+          <TrackedButton
+            eventCategory="topbar"
+            eventLabel="Open Navigation Menu"
             onClick={toggleMobile}
             className="lg:hidden p-2 -ml-2 text-text-secondary hover:text-text-primary hover:bg-surface rounded-lg transition-colors"
             aria-label="Open navigation menu"
           >
             <Menu size={20} />
-          </button>
+          </TrackedButton>
           <WorkspaceMenu />
         </div>
 
         {/* Command Palette / Search (Center) */}
         <div className="flex-1 min-w-0 max-w-xl px-2 sm:px-4">
-          <button
+          <TrackedButton
+            eventCategory="topbar"
+            eventLabel="Search / Command Palette"
             onClick={() => setCmdOpen(true)}
             className="w-full flex items-center justify-between gap-2 px-3 sm:px-4 py-2 bg-surface border border-border hover:border-primary-accent/40 rounded-xl text-text-muted transition-colors group"
           >
@@ -354,18 +371,20 @@ export function Topbar() {
               <kbd className="px-1.5 py-0.5 bg-background rounded border border-border">Ctrl</kbd>
               <kbd className="px-1.5 py-0.5 bg-background rounded border border-border">K</kbd>
             </div>
-          </button>
+          </TrackedButton>
         </div>
 
         {/* Actions (Right) */}
         <div className="flex items-center gap-2 md:gap-4">
-          <button
+          <TrackedButton
+            eventCategory="topbar"
+            eventLabel="Hive Assistant"
             onClick={() => setAssistantOpen(true)}
             className="flex items-center gap-2 px-3 py-1.5 bg-primary-accent/10 hover:bg-primary-accent/20 text-primary-accent rounded-lg transition-colors border border-primary-accent/20"
           >
             <Sparkles size={16} />
             <span className="text-sm font-bold hidden sm:inline">Hive Assistant</span>
-          </button>
+          </TrackedButton>
 
           <div className="w-px h-6 bg-border mx-1 hidden sm:block" />
 

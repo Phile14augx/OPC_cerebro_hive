@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Sparkles, LayoutDashboard, FileText, Landmark, MessageSquare, LineChart, CheckCircle2, Clock, Download, ArrowUpRight, Send, Check, Building, FlaskConical, LogOut, RefreshCw } from "lucide-react";
 import FreeTierDashboard from "@/components/dashboard/FreeTierDashboard";
 import AuthGate from "@/components/dashboard/AuthGate";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface Project {
   name: string;
@@ -267,7 +268,9 @@ export default function ClientDashboardPage() {
       <div className="container-wide" style={{ position: "relative", zIndex: 10 }}>
         {/* Workspace Mode Switcher (Segmented Control style) */}
         <div style={{ display: "flex", gap: "10px", marginBottom: "32px" }}>
-          <button
+          <TrackedButton
+            eventCategory="client-portal"
+            eventLabel="Enterprise Portal"
             onClick={() => setWorkspaceMode("enterprise")}
             style={{
               fontFamily: "var(--font-orbitron), sans-serif",
@@ -286,8 +289,10 @@ export default function ClientDashboardPage() {
             }}
           >
             <Building size={14} /> Enterprise Portal
-          </button>
-          <button
+          </TrackedButton>
+          <TrackedButton
+            eventCategory="client-portal"
+            eventLabel="Free Tier Sandbox"
             onClick={() => setWorkspaceMode("free")}
             style={{
               fontFamily: "var(--font-orbitron), sans-serif",
@@ -306,7 +311,7 @@ export default function ClientDashboardPage() {
             }}
           >
             <FlaskConical size={14} /> Free Tier Sandbox
-          </button>
+          </TrackedButton>
         </div>
 
         {/* Header Dashboard Banner */}
@@ -324,7 +329,9 @@ export default function ClientDashboardPage() {
                   <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontFamily: "var(--font-exo), sans-serif", margin: 0 }}>
                     Partner Account ID: <strong style={{ color: "var(--text-primary)" }}>{companyNameHash}</strong>
                   </p>
-                  <button
+                  <TrackedButton
+                    eventCategory="client-portal"
+                    eventLabel="Sign Out"
                     onClick={handleSignOut}
                     className="btn-ghost"
                     style={{
@@ -339,7 +346,7 @@ export default function ClientDashboardPage() {
                     }}
                   >
                     <LogOut size={12} /> Sign Out
-                  </button>
+                  </TrackedButton>
                 </div>
               </div>
               <div style={{ display: "flex", gap: "16px", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "12px", padding: "12px 20px", fontSize: "0.875rem" }}>
@@ -366,7 +373,9 @@ export default function ClientDashboardPage() {
                   <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontFamily: "var(--font-exo), sans-serif", margin: 0 }}>
                     Session Profile: <strong style={{ color: "var(--text-primary)" }}>{userSession?.email || "guest@cerebro-hive.com"}</strong>
                   </p>
-                  <button
+                  <TrackedButton
+                    eventCategory="client-portal"
+                    eventLabel="Sign Out"
                     onClick={handleSignOut}
                     className="btn-ghost"
                     style={{
@@ -381,7 +390,7 @@ export default function ClientDashboardPage() {
                     }}
                   >
                     <LogOut size={12} /> Sign Out
-                  </button>
+                  </TrackedButton>
                 </div>
               </div>
               <div style={{ display: "flex", gap: "16px", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "12px", padding: "12px 20px", fontSize: "0.875rem" }}>
@@ -414,8 +423,10 @@ export default function ClientDashboardPage() {
               ].map((tab) => {
                 const Icon = tab.icon;
                 return (
-                  <button
+                  <TrackedButton
                     key={tab.id}
+                    eventCategory="client-portal"
+                    eventLabel={tab.label}
                     onClick={() => setActiveTab(tab.id as "projects" | "invoices" | "documents" | "support" | "reporting")}
                     style={{
                       display: "flex",
@@ -438,7 +449,7 @@ export default function ClientDashboardPage() {
                   >
                     <Icon size={16} color={activeTab === tab.id ? "var(--neural-blue)" : "var(--text-muted)"} />
                     <span>{tab.label}</span>
-                  </button>
+                  </TrackedButton>
                 );
               })}
             </div>
@@ -570,14 +581,16 @@ export default function ClientDashboardPage() {
                               </span>
                             </td>
                             <td style={{ padding: "16px 0", textAlign: "right" }}>
-                              <button
+                              <TrackedButton
+                                eventCategory="client-portal"
+                                eventLabel={`Download Invoice ${inv.id}`}
                                 onClick={() => handleDownloadInvoice(inv.id)}
                                 style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", transition: "color 0.2s" }}
                                 onMouseEnter={(e) => e.currentTarget.style.color = "var(--neural-blue)"}
                                 onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}
                               >
                                 <Download size={16} />
-                              </button>
+                              </TrackedButton>
                             </td>
                           </tr>
                         ))}
@@ -602,13 +615,15 @@ export default function ClientDashboardPage() {
                           <strong style={{ fontSize: "0.875rem", color: "var(--text-primary)", display: "block" }}>{doc.name}</strong>
                           <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "4px", display: "block" }}>Uploaded: {doc.date} · {doc.size}</span>
                         </div>
-                        <button
+                        <TrackedButton
+                          eventCategory="client-portal"
+                          eventLabel={`Download Document ${doc.name}`}
                           onClick={() => handleDownloadDocument(doc.name)}
                           className="btn-ghost"
                           style={{ padding: "8px 12px", fontSize: "0.75rem" }}
                         >
                           <Download size={14} />
-                        </button>
+                        </TrackedButton>
                       </div>
                     ))}
                   </div>
@@ -675,13 +690,15 @@ export default function ClientDashboardPage() {
                           />
                         </div>
 
-                        <button
+                        <TrackedButton
                           type="submit"
+                          eventCategory="client-portal"
+                          eventLabel="Open Ticket"
                           className="btn-primary"
                           style={{ alignSelf: "flex-start" }}
                         >
                           <Send size={14} /> Open Ticket
-                        </button>
+                        </TrackedButton>
                       </form>
 
                       {ticketSubmitted && (

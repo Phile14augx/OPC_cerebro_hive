@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { ArrowRight, Globe2, Archive, Code2, Workflow, BarChart2, MessageSquare, Server, Shield, Cpu, Zap, ChevronRight, Database, Cloud, Lock, ShieldCheck, Check } from "lucide-react";
 import { EcosystemArchitectureDiagram } from "./EcosystemArchitectureDiagram";
 import { ecosystemTiers } from "@/lib/data/products";
@@ -142,12 +143,12 @@ export function ProductsEcosystemPage() {
               CerebroHive is a modular Enterprise AI Operating System. Each module delivers standalone value while sharing a common identity layer, AI gateway, event bus, and data fabric — creating powerful intelligence network effects across the entire platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:-translate-y-1 shadow-elevated flex items-center gap-3">
+              <TrackedLink href="/contact" analyticsEvent="hero_book_workshop_click" analyticsCategory="products" analyticsLabel="Book an Architecture Workshop" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:-translate-y-1 shadow-elevated flex items-center gap-3">
                 Book an Architecture Workshop <ArrowRight size={16} />
-              </Link>
-              <Link href="/platform" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
+              </TrackedLink>
+              <TrackedLink href="/platform" analyticsEvent="hero_view_platform_click" analyticsCategory="products" analyticsLabel="View Platform Architecture" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
                 View Platform Architecture
-              </Link>
+              </TrackedLink>
             </div>
           </motion.div>
         </div>
@@ -254,9 +255,9 @@ export function ProductsEcosystemPage() {
                         <span className="px-3 py-1 text-xs font-bold tracking-wide uppercase bg-background border border-border rounded-full text-primary-accent">+{product.coreCapabilities.length - 4} more</span>
                       )}
                     </div>
-                    <Link href={`/products/${product.slug}`} className="inline-flex items-center gap-2 px-8 py-4 bg-violet-500/20 border border-violet-500/40 text-violet-300 font-bold text-sm rounded-xl hover:bg-violet-500/30 transition-colors">
+                    <TrackedLink href={`/products/${product.slug}`} analyticsEvent="explore_os_module_click" analyticsCategory="products" analyticsLabel={`Explore ${product.title}`} className="inline-flex items-center gap-2 px-8 py-4 bg-violet-500/20 border border-violet-500/40 text-violet-300 font-bold text-sm rounded-xl hover:bg-violet-500/30 transition-colors">
                       Explore {product.title} <ChevronRight size={16} />
-                    </Link>
+                    </TrackedLink>
                   </div>
                 </div>
               );
@@ -270,9 +271,12 @@ export function ProductsEcosystemPage() {
                   {ecosystemTiers.orchestration.map(product => {
                     const Icon = moduleIcons[product.id] || Cpu;
                     return (
-                      <Link
+                      <TrackedLink
                         key={product.id}
                         href={`/products/${product.slug}`}
+                        analyticsEvent="explore_orchestration_module_click"
+                        analyticsCategory="products"
+                        analyticsLabel={`Explore ${product.title}`}
                         className="group p-8 rounded-2xl border border-border bg-background hover:border-cyan-500/40 hover:shadow-elevated transition-all flex flex-col items-center text-center gap-5"
                       >
                         <div className="w-14 h-14 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-cyan-500/25 transition-colors">
@@ -286,7 +290,7 @@ export function ProductsEcosystemPage() {
                         <div className="flex-shrink-0 flex items-center gap-1 mt-2 text-xs text-primary-accent font-bold">
                           Explore module <ChevronRight size={12} />
                         </div>
-                      </Link>
+                      </TrackedLink>
                     );
                   })}
                 </div>
@@ -300,9 +304,12 @@ export function ProductsEcosystemPage() {
                 {ecosystemTiers.business.map(product => {
                   const Icon = moduleIcons[product.id] || Code2;
                   return (
-                    <Link
+                    <TrackedLink
                       key={product.id}
                       href={`/products/${product.slug}`}
+                      analyticsEvent="explore_business_module_click"
+                      analyticsCategory="products"
+                      analyticsLabel={`Explore ${product.title}`}
                       className="group p-8 rounded-2xl border border-border bg-background hover:border-emerald-500/40 hover:shadow-elevated transition-all flex flex-col items-center text-center"
                     >
                       <div className="w-14 h-14 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-5 group-hover:bg-emerald-500/25 transition-colors">
@@ -314,7 +321,7 @@ export function ProductsEcosystemPage() {
                       <div className="flex items-center gap-1 mt-auto text-xs text-primary-accent font-bold">
                         Explore module <ChevronRight size={12} />
                       </div>
-                    </Link>
+                    </TrackedLink>
                   );
                 })}
               </div>
@@ -328,9 +335,12 @@ export function ProductsEcosystemPage() {
                   {ecosystemTiers.intelligence.map(product => {
                     const Icon = moduleIcons[product.id] || Database;
                     return (
-                      <Link
+                      <TrackedLink
                         key={product.id}
                         href={`/products/${product.slug}`}
+                        analyticsEvent="explore_intelligence_module_click"
+                        analyticsCategory="products"
+                        analyticsLabel={`Explore ${product.title}`}
                         className="group p-8 rounded-2xl border border-border bg-background hover:border-indigo-500/40 hover:shadow-elevated transition-all flex flex-col items-center text-center gap-4"
                       >
                         <div className="w-14 h-14 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500/25 transition-colors">
@@ -341,7 +351,7 @@ export function ProductsEcosystemPage() {
                           <p className="text-xs text-text-muted mb-4">{product.hero.subtitle}</p>
                           <p className="text-sm text-text-secondary leading-relaxed">{product.summary.substring(0, 160)}…</p>
                         </div>
-                      </Link>
+                      </TrackedLink>
                     );
                   })}
                 </div>
@@ -355,9 +365,12 @@ export function ProductsEcosystemPage() {
                 {ecosystemTiers.enterprise.map(product => {
                   const Icon = moduleIcons[product.id] || Shield;
                   return (
-                    <Link
+                    <TrackedLink
                       key={product.id}
                       href={`/products/${product.slug}`}
+                      analyticsEvent="explore_enterprise_module_click"
+                      analyticsCategory="products"
+                      analyticsLabel={`Explore ${product.title}`}
                       className="group p-8 rounded-2xl border border-border bg-background hover:border-amber-500/40 hover:shadow-elevated transition-all flex flex-col items-center text-center gap-4"
                     >
                       <div className="w-14 h-14 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-500/25 transition-colors">
@@ -368,7 +381,7 @@ export function ProductsEcosystemPage() {
                         <p className="text-xs text-text-muted mb-4">{product.hero.subtitle}</p>
                         <p className="text-sm text-text-secondary leading-relaxed">{product.summary.substring(0, 160)}…</p>
                       </div>
-                    </Link>
+                    </TrackedLink>
                   );
                 })}
               </div>
@@ -381,9 +394,12 @@ export function ProductsEcosystemPage() {
                 {ecosystemTiers.platformFoundation.map(product => {
                   const Icon = moduleIcons[product.id] || Zap;
                   return (
-                    <Link
+                    <TrackedLink
                       key={product.id}
                       href={`/products/${product.slug}`}
+                      analyticsEvent="explore_foundation_module_click"
+                      analyticsCategory="products"
+                      analyticsLabel={`Explore ${product.title}`}
                       className="group p-8 rounded-2xl border border-border bg-background hover:border-rose-500/40 hover:shadow-elevated transition-all flex flex-col items-center text-center gap-4"
                     >
                       <div className="w-14 h-14 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center flex-shrink-0 group-hover:bg-rose-500/25 transition-colors">
@@ -394,7 +410,7 @@ export function ProductsEcosystemPage() {
                         <p className="text-xs text-text-muted mb-4">{product.hero.subtitle}</p>
                         <p className="text-sm text-text-secondary leading-relaxed">{product.summary.substring(0, 200)}…</p>
                       </div>
-                    </Link>
+                    </TrackedLink>
                   );
                 })}
               </div>
@@ -521,12 +537,12 @@ export function ProductsEcosystemPage() {
               Our enterprise architects work with you to map the CerebroHive platform to your organization's specific needs, data architecture, and compliance requirements.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:-translate-y-1 shadow-elevated flex items-center gap-3 justify-center">
+              <TrackedLink href="/contact" analyticsEvent="cta_book_workshop_click" analyticsCategory="products" analyticsLabel="Book an Architecture Workshop" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:-translate-y-1 shadow-elevated flex items-center gap-3 justify-center">
                 Book an Architecture Workshop <ArrowRight size={16} />
-              </Link>
-              <Link href="/platform" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
+              </TrackedLink>
+              <TrackedLink href="/platform" analyticsEvent="cta_view_platform_docs_click" analyticsCategory="products" analyticsLabel="View Full Platform Docs" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:border-primary-accent/50 hover:-translate-y-1">
                 View Full Platform Docs
-              </Link>
+              </TrackedLink>
             </div>
           </div>
         </div>

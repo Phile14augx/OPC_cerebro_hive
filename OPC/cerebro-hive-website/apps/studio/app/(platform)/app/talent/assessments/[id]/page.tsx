@@ -9,6 +9,8 @@ import { CodeEditor } from "../../../components/ui/CodeEditor";
 import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
 import { cn } from "../../../components/ui/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 export default function AssessmentWorkspace() {
   const [activeTab, setActiveTab] = useState<"code" | "sql" | "prompt" | "arch">("code");
@@ -59,22 +61,22 @@ public class DistributedCache {
       
       {/* Activity Bar (Leftmost) */}
       <div className="w-12 bg-background border-r border-border flex flex-col items-center py-4 space-y-6 shrink-0">
-        <button onClick={() => setActiveActivity("explorer")} className={cn("text-text-muted hover:text-text-primary transition-colors", activeActivity === "explorer" && "text-primary-accent")}>
+        <TrackedButton eventCategory="assessments-workspace" eventLabel="Explorer" onClick={() => setActiveActivity("explorer")} className={cn("text-text-muted hover:text-text-primary transition-colors", activeActivity === "explorer" && "text-primary-accent")}>
           <Files size={24} strokeWidth={1.5} />
-        </button>
-        <button onClick={() => setActiveActivity("search")} className={cn("text-text-muted hover:text-text-primary transition-colors", activeActivity === "search" && "text-primary-accent")}>
+        </TrackedButton>
+        <TrackedButton eventCategory="assessments-workspace" eventLabel="Search" onClick={() => setActiveActivity("search")} className={cn("text-text-muted hover:text-text-primary transition-colors", activeActivity === "search" && "text-primary-accent")}>
           <Search size={24} strokeWidth={1.5} />
-        </button>
-        <button onClick={() => setActiveActivity("source")} className={cn("text-text-muted hover:text-text-primary transition-colors", activeActivity === "source" && "text-primary-accent")}>
+        </TrackedButton>
+        <TrackedButton eventCategory="assessments-workspace" eventLabel="Source Control" onClick={() => setActiveActivity("source")} className={cn("text-text-muted hover:text-text-primary transition-colors", activeActivity === "source" && "text-primary-accent")}>
           <GitBranch size={24} strokeWidth={1.5} />
-        </button>
+        </TrackedButton>
         <div className="flex-1" />
-        <button onClick={() => setActiveActivity("ai")} className={cn("text-text-muted hover:text-text-primary transition-colors", activeActivity === "ai" && "text-primary-accent")}>
+        <TrackedButton eventCategory="assessments-workspace" eventLabel="AI Assessor" onClick={() => setActiveActivity("ai")} className={cn("text-text-muted hover:text-text-primary transition-colors", activeActivity === "ai" && "text-primary-accent")}>
           <BrainCircuit size={24} strokeWidth={1.5} />
-        </button>
-        <button className="text-text-muted hover:text-text-primary transition-colors">
+        </TrackedButton>
+        <TrackedButton eventCategory="assessments-workspace" eventLabel="Settings" className="text-text-muted hover:text-text-primary transition-colors">
           <Settings size={24} strokeWidth={1.5} />
-        </button>
+        </TrackedButton>
       </div>
 
       {/* Primary Sidebar (Explorer) */}
@@ -90,7 +92,9 @@ public class DistributedCache {
           </div>
           
           <div className="ml-4 space-y-0.5">
-            <button 
+            <TrackedButton
+              eventCategory="assessments-workspace"
+              eventLabel="DistributedCache.java"
               onClick={() => setActiveTab("code")}
               className={cn(
                 "w-full flex items-center gap-2 px-2 py-1 text-sm rounded transition-colors",
@@ -98,8 +102,10 @@ public class DistributedCache {
               )}
             >
               <FileCode2 size={14} className={activeTab === "code" ? "text-primary-accent" : "text-blue-400"} /> DistributedCache.java
-            </button>
-            <button 
+            </TrackedButton>
+            <TrackedButton
+              eventCategory="assessments-workspace"
+              eventLabel="query_optimization.sql"
               onClick={() => setActiveTab("sql")}
               className={cn(
                 "w-full flex items-center gap-2 px-2 py-1 text-sm rounded transition-colors",
@@ -107,8 +113,10 @@ public class DistributedCache {
               )}
             >
               <Database size={14} className={activeTab === "sql" ? "text-primary-accent" : "text-orange-400"} /> query_optimization.sql
-            </button>
-            <button 
+            </TrackedButton>
+            <TrackedButton
+              eventCategory="assessments-workspace"
+              eventLabel="AI_Agent_Prompt.md"
               onClick={() => setActiveTab("prompt")}
               className={cn(
                 "w-full flex items-center gap-2 px-2 py-1 text-sm rounded transition-colors",
@@ -116,7 +124,7 @@ public class DistributedCache {
               )}
             >
               <MessageSquare size={14} className={activeTab === "prompt" ? "text-primary-accent" : "text-purple-400"} /> AI_Agent_Prompt.md
-            </button>
+            </TrackedButton>
           </div>
         </div>
       </div>
@@ -125,10 +133,10 @@ public class DistributedCache {
       <div className="flex-1 flex flex-col min-w-0 bg-background">
         {/* Editor Tabs */}
         <div className="flex items-center h-10 border-b border-border overflow-x-auto custom-scrollbar shrink-0">
-          <div className={cn("flex items-center gap-2 px-4 h-full border-r border-border border-t-2 cursor-pointer", activeTab === "code" ? "border-t-primary-accent bg-background text-text-primary" : "border-t-transparent bg-surface hover:bg-surface-elevated text-text-muted")} onClick={() => setActiveTab("code")}>
+          <div className={cn("flex items-center gap-2 px-4 h-full border-r border-border border-t-2 cursor-pointer", activeTab === "code" ? "border-t-primary-accent bg-background text-text-primary" : "border-t-transparent bg-surface hover:bg-surface-elevated text-text-muted")} onClick={() => { analytics.track({ eventName: 'click', category: 'assessments-workspace', label: 'DistributedCache.java Tab' }); setActiveTab("code"); }}>
             <FileCode2 size={14} className="text-blue-400" /> DistributedCache.java
           </div>
-          <div className={cn("flex items-center gap-2 px-4 h-full border-r border-border border-t-2 cursor-pointer", activeTab === "sql" ? "border-t-primary-accent bg-background text-text-primary" : "border-t-transparent bg-surface hover:bg-surface-elevated text-text-muted")} onClick={() => setActiveTab("sql")}>
+          <div className={cn("flex items-center gap-2 px-4 h-full border-r border-border border-t-2 cursor-pointer", activeTab === "sql" ? "border-t-primary-accent bg-background text-text-primary" : "border-t-transparent bg-surface hover:bg-surface-elevated text-text-muted")} onClick={() => { analytics.track({ eventName: 'click', category: 'assessments-workspace', label: 'query.sql Tab' }); setActiveTab("sql"); }}>
             <Database size={14} className="text-orange-400" /> query.sql
           </div>
         </div>
@@ -153,12 +161,12 @@ public class DistributedCache {
         <div className="h-64 border-t border-border bg-background flex flex-col shrink-0">
           <div className="flex items-center justify-between px-4 h-10 border-b border-border bg-surface shrink-0">
             <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-text-muted">
-              <button className="text-primary-accent border-b-2 border-primary-accent h-10">Output</button>
-              <button className="hover:text-text-primary transition-colors h-10">Terminal</button>
-              <button className="hover:text-text-primary transition-colors h-10">Test Cases (3)</button>
+              <TrackedButton eventCategory="assessments-workspace" eventLabel="Output" className="text-primary-accent border-b-2 border-primary-accent h-10">Output</TrackedButton>
+              <TrackedButton eventCategory="assessments-workspace" eventLabel="Terminal" className="hover:text-text-primary transition-colors h-10">Terminal</TrackedButton>
+              <TrackedButton eventCategory="assessments-workspace" eventLabel="Test Cases (3)" className="hover:text-text-primary transition-colors h-10">Test Cases (3)</TrackedButton>
             </div>
-            <Button size="sm" onClick={handleRun} disabled={isExecuting} className="h-7 text-xs gap-2 px-3">
-              {isExecuting ? <Loader2 size={12} className="animate-spin" /> : <PlayCircle size={12} />} 
+            <Button size="sm" onClick={() => { analytics.track({ eventName: 'click', category: 'assessments-workspace', label: 'Run Code' }); handleRun(); }} disabled={isExecuting} className="h-7 text-xs gap-2 px-3">
+              {isExecuting ? <Loader2 size={12} className="animate-spin" /> : <PlayCircle size={12} />}
               {isExecuting ? "Executing Sandbox..." : "Run Code"}
             </Button>
           </div>
@@ -195,9 +203,9 @@ public class DistributedCache {
               placeholder="Reply to AI Assessor..." 
               className="w-full bg-surface-elevated border border-border rounded-lg pl-3 pr-10 py-2.5 text-sm text-text-primary focus:outline-none focus:border-purple-400 transition-colors"
             />
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center transition-colors">
+            <TrackedButton eventCategory="assessments-workspace" eventLabel="Send Reply to AI Assessor" className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center transition-colors">
               <ArrowUpRight size={14} />
-            </button>
+            </TrackedButton>
           </div>
         </div>
       </div>

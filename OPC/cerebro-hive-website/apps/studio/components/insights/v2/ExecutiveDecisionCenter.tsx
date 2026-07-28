@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { User, Building2, Target, CheckCircle2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export const ExecutiveDecisionCenter = () => {
   const [step, setStep] = useState(1);
@@ -59,9 +60,9 @@ export const ExecutiveDecisionCenter = () => {
                   </div>
                   <div className="flex flex-wrap gap-4 justify-center">
                     {roles.map(role => (
-                      <button key={role} onClick={() => handleSelect('role', role)} className="px-6 py-3 rounded-xl border border-border bg-surface text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
+                      <TrackedButton key={role} eventCategory="executive-decision-center" eventLabel={role} onClick={() => handleSelect('role', role)} className="px-6 py-3 rounded-xl border border-border bg-surface text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
                         {role}
-                      </button>
+                      </TrackedButton>
                     ))}
                   </div>
                 </motion.div>
@@ -75,9 +76,9 @@ export const ExecutiveDecisionCenter = () => {
                   </div>
                   <div className="flex flex-wrap gap-4 justify-center">
                     {industries.map(ind => (
-                      <button key={ind} onClick={() => handleSelect('industry', ind)} className="px-6 py-3 rounded-xl border border-border bg-surface text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
+                      <TrackedButton key={ind} eventCategory="executive-decision-center" eventLabel={ind} onClick={() => handleSelect('industry', ind)} className="px-6 py-3 rounded-xl border border-border bg-surface text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
                         {ind}
-                      </button>
+                      </TrackedButton>
                     ))}
                   </div>
                 </motion.div>
@@ -91,9 +92,9 @@ export const ExecutiveDecisionCenter = () => {
                   </div>
                   <div className="flex flex-wrap gap-4 justify-center">
                     {priorities.map(pri => (
-                      <button key={pri} onClick={() => handleSelect('priority', pri)} className="px-6 py-3 rounded-xl border border-border bg-surface text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
+                      <TrackedButton key={pri} eventCategory="executive-decision-center" eventLabel={pri} onClick={() => handleSelect('priority', pri)} className="px-6 py-3 rounded-xl border border-border bg-surface text-sm font-bold text-text-primary hover:border-[#7B61FF] hover:bg-[#7B61FF]/10 transition-colors">
                         {pri}
-                      </button>
+                      </TrackedButton>
                     ))}
                   </div>
                 </motion.div>
@@ -118,12 +119,12 @@ export const ExecutiveDecisionCenter = () => {
                   </div>
 
                   <div className="mt-8 text-center">
-                    <button className="px-8 py-4 bg-[#7B61FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity inline-flex items-center gap-2">
+                    <TrackedButton eventCategory="executive-decision-center" eventLabel="Generate Strategy Canvas" className="px-8 py-4 bg-[#7B61FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity inline-flex items-center gap-2">
                       Generate Strategy Canvas <ArrowRight size={16} />
-                    </button>
-                    <button onClick={() => { setStep(1); setSelections({ role: "", industry: "", priority: "" }); }} className="block mx-auto mt-4 text-xs text-text-muted hover:text-text-primary transition-colors uppercase tracking-widest">
+                    </TrackedButton>
+                    <TrackedButton eventCategory="executive-decision-center" eventLabel="Reset Configuration" onClick={() => { setStep(1); setSelections({ role: "", industry: "", priority: "" }); }} className="block mx-auto mt-4 text-xs text-text-muted hover:text-text-primary transition-colors uppercase tracking-widest">
                       Reset Configuration
-                    </button>
+                    </TrackedButton>
                   </div>
                 </motion.div>
               )}

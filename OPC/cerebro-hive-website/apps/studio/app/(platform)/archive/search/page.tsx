@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { 
-  Search, SlidersHorizontal, FileText, Database, 
+import {
+  Search, SlidersHorizontal, FileText, Database,
   MessageSquare, Sparkles, Network, ArrowRight, CornerDownRight, Tag
 } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export default function SemanticSearchPage() {
   const [query, setQuery] = useState("");
@@ -48,7 +49,7 @@ export default function SemanticSearchPage() {
   return (
     <div className="flex-1 p-8 max-w-5xl mx-auto w-full h-[calc(100vh-4rem)] flex flex-col">
       <div className="flex items-center gap-2 text-sm text-text-muted mb-8 font-medium shrink-0">
-        <Link href="/archive" className="hover:text-primary transition-colors">Archive</Link>
+        <TrackedLink href="/archive" analyticsEvent="archive_breadcrumb_click" analyticsCategory="archive-search" analyticsLabel="Archive" className="hover:text-primary transition-colors">Archive</TrackedLink>
         <span className="text-border">/</span>
         <span className="text-text-primary">Semantic Search</span>
       </div>
@@ -78,16 +79,18 @@ export default function SemanticSearchPage() {
               autoFocus
             />
             <div className="absolute inset-y-0 right-2 flex items-center gap-2">
-              <button type="button" className="p-2 text-text-muted hover:text-text-primary hover:bg-background rounded-lg transition-colors" title="Filters">
+              <TrackedButton type="button" eventCategory="archive-search" eventLabel="Filters" className="p-2 text-text-muted hover:text-text-primary hover:bg-background rounded-lg transition-colors" title="Filters">
                 <SlidersHorizontal size={20} />
-              </button>
-              <button 
-                type="submit" 
+              </TrackedButton>
+              <TrackedButton
+                type="submit"
                 disabled={!query.trim()}
+                eventCategory="archive-search"
+                eventLabel="Search"
                 className="bg-primary hover:bg-primary-hover disabled:opacity-50 text-white px-4 py-2 rounded-xl font-medium transition-colors"
               >
                 Search
-              </button>
+              </TrackedButton>
             </div>
           </form>
           
@@ -116,9 +119,9 @@ export default function SemanticSearchPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <button type="button" className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-muted hover:text-text-primary transition-colors">
+            <TrackedButton type="button" eventCategory="archive-search" eventLabel="Filters" className="absolute inset-y-0 right-0 pr-4 flex items-center text-text-muted hover:text-text-primary transition-colors">
               <SlidersHorizontal size={18} />
-            </button>
+            </TrackedButton>
           </form>
 
           {/* Results Area */}
@@ -127,9 +130,9 @@ export default function SemanticSearchPage() {
               <p className="text-sm text-text-muted font-medium">Found 2 results in 1.43s</p>
               
               <div className="flex items-center gap-2 bg-surface border border-border p-1 rounded-lg">
-                <button className="px-3 py-1 bg-background text-text-primary text-xs font-medium rounded shadow-sm border border-border/50">Hybrid (RRF)</button>
-                <button className="px-3 py-1 text-text-muted hover:text-text-primary text-xs font-medium rounded">Semantic Only</button>
-                <button className="px-3 py-1 text-text-muted hover:text-text-primary text-xs font-medium rounded">Keyword Only</button>
+                <TrackedButton eventCategory="archive-search" eventLabel="Hybrid (RRF)" className="px-3 py-1 bg-background text-text-primary text-xs font-medium rounded shadow-sm border border-border/50">Hybrid (RRF)</TrackedButton>
+                <TrackedButton eventCategory="archive-search" eventLabel="Semantic Only" className="px-3 py-1 text-text-muted hover:text-text-primary text-xs font-medium rounded">Semantic Only</TrackedButton>
+                <TrackedButton eventCategory="archive-search" eventLabel="Keyword Only" className="px-3 py-1 text-text-muted hover:text-text-primary text-xs font-medium rounded">Keyword Only</TrackedButton>
               </div>
             </div>
 
@@ -146,9 +149,9 @@ export default function SemanticSearchPage() {
                 Based on the retrieved documents, the CerebroArchive module utilizes <strong>pgvector</strong> as its primary vector database for semantic search. This allows relational metadata to be colocated with vector embeddings. Additionally, it leverages OpenSearch for BM25 keyword search, combining the results using <strong>Reciprocal Rank Fusion (RRF)</strong> to achieve high precision.
               </p>
               <div className="mt-4 flex gap-2 relative z-10">
-                <button className="flex items-center gap-1.5 text-xs font-medium bg-background border border-border px-3 py-1.5 rounded-md hover:bg-surface transition-colors">
+                <TrackedButton eventCategory="archive-search" eventLabel="Ask Follow-up" className="flex items-center gap-1.5 text-xs font-medium bg-background border border-border px-3 py-1.5 rounded-md hover:bg-surface transition-colors">
                   <MessageSquare size={14} /> Ask Follow-up
-                </button>
+                </TrackedButton>
               </div>
             </div>
 
@@ -157,10 +160,10 @@ export default function SemanticSearchPage() {
               {MOCK_RESULTS.map(res => (
                 <div key={res.id} className="bg-surface border border-border rounded-xl p-5 hover:border-border-focus hover:shadow-md transition-all group">
                   <div className="flex justify-between items-start mb-2">
-                    <Link href={`/archive/documents/${res.id}`} className="text-lg font-bold text-primary hover:underline font-space flex items-center gap-2">
+                    <TrackedLink href={`/archive/documents/${res.id}`} analyticsEvent="archive_result_click" analyticsCategory="archive-search" analyticsLabel={res.title} className="text-lg font-bold text-primary hover:underline font-space flex items-center gap-2">
                       <FileText size={18} />
                       {res.title}
-                    </Link>
+                    </TrackedLink>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-mono text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
                         score: {res.score.toFixed(3)}
@@ -188,9 +191,9 @@ export default function SemanticSearchPage() {
                     <div className="text-xs text-text-muted">
                       Matched via Hybrid Search (Vector + Keyword)
                     </div>
-                    <Link href={`/archive/documents/${res.id}`} className="text-xs font-medium text-primary flex items-center gap-1 hover:underline">
+                    <TrackedLink href={`/archive/documents/${res.id}`} analyticsEvent="archive_result_view_click" analyticsCategory="archive-search" analyticsLabel={`View Document - ${res.title}`} className="text-xs font-medium text-primary flex items-center gap-1 hover:underline">
                       View Document <ArrowRight size={12} />
-                    </Link>
+                    </TrackedLink>
                   </div>
                 </div>
               ))}

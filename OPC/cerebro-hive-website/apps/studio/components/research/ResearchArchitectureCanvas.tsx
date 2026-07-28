@@ -12,6 +12,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import { Download, Maximize, FileJson } from 'lucide-react';
 import { ResearchArchitectureData } from '@/lib/content/research/types';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 // Academic Node Component
 const AcademicNode = ({ data }: NodeProps) => {
@@ -88,15 +89,15 @@ export const ResearchArchitectureCanvas = ({ data }: ResearchArchitectureCanvasP
 
         {/* Export Panel (Bottom Right) */}
         <Panel position="bottom-right" className="flex gap-2">
-           <button className="p-2 bg-surface border border-gray-200 rounded-sm shadow-sm text-text-muted hover:text-text-primary transition-colors" title="Download SVG">
+           <TrackedButton eventCategory="research-architecture-canvas" eventLabel="Download SVG" className="p-2 bg-surface border border-gray-200 rounded-sm shadow-sm text-text-muted hover:text-text-primary transition-colors" title="Download SVG">
              <Download size={14} />
-           </button>
-           <button className="p-2 bg-surface border border-gray-200 rounded-sm shadow-sm text-text-muted hover:text-text-primary transition-colors" title="Export JSON">
+           </TrackedButton>
+           <TrackedButton eventCategory="research-architecture-canvas" eventLabel="Export JSON" className="p-2 bg-surface border border-gray-200 rounded-sm shadow-sm text-text-muted hover:text-text-primary transition-colors" title="Export JSON">
              <FileJson size={14} />
-           </button>
-           <button className="p-2 bg-surface border border-gray-200 rounded-sm shadow-sm text-text-muted hover:text-text-primary transition-colors" title="Fullscreen">
+           </TrackedButton>
+           <TrackedButton eventCategory="research-architecture-canvas" eventLabel="Fullscreen" className="p-2 bg-surface border border-gray-200 rounded-sm shadow-sm text-text-muted hover:text-text-primary transition-colors" title="Fullscreen">
              <Maximize size={14} />
-           </button>
+           </TrackedButton>
         </Panel>
 
       </ReactFlow>

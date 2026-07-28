@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Send, Bot, User, CornerDownLeft } from "lucide-react";
 import { cn } from "./utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 export interface HiveAssistantProps {
   isOpen: boolean;
@@ -54,12 +56,15 @@ export function HiveAssistant({ isOpen, onClose }: HiveAssistantProps) {
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-40 bg-background/50 backdrop-blur-sm"
-            onClick={onClose}
+            onClick={() => {
+              analytics.track({ eventName: 'click', category: 'hive-assistant', label: 'Backdrop Dismiss' });
+              onClose();
+            }}
           />
           <motion.div
             initial={{ opacity: 0, x: "100%" }}
@@ -79,12 +84,14 @@ export function HiveAssistant({ isOpen, onClose }: HiveAssistantProps) {
                   <p className="text-xs text-primary-accent mt-1">Powered by Cerebro X</p>
                 </div>
               </div>
-              <button 
+              <TrackedButton
+                eventCategory="hive-assistant"
+                eventLabel="Close Assistant"
                 onClick={onClose}
                 className="p-2 hover:bg-surface rounded-full transition-colors text-text-muted hover:text-text-primary"
               >
                 <X size={20} />
-              </button>
+              </TrackedButton>
             </div>
 
             {/* Chat Area */}
@@ -114,9 +121,9 @@ export function HiveAssistant({ isOpen, onClose }: HiveAssistantProps) {
                     {msg.content}
                     {msg.action && (
                       <div className="mt-3 pt-3 border-t border-primary-accent/20">
-                        <button className="text-xs font-bold text-primary-accent hover:underline flex items-center gap-1">
+                        <TrackedButton eventCategory="hive-assistant" eventLabel="View Details" className="text-xs font-bold text-primary-accent hover:underline flex items-center gap-1">
                           View Details <CornerDownLeft size={12} />
-                        </button>
+                        </TrackedButton>
                       </div>
                     )}
                   </div>
@@ -133,24 +140,28 @@ export function HiveAssistant({ isOpen, onClose }: HiveAssistantProps) {
                   placeholder="Ask Cerebro X..."
                   className="w-full bg-surface border border-border focus:border-primary-accent/50 rounded-xl pl-4 pr-12 py-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-none transition-colors"
                 />
-                <button 
+                <TrackedButton
                   type="submit"
+                  eventCategory="hive-assistant"
+                  eventLabel="Send Message"
                   disabled={!input.trim()}
                   className="absolute right-2 top-2 p-1.5 bg-primary-accent text-background rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
                 >
                   <Send size={16} />
-                </button>
+                </TrackedButton>
               </form>
               <div className="flex gap-2 mt-3 overflow-x-auto pb-1 custom-scrollbar hide-scroll-bar">
                 {["Deploy PostgreSQL", "Create a HR chatbot", "Build RAG"].map((suggestion) => (
-                  <button 
+                  <TrackedButton
                     key={suggestion}
                     type="button"
+                    eventCategory="hive-assistant"
+                    eventLabel={suggestion}
                     onClick={() => setInput(suggestion)}
                     className="whitespace-nowrap px-3 py-1 bg-surface border border-border rounded-full text-xs text-text-secondary hover:text-primary-accent hover:border-primary-accent/30 transition-colors"
                   >
                     {suggestion}
-                  </button>
+                  </TrackedButton>
                 ))}
               </div>
             </div>

@@ -5,7 +5,8 @@ import { ResearchPublication } from '@/lib/content/research/types';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Copy, Download, FileText, Quote, Share2, ShieldCheck } from 'lucide-react';
 import { ResearchArchitectureCanvas } from './ResearchArchitectureCanvas';
-import Link from 'next/link';
+import { TrackedLink } from '@/components/cerebro/TrackedLink';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 export const ResearchReader = ({ publication }: { publication: ResearchPublication }) => {
   
@@ -20,11 +21,25 @@ export const ResearchReader = ({ publication }: { publication: ResearchPublicati
         
         {/* Breadcrumbs */}
         <div className="flex items-center gap-2 text-xs font-mono text-text-muted mb-8">
-          <Link href="/research" className="hover:text-primary-accent transition-colors">Research</Link>
+          <TrackedLink
+            href="/research"
+            analyticsEvent="research_breadcrumb_click"
+            analyticsCategory="research-reader"
+            analyticsLabel="Research"
+            className="hover:text-primary-accent transition-colors"
+          >
+            Research
+          </TrackedLink>
           <span>/</span>
-          <Link href={`/research?category=${publication.category}`} className="hover:text-primary-accent transition-colors capitalize">
+          <TrackedLink
+            href={`/research?category=${publication.category}`}
+            analyticsEvent="research_breadcrumb_click"
+            analyticsCategory="research-reader"
+            analyticsLabel={publication.category}
+            className="hover:text-primary-accent transition-colors capitalize"
+          >
             {publication.category.replace('-', ' ')}
-          </Link>
+          </TrackedLink>
           <span>/</span>
           <span className="text-text-secondary truncate max-w-xs">{publication.title}</span>
         </div>
@@ -137,16 +152,28 @@ export const ResearchReader = ({ publication }: { publication: ResearchPublicati
             
             {/* Actions */}
             <div className="bg-surface border border-border rounded-xl p-5 shadow-sm flex flex-col gap-3">
-              <button className="w-full py-3 bg-primary-accent text-text-primary font-space font-bold text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-[#00F57A]/90 transition-colors">
+              <TrackedButton
+                eventCategory="research-reader"
+                eventLabel="Download PDF"
+                className="w-full py-3 bg-primary-accent text-text-primary font-space font-bold text-sm rounded-lg flex items-center justify-center gap-2 hover:bg-[#00F57A]/90 transition-colors"
+              >
                 <Download size={16} /> Download PDF
-              </button>
+              </TrackedButton>
               <div className="flex gap-2">
-                <button className="flex-1 py-2 bg-background border border-border text-text-primary text-xs font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-surface transition-colors">
+                <TrackedButton
+                  eventCategory="research-reader"
+                  eventLabel="Share"
+                  className="flex-1 py-2 bg-background border border-border text-text-primary text-xs font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-surface transition-colors"
+                >
                   <Share2 size={14} /> Share
-                </button>
-                <button className="flex-1 py-2 bg-background border border-border text-text-primary text-xs font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-surface transition-colors">
+                </TrackedButton>
+                <TrackedButton
+                  eventCategory="research-reader"
+                  eventLabel="Cite"
+                  className="flex-1 py-2 bg-background border border-border text-text-primary text-xs font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-surface transition-colors"
+                >
                   <Quote size={14} /> Cite
-                </button>
+                </TrackedButton>
               </div>
             </div>
 
@@ -162,9 +189,13 @@ export const ResearchReader = ({ publication }: { publication: ResearchPublicati
                     <p className="text-[11px] text-text-secondary leading-relaxed p-3 bg-background border border-border rounded">
                       {publication.authors.map(a => a.name.split(' ').pop()).join(', ')} ({new Date(publication.publishDate).getFullYear()}). {publication.title}. CerebroHive Labs.
                     </p>
-                    <button className="absolute top-2 right-2 text-text-muted hover:text-text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    <TrackedButton
+                      eventCategory="research-reader"
+                      eventLabel="Copy Citation"
+                      className="absolute top-2 right-2 text-text-muted hover:text-text-primary opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
                       <Copy size={12} />
-                    </button>
+                    </TrackedButton>
                   </div>
                 </div>
               </div>

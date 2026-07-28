@@ -6,6 +6,7 @@ import { Cpu, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AgentOSLiveRuntime } from "@/components/platform/live-runtime/AgentOSLiveRuntime";
 import { AgentOSBackendGate } from "@/components/platform/live-runtime/AgentOSBackendGate";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 type Mode = "kernel" | "backend";
 
@@ -27,7 +28,9 @@ export default function LiveRuntimePage() {
           </p>
 
           <div className="inline-flex p-1 rounded-lg bg-surface border border-border gap-1">
-            <button
+            <TrackedButton
+              eventCategory="platform-live-runtime"
+              eventLabel="In-Browser Kernel"
               onClick={() => setMode("kernel")}
               className={cn(
                 "flex items-center gap-2 px-5 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest transition-colors",
@@ -35,8 +38,10 @@ export default function LiveRuntimePage() {
               )}
             >
               <Cpu size={14} /> In-Browser Kernel
-            </button>
-            <button
+            </TrackedButton>
+            <TrackedButton
+              eventCategory="platform-live-runtime"
+              eventLabel="Full Backend"
               onClick={() => setMode("backend")}
               className={cn(
                 "flex items-center gap-2 px-5 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest transition-colors",
@@ -44,7 +49,7 @@ export default function LiveRuntimePage() {
               )}
             >
               <Server size={14} /> Full Backend
-            </button>
+            </TrackedButton>
           </div>
         </div>
       </section>

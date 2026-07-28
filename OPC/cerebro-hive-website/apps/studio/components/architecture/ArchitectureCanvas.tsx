@@ -22,6 +22,7 @@ import { AnimatedEdge } from './AnimatedEdge';
 import { Download, Maximize, Search, Image as ImageIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 const nodeTypes = {
   architectureNode: ArchitectureNode,
@@ -176,12 +177,12 @@ const Flow = ({ initialNodes, initialEdges, direction = 'LR' }: ArchitectureCanv
               className="pl-8 pr-3 py-1.5 bg-surface border border-border rounded-md text-xs text-text-primary focus:outline-none focus:border-primary-accent"
             />
           </div>
-          <button onClick={onDownloadPng} className="p-1.5 bg-surface border border-border rounded-md text-text-muted hover:text-text-primary hover:border-primary-accent transition-colors" title="Download PNG">
+          <TrackedButton eventCategory="architecture-canvas" eventLabel="Download PNG" onClick={onDownloadPng} className="p-1.5 bg-surface border border-border rounded-md text-text-muted hover:text-text-primary hover:border-primary-accent transition-colors" title="Download PNG">
             <ImageIcon size={16} />
-          </button>
-          <button onClick={onDownloadSvg} className="p-1.5 bg-surface border border-border rounded-md text-text-muted hover:text-text-primary hover:border-primary-accent transition-colors" title="Download SVG">
+          </TrackedButton>
+          <TrackedButton eventCategory="architecture-canvas" eventLabel="Download SVG" onClick={onDownloadSvg} className="p-1.5 bg-surface border border-border rounded-md text-text-muted hover:text-text-primary hover:border-primary-accent transition-colors" title="Download SVG">
             <Download size={16} />
-          </button>
+          </TrackedButton>
         </Panel>
       </ReactFlow>
     </div>

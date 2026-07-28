@@ -6,8 +6,9 @@ import { useIndustryExplorer } from './IndustryExplorerContext';
 import { industriesData, getIndustryBySlug } from '@/lib/data/industries';
 import { SectionHeading } from '../cerebro/SectionHeading';
 import { ArrowRight, BrainCircuit, Activity, Database, Server, User, Box, ArrowDownRight, Layers, FileText, CheckCircle2 } from 'lucide-react';
-import Link from 'next/link';
+import { TrackedLink } from '../cerebro/TrackedLink';
 import { AnimatedButton as Button } from '../cerebro/AnimatedButton';
+import { analytics } from '@/lib/analytics/AnalyticsAdapter';
 import { EnterpriseDigitalTwin } from './engine/EnterpriseDigitalTwin';
 import { IndustryMaturity } from './engine/IndustryMaturity';
 import { AIOpportunityMap } from './engine/AIOpportunityMap';
@@ -213,10 +214,10 @@ export function IndustryDetailView() {
             <p className="text-sm text-text-secondary mb-8">Platform configurations tailored for {industry.name} workflows.</p>
             <div className="flex flex-col gap-3 w-full">
               {['CerebroSphere™', 'HiveMatrix™', 'AgentForge™'].map((prod, i) => (
-                <Link key={i} href="/products" className="flex items-center justify-between p-4 rounded-xl bg-surface border border-border hover:border-primary-accent/50 transition-colors group">
+                <TrackedLink key={i} href="/products" analyticsEvent="industry_recommended_product_click" analyticsCategory="industry-explorer" analyticsLabel={prod} className="flex items-center justify-between p-4 rounded-xl bg-surface border border-border hover:border-primary-accent/50 transition-colors group">
                   <span className="font-bold text-sm text-text-primary group-hover:text-primary-accent">{prod}</span>
                   <ArrowRight size={16} className="text-text-muted group-hover:-rotate-45 transition-transform" />
-                </Link>
+                </TrackedLink>
               ))}
             </div>
           </div>
@@ -230,13 +231,13 @@ export function IndustryDetailView() {
                 { title: `AI in ${industry.name} Report 2026`, type: 'Whitepaper', link: '/research' },
                 { title: `${industry.name} Knowledge Graph Guide`, type: 'Implementation', link: '/research' }
               ]).slice(0, 3).map((res, i) => (
-                <Link key={i} href={res.link} className="flex items-center justify-between p-4 rounded-xl bg-surface border border-border hover:border-primary-accent/50 transition-colors group">
+                <TrackedLink key={i} href={res.link} analyticsEvent="industry_research_link_click" analyticsCategory="industry-explorer" analyticsLabel={res.title} className="flex items-center justify-between p-4 rounded-xl bg-surface border border-border hover:border-primary-accent/50 transition-colors group">
                   <div className="flex flex-col gap-1">
                     <span className="font-bold text-sm text-text-primary group-hover:text-primary-accent line-clamp-1">{res.title}</span>
                     <span className="text-[10px] uppercase tracking-wider text-text-muted">{res.type}</span>
                   </div>
                   <ArrowRight size={16} className="text-text-muted group-hover:-rotate-45 transition-transform" />
-                </Link>
+                </TrackedLink>
               ))}
             </div>
           </div>
@@ -251,13 +252,13 @@ export function IndustryDetailView() {
                 const relInd = getIndustryBySlug(rel);
                 if (!relInd) return null;
                 return (
-                  <Link key={rel} href={`/industries/${rel}`} className="p-6 rounded-2xl bg-surface border border-border hover:border-primary-accent/50 transition-colors flex items-center justify-between group">
+                  <TrackedLink key={rel} href={`/industries/${rel}`} analyticsEvent="industry_related_link_click" analyticsCategory="industry-explorer" analyticsLabel={relInd.name} className="p-6 rounded-2xl bg-surface border border-border hover:border-primary-accent/50 transition-colors flex items-center justify-between group">
                     <div className="flex items-center gap-3">
                       <span className="w-3 h-3 rounded-full" style={{ backgroundColor: relInd.color }} />
                       <span className="font-bold text-sm text-text-primary group-hover:text-primary-accent">{relInd.name}</span>
                     </div>
                     <ArrowRight size={14} className="text-text-muted group-hover:text-primary-accent" />
-                  </Link>
+                  </TrackedLink>
                 );
               })}
             </div>
@@ -290,8 +291,20 @@ export function IndustryDetailView() {
             Schedule an industry workshop to map your AI transformation journey with our enterprise architects.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 relative z-10 w-full sm:w-auto px-4 sm:px-0">
-            <Button variant="primary" className="w-full sm:w-auto">Book Industry Workshop</Button>
-            <Button variant="outline" className="w-full sm:w-auto">Download Blueprint</Button>
+            <Button
+              variant="primary"
+              className="w-full sm:w-auto"
+              onClick={() => analytics.track({ eventName: 'click', category: 'industry-explorer', label: 'Book Industry Workshop' })}
+            >
+              Book Industry Workshop
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={() => analytics.track({ eventName: 'click', category: 'industry-explorer', label: 'Download Blueprint' })}
+            >
+              Download Blueprint
+            </Button>
           </div>
         </div>
 

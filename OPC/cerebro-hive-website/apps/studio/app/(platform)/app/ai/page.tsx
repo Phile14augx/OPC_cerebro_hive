@@ -5,12 +5,13 @@ import {
   Bot, BookOpen, DatabaseZap, LayoutPanelLeft,
   Activity, CheckCircle2, AlertCircle, Plus, Terminal
 } from "lucide-react";
-import Link from "next/link";
 import { StatCard } from "../components/ui/StatCard";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Badge } from "../components/ui/Badge";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "../components/ui/Table";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export default function AIOptionsOverview() {
   const metrics = [
@@ -99,7 +100,7 @@ export default function AIOptionsOverview() {
           <div className="space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-text-muted px-1">Quick Actions</h2>
             <div className="flex flex-col gap-2">
-              <Link href="/app/ai/studio">
+              <TrackedLink href="/app/ai/studio" analyticsEvent="quick_action_click" analyticsCategory="ai-overview" analyticsLabel="Open AI Studio">
                 <Card className="flex items-center justify-between p-4 hover:border-primary-accent/40 transition-colors group">
                   <div className="flex items-center gap-3">
                     <LayoutPanelLeft size={18} className="text-text-primary group-hover:text-primary-accent transition-colors" />
@@ -107,8 +108,8 @@ export default function AIOptionsOverview() {
                   </div>
                   <ChevronRightIcon size={16} className="text-text-muted group-hover:text-primary-accent transition-colors" />
                 </Card>
-              </Link>
-              <Link href="/app/ai/prompts">
+              </TrackedLink>
+              <TrackedLink href="/app/ai/prompts" analyticsEvent="quick_action_click" analyticsCategory="ai-overview" analyticsLabel="Prompt Library">
                 <Card className="flex items-center justify-between p-4 hover:border-primary-accent/40 transition-colors group">
                   <div className="flex items-center gap-3">
                     <Terminal size={18} className="text-text-primary group-hover:text-primary-accent transition-colors" />
@@ -116,14 +117,14 @@ export default function AIOptionsOverview() {
                   </div>
                   <ChevronRightIcon size={16} className="text-text-muted group-hover:text-primary-accent transition-colors" />
                 </Card>
-              </Link>
+              </TrackedLink>
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <h2 className="text-sm font-bold uppercase tracking-widest text-text-muted">System Events</h2>
-              <button className="text-xs font-bold text-text-muted hover:text-primary-accent transition-colors">View Logs</button>
+              <TrackedButton eventCategory="ai-overview" eventLabel="View Logs" className="text-xs font-bold text-text-muted hover:text-primary-accent transition-colors">View Logs</TrackedButton>
             </div>
             <Card className="p-4 space-y-4">
               {[

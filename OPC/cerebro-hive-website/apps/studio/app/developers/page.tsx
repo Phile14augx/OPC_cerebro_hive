@@ -1,9 +1,9 @@
 import React from "react";
-import Link from "next/link";
 import type { Metadata } from "next";
 import { Terminal, Code2, Zap, ArrowRight, ShieldCheck, Database, FileJson, Blocks } from "lucide-react";
 import { JsonLd } from "@/components/discovery";
 import { buildTechArticleSchema } from "@/lib/discovery";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export const metadata: Metadata = {
   title: "Developer API, SDK & Documentation | CerebroHive",
@@ -40,7 +40,7 @@ export default function DevelopersPage() {
       <section>
         <h2 className="text-sm uppercase tracking-widest text-text-muted font-bold mb-6">Quick Start</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link href="/developers/api" className="group p-6 rounded-2xl bg-surface border border-border hover:border-primary-accent/50 transition-all hover:shadow-elevated">
+          <TrackedLink href="/developers/api" analyticsEvent="developers_quickstart_click" analyticsCategory="developers" analyticsLabel="REST API" className="group p-6 rounded-2xl bg-surface border border-border hover:border-primary-accent/50 transition-all hover:shadow-elevated">
             <div className="w-12 h-12 rounded-xl bg-primary-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <FileJson className="text-primary-accent" size={24} />
             </div>
@@ -50,9 +50,9 @@ export default function DevelopersPage() {
             <p className="text-sm text-text-secondary">
               Connect to our globally distributed, low-latency API to manage agents, query datasets, and trigger autonomous workflows.
             </p>
-          </Link>
+          </TrackedLink>
 
-          <Link href="/developers/architecture" className="group p-6 rounded-2xl bg-surface border border-border hover:border-secondary-accent/50 transition-all hover:shadow-elevated">
+          <TrackedLink href="/developers/architecture" analyticsEvent="developers_quickstart_click" analyticsCategory="developers" analyticsLabel="Architecture" className="group p-6 rounded-2xl bg-surface border border-border hover:border-secondary-accent/50 transition-all hover:shadow-elevated">
             <div className="w-12 h-12 rounded-xl bg-secondary-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Blocks className="text-secondary-accent" size={24} />
             </div>
@@ -62,9 +62,9 @@ export default function DevelopersPage() {
             <p className="text-sm text-text-secondary">
               Understand the core paradigms of AgentOS, CerebroSphere, and our event-driven infrastructure.
             </p>
-          </Link>
+          </TrackedLink>
 
-          <Link href="/platform/os" className="group p-6 rounded-2xl bg-surface border border-border hover:border-primary-accent/50 transition-all hover:shadow-elevated">
+          <TrackedLink href="/platform/os" analyticsEvent="developers_quickstart_click" analyticsCategory="developers" analyticsLabel="Live OS Console" className="group p-6 rounded-2xl bg-surface border border-border hover:border-primary-accent/50 transition-all hover:shadow-elevated">
             <div className="w-12 h-12 rounded-xl bg-primary-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Zap className="text-primary-accent" size={24} />
             </div>
@@ -74,7 +74,7 @@ export default function DevelopersPage() {
             <p className="text-sm text-text-secondary">
               Operate every platform subsystem — Router, Compiler, Swarm, Digital Twin, Zero Trust, and more — against the real, running API.
             </p>
-          </Link>
+          </TrackedLink>
         </div>
       </section>
 

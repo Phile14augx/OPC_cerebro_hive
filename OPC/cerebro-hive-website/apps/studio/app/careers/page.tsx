@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, CheckCircle2, Cpu, BrainCircuit, Users, Globe2, Sparkles, Code2, GraduationCap, Heart, Zap, Shield, Coffee, Briefcase, Send, ChevronRight, X, BarChart, Layers, Terminal, Search, XCircle, Loader2, Link2, FileText, Upload } from "lucide-react";
 import type { PipelineResult } from "@/lib/hiring/pipeline";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 // Existing Data
 const cultureValues = [
@@ -464,7 +467,10 @@ export default function CareersPage() {
               animate={{ opacity: 1 }} 
               exit={{ opacity: 0 }} 
               className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-              onClick={() => setSelectedRole(null)}
+              onClick={() => {
+                analytics.track({ eventName: 'click', category: 'careers', label: 'Close Role Details Backdrop' });
+                setSelectedRole(null);
+              }}
             />
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }} 
@@ -474,9 +480,14 @@ export default function CareersPage() {
             >
               <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-background/90 backdrop-blur-md border-b border-border">
                 <h2 className="text-2xl md:text-3xl font-space font-bold text-text-primary">{selectedRole.title}</h2>
-                <button onClick={() => setSelectedRole(null)} className="p-2 bg-surface hover:bg-surface-elevated rounded-full transition-colors">
+                <TrackedButton
+                  eventCategory="careers"
+                  eventLabel="Close Role Details"
+                  onClick={() => setSelectedRole(null)}
+                  className="p-2 bg-surface hover:bg-surface-elevated rounded-full transition-colors"
+                >
                   <X size={20} className="text-text-primary" />
-                </button>
+                </TrackedButton>
               </div>
               
               <div className="p-6 md:p-10 space-y-10">
@@ -614,9 +625,16 @@ export default function CareersPage() {
                 )}
                 
                 <div className="pt-6 border-t border-border flex justify-end">
-                  <a href="#apply" onClick={() => { setSelectedRole(null); setForm(f => ({ ...f, role: selectedRole.title })); }} className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated">
+                  <TrackedLink
+                    href="#apply"
+                    analyticsEvent="careers_apply_role_click"
+                    analyticsCategory="careers"
+                    analyticsLabel="Apply for this Role"
+                    onClick={() => { setSelectedRole(null); setForm(f => ({ ...f, role: selectedRole.title })); }}
+                    className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated"
+                  >
                     Apply for this Role
-                  </a>
+                  </TrackedLink>
                 </div>
               </div>
             </motion.div>
@@ -641,12 +659,24 @@ export default function CareersPage() {
             We are assembling a team of exceptional engineers, researchers, architects, and consultants who are obsessed with building enterprise AI systems that actually work.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <a href="#apply" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated">
+            <TrackedLink
+              href="#apply"
+              analyticsEvent="careers_join_talent_network_click"
+              analyticsCategory="careers"
+              analyticsLabel="Join Our Talent Network"
+              className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl flex items-center gap-3 hover:-translate-y-0.5 transition-transform shadow-elevated"
+            >
               Join Our Talent Network <ArrowRight size={16} />
-            </a>
-            <a href="#organization" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/40 hover:bg-surface-elevated transition-all">
+            </TrackedLink>
+            <TrackedLink
+              href="#organization"
+              analyticsEvent="careers_explore_structure_click"
+              analyticsCategory="careers"
+              analyticsLabel="Explore Our Structure"
+              className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/40 hover:bg-surface-elevated transition-all"
+            >
               Explore Our Structure
-            </a>
+            </TrackedLink>
           </div>
         </motion.div>
       </section>
@@ -713,13 +743,15 @@ export default function CareersPage() {
               {orgStructure.map((dept) => {
                 const isActive = activeDept === dept.department;
                 return (
-                  <button
+                  <TrackedButton
                     key={dept.department}
+                    eventCategory="careers"
+                    eventLabel={dept.department}
                     onClick={() => setActiveDept(dept.department)}
                     suppressHydrationWarning
                     className={`flex items-center justify-between p-4 rounded-xl text-left transition-all ${
-                      isActive 
-                        ? "bg-primary-accent border border-primary-accent text-background shadow-elevated" 
+                      isActive
+                        ? "bg-primary-accent border border-primary-accent text-background shadow-elevated"
                         : "bg-surface border border-border hover:border-primary-accent/40 text-text-secondary hover:text-text-primary"
                     }`}
                   >
@@ -728,7 +760,7 @@ export default function CareersPage() {
                       <span className={`font-space font-bold text-sm ${isActive ? "text-background" : ""}`}>{dept.department}</span>
                     </div>
                     {isActive && <ChevronRight size={16} className="text-background" />}
-                  </button>
+                  </TrackedButton>
                 );
               })}
             </div>
@@ -756,9 +788,12 @@ export default function CareersPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {activeDepartmentData.roles.map((role, idx) => (
-                      <div 
-                        key={idx} 
-                        onClick={() => setSelectedRole(role)}
+                      <div
+                        key={idx}
+                        onClick={() => {
+                          analytics.track({ eventName: 'click', category: 'careers', label: `View Role: ${role.title}` });
+                          setSelectedRole(role);
+                        }}
                         className="p-5 rounded-xl bg-background border border-border hover:border-primary-accent/50 hover:shadow-elevated transition-all cursor-pointer group flex flex-col justify-between"
                       >
                         <div>
@@ -850,10 +885,17 @@ export default function CareersPage() {
                 </div>
                 <textarea suppressHydrationWarning required rows={8} value={form.resumeText} onChange={(e) => setForm(f => ({ ...f, resumeText: e.target.value }))} placeholder="Paste your resume text here — experience, skills, projects, and anything relevant to the role you're applying for." className="px-4 py-3 bg-background border border-border rounded-xl text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors resize-none" />
               </div>
-              <button suppressHydrationWarning type="submit" disabled={isLoading} className="flex items-center justify-center gap-3 px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated mt-2 disabled:opacity-60 disabled:cursor-not-allowed">
+              <TrackedButton
+                suppressHydrationWarning
+                type="submit"
+                disabled={isLoading}
+                eventCategory="careers"
+                eventLabel="Submit & Run Automated Pipeline"
+                className="flex items-center justify-center gap-3 px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform shadow-elevated mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
                 {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                 {isLoading ? "Running automated pipeline…" : "Submit & Run Automated Pipeline"}
-              </button>
+              </TrackedButton>
               {error && <p className="text-red-400 text-xs text-center">{error}</p>}
             </form>
           )}

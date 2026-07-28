@@ -1,6 +1,6 @@
 import React from 'react';
-import { WidgetDefinition, WidgetState } from './WidgetRegistry';
-import { WidgetLifecycle } from './WidgetLifecycle';
+import { WidgetDefinition } from './WidgetRegistry';
+import { WidgetState } from './WidgetLifecycle';
 
 export interface WidgetHostProps {
   widgetId: string;

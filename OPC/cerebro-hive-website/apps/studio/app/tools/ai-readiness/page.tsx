@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ArrowRight, ArrowLeft, Download, Brain, Sparkles, RefreshCw, BarChart2 } from "lucide-react";
 import { generateAIReadinessPDF } from "../../../lib/pdfReport";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface DimensionScore {
   name: string;
@@ -444,8 +445,10 @@ export default function AIReadinessPage() {
                 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "16px" }}>
                   {currentQuestion.options.map((opt, idx) => (
-                    <button
+                    <TrackedButton
                       key={idx}
+                      eventCategory="ai-readiness-tool"
+                      eventLabel={opt.text}
                       onClick={() => handleSelectOption(currentQuestion.id, opt.score)}
                       style={{
                         textAlign: "left",
@@ -476,14 +479,16 @@ export default function AIReadinessPage() {
                     >
                       <span style={{ lineHeight: 1.5 }}>{opt.text}</span>
                       <ArrowRight size={16} style={{ flexShrink: 0, marginLeft: "16px", transition: "transform 0.2s" }} />
-                    </button>
+                    </TrackedButton>
                   ))}
                 </div>
               </div>
 
               {/* Navigation Footer */}
               <div style={{ marginTop: "40px", paddingTop: "24px", borderTop: "1px solid rgba(255,255,255,0.05)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <button
+                <TrackedButton
+                  eventCategory="ai-readiness-tool"
+                  eventLabel="Previous Question"
                   onClick={handleBack}
                   disabled={currentIdx === 0}
                   style={{
@@ -509,7 +514,7 @@ export default function AIReadinessPage() {
                   }}
                 >
                   <ArrowLeft size={14} /> Previous Question
-                </button>
+                </TrackedButton>
                 <span style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.75rem", color: "var(--text-muted)" }}>
                   Progress saved automatically
                 </span>
@@ -603,7 +608,9 @@ export default function AIReadinessPage() {
                   />
                 </div>
 
-                <button
+                <TrackedButton
+                  eventCategory="ai-readiness-tool"
+                  eventLabel="View Readiness Dashboard"
                   type="submit"
                   disabled={isSubmitting}
                   className="btn-primary"
@@ -629,7 +636,7 @@ export default function AIReadinessPage() {
                   }}
                 >
                   {isSubmitting ? "Synthesizing Metrics..." : "View Readiness Dashboard"}
-                </button>
+                </TrackedButton>
               </form>
             </div>
           )}
@@ -648,7 +655,9 @@ export default function AIReadinessPage() {
                     <span style={{ fontFamily: "Orbitron, sans-serif", fontSize: "0.7rem", fontWeight: 700, color: "var(--violet)", textTransform: "uppercase", letterSpacing: "0.15em" }}>Audit Diagnostics</span>
                     <h2 style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1.4rem", fontWeight: 700, color: "var(--text-primary)", marginTop: "4px" }}>Readiness Scorecard</h2>
                   </div>
-                  <button
+                  <TrackedButton
+                    eventCategory="ai-readiness-tool"
+                    eventLabel="Download Report"
                     onClick={handleDownloadReport}
                     className="btn-primary"
                     style={{ display: "inline-flex", gap: "6px", cursor: "pointer", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-primary)" }}
@@ -656,7 +665,7 @@ export default function AIReadinessPage() {
                     onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}
                   >
                     <Download size={14} color="var(--violet)" /> {downloadSuccess ? "Report Downloaded!" : "Download Report"}
-                  </button>
+                  </TrackedButton>
                 </div>
 
                 {/* Dashboard layout */}
@@ -853,7 +862,9 @@ export default function AIReadinessPage() {
 
               {/* Restart Button */}
               <div style={{ textAlign: "center" }}>
-                <button
+                <TrackedButton
+                  eventCategory="ai-readiness-tool"
+                  eventLabel="Retake Assessment"
                   onClick={() => {
                     setCurrentIdx(0);
                     setAnswers({});
@@ -877,7 +888,7 @@ export default function AIReadinessPage() {
                   onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}
                 >
                   <RefreshCw size={12} /> Retake Readiness Audit
-                </button>
+                </TrackedButton>
               </div>
 
             </div>

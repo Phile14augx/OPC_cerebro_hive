@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { FileText, Download, BarChart3, ChevronRight, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 const reports = [
   {
@@ -39,9 +41,13 @@ export const InteractiveReports = () => {
           {/* Sidebar */}
           <div className="lg:col-span-4 flex flex-col gap-4">
             {reports.map((report, i) => (
-              <div 
-                key={i} 
-                onClick={() => { setActiveReport(report); setActiveSection(report.sections[0]); }}
+              <div
+                key={i}
+                onClick={() => {
+                  analytics.track({ eventName: 'click', category: 'insights', label: report.title });
+                  setActiveReport(report);
+                  setActiveSection(report.sections[0]);
+                }}
                 className={cn(
                   "p-5 rounded-xl border transition-all cursor-pointer",
                   activeReport.title === report.title 
@@ -72,28 +78,30 @@ export const InteractiveReports = () => {
               <div>
                 <h3 className="text-xl font-space font-bold text-text-primary">{activeReport.title}</h3>
               </div>
-              <button className="flex items-center gap-2 text-xs font-bold text-text-muted hover:text-text-primary transition-colors">
+              <TrackedButton eventCategory="insights" eventLabel="Download PDF" className="flex items-center gap-2 text-xs font-bold text-text-muted hover:text-text-primary transition-colors">
                 <Download size={14} /> Download PDF
-              </button>
+              </TrackedButton>
             </div>
 
             <div className="flex flex-1 overflow-hidden">
               {/* Viewer Tabs */}
               <div className="w-48 border-r border-border bg-surface-elevated p-4 space-y-1 overflow-y-auto">
                 {activeReport.sections.map((sec, i) => (
-                  <button 
+                  <TrackedButton
                     key={i}
                     onClick={() => setActiveSection(sec)}
+                    eventCategory="insights"
+                    eventLabel={sec}
                     className={cn(
                       "w-full text-left px-3 py-2 rounded text-xs font-bold transition-colors flex justify-between items-center",
-                      activeSection === sec 
-                        ? "bg-[#00E5FF]/10 text-accent-secondary" 
+                      activeSection === sec
+                        ? "bg-[#00E5FF]/10 text-accent-secondary"
                         : "text-text-muted hover:text-text-primary hover:bg-surface"
                     )}
                   >
                     {sec}
                     {activeSection === sec && <ChevronRight size={14} />}
-                  </button>
+                  </TrackedButton>
                 ))}
               </div>
 
@@ -124,9 +132,9 @@ export const InteractiveReports = () => {
                     <p className="text-sm text-text-secondary max-w-sm mb-6">
                       Sign in to your Executive Intelligence account to interact with the full dataset and architecture diagrams.
                     </p>
-                    <button className="px-6 py-3 bg-surface text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded flex items-center gap-2">
+                    <TrackedButton eventCategory="insights" eventLabel="Sign In to Access" className="px-6 py-3 bg-surface text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded flex items-center gap-2">
                       Sign In to Access
-                    </button>
+                    </TrackedButton>
                   </div>
                 )}
                 

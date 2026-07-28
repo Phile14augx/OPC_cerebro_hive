@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 import { Stack } from "@/components/cerebro/primitives/Stack";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export default function EnterpriseSimulator() {
   const [step, setStep] = useState(1);
@@ -76,9 +77,9 @@ export default function EnterpriseSimulator() {
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
                       {["Finance", "Healthcare", "Manufacturing", "Retail"].map(ind => (
-                        <button key={ind} onClick={() => handleSelect('industry', ind)} className="p-4 rounded-xl border border-border bg-surface font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
+                        <TrackedButton key={ind} eventCategory="enterprise-simulator" eventLabel={ind} onClick={() => handleSelect('industry', ind)} className="p-4 rounded-xl border border-border bg-surface font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
                           {ind}
-                        </button>
+                        </TrackedButton>
                       ))}
                     </div>
                   </motion.div>
@@ -92,9 +93,9 @@ export default function EnterpriseSimulator() {
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
                       {["SAP", "Oracle", "Workday", "Custom/Legacy"].map(erp => (
-                        <button key={erp} onClick={() => handleSelect('erp', erp)} className="p-4 rounded-xl border border-border bg-surface font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
+                        <TrackedButton key={erp} eventCategory="enterprise-simulator" eventLabel={erp} onClick={() => handleSelect('erp', erp)} className="p-4 rounded-xl border border-border bg-surface font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
                           {erp}
-                        </button>
+                        </TrackedButton>
                       ))}
                     </div>
                   </motion.div>
@@ -108,9 +109,9 @@ export default function EnterpriseSimulator() {
                     </div>
                     <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
                       {["Exploration (Pilots)", "Isolated (Copilots)", "Integrated (APIs)"].map(mat => (
-                        <button key={mat} onClick={() => handleSelect('maturity', mat)} className="p-4 rounded-xl border border-border bg-surface font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
+                        <TrackedButton key={mat} eventCategory="enterprise-simulator" eventLabel={mat} onClick={() => handleSelect('maturity', mat)} className="p-4 rounded-xl border border-border bg-surface font-bold text-text-primary hover:border-[#00E5FF] hover:bg-[#00E5FF]/10 transition-colors">
                           {mat}
-                        </button>
+                        </TrackedButton>
                       ))}
                     </div>
                   </motion.div>
@@ -141,9 +142,9 @@ export default function EnterpriseSimulator() {
                         {selections.industry} • {selections.erp} Environment
                       </p>
                     </div>
-                    <button className="px-6 py-3 bg-[#00E5FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                    <TrackedButton eventCategory="enterprise-simulator" eventLabel="Download PDF" className="px-6 py-3 bg-[#00E5FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
                       <FileDown size={16} /> Download PDF
-                    </button>
+                    </TrackedButton>
                   </div>
 
                   <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -184,15 +185,17 @@ export default function EnterpriseSimulator() {
                   </div>
 
                   <div className="text-center pt-8 border-t border-border">
-                    <button className="px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-gray-200 transition-colors inline-flex items-center gap-2">
+                    <TrackedButton eventCategory="enterprise-simulator" eventLabel="Book Strategy Session" className="px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:bg-gray-200 transition-colors inline-flex items-center gap-2">
                       Book Strategy Session <ArrowRight size={16} />
-                    </button>
-                    <button
+                    </TrackedButton>
+                    <TrackedButton
+                      eventCategory="enterprise-simulator"
+                      eventLabel="Reset Simulator"
                       onClick={() => { setGenerated(false); setStep(1); setSelections({ industry: "", erp: "", maturity: "" }); }}
                       className="block mx-auto mt-4 text-xs font-bold uppercase tracking-widest text-text-muted hover:text-text-primary"
                     >
                       Reset Simulator
-                    </button>
+                    </TrackedButton>
                   </div>
 
                 </div>

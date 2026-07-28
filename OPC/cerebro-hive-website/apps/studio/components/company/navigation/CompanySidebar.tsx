@@ -9,6 +9,7 @@ import {
   Workflow, History, LayoutGrid, FileText
 } from "lucide-react";
 import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 // ============================================================================
 // STORY MODE DATA
@@ -263,7 +264,9 @@ export const CompanySidebar = () => {
     
     return (
       <div key={node.id} className="w-full">
-        <button
+        <TrackedButton
+          eventCategory="company-sidebar"
+          eventLabel={`Explorer Node - ${node.label}`}
           onClick={() => isFolder ? toggleFolder(node.id) : scrollToId(node.id)}
           className={cn(
             "w-full flex items-center justify-between text-left py-1.5 px-2 rounded-md transition-all duration-200 group relative",
@@ -305,7 +308,7 @@ export const CompanySidebar = () => {
               {node.metadata}
             </span>
           )}
-        </button>
+        </TrackedButton>
 
         {/* Children (Animated) */}
         <AnimatePresence>
@@ -346,22 +349,26 @@ export const CompanySidebar = () => {
 
         {/* Story Mode / Explorer Mode Toggle */}
         <div className="flex bg-surface-elevated border border-border rounded-lg p-1 mb-4 relative z-10">
-          <button 
-            onClick={() => setExplorerMode(false)} 
+          <TrackedButton
+            eventCategory="company-sidebar"
+            eventLabel="Story Mode"
+            onClick={() => setExplorerMode(false)}
             className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors relative", !explorerMode ? "text-text-primary" : "text-text-muted hover:text-text-primary")}
           >
             {!explorerMode && <motion.div layoutId="modeToggle" className="absolute inset-0 bg-surface-elevated rounded-md" />}
             <span className="relative z-10">Story</span>
-          </button>
-          <button 
-            onClick={() => setExplorerMode(true)} 
+          </TrackedButton>
+          <TrackedButton
+            eventCategory="company-sidebar"
+            eventLabel="Explorer Mode"
+            onClick={() => setExplorerMode(true)}
             className={cn("flex-1 text-[10px] font-space font-bold uppercase tracking-widest py-1.5 rounded-md transition-colors relative", explorerMode ? "text-text-primary" : "text-text-muted hover:text-text-primary")}
           >
             {explorerMode && <motion.div layoutId="modeToggle" className="absolute inset-0 bg-surface-elevated rounded-md" />}
             <span className="relative z-10 flex items-center justify-center gap-1.5">
               Explorer <span className="hidden xl:inline-block text-[8px] font-mono bg-surface-elevated px-1 rounded opacity-50">⌘K</span>
             </span>
-          </button>
+          </TrackedButton>
         </div>
         
         {/* Explorer Search Bar */}
@@ -430,7 +437,9 @@ export const CompanySidebar = () => {
                       )}
                     </AnimatePresence>
 
-                    <button
+                    <TrackedButton
+                      eventCategory="company-sidebar"
+                      eventLabel={`Chapter - ${chapter.label}`}
                       onClick={() => scrollToId(chapter.id)}
                       className={cn(
                         "relative z-10 w-full text-left py-2.5 px-3 rounded-lg flex items-center transition-all duration-200 overflow-hidden",
@@ -458,7 +467,7 @@ export const CompanySidebar = () => {
                       )}>
                         {chapter.label}
                       </span>
-                    </button>
+                    </TrackedButton>
                   </li>
                 );
               })}

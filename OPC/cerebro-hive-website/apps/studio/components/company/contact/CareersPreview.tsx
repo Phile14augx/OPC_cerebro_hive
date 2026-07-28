@@ -6,6 +6,8 @@ import { ArrowRight, Briefcase, Network, Atom, Cpu, Cloud, LayoutGrid, X, CheckC
 import { motion, AnimatePresence } from "framer-motion";
 import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 // Icon Mapper
 type IconComponent = React.ComponentType<{ size?: number | string; className?: string }>;
@@ -90,9 +92,9 @@ export const CareersPreview = () => {
               </div>
             </div>
 
-            <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-surface border border-border hover:bg-surface-elevated hover:border-primary-accent/50 transition-all text-sm font-space font-bold text-text-primary uppercase tracking-wider group">
+            <TrackedButton eventCategory="careers" eventLabel="Explore Opportunities" className="flex items-center gap-2 px-6 py-3 rounded-full bg-surface border border-border hover:bg-surface-elevated hover:border-primary-accent/50 transition-all text-sm font-space font-bold text-text-primary uppercase tracking-wider group">
               Explore Opportunities <ArrowRight size={16} className="text-primary-accent group-hover:translate-x-1 transition-transform" />
-            </button>
+            </TrackedButton>
           </div>
 
           {/* ==========================================
@@ -112,7 +114,10 @@ export const CareersPreview = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    onClick={() => setActiveDomain(domain)}
+                    onClick={() => {
+                      analytics.track({ eventName: 'click', category: 'careers', label: domain.domain });
+                      setActiveDomain(domain);
+                    }}
                     className={cn(
                       "break-inside-avoid relative p-6 lg:p-8 rounded-3xl bg-surface-elevated border flex flex-col items-start cursor-pointer group transition-all duration-300 overflow-hidden",
                       isSelected ? "border-primary-accent shadow-[0_0_30px_rgba(0,245,122,0.15)] scale-[1.02]" : "border-border hover:-translate-y-1 shadow-lg",
@@ -194,7 +199,10 @@ export const CareersPreview = () => {
               initial={{ opacity: 0.4 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={handleClose}
+              onClick={() => {
+                analytics.track({ eventName: 'click', category: 'careers', label: 'Close inspector backdrop' });
+                handleClose();
+              }}
               className="fixed inset-0 bg-surface-elevated backdrop-blur-sm z-50 lg:hidden" // Only dim on mobile/tablet where it covers the screen
             />
 
@@ -214,9 +222,9 @@ export const CareersPreview = () => {
                   </div>
                   <h3 className="text-lg font-space font-bold text-text-primary">{activeDomain.domain}</h3>
                 </div>
-                <button onClick={handleClose} className="p-2 rounded-full hover:bg-surface-elevated transition-colors text-text-muted hover:text-text-primary">
+                <TrackedButton eventCategory="careers" eventLabel="Close inspector" onClick={handleClose} className="p-2 rounded-full hover:bg-surface-elevated transition-colors text-text-muted hover:text-text-primary">
                   <X size={20} />
-                </button>
+                </TrackedButton>
               </div>
 
               {/* Inspector Body */}
@@ -287,12 +295,12 @@ export const CareersPreview = () => {
 
               {/* Inspector Footer */}
               <div className="mt-auto p-6 border-t border-border bg-[#020306]">
-                <button className={cn(
+                <TrackedButton eventCategory="careers" eventLabel={`View ${activeDomain.openRoles} Open Roles`} className={cn(
                   "w-full py-4 rounded-xl flex items-center justify-center gap-2 text-sm font-space font-bold uppercase tracking-widest transition-colors border",
                   themeConfig[activeDomain.theme].bg, themeConfig[activeDomain.theme].border, themeConfig[activeDomain.theme].text, "hover:bg-surface-elevated hover:text-text-primary"
                 )}>
                   View {activeDomain.openRoles} Open Roles <ArrowRight size={16} />
-                </button>
+                </TrackedButton>
               </div>
             </motion.div>
           </>

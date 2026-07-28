@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Building2, Briefcase, Calculator, Shield, Users, ShoppingCart, Truck, Factory, ArrowRight, BrainCircuit, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const functions = [
   {
@@ -78,13 +79,15 @@ export function BusinessFunctionMap() {
             {functions.map(func => {
               const isActive = activeFunc === func.id;
               return (
-                <button
+                <TrackedButton
                   key={func.id}
+                  eventCategory="business-function-map"
+                  eventLabel={func.name}
                   onClick={() => setActiveFunc(func.id)}
                   className={cn(
                     "flex items-center justify-between p-4 rounded-xl border transition-all duration-300 text-left group",
-                    isActive 
-                      ? "bg-surface-elevated border-primary-accent shadow-elevated" 
+                    isActive
+                      ? "bg-surface-elevated border-primary-accent shadow-elevated"
                       : "bg-surface border-border hover:border-primary-accent/50"
                   )}
                 >
@@ -100,7 +103,7 @@ export function BusinessFunctionMap() {
                     </span>
                   </div>
                   {isActive && <ArrowRight size={16} className="text-primary-accent" />}
-                </button>
+                </TrackedButton>
               );
             })}
           </div>

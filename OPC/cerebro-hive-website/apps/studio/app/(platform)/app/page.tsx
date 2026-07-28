@@ -6,12 +6,14 @@ import {
   Building2, Sparkles, Bot, Workflow, BookOpen, 
   DatabaseZap, ShoppingCart, ArrowRight, Play, MoreVertical, Plus, CheckCircle2
 } from "lucide-react";
-import Link from "next/link";
 import { Card } from "./components/ui/Card";
 import { Badge } from "./components/ui/Badge";
 import { Button } from "./components/ui/Button";
 import { StatCard } from "./components/ui/StatCard";
 import { RightPanel } from "./components/RightPanel";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 export default function DashboardHome() {
   const [commandInput, setCommandInput] = useState("");
@@ -69,7 +71,7 @@ export default function DashboardHome() {
                   placeholder="e.g. Deploy an HR Agent..."
                   className="w-full min-w-0 flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-text-primary placeholder:text-text-muted text-base sm:text-lg lg:text-xl px-2 sm:px-4 py-4 font-medium"
                 />
-                <Button className="shrink-0 h-10 sm:h-12 px-4 sm:px-6 rounded-xl font-bold text-sm sm:text-base gap-1.5 sm:gap-2">
+                <Button onClick={() => analytics.track({ eventName: 'click', category: 'dashboard', label: 'Execute Command' })} className="shrink-0 h-10 sm:h-12 px-4 sm:px-6 rounded-xl font-bold text-sm sm:text-base gap-1.5 sm:gap-2">
                   <span className="hidden sm:inline">Execute</span> <Play size={16} fill="currentColor" />
                 </Button>
               </div>
@@ -80,26 +82,31 @@ export default function DashboardHome() {
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-xs font-bold text-text-muted uppercase tracking-wider mr-2">Suggestions</span>
                   {suggestedCommands.map((cmd, i) => (
-                    <button 
+                    <TrackedButton
                       key={i}
+                      eventCategory="dashboard"
+                      eventLabel={cmd}
                       onClick={() => setCommandInput(cmd)}
                       className="px-3 py-1.5 rounded-lg bg-surface border border-border text-xs text-text-secondary hover:text-primary-accent hover:border-primary-accent/30 transition-colors"
                     >
                       {cmd}
-                    </button>
+                    </TrackedButton>
                   ))}
                 </div>
 
                 <div className="flex items-center gap-2 sm:border-l sm:border-border sm:pl-4">
                   {quickActions.map((action, i) => (
-                    <Link 
-                      key={i} 
+                    <TrackedLink
+                      key={i}
                       href={action.href}
                       title={action.title}
+                      analyticsEvent="quick_action_click"
+                      analyticsCategory="dashboard"
+                      analyticsLabel={action.title}
                       className="w-8 h-8 rounded-lg bg-surface border border-border flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-elevated transition-colors"
                     >
                       <action.icon size={16} />
-                    </Link>
+                    </TrackedLink>
                   ))}
                 </div>
 
@@ -120,7 +127,7 @@ export default function DashboardHome() {
                 <span className="font-bold text-blue-400">Context aware:</span> You uploaded 12 PDFs yesterday to 'HR Docs'. Would you like to create a Knowledge Base from them?
               </p>
             </div>
-            <Button size="sm" variant="secondary" className="border-blue-500/30 hover:bg-blue-500/20 text-blue-400 shrink-0 w-full sm:w-auto">
+            <Button onClick={() => analytics.track({ eventName: 'click', category: 'dashboard', label: 'Create Knowledge Base' })} size="sm" variant="secondary" className="border-blue-500/30 hover:bg-blue-500/20 text-blue-400 shrink-0 w-full sm:w-auto">
               Create Knowledge Base
             </Button>
           </motion.div>
@@ -169,7 +176,7 @@ export default function DashboardHome() {
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <h2 className="text-sm font-bold uppercase tracking-widest text-text-muted">Active Resources</h2>
-              <Link href="/app/ai/agents" className="text-xs font-bold text-primary-accent hover:underline">View All</Link>
+              <TrackedLink href="/app/ai/agents" analyticsEvent="view_all_click" analyticsCategory="dashboard" analyticsLabel="View All" className="text-xs font-bold text-primary-accent hover:underline">View All</TrackedLink>
             </div>
             <Card className="overflow-hidden p-0">
               {[
@@ -187,9 +194,9 @@ export default function DashboardHome() {
                       <Badge variant="success" className="mt-1 px-1.5 py-0 h-4 text-[10px]">{res.status}</Badge>
                     </div>
                   </div>
-                  <button className="p-1.5 text-text-muted hover:text-text-primary transition-colors">
+                  <TrackedButton eventCategory="dashboard" eventLabel={`${res.name} Options`} className="p-1.5 text-text-muted hover:text-text-primary transition-colors">
                     <MoreVertical size={16} />
-                  </button>
+                  </TrackedButton>
                 </div>
               ))}
             </Card>
@@ -199,7 +206,7 @@ export default function DashboardHome() {
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <h2 className="text-sm font-bold uppercase tracking-widest text-text-muted">Marketplace</h2>
-              <Link href="/app/marketplace" className="text-xs font-bold text-primary-accent hover:underline">Browse Directory</Link>
+              <TrackedLink href="/app/marketplace" analyticsEvent="browse_directory_click" analyticsCategory="dashboard" analyticsLabel="Browse Directory" className="text-xs font-bold text-primary-accent hover:underline">Browse Directory</TrackedLink>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
@@ -222,7 +229,7 @@ export default function DashboardHome() {
                   </div>
                   <div className="flex items-center justify-between mt-1 pt-3 border-t border-border">
                     <span className="text-[10px] text-text-muted">{plugin.installs} orgs</span>
-                    <Button variant="secondary" size="sm" className="h-6 text-xs px-2">Install</Button>
+                    <Button onClick={() => analytics.track({ eventName: 'click', category: 'dashboard', label: `Install ${plugin.name}` })} variant="secondary" size="sm" className="h-6 text-xs px-2">Install</Button>
                   </div>
                 </Card>
               ))}

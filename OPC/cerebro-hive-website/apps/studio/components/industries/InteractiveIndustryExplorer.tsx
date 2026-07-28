@@ -4,7 +4,8 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { industriesData, getAllCategories, getIndustriesByTier } from '@/lib/data/industries';
 import { Search, ChevronRight, ChevronDown, Hexagon, BrainCircuit } from 'lucide-react';
-import Link from 'next/link';
+import { TrackedLink } from '@/components/cerebro/TrackedLink';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 import { AnimatedConnector } from '../motion/primitives/AnimatedConnector';
 import { IntelligentOrb } from '../motion/primitives/IntelligentOrb';
 
@@ -61,7 +62,9 @@ export function InteractiveIndustryExplorer() {
 
             return (
               <div key={cat} className="mb-2">
-                <button 
+                <TrackedButton
+                  eventCategory="industry-explorer"
+                  eventLabel={`Category - ${cat}`}
                   onClick={() => toggleCategory(cat)}
                   className="flex items-center gap-2 w-full text-left py-2 px-2 rounded-md hover:bg-surface-elevated transition-colors group"
                 >
@@ -69,7 +72,7 @@ export function InteractiveIndustryExplorer() {
                     {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                   </span>
                   <span className="font-bold text-sm text-text-primary">{cat}</span>
-                </button>
+                </TrackedButton>
                 
                 <AnimatePresence>
                   {isExpanded && (
@@ -83,15 +86,18 @@ export function InteractiveIndustryExplorer() {
                         <div key={ind.slug} className="flex items-center group/item">
                           <div className="w-px h-8 bg-border absolute -ml-3" />
                           <div className="w-3 h-px bg-border absolute -ml-3" />
-                          <Link 
+                          <TrackedLink
                             href={`/industries/${ind.slug}`}
+                            analyticsEvent="industry_sidebar_link_click"
+                            analyticsCategory="industry-explorer"
+                            analyticsLabel={ind.name}
                             onMouseEnter={() => setActiveNode(ind.slug)}
                             onMouseLeave={() => setActiveNode(null)}
                             className={`flex items-center gap-2 py-1.5 px-3 rounded-md w-full text-xs transition-colors ${activeNode === ind.slug ? 'bg-surface-elevated text-text-primary' : 'text-text-secondary hover:text-text-primary hover:bg-surface-elevated/50'}`}
                           >
                             <span className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: ind.color }} />
                             {ind.name}
-                          </Link>
+                          </TrackedLink>
                         </div>
                       ))}
                     </motion.div>
@@ -137,9 +143,15 @@ export function InteractiveIndustryExplorer() {
                       ))}
                     </div>
                   </div>
-                  <Link href={`/industries/${ind.slug}`} className="px-6 py-2 bg-surface border border-border rounded-full text-sm font-bold hover:border-primary-accent transition-colors">
+                  <TrackedLink
+                    href={`/industries/${ind.slug}`}
+                    analyticsEvent="industry_explore_engine_click"
+                    analyticsCategory="industry-explorer"
+                    analyticsLabel={`Explore Engine - ${ind.name}`}
+                    className="px-6 py-2 bg-surface border border-border rounded-full text-sm font-bold hover:border-primary-accent transition-colors"
+                  >
                     Explore Engine
-                  </Link>
+                  </TrackedLink>
                 </div>
               );
             })()}

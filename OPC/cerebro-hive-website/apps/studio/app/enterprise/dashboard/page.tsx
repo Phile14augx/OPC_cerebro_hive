@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Sparkles, Users, Award, BookOpen, UserPlus, Trash2, LineChart, CheckCircle2 } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface Employee {
   id: string;
@@ -217,12 +218,14 @@ export default function EnterpriseDashboardPage() {
                         )}
                       </td>
                       <td className="py-4 text-right">
-                        <button
+                        <TrackedButton
+                          eventCategory="enterprise-dashboard"
+                          eventLabel={`Revoke Seat - ${emp.name}`}
                           onClick={() => handleRevokeSeat(emp.id)}
                           className="text-[#8892A4] hover:text-red-400 transition-all cursor-pointer p-1.5 rounded hover:bg-surface"
                         >
                           <Trash2 className="w-4 h-4 ml-auto" />
-                        </button>
+                        </TrackedButton>
                       </td>
                     </tr>
                   ))}
@@ -277,13 +280,15 @@ export default function EnterpriseDashboardPage() {
                   </select>
                 </div>
 
-                <button
+                <TrackedButton
                   type="submit"
+                  eventCategory="enterprise-dashboard"
+                  eventLabel="Allocate Seat"
                   disabled={remainingSeats <= 0}
                   className="w-full mt-6 py-2.5 bg-[#00E5FF] text-text-primary font-bold rounded-lg text-xs uppercase tracking-widest hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.15)]"
                 >
                   Allocate Seat ({remainingSeats} Left)
-                </button>
+                </TrackedButton>
               </form>
 
               {inviteSuccess && (

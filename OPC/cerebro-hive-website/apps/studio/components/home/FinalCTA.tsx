@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { Calendar } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageContext";
 
@@ -100,13 +100,27 @@ export default function FinalCTA() {
 
           {/* Buttons */}
           <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/contact" className="btn-primary" style={{ fontSize: "0.95rem", padding: "16px 40px" }}>
+            <TrackedLink
+              href="/contact"
+              analyticsEvent="home_final_cta_book_click"
+              analyticsCategory="home"
+              analyticsLabel={t("home.finalCta.cta_book")}
+              className="btn-primary"
+              style={{ fontSize: "0.95rem", padding: "16px 40px" }}
+            >
               <Calendar size={18} />
               {t("home.finalCta.cta_book")}
-            </Link>
-            <Link href="/tools/ai-readiness" className="btn-ghost" style={{ fontSize: "0.95rem", padding: "16px 40px" }}>
+            </TrackedLink>
+            <TrackedLink
+              href="/tools/ai-readiness"
+              analyticsEvent="home_final_cta_assess_click"
+              analyticsCategory="home"
+              analyticsLabel={t("home.finalCta.cta_assess")}
+              className="btn-ghost"
+              style={{ fontSize: "0.95rem", padding: "16px 40px" }}
+            >
               {t("home.finalCta.cta_assess")}
-            </Link>
+            </TrackedLink>
           </div>
 
           {/* Social proof */}

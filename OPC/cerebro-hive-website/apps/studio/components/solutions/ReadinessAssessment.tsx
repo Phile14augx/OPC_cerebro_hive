@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ClipboardCheck, ArrowRight, ShieldAlert, Zap, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const questions = [
   {
@@ -134,13 +135,15 @@ export function ReadinessAssessment() {
                     </h3>
                     <div className="space-y-3">
                       {questions[currentQ].options.map((opt, i) => (
-                        <button
+                        <TrackedButton
                           key={i}
+                          eventCategory="solutions"
+                          eventLabel={opt.text}
                           onClick={() => handleAnswer(opt.score)}
                           className="w-full p-4 text-left rounded-xl border border-border bg-surface hover:border-primary-accent hover:bg-surface-elevated transition-all text-sm text-text-secondary font-medium"
                         >
                           {opt.text}
-                        </button>
+                        </TrackedButton>
                       ))}
                     </div>
                   </motion.div>
@@ -170,12 +173,21 @@ export function ReadinessAssessment() {
                 </div>
 
                 <div className="flex flex-col w-full gap-3">
-                  <button className="w-full py-3 bg-primary-accent text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:shadow-elevated transition-all">
+                  <TrackedButton
+                    eventCategory="solutions"
+                    eventLabel="Download Detailed Report"
+                    className="w-full py-3 bg-primary-accent text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:shadow-elevated transition-all"
+                  >
                     Download Detailed Report
-                  </button>
-                  <button onClick={() => { setCurrentQ(0); setAnswers([]); setIsFinished(false); }} className="text-xs text-text-muted hover:text-text-primary underline">
+                  </TrackedButton>
+                  <TrackedButton
+                    eventCategory="solutions"
+                    eventLabel="Retake Assessment"
+                    onClick={() => { setCurrentQ(0); setAnswers([]); setIsFinished(false); }}
+                    className="text-xs text-text-muted hover:text-text-primary underline"
+                  >
                     Retake Assessment
-                  </button>
+                  </TrackedButton>
                 </div>
               </motion.div>
             )}

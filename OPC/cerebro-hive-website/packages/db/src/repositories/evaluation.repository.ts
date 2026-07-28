@@ -3,7 +3,7 @@
  * Typed data-access layer for EvalDataset + EvalRun entities.
  */
 
-import { type EvalDataset, type EvalRun, prisma } from "../client/index.js";
+import { type EvalDataset, type EvalRun, type Prisma, prisma } from "../client/index.js";
 
 // ── Interfaces ────────────────────────────────────────────────────────────────
 
@@ -69,7 +69,7 @@ export const evaluationRepository = {
         name:        input.name,
         description: input.description ?? "",
         rowCount:    input.rowCount ?? 0,
-        schema:      (input.schema ?? {}) as import("@prisma/client").Prisma.InputJsonValue,
+        schema:      (input.schema ?? {}) as Prisma.InputJsonValue,
         sourceType:  input.sourceType ?? "manual",
         storageKey:  input.storageKey,
         createdById: input.createdById,

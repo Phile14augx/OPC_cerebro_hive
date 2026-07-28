@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import { ArrowRight, Headphones, TrendingUp, BookOpen, Users, BarChart3, Cpu } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageContext";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export default function SolutionsGrid() {
   const [hovered, setHovered] = useState<number | null>(null);
@@ -166,8 +166,11 @@ export default function SolutionsGrid() {
                 </div>
 
                 {/* Learn More */}
-                <Link
+                <TrackedLink
                   href={sol.href}
+                  analyticsEvent="solutions_grid_learn_more_click"
+                  analyticsCategory="home"
+                  analyticsLabel={sol.title}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -182,7 +185,7 @@ export default function SolutionsGrid() {
                   }}
                 >
                   {t("home.solutions.learn_more")} <ArrowRight size={13} />
-                </Link>
+                </TrackedLink>
               </div>
             );
           })}

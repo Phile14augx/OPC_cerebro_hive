@@ -6,6 +6,8 @@ import { AnimatedButton } from "@/components/cerebro/AnimatedButton";
 import { Logo } from "@/components/cerebro/Logo";
 import ThemeToggle from "@/components/cerebro/ThemeToggle";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 import { Menu, X, ChevronDown, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -104,13 +106,15 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button
+          <TrackedButton
+            eventCategory="navbar"
+            eventLabel="Open Navigation Menu"
             className="lg:hidden p-2 text-text-primary hover:text-primary-accent transition-colors"
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open navigation menu"
           >
             <Menu size={24} />
-          </button>
+          </TrackedButton>
         </div>
 
         {/* Mega Menu Panel */}
@@ -166,7 +170,10 @@ export default function Navbar() {
               initial={{ opacity: 0.4 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={() => {
+                analytics.track({ eventName: "click", category: "navbar", label: "Mobile Menu Backdrop" });
+                setIsMobileMenuOpen(false);
+              }}
               className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[60] lg:hidden"
             />
             <motion.div
@@ -177,13 +184,15 @@ export default function Navbar() {
               className="fixed top-0 right-0 bottom-0 w-3/4 max-w-sm bg-surface border-l border-border z-[70] lg:hidden flex flex-col"
             >
               <div className="h-[72px] flex items-center justify-end px-6 border-b border-border/60">
-                <button
+                <TrackedButton
+                  eventCategory="navbar"
+                  eventLabel="Close Navigation Menu"
                   className="p-2 text-text-primary hover:text-primary-accent transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                   aria-label="Close navigation menu"
                 >
                   <X size={24} />
-                </button>
+                </TrackedButton>
               </div>
 
               <div className="flex-1 overflow-y-auto py-8 px-6 flex flex-col gap-2">
@@ -191,13 +200,15 @@ export default function Navbar() {
                   const isOpen = openMobileSection === entry.label;
                   return (
                     <div key={entry.label} className="border-b border-border/40 pb-2">
-                      <button
+                      <TrackedButton
+                        eventCategory="navbar"
+                        eventLabel={entry.label}
                         className="w-full flex items-center justify-between py-2 text-lg font-space font-bold text-text-primary hover:text-primary-accent transition-colors"
                         onClick={() => setOpenMobileSection(isOpen ? null : entry.label)}
                       >
                         {entry.label}
                         <ChevronDown size={18} className={cn("transition-transform duration-200", isOpen && "rotate-180")} />
-                      </button>
+                      </TrackedButton>
                       <AnimatePresence>
                         {isOpen && (
                           <motion.div

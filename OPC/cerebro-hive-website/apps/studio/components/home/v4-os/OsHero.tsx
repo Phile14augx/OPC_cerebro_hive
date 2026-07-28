@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import {
   ArrowRight, BrainCircuit, Zap, Shield, Network, Play,
   Eye, Layers, Search, ListChecks, RotateCw,
@@ -138,22 +139,25 @@ export function OsHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: motionTokens.duration.slow, delay: 0.45 }}
         >
-          <Link
+          <TrackedLink
             href="/platform/live-runtime"
+            analyticsEvent="hero_run_live_demo_click"
+            analyticsCategory="hero"
+            analyticsLabel="Run Live Demo"
             className="btn-primary group inline-flex items-center gap-2"
           >
             <Play className="w-4 h-4" />
             Run Live Demo
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link href="/platform/os" className="btn-ghost inline-flex items-center gap-2">
+          </TrackedLink>
+          <TrackedLink href="/platform/os" analyticsEvent="hero_explore_architecture_click" analyticsCategory="hero" analyticsLabel="Explore Architecture" className="btn-ghost inline-flex items-center gap-2">
             <Network className="w-4 h-4" />
             Explore Architecture
-          </Link>
-          <Link href="/contact" className="btn-ghost inline-flex items-center gap-2">
+          </TrackedLink>
+          <TrackedLink href="/contact" analyticsEvent="hero_book_ai_strategy_session_click" analyticsCategory="hero" analyticsLabel="Book AI Strategy Session" className="btn-ghost inline-flex items-center gap-2">
             <Shield className="w-4 h-4" />
             Book AI Strategy Session
-          </Link>
+          </TrackedLink>
         </motion.div>
 
         {/* Interactive Cognitive Loop */}
@@ -172,8 +176,10 @@ export function OsHero() {
             {cognitiveSteps.map((step, i) => {
               const Icon = step.icon;
               return (
-                <button
+                <TrackedButton
                   key={i}
+                  eventCategory="hero"
+                  eventLabel={step.label}
                   onClick={() => handleStepClick(i)}
                   className={`relative flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all duration-300 cursor-pointer ${
                     activeStep === i
@@ -211,7 +217,7 @@ export function OsHero() {
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                   )}
-                </button>
+                </TrackedButton>
               );
             })}
           </div>
@@ -231,12 +237,14 @@ export function OsHero() {
                 {cognitiveSteps[activeStep].label}:
               </span>{" "}
               <span className="text-slate-300 text-sm">{cognitiveSteps[activeStep].desc}</span>
-              <button
+              <TrackedButton
+                eventCategory="hero"
+                eventLabel={expanded ? "Hide details" : "Explore this stage"}
                 onClick={() => setExpanded((e) => !e)}
                 className="block mx-auto mt-2 text-xs text-primary-accent hover:underline"
               >
                 {expanded ? "Hide details" : "Explore this stage →"}
-              </button>
+              </TrackedButton>
             </motion.div>
           </AnimatePresence>
 

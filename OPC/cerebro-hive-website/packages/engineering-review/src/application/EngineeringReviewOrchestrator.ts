@@ -79,19 +79,30 @@ export class EngineeringReviewOrchestrator {
 
     // Composition (Phase 6 §5): findings and evidence are appended across
     // contributors, never replaced.
+    //
+    // Two passes are required, not one: addEvidence is only valid in Draft
+    // and addFinding is only valid in EvidenceCollected (EngineeringReviewReport
+    // Phase 3 lifecycle), so every contributor's evidence must be recorded and
+    // the Draft -> EvidenceCollected transition made *before* any finding is
+    // added — even though a single contributor conceptually produces both
+    // together. Collapsing this into one pass (as an earlier revision did)
+    // only fails for contributors that produce a finding, which the
+    // "clean workflow" case (zero findings) doesn't exercise — surfaced by
+    // the first real test run against this orchestrator.
     for (const result of results) {
       if (result.status !== 'succeeded') continue; // failed/skipped contributors
-      // contribute nothing in Slice 2 — governance over required-vs-optional
-      // contributor failure is deferred to Slice 6, per Phase 6 §4.
       for (const evidence of result.evidence) {
         review.addEvidence(evidence);
       }
+    }
+    review.collectEvidence();
+
+    for (const result of results) {
+      if (result.status !== 'succeeded') continue;
       for (const finding of result.findings) {
         review.addFinding(finding);
       }
     }
-
-    review.collectEvidence();
     review.completeEvaluation();
 
     // Phase 6 §5: "Recommendations are synthesized after contributor

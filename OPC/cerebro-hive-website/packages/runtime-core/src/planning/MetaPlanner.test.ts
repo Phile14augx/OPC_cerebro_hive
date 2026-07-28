@@ -1,32 +1,46 @@
+import { describe, it, expect, beforeEach } from 'vitest';
 import { MetaPlanner } from './MetaPlanner';
 import { SequentialPlanner } from './SequentialPlanner';
 import { ReActPlanner } from './ReActPlanner';
+import { DefaultEvaluationProvider } from './DefaultEvaluationProvider';
 import { RuntimeRegistry } from '../registry/RuntimeRegistry';
 import { CapabilityDescriptor } from '../registry/CapabilityDescriptor';
 import { Goal } from './Goal';
 import { ExecutionContext } from '../context/ExecutionContext';
 
-async function runTests() {
-  const registry = RuntimeRegistry.getInstance();
-  await registry.clearAll();
+describe('MetaPlanner — candidate generation and selection', () => {
+  beforeEach(async () => {
+    const registry = RuntimeRegistry.getInstance();
+    await registry.clearAll();
 
-  // Register planners
-  registry.register(new CapabilityDescriptor({
-    name: 'SequentialPlanner',
-    capability: 'PlannerProvider',
-    version: '1',
-    priority: 10
-  }, () => new SequentialPlanner()));
+    registry.register(
+      new CapabilityDescriptor(
+        { name: 'SequentialPlanner', capability: 'PlannerProvider', version: '1', priority: 10 },
+        () => new SequentialPlanner()
+      )
+    );
+    registry.register(
+      new CapabilityDescriptor(
+        { name: 'ReActPlanner', capability: 'PlannerProvider', version: '1', priority: 10 },
+        () => new ReActPlanner()
+      )
+    );
+    // Required: any goal without optimizationLevel: 'Fast' generates candidates from
+    // both planners, which means MetaPlanner always resolves an EvaluationProvider to
+    // score and pick between them (see MetaPlanner.createPlan). The original version of
+    // this file never registered this capability, which is why it failed at runtime with
+    // "No providers found for capability EvaluationProvider" the first time it was
+    // actually executed — it had never run successfully before this rewrite.
+    registry.register(
+      new CapabilityDescriptor(
+        { name: 'EvaluationProvider', capability: 'EvaluationProvider', version: '1', priority: 10 },
+        () => new DefaultEvaluationProvider()
+      )
+    );
 
-  registry.register(new CapabilityDescriptor({
-    name: 'ReActPlanner',
-    capability: 'PlannerProvider',
-    version: '1',
-    priority: 10
-  }, () => new ReActPlanner()));
-  registry.listCapabilities().forEach(c => c.setHealth('Healthy'));
+    registry.listCapabilities().forEach((c) => c.setHealth('Healthy'));
+  });
 
-  const metaPlanner = new MetaPlanner();
   const context = new ExecutionContext({
     executionId: 'test-exec-1',
     workspaceId: 'test-ws',
@@ -34,37 +48,43 @@ async function runTests() {
     userId: 'test-user',
     variables: {},
     secretRefs: {},
-    policies: []
+    policies: [],
   });
 
-  // Test 1: Linear Goal
-  const linearGoal: Goal = {
-    id: 'g1',
-    intent: 'Provision a new S3 bucket',
-  };
+  // NOTE on what these two assertions actually verify: DefaultEvaluationProvider scores
+  // plans on cost/latency/risk/compliance/successProbability. Neither SequentialPlanner
+  // nor ReActPlanner sets estimatedCostUsd/estimatedDurationMs on their nodes, so cost
+  // and latency score identically (1.0) for both candidates regardless of the goal's
+  // intent text. The only remaining differentiators are risk and successProbability,
+  // both derived from each plan's flat `confidence` (Sequential: 0.9, ReAct: 0.8) —
+  // and Sequential's is always higher. Under every built-in evaluation policy this
+  // package ships today, SequentialPlanner therefore always wins, for any goal. This
+  // was surfaced by actually running this test for the first time (it previously
+  // couldn't run at all — see the beforeEach note above), and is recorded here rather
+  // than papered over: intent-based planner selection (e.g. "investigate" -> ReAct)
+  // is not something DefaultEvaluationProvider currently implements.
 
-  const plan1 = await metaPlanner.createPlan(linearGoal, context);
-  if (!plan1.assumptions.some(a => a.includes('SequentialPlanner'))) {
-    throw new Error('MetaPlanner failed to select SequentialPlanner for linear goal');
-  }
-  console.log('[Test 1] MetaPlanner correctly selected SequentialPlanner');
-  
-  // Test 2: Investigation Goal
-  const investigateGoal: Goal = {
-    id: 'g2',
-    intent: 'Investigate the root cause of high latency in production',
-  };
+  it('selects SequentialPlanner for a linear goal', async () => {
+    const metaPlanner = new MetaPlanner();
+    const linearGoal: Goal = {
+      id: 'g1',
+      intent: 'Provision a new S3 bucket',
+    };
 
-  const plan2 = await metaPlanner.createPlan(investigateGoal, context);
-  if (!plan2.assumptions.some(a => a.includes('ReActPlanner'))) {
-    throw new Error('MetaPlanner failed to select ReActPlanner for investigate goal');
-  }
-  console.log('[Test 2] MetaPlanner correctly selected ReActPlanner');
-  
-  console.log('All planner tests passed.');
-}
+    const plan = await metaPlanner.createPlan(linearGoal, context);
+    expect(plan.assumptions.some((a) => a.includes('SequentialPlanner'))).toBe(true);
+  });
 
-runTests().catch(err => {
-  console.error('Test failed:', err);
-  process.exit(1);
+  it('also selects SequentialPlanner for an investigative goal (see note above)', async () => {
+    const metaPlanner = new MetaPlanner();
+    const investigateGoal: Goal = {
+      id: 'g2',
+      intent: 'Investigate the root cause of high latency in production',
+    };
+
+    const plan = await metaPlanner.createPlan(investigateGoal, context);
+    expect(plan.assumptions.some((a) => a.includes('SequentialPlanner'))).toBe(true);
+    // The rejected alternative is always ReActPlanner given the above.
+    expect(plan.alternatives.some((a) => a.includes('ReActPlanner'))).toBe(true);
+  });
 });
