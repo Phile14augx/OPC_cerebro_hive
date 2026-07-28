@@ -106,7 +106,7 @@ export class DynamoDBEngineeringReviewRepository implements IEngineeringReviewRe
     );
 
     if (!result.Items) return [];
-    return result.Items.map((item) => this.deserialize(unmarshall(item)));
+    return result.Items.map((item: any) => this.deserialize(unmarshall(item)));
   }
 
   async findByManifest(manifestId: string): Promise<EngineeringReviewReport | undefined> {
@@ -135,7 +135,7 @@ export class DynamoDBEngineeringReviewRepository implements IEngineeringReviewRe
     );
 
     if (!result.Items) return [];
-    return result.Items.map((item) => this.deserialize(unmarshall(item)));
+    return result.Items.map((item: any) => this.deserialize(unmarshall(item)));
   }
 
   // ─── Serialization ──────────────────────────────────────────────────
