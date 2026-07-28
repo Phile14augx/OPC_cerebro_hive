@@ -72,6 +72,7 @@ export function Sidebar() {
         <button
           onClick={toggleCollapse}
           className="hidden lg:flex p-1.5 text-text-muted hover:text-text-primary hover:bg-surface rounded-md transition-colors"
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {isCollapsed ? <PanelLeft size={18} /> : <PanelLeftClose size={18} />}
         </button>
@@ -79,6 +80,7 @@ export function Sidebar() {
         <button
           onClick={closeMobile}
           className="lg:hidden p-1.5 text-text-muted hover:text-text-primary hover:bg-surface rounded-md transition-colors"
+          aria-label="Close sidebar"
         >
           <X size={18} />
         </button>
