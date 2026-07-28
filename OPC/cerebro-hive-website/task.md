@@ -1,17 +1,11 @@
-# Task Tracker: M26.2 (API) & M26.3 (Studio UX) Implementation
+# Task Tracker: M26.4 First-Party Review Agents
 
-## Milestone 26.2 - Engineering Review API
-- `[x]` Define Read Models / DTOs (`EngineeringReviewSummaryDTO`, `ReviewStatisticsDTO`, `EngineeringReviewDetailDTO`, `ReviewComparisonDTO`)
-- `[x]` Implement REST Controller routes (`/api/v1/reviews/...`)
-- `[x]` Implement API Pagination (Cursor-based)
-- `[x]` Implement Lazy Evidence Endpoint
-- `[x]` Implement Freshness Check (`POST /freshness/check`)
-- `[x]` Implement Comparison Endpoint (`/compare`)
-
-## Milestone 26.3 - Studio UX
-- `[x]` Implement Dashboard Layout (Header, Navigation, Content regions)
-- `[x]` Implement Findings UI (Group by severity, category)
-- `[x]` Implement Evidence Explorer (Progressive loading component)
-- `[x]` Implement Recommendation Cards (Linked to findings/nodes)
-- `[x]` Implement Review Comparison View
-- `[x]` Integrate with M26.2 API endpoints
+## Milestone 26.4 - Contributor Ecosystem
+- `[x]` Scaffold `ContributorContext` and `ContributorState` types
+- `[x]` Implement `ContributorHost` abstraction (In-process host)
+- `[x]` Implement `SecurityReviewAgent` (w/ Analyzers: EdgeEncryption, TopologyExposure, IAM)
+- `[x]` Implement `ArchitectureReviewAgent` (w/ Analyzers: TopologyQuality, Idempotency, CyclicDependency)
+- `[x]` Implement `ReliabilityReviewAgent` (Static + Historical evaluation)
+- `[x]` Implement `CostReviewAgent` (Estimation, Budget, Optimization)
+- `[x]` Implement `ComplianceReviewAgent` (GDPR, HIPAA, SOC2 adapters)
+- `[x]` Write Comprehensive End-to-End Test Suite (10 scenarios)
