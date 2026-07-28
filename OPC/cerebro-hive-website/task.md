@@ -1,18 +1,17 @@
-# Task Tracker: M26.1 Implementation Execution
+# Task Tracker: M26.2 (API) & M26.3 (Studio UX) Implementation
 
-## 1. Domain Model
-- `[x]` Implement `EngineeringReviewReport` Aggregate Root (Lifecycle transitions, immutability)
-- `[x]` Implement Value Objects: `ReviewManifest`, `ReviewProvenance`, `ReviewFinding`, `ReviewRecommendation`, `EvidenceReference`, `ReviewVerdict`
-- `[x]` Implement `EvidenceGraph`, `EvidenceNode`, `EvidenceEdge` as immutable structures
+## Milestone 26.2 - Engineering Review API
+- `[x]` Define Read Models / DTOs (`EngineeringReviewSummaryDTO`, `ReviewStatisticsDTO`, `EngineeringReviewDetailDTO`, `ReviewComparisonDTO`)
+- `[x]` Implement REST Controller routes (`/api/v1/reviews/...`)
+- `[x]` Implement API Pagination (Cursor-based)
+- `[x]` Implement Lazy Evidence Endpoint
+- `[x]` Implement Freshness Check (`POST /freshness/check`)
+- `[x]` Implement Comparison Endpoint (`/compare`)
 
-## 2. Ports / Interfaces
-- `[x]` Define `IEngineeringReviewRepository` and `IEvidenceStore`
-- `[x]` Define `IReviewContributor` and `ContributorResult`
-
-## 3. Application Services
-- `[x]` Implement `EngineeringReviewOrchestrator` (Strict 9-step execution sequence)
-- `[x]` Implement Domain Events (Domain: `Started`, `Completed`, `Published`, `MarkedStale` | Integration: `Published`, `Stale`)
-
-## 4. Domain Services
-- `[x]` Implement `ConfidenceAggregationEngine`
-- `[x]` Implement `ReviewFreshnessEvaluator`
+## Milestone 26.3 - Studio UX
+- `[x]` Implement Dashboard Layout (Header, Navigation, Content regions)
+- `[x]` Implement Findings UI (Group by severity, category)
+- `[x]` Implement Evidence Explorer (Progressive loading component)
+- `[x]` Implement Recommendation Cards (Linked to findings/nodes)
+- `[x]` Implement Review Comparison View
+- `[x]` Integrate with M26.2 API endpoints
