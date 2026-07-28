@@ -1,11 +1,9 @@
-# Task Tracker: M26.4 First-Party Review Agents
+# Task Tracker: M27 Governance Analytics & Reporting
 
-## Milestone 26.4 - Contributor Ecosystem
-- `[x]` Scaffold `ContributorContext` and `ContributorState` types
-- `[x]` Implement `ContributorHost` abstraction (In-process host)
-- `[x]` Implement `SecurityReviewAgent` (w/ Analyzers: EdgeEncryption, TopologyExposure, IAM)
-- `[x]` Implement `ArchitectureReviewAgent` (w/ Analyzers: TopologyQuality, Idempotency, CyclicDependency)
-- `[x]` Implement `ReliabilityReviewAgent` (Static + Historical evaluation)
-- `[x]` Implement `CostReviewAgent` (Estimation, Budget, Optimization)
-- `[x]` Implement `ComplianceReviewAgent` (GDPR, HIPAA, SOC2 adapters)
-- `[x]` Write Comprehensive End-to-End Test Suite (10 scenarios)
+## Milestone 27 - Analytics Bounded Context
+- `[x]` Scaffold Evidence Warehouse Dimensional Schema (Fact/Dim Tables)
+- `[x]` Implement NRT Projection Pipeline (Ingest `EngineeringReviewPublished` events)
+- `[x]` Implement Projection Validation Suite
+- `[x]` Implement Trend Engine (Aggregation, Multi-score metrics, Forecasting)
+- `[x]` Implement Analytics API & Studio Dashboards (RLS enabled)
+- `[x]` Implement Executive Report Generator (Quarterly Snapshot exporter)
