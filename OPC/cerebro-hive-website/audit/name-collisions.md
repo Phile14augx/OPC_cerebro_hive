@@ -16,6 +16,8 @@
 | RiskEngine | packages/governance-core; services/enterprise-control-plane |
 | ReasoningEngine | packages/knowledge-graph-core; services/reasoning-service |
 | SecretsManager | packages/secrets-core; services/enterprise-control-plane |
+| CredentialProvider | packages/identity-core (unused/unimplemented); packages/secrets-core (real, internally consumed) — see `audit/CREDENTIAL-PROVIDER-COLLISION-REVIEW.md` |
+| SecretProvider | services/enterprise-control-plane (unwired, mock-backed) |
 | ToolRegistry | packages/capabilities/agent-builder; apps/studio |
 | CompilerPipeline | services/app-builder-api; apps/platform |
 | PlannerService | services/forge-api; services/swarm-runtime |
