@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ReviewDashboard } from '@/features/reviews/ReviewDashboard';
 import { ReviewDetailView } from '@/features/reviews/ReviewDetailView';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import { useParams } from 'next/navigation';
 
