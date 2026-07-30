@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { BookOpen, Box, Cpu, Building2, Code, Users } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const categories = [
   { id: "research", label: "Research", icon: BookOpen, stat: "35+", subtitle: "Papers Published" },
@@ -30,8 +31,10 @@ export default function EnterpriseProof() {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
           {categories.map((cat) => (
-            <button
+            <TrackedButton
               key={cat.id}
+              eventCategory="company_ecosystem_proof"
+              eventLabel={cat.label}
               onClick={() => setActiveCategory(cat.id)}
               className={cn(
                 "p-4 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-3",
@@ -40,7 +43,7 @@ export default function EnterpriseProof() {
             >
               <cat.icon size={24} className={activeCategory === cat.id ? "text-text-primary" : "text-text-muted"} />
               <div className="font-space font-bold text-sm text-text-primary">{cat.label}</div>
-            </button>
+            </TrackedButton>
           ))}
         </div>
 
@@ -61,9 +64,13 @@ export default function EnterpriseProof() {
                 <div className="text-xl md:text-2xl text-text-secondary font-inter">
                   {cat.subtitle}
                 </div>
-                <button className="mt-8 px-6 py-3 border border-border rounded-lg text-xs font-bold uppercase tracking-widest text-text-primary hover:bg-surface transition-colors">
+                <TrackedButton
+                  eventCategory="company_ecosystem_proof"
+                  eventLabel={`Explore ${cat.label}`}
+                  className="mt-8 px-6 py-3 border border-border rounded-lg text-xs font-bold uppercase tracking-widest text-text-primary hover:bg-surface transition-colors"
+                >
                   Explore {cat.label}
-                </button>
+                </TrackedButton>
               </motion.div>
             ))}
           </AnimatePresence>

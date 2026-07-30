@@ -2,8 +2,8 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { Building, Stethoscope, Briefcase, ShoppingBag, Factory, Shield, Cpu, Zap, ArrowRight } from "lucide-react";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
@@ -84,8 +84,11 @@ export function IndustryMapping() {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <Link
+              <TrackedLink
                 href={industry.link}
+                analyticsEvent="industry_mapping_click"
+                analyticsCategory="services"
+                analyticsLabel={industry.name}
                 className={cn(cardVariants({ size: "lg" }), "group block hover:border-primary-accent/50 transition-all duration-300 h-full relative overflow-hidden")}
               >
                 {/* Subtle gradient glow on hover */}
@@ -113,7 +116,7 @@ export function IndustryMapping() {
                 <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-text-muted group-hover:text-primary-accent transition-colors">
                   Explore Solutions <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </div>
-              </Link>
+              </TrackedLink>
             </motion.div>
           ))}
         </div>

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const challenges = [
   { label: "Operations & Workflow", icon: "⚙️", href: "/solutions/erp-automation" },
@@ -63,8 +64,10 @@ export default function SolutionRecommenderTeaser() {
           {/* Options */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "14px", maxWidth: "720px", margin: "0 auto 40px" }}>
             {challenges.map((ch, i) => (
-              <button
+              <TrackedButton
                 key={ch.label}
+                eventCategory="home_solution_recommender"
+                eventLabel={ch.label}
                 onClick={() => handleSelect(i)}
                 style={{
                   display: "flex",
@@ -102,13 +105,15 @@ export default function SolutionRecommenderTeaser() {
               >
                 <span style={{ fontSize: "1.2rem" }}>{ch.icon}</span>
                 {ch.label}
-              </button>
+              </TrackedButton>
             ))}
           </div>
 
           {/* Full recommender CTA */}
           <div style={{ display: "flex", justifyContent: "center", gap: "16px", flexWrap: "wrap" }}>
-            <button
+            <TrackedButton
+              eventCategory="home_solution_recommender"
+              eventLabel="Take the full AI Solution Finder quiz"
               onClick={() => router.push("/tools/solution-finder")}
               style={{
                 display: "inline-flex",
@@ -127,7 +132,7 @@ export default function SolutionRecommenderTeaser() {
               onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "var(--text-muted)")}
             >
               Take the full AI Solution Finder quiz <ArrowRight size={14} />
-            </button>
+            </TrackedButton>
           </div>
         </div>
       </div>

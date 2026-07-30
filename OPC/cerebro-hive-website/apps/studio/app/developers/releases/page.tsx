@@ -1,7 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { JsonLd } from "@/components/discovery";
 import { buildTechArticleSchema } from "@/lib/discovery";
@@ -89,9 +89,9 @@ export default function ReleasesPage() {
                 <p className="text-sm text-text-secondary leading-relaxed mb-6">
                   {release.description}
                 </p>
-                <Link href="/developers/changelog" className="inline-flex items-center gap-2 text-sm font-bold text-text-primary hover:text-primary-accent transition-colors">
+                <TrackedLink href="/developers/changelog" analyticsEvent="changelog_click" analyticsCategory="developers-releases" analyticsLabel={`View full changelog — ${release.version}`} className="inline-flex items-center gap-2 text-sm font-bold text-text-primary hover:text-primary-accent transition-colors">
                   View full technical changelog <ArrowRight size={16} />
-                </Link>
+                </TrackedLink>
               </div>
               
               <div className="bg-surface p-6 rounded-xl border border-border">

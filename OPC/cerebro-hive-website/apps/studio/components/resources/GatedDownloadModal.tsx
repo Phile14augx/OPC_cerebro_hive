@@ -58,6 +58,7 @@ export default function GatedDownloadModal({ title, onClose, onSuccess }: GatedD
           eventCategory="resources"
           eventLabel="Close gated download modal"
           onClick={onClose}
+          aria-label="Close gated download modal"
           style={{
             position: "absolute", top: "20px", right: "20px",
             background: "transparent", border: "none", color: "var(--text-muted)",

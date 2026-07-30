@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Building2, Calculator, Users, Briefcase, Cog, Package, Scale, Cpu, BrainCircuit, Target, ArrowRight } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 // Nodes configuration
 const departments = [
@@ -115,19 +116,21 @@ export const PlatformHero = () => {
                 {departments.map((dept) => {
                   const isActive = activeDept === dept.id;
                   return (
-                    <button 
+                    <TrackedButton
                       key={dept.id}
+                      eventCategory="products-platform-hero"
+                      eventLabel={dept.label}
                       onClick={() => setActiveDept(dept.id)}
                       className={cn(
                         "flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-300",
-                        isActive 
-                          ? "bg-primary-accent/10 border-primary-accent/50 text-primary-accent shadow-[0_0_15px_rgba(0,245,122,0.1)]" 
+                        isActive
+                          ? "bg-primary-accent/10 border-primary-accent/50 text-primary-accent shadow-[0_0_15px_rgba(0,245,122,0.1)]"
                           : "bg-surface border-border text-text-muted hover:border-border-highlight hover:text-text-secondary"
                       )}
                     >
                       <dept.icon size={18} className="mb-2" />
                       <span className="text-[9px] font-space font-bold uppercase tracking-wider">{dept.label}</span>
-                    </button>
+                    </TrackedButton>
                   );
                 })}
               </div>

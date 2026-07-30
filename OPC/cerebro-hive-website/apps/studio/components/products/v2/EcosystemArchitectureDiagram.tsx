@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 interface ModuleNode {
   id: string;
@@ -129,9 +129,12 @@ export function EcosystemArchitectureDiagram() {
                 "grid-cols-1 max-w-xs"
               }`}>
                 {layerModules.map(m => (
-                  <Link
+                  <TrackedLink
                     key={m.id}
                     href={m.href}
+                    analyticsEvent="ecosystem_module_click"
+                    analyticsCategory="products"
+                    analyticsLabel={m.title}
                     onMouseEnter={() => setActiveModule(m.id)}
                     onMouseLeave={() => setActiveModule(null)}
                     className={`group relative flex flex-col gap-1 px-4 py-3 rounded-xl bg-background/60 backdrop-blur-sm border border-border hover:border-border-active transition-all duration-300 cursor-pointer ${getModuleStyle(m)}`}
@@ -151,7 +154,7 @@ export function EcosystemArchitectureDiagram() {
                         Connected to {m.connections.length} module{m.connections.length > 1 ? 's' : ''}
                       </motion.div>
                     )}
-                  </Link>
+                  </TrackedLink>
                 ))}
               </div>
             </div>

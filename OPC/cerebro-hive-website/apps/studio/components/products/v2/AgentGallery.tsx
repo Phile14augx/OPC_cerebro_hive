@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { UserCircle, Briefcase, Calculator, Scale, FileText, Globe, Search, BrainCircuit, Activity, Wrench, Network, LayoutTemplate } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const agents = [
   {
@@ -71,13 +72,16 @@ export const AgentGallery = () => {
             {agents.map((agent) => {
               const isActive = activeAgent === agent.id;
               return (
-                <button
+                <TrackedButton
                   key={agent.id}
+                  eventCategory="products"
+                  eventLabel={agent.name}
+                  eventAction="agent_selector_click"
                   onClick={() => setActiveAgent(agent.id)}
                   className={cn(
                     "flex items-center justify-between p-4 rounded-xl border transition-all text-left group",
-                    isActive 
-                      ? "bg-[#00E5FF]/10 border-[#00E5FF]/50 shadow-[0_0_20px_rgba(0,229,255,0.1)]" 
+                    isActive
+                      ? "bg-[#00E5FF]/10 border-[#00E5FF]/50 shadow-[0_0_20px_rgba(0,229,255,0.1)]"
                       : "bg-surface border-border hover:border-border-strong"
                   )}
                 >
@@ -90,7 +94,7 @@ export const AgentGallery = () => {
                   {isActive && (
                     <motion.div layoutId="agent-active" className="w-2 h-2 rounded-full bg-[#00E5FF]" />
                   )}
-                </button>
+                </TrackedButton>
               );
             })}
           </div>

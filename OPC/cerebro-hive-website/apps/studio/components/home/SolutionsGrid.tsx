@@ -193,9 +193,15 @@ export default function SolutionsGrid() {
 
         {/* CTA */}
         <div style={{ textAlign: "center", marginTop: "48px" }}>
-          <Link href="/solutions" className="btn-ghost">
+          <TrackedLink
+            href="/solutions"
+            analyticsEvent="solutions_grid_view_all_click"
+            analyticsCategory="home"
+            analyticsLabel={t("home.solutions.view_all")}
+            className="btn-ghost"
+          >
             {t("home.solutions.view_all")}
-          </Link>
+          </TrackedLink>
         </div>
       </div>
 

@@ -3,7 +3,7 @@
 import React from "react";
 import { Database, Bot, Zap, ArrowRight, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 import { Stack } from "@/components/cerebro/primitives/Stack";
@@ -52,9 +52,12 @@ export default function IntegratedPlatform() {
 
         <div className="grid lg:grid-cols-3 gap-6">
           {products.map((prod, i) => (
-            <Link
+            <TrackedLink
               key={i}
               href={prod.href}
+              analyticsEvent="platform_product_card_click"
+              analyticsCategory="home-integrated-platform"
+              analyticsLabel={prod.title}
               className={cn(
                 cardVariants({ size: "lg" }),
                 "group hover:border-border-strong transition-all flex flex-col relative overflow-hidden h-full cursor-pointer"
@@ -75,7 +78,7 @@ export default function IntegratedPlatform() {
                 </span>
                 <ArrowRight size={16} className={cn("transition-transform group-hover:translate-x-1", prod.textColor)} />
               </div>
-            </Link>
+            </TrackedLink>
           ))}
         </div>
       </PageContainer>

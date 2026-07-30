@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { FileDown, CheckCircle2, Bot, Layers, Network, DollarSign, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export const StrategyCanvas = () => {
   const [generating, setGenerating] = useState(false);
@@ -29,12 +30,15 @@ export const StrategyCanvas = () => {
 
         {!generated && !generating && (
           <div className="flex justify-center">
-            <button 
+            <TrackedButton
+              eventCategory="insights-explorer"
+              eventLabel="Generate Executive Deliverable"
+              eventAction="strategy_canvas_generate_click"
               onClick={handleGenerate}
               className="px-10 py-5 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-3 transition-transform hover:scale-105 shadow-xl"
             >
               <FileDown size={20} /> Generate Executive Deliverable
-            </button>
+            </TrackedButton>
           </div>
         )}
 
@@ -60,9 +64,9 @@ export const StrategyCanvas = () => {
                   <h3 className="text-3xl font-space font-bold text-text-primary mb-2">Executive AI Strategy Brief</h3>
                   <div className="text-xs font-bold uppercase tracking-widest text-text-muted">Prepared for: CIO • Finance Sector</div>
                 </div>
-                <button className="px-6 py-3 bg-[#7B61FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap">
+                <TrackedButton eventCategory="insights-explorer" eventLabel="Download PDF" eventAction="strategy_canvas_download_click" className="px-6 py-3 bg-[#7B61FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap">
                   <FileDown size={16} /> Download PDF
-                </button>
+                </TrackedButton>
               </div>
 
               <div className="grid md:grid-cols-2 gap-8 mb-8">

@@ -3,6 +3,7 @@
 import React from "react";
 import { Code2, Users, FileText, FlaskConical, ExternalLink } from "lucide-react";
 import { withBasePath } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const researchers = [
   {
@@ -40,9 +41,9 @@ export const ResearchTeam = () => {
               The engineers and scientists building the CerebroHive platform.
             </p>
           </div>
-          <button className="text-sm font-bold text-primary-accent hover:text-text-primary transition-colors flex items-center gap-2">
+          <TrackedButton eventCategory="research" eventLabel="View All Staff" className="text-sm font-bold text-primary-accent hover:text-text-primary transition-colors flex items-center gap-2">
             View All Staff <ExternalLink size={16} />
-          </button>
+          </TrackedButton>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -91,12 +92,12 @@ export const ResearchTeam = () => {
               </div>
 
               <div className="flex items-center gap-3 pt-4 border-t border-border">
-                <button className="p-2 rounded-lg bg-surface text-text-secondary hover:bg-surface hover:text-text-primary transition-colors">
+                <TrackedButton eventCategory="research" eventLabel={`${person.name} — GitHub`} aria-label={`${person.name} — GitHub`} className="p-2 rounded-lg bg-surface text-text-secondary hover:bg-surface hover:text-text-primary transition-colors">
                   <Code2 size={16} />
-                </button>
-                <button className="p-2 rounded-lg bg-surface text-text-secondary hover:bg-[#0077b5] hover:text-text-primary transition-colors">
+                </TrackedButton>
+                <TrackedButton eventCategory="research" eventLabel={`${person.name} — LinkedIn`} aria-label={`${person.name} — LinkedIn`} className="p-2 rounded-lg bg-surface text-text-secondary hover:bg-[#0077b5] hover:text-text-primary transition-colors">
                   <Users size={16} />
-                </button>
+                </TrackedButton>
               </div>
 
             </div>

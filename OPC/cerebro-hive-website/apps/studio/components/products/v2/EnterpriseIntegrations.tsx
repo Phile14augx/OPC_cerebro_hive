@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Database, Network, Server, Cloud, Boxes, ArrowRight, ShieldCheck, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const integrations = [
   {
@@ -71,13 +72,15 @@ export const EnterpriseIntegrations = () => {
             {integrations.map((integration) => {
               const isActive = activeIntegration === integration.id;
               return (
-                <button
+                <TrackedButton
                   key={integration.id}
+                  eventCategory="enterprise-integrations"
+                  eventLabel={integration.name}
                   onClick={() => setActiveIntegration(integration.id)}
                   className={cn(
                     "p-4 rounded-xl border flex items-center justify-between transition-all duration-300 text-left",
-                    isActive 
-                      ? "bg-surface-elevated border-primary-accent/50 shadow-[0_0_15px_rgba(0,245,122,0.1)]" 
+                    isActive
+                      ? "bg-surface-elevated border-primary-accent/50 shadow-[0_0_15px_rgba(0,245,122,0.1)]"
                       : "bg-surface border-border hover:border-border-strong hover:bg-surface-elevated/50"
                   )}
                 >
@@ -92,7 +95,7 @@ export const EnterpriseIntegrations = () => {
                     </div>
                   </div>
                   {isActive && <ArrowRight size={16} className="text-primary-accent" />}
-                </button>
+                </TrackedButton>
               );
             })}
           </div>

@@ -2,8 +2,8 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export type ProgressiveServiceProps = {
   id: string;
@@ -85,8 +85,11 @@ export function ServiceCardProgressive({ service, index }: { service: Progressiv
 
       {/* Action Footer */}
       <div className="border-t border-border bg-background p-6 relative z-10">
-        <Link 
+        <TrackedLink
           href={service.link}
+          analyticsEvent="service_card_explore_click"
+          analyticsCategory="services"
+          analyticsLabel={service.title}
           className="flex items-center justify-between w-full group/btn"
         >
           <span className="text-sm font-bold tracking-widest uppercase text-text-primary group-hover/btn:text-primary-accent transition-colors">
@@ -95,7 +98,7 @@ export function ServiceCardProgressive({ service, index }: { service: Progressiv
           <div className="w-10 h-10 rounded-full bg-surface border border-border flex items-center justify-center group-hover/btn:bg-primary-accent group-hover/btn:text-text-primary group-hover/btn:border-primary-accent transition-all duration-300">
             <ArrowRight size={18} className="group-hover/btn:-rotate-45 transition-transform duration-300" />
           </div>
-        </Link>
+        </TrackedLink>
       </div>
     </motion.div>
   );

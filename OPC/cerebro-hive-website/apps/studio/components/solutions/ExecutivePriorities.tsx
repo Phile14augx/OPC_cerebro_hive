@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrendingUp, TrendingDown, Crosshair, ArrowRight, BrainCircuit, Bot, BookOpen, Database } from "lucide-react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const priorities = [
   {
@@ -61,12 +62,14 @@ export function ExecutivePriorities() {
           {/* Tabs */}
           <div className="flex flex-col md:flex-row gap-4 mb-12">
             {priorities.map(p => (
-              <button
+              <TrackedButton
                 key={p.id}
+                eventCategory="solutions_executive_priorities"
+                eventLabel={p.title}
                 onClick={() => setActiveTab(p.id)}
                 className={cn(
                   "flex-1 flex flex-col items-center p-6 rounded-2xl border transition-all duration-300 text-center",
-                  activeTab === p.id 
+                  activeTab === p.id
                     ? "bg-surface-elevated border-primary-accent shadow-elevated"
                     : "bg-surface border-border hover:border-primary-accent/50"
                 )}
@@ -76,7 +79,7 @@ export function ExecutivePriorities() {
                 </div>
                 <h3 className="text-xl font-space font-bold text-text-primary mb-2">{p.title}</h3>
                 <p className="text-xs text-text-muted leading-relaxed">{p.desc}</p>
-              </button>
+              </TrackedButton>
             ))}
           </div>
 
@@ -95,14 +98,21 @@ export function ExecutivePriorities() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {p.solutions.map((sol, i) => (
-                      <Link href={`/solutions/${sol.slug}`} key={i} className="group block p-6 rounded-xl border border-border bg-background hover:border-primary-accent/50 hover:bg-surface transition-all shadow-sm">
+                      <TrackedLink
+                        href={`/solutions/${sol.slug}`}
+                        key={i}
+                        analyticsEvent="solution_card_click"
+                        analyticsCategory="solutions_executive_priorities"
+                        analyticsLabel={sol.name}
+                        className="group block p-6 rounded-xl border border-border bg-background hover:border-primary-accent/50 hover:bg-surface transition-all shadow-sm"
+                      >
                         <sol.icon size={20} className="text-text-muted group-hover:text-primary-accent mb-4 transition-colors" />
                         <h5 className="font-space font-bold text-text-primary mb-2 text-sm">{sol.name}</h5>
                         <div className="flex items-center justify-between mt-6">
                           <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent">{sol.impact}</span>
                           <ArrowRight size={14} className="text-text-muted group-hover:text-text-primary transition-colors" />
                         </div>
-                      </Link>
+                      </TrackedLink>
                     ))}
                   </div>
                 </motion.div>

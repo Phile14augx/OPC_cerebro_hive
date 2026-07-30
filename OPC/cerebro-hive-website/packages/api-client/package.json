@@ -6,8 +6,12 @@
   "scripts": {
     "build": "tsc"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.4",
+    "zod": "^3.25.76"
+  },
   "devDependencies": {
+    "@types/node": "^26.1.2",
     "typescript": "^5.0.0"
   }
 }

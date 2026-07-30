@@ -6,6 +6,7 @@ import { Modal } from "./Modal";
 import { platformNavigation } from "../../navigation";
 import { useRouter } from "next/navigation";
 import { cn } from "./utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export interface CommandPaletteProps {
   isOpen: boolean;
@@ -57,12 +58,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button 
+          <TrackedButton
+            eventCategory="command-palette"
+            eventLabel="Close (ESC)"
             onClick={onClose}
             className="absolute right-5 p-1 bg-surface-elevated rounded-md text-text-muted hover:text-text-primary transition-colors text-xs font-bold"
           >
             ESC
-          </button>
+          </TrackedButton>
         </div>
 
         {/* Results */}
@@ -70,8 +73,10 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           {filteredItems.length > 0 ? (
             <div className="space-y-1">
               {filteredItems.map((item, idx) => (
-                <button
+                <TrackedButton
                   key={`${item.href}-${idx}`}
+                  eventCategory="command-palette"
+                  eventLabel={item.title}
                   onClick={() => handleSelect(item.href)}
                   className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-elevated transition-colors group text-left"
                 >
@@ -85,7 +90,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                     </div>
                   </div>
                   <ChevronRight size={16} className="text-text-muted opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                </button>
+                </TrackedButton>
               ))}
             </div>
           ) : (

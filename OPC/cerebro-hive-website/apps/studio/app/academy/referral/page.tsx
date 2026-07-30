@@ -1,7 +1,8 @@
 "use client";
 import { CheckCircle, ArrowRight, Users, DollarSign, Share2 } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export default function AcademyReferralPage() {
   const [studentsReferred, setStudentsReferred] = useState(10);
@@ -25,9 +26,15 @@ export default function AcademyReferralPage() {
       <section style={{ paddingTop: "60px", paddingBottom: "60px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(123,97,255,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="container-wide" style={{ position: "relative", textAlign: "center" }}>
-          <Link href="/academy" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px" }}>
+          <TrackedLink
+            href="/academy"
+            analyticsEvent="breadcrumb_click"
+            analyticsCategory="academy"
+            analyticsLabel="Back to Academy"
+            style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px" }}
+          >
             ← Back to Academy
-          </Link>
+          </TrackedLink>
           <div className="section-label" style={{ display: "inline-flex", color: "var(--violet)", background: "rgba(123,97,255,0.08)", borderColor: "rgba(123,97,255,0.25)", margin: "0 auto 20px" }}>
             <Share2 size={11} /> Affiliate Program
           </div>
@@ -155,9 +162,15 @@ export default function AcademyReferralPage() {
                     style={{ width: "100%", padding: "11px 14px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "var(--text-primary)", fontFamily: "Exo 2, sans-serif", fontSize: "0.88rem", outline: "none" }} />
                 </div>
 
-                <button type="submit" className="btn-primary" style={{ width: "100%", justifyContent: "center", display: "inline-flex", gap: "6px", background: "linear-gradient(135deg, var(--violet), var(--neural-blue))" }}>
+                <TrackedButton
+                  type="submit"
+                  eventCategory="academy"
+                  eventLabel="Submit Registration"
+                  className="btn-primary"
+                  style={{ width: "100%", justifyContent: "center", display: "inline-flex", gap: "6px", background: "linear-gradient(135deg, var(--violet), var(--neural-blue))" }}
+                >
                   Submit Registration <ArrowRight size={14} />
-                </button>
+                </TrackedButton>
               </form>
             ) : (
               <div style={{ textAlign: "center", padding: "16px 0" }}>

@@ -1,7 +1,8 @@
 "use client";
 import { CheckCircle, ArrowRight, Zap, Users, MessageSquare, Calendar } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const channels = [
   {
@@ -105,9 +106,9 @@ export default function CommunityPage() {
                   </div>
                   <h3 style={{ fontFamily: "Orbitron, sans-serif", fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "10px" }}>{chan.title}</h3>
                   <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.83rem", color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "24px", flex: 1 }}>{chan.desc}</p>
-                  <a href={chan.href} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "4px", textDecoration: "none", fontFamily: "Orbitron, sans-serif", fontSize: "0.78rem", fontWeight: 700, color: chan.color }}>
+                  <TrackedLink href={chan.href} analyticsEvent="community_channel_click" analyticsCategory="community" analyticsLabel={chan.title} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "4px", textDecoration: "none", fontFamily: "Orbitron, sans-serif", fontSize: "0.78rem", fontWeight: 700, color: chan.color }}>
                     {chan.cta}
-                  </a>
+                  </TrackedLink>
                 </div>
               );
             })}
@@ -140,9 +141,9 @@ export default function CommunityPage() {
                   </div>
                   
                   {/* Action */}
-                  <Link href="/academy" style={{ textDecoration: "none", fontFamily: "Orbitron, sans-serif", fontSize: "0.72rem", fontWeight: 700, color: "var(--neural-blue)", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                  <TrackedLink href="/academy" analyticsEvent="community_event_rsvp_click" analyticsCategory="community" analyticsLabel={ev.title} style={{ textDecoration: "none", fontFamily: "Orbitron, sans-serif", fontSize: "0.72rem", fontWeight: 700, color: "var(--neural-blue)", display: "inline-flex", alignItems: "center", gap: "4px" }}>
                     RSVP Event <ArrowRight size={12} />
-                  </Link>
+                  </TrackedLink>
                 </div>
               ))}
             </div>
@@ -166,9 +167,9 @@ export default function CommunityPage() {
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <input type="email" placeholder="your@email.com" value={waitlistEmail} onChange={(e) => setWaitlistEmail(e.target.value)} required
                   style={{ padding: "12px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", color: "var(--text-primary)", fontFamily: "Exo 2, sans-serif", fontSize: "0.9rem", outline: "none", textAlign: "center" }} />
-                <button type="submit" className="btn-primary" style={{ justifyContent: "center", gap: "6px" }}>
+                <TrackedButton type="submit" eventCategory="community" eventLabel="Join Chapter Waitlist" className="btn-primary" style={{ justifyContent: "center", gap: "6px" }}>
                   Join Chapter Waitlist <ArrowRight size={13} />
-                </button>
+                </TrackedButton>
               </form>
             ) : (
               <div style={{ textAlign: "center", padding: "16px 0" }}>

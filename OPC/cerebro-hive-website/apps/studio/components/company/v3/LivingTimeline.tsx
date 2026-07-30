@@ -84,6 +84,7 @@ export default function LivingTimeline() {
               eventCategory="living-timeline"
               eventLabel={`Mobile Dot ${m.year} ${m.title}`}
               onClick={() => setActiveIndex(i)}
+              aria-label={`${m.year} — ${m.title}`}
               className={`w-2 h-2 rounded-full transition-colors ${activeIndex === i ? 'bg-[#00E5FF]' : 'bg-surface-elevated'}`}
             />
           ))}

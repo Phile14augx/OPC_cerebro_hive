@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Industry } from '@/lib/data/industries/types';
 import { industriesData } from '@/lib/data/industries';
-import Link from 'next/link';
+import { TrackedLink } from '../cerebro/TrackedLink';
+import { TrackedButton } from '../cerebro/TrackedButton';
 import { cn } from '@/lib/utils';
 import { ArchitectureCanvas } from '../architecture/ArchitectureCanvas';
 import { SectionHeading } from '../cerebro/SectionHeading';
@@ -18,9 +19,12 @@ const IndustryNavigator = ({ currentSlug }: { currentSlug: string }) => {
         {industriesData.map(s => {
           const isActive = currentSlug === s.slug;
           return (
-            <Link 
-              key={s.slug} 
+            <TrackedLink
+              key={s.slug}
               href={`/industries/${s.slug}`}
+              analyticsEvent="industry_nav_click"
+              analyticsCategory="industry-explorer"
+              analyticsLabel={s.name}
               className={cn(
                 "text-xs font-bold tracking-widest uppercase transition-all duration-300 relative py-2 whitespace-nowrap",
                 isActive ? "text-text-primary" : "text-text-muted hover:text-text-secondary"
@@ -28,14 +32,14 @@ const IndustryNavigator = ({ currentSlug }: { currentSlug: string }) => {
             >
               {s.name}
               {isActive && (
-                <motion.div 
+                <motion.div
                   layoutId="ind-nav-indicator"
                   className="absolute -bottom-4 left-0 w-full h-[2px] rounded-t-full bg-primary-accent"
                   initial={false}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
-            </Link>
+            </TrackedLink>
           );
         })}
       </div>
@@ -82,9 +86,9 @@ export default function IndustryPageLayout({ industry }: { industry: Industry })
              </p>
 
              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">
-                <button className="w-full sm:w-auto px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg transition-transform hover:-translate-y-1">
+                <TrackedButton eventCategory="industry-explorer" eventLabel={industry.hero.primaryCta} className="w-full sm:w-auto px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg transition-transform hover:-translate-y-1">
                   {industry.hero.primaryCta}
-                </button>
+                </TrackedButton>
              </div>
           </div>
         </section>

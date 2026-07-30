@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Globe2 } from "lucide-react";
 import { withBasePath } from "@/lib/utils";
 import dynamic from 'next/dynamic';
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const BackgroundEngine = dynamic(
   () => import("@/components/cerebro/BackgroundEngine").then((mod) => mod.BackgroundEngine),
@@ -134,13 +135,13 @@ export const CompanyHero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="group px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-surface hover:shadow-[0_0_30px_rgba(0,245,122,0.4)]">
+            <TrackedButton eventCategory="company-hero" eventLabel="See How We Deliver" className="group px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-surface hover:shadow-[0_0_30px_rgba(0,245,122,0.4)]">
               See How We Deliver
               <ArrowDown size={16} className="transition-transform group-hover:translate-y-1" />
-            </button>
-            <button className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-border-strong hover:bg-surface-elevated transition-all">
+            </TrackedButton>
+            <TrackedButton eventCategory="company-hero" eventLabel="Download Handbook" className="px-8 py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-border-strong hover:bg-surface-elevated transition-all">
               Download Handbook
-            </button>
+            </TrackedButton>
           </div>
         </motion.div>
 

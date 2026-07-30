@@ -8,6 +8,7 @@ import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 import { Stack } from "@/components/cerebro/primitives/Stack";
 import { cardVariants } from "@/components/cerebro/primitives/Card";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const cases = [
   {
@@ -58,8 +59,11 @@ export default function HumanProof() {
           {/* Customer Selector */}
           <div className="lg:col-span-4 flex flex-col gap-4">
             {cases.map(c => (
-              <button
+              <TrackedButton
                 key={c.id}
+                eventCategory="home-human-proof"
+                eventLabel={c.industry}
+                eventAction="case_selector_click"
                 onClick={() => setActiveCase(c)}
                 className={`p-6 rounded-2xl border text-left transition-all ${
                   activeCase.id === c.id
@@ -74,7 +78,7 @@ export default function HumanProof() {
                 <div className={`font-space font-bold text-xl ${activeCase.id === c.id ? "text-text-primary" : "text-text-secondary"}`}>
                   {c.logo}
                 </div>
-              </button>
+              </TrackedButton>
             ))}
           </div>
 
@@ -128,9 +132,9 @@ export default function HumanProof() {
 
                 <div className="flex items-center justify-between pt-6 border-t border-border">
                   <p className="text-sm font-bold text-accent-primary">{activeCase.outcome}</p>
-                  <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-primary hover:text-[#00F57A] transition-colors">
+                  <TrackedButton eventCategory="home-human-proof" eventLabel={`Read Full Study — ${activeCase.industry}`} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-primary hover:text-[#00F57A] transition-colors">
                     Read Full Study <ArrowRight size={14} />
-                  </button>
+                  </TrackedButton>
                 </div>
 
               </motion.div>

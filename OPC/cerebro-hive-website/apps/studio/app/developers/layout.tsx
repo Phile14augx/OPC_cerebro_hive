@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import type { Metadata } from "next";
 import { Book, Code, Cpu, Activity, ListOrdered, Calendar, GitCommit } from "lucide-react";
 import { JsonLd } from "@/components/discovery";
@@ -48,14 +48,17 @@ export default function DevelopersLayout({
               </h2>
               <nav className="flex flex-row md:flex-col gap-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-hide">
                 {navItems.map((item) => (
-                  <Link
+                  <TrackedLink
                     key={item.href}
                     href={item.href}
+                    analyticsEvent="developers_nav_click"
+                    analyticsCategory="developers"
+                    analyticsLabel={item.label}
                     className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors whitespace-nowrap"
                   >
                     <item.icon size={16} className="text-primary-accent" />
                     {item.label}
-                  </Link>
+                  </TrackedLink>
                 ))}
               </nav>
 
@@ -63,9 +66,9 @@ export default function DevelopersLayout({
                 <div className="p-4 rounded-xl bg-surface border border-border">
                   <h4 className="text-xs font-bold text-text-primary mb-2">Need Help?</h4>
                   <p className="text-[11px] text-text-muted mb-4">Join our developer community or contact enterprise support.</p>
-                  <Link href="/community" className="text-xs text-primary-accent font-medium hover:underline">
+                  <TrackedLink href="/community" analyticsEvent="developers_join_community_click" analyticsCategory="developers" analyticsLabel="Join Community" className="text-xs text-primary-accent font-medium hover:underline">
                     Join Community &rarr;
-                  </Link>
+                  </TrackedLink>
                 </div>
               </div>
             </div>

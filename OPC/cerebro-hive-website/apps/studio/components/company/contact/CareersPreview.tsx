@@ -222,7 +222,7 @@ export const CareersPreview = () => {
                   </div>
                   <h3 className="text-lg font-space font-bold text-text-primary">{activeDomain.domain}</h3>
                 </div>
-                <TrackedButton eventCategory="careers" eventLabel="Close inspector" onClick={handleClose} className="p-2 rounded-full hover:bg-surface-elevated transition-colors text-text-muted hover:text-text-primary">
+                <TrackedButton eventCategory="careers" eventLabel="Close inspector" onClick={handleClose} aria-label="Close inspector" className="p-2 rounded-full hover:bg-surface-elevated transition-colors text-text-muted hover:text-text-primary">
                   <X size={20} />
                 </TrackedButton>
               </div>

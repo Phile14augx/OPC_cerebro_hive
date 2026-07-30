@@ -967,9 +967,9 @@ function PipelineResultView({ pipeline, roleTitle, onReset }: { pipeline: Pipeli
         </div>
       )}
 
-      <button suppressHydrationWarning onClick={onReset} className="self-center mt-2 px-6 py-3 bg-background border border-border text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:border-primary-accent/40 transition-colors">
+      <TrackedButton suppressHydrationWarning eventCategory="careers" eventLabel="Submit Another Application" onClick={onReset} className="self-center mt-2 px-6 py-3 bg-background border border-border text-text-primary font-space font-bold text-xs uppercase tracking-widest rounded-xl hover:border-primary-accent/40 transition-colors">
         Submit Another Application
-      </button>
+      </TrackedButton>
     </motion.div>
   );
 }

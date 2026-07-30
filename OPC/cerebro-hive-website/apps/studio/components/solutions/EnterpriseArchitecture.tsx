@@ -75,19 +75,21 @@ export function EnterpriseArchitecture() {
             {views.map(view => {
               const isActive = activeView === view.id;
               return (
-                <button
+                <TrackedButton
                   key={view.id}
+                  eventCategory="solutions"
+                  eventLabel={view.name}
                   onClick={() => setActiveView(view.id)}
                   className={cn(
                     "flex items-center gap-3 p-4 rounded-xl border transition-all text-left whitespace-nowrap min-w-[200px] lg:min-w-0",
-                    isActive 
-                      ? "bg-surface-elevated border-primary-accent shadow-elevated" 
+                    isActive
+                      ? "bg-surface-elevated border-primary-accent shadow-elevated"
                       : "bg-surface border-border hover:border-primary-accent/50 text-text-secondary"
                   )}
                 >
                   <view.icon size={18} className={isActive ? "text-primary-accent" : "text-text-muted"} />
                   <span className={cn("font-space font-bold text-sm", isActive ? "text-text-primary" : "")}>{view.name}</span>
-                </button>
+                </TrackedButton>
               );
             })}
           </div>
@@ -126,9 +128,9 @@ export function EnterpriseArchitecture() {
                   </div>
                   
                   <div className="mt-8 flex justify-end">
-                     <button className="text-xs font-bold uppercase tracking-widest text-text-muted hover:text-primary-accent transition-colors flex items-center gap-2">
+                     <TrackedButton eventCategory="solutions" eventLabel="View Detailed Architecture Diagram" className="text-xs font-bold uppercase tracking-widest text-text-muted hover:text-primary-accent transition-colors flex items-center gap-2">
                        View Detailed Architecture Diagram <ArrowRight size={14} />
-                     </button>
+                     </TrackedButton>
                   </div>
                 </motion.div>
               ))}

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { AlertTriangle, XCircle, Lightbulb, Zap, Rocket } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const storySteps = [
   {
@@ -72,8 +73,10 @@ export default function OriginStory() {
                 const isPast = activeStep > idx;
                 
                 return (
-                  <button 
-                    key={step.id} 
+                  <TrackedButton
+                    key={step.id}
+                    eventCategory="company-origin-story"
+                    eventLabel={step.title}
                     onClick={() => setActiveStep(idx)}
                     className="flex items-center gap-6 group text-left relative z-10"
                   >
@@ -87,7 +90,7 @@ export default function OriginStory() {
                     <div className={`text-lg font-space font-bold transition-colors ${isActive ? 'text-text-primary' : 'text-text-secondary group-hover:text-text-primary'}`}>
                       {step.title}
                     </div>
-                  </button>
+                  </TrackedButton>
                 )
               })}
             </div>

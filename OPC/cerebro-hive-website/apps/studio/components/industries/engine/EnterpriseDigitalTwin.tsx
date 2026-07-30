@@ -9,6 +9,7 @@ import { IntelligentOrb } from "@/components/motion/primitives/IntelligentOrb";
 import { HoverCard } from "@/components/motion/primitives/HoverCard";
 import { AnimatedConnector } from "@/components/motion/primitives/AnimatedConnector";
 import { PulseRing } from "@/components/motion/primitives/PulseRing";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface Props {
   config?: DigitalTwinConfig;
@@ -114,21 +115,23 @@ export function EnterpriseDigitalTwin({ config }: Props) {
           {/* View Modes (Semantic Zoom) */}
           <div className="flex p-1 bg-surface-secondary border border-border rounded-xl">
             {views.map(view => (
-              <button
+              <TrackedButton
                 key={view.id}
+                eventCategory="industry-explorer"
+                eventLabel={view.label}
                 onClick={() => {
                   setViewMode(view.id);
                   setSelectedNodeId(null);
                 }}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-bold transition-all ${
-                  viewMode === view.id 
-                    ? "bg-surface shadow-sm text-text-primary" 
+                  viewMode === view.id
+                    ? "bg-surface shadow-sm text-text-primary"
                     : "text-text-muted hover:text-text-primary"
                 }`}
               >
                 <view.icon size={16} />
                 <span className="hidden sm:inline">{view.label}</span>
-              </button>
+              </TrackedButton>
             ))}
           </div>
         </div>
@@ -178,7 +181,9 @@ export function EnterpriseDigitalTwin({ config }: Props) {
                       
                       {currentNodes?.map((node, i) => (
                         <React.Fragment key={node.id}>
-                          <button
+                          <TrackedButton
+                            eventCategory="industry-explorer"
+                            eventLabel={node.label}
                             onClick={() => setSelectedNodeId(node.id === selectedNodeId ? null : node.id)}
                             className={`relative flex flex-col items-center gap-3 transition-transform duration-300 ${
                               selectedNodeId === node.id ? 'scale-110' : 'hover:scale-105'
@@ -224,7 +229,7 @@ export function EnterpriseDigitalTwin({ config }: Props) {
                                 />
                               </div>
                             )}
-                          </button>
+                          </TrackedButton>
                         </React.Fragment>
                       ))}
 

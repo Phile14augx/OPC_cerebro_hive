@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { osPillars } from "./lib";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export function PillarShell({
   slug,
@@ -18,9 +18,9 @@ export function PillarShell({
 
   return (
     <main className="mx-auto max-w-6xl px-6 pb-24 pt-8">
-      <Link href="/platform/os" className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-primary-accent transition-colors">
+      <TrackedLink href="/platform/os" analyticsEvent="pillar_shell_back_click" analyticsCategory="platform-os" analyticsLabel="Enterprise AI OS Console" className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-primary-accent transition-colors">
         <ArrowLeft size={14} /> Enterprise AI OS Console
-      </Link>
+      </TrackedLink>
 
       {current && (
         <>
@@ -42,10 +42,10 @@ export function PillarShell({
           <p className="text-xs font-semibold uppercase tracking-widest text-text-secondary">More in {current?.group}</p>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
             {siblings.map(s => (
-              <Link key={s.slug} href={`/platform/os/${s.slug}`} className="rounded-xl border border-border bg-surface/40 p-4 transition-colors hover:border-primary-accent">
+              <TrackedLink key={s.slug} href={`/platform/os/${s.slug}`} analyticsEvent="pillar_shell_sibling_click" analyticsCategory="platform-os" analyticsLabel={s.name} className="rounded-xl border border-border bg-surface/40 p-4 transition-colors hover:border-primary-accent">
                 <div className="font-semibold text-text-primary">{s.name}</div>
                 <p className="mt-1 text-xs text-text-secondary">{s.tagline}</p>
-              </Link>
+              </TrackedLink>
             ))}
           </div>
         </section>

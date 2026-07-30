@@ -69,7 +69,7 @@ function GatedModal({ paper, onClose }: { paper: Whitepaper; onClose: () => void
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(8,11,20,0.85)", backdropFilter: "blur(8px)" }}>
       <div className="card-glass" style={{ padding: "44px", maxWidth: "480px", width: "90%", position: "relative" }}>
-        <TrackedButton eventCategory="whitepapers" eventLabel="Close Download Modal" onClick={onClose} style={{ position: "absolute", top: "16px", right: "16px", background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)" }}>
+        <TrackedButton eventCategory="whitepapers" eventLabel="Close Download Modal" onClick={onClose} aria-label="Close Download Modal" style={{ position: "absolute", top: "16px", right: "16px", background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)" }}>
           <X size={18} />
         </TrackedButton>
         {!submitted ? (

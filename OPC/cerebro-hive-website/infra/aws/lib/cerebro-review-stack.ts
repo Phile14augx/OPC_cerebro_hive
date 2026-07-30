@@ -5,6 +5,9 @@ import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as sns_subs from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as lambdaNodejs from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as path from 'path';
+import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
 
@@ -96,8 +99,7 @@ export class CerebroHiveReviewStack extends cdk.Stack {
     });
 
     // ─── SNS: Integration Event Topic ────────────────────────────────
-    // Publishes EngineeringReviewPublished events. M27 analytics
-    // pipeline subscribes here.
+    // Publishes EngineeringReviewPublished events for downstream consumers.
     this.reviewEventsTopic = new sns.Topic(this, 'ReviewEventsTopic', {
       topicName: 'cerebro-review-events',
       displayName: 'Cerebro Hive Engineering Review Events',
@@ -128,19 +130,12 @@ export class CerebroHiveReviewStack extends cdk.Stack {
     // ─── Lambda: Review API Handler ──────────────────────────────────
     // Single Lambda function handling all M26.2 API routes.
     // 128MB memory keeps execution within free tier compute limits.
-    const reviewApiHandler = new lambda.Function(this, 'ReviewApiHandler', {
+    const reviewApiHandler = new lambdaNodejs.NodejsFunction(this, 'ReviewApiHandler', {
       functionName: 'cerebro-review-api',
       runtime: lambda.Runtime.NODEJS_20_X,
-      handler: 'index.handler',
-      code: lambda.Code.fromInline(`
-        exports.handler = async (event) => {
-          return {
-            statusCode: 200,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: 'Cerebro Review API — Ready for adapter wiring' }),
-          };
-        };
-      `),
+      entry: path.resolve(__dirname, '../../../packages/engineering-review/src/infrastructure/api/handler.ts'),
+      handler: 'handler',
+      projectRoot: path.resolve(__dirname, '../../../'),
       memorySize: 128,
       timeout: cdk.Duration.seconds(10),
       environment: {
@@ -155,6 +150,28 @@ export class CerebroHiveReviewStack extends cdk.Stack {
     this.evidenceBucket.grantRead(reviewApiHandler);
     this.reviewEventsTopic.grantPublish(reviewApiHandler);
 
+    // ─── Cognito: Authentication ───────────────────────────────────────
+    const userPool = new cognito.UserPool(this, 'CerebroUserPool', {
+      userPoolName: 'cerebro-users',
+      selfSignUpEnabled: false, // Internal enterprise app
+      signInAliases: { email: true },
+      autoVerify: { email: true },
+      passwordPolicy: { minLength: 8, requireLowercase: true, requireUppercase: true, requireDigits: true },
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+    });
+
+    const userPoolClient = new cognito.UserPoolClient(this, 'CerebroStudioClient', {
+      userPool,
+      generateSecret: false, // For SPA (React/Next.js)
+      authFlows: {
+        userSrp: true,
+      },
+    });
+
+    const authorizer = new apigateway.CognitoUserPoolsAuthorizer(this, 'CerebroAuthorizer', {
+      cognitoUserPools: [userPool],
+    });
+
     // ─── API Gateway: REST API ───────────────────────────────────────
     // Exposes the M26.2 endpoints. 1M calls/month free for 12 months.
     const api = new apigateway.RestApi(this, 'CerebroReviewApi', {
@@ -168,47 +185,53 @@ export class CerebroHiveReviewStack extends cdk.Stack {
       defaultCorsPreflightOptions: {
         allowOrigins: apigateway.Cors.ALL_ORIGINS,
         allowMethods: apigateway.Cors.ALL_METHODS,
+        allowHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token', 'X-Amz-User-Agent'],
       },
     });
+
+    const authOptions = {
+      authorizer,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+    };
 
     const lambdaIntegration = new apigateway.LambdaIntegration(reviewApiHandler);
 
     // /api/v1/reviews/{reviewId}
     const reviews = api.root.addResource('reviews');
     const reviewById = reviews.addResource('{reviewId}');
-    reviewById.addMethod('GET', lambdaIntegration);
+    reviewById.addMethod('GET', lambdaIntegration, authOptions);
 
     // /api/v1/reviews/{reviewId}/findings
     const findings = reviewById.addResource('findings');
-    findings.addMethod('GET', lambdaIntegration);
+    findings.addMethod('GET', lambdaIntegration, authOptions);
 
     // /api/v1/reviews/{reviewId}/findings/{findingId}
     const findingById = findings.addResource('{findingId}');
-    findingById.addMethod('GET', lambdaIntegration);
+    findingById.addMethod('GET', lambdaIntegration, authOptions);
 
     // /api/v1/reviews/{reviewId}/contributors
     const contributors = reviewById.addResource('contributors');
-    contributors.addMethod('GET', lambdaIntegration);
+    contributors.addMethod('GET', lambdaIntegration, authOptions);
 
     // /api/v1/reviews/{reviewId}/evidence/{findingId}
     const evidence = reviewById.addResource('evidence');
     const evidenceByFinding = evidence.addResource('{findingId}');
-    evidenceByFinding.addMethod('GET', lambdaIntegration);
+    evidenceByFinding.addMethod('GET', lambdaIntegration, authOptions);
 
     // /api/v1/reviews/{reviewId}/freshness/check
     const freshness = reviewById.addResource('freshness');
     const freshnessCheck = freshness.addResource('check');
-    freshnessCheck.addMethod('POST', lambdaIntegration);
+    freshnessCheck.addMethod('POST', lambdaIntegration, authOptions);
 
     // /api/v1/workflows/{workflowId}/reviews
     const workflows = api.root.addResource('workflows');
     const workflowById = workflows.addResource('{workflowId}');
     const workflowReviews = workflowById.addResource('reviews');
-    workflowReviews.addMethod('GET', lambdaIntegration);
+    workflowReviews.addMethod('GET', lambdaIntegration, authOptions);
 
     // /api/v1/workflows/{workflowId}/reviews/compare
     const compare = workflowReviews.addResource('compare');
-    compare.addMethod('GET', lambdaIntegration);
+    compare.addMethod('GET', lambdaIntegration, authOptions);
 
     // ─── Outputs ─────────────────────────────────────────────────────
     new cdk.CfnOutput(this, 'ApiEndpoint', {

@@ -1,9 +1,9 @@
 'use client';
 
 import { useFindings } from './hooks/useReviews';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { FindingDetailDTO } from '@cerebro/api-client';
 import { AlertTriangle, Info, FileSearch } from 'lucide-react';
 import { cn } from '@/lib/utils';

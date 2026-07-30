@@ -14,9 +14,9 @@ import { Readable } from 'node:stream';
  * is never overwritten or deleted — new versions create new S3
  * object versions.
  *
- * This is the infrastructure adapter for the IEvidenceStore port
- * described in M26.1 ADR-007 (persistence split: operational DB
- * handles review metadata; evidence store handles immutable blobs).
+ * This is the infrastructure adapter for the IEvidenceStore port,
+ * adopted in ADR-006 (persistence split: operational DB handles
+ * review metadata; evidence store handles immutable blobs).
  */
 export class S3EvidenceStore {
   private readonly client: S3Client;

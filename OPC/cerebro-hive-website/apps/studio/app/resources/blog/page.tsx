@@ -1,6 +1,5 @@
 "use client";
 import { BookOpen, ArrowRight, Zap, Clock } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
@@ -120,7 +119,7 @@ export default function BlogPage() {
       {featuredArticle && (
         <section style={{ paddingBottom: "40px" }}>
           <div className="container-wide">
-            <Link href={featuredArticle.slug} style={{ textDecoration: "none" }}>
+            <TrackedLink href={featuredArticle.slug} analyticsEvent="blog_featured_article_click" analyticsCategory="blog" analyticsLabel={featuredArticle.title} style={{ textDecoration: "none" }}>
               <div className="card-glass" style={{ padding: "48px", background: `radial-gradient(ellipse 60% 80% at 0% 50%, ${featuredArticle.color}08 0%, transparent 70%)` }}>
                 <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "20px" }}>
                   <span style={{ fontFamily: "Orbitron, sans-serif", fontSize: "0.58rem", fontWeight: 700, color: featuredArticle.color, background: `${featuredArticle.color}14`, border: `1px solid ${featuredArticle.color}30`, padding: "3px 10px", borderRadius: "100px", textTransform: "uppercase" }}>
@@ -148,7 +147,7 @@ export default function BlogPage() {
                   </div>
                 </div>
               </div>
-            </Link>
+            </TrackedLink>
           </div>
         </section>
       )}
@@ -158,7 +157,7 @@ export default function BlogPage() {
         <div className="container-wide">
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {categories.map((cat) => (
-              <button key={cat} onClick={() => setActiveCategory(cat)}
+              <TrackedButton key={cat} eventCategory="blog" eventLabel={cat} eventAction="blog_category_filter_click" onClick={() => setActiveCategory(cat)}
                 style={{
                   padding: "8px 18px", borderRadius: "100px", cursor: "pointer", fontFamily: "Exo 2, sans-serif", fontSize: "0.82rem", fontWeight: 600, transition: "all 0.2s",
                   background: activeCategory === cat ? "rgba(0,229,255,0.1)" : "rgba(255,255,255,0.03)",
@@ -166,7 +165,7 @@ export default function BlogPage() {
                   color: activeCategory === cat ? "var(--neural-blue)" : "var(--text-muted)",
                 }}>
                 {cat}
-              </button>
+              </TrackedButton>
             ))}
           </div>
         </div>
@@ -182,7 +181,7 @@ export default function BlogPage() {
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
               {filteredArticles.map((article) => (
-                <Link key={article.title} href={article.slug} style={{ textDecoration: "none" }}>
+                <TrackedLink key={article.title} href={article.slug} analyticsEvent="blog_article_click" analyticsCategory="blog" analyticsLabel={article.title} style={{ textDecoration: "none" }}>
                   <div className="card-glass" style={{ padding: "32px 28px", height: "100%", display: "flex", flexDirection: "column" }}>
                     <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "16px" }}>
                       <span style={{ fontFamily: "Orbitron, sans-serif", fontSize: "0.58rem", fontWeight: 700, color: article.color, background: `${article.color}12`, border: `1px solid ${article.color}28`, padding: "2px 8px", borderRadius: "100px", textTransform: "uppercase" }}>
@@ -204,7 +203,7 @@ export default function BlogPage() {
                       </div>
                     </div>
                   </div>
-                </Link>
+                </TrackedLink>
               ))}
             </div>
           )}
@@ -232,9 +231,9 @@ export default function BlogPage() {
                 <form onSubmit={(e) => { e.preventDefault(); if (email.includes("@")) setSubscribed(true); }} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   <input type="email" placeholder="your@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required
                     style={{ padding: "12px 16px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", color: "var(--text-primary)", fontFamily: "Exo 2, sans-serif", fontSize: "0.9rem", outline: "none" }} />
-                  <button type="submit" className="btn-primary" style={{ justifyContent: "center", gap: "6px" }}>
+                  <TrackedButton type="submit" eventCategory="blog" eventLabel="Subscribe to the Dispatch" eventAction="newsletter_subscribe_click" className="btn-primary" style={{ justifyContent: "center", gap: "6px" }}>
                     Subscribe to the Dispatch <ArrowRight size={13} />
-                  </button>
+                  </TrackedButton>
                   <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.72rem", color: "var(--text-dim)", textAlign: "center" }}>No spam. Weekly cadence. Unsubscribe any time.</p>
                 </form>
               ) : (

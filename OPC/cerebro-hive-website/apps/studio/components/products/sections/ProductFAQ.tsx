@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { ChevronDown } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export const ProductFAQ = ({ product }: { product: PackagedProduct }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -22,7 +23,9 @@ export const ProductFAQ = ({ product }: { product: PackagedProduct }) => {
               key={i}
               className="border border-border rounded-xl bg-background overflow-hidden"
             >
-              <button
+              <TrackedButton
+                eventCategory="product-faq"
+                eventLabel={faq.question}
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 className="w-full flex items-center justify-between p-6 text-left hover:bg-surface-elevated transition-colors"
               >
@@ -35,7 +38,7 @@ export const ProductFAQ = ({ product }: { product: PackagedProduct }) => {
                     openIndex === i ? "rotate-180" : ""
                   }`}
                 />
-              </button>
+              </TrackedButton>
               <AnimatePresence>
                 {openIndex === i && (
                   <motion.div

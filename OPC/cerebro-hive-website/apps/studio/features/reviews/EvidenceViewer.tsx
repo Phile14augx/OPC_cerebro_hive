@@ -1,9 +1,9 @@
 'use client';
 
 import { useEvidence } from './hooks/useReviews';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { Badge } from '@/components/ui/Badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 import { Database, Clock, Server } from 'lucide-react';
 import { format } from 'date-fns';
 

@@ -8,6 +8,7 @@ import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 import { Stack } from "@/components/cerebro/primitives/Stack";
 import { cardVariants } from "@/components/cerebro/primitives/Card";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 type MapNode = {
   id: string;
@@ -106,8 +107,10 @@ export function InteractiveCapabilityMap() {
             {scenarios.map(scenario => {
               const isActive = scenario.id === activeScenarioId;
               return (
-                <button
+                <TrackedButton
                   key={scenario.id}
+                  eventCategory="industry-explorer"
+                  eventLabel={scenario.industry}
                   onClick={() => setActiveScenarioId(scenario.id)}
                   className={cn(
                     "p-5 rounded-xl border text-left transition-all duration-300 relative overflow-hidden group",
@@ -128,7 +131,7 @@ export function InteractiveCapabilityMap() {
                   <p className="text-xs text-text-secondary leading-relaxed font-inter">
                     {scenario.description}
                   </p>
-                </button>
+                </TrackedButton>
               )
             })}
           </div>

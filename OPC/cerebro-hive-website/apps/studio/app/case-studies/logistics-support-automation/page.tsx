@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { ArrowLeft, Database, Server, Settings, Calendar } from "lucide-react";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export default function LogisticsSupportCaseStudy() {
   const [booked, setBooked] = useState(false);
@@ -38,11 +39,11 @@ export default function LogisticsSupportCaseStudy() {
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 40% at 50% 0%, rgba(0,229,255,0.05) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="container-wide" style={{ position: "relative" }}>
           
-          <Link href="/case-studies" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px", transition: "color 0.2s" }}
+          <TrackedLink href="/case-studies" analyticsEvent="case_study_back_click" analyticsCategory="case-studies" analyticsLabel="Back to Case Studies" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px", transition: "color 0.2s" }}
             onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-primary)"}
             onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}>
             <ArrowLeft size={14} /> Back to Case Studies
-          </Link>
+          </TrackedLink>
 
           <div className="section-label" style={{ display: "inline-flex", marginBottom: "20px", color: "var(--neural-blue)", background: "rgba(0,229,255,0.06)", borderColor: "rgba(0,229,255,0.2)" }}>
             Case Study: Automation
@@ -168,14 +169,16 @@ export default function LogisticsSupportCaseStudy() {
             <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.9rem", color: "var(--text-muted)", maxWidth: "500px", lineHeight: 1.6 }}>
               Let&apos;s discuss how multi-agent pipelines and vector indexing can eliminate your team&apos;s operational ticket queues.
             </p>
-            <button
+            <TrackedButton
+              eventCategory="case-studies"
+              eventLabel="Book Similar Project Consultation"
               onClick={() => setBooked(true)}
               disabled={booked}
               className="btn-primary"
               style={{ display: "inline-flex", gap: "6px", cursor: booked ? "not-allowed" : "pointer" }}
             >
               <Calendar size={16} /> {booked ? "Session Booked!" : "Book Similar Project Consultation"}
-            </button>
+            </TrackedButton>
           </div>
 
         </div>

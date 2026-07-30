@@ -44,6 +44,7 @@ export const OrgNavRail = () => {
             onMouseLeave={() => setHoveredNodeId(null)}
             eventCategory="org-chart"
             eventLabel={item.label}
+            aria-label={item.label}
             className={cn(
               "relative group w-10 h-10 rounded-lg flex items-center justify-center text-text-muted transition-all duration-200",
               item.color
@@ -60,10 +61,10 @@ export const OrgNavRail = () => {
       </div>
 
       <div className="flex flex-col gap-4 w-full px-3 pt-6 border-t border-border">
-        <TrackedButton eventCategory="org-chart" eventLabel="Search" className="w-10 h-10 rounded-lg flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface transition-all">
+        <TrackedButton eventCategory="org-chart" eventLabel="Search" aria-label="Search" className="w-10 h-10 rounded-lg flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface transition-all">
           <Search size={18} />
         </TrackedButton>
-        <TrackedButton eventCategory="org-chart" eventLabel="Settings" className="w-10 h-10 rounded-lg flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface transition-all">
+        <TrackedButton eventCategory="org-chart" eventLabel="Settings" aria-label="Settings" className="w-10 h-10 rounded-lg flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface transition-all">
           <Settings size={18} />
         </TrackedButton>
       </div>

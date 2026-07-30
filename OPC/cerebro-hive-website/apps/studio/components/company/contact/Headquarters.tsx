@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Globe, Zap, Mail, ArrowRight, Building2, Clock, Terminal } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 // ============================================================================
 // ANIMATED SVG CAMPUS COMPONENT
@@ -313,9 +315,9 @@ export const Headquarters = () => {
                     <span className="text-[10px] font-mono text-text-muted uppercase tracking-widest flex items-center gap-2">
                       <Mail size={12} /> Enterprise Inquiries
                     </span>
-                    <a href="mailto:enterprise@cerebrohive.com" className="text-sm font-space font-bold text-text-primary hover:text-primary-accent transition-colors mt-1">
+                    <TrackedLink href="mailto:enterprise@cerebrohive.com" analyticsEvent="hq_email_click" analyticsCategory="contact" analyticsLabel="Enterprise Inquiries Email" className="text-sm font-space font-bold text-text-primary hover:text-primary-accent transition-colors mt-1">
                       enterprise@cerebrohive.com
-                    </a>
+                    </TrackedLink>
                   </div>
                   
                   {/* Time Zones */}
@@ -344,10 +346,10 @@ export const Headquarters = () => {
             </div>
 
             {/* CTA */}
-            <button className="self-start flex items-center gap-3 px-6 py-3 rounded-full bg-surface border border-border hover:bg-surface-elevated hover:border-primary-accent/50 transition-all group">
+            <TrackedButton eventCategory="contact" eventLabel="Explore Global Network" className="self-start flex items-center gap-3 px-6 py-3 rounded-full bg-surface border border-border hover:bg-surface-elevated hover:border-primary-accent/50 transition-all group">
               <span className="text-sm font-space font-bold text-text-primary uppercase tracking-wider">Explore Global Network</span>
               <ArrowRight size={16} className="text-primary-accent group-hover:translate-x-1 transition-transform" />
-            </button>
+            </TrackedButton>
 
           </motion.div>
 

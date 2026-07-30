@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 export default function AssessmentStudio() {
   const [assessments, setAssessments] = useState([]);
@@ -93,13 +94,15 @@ export default function AssessmentStudio() {
                 placeholder="e.g., Senior Full-Stack Engineer"
               />
             </div>
-            <button 
+            <TrackedButton
               type="submit"
+              eventCategory="talent-recruiter"
+              eventLabel="Create Draft"
               disabled={!title}
               className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium py-2 px-4 rounded transition-all"
             >
               Create Draft
-            </button>
+            </TrackedButton>
           </form>
         </div>
 
@@ -126,9 +129,13 @@ export default function AssessmentStudio() {
                       <span>ID: <span className="font-mono">{a.id.split('-')[0]}...</span></span>
                     </div>
                   </div>
-                  <button className="opacity-0 group-hover:opacity-100 transition-opacity px-4 py-2 bg-[#222] hover:bg-[#333] rounded text-sm font-medium">
+                  <TrackedButton
+                    eventCategory="talent-recruiter"
+                    eventLabel="Edit Schema"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity px-4 py-2 bg-[#222] hover:bg-[#333] rounded text-sm font-medium"
+                  >
                     Edit Schema
-                  </button>
+                  </TrackedButton>
                 </div>
               ))}
             </div>

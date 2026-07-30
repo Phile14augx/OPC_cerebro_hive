@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 export default function GlobalError({
   error,
@@ -22,12 +23,14 @@ export default function GlobalError({
           <p className="text-text-secondary max-w-md">
             A critical error occurred while attempting to render this page. Our engineering team has been notified.
           </p>
-          <button
+          <TrackedButton
+            eventCategory="error"
+            eventLabel="Attempt Recovery"
             onClick={() => reset()}
             className="px-6 py-3 bg-primary-accent text-background font-bold rounded-lg"
           >
             Attempt Recovery
-          </button>
+          </TrackedButton>
         </div>
       </body>
     </html>

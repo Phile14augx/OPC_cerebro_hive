@@ -5,6 +5,8 @@ import { AI_Agent, EngineConfig } from '@/lib/data/industries/types';
 import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BrainCircuit, X } from 'lucide-react';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
+import { analytics } from '@/lib/analytics/AnalyticsAdapter';
 
 export function AgentEcosystem({ agents, config }: { agents: AI_Agent[], config: EngineConfig }) {
   const [selectedAgent, setSelectedAgent] = useState<AI_Agent | null>(null);
@@ -49,7 +51,10 @@ export function AgentEcosystem({ agents, config }: { agents: AI_Agent[], config:
                     initial={{ x, y, opacity: 0.4 }}
                     whileInView={{ opacity: 1 }}
                     transition={{ delay: i * 0.1 }}
-                    onClick={() => setSelectedAgent(agent)}
+                    onClick={() => {
+                      analytics.track({ eventName: "click", category: "industry-explorer", label: agent.name });
+                      setSelectedAgent(agent);
+                    }}
                   >
                     <div 
                       className={`relative flex items-center justify-center transition-all duration-300
@@ -87,9 +92,9 @@ export function AgentEcosystem({ agents, config }: { agents: AI_Agent[], config:
                       <h3 className="text-3xl font-space font-bold text-text-primary" style={{ color: config.primaryColor }}>
                         {selectedAgent.name}
                       </h3>
-                      <button onClick={() => setSelectedAgent(null)} className="p-2 hover:bg-surface rounded-full text-text-muted hover:text-text-primary transition-colors">
+                      <TrackedButton eventCategory="industry-explorer" eventLabel="Close Agent Details" onClick={() => setSelectedAgent(null)} className="p-2 hover:bg-surface rounded-full text-text-muted hover:text-text-primary transition-colors">
                         <X size={20} />
-                      </button>
+                      </TrackedButton>
                     </div>
 
                     <p className="text-text-secondary text-lg mb-8">{selectedAgent.description}</p>

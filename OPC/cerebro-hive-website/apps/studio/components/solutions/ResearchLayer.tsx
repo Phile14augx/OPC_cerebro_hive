@@ -3,7 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FlaskConical, FileText, BarChart, BookOpen, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const researchItems = [
   {
@@ -50,9 +51,9 @@ export function ResearchLayer() {
             Our solutions are backed by rigorous research. We constantly benchmark foundation models, test orchestration frameworks, and publish our findings to ensure your architecture is state-of-the-art.
           </p>
 
-          <Link href="/research" className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary-accent hover:text-[#00E5FF] transition-colors">
+          <TrackedLink href="/research" analyticsEvent="research_layer_explore_click" analyticsCategory="solutions" analyticsLabel="Explore All Research" className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary-accent hover:text-[#00E5FF] transition-colors">
             Explore All Research <ArrowRight size={16} />
-          </Link>
+          </TrackedLink>
         </div>
 
         {/* Right Content - Cards */}
@@ -84,7 +85,7 @@ export function ResearchLayer() {
              <p className="text-xs text-text-secondary mb-4">Get our weekly technical breakdown of AI research and architecture patterns.</p>
              <div className="flex w-full gap-2">
                <input type="email" placeholder="Enter work email" className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-xs text-text-primary focus:outline-none focus:border-primary-accent" />
-               <button className="bg-primary-accent text-text-primary px-4 py-2 rounded-lg text-xs font-bold hover:shadow-elevated transition-shadow">Subscribe</button>
+               <TrackedButton eventCategory="solutions" eventLabel="Subscribe" eventAction="research_layer_briefing_subscribe_click" className="bg-primary-accent text-text-primary px-4 py-2 rounded-lg text-xs font-bold hover:shadow-elevated transition-shadow">Subscribe</TrackedButton>
              </div>
           </div>
         </div>

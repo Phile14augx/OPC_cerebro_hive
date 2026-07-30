@@ -139,18 +139,24 @@ export default async function GuidePage({
                     CerebroHive architects can help you apply this framework to your specific enterprise context — from readiness assessment to platform deployment.
                   </p>
                   <div className="flex flex-wrap gap-4">
-                    <Link
+                    <TrackedLink
                       href="/contact"
+                      analyticsEvent="guide_cta_click"
+                      analyticsCategory="resources"
+                      analyticsLabel="Talk to an Architect"
                       className="inline-flex items-center gap-2 px-6 py-3 bg-primary-accent text-background font-space font-bold text-sm rounded-xl hover:-translate-y-0.5 transition-transform"
                     >
                       Talk to an Architect <ChevronRight size={16} />
-                    </Link>
-                    <Link
+                    </TrackedLink>
+                    <TrackedLink
                       href="/resources"
+                      analyticsEvent="guide_cta_click"
+                      analyticsCategory="resources"
+                      analyticsLabel="More Guides"
                       className="inline-flex items-center gap-2 px-6 py-3 border border-border text-text-primary font-space font-bold text-sm rounded-xl hover:border-primary-accent/40 transition-colors"
                     >
                       More Guides
-                    </Link>
+                    </TrackedLink>
                   </div>
                 </div>
               </div>
@@ -163,14 +169,17 @@ export default async function GuidePage({
                   <h4 className="text-xs font-bold uppercase tracking-widest text-text-muted mb-4">In This Guide</h4>
                   <nav className="flex flex-col gap-1">
                     {guide.sections.map((section) => (
-                      <a
+                      <TrackedLink
                         key={section.id}
                         href={`#${section.id}`}
+                        analyticsEvent="toc_click"
+                        analyticsCategory="resources"
+                        analyticsLabel={section.title}
                         className="group flex items-start gap-2 py-2 px-3 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-background transition-all"
                       >
                         <span className="w-1 h-1 rounded-full bg-border group-hover:bg-primary-accent mt-2 shrink-0 transition-colors" />
                         {section.title}
-                      </a>
+                      </TrackedLink>
                     ))}
                   </nav>
                 </div>

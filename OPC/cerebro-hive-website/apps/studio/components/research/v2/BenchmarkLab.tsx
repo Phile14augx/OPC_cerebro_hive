@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Activity, ShieldCheck, Database, FileText, Bot, Scale, BrainCircuit } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const tasks = [
   { id: "doc", label: "Document Intelligence", icon: FileText, desc: "Extracting entities from 100-page unstructured PDFs." },
@@ -43,8 +44,10 @@ export const BenchmarkLab = () => {
             {tasks.map(task => {
               const isActive = activeTask === task.id;
               return (
-                <button
+                <TrackedButton
                   key={task.id}
+                  eventCategory="research-benchmark-lab"
+                  eventLabel={task.label}
                   onClick={() => setActiveTask(task.id)}
                   className={cn(
                     "p-4 rounded-xl border flex flex-col items-start text-left transition-all",
@@ -58,7 +61,7 @@ export const BenchmarkLab = () => {
                     <span className={cn("font-space font-bold text-sm", isActive ? "text-text-primary" : "text-text-secondary")}>{task.label}</span>
                   </div>
                   <div className="text-xs text-text-muted leading-relaxed pl-7">{task.desc}</div>
-                </button>
+                </TrackedButton>
               );
             })}
           </div>

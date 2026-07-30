@@ -86,7 +86,7 @@ export default function ResourcesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {hubs.map((hub, i) => (
               <motion.div key={hub.href} initial={{ opacity: 0.4, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }}>
-                <Link href={hub.href} className="group block h-full">
+                <TrackedLink href={hub.href} analyticsEvent="resources_hub_click" analyticsCategory="resources" analyticsLabel={hub.label} className="group block h-full">
                   <div className="h-full flex flex-col p-8 rounded-2xl bg-surface border border-border hover:border-primary-accent/40 transition-all hover:-translate-y-1 overflow-hidden relative">
                     <div className="absolute top-0 left-0 w-full h-1" style={{ backgroundColor: hub.color }} />
                     <div className="flex items-start justify-between mb-6">
@@ -102,7 +102,7 @@ export default function ResourcesPage() {
                       {hub.cta} <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
-                </Link>
+                </TrackedLink>
               </motion.div>
             ))}
           </div>
@@ -120,7 +120,7 @@ export default function ResourcesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {featured.map((f, i) => (
               <motion.div key={f.title} initial={{ opacity: 0.4, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.07 }}>
-                <Link href={f.href} className="group flex items-center justify-between p-5 rounded-xl bg-background border border-border hover:border-primary-accent/40 transition-all hover:-translate-y-0.5">
+                <TrackedLink href={f.href} analyticsEvent="resources_featured_click" analyticsCategory="resources" analyticsLabel={f.title} className="group flex items-center justify-between p-5 rounded-xl bg-background border border-border hover:border-primary-accent/40 transition-all hover:-translate-y-0.5">
                   <div className="flex items-center gap-4">
                     <div className="w-2 h-10 rounded-full" style={{ backgroundColor: f.color }} />
                     <div>
@@ -129,7 +129,7 @@ export default function ResourcesPage() {
                     </div>
                   </div>
                   <ArrowRight size={16} className="text-text-muted group-hover:text-primary-accent group-hover:translate-x-1 transition-all shrink-0 ml-4" />
-                </Link>
+                </TrackedLink>
               </motion.div>
             ))}
           </div>

@@ -1,18 +1,22 @@
 'use client';
 
 import { useReviewsByWorkflow } from './hooks/useReviews';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { EngineeringReviewSummaryDTO } from '@cerebro/api-client';
 import { AlertCircle, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
-const WorkflowId = 'wf_integration_test'; // Hardcoded for this milestone verification
-
-export function ReviewDashboard({ onSelectReview }: { onSelectReview: (id: string) => void }) {
-  const { data: reviews, isLoading, isError } = useReviewsByWorkflow(WorkflowId);
+export function ReviewDashboard({
+  workflowId,
+  onSelectReview,
+}: {
+  workflowId: string;
+  onSelectReview: (id: string) => void;
+}) {
+  const { data: reviews, isLoading, isError } = useReviewsByWorkflow(workflowId);
 
   if (isLoading) {
     return (
@@ -46,7 +50,7 @@ export function ReviewDashboard({ onSelectReview }: { onSelectReview: (id: strin
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold font-space tracking-tight text-white">Engineering Reviews</h2>
         <Badge variant="outline" className="border-gray-800 text-gray-400">
-          Workflow: {WorkflowId}
+          Workflow: {workflowId}
         </Badge>
       </div>
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { transformations } from "@/lib/config/transformation";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export function EnterpriseTransformation() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -27,8 +28,10 @@ export function EnterpriseTransformation() {
           {/* Industry Sidebar */}
           <div className="w-full lg:w-1/3 flex flex-col gap-2">
             {transformations.map((transform, idx) => (
-              <button
+              <TrackedButton
                 key={transform.id}
+                eventCategory="enterprise-transformation"
+                eventLabel={transform.industry}
                 onClick={() => setActiveIndex(idx)}
                 className={`text-left px-6 py-4 rounded-xl transition-all duration-300 ${
                   activeIndex === idx
@@ -37,7 +40,7 @@ export function EnterpriseTransformation() {
                 }`}
               >
                 <h3 className="text-lg font-semibold">{transform.industry}</h3>
-              </button>
+              </TrackedButton>
             ))}
           </div>
 

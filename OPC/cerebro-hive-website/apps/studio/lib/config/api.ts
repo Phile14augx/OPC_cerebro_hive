@@ -1,9 +1,19 @@
 import { EngineeringReviewClient } from '@cerebro/api-client';
+import { cognitoProvider } from '../auth/CognitoProvider';
+
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+if (!baseUrl) {
+  throw new Error("NEXT_PUBLIC_API_URL must be configured.");
+}
 
 export const apiConfig = {
-  // Use the env var if available, fallback to the deployed API endpoint from verification
-  baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://vtbrbb44kd.execute-api.ap-south-1.amazonaws.com/v1',
+  baseUrl,
   timeoutMs: 15000,
+  getToken: async () => {
+    const session = await cognitoProvider.getSession();
+    return session?.accessToken || null;
+  }
 };
 
 export const reviewClient = new EngineeringReviewClient(apiConfig);

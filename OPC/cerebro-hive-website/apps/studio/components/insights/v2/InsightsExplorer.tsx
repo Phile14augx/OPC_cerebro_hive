@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Filter, ChevronDown, Clock, Maximize2, FileText, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const insights = [
   {
@@ -49,8 +50,11 @@ export const InsightsExplorer = () => {
           </div>
           <div className="flex bg-surface border border-border rounded-lg p-1">
             {(["30s", "5m", "Full"] as const).map(level => (
-              <button
+              <TrackedButton
                 key={level}
+                eventCategory="insights-explorer"
+                eventLabel={level === "30s" ? "30 Sec Summary" : level === "5m" ? "5 Min Brief" : "Full Analysis"}
+                eventAction="insights_level_toggle_click"
                 onClick={() => setActiveLevel(level)}
                 className={cn(
                   "px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-md transition-colors",
@@ -58,7 +62,7 @@ export const InsightsExplorer = () => {
                 )}
               >
                 {level === "30s" ? "30 Sec Summary" : level === "5m" ? "5 Min Brief" : "Full Analysis"}
-              </button>
+              </TrackedButton>
             ))}
           </div>
         </div>
@@ -81,12 +85,15 @@ export const InsightsExplorer = () => {
                 </div>
                 
                 <div className="shrink-0">
-                  <button 
+                  <TrackedButton
+                    eventCategory="insights-explorer"
+                    eventLabel={`Expand insight: ${insight.title}`}
+                    eventAction="insights_expand_click"
                     onClick={() => setExpandedId(expandedId === insight.id ? null : insight.id)}
                     className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-text-primary hover:bg-surface-elevated transition-colors"
                   >
                     <ChevronDown size={16} className={cn("transition-transform", expandedId === insight.id ? "rotate-180" : "")} />
-                  </button>
+                  </TrackedButton>
                 </div>
               </div>
 
@@ -108,9 +115,15 @@ export const InsightsExplorer = () => {
                   </p>
                   
                   {activeLevel !== "Full" && (
-                    <button onClick={() => setActiveLevel(activeLevel === "30s" ? "5m" : "Full")} className="mt-4 text-xs font-bold text-accent-secondary hover:text-text-primary transition-colors flex items-center gap-1">
+                    <TrackedButton
+                      eventCategory="insights-explorer"
+                      eventLabel={`Read ${activeLevel === "30s" ? "5 Min Brief" : "Full Analysis"}`}
+                      eventAction="insights_read_more_click"
+                      onClick={() => setActiveLevel(activeLevel === "30s" ? "5m" : "Full")}
+                      className="mt-4 text-xs font-bold text-accent-secondary hover:text-text-primary transition-colors flex items-center gap-1"
+                    >
                       Read {activeLevel === "30s" ? "5 Min Brief" : "Full Analysis"} <ArrowRight size={12} />
-                    </button>
+                    </TrackedButton>
                   )}
                 </motion.div>
               </AnimatePresence>

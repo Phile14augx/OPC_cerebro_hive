@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, checkOnline, KEY } from "../lib";
 import { PillarShell } from "../PillarShell";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface ActionDefinition { kind: string; title: string; category: string; requiresApproval: boolean }
 interface ActionExecution { id: string; kind: string; status: string; result?: Record<string, unknown> }
@@ -43,15 +44,17 @@ export default function ActionsPage() {
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         <div className="mt-4 flex flex-wrap gap-2">
           {catalog.map(a => (
-            <button
+            <TrackedButton
               key={a.kind}
+              eventCategory="platform-os-actions"
+              eventLabel={a.title}
               onClick={() => void executeAction(a.kind)}
               disabled={busy !== null || !online || !KEY}
               className="rounded-full border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40"
               title={a.requiresApproval ? "Requires approval" : undefined}
             >
               {busy === a.kind ? "…" : a.title}{a.requiresApproval ? " *" : ""}
-            </button>
+            </TrackedButton>
           ))}
         </div>
         <ul className="mt-4 space-y-1.5 text-xs">
@@ -60,7 +63,7 @@ export default function ActionsPage() {
               <span className="text-text-primary">{a.kind}</span>
               <span className="flex items-center gap-2">
                 {a.status === "pending_approval" && (
-                  <button onClick={() => void executeAction(a.kind, true)} className="rounded border border-primary-accent px-2 py-0.5 text-[11px] text-primary-accent">Approve</button>
+                  <TrackedButton eventCategory="platform-os-actions" eventLabel={`Approve: ${a.kind}`} onClick={() => void executeAction(a.kind, true)} className="rounded border border-primary-accent px-2 py-0.5 text-[11px] text-primary-accent">Approve</TrackedButton>
                 )}
                 <span className={a.status === "executed" ? "text-primary-accent" : a.status === "pending_approval" ? "text-amber-400" : "text-red-400"}>{a.status.replace(/_/g, " ")}</span>
               </span>

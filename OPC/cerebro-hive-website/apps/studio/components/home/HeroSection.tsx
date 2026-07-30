@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { HeroEngine } from "./HeroEngine";
 import { useLanguage } from "@/components/layout/LanguageContext";
 
@@ -138,12 +138,12 @@ export default function HeroSection() {
 
             {/* CTAs */}
             <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", justifyContent: "center" }}>
-              <Link href="/contact" className="btn-primary" style={{ fontSize: "0.9rem", padding: "14px 32px" }}>
+              <TrackedLink href="/contact" analyticsEvent="cta_click" analyticsCategory="hero" analyticsLabel="Book a Consultation" className="btn-primary" style={{ fontSize: "0.9rem", padding: "14px 32px" }}>
                 {t("home.hero.cta_consult")}
-              </Link>
-              <Link href="/solutions" className="btn-ghost" style={{ fontSize: "0.9rem", padding: "14px 32px" }}>
+              </TrackedLink>
+              <TrackedLink href="/solutions" analyticsEvent="cta_click" analyticsCategory="hero" analyticsLabel="Explore Solutions" className="btn-ghost" style={{ fontSize: "0.9rem", padding: "14px 32px" }}>
                 {t("home.hero.cta_solutions")}
-              </Link>
+              </TrackedLink>
             </div>
 
             {/* Trust badges */}

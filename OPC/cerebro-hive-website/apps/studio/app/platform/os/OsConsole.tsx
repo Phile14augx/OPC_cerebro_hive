@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { api, checkOnline, KEY, osPillars } from "./lib";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 interface Cockpit {
   analytics?: { executions?: { total: number; completed: number; failed: number }; knowledge?: { documents: number }; ai?: { calls: number; costUsd: number } };
@@ -98,13 +99,15 @@ export default function OsConsole() {
             className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-text-primary outline-none focus:border-primary-accent"
             placeholder="Give the runtime a task…"
           />
-          <button
+          <TrackedButton
+            eventCategory="platform-os"
+            eventLabel="Run"
             onClick={() => void run()}
             disabled={running || !online || !KEY}
             className="rounded-lg bg-primary-accent px-6 py-3 font-semibold text-background transition-opacity disabled:opacity-40"
           >
             {running ? "Running…" : "Run"}
-          </button>
+          </TrackedButton>
         </div>
         {error && <p className="mt-3 text-sm text-red-400">Blocked/failed: {error}</p>}
         {execution?.result && (
@@ -141,7 +144,7 @@ export default function OsConsole() {
       <section className="mt-12 rounded-xl border border-primary-accent/40 bg-primary-accent/5 p-6">
         <h2 className="text-xl font-semibold text-text-primary">HiveForge™ — Enterprise AI Cloud Marketplace</h2>
         <p className="mt-1 max-w-2xl text-sm text-text-secondary">The compute, data, and marketplace layer beneath this OS — provision VPS, GPU, Kubernetes, databases, and install marketplace items directly.</p>
-        <Link href="/platform/hiveforge" className="mt-4 inline-block rounded-lg bg-primary-accent px-5 py-2.5 text-sm font-semibold text-background">Open HiveForge →</Link>
+        <TrackedLink href="/platform/hiveforge" analyticsEvent="cta_click" analyticsCategory="platform-os" analyticsLabel="Open HiveForge" className="mt-4 inline-block rounded-lg bg-primary-accent px-5 py-2.5 text-sm font-semibold text-background">Open HiveForge →</TrackedLink>
       </section>
 
       <section className="mt-14">
@@ -157,14 +160,17 @@ export default function OsConsole() {
           <h3 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">{group}</h3>
           <div className="mt-3 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             {osPillars.filter(p => p.group === group).map(p => (
-              <Link
+              <TrackedLink
                 key={p.slug}
                 href={`/platform/os/${p.slug}`}
+                analyticsEvent="pillar_card_click"
+                analyticsCategory="platform-os"
+                analyticsLabel={p.name}
                 className="rounded-xl border border-border bg-surface/40 p-4 transition-colors hover:border-primary-accent"
               >
                 <div className="font-semibold text-text-primary">{p.name}</div>
                 <p className="mt-1 text-xs text-text-secondary">{p.tagline}</p>
-              </Link>
+              </TrackedLink>
             ))}
           </div>
         </section>

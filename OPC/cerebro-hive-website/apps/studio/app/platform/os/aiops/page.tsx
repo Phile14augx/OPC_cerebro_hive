@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, checkOnline, KEY } from "../lib";
 import { PillarShell } from "../PillarShell";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface Incident { id: string; title: string; severity: string; status: string; suggestedPlaybook?: string }
 
@@ -35,7 +36,7 @@ export default function AIOpsPage() {
       <section className="rounded-xl border border-border bg-surface/40 p-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-text-primary">Incidents &amp; anomaly detection</h2>
-          <button onClick={() => void detectAnomalies()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent disabled:opacity-40">{busy ? "…" : "Detect"}</button>
+          <TrackedButton eventCategory="aiops" eventLabel="Detect Anomalies" onClick={() => void detectAnomalies()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent disabled:opacity-40">{busy ? "…" : "Detect"}</TrackedButton>
         </div>
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         <ul className="mt-4 space-y-2 text-sm">

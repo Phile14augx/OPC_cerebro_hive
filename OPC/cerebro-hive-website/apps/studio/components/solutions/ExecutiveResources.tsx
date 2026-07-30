@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Download, FileText, CheckCircle2 } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const resources = [
   {
@@ -49,9 +50,9 @@ export function ExecutiveResources() {
                 </ul>
               </div>
 
-              <button className="w-full py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/50 hover:bg-surface-elevated transition-all flex items-center justify-center gap-2 group-hover:bg-primary-accent group-hover:text-text-primary group-hover:border-primary-accent">
+              <TrackedButton eventCategory="solutions" eventLabel={`Download — ${res.title}`} className="w-full py-4 bg-surface border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:border-primary-accent/50 hover:bg-surface-elevated transition-all flex items-center justify-center gap-2 group-hover:bg-primary-accent group-hover:text-text-primary group-hover:border-primary-accent">
                 Download Now <Download size={16} />
-              </button>
+              </TrackedButton>
             </div>
           ))}
         </div>

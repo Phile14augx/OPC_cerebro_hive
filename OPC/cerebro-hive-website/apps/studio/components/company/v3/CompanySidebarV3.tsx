@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const chapters = [
   { id: "chapter-1", label: "Why We Exist" },
@@ -54,8 +55,11 @@ export function CompanySidebarV3() {
           {chapters.map((chapter, i) => {
             const isActive = activeId === chapter.id || (!activeId && i === 0);
             return (
-              <button
+              <TrackedButton
                 key={chapter.id}
+                eventCategory="company"
+                eventLabel={chapter.label}
+                eventAction="toc_click"
                 onClick={() => scrollTo(chapter.id)}
                 className="group flex items-center gap-4 text-left relative z-10"
               >
@@ -69,7 +73,7 @@ export function CompanySidebarV3() {
                 )}>
                   {chapter.label}
                 </span>
-              </button>
+              </TrackedButton>
             );
           })}
         </nav>

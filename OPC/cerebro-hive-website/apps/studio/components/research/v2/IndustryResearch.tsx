@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { Activity, ShieldCheck, Factory, ArrowRight, BookOpen } from "lucide-react";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { cn } from "@/lib/utils";
 
 const industries = [
@@ -81,9 +81,9 @@ export const IndustryResearch = () => {
                       <span>{paper}</span>
                     </div>
                   ))}
-                  <Link href={`/industries/${ind.id}`} className="mt-4 text-xs font-bold text-primary-accent flex items-center gap-2 hover:text-text-primary transition-colors">
+                  <TrackedLink href={`/industries/${ind.id}`} analyticsEvent="industry_research_explore_click" analyticsCategory="industry-explorer" analyticsLabel={ind.label} className="mt-4 text-xs font-bold text-primary-accent flex items-center gap-2 hover:text-text-primary transition-colors">
                     Explore Industry <ArrowRight size={14} />
-                  </Link>
+                  </TrackedLink>
                 </div>
               </div>
             );

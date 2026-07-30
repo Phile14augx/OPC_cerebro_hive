@@ -117,8 +117,11 @@ export default function SitemapPage() {
                   <ul className="flex flex-col">
                     {section.links.map((link) => (
                       <li key={link.href + link.label}>
-                        <Link
+                        <TrackedLink
                           href={link.href}
+                          analyticsEvent="sitemap_link_click"
+                          analyticsCategory="sitemap"
+                          analyticsLabel={link.label}
                           className="group flex items-center justify-between py-2 px-2 -mx-2 rounded-lg text-sm font-inter text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors"
                         >
                           <span>{link.label}</span>
@@ -126,7 +129,7 @@ export default function SitemapPage() {
                             className="w-3.5 h-3.5 text-text-disabled opacity-0 group-hover:opacity-100 group-hover:text-primary-accent transition-opacity"
                             aria-hidden="true"
                           />
-                        </Link>
+                        </TrackedLink>
                       </li>
                     ))}
                   </ul>
@@ -145,12 +148,15 @@ export default function SitemapPage() {
                 Search engines and crawlers can use our XML sitemap.
               </p>
             </div>
-            <a
+            <TrackedLink
               href="/sitemap.xml"
+              analyticsEvent="xml_sitemap_click"
+              analyticsCategory="sitemap"
+              analyticsLabel="sitemap.xml"
               className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary-accent hover:underline shrink-0"
             >
               sitemap.xml <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
-            </a>
+            </TrackedLink>
           </div>
         </div>
       </section>

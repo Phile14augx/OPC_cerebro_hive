@@ -1,6 +1,6 @@
 "use client";
 import { Clock, Target, ArrowRight, ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const paths = [
   {
@@ -59,9 +59,9 @@ export default function LearningPathsPage() {
       <section style={{ paddingTop: "60px", paddingBottom: "50px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 40% at 50% 0%, rgba(123,97,255,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="container-wide" style={{ position: "relative" }}>
-          <Link href="/academy/courses" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px" }}>
+          <TrackedLink href="/academy/courses" analyticsEvent="nav_back_click" analyticsCategory="academy" analyticsLabel="Back to Course Catalog" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px" }}>
             <ArrowLeft size={14} /> Back to Course Catalog
-          </Link>
+          </TrackedLink>
           <div className="section-label" style={{ display: "inline-flex", marginBottom: "20px" }}>
             <Target size={11} /> Structured Learning Tracks
           </div>
@@ -122,13 +122,16 @@ export default function LearningPathsPage() {
                     ))}
                   </div>
 
-                  <Link
+                  <TrackedLink
                     href="/academy/courses"
+                    analyticsEvent="cta_click"
+                    analyticsCategory="academy"
+                    analyticsLabel={`View Path Courses — ${path.title}`}
                     className="btn-primary"
                     style={{ width: "100%", justifyContent: "center", display: "inline-flex", gap: "6px" }}
                   >
                     View Path Courses <ArrowRight size={14} />
-                  </Link>
+                  </TrackedLink>
                 </div>
               </div>
             ))}

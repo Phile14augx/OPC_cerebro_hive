@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Lock, ShieldCheck, Loader2 } from "lucide-react";
 import { AgentOSBackendConsole } from "./AgentOSBackendConsole";
 import { AgentOSPlatformConsole } from "./AgentOSPlatformConsole";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 /**
  * Gates the "Full Backend" consoles behind an admin-secret prompt. This is
@@ -54,12 +55,14 @@ export const AgentOSBackendGate = () => {
           placeholder="Admin secret (leave blank for local dev)"
           className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-sm text-text-primary text-center focus:outline-none focus:border-primary-accent/60"
         />
-        <button
+        <TrackedButton
+          eventCategory="live-runtime"
+          eventLabel="Connect"
           onClick={enter}
           className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg transition-transform hover:-translate-y-0.5"
         >
           <ShieldCheck size={16} /> Connect
-        </button>
+        </TrackedButton>
       </div>
     );
   }
@@ -73,7 +76,9 @@ export const AgentOSBackendGate = () => {
       )}
       <AgentOSBackendConsole adminSecret={adminSecret} />
       <AgentOSPlatformConsole adminSecret={adminSecret} />
-      <button
+      <TrackedButton
+        eventCategory="live-runtime"
+        eventLabel="Change secret / disconnect"
         onClick={() => {
           setUnlocked(false);
           setSecretInput("");
@@ -82,7 +87,7 @@ export const AgentOSBackendGate = () => {
         className="self-start text-[10px] uppercase tracking-widest font-bold text-text-muted hover:text-text-secondary transition-colors"
       >
         ← Change secret / disconnect
-      </button>
+      </TrackedButton>
     </div>
   );
 };

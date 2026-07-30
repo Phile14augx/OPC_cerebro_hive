@@ -52,11 +52,12 @@ export default function CompanyHero() {
 
       </div>
 
-      <motion.button 
+      <motion.button
         initial={{ opacity: 0.4 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1 }}
         onClick={scrollToNext}
+        aria-label="Scroll to next section"
         className="absolute bottom-12 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full border border-border flex items-center justify-center text-text-muted hover:text-text-primary hover:border-border-default transition-colors"
       >
         <ArrowDown size={20} className="animate-bounce" />

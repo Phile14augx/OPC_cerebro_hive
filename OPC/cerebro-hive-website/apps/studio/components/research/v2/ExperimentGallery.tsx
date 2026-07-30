@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FlaskConical, Target, Layers, Database, Activity, AlertTriangle, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const experiments = [
   {
@@ -102,8 +103,8 @@ export const ExperimentGallery = () => {
 
           {/* Footer Navigation */}
           <div className="p-4 bg-surface-elevated border-t border-border flex justify-between items-center text-sm text-text-muted">
-            <button className="hover:text-text-primary transition-colors">Previous Experiment</button>
-            <button className="flex items-center gap-2 hover:text-text-primary transition-colors">Next Experiment <ArrowRight size={16} /></button>
+            <TrackedButton eventCategory="research" eventLabel="Previous Experiment" className="hover:text-text-primary transition-colors">Previous Experiment</TrackedButton>
+            <TrackedButton eventCategory="research" eventLabel="Next Experiment" className="flex items-center gap-2 hover:text-text-primary transition-colors">Next Experiment <ArrowRight size={16} /></TrackedButton>
           </div>
 
         </div>

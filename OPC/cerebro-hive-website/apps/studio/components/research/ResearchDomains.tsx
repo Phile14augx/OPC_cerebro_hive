@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeading } from '../cerebro/SectionHeading';
 import { ArrowRight, BookOpen, BrainCircuit, Code, Database, Globe, Network, Shield, Cpu, Binary, Cloud, Workflow, Eye, Lightbulb, Target, Zap } from 'lucide-react';
-import Link from 'next/link';
+import { TrackedLink } from '../cerebro/TrackedLink';
 import { cn } from '@/lib/utils';
 import { allResearchData } from '@/lib/content/research';
 import { ResearchDomain } from '@/lib/content/research/types';
@@ -60,9 +60,12 @@ export const ResearchDomains = () => {
             const isHovered = hoveredDomain === domain.name;
 
             return (
-              <Link 
+              <TrackedLink
                 key={domain.name}
                 href={`/research?domain=${encodeURIComponent(domain.name)}`}
+                analyticsEvent="research_domain_click"
+                analyticsCategory="research-domains"
+                analyticsLabel={domain.name}
                 onMouseEnter={() => setHoveredDomain(domain.name)}
                 onMouseLeave={() => setHoveredDomain(null)}
                 className="relative p-6 rounded-xl border border-border bg-background flex flex-col items-start gap-4 transition-all duration-300 hover:border-primary-accent/40 group overflow-hidden"
@@ -95,7 +98,7 @@ export const ResearchDomains = () => {
                   )}
                 </AnimatePresence>
 
-              </Link>
+              </TrackedLink>
             );
           })}
         </div>

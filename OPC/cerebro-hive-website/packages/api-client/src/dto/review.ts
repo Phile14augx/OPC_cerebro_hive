@@ -1,49 +1,18 @@
-export type ReviewStateDTO = 'Draft' | 'GatheringEvidence' | 'Evaluating' | 'Published' | 'Archived';
-export type ReviewOutcomeDTO = 'pass' | 'fail' | 'needs-attention' | 'not-applicable';
+import { z } from 'zod';
+import {
+  ReviewStateSchema,
+  ReviewOutcomeSchema,
+  EngineeringReviewSummarySchema,
+  FindingDetailSchema,
+  EvidenceSchema,
+  ContributorResultSchema,
+  FreshnessStatusSchema
+} from '../schema/review.schema';
 
-export interface EngineeringReviewSummaryDTO {
-  id: string;
-  workflowId: string;
-  reviewVersion: number;
-  state: ReviewStateDTO;
-  createdAt: string;
-  publishedAt?: string;
-  verdict?: {
-    outcome: ReviewOutcomeDTO;
-    summary: string;
-  };
-  findingCount: number;
-  evidenceCount: number;
-}
-
-export interface FindingDetailDTO {
-  id: string;
-  severity: 'critical' | 'high' | 'medium' | 'low';
-  confidence: 'high' | 'medium' | 'low';
-  message: string;
-  evidenceRefs: string[];
-}
-
-export interface EvidenceDTO {
-  id: string;
-  description: string;
-  provenance: {
-    sourceSystem: string;
-    sourceElementId: string;
-    retrievedAt: string;
-  };
-  payload?: Record<string, unknown>; // Fetched separately in EvidenceViewer
-}
-
-export interface ContributorResultDTO {
-  agentId: string;
-  agentVersion: string;
-  findingsProduced: number;
-  executionTimeMs: number;
-  completedAt: string;
-}
-
-export interface FreshnessStatusDTO {
-  isStale: boolean;
-  reason?: 'POLICY_CHANGED' | 'PLATFORM_CHANGED' | 'CONTRIBUTOR_UPGRADED' | 'WORKFLOW_CHANGED';
-}
+export type ReviewStateDTO = z.infer<typeof ReviewStateSchema>;
+export type ReviewOutcomeDTO = z.infer<typeof ReviewOutcomeSchema>;
+export type EngineeringReviewSummaryDTO = z.infer<typeof EngineeringReviewSummarySchema>;
+export type FindingDetailDTO = z.infer<typeof FindingDetailSchema>;
+export type EvidenceDTO = z.infer<typeof EvidenceSchema>;
+export type ContributorResultDTO = z.infer<typeof ContributorResultSchema>;
+export type FreshnessStatusDTO = z.infer<typeof FreshnessStatusSchema>;

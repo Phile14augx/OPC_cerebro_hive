@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn, withBasePath } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const FLOAT_Y = [0, -8, 0];
 
@@ -77,8 +78,10 @@ export default function AIAgentShowcase() {
         {/* Industry Context Filters */}
         <div className="flex flex-wrap justify-center gap-4 mt-8">
            {["cross", "finance", "manufacturing", "healthcare"].map(ind => (
-             <button 
+             <TrackedButton
                key={ind}
+               eventCategory="ai-agent-showcase"
+               eventLabel={ind === "cross" ? "All Domains" : ind}
                onClick={() => setActiveIndustry(ind)}
                className={cn(
                  "px-4 py-2 rounded-full border text-xs font-bold uppercase tracking-widest transition-all",
@@ -86,7 +89,7 @@ export default function AIAgentShowcase() {
                )}
              >
                {ind === "cross" ? "All Domains" : ind}
-             </button>
+             </TrackedButton>
            ))}
         </div>
       </div>

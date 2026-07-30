@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { globalPresence } from "@/lib/content/company/offices";
 import { MapPin, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export const GlobalPresenceMap = () => {
   const [activeRegion, setActiveRegion] = useState(globalPresence[0]);
@@ -45,8 +46,10 @@ export const GlobalPresenceMap = () => {
                 const isOperational = office.status === "Operational";
                 
                 return (
-                  <button
+                  <TrackedButton
                     key={office.region}
+                    eventCategory="company-global-presence"
+                    eventLabel={office.region}
                     onClick={() => setActiveRegion(office)}
                     className={cn(
                       "flex items-center gap-3 px-6 py-4 rounded-xl border transition-all duration-500 backdrop-blur-md",
@@ -68,7 +71,7 @@ export const GlobalPresenceMap = () => {
                         {office.status}
                       </p>
                     </div>
-                  </button>
+                  </TrackedButton>
                 );
               })}
             </div>

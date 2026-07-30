@@ -1,6 +1,6 @@
 "use client";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const caseStudies = [
   {
@@ -60,9 +60,9 @@ export default function CaseStudiesPreview() {
               <span className="gradient-text-orange">Real Impact</span>
             </h2>
           </div>
-          <Link href="/case-studies" className="btn-ghost" style={{ padding: "10px 24px", fontSize: "0.8rem" }}>
+          <TrackedLink href="/case-studies" analyticsEvent="case_studies_view_all_click" analyticsCategory="home" analyticsLabel="All Case Studies" className="btn-ghost" style={{ padding: "10px 24px", fontSize: "0.8rem" }}>
             All Case Studies →
-          </Link>
+          </TrackedLink>
         </div>
 
         {/* Cards */}
@@ -147,8 +147,11 @@ export default function CaseStudiesPreview() {
                 ))}
               </div>
 
-              <Link
+              <TrackedLink
                 href={cs.href}
+                analyticsEvent="case_study_read_click"
+                analyticsCategory="home"
+                analyticsLabel={cs.industry}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -162,7 +165,7 @@ export default function CaseStudiesPreview() {
                 }}
               >
                 Read Case Study <ArrowRight size={13} />
-              </Link>
+              </TrackedLink>
             </div>
           ))}
         </div>

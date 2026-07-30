@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ArrowRight, Mail } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export default function CompanyCTA() {
   return (
@@ -22,20 +22,26 @@ export default function CompanyCTA() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link 
-              href="/contact" 
+            <TrackedLink
+              href="/contact"
+              analyticsEvent="cta_click"
+              analyticsCategory="company"
+              analyticsLabel="Partner with CerebroHive"
               className="px-8 py-4 bg-surface text-text-primary rounded-full font-space font-bold text-lg hover:bg-overlay transition-colors flex items-center gap-3 w-full sm:w-auto justify-center group"
             >
               Partner with CerebroHive
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-            
-            <Link 
-              href="/careers" 
+            </TrackedLink>
+
+            <TrackedLink
+              href="/careers"
+              analyticsEvent="nav_careers_click"
+              analyticsCategory="company"
+              analyticsLabel="View Open Roles"
               className="px-8 py-4 bg-transparent border-2 border-border-default text-text-primary rounded-full font-space font-bold text-lg hover:bg-surface-elevated transition-colors flex items-center gap-3 w-full sm:w-auto justify-center"
             >
               View Open Roles
-            </Link>
+            </TrackedLink>
           </div>
           
         </div>

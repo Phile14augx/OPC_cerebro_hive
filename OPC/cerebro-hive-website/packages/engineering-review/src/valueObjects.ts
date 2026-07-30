@@ -66,6 +66,15 @@ export function createEvidenceReference(input: {
   return { id: input.id, description: input.description, provenance: input.provenance };
 }
 
+export interface ExecutionProvenance {
+  readonly model: string;
+  readonly provider: string;
+  readonly temperature: number;
+  readonly executionTimeMs: number;
+  readonly tokenUsage: number;
+  readonly promptVersion: string;
+}
+
 /**
  * Phase 3 §Finding: append-only entity owned by EngineeringReviewReport.
  * Invariant 2: a Finding cannot be constructed without at least one
@@ -78,6 +87,7 @@ export interface ReviewFinding {
   readonly confidence: Confidence;
   readonly message: string;
   readonly category?: string;
+  readonly executionProvenance?: ExecutionProvenance;
 }
 
 export function createReviewFinding(input: {
@@ -87,6 +97,7 @@ export function createReviewFinding(input: {
   confidence: Confidence;
   message: string;
   category?: string;
+  executionProvenance?: ExecutionProvenance;
 }): ReviewFinding {
   if (input.evidenceRefs.length === 0) {
     throw new DomainInvariantViolation(
@@ -103,6 +114,7 @@ export function createReviewFinding(input: {
     confidence: input.confidence,
     message: input.message,
     category: input.category,
+    executionProvenance: input.executionProvenance,
   };
 }
 

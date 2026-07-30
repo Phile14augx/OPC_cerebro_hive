@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Crosshair, Navigation, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const technologies = [
   { id: "world-models", name: "World Models", category: "Emerging", x: 20, y: 30, adoption: "Low", maturity: "2-5 Years", confidence: "Medium", desc: "Simulating physical world physics in latent space for robotic planning." },
@@ -48,8 +49,10 @@ export const TrendRadar = () => {
             {/* Points */}
             <div className="relative w-full h-full max-w-[400px] max-h-[400px]">
               {technologies.map(tech => (
-                <button
+                <TrackedButton
                   key={tech.id}
+                  eventCategory="insights"
+                  eventLabel={tech.name}
                   onClick={() => setActiveTech(tech)}
                   className="absolute -translate-x-1/2 -translate-y-1/2 group"
                   style={{ left: `${tech.x}%`, top: `${tech.y}%` }}
@@ -68,7 +71,7 @@ export const TrendRadar = () => {
                   <div className="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-bold text-text-primary bg-surface-secondary px-2 py-1 rounded border border-border opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     {tech.name}
                   </div>
-                </button>
+                </TrackedButton>
               ))}
             </div>
           </div>

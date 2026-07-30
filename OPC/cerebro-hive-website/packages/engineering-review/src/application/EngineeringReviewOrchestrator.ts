@@ -16,29 +16,11 @@ export interface RunReviewInput {
   workflowSummary: { nodeCount: number; edgeCount: number };
 }
 
-/**
- * Application layer (Phase 3/4 split): coordinates the use case — obtains a
- * snapshot, invokes contributors, assembles their output into the aggregate,
- * synthesizes recommendations and a verdict via injected strategies,
- * publishes, and persists. Never itself implements evaluation logic (that
- * lives in contributors, in the domain's own construction invariants, and —
- * as of this revision — in the RecommendationStrategy/VerdictStrategy it's
- * handed) — this class is orchestration, not domain or governance logic.
- *
- * Slice 2 scope only: one (or more) contributors run in sequence with no
- * dependency-DAG ordering yet (Phase 6 §3 — deferred to Slice 6). The
- * default strategies below are intentionally minimal placeholders, not real
- * governance logic (that's Slice 5) — but they're no longer hardcoded here,
- * specifically so a 1:1 finding-to-recommendation assumption never gets
- * baked into the orchestrator itself. Recommendations are many-to-many
- * relative to findings in general; only Slice 2's default strategy happens
- * to be 1:1.
- */
 export class EngineeringReviewOrchestrator {
   constructor(
     private readonly snapshotProvider: ISnapshotProvider,
     private readonly repository: IEngineeringReviewRepository,
-    private readonly contributors: readonly IReviewContributor[],
+    private readonly registry: { getEnabled(): readonly IReviewContributor[] },
     private readonly recommendationStrategy: RecommendationStrategy = new OneRecommendationPerFindingStrategy(),
     private readonly verdictStrategy: VerdictStrategy = new SeverityBasedVerdictStrategy()
   ) {}
@@ -72,25 +54,13 @@ export class EngineeringReviewOrchestrator {
       workflowSummary: input.workflowSummary,
     };
 
-    const results: ContributorResult[] = [];
-    for (const contributor of this.contributors) {
-      results.push(await this.safeExecute(contributor, context));
-    }
+    const contributors = this.registry.getEnabled();
+    const results = await Promise.all(
+      contributors.map(contributor => this.safeExecute(contributor, context))
+    );
 
-    // Composition (Phase 6 §5): findings and evidence are appended across
-    // contributors, never replaced.
-    //
-    // Two passes are required, not one: addEvidence is only valid in Draft
-    // and addFinding is only valid in EvidenceCollected (EngineeringReviewReport
-    // Phase 3 lifecycle), so every contributor's evidence must be recorded and
-    // the Draft -> EvidenceCollected transition made *before* any finding is
-    // added — even though a single contributor conceptually produces both
-    // together. Collapsing this into one pass (as an earlier revision did)
-    // only fails for contributors that produce a finding, which the
-    // "clean workflow" case (zero findings) doesn't exercise — surfaced by
-    // the first real test run against this orchestrator.
     for (const result of results) {
-      if (result.status !== 'succeeded') continue; // failed/skipped contributors
+      if (result.status !== 'succeeded') continue;
       for (const evidence of result.evidence) {
         review.addEvidence(evidence);
       }
@@ -105,18 +75,11 @@ export class EngineeringReviewOrchestrator {
     }
     review.completeEvaluation();
 
-    // Phase 6 §5: "Recommendations are synthesized after contributor
-    // execution ... by the framework, not by individual contributors."
-    // Delegated to the injected strategy rather than assumed to be 1:1 with
-    // findings — see RecommendationStrategy.ts.
     for (const recommendation of this.recommendationStrategy.synthesize(review.findings)) {
       review.addRecommendation(recommendation);
     }
     review.generateRecommendations();
 
-    // Real governance/policy-driven verdicts are Slice 5 (policy evaluation
-    // port) — delegated to the injected strategy so that arrives without
-    // touching this orchestrator. See VerdictStrategy.ts.
     review.decideVerdict(this.verdictStrategy.decide(review.findings, review.recommendations));
 
     review.publish();
@@ -124,21 +87,23 @@ export class EngineeringReviewOrchestrator {
     return review;
   }
 
-  /**
-   * Phase 6 §4 (failure isolation): a contributor throwing must not
-   * propagate across the contributor boundary or abort the whole review.
-   * Converted here into a structured, failed ContributorResult instead.
-   */
   private async safeExecute(
     contributor: IReviewContributor,
     context: ReviewContext
   ): Promise<ContributorResult> {
+    const startedAt = new Date();
     try {
       return await contributor.execute(context);
     } catch (err) {
+      const completedAt = new Date();
+      console.error(`Contributor ${contributor.contributorId} failed:`, err);
       return {
         contributorId: contributor.contributorId,
         status: 'failed',
+        startedAt: startedAt.toISOString(),
+        completedAt: completedAt.toISOString(),
+        durationMs: completedAt.getTime() - startedAt.getTime(),
+        metrics: [],
         evidence: [],
         findings: [],
         error: err instanceof Error ? err.message : String(err),

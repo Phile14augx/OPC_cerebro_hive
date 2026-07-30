@@ -7,6 +7,7 @@ import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 import { Stack } from "@/components/cerebro/primitives/Stack";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const layers = [
   {
@@ -84,8 +85,10 @@ export default function LivingArchitecture() {
             </div>
 
             {layers.map((layer) => (
-              <button
+              <TrackedButton
                 key={layer.id}
+                eventCategory="home-living-architecture"
+                eventLabel={layer.label}
                 onClick={() => setActiveLayer(layer.id)}
                 className={`flex items-center gap-6 p-4 rounded-xl transition-all relative z-10 ${
                   activeLayer === layer.id ? "bg-surface-elevated border border-border" : "hover:bg-surface border border-transparent"
@@ -101,7 +104,7 @@ export default function LivingArchitecture() {
                     {layer.label}
                   </div>
                 </div>
-              </button>
+              </TrackedButton>
             ))}
           </div>
 

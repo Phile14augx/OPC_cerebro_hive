@@ -4,9 +4,14 @@ import { EngineeringReviewReport } from '../EngineeringReviewReport';
 /**
  * Publishes integration events to SNS when a review is published.
  *
- * This is the bridge between M26.1 (domain events) and M27 (analytics
- * pipeline). The M27 Evidence Warehouse subscribes to this topic via
- * SQS and projects the events into its dimensional model.
+ * Adopted in ADR-006 as a general-purpose integration event mechanism,
+ * fanned out to SQS (with a dead-letter queue). There is currently no
+ * confirmed subscriber — an "M27 Evidence Warehouse" was previously
+ * described here as though it already existed and consumed this topic;
+ * no such design, PRD, or implementation exists anywhere in this
+ * repository, and that claim has been removed. Whatever consumes this
+ * topic in the future is a decision for whenever that consumer is
+ * actually designed, not assumed here.
  *
  * Event types:
  *   - EngineeringReviewPublished: Emitted when a review transitions to Published state.

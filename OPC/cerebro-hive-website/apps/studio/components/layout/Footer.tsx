@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView, animate } from "framer-motion";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { CheckCircle2, ChevronDown, ChevronRight, Globe, BookOpen, Quote } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -242,13 +243,15 @@ export default function Footer() {
             <div className="md:hidden flex flex-col gap-2 border-y border-border py-4">
               {Object.entries(footerLinks).map(([category, links]) => (
                 <div key={category} className="border-b border-border last:border-0">
-                  <button 
+                  <TrackedButton
+                    eventCategory="footer"
+                    eventLabel={`${category} Accordion`}
                     onClick={() => setOpenAccordion(openAccordion === category ? null : category)}
                     className="w-full flex items-center justify-between py-3 text-left text-xs font-bold tracking-widest uppercase text-text-muted hover:text-text-primary transition-colors"
                   >
                     {category}
                     <ChevronDown size={14} className={cn("transition-transform", openAccordion === category && "rotate-180")} />
-                  </button>
+                  </TrackedButton>
                   <AnimatePresence>
                     {openAccordion === category && (
                       <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">

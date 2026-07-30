@@ -9,6 +9,7 @@ import {
 export interface ApiClientConfig {
   baseUrl: string;
   timeoutMs?: number;
+  getToken?: () => Promise<string | null>;
 }
 
 export class ApiError extends Error {
@@ -34,13 +35,22 @@ export class EngineeringReviewClient {
     const timeoutId = setTimeout(() => controller.abort(), this.config.timeoutMs ?? 10000);
 
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        ...(options?.headers as Record<string, string>),
+      };
+
+      if (this.config.getToken) {
+        const token = await this.config.getToken();
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+      }
+
       const response = await fetch(url, {
         ...options,
         signal: controller.signal,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options?.headers,
-        },
+        headers,
       });
 
       if (!response.ok) {

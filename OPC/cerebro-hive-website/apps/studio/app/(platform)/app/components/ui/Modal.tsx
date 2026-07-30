@@ -4,6 +4,8 @@ import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { cn } from "./utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 export interface ModalProps {
   isOpen: boolean;
@@ -48,7 +50,10 @@ export function Modal({ isOpen, onClose, title, description, children, className
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-            onClick={onClose}
+            onClick={() => {
+              analytics.track({ eventName: "modal_backdrop_click", category: "modal", label: title || "Modal" });
+              onClose();
+            }}
           />
           <motion.div 
             initial={{ opacity: 0, scale: 0.95, y: 20 }} 
@@ -66,12 +71,14 @@ export function Modal({ isOpen, onClose, title, description, children, className
                   {title && <h2 className="text-xl font-space font-bold text-text-primary">{title}</h2>}
                   {description && <p className="text-sm text-text-secondary mt-1">{description}</p>}
                 </div>
-                <button 
-                  onClick={onClose} 
+                <TrackedButton
+                  eventCategory="modal"
+                  eventLabel={title ? `Close — ${title}` : "Close Modal"}
+                  onClick={onClose}
                   className="p-2 bg-surface hover:bg-surface-elevated rounded-full transition-colors shrink-0 ml-4"
                 >
                   <X size={20} className="text-text-primary" />
-                </button>
+                </TrackedButton>
               </div>
             )}
             

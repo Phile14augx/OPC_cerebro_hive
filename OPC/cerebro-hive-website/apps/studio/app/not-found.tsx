@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { TrackedLink } from '@/components/cerebro/TrackedLink';
 
 export default function NotFound() {
   const pathname = usePathname();
@@ -18,12 +18,15 @@ export default function NotFound() {
       <p className="text-text-secondary max-w-md">
         The requested resource could not be found within the CerebroHive network.
       </p>
-      <Link
+      <TrackedLink
         href="/"
+        analyticsEvent="not_found_return_click"
+        analyticsCategory="404"
+        analyticsLabel="Return to Core"
         className="px-6 py-3 bg-primary-accent text-background font-bold rounded-lg hover:brightness-110 transition-all"
       >
         Return to Core
-      </Link>
+      </TrackedLink>
     </div>
   );
 }

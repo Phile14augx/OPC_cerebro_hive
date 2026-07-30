@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, checkOnline, KEY } from "../lib";
 import { PillarShell } from "../PillarShell";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface TwinRun { id: string; kind: string; result: Record<string, unknown> & { recommendation?: string } }
 
@@ -45,8 +46,8 @@ export default function DigitalTwinPage() {
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-text-primary">Named enterprise scenarios</h2>
           <div className="flex gap-2">
-            <button onClick={() => void runSupplyChainTwin()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40">Supply chain</button>
-            <button onClick={() => void runCyberTwin()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40">Cyber attack</button>
+            <TrackedButton eventCategory="digital-twin" eventLabel="Supply chain" onClick={() => void runSupplyChainTwin()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40">Supply chain</TrackedButton>
+            <TrackedButton eventCategory="digital-twin" eventLabel="Cyber attack" onClick={() => void runCyberTwin()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40">Cyber attack</TrackedButton>
           </div>
         </div>
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}

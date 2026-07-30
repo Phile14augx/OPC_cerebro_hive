@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { knowledgeHub } from "@/lib/config/knowledge";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export function KnowledgePlatform() {
   return (
@@ -16,16 +16,19 @@ export function KnowledgePlatform() {
               Architectural patterns, engineering playbooks, and research from the CerebroHive labs.
             </p>
           </div>
-          <Link href="/research" className="px-6 py-3 bg-primary-accent text-black font-semibold rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap">
+          <TrackedLink href="/research" analyticsEvent="knowledge_explore_research_click" analyticsCategory="home" analyticsLabel="Explore All Research" className="px-6 py-3 bg-primary-accent text-black font-semibold rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap">
             Explore All Research
-          </Link>
+          </TrackedLink>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {knowledgeHub.map((item) => (
-            <Link
+            <TrackedLink
               href="/research"
               key={item.id}
+              analyticsEvent="knowledge_item_click"
+              analyticsCategory="home"
+              analyticsLabel={item.title}
               className="group flex flex-col justify-between p-6 rounded-2xl bg-surface border border-border hover:bg-surface-elevated transition-colors cursor-pointer"
             >
               <div>
@@ -47,7 +50,7 @@ export function KnowledgePlatform() {
                 <span>Read Document</span>
                 <span className="transform group-hover:translate-x-1 transition-transform">→</span>
               </div>
-            </Link>
+            </TrackedLink>
           ))}
         </div>
       </div>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, ChevronDown, Layers, Terminal, Database, Cloud, Zap, ArrowDown, Activity, Code, Paintbrush, Monitor, Cpu, Workflow, Network, Brain, Bot, Box, Share2, Search as SearchIcon, GitMerge, Snowflake, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 // --- Data Models ---
 const architectureLayers = [
@@ -156,8 +157,10 @@ export default function TechStack() {
             </div>
             <div className="flex gap-2">
               {["all", "ai", "cloud", "frontend"].map(filter => (
-                <button 
+                <TrackedButton
                   key={filter}
+                  eventCategory="home"
+                  eventLabel={`Tech Stack Filter — ${filter}`}
                   onClick={() => { setActiveFilter(filter); setSearchQuery(""); }}
                   className={cn(
                     "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-all",
@@ -165,7 +168,7 @@ export default function TechStack() {
                   )}
                 >
                   {filter}
-                </button>
+                </TrackedButton>
               ))}
             </div>
           </div>

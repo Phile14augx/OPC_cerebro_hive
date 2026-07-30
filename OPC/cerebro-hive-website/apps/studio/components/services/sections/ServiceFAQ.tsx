@@ -7,6 +7,7 @@ import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { ChevronDown } from "lucide-react";
 import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export const ServiceFAQ = ({ service }: { service: EnterpriseService }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -24,7 +25,9 @@ export const ServiceFAQ = ({ service }: { service: EnterpriseService }) => {
         <div className="mt-16 flex flex-col gap-4">
           {service.faqs.map((faq, i) => (
             <div key={i} className="border border-border rounded-xl bg-background overflow-hidden">
-              <button
+              <TrackedButton
+                eventCategory="service-faq"
+                eventLabel={faq.question}
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 className="w-full flex items-center justify-between p-6 text-left hover:bg-surface-elevated transition-colors"
               >
@@ -33,7 +36,7 @@ export const ServiceFAQ = ({ service }: { service: EnterpriseService }) => {
                   size={20}
                   className={`text-text-muted transition-transform duration-300 shrink-0 ${openIndex === i ? "rotate-180" : ""}`}
                 />
-              </button>
+              </TrackedButton>
               <AnimatePresence>
                 {openIndex === i && (
                   <motion.div

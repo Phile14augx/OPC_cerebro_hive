@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import React from 'react';
-import Link from 'next/link';
+import { TrackedLink } from '@/components/cerebro/TrackedLink';
 
 export const metadata: Metadata = {
   title: "Sign In — CerebroHive",
@@ -16,7 +16,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           
           {/* Logo */}
           <div className="mb-12">
-            <Link href="/" className="flex items-center gap-3 no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded">
+            <TrackedLink href="/" analyticsEvent="auth_logo_click" analyticsCategory="auth" analyticsLabel="CerebroHive Logo" className="flex items-center gap-3 no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -25,7 +25,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               <span className="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r dark:from-white dark:to-gray-400 from-slate-800 to-slate-500">
                 CerebroHive
               </span>
-            </Link>
+            </TrackedLink>
           </div>
 
           {/* Form Content */}

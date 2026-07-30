@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useReview, useContributors } from './hooks/useReviews';
 import { FindingsPanel } from './FindingsPanel';
 import { EvidenceViewer } from './EvidenceViewer';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { Badge } from '@/components/ui/Badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 import { Bot, ChevronRight, Activity } from 'lucide-react';
 import { format } from 'date-fns';
 

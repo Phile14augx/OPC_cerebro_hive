@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { Users, Award, Shield, CheckCircle, Send, ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const formats = ["Virtual (Live Cohort)", "On-Site Intensive", "Hybrid (Self-paced + Workshops)"];
 const sizes = ["Under 20", "20-50", "50-200", "200+"];
@@ -30,9 +31,9 @@ export default function CorporateProgramsPage() {
       <section style={{ paddingTop: "60px", paddingBottom: "60px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 40% at 50% 0%, rgba(0,229,255,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="container-wide" style={{ position: "relative" }}>
-          <Link href="/academy/courses" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px" }}>
+          <TrackedLink href="/academy/courses" analyticsEvent="academy_back_to_catalog_click" analyticsCategory="academy" analyticsLabel="Back to Course Catalog" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px" }}>
             <ArrowLeft size={14} /> Back to Course Catalog
-          </Link>
+          </TrackedLink>
           <div className="section-label" style={{ display: "inline-flex", marginBottom: "20px" }}>
             <Users size={11} /> Enterprise L&D Solutions
           </div>
@@ -208,9 +209,9 @@ export default function CorporateProgramsPage() {
                       />
                     </div>
 
-                    <button type="submit" className="btn-primary" style={{ width: "100%", justifyContent: "center", display: "flex", gap: "8px", padding: "12px", marginTop: "4px" }}>
+                    <TrackedButton type="submit" eventCategory="academy" eventLabel="Submit Program Intake" className="btn-primary" style={{ width: "100%", justifyContent: "center", display: "flex", gap: "8px", padding: "12px", marginTop: "4px" }}>
                       <Send size={14} /> Submit Program Intake
-                    </button>
+                    </TrackedButton>
                   </form>
                 </>
               )}

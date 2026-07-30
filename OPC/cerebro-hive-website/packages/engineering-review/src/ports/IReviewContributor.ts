@@ -33,9 +33,13 @@ export type ContributorStatus = 'succeeded' | 'failed' | 'skipped';
  */
 export interface ContributorResult {
   readonly contributorId: string;
-  readonly status: ContributorStatus;
+  readonly startedAt: string;
+  readonly completedAt: string;
+  readonly durationMs: number;
   readonly evidence: readonly EvidenceReference[];
   readonly findings: readonly ReviewFinding[];
+  readonly metrics: readonly any[];
+  readonly status: ContributorStatus;
   readonly error?: string;
 }
 

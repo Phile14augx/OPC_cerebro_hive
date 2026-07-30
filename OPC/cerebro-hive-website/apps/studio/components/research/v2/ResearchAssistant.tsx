@@ -105,7 +105,7 @@ export const ResearchAssistant = () => {
                   placeholder="Ask about our research..."
                   className="w-full bg-surface border border-border rounded-xl py-3 pl-4 pr-12 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary-accent/50 transition-colors"
                 />
-                <TrackedButton eventCategory="research-assistant" eventLabel="Send Message" eventAction="chat_send" type="submit" disabled={!input.trim()} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-primary-accent text-text-primary disabled:opacity-50 disabled:bg-surface-elevated disabled:text-text-muted transition-colors">
+                <TrackedButton eventCategory="research-assistant" eventLabel="Send Message" eventAction="chat_send" type="submit" disabled={!input.trim()} aria-label="Send Message" className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-primary-accent text-text-primary disabled:opacity-50 disabled:bg-surface-elevated disabled:text-text-muted transition-colors">
                   <Send size={14} />
                 </TrackedButton>
               </form>

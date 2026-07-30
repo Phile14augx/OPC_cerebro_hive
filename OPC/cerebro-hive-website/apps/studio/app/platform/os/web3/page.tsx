@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, checkOnline, KEY } from "../lib";
 import { PillarShell } from "../PillarShell";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface Chain { id: string; name: string; layer: string; nativeCurrency: string }
 interface DefiProtocol { id: string; name: string; category: string; chains: string[] }
@@ -47,12 +48,12 @@ export default function Web3Page() {
         <h2 className="text-xl font-semibold text-text-primary">Chain registry &amp; account lookup</h2>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {chains.map(c => (
-            <button key={c.id} onClick={() => setChainId(c.id)} className={`rounded-full border px-3 py-1 text-xs ${chainId === c.id ? "border-primary-accent text-primary-accent" : "border-border text-text-secondary"}`}>{c.name}</button>
+            <TrackedButton key={c.id} eventCategory="web3" eventLabel={c.name} onClick={() => setChainId(c.id)} className={`rounded-full border px-3 py-1 text-xs ${chainId === c.id ? "border-primary-accent text-primary-accent" : "border-border text-text-secondary"}`}>{c.name}</TrackedButton>
           ))}
         </div>
         <div className="mt-3 flex gap-2">
           <input value={address} onChange={e => setAddress(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="address" />
-          <button onClick={() => void lookupAccount()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent disabled:opacity-40">{busy ? "…" : "Lookup"}</button>
+          <TrackedButton eventCategory="web3" eventLabel="Lookup Account" onClick={() => void lookupAccount()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent disabled:opacity-40">{busy ? "…" : "Lookup"}</TrackedButton>
         </div>
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         {account && (

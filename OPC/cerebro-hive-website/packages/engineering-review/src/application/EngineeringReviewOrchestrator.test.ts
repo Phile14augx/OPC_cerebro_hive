@@ -15,7 +15,9 @@ const FIXED_SNAPSHOT = {
 
 function buildOrchestrator(contributors: readonly IReviewContributor[], repo = new InMemoryEngineeringReviewRepository()) {
   const snapshotProvider = new FixedSnapshotProvider(FIXED_SNAPSHOT);
-  const orchestrator = new EngineeringReviewOrchestrator(snapshotProvider, repo, contributors);
+  const orchestrator = new EngineeringReviewOrchestrator(snapshotProvider, repo, {
+    getEnabled: () => contributors
+  });
   return { orchestrator, repo };
 }
 

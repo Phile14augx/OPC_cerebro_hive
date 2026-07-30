@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, checkOnline, KEY } from "../lib";
 import { PillarShell } from "../PillarShell";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface RoutingDecision { id: string; intent: string; complexity: number; privacyTier: string; selectedModel: string; rationale: string; predictedCostUsd: number; predictedLatencyMs: number }
 interface ModelProfile { id: string; family: string; quality: number; local: boolean }
@@ -37,7 +38,7 @@ export default function RouterPage() {
         <p className="text-sm text-text-secondary">Every request passes through intent detection → complexity estimation → cost/latency prediction → privacy classification → model selection, across a catalog of {catalog.length || "14"} models.</p>
         <div className="mt-4 flex flex-col gap-3 md:flex-row">
           <input value={text} onChange={e => setText(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="Describe a request to route…" />
-          <button onClick={() => void routeText()} disabled={busy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{busy ? "Routing…" : "Route"}</button>
+          <TrackedButton eventCategory="router" eventLabel="Route" onClick={() => void routeText()} disabled={busy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{busy ? "Routing…" : "Route"}</TrackedButton>
         </div>
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         {decision && (

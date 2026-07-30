@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { Search, Sparkles, ExternalLink, ArrowLeft, Star } from "lucide-react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const categories = ["All", "Frameworks", "Automation", "Vector DBs", "LLM APIs", "AI Coding", "Audio"];
 
@@ -96,9 +97,9 @@ export default function ToolsDirectoryPage() {
       <section style={{ paddingTop: "60px", paddingBottom: "50px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 40% at 50% 0%, rgba(255,138,0,0.04) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="container-wide" style={{ position: "relative" }}>
-          <Link href="/resources/blog" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px" }}>
+          <TrackedLink href="/resources/blog" analyticsEvent="ai_tools_back_to_blog_click" analyticsCategory="ai-tools-directory" analyticsLabel="Back to Blog" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px" }}>
             <ArrowLeft size={14} /> Back to Blog
-          </Link>
+          </TrackedLink>
           <div className="section-label" style={{ display: "inline-flex", marginBottom: "20px", color: "#FF8A00", background: "rgba(255,138,0,0.08)", borderColor: "rgba(255,138,0,0.25)" }}>
             <Sparkles size={11} /> AI Tools Directory
           </div>
@@ -130,8 +131,11 @@ export default function ToolsDirectoryPage() {
             {/* Categories */}
             <div style={{ display: "flex", gap: "6px", overflowX: "auto", maxWidth: "100%" }}>
               {categories.map((cat) => (
-                <button
+                <TrackedButton
                   key={cat}
+                  eventCategory="ai-tools-directory"
+                  eventLabel={cat}
+                  eventAction="ai_tools_category_filter_click"
                   onClick={() => setSelectedCat(cat)}
                   style={{
                     padding: "8px 16px",
@@ -148,7 +152,7 @@ export default function ToolsDirectoryPage() {
                   }}
                 >
                   {cat}
-                </button>
+                </TrackedButton>
               ))}
             </div>
           </div>
@@ -193,15 +197,18 @@ export default function ToolsDirectoryPage() {
                   </div>
                 </div>
 
-                <a
+                <TrackedLink
                   href={tool.link}
                   target="_blank"
                   rel="noopener noreferrer"
+                  analyticsEvent="ai_tools_visit_tool_click"
+                  analyticsCategory="ai-tools-directory"
+                  analyticsLabel={`Visit ${tool.name}`}
                   className="btn-ghost"
                   style={{ width: "100%", justifyContent: "center", marginTop: "auto", fontSize: "0.8rem", display: "inline-flex", gap: "6px" }}
                 >
                   Visit Tool Page <ExternalLink size={12} />
-                </a>
+                </TrackedLink>
               </div>
             ))}
           </div>

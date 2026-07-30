@@ -6,6 +6,8 @@ import { SectionHeading } from '../cerebro/SectionHeading';
 import { AnimatedButton } from '../cerebro/AnimatedButton';
 import { Download, Mail, Calendar, Calculator, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TrackedButton } from '../cerebro/TrackedButton';
+import { analytics } from '@/lib/analytics/AnalyticsAdapter';
 
 export const ROICalculator = () => {
   const [docs, setDocs] = useState(50000);
@@ -182,14 +184,22 @@ export const ROICalculator = () => {
               </div>
 
               <div className="mt-12 flex flex-wrap gap-4 pt-8 border-t border-border">
-                <AnimatedButton variant="primary" className="flex items-center gap-2">
+                <AnimatedButton
+                  variant="primary"
+                  className="flex items-center gap-2"
+                  onClick={() => analytics.track({ eventName: 'click', category: 'roi-calculator', label: 'Download Full Report' })}
+                >
                   <Download size={16} />
                   Download Full Report
                 </AnimatedButton>
-                <button className="px-6 py-3 rounded-lg bg-surface border border-border text-sm font-bold text-text-primary flex items-center gap-2 hover:border-primary-accent transition-colors">
+                <TrackedButton
+                  eventCategory="roi-calculator"
+                  eventLabel="Book Strategy Workshop"
+                  className="px-6 py-3 rounded-lg bg-surface border border-border text-sm font-bold text-text-primary flex items-center gap-2 hover:border-primary-accent transition-colors"
+                >
                   <Calendar size={16} />
                   Book Strategy Workshop
-                </button>
+                </TrackedButton>
               </div>
 
             </div>

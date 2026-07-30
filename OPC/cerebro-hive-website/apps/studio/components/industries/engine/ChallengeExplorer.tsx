@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import { IndustryChallenge, EngineConfig } from '@/lib/data/industries/types';
 import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ShieldAlert, 
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
+import {
+  ShieldAlert,
   ShieldCheck, 
   Users, 
   Activity, 
@@ -226,9 +227,9 @@ export function ChallengeExplorer({ challenges, config }: { challenges: Industry
                         
                         {/* Explore CTA */}
                         <div className="mt-2 flex justify-end">
-                          <button className="flex items-center gap-2 text-sm font-bold transition-colors" style={{ color: catConfig.color }}>
+                          <TrackedButton eventCategory="industry-explorer" eventLabel={`Explore Architecture — ${challenge.title}`} className="flex items-center gap-2 text-sm font-bold transition-colors" style={{ color: catConfig.color }}>
                             Explore Architecture <ArrowRight size={14} />
-                          </button>
+                          </TrackedButton>
                         </div>
                       </motion.div>
                     )}

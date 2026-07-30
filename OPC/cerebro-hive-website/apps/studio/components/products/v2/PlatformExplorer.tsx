@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cpu, Search, Cog, Database, CheckCircle2, Server, Layers, Building2, TrendingUp, Code2, Network, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const products = [
   { 
@@ -113,18 +114,22 @@ export const PlatformExplorer = () => {
           
           {/* View Toggle */}
           <div className="flex bg-surface-elevated border border-border rounded-lg p-1">
-            <button 
+            <TrackedButton
+              eventCategory="platform-explorer"
+              eventLabel="Business View"
               onClick={() => setViewMode("business")}
               className={cn("px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2", viewMode === "business" ? "bg-primary-accent text-text-primary" : "text-text-muted hover:text-text-primary")}
             >
               <Building2 size={14} /> Business View
-            </button>
-            <button 
+            </TrackedButton>
+            <TrackedButton
+              eventCategory="platform-explorer"
+              eventLabel="Technical View"
               onClick={() => setViewMode("technical")}
               className={cn("px-4 py-2 rounded-md text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2", viewMode === "technical" ? "bg-surface text-text-primary" : "text-text-muted hover:text-text-primary")}
             >
               <Code2 size={14} /> Technical View
-            </button>
+            </TrackedButton>
           </div>
         </div>
 
@@ -133,8 +138,10 @@ export const PlatformExplorer = () => {
           {products.map((p) => {
             const isActive = activeTab === p.id;
             return (
-              <button
+              <TrackedButton
                 key={p.id}
+                eventCategory="platform-explorer"
+                eventLabel={p.name}
                 onClick={() => setActiveTab(p.id)}
                 className={cn(
                   "px-6 py-4 rounded-xl flex items-center gap-3 transition-all border whitespace-nowrap",
@@ -143,7 +150,7 @@ export const PlatformExplorer = () => {
               >
                 <p.icon size={18} className={isActive ? p.color : "text-text-muted"} />
                 <span className={cn("font-space font-bold", isActive ? "text-text-primary" : "")}>{p.name}</span>
-              </button>
+              </TrackedButton>
             );
           })}
         </div>

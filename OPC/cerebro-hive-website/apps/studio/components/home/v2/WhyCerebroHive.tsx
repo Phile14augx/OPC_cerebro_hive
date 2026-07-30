@@ -5,6 +5,8 @@ import { motion, useScroll, useSpring, useTransform, AnimatePresence } from "fra
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { Database, Cloud, LineChart, Sparkles, Bot, BrainCircuit, CheckCircle2, Server, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 const stages = [
   {
@@ -181,6 +183,7 @@ export default function WhyCerebroHive() {
                     id={`stage-${stage.id}`}
                     className="relative group cursor-pointer"
                     onClick={() => {
+                      analytics.track({ eventName: "click", category: "why-cerebrohive", label: `Timeline stage: ${stage.title}` });
                       document.getElementById(`stage-${stage.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
                     }}
                   >
@@ -289,9 +292,9 @@ export default function WhyCerebroHive() {
 
                   {/* CTA */}
                    <div className="mt-4 pt-6 border-t border-border">
-                     <button className="text-sm font-bold text-primary-accent flex items-center gap-2 group hover:text-text-primary transition-colors">
+                     <TrackedButton eventCategory="why-cerebrohive" eventLabel="View Architecture Reference" eventAction="architecture_reference_click" className="text-sm font-bold text-primary-accent flex items-center gap-2 group hover:text-text-primary transition-colors">
                        View Architecture Reference <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                     </button>
+                     </TrackedButton>
                   </div>
 
                 </motion.div>

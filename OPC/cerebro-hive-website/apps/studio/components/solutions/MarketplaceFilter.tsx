@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 interface MarketplaceFilterProps {
   categories: { id: string; label: string; count: number; icon: string }[];
@@ -16,8 +17,10 @@ export const MarketplaceFilter: React.FC<MarketplaceFilterProps> = ({ categories
         const isActive = activeCategory === cat.id;
         
         return (
-          <button
+          <TrackedButton
             key={cat.id}
+            eventCategory="solutions-marketplace"
+            eventLabel={cat.label}
             onClick={() => onSelect(cat.id)}
             className={`relative flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-colors ${
               isActive ? 'text-text-primary' : 'text-text-muted hover:text-text-secondary'
@@ -37,7 +40,7 @@ export const MarketplaceFilter: React.FC<MarketplaceFilterProps> = ({ categories
                 {cat.count}
               </span>
             </span>
-          </button>
+          </TrackedButton>
         );
       })}
     </div>

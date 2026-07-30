@@ -1,12 +1,11 @@
 import { platformCapabilities } from "@/lib/data/platform";
 import { Metadata } from 'next';
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import React from 'react';
 import { motion } from 'framer-motion';
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
-import { CheckCircle2, Cpu } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { CheckCircle2 } from "lucide-react";
+import { CapabilityCTA } from "./CapabilityCTA";
 
 export async function generateStaticParams() {
   return platformCapabilities.map((cap) => ({
@@ -64,24 +63,11 @@ export default async function PlatformCapabilityPage({ params }: { params: Promi
              {capability.hero.description}
            </p>
 
-           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">
-              {capability.liveDemoUrl && (
-                <Link
-                  href={capability.liveDemoUrl}
-                  className="w-full sm:w-auto px-8 py-4 bg-primary-accent text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg transition-transform hover:-translate-y-1 shadow-elevated flex items-center justify-center gap-2"
-                >
-                  <Cpu size={16} /> {capability.liveDemoLabel || "Try It Live"}
-                </Link>
-              )}
-              <button className={cn(
-                "w-full sm:w-auto px-8 py-4 font-space font-bold text-sm uppercase tracking-widest rounded-lg transition-all",
-                capability.liveDemoUrl
-                  ? "bg-transparent border border-border text-text-primary hover:border-border-default hover:bg-surface"
-                  : "bg-primary-accent text-text-primary hover:-translate-y-1 shadow-elevated"
-              )}>
-                Request Architecture Brief
-              </button>
-           </div>
+           <CapabilityCTA
+             liveDemoUrl={capability.liveDemoUrl}
+             liveDemoLabel={capability.liveDemoLabel}
+             capabilityTitle={capability.title}
+           />
            {capability.liveDemoUrl && (
              <p className="mt-4 text-xs text-text-muted max-w-md">
                Not a mockup — this links to a page in this site that runs the real, executing code for this capability.

@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { ArrowLeft, Brain, Network, Sparkles, Calendar } from "lucide-react";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export default function SalesPipelineCaseStudy() {
   const [booked, setBooked] = useState(false);
@@ -38,11 +39,11 @@ export default function SalesPipelineCaseStudy() {
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 40% at 50% 0%, rgba(123,97,255,0.05) 0%, transparent 70%)", pointerEvents: "none" }} />
         <div className="container-wide" style={{ position: "relative" }}>
           
-          <Link href="/case-studies" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px", transition: "color 0.2s" }}
+          <TrackedLink href="/case-studies" analyticsEvent="back_to_case_studies_click" analyticsCategory="case-studies" analyticsLabel="Back to Case Studies" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--text-muted)", fontSize: "0.85rem", textDecoration: "none", marginBottom: "24px", transition: "color 0.2s" }}
             onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-primary)"}
             onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}>
             <ArrowLeft size={14} /> Back to Case Studies
-          </Link>
+          </TrackedLink>
 
           <div className="section-label" style={{ display: "inline-flex", marginBottom: "20px", color: "var(--violet)", background: "rgba(123,97,255,0.06)", borderColor: "rgba(123,97,255,0.2)" }}>
             Case Study: Revenue Automation
@@ -168,7 +169,9 @@ export default function SalesPipelineCaseStudy() {
             <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "0.9rem", color: "var(--text-muted)", maxWidth: "500px", lineHeight: 1.6 }}>
               Connect with our solutions engineers to build automated research nodes and lead-scoring workflows for your CRM.
             </p>
-            <button
+            <TrackedButton
+              eventCategory="case-studies"
+              eventLabel="Book Similar Project Consultation"
               onClick={() => setBooked(true)}
               disabled={booked}
               className="btn-primary"
@@ -185,7 +188,7 @@ export default function SalesPipelineCaseStudy() {
               }}
             >
               <Calendar size={16} /> {booked ? "Session Booked!" : "Book Similar Project Consultation"}
-            </button>
+            </TrackedButton>
           </div>
 
         </div>

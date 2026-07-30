@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, checkOnline, KEY } from "../lib";
 import { PillarShell } from "../PillarShell";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface AgentStep { thought: string; tool: string; observation: string }
 interface AgentResult { finalAnswer: string; steps: AgentStep[]; status: string }
@@ -34,9 +35,9 @@ export default function AgentExecutorPage() {
             className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-text-primary outline-none focus:border-primary-accent"
             placeholder="Give the agent an objective…"
           />
-          <button onClick={() => void runAgent()} disabled={busy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 font-semibold text-background transition-opacity disabled:opacity-40">
+          <TrackedButton eventCategory="platform-os-agent-executor" eventLabel="Run Agent" onClick={() => void runAgent()} disabled={busy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 font-semibold text-background transition-opacity disabled:opacity-40">
             {busy ? "Running…" : "Run agent"}
-          </button>
+          </TrackedButton>
         </div>
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         {result && (

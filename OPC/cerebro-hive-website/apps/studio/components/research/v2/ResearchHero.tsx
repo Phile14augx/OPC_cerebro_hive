@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { BrainCircuit, BookOpen, FlaskConical, Code2, Network, ArrowRight } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const graphNodes = [
   { id: "reasoning", label: "Reasoning", x: 20, y: 30, color: "text-accent-secondary", border: "border-[#00E5FF]/30", glow: "shadow-[0_0_15px_#00E5FF]" },
@@ -65,19 +66,23 @@ export const ResearchHero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <button
+            <TrackedButton
+              eventCategory="research"
+              eventLabel="Explore Research"
               onClick={() => router.push("/research")}
               className="group px-8 py-4 bg-surface text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg flex items-center justify-center gap-3 transition-all hover:bg-primary-accent shadow-lg"
             >
               Explore Research
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </button>
-            <button
+            </TrackedButton>
+            <TrackedButton
+              eventCategory="research"
+              eventLabel="Developer Portal"
               onClick={() => router.push("/developers")}
               className="px-8 py-4 bg-transparent border border-border text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-lg hover:border-border-default hover:bg-surface transition-all flex items-center justify-center gap-2"
             >
               <Code2 size={16} /> Developer Portal
-            </button>
+            </TrackedButton>
           </div>
           
         </div>

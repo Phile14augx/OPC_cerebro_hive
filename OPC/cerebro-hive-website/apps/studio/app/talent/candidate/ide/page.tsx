@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 // Dynamically import Monaco Editor without SSR
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { 
@@ -201,7 +202,9 @@ export default function CandidateCloudIDE() {
               tests.js
             </div>
           </div>
-          <button 
+          <TrackedButton
+            eventCategory="talent-candidate-ide"
+            eventLabel="Run Tests"
             onClick={handleRunCode}
             disabled={isExecuting || !sessionId}
             className={`text-white text-xs font-bold px-4 py-1.5 rounded transition-colors flex items-center gap-2 ${isExecuting ? 'bg-gray-600' : 'bg-emerald-600 hover:bg-emerald-500'}`}
@@ -214,7 +217,7 @@ export default function CandidateCloudIDE() {
                 RUN TESTS
               </>
             )}
-          </button>
+          </TrackedButton>
         </div>
         
         {/* Editor Area (Top Half) */}

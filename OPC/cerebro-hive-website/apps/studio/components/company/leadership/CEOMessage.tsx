@@ -8,6 +8,7 @@ import { withBasePath, cn } from "@/lib/utils";
 import { executiveProfile } from "@/lib/content/company/leadership";
 import { SectionMetadata } from "@/components/cerebro/SectionMetadata";
 import { motionPresets } from "@/lib/motion";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export const CEOMessage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -184,7 +185,9 @@ export const CEOMessage = () => {
               </AnimatePresence>
 
               {!isExpanded && (
-                <button 
+                <TrackedButton
+                  eventCategory="company-ceo-message"
+                  eventLabel="Expand Executive Letter"
                   onClick={() => setIsExpanded(true)}
                   className="group flex flex-col items-start focus:outline-none focus:ring-2 focus:ring-primary-accent/50 rounded-lg p-2 -ml-2"
                   aria-expanded="false"
@@ -197,7 +200,7 @@ export const CEOMessage = () => {
                   <span className="text-[10px] font-mono text-text-muted uppercase tracking-wider">
                     {executiveProfile.letter.metadata}
                   </span>
-                </button>
+                </TrackedButton>
               )}
             </motion.div>
 

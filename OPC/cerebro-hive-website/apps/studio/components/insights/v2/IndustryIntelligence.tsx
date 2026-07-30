@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Activity, ShieldCheck, Factory, BookOpen, Layers, Target, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const industries = [
   {
@@ -61,13 +62,15 @@ export const IndustryIntelligence = () => {
             {industries.map(ind => {
               const isActive = active === ind.id;
               return (
-                <button 
+                <TrackedButton
                   key={ind.id}
+                  eventCategory="insights"
+                  eventLabel={ind.label}
                   onClick={() => setActive(ind.id)}
                   className={cn(
                     "flex items-center gap-4 p-4 rounded-xl border transition-all text-left group",
-                    isActive 
-                      ? "bg-surface border-[#00E5FF]/50 shadow-[0_0_15px_rgba(0,229,255,0.1)]" 
+                    isActive
+                      ? "bg-surface border-[#00E5FF]/50 shadow-[0_0_15px_rgba(0,229,255,0.1)]"
                       : "bg-surface/50 border-border hover:border-border-strong"
                   )}
                 >
@@ -83,7 +86,7 @@ export const IndustryIntelligence = () => {
                     </div>
                   </div>
                   <ChevronRight size={16} className={cn("transition-colors", isActive ? "text-accent-secondary" : "text-text-muted")} />
-                </button>
+                </TrackedButton>
               );
             })}
           </div>

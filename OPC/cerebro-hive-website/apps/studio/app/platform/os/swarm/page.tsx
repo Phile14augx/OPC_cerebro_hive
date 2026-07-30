@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, checkOnline, KEY } from "../lib";
 import { PillarShell } from "../PillarShell";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface SwarmRoleResult { role: string; description: string; output: string; critique: { ok: boolean; score: number } }
 interface SwarmRun { id: string; objective: string; roles: SwarmRoleResult[]; consensus?: { finalAnswer: string; averageScore: number; agreement: number }; status: string; auditTrail: { stage: string; note: string }[] }
@@ -29,7 +30,7 @@ export default function SwarmPage() {
         <p className="text-sm text-text-secondary">A single objective fans out to role-labeled specialists executed by AgentOS™, each independently critiqued, synthesized into one consensus answer, and hard-verified.</p>
         <div className="mt-4 flex flex-col gap-3 md:flex-row">
           <input value={objective} onChange={e => setObjective(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="Describe an objective for the swarm…" />
-          <button onClick={() => void runSwarm()} disabled={busy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{busy ? "Coordinating…" : "Run swarm"}</button>
+          <TrackedButton eventCategory="swarm" eventLabel="Run swarm" onClick={() => void runSwarm()} disabled={busy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{busy ? "Coordinating…" : "Run swarm"}</TrackedButton>
         </div>
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         {run && (

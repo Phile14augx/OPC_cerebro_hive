@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Mail, ScanLine, Search, Cpu, Database, CheckCircle2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const steps = [
   { id: "email", label: "Email Received", icon: Mail, detail: "Vendor Invoice PDF", color: "text-text-primary" },
@@ -114,12 +115,14 @@ export const PlatformActionDemo = () => {
                 </div>
                 <h3 className="text-3xl font-space font-bold text-text-primary mb-2">Workflow Completed</h3>
                 <p className="text-text-secondary">Time elapsed: 1.2 seconds</p>
-                <button 
+                <TrackedButton
+                  eventCategory="products"
+                  eventLabel="Replay Simulation"
                   onClick={() => setActiveStep(0)}
                   className="mt-6 px-6 py-2 border border-primary-accent/50 text-primary-accent rounded-full text-xs font-bold uppercase tracking-widest hover:bg-primary-accent/10"
                 >
                   Replay Simulation
-                </button>
+                </TrackedButton>
               </motion.div>
             )}
           </AnimatePresence>

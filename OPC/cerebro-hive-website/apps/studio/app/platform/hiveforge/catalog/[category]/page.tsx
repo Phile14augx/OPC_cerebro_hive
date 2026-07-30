@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { api, checkOnline, KEY, type CatalogCategory, type CatalogItem, type ProvisionedResource } from "../../lib";
 import { HiveForgeWizard } from "../../HiveForgeWizard";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export default function CatalogCategoryPage() {
   const params = useParams<{ category: string }>();
@@ -47,9 +48,9 @@ export default function CatalogCategoryPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-6 pb-24 pt-8">
-      <Link href="/platform/hiveforge" className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-primary-accent transition-colors">
+      <TrackedLink href="/platform/hiveforge" analyticsEvent="hiveforge_back_click" analyticsCategory="hiveforge" analyticsLabel="HiveForge Back" className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-primary-accent transition-colors">
         <ArrowLeft size={14} /> HiveForge™
-      </Link>
+      </TrackedLink>
 
       {category ? (
         <>
@@ -82,9 +83,9 @@ export default function CatalogCategoryPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-primary-accent">{r.status}</span>
-                  <button onClick={() => void deprovision(r.id)} disabled={busyItem !== null} className="rounded border border-border px-2 py-1 text-[11px] text-text-secondary hover:border-red-400 hover:text-red-400 disabled:opacity-40">
+                  <TrackedButton eventCategory="hiveforge" eventLabel="Deprovision" onClick={() => void deprovision(r.id)} disabled={busyItem !== null} className="rounded border border-border px-2 py-1 text-[11px] text-text-secondary hover:border-red-400 hover:text-red-400 disabled:opacity-40">
                     {busyItem === r.id ? "…" : "Deprovision"}
-                  </button>
+                  </TrackedButton>
                 </div>
               </div>
             ))}
@@ -108,13 +109,15 @@ export default function CatalogCategoryPage() {
                     )}
                   </div>
                   {item.provisionable && (
-                    <button
+                    <TrackedButton
+                      eventCategory="hiveforge"
+                      eventLabel={`Provision: ${item.name}`}
                       onClick={() => setWizardItem(item)}
                       disabled={!online || !KEY}
                       className="rounded-lg border border-primary-accent px-2.5 py-1 text-xs font-semibold text-primary-accent disabled:opacity-40"
                     >
                       Provision…
-                    </button>
+                    </TrackedButton>
                   )}
                 </div>
               ))}

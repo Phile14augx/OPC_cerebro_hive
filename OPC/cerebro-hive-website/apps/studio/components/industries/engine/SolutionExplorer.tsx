@@ -6,6 +6,7 @@ import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { ArchitectureCanvas } from '@/components/architecture/ArchitectureCanvas';
 import { Sparkles, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 const roiDotColor: Record<string, string> = {
   High: 'bg-accent-primary',
@@ -80,8 +81,10 @@ export function SolutionExplorer({ matrix, config }: { matrix: MatrixItem[], con
             {matrix.map((sol, i) => {
               const isActive = activeSolution === i;
               return (
-                <button
+                <TrackedButton
                   key={i}
+                  eventCategory="solution-explorer"
+                  eventLabel={sol.name}
                   onClick={() => setActiveSolution(i)}
                   className={cn(
                     'text-left p-4 rounded-2xl border transition-all duration-300 group',
@@ -120,7 +123,7 @@ export function SolutionExplorer({ matrix, config }: { matrix: MatrixItem[], con
                       </div>
                     </div>
                   </div>
-                </button>
+                </TrackedButton>
               );
             })}
           </div>

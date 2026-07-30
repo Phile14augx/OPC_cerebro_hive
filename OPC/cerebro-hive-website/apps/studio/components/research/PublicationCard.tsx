@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { ResearchPublication } from '@/lib/content/research/types';
-import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, BookOpen, Clock, FileText, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TrackedLink } from '@/components/cerebro/TrackedLink';
 
 export const PublicationCard = ({ pub }: { pub: ResearchPublication }) => {
   
@@ -26,8 +26,11 @@ export const PublicationCard = ({ pub }: { pub: ResearchPublication }) => {
   });
 
   return (
-    <Link 
+    <TrackedLink
       href={`/research/${pub.category}/${pub.slug}`}
+      analyticsEvent="publication_card_click"
+      analyticsCategory="research"
+      analyticsLabel={pub.title}
       className="@container group flex flex-col bg-surface border border-border rounded-xl p-6 transition-all duration-300 hover:border-primary-accent/40 hover:shadow-sm"
     >
       <div className="flex justify-between items-start mb-4">
@@ -65,7 +68,7 @@ export const PublicationCard = ({ pub }: { pub: ResearchPublication }) => {
           <ArrowRight size={14} />
         </div>
       </div>
-    </Link>
+    </TrackedLink>
   );
 };
 

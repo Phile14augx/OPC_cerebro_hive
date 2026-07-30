@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { ArrowRight, ChevronRight, Shield, Server, Zap, Database, Network, Globe2, Lock, Activity, Code, Search, Bell, Users, DollarSign, Cpu, Compass, Code2, FlaskConical, BarChart3, TrendingUp, Store, Boxes, LayoutGrid, Archive, MessageSquare, Radio, Route, GitBranch } from "lucide-react";
 import { EnterpriseIntegrations } from "@/components/platform/EnterpriseIntegrations";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 const archStack = [
@@ -255,8 +255,10 @@ function WorkspaceLauncher() {
           Selecting a workspace scopes the panel below; searching overrides it. */}
       <div className="mt-6 flex items-center justify-center gap-1 overflow-x-auto border-b border-border pb-px">
         {LAUNCHER_CATEGORIES.map(c => (
-          <button
+          <TrackedButton
             key={c.id}
+            eventCategory="platform-launcher"
+            eventLabel={c.label}
             onClick={() => setCategory(c.id)}
             disabled={searching}
             className={`inline-flex shrink-0 items-center gap-1.5 border-b-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest transition-all disabled:cursor-default disabled:opacity-40 ${
@@ -268,7 +270,7 @@ function WorkspaceLauncher() {
             {c.id === "all" && <LayoutGrid size={12} />}
             {c.label}
             <span className="text-[10px] font-normal normal-case text-text-secondary/70">{countFor(c.id)}</span>
-          </button>
+          </TrackedButton>
         ))}
       </div>
 

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Sparkles, FileText, CheckSquare, List, Bookmark, Users, HelpCircle, Download } from "lucide-react";
 import GatedDownloadModal from "@/components/resources/GatedDownloadModal";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface TemplateItem {
   id: string;
@@ -224,13 +225,15 @@ export default function TemplatesPage() {
                   </div>
 
                   {/* Action Button */}
-                  <button
+                  <TrackedButton
+                    eventCategory="resources-templates"
+                    eventLabel={tmpl.title}
                     onClick={() => setActiveTemplate(tmpl)}
                     className="btn-primary"
                     style={{ width: "100%", justifyContent: "center", display: "inline-flex", gap: "6px", cursor: "pointer", marginTop: "auto" }}
                   >
                     <Download size={14} /> Download Template
-                  </button>
+                  </TrackedButton>
                 </div>
               );
             })}

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, checkOnline, KEY } from "../lib";
 import { PillarShell } from "../PillarShell";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface DataAsset { id: string; name: string; kind: string; freshnessSlaMinutes: number }
 
@@ -35,7 +36,7 @@ export default function DataPlatformPage() {
       <section className="rounded-xl border border-border bg-surface/40 p-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-text-primary">Governed asset catalog</h2>
-          <button onClick={() => void registerDataAsset()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent disabled:opacity-40">Register asset</button>
+          <TrackedButton eventCategory="platform-os-data-platform" eventLabel="Register Asset" onClick={() => void registerDataAsset()} disabled={busy || !online || !KEY} className="rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent disabled:opacity-40">Register asset</TrackedButton>
         </div>
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         <ul className="mt-4 space-y-1.5 text-sm">

@@ -232,6 +232,7 @@ export default function CerebroChat() {
                   eventLabel="Close Cerebro Chat"
                   onClick={() => setIsOpen(false)}
                   className="text-text-muted hover:text-text-primary transition-colors"
+                  aria-label="Close Cerebro Chat"
                 >
                   <X size={20} />
                 </TrackedButton>
@@ -395,9 +396,9 @@ export default function CerebroChat() {
                     />
                     <div className="toolbar flex items-center justify-between px-6 py-4 bg-surface-elevated/40 dark:bg-surface-elevated border-t border-border dark:border-transparent">
                       <div className="flex gap-2">
-                        <TrackedButton eventCategory="cerebro-chat" eventLabel="Attach Briefcase" className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Briefcase size={16}/></TrackedButton>
-                        <TrackedButton eventCategory="cerebro-chat" eventLabel="Attach Network" className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Network size={16}/></TrackedButton>
-                        <TrackedButton eventCategory="cerebro-chat" eventLabel="Attach File" className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><FileText size={16}/></TrackedButton>
+                        <TrackedButton eventCategory="cerebro-chat" eventLabel="Attach Briefcase" aria-label="Attach Briefcase" className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Briefcase size={16}/></TrackedButton>
+                        <TrackedButton eventCategory="cerebro-chat" eventLabel="Attach Network" aria-label="Attach Network" className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><Network size={16}/></TrackedButton>
+                        <TrackedButton eventCategory="cerebro-chat" eventLabel="Attach File" aria-label="Attach File" className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-colors"><FileText size={16}/></TrackedButton>
                       </div>
                       <TrackedButton
                         eventCategory="cerebro-chat"

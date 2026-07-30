@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { api, checkOnline, KEY, hiveForgeSections, catalogCategoryIndex, type CostExplorer } from "./lib";
 
 export default function HiveForgePage() {
@@ -53,10 +53,10 @@ export default function HiveForgePage() {
         <h2 className="text-xl font-semibold text-text-primary">Consoles</h2>
         <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           {hiveForgeSections.map(s => (
-            <Link key={s.id} href={s.href} className="rounded-xl border border-border bg-surface/40 p-4 transition-colors hover:border-primary-accent">
+            <TrackedLink key={s.id} href={s.href} analyticsEvent="console_link_click" analyticsCategory="hiveforge" analyticsLabel={s.name} className="rounded-xl border border-border bg-surface/40 p-4 transition-colors hover:border-primary-accent">
               <div className="font-semibold text-text-primary">{s.name}</div>
               <p className="mt-1 text-xs text-text-secondary">{s.blurb}</p>
-            </Link>
+            </TrackedLink>
           ))}
         </div>
       </section>
@@ -65,7 +65,7 @@ export default function HiveForgePage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-primary-accent">Building AI products, not just infrastructure?</p>
         <h2 className="mt-2 text-xl font-semibold text-text-primary">CerebroStudio™ — the full IDE-style AI development workspace</h2>
         <p className="mt-2 max-w-2xl text-sm text-text-secondary">Versioned prompts, agents, flows, notebooks, and datasets, all runnable end to end inside a workspace.</p>
-        <Link href="/platform/studio" className="mt-4 inline-block rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent">Open CerebroStudio™ →</Link>
+        <TrackedLink href="/platform/studio" analyticsEvent="cta_click" analyticsCategory="hiveforge" analyticsLabel="Open CerebroStudio" className="mt-4 inline-block rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent">Open CerebroStudio™ →</TrackedLink>
       </section>
 
       <section className="mt-12">
@@ -73,10 +73,10 @@ export default function HiveForgePage() {
         <p className="mt-1 text-sm text-text-secondary">24 categories. Click through to browse every product and provision what&apos;s live.</p>
         <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {catalogCategoryIndex.map(c => (
-            <Link key={c.id} href={`/platform/hiveforge/catalog/${c.id}`} className="rounded-xl border border-border bg-surface/40 p-4 transition-colors hover:border-primary-accent">
+            <TrackedLink key={c.id} href={`/platform/hiveforge/catalog/${c.id}`} analyticsEvent="catalog_category_click" analyticsCategory="hiveforge" analyticsLabel={c.name} className="rounded-xl border border-border bg-surface/40 p-4 transition-colors hover:border-primary-accent">
               <div className="font-semibold text-text-primary">{c.name}</div>
               <p className="mt-1 text-xs text-text-secondary">{c.tagline}</p>
-            </Link>
+            </TrackedLink>
           ))}
         </div>
       </section>

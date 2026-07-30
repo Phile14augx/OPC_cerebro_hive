@@ -1,7 +1,7 @@
 "use client";
-import Link from "next/link";
 import { Brain, Zap, GraduationCap, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/components/layout/LanguageContext";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export default function ServicesOverview() {
   const { t } = useLanguage();
@@ -157,8 +157,11 @@ export default function ServicesOverview() {
                 </ul>
 
                 {/* CTA */}
-                <Link
+                <TrackedLink
                   href={service.href}
+                  analyticsEvent="services_overview_explore_click"
+                  analyticsCategory="home"
+                  analyticsLabel={service.title}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -179,7 +182,7 @@ export default function ServicesOverview() {
                   }}
                 >
                   {t("home.services.explore_prefix")}{service.title} <ArrowRight size={14} />
-                </Link>
+                </TrackedLink>
               </div>
             );
           })}

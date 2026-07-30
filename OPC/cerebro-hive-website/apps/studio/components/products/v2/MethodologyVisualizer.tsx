@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Compass, Scale, PenTool, Rocket, ShieldCheck, ArrowRight, FileText, FileSpreadsheet, FileBox, Cpu, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
+import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 const phases = [
   {
@@ -81,7 +83,14 @@ export const MethodologyVisualizer = () => {
               const isPast = i < activePhase;
               
               return (
-                <div key={phase.id} className="relative z-10 flex flex-col items-center cursor-pointer group w-1/5" onClick={() => setActivePhase(i)}>
+                <div
+                  key={phase.id}
+                  className="relative z-10 flex flex-col items-center cursor-pointer group w-1/5"
+                  onClick={() => {
+                    analytics.track({ eventName: "phase_select", category: "products_methodology", label: phase.label });
+                    setActivePhase(i);
+                  }}
+                >
                   <div className={cn(
                     "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 mb-4",
                     isActive ? "bg-[#00E5FF] text-text-primary shadow-[0_0_20px_rgba(0,229,255,0.4)] scale-125" : 
@@ -118,21 +127,25 @@ export const MethodologyVisualizer = () => {
                   
                   {/* Mobile nav controls */}
                   <div className="flex items-center justify-center md:justify-start gap-4 lg:hidden mb-8">
-                    <button 
+                    <TrackedButton
+                      eventCategory="products_methodology"
+                      eventLabel="Previous Phase"
                       onClick={() => setActivePhase(Math.max(0, activePhase - 1))}
                       disabled={activePhase === 0}
                       className="p-2 border border-border rounded-lg text-text-muted hover:text-text-primary disabled:opacity-30"
                     >
                       <ArrowRight size={20} className="rotate-180" />
-                    </button>
+                    </TrackedButton>
                     <span className="text-xs font-bold text-text-secondary">{activePhase + 1} / {phases.length}</span>
-                    <button 
+                    <TrackedButton
+                      eventCategory="products_methodology"
+                      eventLabel="Next Phase"
                       onClick={() => setActivePhase(Math.min(phases.length - 1, activePhase + 1))}
                       disabled={activePhase === phases.length - 1}
                       className="p-2 border border-border rounded-lg text-text-muted hover:text-text-primary disabled:opacity-30"
                     >
                       <ArrowRight size={20} />
-                    </button>
+                    </TrackedButton>
                   </div>
                 </div>
 

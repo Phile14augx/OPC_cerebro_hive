@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { buildFaqSchema } from '@/lib/discovery';
 import { JsonLd } from './JsonLd';
+import { TrackedButton } from '@/components/cerebro/TrackedButton';
 
 interface FaqItem {
   q: string;
@@ -30,7 +31,9 @@ export function FaqSection({ faqs, title = 'Frequently Asked Questions', classNa
               key={i}
               className="border border-border rounded-lg overflow-hidden"
             >
-              <button
+              <TrackedButton
+                eventCategory="faq"
+                eventLabel={faq.q}
                 className="w-full text-left px-5 py-4 font-medium flex justify-between items-center hover:bg-muted/50 transition-colors"
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 aria-expanded={openIndex === i}
@@ -39,7 +42,7 @@ export function FaqSection({ faqs, title = 'Frequently Asked Questions', classNa
                 <span className="ml-4 shrink-0 text-muted-foreground">
                   {openIndex === i ? '−' : '+'}
                 </span>
-              </button>
+              </TrackedButton>
               {openIndex === i && (
                 <div className="px-5 pb-4 text-muted-foreground leading-relaxed">
                   {faq.a}

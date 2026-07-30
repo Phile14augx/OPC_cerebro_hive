@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, checkOnline, KEY } from "../lib";
 import { PillarShell } from "../PillarShell";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 interface CompiledProgram { id: string; goal: string; strategy: string; plan: { steps: { id: number; description: string }[] }; workflowId?: string; runId?: string }
 
@@ -28,7 +29,7 @@ export default function CompilerPage() {
         <p className="text-sm text-text-secondary">Compiles a sentence directly into a validated, running Cerebro Flow™ workflow — no hand-authored DAG.</p>
         <div className="mt-4 flex flex-col gap-3 md:flex-row">
           <input value={goal} onChange={e => setGoal(e.target.value)} className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-sm text-text-primary outline-none focus:border-primary-accent" placeholder="Describe a goal to compile…" />
-          <button onClick={() => void compileGoal()} disabled={busy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{busy ? "Compiling…" : "Compile & deploy"}</button>
+          <TrackedButton eventCategory="compiler" eventLabel="Compile & deploy" onClick={() => void compileGoal()} disabled={busy || !online || !KEY} className="rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-background disabled:opacity-40">{busy ? "Compiling…" : "Compile & deploy"}</TrackedButton>
         </div>
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         {program && (

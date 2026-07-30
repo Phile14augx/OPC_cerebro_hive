@@ -2,12 +2,12 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { BookOpen, Newspaper, FileText, FlaskConical, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 import { cardVariants } from "@/components/cerebro/primitives/Card";
+import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const resources = [
   {
@@ -50,9 +50,9 @@ export function ResearchInnovation() {
                 We don&apos;t just implement AI; we push its boundaries. Our dedicated research arm continuously evaluates frontier models, publishes architecture patterns, and contributes to the open-source community to ensure our clients always receive state-of-the-art solutions.
               </p>
 
-              <Link href="/research" className="inline-flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-primary-accent hover:text-text-primary transition-colors group">
+              <TrackedLink href="/research" analyticsEvent="research_explore_click" analyticsCategory="services" analyticsLabel="Explore Our Research" className="inline-flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-primary-accent hover:text-text-primary transition-colors group">
                 Explore Our Research <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
+              </TrackedLink>
             </div>
 
             <div className="w-full lg:w-1/2">
@@ -65,13 +65,13 @@ export function ResearchInnovation() {
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.4, delay: i * 0.1 }}
                   >
-                    <Link href={item.link} className={cn(cardVariants({ size: "md" }), "block hover:border-primary-accent/30 hover:shadow-elevated transition-all duration-300 group h-full")}>
+                    <TrackedLink href={item.link} analyticsEvent="research_resource_click" analyticsCategory="services" analyticsLabel={item.title} className={cn(cardVariants({ size: "md" }), "block hover:border-primary-accent/30 hover:shadow-elevated transition-all duration-300 group h-full")}>
                       <item.icon size={24} className="text-text-muted mb-4 group-hover:text-primary-accent transition-colors" />
                       <span className="block text-[10px] font-bold tracking-widest uppercase text-text-muted mb-2">{item.type}</span>
                       <h3 className="text-sm font-space font-bold text-text-primary group-hover:text-primary-accent transition-colors">
                         {item.title}
                       </h3>
-                    </Link>
+                    </TrackedLink>
                   </motion.div>
                 ))}
               </div>

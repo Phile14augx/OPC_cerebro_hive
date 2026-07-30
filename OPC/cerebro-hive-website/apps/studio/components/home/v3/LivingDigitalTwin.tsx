@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 import { Stack } from "@/components/cerebro/primitives/Stack";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const workflows = [
   {
@@ -57,8 +58,11 @@ export default function LivingDigitalTwin() {
           {/* Selector */}
           <div className="lg:col-span-4 flex flex-col gap-4">
             {workflows.map(wf => (
-              <button
+              <TrackedButton
                 key={wf.id}
+                eventCategory="home-digital-twin"
+                eventLabel={wf.label}
+                eventAction="workflow_selector_click"
                 onClick={() => setActiveId(wf.id)}
                 className={`p-6 rounded-2xl border text-left transition-all ${
                   activeId === wf.id
@@ -68,7 +72,7 @@ export default function LivingDigitalTwin() {
               >
                 <div className="font-space font-bold text-text-primary mb-2">{wf.label}</div>
                 <div className="text-xs text-text-secondary">View transformation →</div>
-              </button>
+              </TrackedButton>
             ))}
           </div>
 

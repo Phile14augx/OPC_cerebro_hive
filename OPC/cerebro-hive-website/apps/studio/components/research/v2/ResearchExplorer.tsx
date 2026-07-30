@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Filter, ChevronDown, Download, FileText, Database, Code2, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const GITHUB_ORG = "https://github.com/Phile14augx";
 
@@ -68,18 +69,20 @@ export const ResearchExplorer = () => {
               <Filter size={14} /> I am a:
             </div>
             {personas.map(persona => (
-              <button
+              <TrackedButton
                 key={persona}
+                eventCategory="research-archive"
+                eventLabel={persona}
                 onClick={() => setActivePersona(persona)}
                 className={cn(
                   "px-4 py-2 rounded-full text-xs font-bold transition-all shrink-0 border",
-                  activePersona === persona 
-                    ? "bg-[#00E5FF]/10 text-accent-secondary border-[#00E5FF]/30" 
+                  activePersona === persona
+                    ? "bg-[#00E5FF]/10 text-accent-secondary border-[#00E5FF]/30"
                     : "bg-surface border-border text-text-muted hover:text-text-primary"
                 )}
               >
                 {persona}
-              </button>
+              </TrackedButton>
             ))}
           </div>
         </div>

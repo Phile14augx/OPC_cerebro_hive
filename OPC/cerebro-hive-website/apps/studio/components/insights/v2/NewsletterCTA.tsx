@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Mail, CheckCircle2, ArrowRight } from "lucide-react";
+import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export const NewsletterCTA = () => {
   return (
@@ -46,12 +47,14 @@ export const NewsletterCTA = () => {
               className="flex-1 px-6 py-4 bg-surface-secondary border border-border rounded-xl text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[#00E5FF]/50 transition-colors" 
               required
             />
-            <button 
-              type="submit" 
+            <TrackedButton
+              eventCategory="insights"
+              eventLabel="Newsletter Subscribe"
+              type="submit"
               className="px-8 py-4 bg-[#00E5FF] text-text-primary font-space font-bold text-sm uppercase tracking-widest rounded-xl hover:-translate-y-0.5 transition-transform flex items-center justify-center gap-2 whitespace-nowrap"
             >
               Subscribe <ArrowRight size={16} />
-            </button>
+            </TrackedButton>
           </form>
 
         </div>
