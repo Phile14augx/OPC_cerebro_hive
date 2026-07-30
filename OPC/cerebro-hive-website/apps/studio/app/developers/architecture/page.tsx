@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import { LivingArchitecture } from "@/components/architecture/LivingArchitecture";
+import LivingArchitecture from "@/components/architecture/LivingArchitecture";
 import { JsonLd } from "@/components/discovery";
 import { buildTechArticleSchema } from "@/lib/discovery";
 
