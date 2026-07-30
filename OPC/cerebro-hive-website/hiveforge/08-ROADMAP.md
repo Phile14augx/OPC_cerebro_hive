@@ -17,6 +17,7 @@
 | Security (Phase 6) | Foundation §2 principle #4 (Zero Trust); `ADR-023`, `ADR-026` (amends it); Domain Model (`User`, `Policy`); Business Platform (`User` subtype pattern); introduces `ADR-028`–`033` |
 | Operations (Phase 7) | Security (`HumanApprovalWorkflow`, `SecureAIGateway`, `AIGovernanceEngine`, `ADR-030` naming); Business Platform (Usage Ledger, `ADR-025`); Control Plane (`ADR-024` events); introduces `ADR-034`–`037` |
 | Roadmap (Phase 8, this document) | All of the above — consolidation only, no new dependency introduced |
+| Execution Lifecycle Runtime (Phase 9, post-masterplan — `09-EXECUTION-LIFECYCLE-RUNTIME.md`) | Provider Framework (Phase 4, its execution layer is the extension point); `ADR-022` (related precedent, different bounded context); `ADR-038` (policy integration target, sub-phase 9f); Control Plane (Phase 3, `ADR-024` events, sub-phase 9e) — introduces its own ADR(s), not yet drafted |
 
 Reading the map: every phase after 0 depends on something fixed earlier; nothing later silently overrides an earlier decision without an explicit amendment (tracked per-phase in each document's own "Architectural Impact" section). The only two *amended* (not merely extended) ADRs across the whole masterplan are `ADR-020` (metadata/executor split, Phase 4) and `ADR-026` (infrastructure-isolation resolution, Phase 6) — worth knowing as the two places the architecture actually revised itself rather than only adding to itself.
 
@@ -43,6 +44,8 @@ Consolidating every item this masterplan flagged as intentionally deferred, rath
 - Additional review domains / service catalog breadth beyond what's listed (implicit in `02-SERVICE-CATALOG.md`'s Planned-only status) — no specific expansion is proposed here; noted only as a category, since inventing a domain list this document has no evidence to justify would violate Phase 0 principle #8.
 
 **Explicitly not proposed by this masterplan, and not retroactively added here either:** any external analyzer integration, dynamic contributor/plugin discovery mechanism, or "LLM Contributors" architecture — these appeared only in your illustrative dependency-table example (§1, above), not in any Phase 0–7 content. If you want these designed, that's new scope for a Phase 9, not something Phase 8 should quietly absorb.
+
+> **Update — Phase 9 now exists.** `09-EXECUTION-LIFECYCLE-RUNTIME.md`, proposed following `audit/SLICE-5-EXECUTION-LIFECYCLE-REVIEW.md`'s finding that the execution lifecycle (aggregate, state machine, orchestrator, persistence, events, policy integration) exists only as disconnected fragments, not a coherent runtime. Not the "LLM Contributors"/plugin architecture referenced above — a different, evidence-driven scope. See `08-ROADMAP.md` §1's dependency map for its place in the masterplan.
 
 ## 3. Repository-wide evidence conventions
 

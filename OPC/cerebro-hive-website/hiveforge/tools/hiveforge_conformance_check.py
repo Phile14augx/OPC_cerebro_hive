@@ -98,6 +98,7 @@ PHASE_DOCS_REQUIRING_IMPACT_SECTION = [
     "06-SECURITY.md",
     "07-OPERATIONS.md",
     "08-ROADMAP.md",
+    "09-EXECUTION-LIFECYCLE-RUNTIME.md",
 ]
 
 ADR_REF_RE = re.compile(r"ADR-0*(\d{2,3})")
