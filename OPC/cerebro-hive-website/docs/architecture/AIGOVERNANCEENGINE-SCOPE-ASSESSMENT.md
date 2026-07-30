@@ -33,13 +33,13 @@ This review does **not** attempt to resolve `ADR-038` rule 5 ("one algorithm, tw
 
 **Tests.** `packages/engineering-review/src/infrastructure/llm/__tests__/LLMExecutionService.test.ts` — 4 tests, including one that exercises the `contains_pii` rejection path directly (lines 28–37) and asserts on the exact rejection message. `packages/engineering-review/src/contributors/__tests__/ContributorE2E.test.ts` exercises the full contributor pipeline end-to-end; its describe-block title (line 37) reads `"Contributor pipeline end-to-end (M26.5 LLM-Backed, ADR-013)"`. No `ADR-013` exists anywhere in the repository — `audit/adr/` contains only `ADR-001` through `ADR-007`.
 
-**Orchestration reachability.** `packages/engineering-review/src/contributors/ContributorRegistry.ts` (currently untracked) registers `SecurityReviewAgent` and `ArchitectureReviewContributor` alongside the other contributors. A repository search confirms `packages/engineering-review/src/application/EngineeringReviewOrchestrator.ts` does not import `ContributorRegistry` — the governance-interception path is real and tested at the contributor level, but not currently reachable through the live orchestration entry point.
+**Orchestration reachability.** `packages/engineering-review/src/contributors/ContributorRegistry.ts` registers `SecurityReviewAgent` and `ArchitectureReviewContributor` alongside the other contributors. A repository search confirms `packages/engineering-review/src/application/EngineeringReviewOrchestrator.ts` does not import `ContributorRegistry` — the governance-interception path is real and tested at the contributor level, but not currently reachable through the live orchestration entry point.
 
 ## 3. Architecture Comparison
 
 Not framed as `ADR-038` compliance: the evidence in Section 2 shows this class does not attempt `ADR-038`'s policy model, so measuring it against that model's compliance criteria would be evaluating it against a specification it never claimed to implement. The comparison below is a scope assessment instead.
 
-| Capability | `engineering-review`'s `AIGovernanceEngine` | Platform governance architecture (`ADR-029`, `hiveshield-policy`) |
+| Capability | `engineering-review`'s `AIGovernanceEngine` | Platform AI-governance architecture (`ADR-029`, `hiveshield-policy`) |
 |---|---|---|
 | Policy model | No — raw `prompt.parameters` booleans | Yes — `Policy` aggregate (`01-DOMAIN-MODEL.md` §2/§4) |
 | Rule model | Hardcoded booleans (`contains_pii`, `simulate_policy_rejection`) | `PolicyRule` aggregate (`packages/policy-core/src/models/PolicyRule.ts`) |
@@ -50,7 +50,7 @@ Not framed as `ADR-038` compliance: the evidence in Section 2 shows this class d
 
 ## 4. Findings
 
-**Finding 1: The implementation is a deterministic contributor-local interception layer.**
+**Finding 1: The implementation is a deterministic, contributor-local simulation of a governance interception layer.**
 Evidence: the method's own comment explicitly frames it as a stand-in ("For M26.5, we implement basic deterministic checks to simulate the interception layer"); the logic is two hardcoded boolean checks; it shares no model or code with any other governance component in the repository.
 
 **Finding 2: The implementation is not an implementation of `ADR-038`'s policy evaluation model.**
@@ -60,16 +60,16 @@ Evidence: no `Policy` aggregate, no `PolicyRule`, no outcome-precedence ranking,
 Evidence: `ContributorRegistry.ts` registers the two consuming contributors but is not imported by `EngineeringReviewOrchestrator.ts`; the governance-interception logic is exercised only through contributor-level and end-to-end contributor tests, not through the orchestrator's own entry point.
 
 **Finding 4: An architectural naming collision exists between this class and `ADR-029`'s `AIGovernanceEngine`.**
-Both are called `AIGovernanceEngine`. `ADR-029` defines a ten-submodule HiveShield component (`PromptPolicyEvaluator`, `ToolPolicyEvaluator`, `AgentPolicyEvaluator`, `ModelSelectionPolicy`, `BudgetPolicy`, `DataClassificationPolicy`, `SafetyPolicy`, `CompliancePolicy`, `ApprovalPolicy`, `OutputPolicy`). The class in `packages/engineering-review` implements none of these submodules and shares no code with a HiveShield package. This is arguably the primary issue surfaced by this review — independent of which architectural alternative (Section 5) is eventually chosen, two unrelated classes currently share one name.
+Both are called `AIGovernanceEngine`. `ADR-029` defines a ten-submodule HiveShield component (`PromptPolicyEvaluator`, `ToolPolicyEvaluator`, `AgentPolicyEvaluator`, `ModelSelectionPolicy`, `BudgetPolicy`, `DataClassificationPolicy`, `SafetyPolicy`, `CompliancePolicy`, `ApprovalPolicy`, `OutputPolicy`). The class in `packages/engineering-review` implements none of these submodules and shares no code with a HiveShield package. Independent of which architectural alternative (Section 5) is eventually chosen, two unrelated classes currently share one name.
 
 ## 5. Architectural Alternatives
 
 **Option A — Contributor-local simulation.**
-Advantages: matches the current implementation exactly; matches the class's own comment; requires minimal changes; `ADR-038` and `hiveshield-policy` are unaffected.
-Consequences: requires renaming the class (or otherwise removing the naming collision) and documenting that its scope is intentionally local to `engineering-review`, not a platform component.
+Advantages: matches the current implementation and its own self-disclosing comment; requires no change to `packages/policy-core` or `packages/hiveshield-policy`.
+Consequences: requires renaming the class (or otherwise removing the naming collision) and documenting that its scope is intentionally local to `engineering-review`, not a platform component; if platform AI-governance work later reaches `engineering-review`'s use case, this class would still need to be replaced rather than extended.
 
 **Option B — First implementation slice of the platform `AIGovernanceEngine`.**
-Advantages: preserves a path to future convergence with `hiveshield-policy` under `ADR-038` rule 5.
+Advantages: avoids a naming collision by growing into the name rather than away from it; preserves a path to convergence with `hiveshield-policy` under `ADR-038` rule 5 without a later replacement step.
 Consequences: requires a migration plan toward a shared evaluator, real rule-5 implementation work, and corresponding `ADR-029`/`ADR-038` updates to track the transition.
 
 ## 6. Review Conclusion
