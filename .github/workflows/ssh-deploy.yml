@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   deploy:
     name: Build & Deploy
@@ -27,7 +31,8 @@ jobs:
       uses: actions/setup-node@v7
       with:
         node-version: '20'
-        cache: 'pnpm'
+        cache: pnpm
+          cache-dependency-path: OPC/cerebro-hive-website/pnpm-lock.yaml
         cache-dependency-path: ./OPC/cerebro-hive-website/pnpm-lock.yaml
 
     - name: Install dependencies

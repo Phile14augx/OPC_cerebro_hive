@@ -13,6 +13,10 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}-api
 
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   build-and-push:
     name: Build and Push Docker Image

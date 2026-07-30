@@ -13,6 +13,10 @@ permissions:
   security-events: write
   actions: read
 
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   semgrep:
     runs-on: ubuntu-latest

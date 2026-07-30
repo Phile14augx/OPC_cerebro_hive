@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   deploy:
     name: Deploy to Production

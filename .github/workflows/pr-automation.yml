@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, reopened, ready_for_review, closed]
 
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   update_pr_status:
     runs-on: ubuntu-latest

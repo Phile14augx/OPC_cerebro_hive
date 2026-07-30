@@ -25,6 +25,10 @@ concurrency:
   group: ai-review-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   # ────────────────────────────────────────────────────────────
   # 1. Diff extraction

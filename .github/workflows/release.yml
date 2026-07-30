@@ -29,6 +29,10 @@ permissions:
   packages: write
   id-token: write
 
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   release:
     name: Semantic Release
@@ -51,6 +55,7 @@ jobs:
         with:
           node-version: "20"
           cache: pnpm
+          cache-dependency-path: OPC/cerebro-hive-website/pnpm-lock.yaml
 
       - name: Install release dependencies
         run: |
@@ -104,6 +109,7 @@ jobs:
         with:
           node-version: "20"
           cache: pnpm
+          cache-dependency-path: OPC/cerebro-hive-website/pnpm-lock.yaml
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies

@@ -8,6 +8,10 @@ on:
 
 permissions: read-all
 
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   analysis:
     name: Scorecard analysis

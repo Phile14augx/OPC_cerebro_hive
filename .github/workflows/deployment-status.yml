@@ -3,6 +3,10 @@ name: Deployment Status Reporting
 on:
   deployment_status:
 
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   report-deployment:
     runs-on: ubuntu-latest

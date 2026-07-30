@@ -9,6 +9,10 @@ permissions:
   deployments: write
   pull-requests: write
 
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   preview:
     runs-on: ubuntu-latest
