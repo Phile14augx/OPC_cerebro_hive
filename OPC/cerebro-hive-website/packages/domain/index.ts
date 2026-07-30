@@ -33,3 +33,16 @@ export * from './src/validators/WorkflowValidator';
 export * from './src/services/AgentApplicationService';
 export * from './src/services/WorkflowApplicationService';
 export * from './src/context/AgentExecutionContext';
+
+// Execution (Phase 9a — canonical Execution aggregate)
+export * from './src/execution/ExecutionId';
+export * from './src/execution/ExecutionStatus';
+export * from './src/execution/Execution';
+export * from './src/execution/ExecutionRepository';
+export * from './src/execution/ExecutionEvents';
+export * from './src/execution/ExecutionTransitions';
+export * from './src/execution/ExecutionOrchestrator';
+export * from './src/execution/ExecutionSnapshot';
+export * from './src/execution/InMemoryExecutionRepository';
+export * from './src/execution/ExecutionCheckpointStore';
+export * from './src/execution/ExecutionReplay';
