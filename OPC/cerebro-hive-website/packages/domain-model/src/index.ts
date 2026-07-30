@@ -45,3 +45,18 @@ export * from './capability/HiveCapabilityFilter';
 export * from './capability/HiveCapabilityDiscoveryResult';
 export * from './capability/HiveCapabilityProvider';
 export * from './capability/HiveCapabilityRegistry';
+
+// Provider contracts (Slice 4 — interfaces/types only, no concrete AWS/Azure/
+// GCP/Hetzner adapter, no ProviderSelector, no registry implementation; see
+// packages/domain-model/README.md for the inventory findings that preceded
+// this slice)
+export * from './provider/HiveRegion';
+export * from './provider/HiveResourceTypeDescriptor';
+export * from './provider/HiveProviderQuota';
+export * from './provider/HiveProviderMetadata';
+export * from './provider/HiveResourceSpec';
+export * from './provider/HiveProviderErrorCode';
+export * from './provider/HiveProviderOperation';
+export * from './provider/HiveProviderResourceState';
+export * from './provider/HiveProviderExecutor';
+export * from './provider/HiveProvider';

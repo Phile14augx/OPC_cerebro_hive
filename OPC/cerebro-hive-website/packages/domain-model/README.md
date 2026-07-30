@@ -31,6 +31,20 @@ Resolution applied, reusing a convention HiveForge already has rather than inven
 
 `HiveCapabilityMetadata`'s `capability` field is typed against the closed `HiveCapability` enum (`00-FOUNDATION.md` §3); `@cerebro/capability-core`'s `CapabilityMetadata.id` is a free-form string keyed to its own, unrelated registry. The two are not interchangeable and neither package depends on the other.
 
+## Slice 4 — Provider contracts (ADR-020/`04-PROVIDER-FRAMEWORK.md`)
+
+**Primary Finding:** No implementation corresponding to ADR-020's infrastructure/cloud provider abstraction (`ProviderMetadata`/`ProviderExecutor` for AWS/Azure/GCP/Hetzner-style resource provisioning) was found in the repository source inspected for this slice — a targeted pass across every `packages/*/src` tree matching `interface \w*Provider\b`, plus each matched file's real consumers via `package.json` workspace-dependency grep. This is **evidence of absence within that inspected scope, not proof of absence repository-wide**: `apps/`, `services/` (including the orphaned `services/platform-api` source tree noted below), and any non-TypeScript infrastructure code (Terraform, Helm, ad hoc scripts) were not exhaustively searched for a cloud-provider abstraction. `HiveProviderMetadata`/`HiveProviderExecutor`/`HiveProvider` (interfaces only, no adapter) are therefore new contracts filling what appears to be a genuine gap, not a disambiguation of something pre-existing — the first slice where that was true, and the first slice's finding that should be re-checked if a wider search ever surfaces a counter-example. `HiveProviderMetadata` extends Slice 2's `HiveCapabilityProvider` rather than redefining capability declaration, per that type's own doc comment anticipating exactly this composition. `HiveProviderExecutor`'s error/status/operation shapes (`HiveProviderErrorCode`, `HiveProviderOperation`, `HiveProviderResourceState`) are drawn directly from `ADR-020`/`ADR-027`/`04-PROVIDER-FRAMEWORK.md` — no invented vocabulary.
+
+**Secondary Observations (Out of Scope for this slice — recorded, not resolved):** an inventory pass across model/AI-gateway, execution, storage, and auth/identity provider abstractions ahead of this slice turned up several unrelated findings within that same inspected scope, each requiring its own separate architectural review:
+- A real two-package naming collision: `identity-core`'s `CredentialProvider` (validates a presented credential) and `secrets-core`'s `CredentialProvider` (issues/revokes a new credential) share a name but do opposite things, with no shared types and no import relationship. **Reviewed separately, resolved:** see `audit/CREDENTIAL-PROVIDER-COLLISION-REVIEW.md` — `identity-core`'s version is unimplemented/unconsumed anywhere in the repo and is recommended for rename to `CredentialValidator`; `secrets-core`'s version is real and keeps its name.
+- `packages/storage` is an entirely empty directory — no package, no code, zero references anywhere in the repo.
+- `runtime-core`'s `CapabilityProvider` family defines a third, differently-shaped `PolicyProvider` (alongside `policy-core`'s and `change-core`'s), and lists `StorageProvider`/`EmbeddingProvider` only as string literals in a type union with no corresponding interfaces.
+- `federation-core`, `change-core`, and `engineering-review`'s `ISnapshotProvider` are real, mock-backed code with zero consumers anywhere in the repo — isolated/unwired.
+- `knowledge-sdk`'s `EmbeddingProvider` is a legitimate, differently-scoped model-adjacent provider (RAG embedding generation) with real consumers, unrelated to this slice.
+- `packages/auth`'s `IAuthProvider`/`MockAuthProvider` is a permanently-hardcoded mock wired into `apps/forge`, with no conditional swap to a real backend found; `services/platform-api` (distinct from `apps/platform-api`) is a source tree with no `package.json` at all — an orphaned/undeclared workspace member. **Reviewed separately, classified:** see `audit/SERVICES-PLATFORM-API-CLASSIFICATION.md` — a substantial but never-wired parallel implementation attempt (Express, org/billing/API-key management), not a duplicate of the actively-developed Fastify-based `apps/platform-api`, recommended for archival as design reference rather than deletion or adoption.
+
+None of these observations block or change Slice 4's contracts; they are recorded here so a future reviewer doesn't have to reconstruct the inventory pass that found them.
+
 ## Public API
 
 - `Identifier<Brand>`, `createIdentifierFactory` — the generic branded-identifier mechanism.
@@ -62,16 +76,27 @@ Resolution applied, reusing a convention HiveForge already has rather than inven
 - `HiveEventSerializer` — (de)serialization contract.
 - `HiveEventDispatcher` — in-process routing contract, distinct from `HiveEventPublisher` (which crosses a transport boundary).
 
+**Slice 4 — provider contracts (interfaces/types only, no concrete AWS/Azure/GCP/Hetzner adapter):**
+- `HiveRegion`, `HiveResourceTypeDescriptor`, `HiveProviderQuota` — `HiveProviderMetadata`'s discovery return shapes (`04-PROVIDER-FRAMEWORK.md` §2).
+- `HiveProviderMetadata` — read-only, cacheable discovery contract; extends `HiveCapabilityProvider` (Slice 2) rather than redefining capability declaration.
+- `HiveResourceSpec`, `HiveResourceUpdateSpec`, `HiveResourceResizeSpec` — inputs to `HiveProviderExecutor`'s mutating methods.
+- `HiveProviderErrorCode`, `HIVE_PROVIDER_ERROR_RETRYABILITY`, `HiveProviderError` — the shared failure taxonomy and Retryable/Terminal classification fixed by `ADR-027`.
+- `HiveProviderOperationKind`, `HiveProviderOperation` — the return shape of every `HiveProviderExecutor` lifecycle method.
+- `HiveProviderResourceState` — the return shape of `HiveProviderExecutor.status()`.
+- `HiveProviderExecutor` — the execution contract (`provision`/`update`/`resize`/`delete`/`snapshot`/`restore`/`status`); scoped exclusively to lifecycle operations, no policy/billing/orchestration/auditing/selection.
+- `HiveProvider` — composes one provider's `HiveProviderMetadata` + `HiveProviderExecutor` under one `ProviderId`. No registry, resolver, or registration mechanism implemented — that remains `ProviderSelector`'s (control-plane) concern.
+
 ## ADR references
 
-- `ADR-020` (Provider Abstraction Layer) — `ResourceReference`'s `resourceType` is a plain string, not this ADR's `ProviderMetadata`/`ProviderExecutor` types, since this package doesn't depend on the Provider Framework.
-- `ADR-022` (Resource Lifecycle State Machine) — source of `ResourceLifecycleState`.
+- `ADR-020` (Provider Abstraction Layer) — implemented as interfaces-only in Slice 4 (`HiveProviderMetadata`/`HiveProviderExecutor`/`HiveProvider`). `ResourceReference`'s `resourceType` remains a plain string, consistent with `HiveResourceSpec`/`HiveResourceTypeDescriptor`'s own plain-string `resourceType`.
+- `ADR-022` (Resource Lifecycle State Machine) — source of `ResourceLifecycleState`, reused directly by `HiveProviderOperation`/`HiveProviderResourceState`.
 - `ADR-024` (Event-Driven Platform Architecture) — source of `DomainEvent`'s shape; this package implements none of that ADR's transport/delivery guarantees.
+- `ADR-027` (Failure Handling and Retry Classification) — source of `HiveProviderErrorCode`'s taxonomy and the Retryable/Terminal split fixed in `HIVE_PROVIDER_ERROR_RETRYABILITY`.
 - `ADR-038` (Policy Inheritance Precedence and Conflict Resolution) — not implemented here; `PolicyId` exists as an identifier only, no `Policy` aggregate or evaluator.
 
 ## Explicit non-goals (this slice)
 
-No provider integrations, execution engine, credential handling, persistence, event transport, policy evaluation, API layer, or service orchestration. No dependency on `@cerebro/domain`, `@cerebro/database`, or any other workspace package — this package has zero runtime dependencies by design.
+No concrete AWS/Azure/GCP/Hetzner adapter, no `ProviderSelector` implementation, no provider registry/registration mechanism, no execution engine, credential handling, persistence, event transport, policy evaluation, API layer, or service orchestration. No dependency on `@cerebro/domain`, `@cerebro/database`, or any other workspace package — this package has zero runtime dependencies by design.
 
 ## Ownership boundary
 
