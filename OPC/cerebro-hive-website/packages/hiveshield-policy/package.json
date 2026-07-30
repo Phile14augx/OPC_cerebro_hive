@@ -1,16 +1,16 @@
 {
-  "name": "@cerebro/policy-core",
-  "version": "1.0.0",
+  "name": "@cerebro/hiveshield-policy",
+  "version": "0.1.0",
+  "private": true,
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
     "test": "vitest run"
   },
   "dependencies": {
+    "@cerebro/policy-core": "workspace:*",
     "@cerebro/identity-core": "workspace:*",
-    "@cerebro/core-bus": "workspace:*",
-    "@cerebro/secrets-core": "workspace:*",
-    "zod": "^3.22.4"
+    "@cerebro/domain-model": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

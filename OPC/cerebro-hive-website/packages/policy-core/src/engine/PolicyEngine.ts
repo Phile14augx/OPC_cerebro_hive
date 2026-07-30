@@ -1,10 +1,27 @@
+import { IdentityContext } from '@cerebro/identity-core';
 import { PolicyRule, PolicyObligation, PolicyAdvice } from '../models/PolicyRule';
 import { ResourceDescriptor } from '../models/ResourceDescriptor';
 import { ConditionEngine } from './ConditionEngine';
 import { OptimizedPolicyBundle } from '../distribution/Compiler';
 
-export type PolicyDecisionType = 'Permit' | 'Deny' | 'NotApplicable' | 'Indeterminate';
+// 'StepUpMfa' and 'HumanApproval' extend the base XACML-style four outcomes
+// per ADR-028 — see PolicyRule.ts's PolicyEffect for the corresponding
+// rule-authoring types.
+export type PolicyDecisionType = 'Permit' | 'Deny' | 'StepUpMfa' | 'HumanApproval' | 'NotApplicable' | 'Indeterminate';
 export type EngineExecutionMode = 'Enforce' | 'Shadow';
+
+// ADR-038 rule 4: outcome precedence when multiple applicable policies
+// produce different outcomes. Higher rank wins. 'NotApplicable' isn't
+// ranked here — it's the initial/no-match state, resolved to implicit
+// Deny at the end of evaluation (unchanged prior behavior), not a
+// competing outcome a policy can produce. 'Indeterminate' is an error
+// state returned immediately on evaluation failure, not combined here.
+const OUTCOME_PRECEDENCE: Record<'Deny' | 'HumanApproval' | 'StepUpMfa' | 'Permit', number> = {
+  Deny: 3,
+  HumanApproval: 2,
+  StepUpMfa: 1,
+  Permit: 0,
+};
 
 export interface PolicyDecision {
   decisionId: string;
@@ -120,24 +137,30 @@ export class PolicyEngine {
 
         // Policy Matched
         matchedPolicies.push(policy.id);
-        
+
         if (policy.obligations) obligations.push(...policy.obligations);
         if (policy.advice) advice.push(...policy.advice);
-        
-        // Deny Overrides logic
-        if (policy.effect === 'Deny') {
-          finalDecision = 'Deny';
-          reason = `Explicitly denied by policy: ${policy.name}`;
-          break; // Stop evaluating on Explicit Deny
+
+        // ADR-038 rule 4: outcome precedence, not simple deny-overrides.
+        // A policy's effect only replaces finalDecision if it outranks
+        // whatever's already been matched — Deny always wins immediately
+        // (short-circuit, since nothing outranks it); HumanApproval beats
+        // a later StepUpMfa or Permit; StepUpMfa beats a later Permit;
+        // a later, lower-ranked match never downgrades an already-matched
+        // stricter outcome.
+        const effect = policy.effect as 'Permit' | 'Deny' | 'StepUpMfa' | 'HumanApproval';
+        const currentRank = finalDecision === 'NotApplicable' ? -1 : OUTCOME_PRECEDENCE[finalDecision as 'Deny' | 'HumanApproval' | 'StepUpMfa' | 'Permit'];
+
+        if (OUTCOME_PRECEDENCE[effect] > currentRank) {
+          finalDecision = effect;
+          highestPriority = policy.priority;
+          reason = `${effect} by policy: ${policy.name}`;
         }
 
-        // Permit (only if we haven't already permitted at a higher priority)
-        if (finalDecision !== 'Permit') {
-          finalDecision = 'Permit';
-          highestPriority = policy.priority;
-          reason = `Permitted by policy: ${policy.name}`;
+        if (effect === 'Deny') {
+          break; // Nothing outranks Deny — stop evaluating (existing short-circuit, preserved).
         }
-        
+
       } catch (err) {
         return {
           decisionId: `dec-${Date.now()}`,

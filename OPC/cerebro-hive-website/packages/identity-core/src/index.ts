@@ -1,7 +1,6 @@
 export * from './principals/Principal';
 export * from './tenancy/Tenancy';
 export * from './context/IdentityContext';
-export * from './context/IdentityResolver';
 export * from './repository/IdentityRepository';
 export * from './sessions/Session';
 export * from './credentials/CredentialProvider';

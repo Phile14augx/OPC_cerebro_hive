@@ -1,4 +1,9 @@
-export type PolicyEffect = 'Permit' | 'Deny';
+// 'StepUpMfa' and 'HumanApproval' extend the base Permit/Deny effect per
+// ADR-028 (Zero Trust identity, ABAC authorization, and the human-approval
+// decision outcome) — a rule can declare either as its effect, not just a
+// post-decision obligation, since both are first-class authorization
+// outcomes a Policy Enforcement Point must branch on.
+export type PolicyEffect = 'Permit' | 'Deny' | 'StepUpMfa' | 'HumanApproval';
 export type PolicyLifecycleState = 'Draft' | 'Validation' | 'Simulation' | 'Pending Review' | 'Approved' | 'Staged' | 'Active' | 'Deprecated' | 'Archived';
 export type ExecutionStage = 'BeforeAction' | 'DuringAction' | 'AfterAction';
 export type AdviceCategory = 'Security' | 'Compliance' | 'Cost' | 'Performance' | 'Operational';
