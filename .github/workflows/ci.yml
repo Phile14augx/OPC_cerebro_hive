@@ -62,6 +62,14 @@ jobs:
       - name: Generate Prisma client
         run: pnpm --filter @cerebro/database exec prisma generate
 
+      # Temporary CI compatibility: generate Prisma clients for both
+      # packages/database and packages/db until the canonical Prisma
+      # package is established by a future architecture decision
+      # (see docs/architecture/adr/0008-monorepo-packaging-strategy.md
+      # for the related packaging ADR).
+      - name: Generate Prisma client (@cerebro/db)
+        run: pnpm --filter @cerebro/db exec prisma generate
+
       - name: Type check — studio
         run: pnpm --filter @cerebro/studio exec tsc --noEmit
 
@@ -145,6 +153,14 @@ jobs:
       - name: Generate Prisma client
         run: pnpm --filter @cerebro/database exec prisma generate
 
+      # Temporary CI compatibility: generate Prisma clients for both
+      # packages/database and packages/db until the canonical Prisma
+      # package is established by a future architecture decision
+      # (see docs/architecture/adr/0008-monorepo-packaging-strategy.md
+      # for the related packaging ADR).
+      - name: Generate Prisma client (@cerebro/db)
+        run: pnpm --filter @cerebro/db exec prisma generate
+
       - name: Run unit tests
         run: pnpm run --if-present test
         env:
@@ -209,6 +225,14 @@ jobs:
       - name: Generate Prisma client
         run: pnpm --filter @cerebro/database exec prisma generate
 
+      # Temporary CI compatibility: generate Prisma clients for both
+      # packages/database and packages/db until the canonical Prisma
+      # package is established by a future architecture decision
+      # (see docs/architecture/adr/0008-monorepo-packaging-strategy.md
+      # for the related packaging ADR).
+      - name: Generate Prisma client (@cerebro/db)
+        run: pnpm --filter @cerebro/db exec prisma generate
+
       - name: Run DB migrations
         run: pnpm --filter @cerebro/database exec prisma migrate deploy
         env:
@@ -265,6 +289,14 @@ jobs:
 
       - name: Generate Prisma client
         run: pnpm --filter @cerebro/database exec prisma generate
+
+      # Temporary CI compatibility: generate Prisma clients for both
+      # packages/database and packages/db until the canonical Prisma
+      # package is established by a future architecture decision
+      # (see docs/architecture/adr/0008-monorepo-packaging-strategy.md
+      # for the related packaging ADR).
+      - name: Generate Prisma client (@cerebro/db)
+        run: pnpm --filter @cerebro/db exec prisma generate
 
       - name: Build ${{ matrix.app.name }}
         run: pnpm --filter "${{ matrix.app.filter }}" run build
