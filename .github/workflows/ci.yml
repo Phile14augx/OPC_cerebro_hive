@@ -146,7 +146,7 @@ jobs:
         run: pnpm --filter @cerebro/database exec prisma generate
 
       - name: Run unit tests
-        run: pnpm run test --if-present
+        run: pnpm run --if-present test
         env:
           NODE_ENV: test
           CI: true
@@ -215,7 +215,7 @@ jobs:
           DATABASE_URL: postgresql://cerebrohive:test_password@localhost:5432/cerebrohive_test
 
       - name: Run integration tests
-        run: pnpm run test:integration --if-present
+        run: pnpm run --if-present test:integration
         env:
           DATABASE_URL: postgresql://cerebrohive:test_password@localhost:5432/cerebrohive_test
           REDIS_URL: redis://localhost:6379
@@ -303,7 +303,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate OpenAPI spec
-        run: pnpm --filter @cerebro/platform-api run generate:openapi --if-present
+        run: pnpm --filter @cerebro/platform-api run --if-present generate:openapi
         continue-on-error: true
 
       - name: Upload OpenAPI spec
