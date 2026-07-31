@@ -1,7 +1,7 @@
 # Ruleset Reconciliation Assessment
 
 **Status:** Evidence-based audit. Descriptive, not prescriptive — records current state and a recommended reconciliation path. No ruleset, workflow, or branch-protection change has been applied as a result of this document.
-**Scope:** GitHub repository ruleset `Main Production Protection` (id `19152342`, `Phile14augx/OPC_cerebro_hive`, `enforcement: active`, targeting `refs/heads/main`) and the 32 workflow files under the repository's actual root `.github/workflows/`.
+**Scope:** GitHub repository ruleset `Main Production Protection` (id `19152342`, `Phile14augx/OPC_cerebro_hive`, `enforcement: active`, targeting `refs/heads/main`) and the 32 workflow files under the repository's actual root `.github/workflows/`. Primarily the `required_status_checks` rule's 10 contexts (Sections 4–5); Section 4.1 covers a second, independently-discovered broken rule (`required_deployments`).
 **Discovered during:** Investigation of why two failing deploy workflows (`Deploy to VPS via SSH`, `Deploy to cPanel / Hostinger via FTP`) had been landing on `main` for two days despite CI failing on every push. See the incident thread this document follows on from; the three application defects that caused that incident are already fixed and merged (commits `c06bee5`, `f982347`, `3534764`) and are out of scope here — this document covers only the governance layer above CI, not the application code.
 
 ---
@@ -14,7 +14,7 @@
 
 **Why no changes were applied.** The audit itself surfaced a broader problem than a simple naming drift: of the 10 required contexts, only 4 map to both a correctly-matching name *and* a real, currently-blocking check. Patching only the 4 clean renames would leave the ruleset internally inconsistent — still advertising governance (`Docker Build`, `Coverage`, `Deploy Preview`, etc.) that doesn't correspond to anything real. A partial patch was prepared and deliberately not applied, in favor of one comprehensive reconciliation.
 
-**Current status.** Reconciliation deferred pending a complete decision on every required context (Section 5). This document is that decision's evidence base.
+**Current status.** Reconciliation deferred pending a complete decision on every required context (Section 5). This document is that decision's evidence base. Since the original audit, a second, independent broken rule was confirmed (Section 4.1): the ruleset's `required_deployments` rule requires a successful `github-pages` deployment, but GitHub Pages is disabled for this repository. That rule is currently unsatisfiable through normal operation, the same underlying failure mode as the `required_status_checks` findings below, just in a different rule type.
 
 ## 2. Objectives
 
@@ -50,6 +50,16 @@ No required context was reconciled by name-similarity alone; each of the 10 was 
 | `Playwright (optional)` | `visual-regression.yml` (`test` job, no `name:` override) | `test` (literal job id) | Pending | Real — installs and runs Playwright. But the emitted context is the generic literal string `test`, not `Playwright (optional)`. Checked for collisions against all 32 workflow files; `test` as a job id is currently unique, but it is fragile (any future workflow adding an unnamed `test:` job would collide). |
 | `Deploy Preview` | `preview.yml` (workflow name `Preview Deployments`, `preview` job) | No matching check-run found | Pending | Step body is `echo "This workflow will deploy PR previews to Vercel/Cloudflare Pages once an integration is added."` — placeholder, same pattern as `build`/`Docker Build`. |
 
+### 4.1 A second, independently-discovered broken rule: `required_deployments`
+
+Discovered while investigating an unrelated CI build failure (`ci.yml`'s `Build` job unintentionally building `apps/studio` in static-export mode — see the incident thread this document follows on from). Not part of the original 10-context audit above, but the same failure pattern, in a different rule type.
+
+| Rule | Requirement | Evidence | Status |
+|---|---|---|---|
+| `required_deployments` | `required_deployment_environments: ["github-pages"]` — a successful `github-pages` deployment is required before a change can be merged normally | `gh api repos/.../pages` returns `404 Not Found` — GitHub Pages is not enabled for this repository. The one workflow that could produce a `github-pages` deployment, `pages.yml` ("Deploy Next.js to GitHub Pages"), is `disabled_manually`. Directly observed on a real push: GitHub's own bypass message reads `"Missing successful active github-pages deployment."` | Unsatisfiable through normal operation |
+
+This is the same root cause as `build`, `Docker Build`, `Coverage`, and `Deploy Preview` in Section 5's Category C: a required governance rule with no live, active thing behind it. The fix for `ci.yml`'s Build job itself (setting `IS_FTP_DEPLOY: "true"` to build in `standalone` mode, matching the two real deploy workflows) has already been applied and merged (`5ab11fb`) — that was an application/CI-config fix, not a ruleset change, and is out of scope for this document. What remains open here is the ruleset rule itself: `required_deployments: [github-pages]` should be given the same explicit disposition (retain/rename/remove/replace) as the Category C items below, as part of the same single reconciliation.
+
 ## 5. Classification Matrix
 
 ### Category A — Verified / Canonical
@@ -82,6 +92,7 @@ No naming fix resolves these — each needs a deliberate retain / rename / remov
 | `Coverage` | | | Candidate | Candidate | No corresponding check exists. The ruleset separately defines a `code_coverage` rule (`minimum_coverage: 0.8`) — whether that rule type reads from a named status check, a native GitHub coverage integration, or a third-party integration (Codecov, etc.) was not verified in this pass and should be resolved before deciding this row. |
 | `Deploy Preview` | | | Candidate | Candidate | Placeholder (`echo`), `preview.yml`. Same pattern as `build`/`Docker Build`. |
 | `Lint` | Candidate | | | Candidate | Real tooling runs, but `\|\| true` on both the ESLint and Prettier steps means the job cannot fail. This is a policy decision, not a naming one: either remove the suppression (making it a genuine gate) or explicitly decide lint failures should not block merges and document that choice. Requiring it as-is today would misrepresent it as enforcement when it is not. |
+| `required_deployments: [github-pages]` (Section 4.1 — a different rule type, not a status check) | | | Candidate | Candidate | GitHub Pages is disabled for this repository (`404` on the Pages API) and `pages.yml` is `disabled_manually`. Either re-enable Pages and the workflow, or remove this rule — it cannot be satisfied as configured. |
 
 ## 6. Risk Assessment
 
@@ -102,6 +113,8 @@ No naming fix resolves these — each needs a deliberate retain / rename / remov
 
 **7.4 — Canonical naming should be established once, not per-incident.** This is the second time in this session that a name mismatch (application-level: `Button` vs `button.tsx`; governance-level: required-context strings vs. actual job names) caused a real failure that was invisible until specifically audited. Both were caught by direct, evidence-based comparison against source, not by assumption.
 
+**7.5 — The "dead required rule" pattern isn't limited to `required_status_checks`.** Section 4.1's `required_deployments: [github-pages]` finding is the same failure mode as Category C above (a required governance rule with nothing real behind it), but in a different rule type entirely, discovered independently and later. This suggests the drift documented in this report may not be confined to the 10 status-check contexts audited in Section 4 — the ruleset's other rule types (`code_scanning`, `code_coverage`, `code_quality`, `pull_request`'s reviewer requirements, etc.) were read in Section 3 but not each individually verified against a live, currently-functioning enforcement mechanism the way `required_status_checks` and `required_deployments` were. That verification is not done in this pass and is noted here as a gap, not assumed to be clean.
+
 ## 8. Recommendation
 
 Perform one comprehensive ruleset reconciliation that simultaneously:
@@ -109,8 +122,11 @@ Perform one comprehensive ruleset reconciliation that simultaneously:
 - validates every required status context against its actual, currently-emitted string,
 - resolves the 3 confirmed naming inconsistencies (Category A),
 - gives each of the remaining 6 required contexts (Category B/C) an explicit, documented disposition — retain, rename, remove, or replace — rather than leaving any as silent dead configuration,
-- updates the ruleset's `required_status_checks` parameter atomically, in one PATCH, rather than incrementally,
+- gives the `required_deployments: [github-pages]` rule (Section 4.1) the same explicit disposition, since it is unsatisfiable for the same underlying reason,
+- updates the ruleset's `required_status_checks` and `required_deployments` parameters atomically, in one PATCH, rather than incrementally,
 - and verifies the resulting configuration with a clean CI run afterward, confirming every context the ruleset now requires actually posts.
+
+Given Finding 7.5, the reconciliation should also include a quick pass confirming the ruleset's other rule types (`code_scanning`, `code_coverage`, `code_quality`, `pull_request` review requirements) each correspond to something real, rather than assuming they're clean because this audit didn't find a problem with them — this audit didn't specifically look.
 
 ## 9. Non-Goals
 
