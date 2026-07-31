@@ -21,7 +21,6 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
-    "importsNotUsedAsValues": "error",
     "verbatimModuleSyntax": false
   },
   "exclude": ["node_modules", "dist", "build", ".next", "coverage", "**/*.test.ts", "**/*.spec.ts"]
