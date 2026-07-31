@@ -1,2 +1,2 @@
 // @cerebro/config
-export {};
+export * from './env';
