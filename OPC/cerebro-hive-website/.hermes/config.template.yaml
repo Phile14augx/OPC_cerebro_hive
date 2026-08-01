@@ -1,0 +1,74 @@
+# =============================================================================
+# Hermes Agent — MCP config TEMPLATE (NOT a runtime config)
+# =============================================================================
+# CerebroHive engineering. This file is a PER-DEVELOPER TEMPLATE.
+#
+# DO NOT:
+#   - put real tokens / connection strings in this file
+#   - commit a populated ~/.hermes/config.yaml
+#   - point the filesystem server at "/" or any path outside the repo
+#
+# DO:
+#   - copy to ~/.hermes/config.yaml and fill secrets via ~/.hermes/.env
+#   - scope filesystem to the three repo roots below
+#   - review the upstream manifest of every server before enabling it
+#
+# Onboarding (run once):
+#   cp .hermes/config.template.yaml ~/.hermes/config.yaml
+#   hermes mcp install linear     # catalog, OAuth
+#   hermes mcp install figma      # catalog, OAuth
+#   hermes mcp install n8n        # catalog
+#   hermes mcp add github -- npx -y @modelcontextprotocol/server-github
+#   hermes mcp add fs     -- npx -y @modelcontextprotocol/server-filesystem ./apps ./packages ./docs
+#   hermes mcp add pg     -- npx -y @modelcontextprotocol/server-postgres
+#   hermes mcp add docker -- npx -y @docker/mcp
+#   hermes mcp list && hermes mcp test linear && hermes mcp test github
+#
+# Two layers:
+#   Hermes CLI      = developer-side MCP client (productivity, local orchestration)
+#   AgentOS MCP     = production-grade, audited tool execution (apps/studio/agentos)
+#   CerebroHive     = future MCP marketplace / governance layer
+# =============================================================================
+
+mcp_servers:
+  # ---- Catalog installs (Nous-reviewed, one-click) -------------------------
+  linear:
+    url: "https://mcp.linear.app/mcp"
+    auth: oauth # Hermes opens browser on first connect; token cached at ~/.hermes/mcp-tokens/linear.json
+
+  figma:
+    url: "https://mcp.figma.com/mcp"
+    auth: oauth # Hermes auto-sets client_name so login succeeds
+
+  n8n:
+    command: "npx"
+    args: ["-y", "@n8n/mcp"]
+
+  # ---- Manual adds (verify upstream package before installing) -------------
+  github:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-github"]
+    env:
+      GITHUB_PERSONAL_ACCESS_TOKEN: "${GITHUB_TOKEN}" # exported from ~/.hermes/.env
+
+  fs:
+    command: "npx"
+    args:
+      - "-y"
+      - "@modelcontextprotocol/server-filesystem"
+      - "./apps"
+      - "./packages"
+      - "./docs"
+    # Never add "/" or any path outside the repo here.
+
+  pg:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-postgres", "${DATABASE_URL}"]
+    # DATABASE_URL provided via ~/.hermes/.env (e.g. postgres://...?sslmode=require)
+
+  docker:
+    command: "npx"
+    args: ["-y", "@docker/mcp"]
+    # Requires Docker Desktop MCP extension / socket access on the dev machine.
+
+  # k8s: add only after infra stabilizes; verify community server source first.
