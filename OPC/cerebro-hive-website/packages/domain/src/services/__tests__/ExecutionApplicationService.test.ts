@@ -26,12 +26,13 @@ describe('ExecutionApplicationService (Atomicity & Persistence)', () => {
   beforeEach(() => {
     mockExecution = {
       id: new ExecutionId('11111111-1111-1111-1111-111111111111'),
+      version: 0,
       status: ExecutionStatus.QUEUED,
       transitionTo: vi.fn().mockReturnValue({ type: 'ExecutionStartedEvent', aggregateId: '11111111-1111-1111-1111-111111111111' })
     };
 
     executionRepo = {
-      findById: vi.fn().mockResolvedValue(mockExecution),
+      load: vi.fn().mockResolvedValue(mockExecution),
       save: vi.fn().mockResolvedValue(undefined)
     };
 
@@ -71,9 +72,11 @@ describe('ExecutionApplicationService (Atomicity & Persistence)', () => {
     expect(executionRepo.save).toHaveBeenCalledTimes(1);
     expect(outboxPublisher.publish).toHaveBeenCalledTimes(1);
 
-    const saveTx = executionRepo.save.mock.calls[0][1];
+    const expectedVersion = executionRepo.save.mock.calls[0][1];
+    const saveTx = executionRepo.save.mock.calls[0][2];
     const publishTx = outboxPublisher.publish.mock.calls[0][2];
     
+    expect(expectedVersion).toBe(0);
     expect(saveTx).toStrictEqual({ isMockTx: true });
     expect(publishTx).toStrictEqual({ isMockTx: true });
     expect(saveTx).toBe(publishTx);
