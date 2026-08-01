@@ -32,7 +32,6 @@ jobs:
       with:
         node-version: '20'
         cache: pnpm
-          cache-dependency-path: OPC/cerebro-hive-website/pnpm-lock.yaml
         cache-dependency-path: ./OPC/cerebro-hive-website/pnpm-lock.yaml
 
     - name: Install dependencies
