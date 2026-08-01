@@ -1,0 +1,21 @@
+{
+  "name": "@cerebro/capability-registry",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Schema, validation, and in-memory indexing for the agentOS <-> MCP capability registry (PR #25).",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+  }
+}
