@@ -1,5 +1,5 @@
 'use client';
-import { useUser } from '@cerebro/auth';
+import { useUser } from '@cerebro/auth/react';
 import { PageContainer, PageHeader } from '@cerebro/ui';
 import React, { useState } from 'react';
 

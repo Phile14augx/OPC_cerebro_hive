@@ -3,7 +3,7 @@
  * Adds the `auth` property set by JwtGuard to all Express Request objects.
  */
 
-import type { CerebroJWTPayload } from "@cerebro/auth";
+import type { CerebroJWTPayload } from "@cerebro/auth/server";
 
 declare global {
   namespace Express {
