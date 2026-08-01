@@ -91,3 +91,7 @@ This review does not determine whether that scope should remain permanent or evo
 **No action:**
 - `ADR-038` rule 5 remains correctly deferred; nothing in this review changes that status.
 - No changes required to `packages/policy-core` or `packages/hiveshield-policy` as a result of this review.
+
+## Related Tracking
+
+Tracked in `docs/ROADMAP.md` Section 5 (Future Work) — the platform `AIGovernanceEngine` implementation (Option B from Section 5 above) is listed there as proposed-but-undecided, not scheduled.

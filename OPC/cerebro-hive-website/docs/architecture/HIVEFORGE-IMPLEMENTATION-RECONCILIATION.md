@@ -84,3 +84,7 @@ Framed as governance actions, not implementation directives:
 ## 7. Overall Conclusion
 
 Of the eight approved HiveForge capabilities, the repository contains a mixture of implemented capabilities, governed simulations, specification-only areas, and isolated prototype packages. The audit identified two capabilities (HiveDatabase and HiveConsole) with no substantive implementation evidence, several capabilities implemented as deterministic simulations rather than provider-backed infrastructure, and multiple cases where architectural terminology maps to more than one implementation. These findings should guide future implementation work toward extending verified implementations rather than introducing parallel abstractions.
+
+## Related Tracking
+
+This audit's findings are carried forward in `docs/ROADMAP.md`: the capability inventory itself is cited in Section 2 (Current State), and the not-yet-implemented capabilities (real HiveCompute/Storage/Network provisioning, HiveDatabase, HiveConsole) are listed in Section 5 (Future Work) as unscoped rather than scheduled.

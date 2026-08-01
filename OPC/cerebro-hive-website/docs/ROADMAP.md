@@ -14,10 +14,16 @@ This document is authoritative for engineering phase/status tracking going forwa
 Every entry in Sections 2–4 must cite at least one of: a file path, a test name/result, an ADR, a merged commit, or a CI run. Entries without evidence belong in Section 5, not above it.
 
 ### Status labels
-- **Verified** — backed by code, tests, ADRs, or merged design documents.
-- **Proposed** — discussed but not yet approved.
-- **Draft** — under active design.
-- **Deprecated** — superseded or abandoned.
+
+| Status | Meaning |
+|---|---|
+| **Verified** | Backed by code, tests, ADRs, or merged design documents |
+| **In Progress** | Active work with repository evidence (real code, real failing/passing tests) |
+| **Blocked** | Awaiting a prerequisite or unresolved issue — the blocker is itself cited as evidence |
+| **Unrecovered** | Referenced historically (e.g. in conversation) but no canonical source currently exists in this repository |
+| **Proposed** | Discussed or drafted, not yet approved |
+| **Draft** | Under active design, not yet proposed for approval |
+| **Deprecated** | Superseded or abandoned |
 
 "Canonical" is not used as a status label in this document — see `docs/architecture/SPECIFICATION-GOVERNANCE-FINDING.md` for why that label was previously applied without an approval process and what that caused.
 
@@ -59,7 +65,7 @@ Every entry in Sections 2–4 must cite at least one of: a file path, a test nam
 **Confidence:** High that this work is real and active; low on completion timeline, since ownership sits outside this document's authoring context.
 
 ### Monorepo packaging decision (ADR 0008)
-**Status:** In Progress (decision pending)
+**Status:** Proposed (matches the ADR's own status; not yet approved)
 **Evidence:** See Section 2. Directly blocks `Build — forge` and `Build — platform-api` in CI.
 
 ### Ruleset reconciliation (governance)
@@ -72,25 +78,25 @@ Items directly supported by failing CI, open findings, or explicit prior deferra
 
 | Item | Evidence | Status |
 |---|---|---|
-| `Unit Tests` CI job failing | `this.executionRepo.load is not a function`, run `30662121774` | Owned by Execution Lifecycle work (Section 3) |
-| `Integration Tests` CI job failing | `prisma migrate deploy` failure, run `30662121774` | Not yet investigated |
+| `Unit Tests` CI job failing | `this.executionRepo.load is not a function`, run `30662121774` | Blocked — owned by Execution Lifecycle work (Section 3) |
+| `Integration Tests` CI job failing | `prisma migrate deploy` failure, run `30662121774` | Blocked — root cause not yet investigated |
 | `Build — forge` CI job failing | Turbopack `.js`→`.ts` resolution, 62 errors | Blocked on ADR 0008 |
 | `Build — platform-api` CI job failing | `tsc` JSX/module resolution errors from `@cerebro/auth` | Blocked on ADR 0008 |
-| Ruleset required-context reconciliation | `RULESET-RECONCILIATION-ASSESSMENT.md` Categories A–C | Evidence complete, patch not applied |
-| Hostinger/cPanel FTP deploy failing | `Error: Client is closed because Server sent FIN packet unexpectedly` | Infrastructure-side, not yet investigated |
-| `packages/db` vs `packages/database` duplication | Two separate Prisma-wrapping packages, `ci.yml` now generates both as a workaround (commit `e13c60c`) | Deferred pending an ownership/consolidation ADR |
-| `HierarchicalPolicyEngine` not wired to any consumer | `packages/hiveshield-policy` has no importers outside its own tests | Not yet scheduled |
-| 6 pre-existing duplicate `PolicyEngine` implementations | Found during PolicyEngine investigation; adoption status not rechecked | Not yet scheduled |
+| Ruleset required-context reconciliation | `RULESET-RECONCILIATION-ASSESSMENT.md` Categories A–C | In Progress — evidence complete, patch not applied |
+| Hostinger/cPanel FTP deploy failing | `Error: Client is closed because Server sent FIN packet unexpectedly` | Blocked — infrastructure-side, not yet investigated |
+| `packages/db` vs `packages/database` duplication | Two separate Prisma-wrapping packages, `ci.yml` now generates both as a workaround (commit `e13c60c`) | Blocked — pending an ownership/consolidation ADR |
+| `HierarchicalPolicyEngine` not wired to any consumer | `packages/hiveshield-policy` has no importers outside its own tests | Proposed — not yet scheduled |
+| 6 pre-existing duplicate `PolicyEngine` implementations | Found during PolicyEngine investigation; adoption status not rechecked | Proposed — not yet scheduled |
 
 ## 5. Future Work
 
 Intentionally unscoped. Nothing below has an implementation plan, approved specification, or committed timeline in this repository.
 
-- **HiveCompute / HiveStorage / HiveNetwork real provisioning** (vs. the current governed-simulation layer) — no ADR, no spec.
-- **HiveDatabase / HiveConsole** — no implementation of any kind beyond a vocabulary enum (`docs/architecture/HIVEFORGE-IMPLEMENTATION-RECONCILIATION.md`).
-- **`AIGovernanceEngine` platform implementation** (ADR-029's ten-submodule design, vs. the current `packages/engineering-review`-local simulation) — explicitly left as an open architectural alternative in `docs/architecture/AIGOVERNANCEENGINE-SCOPE-ASSESSMENT.md`, not decided.
-- **The 44 non-real-product specs in `PRODUCT_SPECIFICATIONS/`** and the 50-product `docs/product-registry.md` vision — `docs/architecture/SPECIFICATION-GOVERNANCE-FINDING.md` found these were mass-produced without a real product decision behind them. Not roadmap-ready.
-- **"Phase 10" / "AF-1 through AF-5"** — referenced in conversation, not found anywhere in this repository as of 2026-08-01. Requires recovery from its original source (see Section 1) or a fresh ADR/spec if the original plan is unrecoverable.
+- **HiveCompute / HiveStorage / HiveNetwork real provisioning** (vs. the current governed-simulation layer) — *Draft at best*; no ADR, no spec.
+- **HiveDatabase / HiveConsole** — *Unscoped*; no implementation of any kind beyond a vocabulary enum (`docs/architecture/HIVEFORGE-IMPLEMENTATION-RECONCILIATION.md`).
+- **`AIGovernanceEngine` platform implementation** (ADR-029's ten-submodule design, vs. the current `packages/engineering-review`-local simulation) — *Proposed as an alternative, not decided*; left open in `docs/architecture/AIGOVERNANCEENGINE-SCOPE-ASSESSMENT.md`.
+- **The 44 non-real-product specs in `PRODUCT_SPECIFICATIONS/`** and the 50-product `docs/product-registry.md` vision — *Deprecated in effect*; `docs/architecture/SPECIFICATION-GOVERNANCE-FINDING.md` found these were mass-produced without a real product decision behind them. Not roadmap-ready.
+- **"Phase 10" / "AF-1 through AF-5"** — **Unrecovered**. Referenced in conversation, not found anywhere in this repository as of 2026-08-01. Requires recovery from its original source (see Section 1) or a fresh ADR/spec if the original plan cannot be recovered.
 
 Any of the above becomes roadmap-ready (moves to Section 2/3) only once it has a real ADR, specification, or merged implementation to cite as evidence — not before.
 

@@ -113,3 +113,7 @@ This review stops at evidence and recommendation. The following require an owner
 ## 8. Non-Goals
 
 This finding intentionally does not reconcile individual product entries, edit `docs/products.md`, or modify the live website's product catalog. Determining which catalog reflects the intended business offering — and what to do about the 13 mismatched entries in §6 — requires product ownership decisions beyond the evidence available during this review. The review stopped here because of that governance boundary, not because it was incomplete.
+
+## Related Tracking
+
+Tracked in `docs/ROADMAP.md` Section 5 (Future Work) — the 44 non-real-product specs and the 50-product `docs/product-registry.md` vision this finding documents are marked there as not roadmap-ready until a real product decision exists.
