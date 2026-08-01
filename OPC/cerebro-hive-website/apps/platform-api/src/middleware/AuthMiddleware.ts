@@ -7,7 +7,7 @@ import {
   getPermissions,
   type CerebroJWTPayload,
   type OrgRole,
-} from '@cerebro/auth';
+} from '@cerebro/auth/server';
 
 /**
  * Real authentication, replacing the mock header-based identity that used to

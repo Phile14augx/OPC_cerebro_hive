@@ -1,7 +1,7 @@
 'use client';
 import './globals.css';
 import { ThemeProvider, EnterpriseShell } from '@cerebro/ui';
-import { MockAuthProvider } from '@cerebro/auth';
+import { MockAuthProvider } from '@cerebro/auth/react';
 
 const forgeSidebar = [
   { label: 'Forge Overview',       href: '/' },

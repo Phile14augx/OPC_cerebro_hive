@@ -3,7 +3,7 @@
  */
 
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { safeVerifyJWT, isSystemAdmin, type CerebroJWTPayload } from "@cerebro/auth";
+import { safeVerifyJWT, isSystemAdmin, type CerebroJWTPayload } from "@cerebro/auth/server";
 import type { Request } from "express";
 
 @Injectable()

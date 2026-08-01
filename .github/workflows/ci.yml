@@ -70,6 +70,14 @@ jobs:
       - name: Generate Prisma client (@cerebro/db)
         run: pnpm --filter @cerebro/db exec prisma generate
 
+      # @cerebro/auth now publishes built dist/ output as its public
+      # interface (ADR 0008: source-first consumption broke Turbopack
+      # and non-JSX tsc consumers independently). Must be built before
+      # anything importing @cerebro/auth, @cerebro/auth/server, or
+      # @cerebro/auth/react.
+      - name: Build @cerebro/auth
+        run: pnpm --filter @cerebro/auth run build
+
       - name: Type check — studio
         run: pnpm --filter @cerebro/studio exec tsc --noEmit
 
@@ -161,6 +169,14 @@ jobs:
       - name: Generate Prisma client (@cerebro/db)
         run: pnpm --filter @cerebro/db exec prisma generate
 
+      # @cerebro/auth now publishes built dist/ output as its public
+      # interface (ADR 0008: source-first consumption broke Turbopack
+      # and non-JSX tsc consumers independently). Must be built before
+      # anything importing @cerebro/auth, @cerebro/auth/server, or
+      # @cerebro/auth/react.
+      - name: Build @cerebro/auth
+        run: pnpm --filter @cerebro/auth run build
+
       - name: Run unit tests
         run: pnpm run --if-present test
         env:
@@ -233,6 +249,14 @@ jobs:
       - name: Generate Prisma client (@cerebro/db)
         run: pnpm --filter @cerebro/db exec prisma generate
 
+      # @cerebro/auth now publishes built dist/ output as its public
+      # interface (ADR 0008: source-first consumption broke Turbopack
+      # and non-JSX tsc consumers independently). Must be built before
+      # anything importing @cerebro/auth, @cerebro/auth/server, or
+      # @cerebro/auth/react.
+      - name: Build @cerebro/auth
+        run: pnpm --filter @cerebro/auth run build
+
       - name: Run DB migrations
         run: pnpm --filter @cerebro/database exec prisma migrate deploy
         env:
@@ -297,6 +321,14 @@ jobs:
       # for the related packaging ADR).
       - name: Generate Prisma client (@cerebro/db)
         run: pnpm --filter @cerebro/db exec prisma generate
+
+      # @cerebro/auth now publishes built dist/ output as its public
+      # interface (ADR 0008: source-first consumption broke Turbopack
+      # and non-JSX tsc consumers independently). Must be built before
+      # anything importing @cerebro/auth, @cerebro/auth/server, or
+      # @cerebro/auth/react.
+      - name: Build @cerebro/auth
+        run: pnpm --filter @cerebro/auth run build
 
       - name: Build ${{ matrix.app.name }}
         run: pnpm --filter "${{ matrix.app.filter }}" run build

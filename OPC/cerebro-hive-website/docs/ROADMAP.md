@@ -44,9 +44,9 @@ Every entry in Sections 2–4 must cite at least one of: a file path, a test nam
 **Status:** Verified (implementation), not yet adopted
 **Evidence:** `packages/policy-core`, `packages/hiveshield-policy` — 16/16 tests passing (commit `082d7d5`). Implements ADR-038 rules 1–4 (deny-precedence, narrow-never-widen, top-down accumulation, outcome precedence). Rule 5 (shared algorithm with `AIGovernanceEngine`) explicitly deferred — see `docs/architecture/AIGOVERNANCEENGINE-SCOPE-ASSESSMENT.md`. Not wired into any app or service route yet.
 
-### Monorepo packaging architecture
-**Status:** Proposed (ADR filed, no decision made)
-**Evidence:** `docs/architecture/adr/0008-monorepo-packaging-strategy.md` — documents two independently-confirmed failures (Turbopack in `apps/forge`, plain `tsc` in `apps/platform-api`) caused by shared packages exposing raw TypeScript/TSX source via `package.json` `"main"`. Decision between built-artifact (`dist/`) and source-first consumption is explicitly not made in that ADR.
+### Monorepo packaging architecture (ADR 0008)
+**Status:** Verified — decided (Option A, built `dist/` output) and implemented for `@cerebro/auth`, the one package confirmed to break real consumers.
+**Evidence:** `docs/architecture/adr/0008-monorepo-packaging-strategy.md`. `@cerebro/auth` split into `server`/`react` subpath exports, `package.json` `main`/`exports` point at `dist/`, `ci.yml` builds it before consumers in 4 jobs. Verified (fresh-checkout simulation): the original `.js`→`.ts` Turbopack errors and the `'--jsx' is not set` `tsc` errors are both completely gone from `apps/forge` and `apps/platform-api` respectively. The other five packages flagged in the ADR's Context (`db`, `errors`, `queue`, `shared-types`, `swarm-sdk`) remain source-first, deliberately — none has been shown to break a real consumer, and `errors`/`queue`/`shared-types` have no `package.json` at all (dead directories, not live packages).
 
 ### Branch protection / ruleset governance
 **Status:** Verified (audit), Outstanding (implementation)
@@ -64,10 +64,6 @@ Every entry in Sections 2–4 must cite at least one of: a file path, a test nam
 
 **Confidence:** High that this work is real and active; low on completion timeline, since ownership sits outside this document's authoring context.
 
-### Monorepo packaging decision (ADR 0008)
-**Status:** Proposed (matches the ADR's own status; not yet approved)
-**Evidence:** See Section 2. Directly blocks `Build — forge` and `Build — platform-api` in CI.
-
 ### Ruleset reconciliation (governance)
 **Status:** In Progress (evidence complete, implementation not started)
 **Evidence:** See Section 2. `docs/architecture/RULESET-RECONCILIATION-ASSESSMENT.md` Section 8 defines the single-PATCH reconciliation still to be applied.
@@ -80,8 +76,8 @@ Items directly supported by failing CI, open findings, or explicit prior deferra
 |---|---|---|
 | `Unit Tests` CI job failing | `this.executionRepo.load is not a function`, run `30662121774` | Blocked — owned by Execution Lifecycle work (Section 3) |
 | `Integration Tests` CI job failing | `prisma migrate deploy` failure, run `30662121774` | Blocked — root cause not yet investigated |
-| `Build — forge` CI job failing | Turbopack `.js`→`.ts` resolution, 62 errors | Blocked on ADR 0008 |
-| `Build — platform-api` CI job failing | `tsc` JSX/module resolution errors from `@cerebro/auth` | Blocked on ADR 0008 |
+| `Build — forge` CI job failing | ADR 0008's original cause (fixed) now replaced by 56 Turbopack errors: `Export X doesn't exist in target module` against `@cerebro/ui` | Proposed — not yet investigated, unrelated to packaging |
+| `Build — platform-api` CI job failing | ADR 0008's original cause (fixed) now replaced by 18 pre-existing `tsc` errors: unknown-typed catch variables in `bootstrap.ts`, a Fastify plugin registration type mismatch, missing `express`/`@prisma/client` dependencies, `RequestLogger.ts`'s `routerPath`, and several strict-null gaps | Proposed — catalogued, not yet fixed |
 | Ruleset required-context reconciliation | `RULESET-RECONCILIATION-ASSESSMENT.md` Categories A–C | In Progress — evidence complete, patch not applied |
 | Hostinger/cPanel FTP deploy failing | `Error: Client is closed because Server sent FIN packet unexpectedly` | Blocked — infrastructure-side, not yet investigated |
 | `packages/db` vs `packages/database` duplication | Two separate Prisma-wrapping packages, `ci.yml` now generates both as a workaround (commit `e13c60c`) | Blocked — pending an ownership/consolidation ADR |
