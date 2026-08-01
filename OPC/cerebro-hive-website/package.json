@@ -21,7 +21,21 @@
     "prisma:migrate": "turbo prisma:migrate:deploy",
     "release": "semantic-release",
     "policy:check": "turbo policy:check",
-    "prepare": "husky"
+    "prepare": "husky",
+    "arch:check": "node tools/arch/check-architecture.mjs",
+    "arch:boundaries": "depcruise --config .dependency-cruiser.js packages services apps",
+    "arch:verify-rules": "bash tools/arch/verify-boundaries.sh",
+    "corpus:signatures": "vitest run --passWithNoTests tools/arch/corpus",
+    "harness": "node tools/harness/cli.mjs",
+    "harness:list": "node tools/harness/cli.mjs list",
+    "harness:gate": "node tools/harness/cli.mjs gate",
+    "gate-a:self-test": "node tools/arch/gate-a/self-test.mjs",
+    "gate-b:semantics": "node tools/arch/gate-b/semantics-test.mjs",
+    "gate-b:model": "node tools/arch/gate-b/history-model.mjs",
+    "gate-c": "node tools/arch/gate-c/run-gate-c.mjs",
+    "gate-c:self-test": "node tools/arch/gate-c/self-test.mjs",
+    "gate-c:controls": "node tools/arch/gate-c/verify-controls.mjs",
+    "harness:status": "node tools/harness/cli.mjs status"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",

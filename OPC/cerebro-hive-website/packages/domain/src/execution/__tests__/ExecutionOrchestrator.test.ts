@@ -10,26 +10,49 @@ import {
   ExecutionEventSink,
 } from '../ExecutionOrchestrator';
 import { DomainEvent } from '../../events/DomainEvent';
+import { ConcurrencyError } from '../../errors/DomainError';
 
 /** A minimal in-memory ExecutionRepository — real enough to exercise the
  * orchestrator's persistence calls without any real database, consistent
  * with this suite testing coordination logic, not a real Phase 9d
- * implementation (which does not exist yet). */
+ * implementation. Reconciled to the mandatory-`expectedVersion` contract:
+ * enforces the same real optimistic-concurrency check
+ * `InMemoryExecutionRepository.ts` does, so a bug in the orchestrator's own
+ * version bookkeeping would surface here as a thrown `ConcurrencyError`,
+ * not just in that class's own test suite. */
 class InMemoryExecutionRepository implements ExecutionRepository {
   public readonly saved: Execution[] = [];
-  private readonly byId = new Map<string, Execution>();
+  private readonly store = new Map<string, { version: number; execution: Execution }>();
 
-  async save(execution: Execution): Promise<void> {
+  async save(execution: Execution, expectedVersion: number): Promise<void> {
+    const key = execution.id.toString();
+    const existing = this.store.get(key);
+    const currentVersion = existing?.version ?? 0;
+    if (currentVersion !== expectedVersion) {
+      throw new ConcurrencyError(
+        `Execution ${key} was modified concurrently — expected version ${expectedVersion}, found ${currentVersion}.`
+      );
+    }
     this.saved.push(execution);
-    this.byId.set(execution.id.toString(), execution);
+    this.store.set(key, { version: execution.version, execution });
   }
 
-  async findById(id: ExecutionId): Promise<Execution | undefined> {
-    return this.byId.get(id.toString());
+  async load(id: ExecutionId): Promise<Execution | undefined> {
+    return this.store.get(id.toString())?.execution;
+  }
+
+  async exists(id: ExecutionId): Promise<boolean> {
+    return this.store.has(id.toString());
+  }
+
+  async loadTransitions(id: ExecutionId) {
+    return this.store.get(id.toString())?.execution.transitionHistory ?? [];
   }
 
   async findChildren(parentId: ExecutionId): Promise<readonly Execution[]> {
-    return Array.from(this.byId.values()).filter((e) => e.parentExecutionId?.equals(parentId));
+    return Array.from(this.store.values())
+      .map((entry) => entry.execution)
+      .filter((e) => e.parentExecutionId?.equals(parentId));
   }
 }
 
@@ -67,7 +90,10 @@ describe('ExecutionOrchestrator.run — happy path', () => {
     expect(execution.status).toBe(ExecutionStatus.Completed);
     expect(execution.isTerminal).toBe(true);
     expect(provider.execute).toHaveBeenCalledTimes(1);
-    expect(provider.execute).toHaveBeenCalledWith(execution);
+    // Phase 9f-1: execute() now also receives a cancellationSignal (the
+    // provider's read-only view of ExecutionCancellationTokenSource) as a
+    // second argument.
+    expect(provider.execute).toHaveBeenCalledWith(execution, expect.objectContaining({ cancellationSignal: expect.anything() }));
 
     // create() itself is not a transition (no event), then Validating,
     // Queued, Running, Completed — 4 persisted-with-event steps, plus the

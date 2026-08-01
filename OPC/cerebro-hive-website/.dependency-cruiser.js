@@ -1,6 +1,9 @@
+const edaRules = require("./.dependency-cruiser.eda.js").forbidden;
+
 /** @type {import('dependency-cruiser').IConfiguration} */
 module.exports = {
   forbidden: [
+    ...edaRules,
     {
       name: "no-studio-to-forge-api",
       severity: "error",

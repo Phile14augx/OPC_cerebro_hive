@@ -1,0 +1,21 @@
+{
+  "name": "@cerebro/execution-runtime-adapters",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@cerebro/domain": "workspace:*",
+    "@cerebro/events": "workspace:*",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

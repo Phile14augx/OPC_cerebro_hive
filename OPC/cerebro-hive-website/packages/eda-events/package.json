@@ -1,0 +1,23 @@
+{
+  "name": "@cerebro/eda-events",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "cerebroEda": {
+    "layer": "platform",
+    "adr": [
+      "0001",
+      "0009"
+    ],
+    "scaffoldUntilPhase": 1
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0",
+    "@types/node": "^22.0.0"
+  }
+}

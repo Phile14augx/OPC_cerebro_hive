@@ -1,0 +1,16 @@
+{
+  "$comment": "Gate B criteria — ADR 0009. Fixed before measurement. See CEREBROEDA-VERIFICATION-MATRIX.md §3.",
+  "fixedAt": "2026-08-01",
+  "scales": [50, 500, 5000, 10000],
+  "thresholds": {
+    "dispatchLatencyP99Ms": 2000,
+    "continueAsNewPerJobs": 1000,
+    "replayDeterminism": "required",
+    "$comment": "Dispatch p99 matches the Blueprint §22.1 SLO. continueAsNew more often than once per 1,000 jobs means history growth is forcing the design."
+  },
+  "correctness": {
+    "nonZeroExitIsOutcomeNotFailure": true,
+    "evictedPodIsRetried": true,
+    "$comment": "The failure mode ADR 0009 names as most easily botched. Will not surface at 50 jobs — must be asserted explicitly at every scale."
+  }
+}

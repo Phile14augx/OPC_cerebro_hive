@@ -1,0 +1,1229 @@
+{
+  "record": {
+    "caseId": "gate-a-sandbox-overhead",
+    "title": "Sandbox runtime overhead on EDA workloads",
+    "adrs": [
+      "0013"
+    ],
+    "phase": 1,
+    "criteriaFingerprint": "5b5f9c2b",
+    "criteriaFixedAt": "2026-08-01",
+    "ranAt": "2026-08-01T09:57:55.780Z",
+    "verdict": "INCONCLUSIVE",
+    "findings": [
+      "lint_tool/native: CV 0.155 exceeds 0.15. Host is too noisy for a meaningful comparison — rerun on a quiet machine.",
+      "gVisor was not measured. Gate A cannot be satisfied without it — this run establishes a baseline only and does NOT confirm ADR 0013."
+    ],
+    "rows": []
+  },
+  "observations": {
+    "gate": "A",
+    "adr": "0013",
+    "criteriaVersion": 2,
+    "quick": false,
+    "environment": {
+      "hostname": "c857d09db23e",
+      "kernel": "6.8.0-124-generic",
+      "arch": "x64",
+      "cpuModel": "AMD Ryzen 7 7435HS",
+      "cpuCount": 2,
+      "totalMemGiB": 4,
+      "loadAvgAtStart": [
+        0.03,
+        0.03,
+        0.02
+      ],
+      "virtualised": "none",
+      "nodeVersion": "v22.22.3",
+      "capturedAt": "2026-08-01T09:57:45.127Z"
+    },
+    "runtimesRequested": [
+      "native",
+      "docker",
+      "gvisor"
+    ],
+    "runtimesMeasured": [
+      "native"
+    ],
+    "runtimesUnavailable": [
+      "docker",
+      "gvisor"
+    ],
+    "iterations": {
+      "warmup": 3,
+      "measured": 25
+    },
+    "observations": [
+      {
+        "workload": "startup",
+        "axis": "startup",
+        "runtime": "native",
+        "failed": false,
+        "failure": null,
+        "samples": [
+          {
+            "ok": true,
+            "wallclockMs": 6.881465,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.549044,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 6.546001,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 6.063397,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.594931,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 6.129403,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.748538,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 6.111554,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.09043,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 6.029367,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.039663,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.306161,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 7.622384,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.902762,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 6.343941,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.915886,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.270674,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.209902,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 6.001565,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.901174,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.884006,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 6.152351,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 4.904711,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.638664,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 5.490301,
+            "wallclockFromTimeMs": 0,
+            "cpuUserSec": 0,
+            "cpuSysSec": 0,
+            "peakRssKb": 1664,
+            "outputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      {
+        "workload": "hdl_parse_large",
+        "axis": "cpu+read",
+        "runtime": "native",
+        "failed": false,
+        "failure": null,
+        "samples": [
+          {
+            "ok": true,
+            "wallclockMs": 90.745852,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55280,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 90.660884,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55156,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 93.777688,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55160,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 79.623234,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55284,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 89.292936,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55156,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 91.659476,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55120,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 79.018613,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55024,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 90.767132,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55152,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 90.767232,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55124,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 85.261211,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55120,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 88.315997,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55380,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 81.319218,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55152,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 90.937772,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55284,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 84.631202,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55024,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 89.05829,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55416,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 83.32728,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55156,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 78.698735,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55152,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 77.435265,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55124,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 78.926708,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55152,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 72.800327,
+            "wallclockFromTimeMs": 60,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55168,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 75.718992,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55156,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 88.825963,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55156,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 74.747248,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55024,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 71.218575,
+            "wallclockFromTimeMs": 60,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55028,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 70.977371,
+            "wallclockFromTimeMs": 60,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.01,
+            "peakRssKb": 55008,
+            "outputDigest": "3e1f0da03dcbf7506d1f918e0da1d7ec6cb6b23697bbc53f97e5d586a21d72fe"
+          }
+        ]
+      },
+      {
+        "workload": "lint_tool",
+        "axis": "cpu+read+write",
+        "runtime": "native",
+        "failed": false,
+        "failure": null,
+        "samples": [
+          {
+            "ok": true,
+            "wallclockMs": 80.138141,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55252,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 76.931866,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55296,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 78.123435,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55168,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 84.134005,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55168,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 76.537225,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55296,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 77.220766,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55164,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 90.748853,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.01,
+            "peakRssKb": 55296,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 85.427068,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55296,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 72.136868,
+            "wallclockFromTimeMs": 60,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55292,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 75.32095,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55292,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 68.583223,
+            "wallclockFromTimeMs": 60,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55296,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 77.473297,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55296,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 76.631429,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55292,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 78.396995,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55164,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 78.69887,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55252,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 81.433327,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55292,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 75.143746,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 55168,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 78.979935,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55168,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 131.047254,
+            "wallclockFromTimeMs": 120,
+            "cpuUserSec": 0.09,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 55420,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 101.809853,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55292,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 88.16021,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55420,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 72.483218,
+            "wallclockFromTimeMs": 60,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55264,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 81.099855,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55292,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 85.440378,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55168,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 85.755722,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 55296,
+            "outputDigest": "39fee7e99ecf38dded7a3552da2bbf9f6449b281876bb2e043a0013f5b8c9f26"
+          }
+        ]
+      },
+      {
+        "workload": "file_tree_traversal",
+        "axis": "metadata",
+        "runtime": "native",
+        "failed": false,
+        "failure": null,
+        "samples": [
+          {
+            "ok": true,
+            "wallclockMs": 105.376428,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54740,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 102.026235,
+            "wallclockFromTimeMs": 90,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54732,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 98.809842,
+            "wallclockFromTimeMs": 90,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54636,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 116.162489,
+            "wallclockFromTimeMs": 110,
+            "cpuUserSec": 0.08,
+            "cpuSysSec": 0.05,
+            "peakRssKb": 54732,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 104.32446,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54704,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 102.710823,
+            "wallclockFromTimeMs": 90,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54676,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 104.390085,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54664,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 102.075405,
+            "wallclockFromTimeMs": 90,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54736,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 118.65883,
+            "wallclockFromTimeMs": 110,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.05,
+            "peakRssKb": 54736,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 106.958153,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 55416,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 109.726082,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.05,
+            "peakRssKb": 54680,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 105.698721,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54368,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 111.274556,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.05,
+            "peakRssKb": 54724,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 97.267737,
+            "wallclockFromTimeMs": 90,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54636,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 105.446841,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54648,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 112.893958,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.05,
+            "peakRssKb": 54812,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 146.269636,
+            "wallclockFromTimeMs": 140,
+            "cpuUserSec": 0.09,
+            "cpuSysSec": 0.06,
+            "peakRssKb": 54716,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 105.370626,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54696,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 104.575994,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54712,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 111.683664,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54640,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 104.881425,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54740,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 112.915543,
+            "wallclockFromTimeMs": 100,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.05,
+            "peakRssKb": 54704,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 129.833994,
+            "wallclockFromTimeMs": 120,
+            "cpuUserSec": 0.09,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54768,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 103.031734,
+            "wallclockFromTimeMs": 90,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.05,
+            "peakRssKb": 54720,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 102.450262,
+            "wallclockFromTimeMs": 90,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.04,
+            "peakRssKb": 54808,
+            "outputDigest": "1da0abf05a9a357fa484b712a237097fc8d373b67205364e9c3525104c8b5c01"
+          }
+        ]
+      },
+      {
+        "workload": "mixed_parse_write",
+        "axis": "end-to-end",
+        "runtime": "native",
+        "failed": false,
+        "failure": null,
+        "samples": [
+          {
+            "ok": true,
+            "wallclockMs": 83.845487,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 54400,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 82.264063,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54272,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 79.986261,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54140,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 89.596485,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54400,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 93.411366,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54264,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 95.387618,
+            "wallclockFromTimeMs": 90,
+            "cpuUserSec": 0.07,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 54400,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 78.597582,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 54272,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 87.889535,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54140,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 81.385133,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54272,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 79.733389,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54364,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 85.335648,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54368,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 83.735969,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54368,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 78.882459,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 54268,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 76.584265,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54144,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 81.28694,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 54396,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 86.053299,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 54268,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 87.123009,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 54368,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 86.969784,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54396,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 77.315707,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 54268,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 80.449362,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 54272,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 86.52223,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.05,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54396,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 98.54864,
+            "wallclockFromTimeMs": 90,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54396,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 83.867986,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54272,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 76.588973,
+            "wallclockFromTimeMs": 70,
+            "cpuUserSec": 0.04,
+            "cpuSysSec": 0.03,
+            "peakRssKb": 54144,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          },
+          {
+            "ok": true,
+            "wallclockMs": 84.158913,
+            "wallclockFromTimeMs": 80,
+            "cpuUserSec": 0.06,
+            "cpuSysSec": 0.02,
+            "peakRssKb": 54396,
+            "outputDigest": "0e11442c6369a93a1927a17990958f0bbdbb1550f38bbe8a2d1dd88a429c96f2"
+          }
+        ]
+      }
+    ]
+  }
+}

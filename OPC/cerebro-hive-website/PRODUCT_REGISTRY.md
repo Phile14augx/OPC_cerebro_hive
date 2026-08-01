@@ -436,6 +436,32 @@ This registry is the authoritative catalog for all 50 products across the Cerebr
 
 ---
 
+## Family 1.3: Engineering Verticals
+
+> **Numbering note:** Product IDs are append-only. CerebroEDA is numbered 51 rather than inserted at 19, so that all existing references to products 19–50 remain stable.
+
+### 51. CerebroEDA™
+* **Product Family**: Cerebro Applications | **Category**: AI Engineering / Semiconductor Design Automation
+* **Tagline**: The AI operating system for chip design — orchestrating the flow, remembering the design.
+* **Mission**: Give semiconductor engineering teams a persistent, queryable memory of their design and a grounded AI layer over it, without touching the certified tools they sign off with.
+* **Business Problem**: Design teams lose more time navigating their flow than running it — finding the last known-good configuration, understanding why a regression broke, correlating a DRC cluster to an RTL change, onboarding onto a five-year-old block. These are information-retrieval and orchestration problems that no EDA tool owns.
+* **Target Customer**: Fabless semiconductor companies, ASIC/FPGA design services, IP vendors, research fabs, defence electronics.
+* **Personas**: RTL Design Engineers, Verification Engineers, Physical Design Engineers, Timing/Signoff Engineers, CAD & Methodology Engineers, Engineering Managers.
+* **Core Capabilities**: Multi-stage flow orchestration across Kubernetes/Slurm/LSF, licence-token-aware scheduling, content-addressed artifact registry with full lineage, cross-run comparison via stable result signatures, regression fan-out and coverage merge, DRC spatial clustering, waiver tracking, approval gates, audit trail, CLI and IDE surfaces.
+* **AI Capabilities**: Grounded design copilot with mandatory citations, regression failure triage, timing closure analysis with slack trajectories, DRC root-cause clustering, coverage hole strategy, legacy block explanation, impact/blast-radius analysis, documentation generation.
+* **Modules**: EDA Flows (orchestration), EDA Analysis (timing/power/DRC/LVS/coverage), EDA Knowledge (design graph, semantic search, provenance), EDA Copilot (agents and assistance), EDA Plugins (tool adapters, parsers, viewers), EDA Admin (PDKs, licences, quotas, export control).
+* **Integrations**: OpenROAD, Yosys, Verilator, OpenSTA, KLayout, Magic, ngspice, Xyce; commercial tools via CLI/file-interface adapters; Git, Gerrit, Perforce; Kubernetes, Slurm, LSF.
+* **Dependencies**: HiveIdentity, HiveOps, HiveCompute, HiveStorage, HiveVector, HiveKnowledge, HiveExchange, HiveGovern, CerebroFlow, CerebroAgent.
+* **Technology Stack**: Next.js, GraphQL Federation, gRPC, PostgreSQL 16 (partitioned), Kafka, Neo4j/Postgres graph, pgvector, OpenSearch, Redis, ClickHouse, WASM plugin runtime, gVisor-isolated runners.
+* **Deployment Model**: SaaS, Dedicated VPC, On-Premises, Air-Gapped.
+* **Security Classification**: Tier 0 — Compliance Critical (ITAR/EAR-controlled design data).
+* **Pricing Tier**: Professional, Enterprise, Enterprise Plus.
+* **Lifecycle Stage**: Research.
+* **Roadmap**: Phase 1 thin vertical slice (Yosys + OpenSTA on Kubernetes with timing history); see `docs/architecture/CEREBROEDA-BLUEPRINT.md` §25.
+* **KPIs**: Time-to-triage per regression, Flow runs orchestrated, Suggestion acceptance rate, Agent grounding score, Licence utilisation.
+
+---
+
 # PART 2 — HIVE PLATFORM (Foundational Infrastructure)
 
 ## Family 2.1: Infrastructure Platform
@@ -1160,7 +1186,8 @@ This registry is the authoritative catalog for all 50 products across the Cerebr
 | Infrastructure Platform | 10 | HiveForge, HiveOps, HiveAPI, HiveIdentity, HiveShield, HiveStorage, HiveCompute, HiveNetwork, HiveConsole, HiveGateway |
 | AI Runtime & Platform | 7 | HiveModels, HiveAgents, HiveAutomation, HivePlanner, HiveReasoner, HiveMemory, HiveEvaluation |
 | Ecosystem & Commerce | 8 | HiveExchange, HiveMarketplace, HiveBilling, HiveLicense, HivePartner, HiveDeploy, HiveCloud, HiveGovern |
-| **TOTAL** | **50** | |
+| Engineering Verticals | 1 | CerebroEDA |
+| **TOTAL** | **51** | |
 
 ---
 
