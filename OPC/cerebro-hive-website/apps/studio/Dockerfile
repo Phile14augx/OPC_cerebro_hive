@@ -19,7 +19,12 @@ FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
 RUN addgroup --system --gid 1001 nodejs && \
     adduser  --system --uid 1001 nextjs
 
-# Enable pnpm via corepack (matches workspace version)
+# Enable pnpm via corepack (matches workspace version).
+# COREPACK_INTEGRITY_KEYS=0 disables corepack's signature check against its
+# bundled key set — that set goes stale as npm rotates signing keys faster
+# than base images update, and a stale keyid otherwise hard-fails every
+# `corepack prepare` with "Internal Error: Cannot find matching keyid".
+ENV COREPACK_INTEGRITY_KEYS=0
 RUN corepack enable && corepack prepare pnpm@9 --activate
 
 ENV PNPM_HOME=/pnpm

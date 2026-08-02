@@ -8,6 +8,8 @@ ARG ALPINE_VERSION=3.19
 
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nodeapi
+# See apps/studio/Dockerfile for why COREPACK_INTEGRITY_KEYS=0 is needed.
+ENV COREPACK_INTEGRITY_KEYS=0
 RUN corepack enable && corepack prepare pnpm@9 --activate
 ENV PNPM_HOME=/pnpm PATH="$PNPM_HOME:$PATH"
 WORKDIR /app

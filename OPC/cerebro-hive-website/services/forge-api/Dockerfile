@@ -2,7 +2,10 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Install pnpm
+# Install pnpm. See apps/studio/Dockerfile for why COREPACK_INTEGRITY_KEYS=0
+# is needed (corepack's bundled signing keys go stale against npm's current
+# ones, hard-failing every `corepack prepare` otherwise).
+ENV COREPACK_INTEGRITY_KEYS=0
 RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
 
 # Copy workspace config
