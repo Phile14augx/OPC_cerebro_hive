@@ -13,6 +13,14 @@ name: Build & Publish Images
 #   • Manual dispatch with optional image selection
 #
 # Images are signed with Cosign (keyless OIDC) for supply chain security.
+#
+# Security gate (closes the gap in MASTER-PLAN-GAP-ASSESSMENT.md: images were
+# built and pushed with no scanning step at all). Per service, before the
+# real push: build a local (unpushed) linux/amd64 scan candidate, generate a
+# CycloneDX SBOM for it, and Trivy-scan it. A step failure here — severity
+# threshold set by TRIVY_SEVERITY/TRIVY_EXIT_CODE below — stops the job
+# before "Build and push" ever runs, so nothing failing the gate reaches
+# GHCR or ECR.
 # ──────────────────────────────────────────────────────────────────────────────
 
 on:
@@ -33,11 +41,15 @@ on:
 permissions:
   contents: read
   packages: write
-  id-token: write  # Cosign keyless signing
+  id-token: write        # Cosign keyless signing
+  security-events: write # required to upload Trivy SARIF to code scanning
 
 env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/cerebro-hive
+  # Policy thresholds for the pre-push Trivy gate — change here, not per-step.
+  TRIVY_SEVERITY: "CRITICAL,HIGH"
+  TRIVY_EXIT_CODE: "1"
 
 defaults:
   run:
@@ -161,7 +173,70 @@ jobs:
             com.cerebrohive.service=${{ matrix.name }}
             com.cerebrohive.version=${{ needs.setup.outputs.sha_short }}
 
-      # Build and push
+      # ── Security gate: build a local scan candidate first ──────────────────
+      # linux/amd64 only, regardless of the multi-arch matrix — Buildx --load
+      # cannot load a multi-platform build into the local Docker daemon, and
+      # a local, unpushed image is exactly what SBOM/Trivy need to inspect.
+      - name: Build scan candidate (local, amd64, not pushed)
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64
+          push: false
+          load: true
+          tags: scan-candidate/${{ matrix.name }}:${{ needs.setup.outputs.sha_short }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+            GIT_REF=${{ github.ref_name }}
+            SERVICE_NAME=${{ matrix.name }}
+
+      - name: Generate SBOM (CycloneDX)
+        uses: anchore/sbom-action@v0
+        with:
+          image: scan-candidate/${{ matrix.name }}:${{ needs.setup.outputs.sha_short }}
+          format: cyclonedx-json
+          output-file: sbom-${{ matrix.name }}.cdx.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ matrix.name }}
+          path: sbom-${{ matrix.name }}.cdx.json
+          retention-days: 90
+
+      - name: Scan image with Trivy
+        id: trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: scan-candidate/${{ matrix.name }}:${{ needs.setup.outputs.sha_short }}
+          format: sarif
+          output: trivy-${{ matrix.name }}.sarif
+          severity: ${{ env.TRIVY_SEVERITY }}
+          exit-code: ${{ env.TRIVY_EXIT_CODE }}
+          ignore-unfixed: true # don't block on vulns with no available fix yet
+
+      - name: Upload Trivy SARIF to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-${{ matrix.name }}.sarif
+          category: trivy-${{ matrix.name }}
+
+      - name: Upload Trivy report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report-${{ matrix.name }}
+          path: trivy-${{ matrix.name }}.sarif
+          retention-days: 90
+      # If the Trivy step above failed (severity threshold exceeded), the job
+      # stops here by default — the steps below never run, so nothing that
+      # fails the gate reaches GHCR or ECR.
+
+      # Build and push (multi-arch, post-scan)
       - name: Build and push ${{ matrix.name }}
         id: build
         uses: docker/build-push-action@v5
