@@ -23,6 +23,9 @@ import { registerToolRuntimeProvider } from './modules/runtime/providers/ToolRun
 import type { AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
 import type { AgentRepository } from '@cerebro/database';
 import type { AIGateway } from '@cerebro/ai-gateway';
+import { ExecutionOrchestrator, InMemoryExecutionRepository } from '@cerebro/domain';
+import { AgentExecutionProvider } from './modules/runtime/AgentExecutionProvider';
+import { ExecutionRuntimeService } from './modules/runtime/ExecutionRuntimeService';
 
 export interface BootstrapDeps {
   agentRuntimeService: AgentRuntimeService;
@@ -42,6 +45,22 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
   registerMockProviders();
   registerAIGatewayProvider(deps.aiGateway);
   registerToolRuntimeProvider(deps.toolRuntime, deps.toolRegistry);
+
+  // Phase 10.1/10.2 — the first real, live caller of Phase 9's execution
+  // runtime. `InMemoryExecutionRepository` is the same standalone, real
+  // (not-a-mock) implementation the whole of Phase 9 was built and verified
+  // against — there is no database-backed `ExecutionRepository` yet (see
+  // hiveforge/TECHNICAL-DEBT.md §2), so every Execution created through this
+  // wiring is process-lifetime only, lost on restart. `AgentExecutionProvider`
+  // is the one real `ExecutionProviderPort` this engagement has — it bridges
+  // to the already-real `AgentRuntimeService`; no other execution kind
+  // ('Workflow', 'Tool', 'Evaluation') has a real provider yet, and
+  // `runtime.routes.ts` rejects those kinds explicitly rather than silently
+  // pretending to execute them.
+  const executionRepository = new InMemoryExecutionRepository();
+  const agentExecutionProvider = new AgentExecutionProvider(deps.agentRuntimeService, deps.agentRepository);
+  const executionOrchestrator = new ExecutionOrchestrator(executionRepository, agentExecutionProvider);
+  const executionRuntimeService = new ExecutionRuntimeService(executionOrchestrator, executionRepository);
 
   const server = Fastify({ logger: true }).withTypeProvider<TypeBoxTypeProvider>();
 
@@ -100,7 +119,7 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
     protectedApi.register(agentRoutes, { prefix: '/api/v1/agents', bus, agentRepository: deps.agentRepository });
     protectedApi.register(workflowsRoutes, { prefix: '/api/v1/workflows' });
     protectedApi.register(telemetryRoutes, { prefix: '/api/v1/telemetry' });
-    protectedApi.register(runtimeRoutes, { prefix: '/api/v1/runtime' });
+    protectedApi.register(runtimeRoutes, { prefix: '/api/v1/runtime', executionRuntimeService });
     protectedApi.register(conversationsRoutes, {
       prefix: '/api/v1/conversations',
       agentRuntimeService: deps.agentRuntimeService,

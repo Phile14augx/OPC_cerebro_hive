@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+# Least-privilege token: these workflows only read the tree and report status.
+# Without an explicit block the job inherits the repository default, which is
+# write-all on many orgs.
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest

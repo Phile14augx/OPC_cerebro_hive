@@ -32,7 +32,8 @@ on:
 permissions:
   contents: read
   pull-requests: write
-  id-token: write  # AWS OIDC
+  id-token: write        # AWS OIDC
+  security-events: write # for SARIF uploads
 
 env:
   TF_VERSION: "1.8.5"

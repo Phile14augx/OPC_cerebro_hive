@@ -1,0 +1,82 @@
+# Grafana Datasource Provisioning — CerebroHive
+# All datasources are auto-provisioned at startup.
+# Credentials are injected from Kubernetes secrets via envFrom.
+
+apiVersion: 1
+
+deleteDatasources:
+  - name: Prometheus
+    orgId: 1
+
+datasources:
+  # ── Prometheus (metrics) ──────────────────────────────────────────────────
+  - name:      Prometheus
+    type:      prometheus
+    access:    proxy
+    uid:       prometheus
+    url:       http://prometheus.monitoring.svc.cluster.local:9090
+    isDefault: true
+    jsonData:
+      timeInterval:           "15s"
+      queryTimeout:           "60s"
+      httpMethod:             POST
+      exemplarTraceIdDestinations:
+        - name:      traceID
+          datasourceUid: tempo
+    editable: false
+
+  # ── Loki (logs) ───────────────────────────────────────────────────────────
+  - name:   Loki
+    type:   loki
+    access: proxy
+    uid:    loki
+    url:    http://loki.monitoring.svc.cluster.local:3100
+    jsonData:
+      maxLines: 1000
+      derivedFields:
+        - name:            traceID
+          matcherRegex:    '"trace_id":"(\w+)"'
+          url:             "$${__value.raw}"
+          datasourceUid:   tempo
+    editable: false
+
+  # ── Tempo (traces) ────────────────────────────────────────────────────────
+  - name:   Tempo
+    type:   tempo
+    access: proxy
+    uid:    tempo
+    url:    http://tempo.monitoring.svc.cluster.local:3200
+    jsonData:
+      httpMethod:     GET
+      tracesToLogs:
+        datasourceUid:  loki
+        tags:           ["service.name", "pod"]
+        spanStartTimeShift: "-1m"
+        spanEndTimeShift:   "1m"
+        filterByTraceID: true
+        filterBySpanID:  false
+      tracesToMetrics:
+        datasourceUid: prometheus
+        tags:
+          - key: service.name
+            value: service
+        queries:
+          - name:  "Request Rate"
+            query: 'rate(traces_spanmetrics_calls_total{$__tags}[5m])'
+      serviceMap:
+        datasourceUid: prometheus
+      nodeGraph:
+        enabled: true
+      search:
+        hide: false
+    editable: false
+
+  # ── Alertmanager ──────────────────────────────────────────────────────────
+  - name:   Alertmanager
+    type:   alertmanager
+    access: proxy
+    uid:    alertmanager
+    url:    http://alertmanager.monitoring.svc.cluster.local:9093
+    jsonData:
+      implementation: prometheus
+    editable: false

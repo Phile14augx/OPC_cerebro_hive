@@ -36,8 +36,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — never commit real values
 .env*
+
+# ...but the template MUST be committed, otherwise a new contributor has no way
+# to know which variables the app needs. `.env*` above would otherwise swallow it.
+!.env.example
+!.env.*.example
 
 # vercel
 .vercel
@@ -48,3 +53,32 @@ next-env.d.ts
 
 *storybook.log
 storybook-static
+tools/arch/gate-a/results/
+
+# scratch, throwaway and one-shot scripts
+# These accumulated at the repo root and were quarantined during the 2026-08-02
+# audit. Keep them out of the tree — if a script is worth keeping, move it into
+# scripts/ or tools/ with a name that says what it does.
+scratch_*.js
+scratch_*.ts
+_shot*.js
+__shot_*.js
+_tmp_*
+scaffold_*.ps1
+.audit-quarantine/
+
+# build / tool output that must never be committed
+build_output.log
+ts-errors.log
+diff.txt
+*.tsbuildinfo
+out.zip
+pnpm-lock.yaml.*
+
+# credential-adjacent files
+si_keys.txt
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.*.json

@@ -1,0 +1,92 @@
+# Stage 4 — Network Chaos: Packet loss + network partition
+#
+# Packet loss simulates unreliable network paths (spot instance churn,
+# cross-region traffic, degraded switches). Validates retry logic,
+# exponential backoff, and connection pool health under intermittent loss.
+#
+# Network partition simulates a split-brain scenario. For a stateful
+# system like PostgreSQL or NATS, this validates quorum behavior.
+# For stateless services, validates load balancer failover.
+
+---
+# Packet loss: 20% to all forge-api peers
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: packet-loss-forge-api
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage4-network
+    fault: packet-loss
+    blast-radius: medium
+spec:
+  action: loss
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "forge-api"
+  loss:
+    loss: "20"          # 20% packet drop
+    correlation: "25"   # correlated loss (burst, not random) — more realistic
+  direction: both
+  duration: "5m"
+
+---
+# Packet corruption: 5% (tests protocol error handling)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: packet-corrupt-forge-api
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage4-network
+    fault: packet-corrupt
+    blast-radius: low
+spec:
+  action: corrupt
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "forge-api"
+  corrupt:
+    corrupt: "5"
+    correlation: "25"
+  direction: both
+  duration: "3m"
+
+---
+# Full network partition: forge-api ↔ ai-gateway
+# Tests whether requests time out cleanly (not hang) and the circuit
+# breaker between forge-api and ai-gateway opens within the configured
+# threshold.
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: partition-forge-to-ai-gateway
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage4-network-partition
+    fault: partition
+    path: forge-api-to-ai-gateway
+    blast-radius: high
+spec:
+  action: partition
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "forge-api"
+  direction: both
+  target:
+    mode: all
+    selector:
+      namespaces:
+        - cerebro-staging
+      labelSelectors:
+        "app.kubernetes.io/name": "ai-gateway"
+  duration: "5m"

@@ -3,10 +3,13 @@ import { ExecutionId } from './ExecutionId';
 import { ITransactionContext } from '../transactions/UnitOfWork';
 
 /**
- * Phase 9a's persistence *contract* for the canonical `Execution` aggregate,
- * extended in Phase 9d with an optional optimistic-concurrency parameter.
- * `packages/domain/src/execution/InMemoryExecutionRepository.ts` (Phase 9d)
- * is the first real implementation — standalone, not backed by
+ * Phase 9a's persistence *contract* for the canonical `Execution` aggregate.
+ * Concurrency control is mandatory version-based optimistic concurrency
+ * (every `save()` call must state the version it expects to overwrite), not
+ * an opt-in parameter — see `save()`'s own doc comment below.
+ * `packages/domain/src/execution/InMemoryExecutionRepository.ts` (Phase 9d,
+ * reconciled to this contract post-9d) is the first real implementation —
+ * standalone, not backed by
  * `@cerebro/database`'s live Prisma schema. Whether/how to migrate
  * `WorkflowExecution`/`AgentExecution` onto this contract remains
  * undecided, per `ADR-039` decision 6, unchanged by this file.

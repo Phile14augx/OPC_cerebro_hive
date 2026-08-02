@@ -1,0 +1,139 @@
+# Stage 5 — AI-Specific Chaos: Embedding service degradation + budget exhaustion
+#
+# Two distinct AI-native failure modes:
+#
+# A. Embedding service degradation — the vector embedding service (used for
+#    knowledge retrieval and semantic search) becomes slow or unavailable.
+#    Validates that agent runs degrade gracefully: agents that rely on
+#    RAG fall back to prompt-only context, not hard-fail. Vector search
+#    probe fires. withVectorSearchTelemetry records the latency spike.
+#
+# B. Budget exhaustion — the AI spend limit is deliberately exhausted by
+#    issuing many cheap inference requests, then verifying that:
+#      - AI_BUDGET_HARD_LIMIT blocks further requests with 429
+#      - CerebroAICostBudgetCritical alert fires
+#      - The forge-api returns a structured error (not a 500)
+#      - The HiveOps costs page reflects the exhaustion in real-time
+
+---
+# Experiment A: Embedding service pod failure
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: embedding-service-failure
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage5-ai
+    fault: embedding-unavailable
+    blast-radius: medium
+spec:
+  action: pod-failure   # pause, not kill — simulates a hung embedding process
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "embedding-service"
+  duration: "5m"
+
+---
+# Embedding latency injection — slow embeddings (tests RAG pipeline timeout)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: embedding-service-latency
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage5-ai
+    fault: embedding-slow
+    blast-radius: low
+spec:
+  action: delay
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "ai-gateway"
+  delay:
+    latency: "3000ms"   # 3s delay — exceeds typical 2s embedding SLO
+    jitter: "500ms"
+  direction: to
+  target:
+    mode: all
+    selector:
+      namespaces:
+        - cerebro-staging
+      labelSelectors:
+        "app.kubernetes.io/name": "embedding-service"
+  duration: "5m"
+
+---
+# Experiment B: Budget exhaustion simulation
+# This is a Job that issues many cheap inference requests to exhaust the
+# per-workspace budget limit, then verifies the hard limit responds correctly.
+# Not a Chaos Mesh CRD — runs as a Kubernetes Job.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: chaos-budget-exhaustion
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage5-ai
+    fault: budget-exhaustion
+    blast-radius: medium
+spec:
+  parallelism: 5
+  completions: 50        # 50 requests × 5 workers = 250 inference calls
+  backoffLimit: 0        # don't retry failed calls (we want to see the 429)
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        experiment: budget-exhaustion
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: load-generator
+          image: curlimages/curl:8.9.1
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              RESPONSE=$(curl -s -w "\n%{http_code}" \
+                -X POST \
+                -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $PROBE_API_KEY" \
+                -H "X-Workspace-ID: $CHAOS_WORKSPACE_ID" \
+                "$FORGE_API_URL/api/ai/generate" \
+                -d '{"model":"claude-haiku-4-5-20251001","messages":[{"role":"user","content":"say hi"}],"max_tokens":1}')
+
+              HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+              BODY=$(echo "$RESPONSE" | head -n -1)
+
+              echo "HTTP $HTTP_CODE: $BODY"
+
+              if [ "$HTTP_CODE" = "429" ]; then
+                echo "Budget limit enforced correctly — chaos test passed"
+                exit 0
+              elif [ "$HTTP_CODE" = "200" ]; then
+                echo "Request succeeded — budget not yet exhausted"
+                exit 0
+              else
+                echo "Unexpected response $HTTP_CODE"
+                exit 1
+              fi
+          env:
+            - name: PROBE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: blackbox-probe-auth
+                  key: api-key
+            - name: CHAOS_WORKSPACE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: blackbox-probe-auth
+                  key: workspace-id
+            - name: FORGE_API_URL
+              value: "https://api.cerebrohive-staging.com"

@@ -1,0 +1,29 @@
+{
+  "record": {
+    "caseId": "gate-c-tenant-isolation",
+    "title": "Cross-tenant isolation under adversarial probing",
+    "adrs": [
+      "0010"
+    ],
+    "phase": 1,
+    "criteriaFingerprint": "2da89846",
+    "criteriaFixedAt": "2026-08-01",
+    "ranAt": "2026-08-01T09:57:56.353Z",
+    "verdict": "INCONCLUSIVE",
+    "findings": [
+      "Harness self-test passed (18 checks: probe completeness, evidence model, criteria integrity).",
+      "DATABASE_URL not set — no probe executed against real infrastructure.",
+      "PASS requires at least integration-test evidence; this run produced static-analysis. The result is consistent with the decision but does not establish it."
+    ],
+    "rows": []
+  },
+  "observations": {
+    "selfTest": {
+      "ok": true,
+      "log": "\nGate C harness self-test\n\nprobe set completeness\n  ok   every probe is fully specified\n  ok   probe ids are unique\n  ok   every criteria target has probes\n  ok   postgres probes include negative controls\n  ok   all vector probes target the shared-index failure mode\n  ok   excluded probes are documented with a reason\n\nevidence and confidence model\n  ok   PASS on weak evidence downgrades to INCONCLUSIVE\n  ok   PASS on sufficient evidence stands\n  ok   FAIL is never downgraded by weak evidence\n  ok   analytical model ranks below integration test\n  ok   system measurement outranks integration test\n\nbreach handling\n  ok   evidence record cites ADR 0010 (not 0015)\n  ok   evidence record carries confidence\n  ok   a breach is representable\n\ncriteria integrity\n  ok   criteria are dated\n  ok   criteria require integration-test evidence for PASS\n  ok   criteria require negative controls\n  ok   criteria cite ADR 0010\n\nwhat this does NOT establish\n  - that tenants are actually isolated  → needs DATABASE_URL and real probes\n  - storage / vector / cache / execution → needs those services provisioned\n\nharness OK — Gate C remains INCONCLUSIVE until probes run against real infrastructure\n\n"
+    },
+    "controls": null,
+    "probes": null,
+    "hasDb": false
+  }
+}

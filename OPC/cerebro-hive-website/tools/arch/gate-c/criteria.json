@@ -1,0 +1,24 @@
+{
+  "$comment": [
+    "Gate C acceptance criteria — ADR 0010 (D7). Fixed before measurement.",
+    "",
+    "Note on ADR numbering: tenant isolation is ADR 0010. ADR 0015 is the RTL",
+    "frontend. Evidence records must cite 0010 so a failure routes to the decision",
+    "it actually bears on.",
+    "",
+    "Unlike Gates A and B this has no thresholds — isolation is binary. Any probe",
+    "that succeeds in reaching another tenant's data fails the gate outright."
+  ],
+  "fixedAt": "2026-08-01",
+  "adr": "0010",
+  "requireAllProbesBlocked": true,
+  "minimumEvidenceForPass": "integration-test",
+  "$minimumEvidenceRationale": "Isolation cannot be established by static analysis or unit tests with fakes. A fake that models RLS correctly proves only that the fake is correct. PASS requires real Postgres.",
+  "requireNegativeControls": true,
+  "$negativeControlRationale": "Every probe must be demonstrated to FAIL against a deliberately broken schema. A probe never observed failing may be passing vacuously.",
+  "targets": ["postgres", "object-storage", "vector", "cache", "execution"],
+  "outcome": {
+    "onPass": "ADR 0010 isolation model validated at integration-test confidence.",
+    "onFail": "ADR 0010 REOPENED. A successful probe is a cross-tenant breach path. Halt feature work on the affected plane until closed."
+  }
+}

@@ -1,0 +1,120 @@
+# P1: SLO Burn Validation
+#
+# This experiment validates the entire SLO alerting pipeline end-to-end:
+#   1. Inject latency that exceeds the 500ms SLO threshold
+#   2. Verify the latency SLI recording rule reflects the degradation
+#   3. Verify the 1h burn rate exceeds the 14× critical threshold
+#   4. Verify CerebroSLOErrorBudgetCritical fires within 2 minutes
+#   5. Remove the latency injection
+#   6. Verify the alert resolves and error budget stops burning
+#
+# This is the runtime counterpart to a unit test of the PromQL rules.
+# It proves the detection chain works under real traffic conditions.
+#
+# Prerequisites:
+#   - Staging cluster running with Prometheus + Alertmanager
+#   - Synthetic probes active (probe traffic generates the latency metrics)
+#   - Recording rules deployed (cerebro:slo:latency:burn_rate_1h must exist)
+#
+# Run sequence:
+#   kubectl apply -f slo-burn-validation.yaml
+#   # Wait 2 minutes, then check:
+#   # curl alertmanager:9093/api/v2/alerts | jq '.[] | select(.labels.alertname == "CerebroSLOErrorBudgetCritical")'
+#   kubectl delete -f slo-burn-validation.yaml
+#   # Verify alert resolves within 5 minutes
+
+---
+# Phase 1: Inject latency above the 500ms SLO threshold
+# This causes the latency SLI to drop below 1.0, burning the error budget.
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: slo-burn-latency-injection
+  namespace: cerebro-chaos
+  labels:
+    experiment: slo-burn-validation
+    phase: "1-inject"
+    blast-radius: medium
+  annotations:
+    description: "SLO burn validation — inject 600ms latency to exceed 500ms SLO threshold"
+spec:
+  action: delay
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "forge-api"
+  delay:
+    latency: "600ms"      # exceeds 500ms p99 SLO threshold
+    jitter: "50ms"
+    correlation: "75"     # high correlation = burst of slow requests (worst case for burn rate)
+  direction: both
+  duration: "10m"         # 10 minutes is enough to exceed the 1h burn window threshold
+
+---
+# Verification Job — runs alongside the chaos experiment
+# Polls Prometheus every 30s and records when the alert fires.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: slo-burn-verifier
+  namespace: cerebro-chaos
+  labels:
+    experiment: slo-burn-validation
+    phase: "2-verify"
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        experiment: slo-burn-verification
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: verifier
+          image: curlimages/curl:8.9.1
+          command:
+            - sh
+            - -c
+            - |
+              PROMETHEUS_URL="http://prometheus-operated.monitoring.svc.cluster.local:9090"
+              ALERTMANAGER_URL="http://alertmanager-operated.monitoring.svc.cluster.local:9093"
+              MAX_WAIT_SECONDS=300   # 5 minute timeout
+              POLL_INTERVAL=30
+              elapsed=0
+
+              echo "=== SLO Burn Validation ==="
+              echo "Waiting for CerebroSLOErrorBudgetCritical to fire..."
+              echo ""
+
+              while [ $elapsed -lt $MAX_WAIT_SECONDS ]; do
+                # Check burn rate
+                BURN_RATE=$(curl -s "$PROMETHEUS_URL/api/v1/query?query=cerebro:slo:latency:burn_rate_1h" \
+                  | python3 -c "import sys,json; d=json.load(sys.stdin); r=d.get('data',{}).get('result',[]); print(r[0]['value'][1] if r else '0')" 2>/dev/null || echo "0")
+
+                # Check if alert is firing
+                ALERT_FIRING=$(curl -s "$ALERTMANAGER_URL/api/v2/alerts?filter=alertname=CerebroSLOErrorBudgetCritical" \
+                  | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d))" 2>/dev/null || echo "0")
+
+                echo "[$(date -u +%H:%M:%S)] burn_rate_1h=${BURN_RATE} | alert_firing=${ALERT_FIRING}"
+
+                if [ "$ALERT_FIRING" -gt "0" ]; then
+                  echo ""
+                  echo "✅ PASS: CerebroSLOErrorBudgetCritical fired at elapsed=${elapsed}s"
+                  echo "   Burn rate: ${BURN_RATE}× (threshold: 14×)"
+                  exit 0
+                fi
+
+                sleep $POLL_INTERVAL
+                elapsed=$((elapsed + POLL_INTERVAL))
+              done
+
+              echo ""
+              echo "❌ FAIL: Alert did not fire within ${MAX_WAIT_SECONDS}s"
+              echo "   Last burn rate: ${BURN_RATE}×"
+              echo ""
+              echo "Debugging info:"
+              curl -s "$PROMETHEUS_URL/api/v1/query?query=cerebro:slo:latency:burn_rate_1h" | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), indent=2))" 2>/dev/null || echo "Cannot reach Prometheus"
+              exit 1

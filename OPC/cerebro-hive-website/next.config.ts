@@ -29,19 +29,18 @@ const nextConfig: NextConfig = {
 
   env: {
     NEXT_PUBLIC_BASE_PATH: isStaticExport ? basePath : "",
-  },
-
-  // Expose runtime env vars in SSR mode
-  serverRuntimeConfig: {
-    apiUrl: process.env.API_URL ?? "http://gateway:8900/api/v1",
-  },
-
-  publicRuntimeConfig: {
-    apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8900/api/v1",
-    keycloakUrl: process.env.NEXT_PUBLIC_KEYCLOAK_URL ?? "http://localhost:8080",
-    keycloakRealm: process.env.NEXT_PUBLIC_KEYCLOAK_REALM ?? "cerebro",
-    keycloakClientId: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID ?? "cerebro-web",
-    siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+    // Migrated from serverRuntimeConfig / publicRuntimeConfig (removed in Next.js 16)
+    API_URL: process.env.API_URL ?? "http://gateway:8900/api/v1",
+    NEXT_PUBLIC_API_URL:
+      process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8900/api/v1",
+    NEXT_PUBLIC_KEYCLOAK_URL:
+      process.env.NEXT_PUBLIC_KEYCLOAK_URL ?? "http://localhost:8080",
+    NEXT_PUBLIC_KEYCLOAK_REALM:
+      process.env.NEXT_PUBLIC_KEYCLOAK_REALM ?? "cerebro",
+    NEXT_PUBLIC_KEYCLOAK_CLIENT_ID:
+      process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID ?? "cerebro-web",
+    NEXT_PUBLIC_SITE_URL:
+      process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   },
 };
 

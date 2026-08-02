@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-const API = process.env.NEXT_PUBLIC_PLATFORM_API_URL || "http://localhost:8090";
-const KEY = process.env.NEXT_PUBLIC_PLATFORM_DEMO_KEY || "";
+import { API, KEY } from "@/lib/platform-api";
 type Tab = "overview" | "users" | "audit";
 const AUDIT = [
   { user: "phil@cerebrohive.io", action: "Agent created", resource: "finance-reconciler-v2", time: "2026-07-25 08:12" },

@@ -1,0 +1,98 @@
+# Stage 5 — AI-Specific Chaos: Provider rate limiting (429)
+#
+# This is the most common real-world AI platform failure mode.
+# Every LLM provider enforces RPM (requests per minute) and TPM
+# (tokens per minute) limits. A sufficiently active workspace can
+# exhaust them, causing all subsequent requests to fail with 429.
+#
+# Hypothesis: injecting 429 responses on requests to api.anthropic.com
+# causes InstrumentedAIProvider to:
+#   1. Emit llm_errors_total{error_type="rate_limit", provider="anthropic"}
+#   2. Activate the provider circuit breaker (if implemented)
+#   3. Route to the fallback provider (OpenAI) within configured timeout
+#   4. If no fallback: return a 429 to the caller with Retry-After header
+#
+# Steady state:
+#   - llm_requests_total success rate > 99%
+#   - No rate limit errors in the last 5 minutes
+#
+# HTTPChaos intercepts HTTP traffic at the pod network level (iptables).
+# It can match on request URL patterns and inject arbitrary response codes.
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: HTTPChaos
+metadata:
+  name: provider-rate-limit-429
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage5-ai
+    fault: rate-limit
+    provider: anthropic
+    blast-radius: high
+spec:
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "ai-gateway"
+  target: Request      # intercept outbound requests from the pod
+  port: 443
+  path: "/v1/messages"  # Anthropic Messages API path
+  method: POST
+  abort: false
+  response:
+    statusCode: 429
+    headers:
+      Content-Type: "application/json"
+      Retry-After: "30"
+      X-Chaos-Injected: "true"
+    body: |
+      {
+        "type": "error",
+        "error": {
+          "type": "rate_limit_error",
+          "message": "Rate limit exceeded. [chaos-injected]"
+        }
+      }
+  duration: "5m"
+
+---
+# OpenAI rate limit variant (tests provider-routing failover)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: HTTPChaos
+metadata:
+  name: provider-rate-limit-openai
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage5-ai
+    fault: rate-limit
+    provider: openai
+    blast-radius: medium
+spec:
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "ai-gateway"
+  target: Request
+  port: 443
+  path: "/v1/chat/completions"
+  method: POST
+  response:
+    statusCode: 429
+    headers:
+      Content-Type: "application/json"
+      Retry-After: "60"
+      X-RateLimit-Limit-Requests: "500"
+      X-RateLimit-Remaining-Requests: "0"
+    body: |
+      {
+        "error": {
+          "message": "Rate limit reached. [chaos-injected]",
+          "type": "requests",
+          "code": "rate_limit_exceeded"
+        }
+      }
+  duration: "3m"

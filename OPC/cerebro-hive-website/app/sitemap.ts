@@ -2,21 +2,28 @@ import type { MetadataRoute } from "next";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cerebro-hive.com";
 
-// ── Platform product slugs (51 products) ──────────────────────────────────────
+// ── Platform product slugs (60 products) ──────────────────────────────────────
+// Must stay in sync with the directories under `app/platform/`.
+// `pnpm sitemap:check` (scripts/check-sitemap.mjs) fails the build if this list
+// drifts — either by omitting a real page (lost SEO surface) or by listing a
+// slug that has no page (a 404 submitted to search engines).
 const PLATFORM_SLUGS = [
   // T0 — Foundation
-  "identity", "govern",
+  "identity", "govern", "security",
   // T1 — Infrastructure
   "compute", "storage", "network", "memory", "lake", "deploy",
   // T2 — Data & Intelligence
-  "data", "vector", "knowledge", "analytics", "observatory", "quality",
+  "data", "vector", "knowledge", "analytics", "observatory", "monitor", "quality", "x",
   // T3 — AI Runtime
-  "models", "agents", "forge", "flow", "automation", "planner", "reasoner", "semantic", "evaluation", "gateway", "api",
+  "models", "agents", "forge", "flow", "automation", "planner", "reasoner", "semantic",
+  "evaluation", "gateway", "api", "workspace",
   // T4 — Cerebro Applications
-  "studio", "agent", "search", "archive", "insight", "copilot", "customer360", "compliance", "console", "ops",
+  "studio", "agent", "search", "archive", "insight", "copilot", "customer360",
+  "compliance", "console", "ops", "cerebro-analytics", "predict", "growth",
+  "research", "architect",
   // T5 — Enterprise & Ecosystem
   "erp", "crm", "hr", "finance", "procurement", "projects", "assets", "pulse",
-  "marketplace", "partner", "billing", "license", "cloud", "shield", "learn", "x",
+  "exchange", "marketplace", "partner", "billing", "license", "cloud", "shield", "learn",
 ];
 
 // ── Solution slugs (12 solutions) ─────────────────────────────────────────────
@@ -58,6 +65,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/academy/courses", 0.7, "monthly"),
     url("/academy/learning-paths", 0.7, "monthly"),
     url("/academy/corporate-programs", 0.7, "monthly"),
+    url("/academy/certificates", 0.7, "monthly"),
     url("/academy/referral", 0.6, "monthly"),
 
     // ── Services sub-pages ────────────────────────────────────────────────────

@@ -51,7 +51,9 @@ const TIERS: { label: string; description: string; products: Product[] }[] = [
       { name: "HiveGateway™", tagline: "Envoy + OPA · AI firewall · route management · traffic shaping", href: "/platform/gateway", tier: 2, icon: Route, live: true },
       { name: "HiveKnowledge™", tagline: "Document ingestion · semantic search · RAG with inline citations", href: "/platform/knowledge", tier: 2, icon: Layers, live: true },
       { name: "HiveConsole™", tagline: "Unified admin portal · system health · user management · audit log", href: "/platform/console", tier: 2, icon: LayoutDashboard, live: true },
+      { name: "HiveMonitor™", tagline: "Real-time telemetry · distributed tracing · health checks · on-call routing", href: "/platform/monitor", tier: 2, icon: Activity, live: true },
       { name: "HiveAPI™", tagline: "Developer portal · API explorer · key management · usage analytics", href: "/platform/api", tier: 2, icon: Code2, live: true },
+      { name: "Cerebro X™", tagline: "AI gateway console · live model routing · cost & token telemetry · trace spans", href: "/platform/x", tier: 2, icon: Route, live: true },
     ],
   },
   {
@@ -67,6 +69,7 @@ const TIERS: { label: string; description: string; products: Product[] }[] = [
       { name: "HiveEvaluation™", tagline: "Distributed traces · token metrics · event stream · platform summary", href: "/platform/evaluation", tier: 3, icon: Activity, live: true },
       { name: "HiveForge™", tagline: "Prompt Studio · sandbox testing · tool binding · agent authoring", href: "/platform/forge", tier: 3, icon: Code2, live: true },
       { name: "HiveOps™", tagline: "Model registry · canary deployments · MLOps · LLMOps · agent SRE", href: "/platform/ops", tier: 3, icon: Settings, live: true },
+      { name: "HiveWorkspace™", tagline: "Shared human + agent workspaces · handoffs · shared context · session replay", href: "/platform/workspace", tier: 3, icon: Users, live: true },
     ],
   },
   {
@@ -91,13 +94,18 @@ const TIERS: { label: string; description: string; products: Product[] }[] = [
       { name: "CerebroQuality™", tagline: "SPC control charts · defect tracking · computer vision inspection · CAPA", href: "/platform/quality", tier: 4, icon: CheckSquare, live: true },
       { name: "CerebroCompliance™", tagline: "Multi-framework posture · SOC 2 · GDPR · ISO 27001 · evidence tracking", href: "/platform/compliance", tier: 4, icon: Scale, live: true },
       { name: "CerebroCustomer360™", tagline: "Unified profiles · identity resolution · Fellegi-Sunter · audience segments", href: "/platform/customer360", tier: 4, icon: UserCheck, live: true },
+      { name: "CerebroAnalytics™", tagline: "Predictive & prescriptive analytics · cohort modelling · driver analysis", href: "/platform/cerebro-analytics", tier: 4, icon: BarChart2, live: true },
+      { name: "CerebroPredict™", tagline: "Forecasting for supply chain, revenue, and capacity · scenario simulation", href: "/platform/predict", tier: 4, icon: Waves, live: true },
+      { name: "CerebroGrowth™", tagline: "Marketing, sales pipeline, and revenue optimization · attribution modelling", href: "/platform/growth", tier: 4, icon: Rocket, live: true },
+      { name: "CerebroResearch™", tagline: "Deep intelligence gathering & synthesis · source grading · cited briefings", href: "/platform/research", tier: 4, icon: Search, live: true },
+      { name: "CerebroArchitect™", tagline: "Enterprise system design assistant · reference architectures · ADR drafting", href: "/platform/architect", tier: 4, icon: Building2, live: true },
     ],
   },
   {
     label: "Tier 5 — Ecosystem & Commerce",
     description: "Developer exchange, enterprise marketplace, billing, licensing, partner portal, CI/CD, and multi-cloud.",
     products: [
-      { name: "HiveExchange™", tagline: "Developer exchange · artifact publishing · skill marketplace · monetization", href: "/platform/x", tier: 5, icon: Globe, live: true },
+      { name: "HiveExchange™", tagline: "Agents · models · workflows · connectors · industry packs · prompt libraries", href: "/platform/exchange", tier: 5, icon: Globe, live: true },
       { name: "HiveMarketplace™", tagline: "Enterprise solution marketplace · certified bundles · one-click deploy", href: "/platform/marketplace", tier: 5, icon: ShoppingBag, live: true },
       { name: "HiveBilling™", tagline: "Usage metering · rating engine · revenue recognition · invoicing", href: "/platform/billing", tier: 5, icon: CreditCard, live: true },
       { name: "HiveLicense™", tagline: "Entitlement management · runtime enforcement · seat & token quotas", href: "/platform/license", tier: 5, icon: Key, live: true },

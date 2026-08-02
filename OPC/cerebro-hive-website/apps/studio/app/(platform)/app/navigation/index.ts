@@ -17,6 +17,8 @@ import {
   Hammer, Brain, PenTool, Smartphone, Globe, Monitor, MessageCircle,
   FlaskConical as Flask, TestTube2, Truck, GitBranch, ScanSearch,
   FileCode2, Cpu, Layers3, TerminalSquare, Webhook, Boxes,
+  // HiveOps
+  DollarSign,
   type LucideIcon
 } from "lucide-react";
 
@@ -227,9 +229,25 @@ export const forgeNavigation: NavGroup = {
   ],
 };
 
+export const hiveopsNavigation: NavGroup = {
+  title: "HiveOps",
+  href: "/app/hiveops",
+  icon: Activity,
+  items: [
+    { title: "Overview",         href: "/app/hiveops",             icon: LayoutDashboard },
+    { title: "Pipelines",        href: "/app/hiveops/pipelines",   icon: GitBranch },
+    { title: "Deployments",      href: "/app/hiveops/deployments", icon: Rocket },
+    { title: "Security",         href: "/app/hiveops/security",    icon: ShieldCheck },
+    { title: "AI Costs",         href: "/app/hiveops/costs",       icon: DollarSign },
+    { title: "Clusters",         href: "/app/hiveops/clusters",    icon: Server },
+    { title: "GitOps",           href: "/app/hiveops/gitops",      icon: GitMerge },
+  ],
+};
+
 export const platformNavigation: NavGroup[] = [
   workspaceNavigation,
   forgeNavigation,
+  hiveopsNavigation,
   aiNavigation,
   solutionsNavigation,
   infrastructureNavigation,

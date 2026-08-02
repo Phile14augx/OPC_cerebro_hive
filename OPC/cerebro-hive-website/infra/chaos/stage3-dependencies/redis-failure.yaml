@@ -1,0 +1,63 @@
+# Stage 3 — Dependency Chaos: Redis failure
+#
+# Redis is used for: session caching, rate limit counters, job queues,
+# and AI response caching. A Redis failure exposes whether the application
+# degrades gracefully (cache miss → DB fallback) or fails hard.
+#
+# Hypothesis: killing Redis causes cache misses and elevated DB load,
+# but no user-visible errors (cache-aside pattern absorbs the failure).
+# Rate limiting falls back to in-memory or passes through (validated separately).
+#
+# Steady state:
+#   - Redis keyspace_hits / (keyspace_hits + keyspace_misses) > 0.8
+#   - DB query rate at baseline
+#   - No 5xx errors
+#
+# Expected outcome:
+#   - Cache miss rate spikes to 100% while Redis is down
+#   - DB query rate increases proportionally
+#   - Application serves correctly (no 500s from cache operations)
+#   - AI response caching disabled (every inference hits the LLM — cost spike visible in metrics)
+#   - After Redis restarts, hit ratio recovers as cache warms
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: redis-pod-kill
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage3-dependency
+    dependency: redis
+    blast-radius: medium
+spec:
+  action: pod-kill
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "redis"
+  gracePeriod: 0
+  duration: "3m"
+
+---
+# Redis pod-failure (pause, not kill) — simulates a hung Redis process
+# that still accepts connections but never responds. Tests timeout handling.
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: redis-pod-failure
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage3-dependency-hang
+    dependency: redis
+    blast-radius: medium
+spec:
+  action: pod-failure
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "redis"
+  duration: "2m"

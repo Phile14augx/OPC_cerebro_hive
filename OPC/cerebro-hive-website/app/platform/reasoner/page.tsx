@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Brain, Shield, Users } from "lucide-react";
+import { API, KEY } from "@/lib/platform-api";
 
-const API = process.env.NEXT_PUBLIC_PLATFORM_API_URL || "http://localhost:8090";
-const KEY = process.env.NEXT_PUBLIC_PLATFORM_DEMO_KEY || "";
 
 type Tab = "cot" | "constitution" | "debate";
 

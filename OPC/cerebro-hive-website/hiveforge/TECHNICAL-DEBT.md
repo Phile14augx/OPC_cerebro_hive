@@ -1,0 +1,58 @@
+# Technical Debt Register — Phase 9 (Execution Lifecycle Runtime) + Phase 10.1/10.2 (Live Integration)
+
+**Scope:** `packages/domain/src/execution/`, `packages/execution-runtime-adapters/`, `apps/platform-api/src/modules/runtime/`, and the ADR/phase-doc set covering Phase 9 (`ADR-039` through `ADR-051`) and Phase 10's first slice (`ADR-052`). This register does not cover the rest of the monorepo — it is scoped to the runtime this engagement built, and should be extended (not replaced) if a future phase wants a project-wide debt register.
+
+**Purpose:** a single, honest list of what was deliberately deferred, what still needs real infrastructure to verify, what could be improved later, what the system's real limitations are, and what's genuinely still an open question — separated from the ADRs themselves so a reader doesn't have to mine 13 documents to answer "what's left."
+
+## 1. Intentional debt (deliberate, considered trade-offs)
+
+- **`ExecutionOrchestrator` has no real validation logic.** `driveNewExecution()` always proceeds `VALIDATING -> QUEUED` unconditionally — there is no hook for a real validation step to reject an Execution. The aggregate's transition graph supports `VALIDATING -> FAILED` (exercised directly in 9g-6's test suite), but nothing in the orchestrator calls it. Adding a real validation seam is future work, not started here, and no test claims otherwise.
+- **Every optional dependency defaults to permissive-or-conservative no-ops**, by design: `AllowAllExecutionAuthorizationPolicy` (permissive — matches pre-9f-1 unchecked behavior), `NoOpExecutionIdempotencyStore` (no dedup unless configured), `NeverRetryPolicy` (no auto-retry unless configured), `NoOpExecutionTelemetry` (no signals unless configured). This means a caller who constructs `new ExecutionOrchestrator(repo, provider)` with no options gets none of 9f/9g's real enforcement — correct and intentional (additive, behavior-preserving), but worth remembering: these capabilities are opt-in, not on-by-default.
+- **`FanOutExecutionEventSink`** (durable outbox + in-process event bus, both fed from one sink) exists only inside `ExecutionEndToEnd.test.ts` — deliberately not promoted to a package export, since production callers are expected to choose exactly one delivery mechanism or compose their own. If a real caller needs both simultaneously, this pattern is proven correct and ready to lift out, but hasn't been.
+- **`ExecutionIdempotencyStore`'s Postgres table (`execution_idempotency_keys`) is a new, dedicated table, not a reuse of `packages/database`'s existing `IdempotencyRecord` model.** The existing model's `(tenantId, requestHash)` keying and `status`/`responseHash` fields don't match this contract's needs; reconciling the two (or deciding they should stay separate) is an open, deferred decision (`ADR-046`).
+
+## 2. Deferred infrastructure (requires real, currently-unavailable backends to build or verify)
+
+- **No Postgres-backed `ExecutionRepository`.** `wiring.ts`'s production composition root still defaults `repository` to the standalone `InMemoryExecutionRepository` — a database-backed implementation was explicitly out of 9g-1's scope and has not been built since.
+- **`PostgresExecutionLeaseStore`/`PostgresExecutionIdempotencyStore` are unverified against a live PostgreSQL server.** Their SQL construction and result-interpretation logic are tested against a real (non-framework-mock) fake `PgQueryable`, not a real database — whether the documented schema actually creates correctly, whether `ON CONFLICT`/`RETURNING` behaves as written under real concurrent writers, and connection-pooling/transaction/isolation-level behavior are all unverified.
+- **`NatsExecutionEventPublisher.ts`/`wiring.ts` have never been typechecked against a real `@cerebro/events`/`@cerebro/core-bus`/`@cerebro/database` dependency graph**, let alone run against a live NATS server — this sandbox has no generated `@prisma/client`, blocking the cross-package build. Their `publish()` boundary uses explicit `as any` casts because true structural compatibility could not be compiler-verified here.
+- **No live NATS broker has ever been connected to, published to, or subscribed from**, anywhere in Phase 9.
+- **No real OpenTelemetry Collector, Prometheus, Grafana, or alerting pipeline exists.** 9g-5 built real, standalone `Tracer`/`Meter`/`Logger` contracts with in-memory reference adapters; a real OTel SDK integration, a `prom-client` exporter, dashboards, and alert thresholds are all unbuilt.
+- **No health/readiness HTTP endpoint exists** for the execution runtime — this requires live HTTP server/route wiring, out of every 9g sub-phase's standalone scope.
+- **Multi-process/distributed behavior is entirely unverified**: lease contention across real concurrent workers, a real distributed scheduler, cross-process failover, and horizontal scaling have no test coverage of any kind (only single-process, in-memory-fake-backed behavior is exercised throughout 9g-1 through 9g-6).
+- **`packages/queue` (a real, orphaned NATS JetStream client discovered mid-9g-1) remains untouched** — not adopted, not deleted, not further investigated beyond confirming it has no `package.json` and zero consumers. A future decision (adopt, wire, or remove) is open.
+- **`packages/core-bus`'s `DomainEventBus` and `packages/domain-model`'s `HiveEventBus` remain orphaned/unimplemented**, exactly as `ADR-043`'s investigation found them. Neither was fixed, deprecated, or removed — that decision remains open.
+
+## 3. Future optimization (works today, not tuned or load-tested)
+
+- **Outbox relay batch size (default 50) and `maxAttempts` (default 5) are untested under real load** — no throughput or latency characterization exists for `ExecutionEventRelay.relayOnce()`.
+- **`ExecutionLeaseHeartbeat`'s default heartbeat interval (half the lease duration) is a conventional safety margin, not a benchmarked value** — no data exists on real renewal latency or contention under many concurrent workers.
+- **No performance or throughput benchmark exists anywhere in Phase 9** — every verification in 9a-9g-6 is a correctness test, not a load test.
+- **Metric label cardinality (e.g. `execution_retries_total`'s `attempt`/`retried` labels) has not been evaluated against a real time-series backend's cardinality limits** — fine for the in-memory collector, untested for Prometheus-scale cardinality.
+
+## 4. Known limitations (real, structural, not a "todo")
+
+- **Everything in Phase 9 is single-process.** Leases, idempotency, the scheduler, and workers are all designed to be safe under single-process concurrency (or, for the Postgres adapters, safe in *principle* under multi-process access via real SQL atomicity — but that principle is unverified per §2).
+- **No test anywhere in Phase 9 waits on real elapsed wall-clock time.** Every timeout/heartbeat/scheduling test uses a deterministic fake `Clock` and/or a manually-driven fake `TimerSource`. This is correct discipline for deterministic tests, but means real-world timing behavior (clock drift, scheduling jitter, GC pauses affecting a real interval timer) is entirely unobserved.
+- **"Validation failure" has no real orchestrator-level trigger** (see §1) — the only test demonstrating it operates directly on the aggregate.
+- **Property-based/random-command-sequence testing was considered and explicitly not built** (`ADR-051`) — a real, reasoned scope decision (the fixed scenario matrix already covers every legal-transition edge), not an oversight, but worth knowing if a future contributor wonders why it's absent.
+- **Correlation-ID propagation is verified only within one in-process pipeline run** — nothing confirms correlation IDs survive a real network hop (an HTTP call, a real NATS message, a real database round-trip).
+- **This sandbox had no functioning git repository for the duration of this engagement** — none of Phase 9's work has been committed to version control from within this session. This is an operational gap, not a code gap, but it means there is currently no commit history marking any of Phase 9's incremental progress until the working copy this session is pointed at is confirmed to have a real `.git` history.
+
+## 5.5 Phase 10.1/10.2 additions (live integration into `apps/platform-api`)
+
+- **`/pause` returns a real 501, not a real pause.** `ExecutionTransitions.ts` has no user-requested `RUNNING -> WAITING` edge — building real pause support requires a new `ExecutionOrchestrator` method and a new transition-graph edge (a `packages/domain` change), correctly not invented unilaterally inside an application-level wiring task. See `ADR-052` decision 4.
+- **`/events/stream` (SSE) is not wired to real events.** It now honestly reports "not yet wired" instead of the previous mock's fake `setInterval` token stream. A real implementation would subscribe to an Execution's event sink via the already-proven `InMemoryEventBus` reuse pattern (`ADR-049` decision 5).
+- **Only `execution.kind === 'Agent'` has a real `ExecutionProviderPort` (`AgentExecutionProvider`).** `'Workflow'`/`'Tool'`/`'Evaluation'` executions fail explicitly with a clear reason — no provider exists for them yet.
+- **`apps/platform-api` could not be typechecked in this sandbox at all — for any file, old or new.** A full `tsc -p tsconfig.json --noEmit` run failed identically on pre-existing files (`bootstrap.ts`, `conversations.routes.ts`, `agents.handlers.ts`) and the new Phase 10 files alike, confirming this is a pre-existing, total sandbox constraint (no generated `@prisma/client`, transitively blocking `fastify`/`@sinclair/typebox`/`@cerebro/*` resolution in this app specifically), not something Phase 10 introduced. No live HTTP request has been sent to any of the new/changed routes.
+- **Executions created through this new wiring do not survive a process restart** — `ExecutionRuntimeService` is deliberately backed by the same standalone `InMemoryExecutionRepository` Phase 9 used throughout, since no database-backed `ExecutionRepository` exists yet (§2 above).
+- **`InMemoryExecutionRepository.listByTenant()` is O(n)** (full in-memory scan + sort) — fine for tests and small in-process deployments, not a claim about performance at any real scale; a database-backed implementation would express this as an indexed query.
+
+## 5. Research items (genuinely open questions, not yet decided)
+
+- Should `ExecutionIdempotencyStore`'s dedicated Postgres table be reconciled with, or kept separate from, `packages/database`'s existing `IdempotencyRecord` model?
+- Should `ExecutionCheckpoint.revision` be renamed (e.g. to `transitionCount`) to stop colliding, in name only, with `Execution.version` — a documentation-clarity question raised during the Phase 9 stabilization review, not a functional one (`ADR-042`'s Amendment).
+- Should `packages/queue` be adopted as a second NATS client path, formally wired and given a `package.json`, or removed as dead code?
+- Should `packages/core-bus`'s `DomainEventBus` or `packages/domain-model`'s `HiveEventBus` be formally deprecated/removed now that `packages/events` is the adopted event-transport foundation (`ADR-043`), or left as-is pending some future use?
+- What should `ADR-039`'s still-deferred canonical-persistence-schema decision (a new schema vs. reusing `packages/database`'s live schema vs. `packages/db`'s stranded schema) actually be, once a real database-backed `ExecutionRepository` is prioritized?
+- How should the execution runtime be wired into `apps/platform-api`'s `runtime.routes.ts` (still mocked, per the original Slice 5 review) — this remains unstarted end-to-end integration work, distinct from Phase 9's own standalone verification.

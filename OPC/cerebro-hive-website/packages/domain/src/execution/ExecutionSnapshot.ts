@@ -43,6 +43,7 @@ export interface ExecutionSnapshot {
   readonly updatedAt: string;
   readonly startedAt?: string;
   readonly completedAt?: string;
+  readonly version: number;
   readonly transitionHistory: readonly ExecutionTransitionRecordSnapshot[];
 }
 
@@ -68,6 +69,7 @@ export function toExecutionSnapshot(execution: Execution): ExecutionSnapshot {
     updatedAt: props.updatedAt.toISOString(),
     startedAt: props.startedAt?.toISOString(),
     completedAt: props.completedAt?.toISOString(),
+    version: props.version,
     transitionHistory: props.transitionHistory.map((r) => ({
       from: r.from,
       to: r.to,
@@ -114,6 +116,7 @@ export function fromExecutionSnapshot(snapshot: ExecutionSnapshot): Execution {
     updatedAt: new Date(snapshot.updatedAt),
     startedAt: snapshot.startedAt ? new Date(snapshot.startedAt) : undefined,
     completedAt: snapshot.completedAt ? new Date(snapshot.completedAt) : undefined,
+    version: snapshot.version,
     transitionHistory,
   });
 }

@@ -2,9 +2,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
+import { API, KEY } from "@/lib/platform-api";
 
-const API = process.env.NEXT_PUBLIC_PLATFORM_API_URL || "http://localhost:8090";
-const KEY = process.env.NEXT_PUBLIC_PLATFORM_DEMO_KEY || "";
 
 type Item = { slug: string; name: string; description: string; category: string; publisher?: string; price?: string; installed?: boolean };
 

@@ -82,9 +82,9 @@ describe('InMemoryExecutionRepository — save/load and optimistic concurrency',
   it('saves and loads an Execution by id', async () => {
     const repo = new InMemoryExecutionRepository();
     const exec = driveThroughRunning();
-    await repo.save(exec);
+    await repo.save(exec, 0);
 
-    const loaded = await repo.findById(exec.id);
+    const loaded = await repo.load(exec.id);
     expect(loaded).toBeDefined();
     expect(loaded!.id.equals(exec.id)).toBe(true);
     expect(loaded!.status).toBe(ExecutionStatus.Running);
@@ -93,53 +93,66 @@ describe('InMemoryExecutionRepository — save/load and optimistic concurrency',
   it('returns undefined for an unknown id', async () => {
     const repo = new InMemoryExecutionRepository();
     const exec = Execution.create(baseInput);
-    expect(await repo.findById(exec.id)).toBeUndefined();
+    expect(await repo.load(exec.id)).toBeUndefined();
   });
 
   it('findChildren returns Executions declaring the given parent', async () => {
     const repo = new InMemoryExecutionRepository();
     const parent = Execution.create(baseInput);
     const child = Execution.create({ ...baseInput, parentExecutionId: parent.id });
-    await repo.save(parent);
-    await repo.save(child);
+    await repo.save(parent, 0);
+    await repo.save(child, 0);
 
     const children = await repo.findChildren(parent.id);
     expect(children).toHaveLength(1);
     expect(children[0].id.equals(child.id)).toBe(true);
   });
 
-  it('tracks revision as transitionHistory.length and exposes it via getRevision', async () => {
+  it('exists() reports whether an Execution has been persisted', async () => {
     const repo = new InMemoryExecutionRepository();
     const exec = Execution.create(baseInput);
-    await repo.save(exec);
-    expect(repo.getRevision(exec.id)).toBe(0);
-
-    exec.transitionTo(ExecutionStatus.Validating);
-    await repo.save(exec);
-    expect(repo.getRevision(exec.id)).toBe(1);
+    expect(await repo.exists(exec.id)).toBe(false);
+    await repo.save(exec, 0);
+    expect(await repo.exists(exec.id)).toBe(true);
   });
 
-  it('rejects a save whose expectedRevision does not match the stored revision (ConcurrencyError)', async () => {
+  it('loadTransitions() returns the persisted transition log', async () => {
     const repo = new InMemoryExecutionRepository();
     const exec = Execution.create(baseInput);
-    await repo.save(exec); // stored revision: 0
+    await repo.save(exec, 0);
+    exec.transitionTo(ExecutionStatus.Validating);
+    await repo.save(exec, 1);
+    exec.transitionTo(ExecutionStatus.Queued);
+    await repo.save(exec, 2);
 
-    exec.transitionTo(ExecutionStatus.Validating); // in-memory transitionHistory.length: 1
-    await repo.save(exec, undefined, { expectedRevision: 0 }); // matches stored 0 -> accepted; stored revision is now 1
-
-    // A second writer who last read the Execution when its stored revision
-    // was still 0 (e.g. loaded before the transition above was persisted)
-    // now attempts its own conditional save, still expecting revision 0.
-    exec.transitionTo(ExecutionStatus.Queued); // in-memory transitionHistory.length: 2
-    await expect(repo.save(exec, undefined, { expectedRevision: 0 })).rejects.toThrow(ConcurrencyError);
+    const transitions = await repo.loadTransitions(exec.id);
+    expect(transitions.map((t) => t.to)).toEqual([ExecutionStatus.Validating, ExecutionStatus.Queued]);
   });
 
-  it('allows a save with no expectedRevision regardless of concurrent changes (opt-in check only)', async () => {
+  it('tracks version incrementing on each transitionTo, exposed via getVersion', async () => {
     const repo = new InMemoryExecutionRepository();
     const exec = Execution.create(baseInput);
-    await repo.save(exec);
+    await repo.save(exec, 0); // nothing stored yet -> expectedVersion 0
+    expect(repo.getVersion(exec.id)).toBe(1); // Execution.create() starts at version 1
+
     exec.transitionTo(ExecutionStatus.Validating);
-    await expect(repo.save(exec)).resolves.not.toThrow();
+    await repo.save(exec, 1); // pre-transition version was 1
+    expect(repo.getVersion(exec.id)).toBe(2);
+  });
+
+  it('rejects a save whose expectedVersion does not match the stored version (ConcurrencyError)', async () => {
+    const repo = new InMemoryExecutionRepository();
+    const exec = Execution.create(baseInput);
+    await repo.save(exec, 0); // stored version: 1
+
+    exec.transitionTo(ExecutionStatus.Validating); // in-memory version: 2
+    await repo.save(exec, 1); // matches stored 1 -> accepted; stored version is now 2
+
+    // A second writer who last read the Execution when its stored version
+    // was still 1 (e.g. loaded before the transition above was persisted)
+    // now attempts its own conditional save, still expecting version 1.
+    exec.transitionTo(ExecutionStatus.Queued); // in-memory version: 3
+    await expect(repo.save(exec, 1)).rejects.toThrow(ConcurrencyError);
   });
 });
 
@@ -270,7 +283,7 @@ describe('Crash recovery — orchestrator resumes correctly from persisted state
     // repository as a brand-new object graph (not the same in-memory
     // instance `run()` returned), the same way a real process would after
     // recovering from a crash.
-    const rehydrated = await repo.findById(execution.id);
+    const rehydrated = await repo.load(execution.id);
     expect(rehydrated).toBeDefined();
     expect(rehydrated).not.toBe(execution);
     expect(rehydrated!.status).toBe(ExecutionStatus.Waiting);
@@ -279,7 +292,7 @@ describe('Crash recovery — orchestrator resumes correctly from persisted state
     const resumed = await orchestrator.resume(rehydrated!);
     expect(resumed.status).toBe(ExecutionStatus.Completed);
 
-    const finalPersisted = await repo.findById(execution.id);
+    const finalPersisted = await repo.load(execution.id);
     expect(finalPersisted!.status).toBe(ExecutionStatus.Completed);
   });
 
@@ -289,7 +302,7 @@ describe('Crash recovery — orchestrator resumes correctly from persisted state
     const orchestrator = new ExecutionOrchestrator(repo, provider);
 
     const execution = await orchestrator.run(baseInput);
-    const persisted = await repo.findById(execution.id);
+    const persisted = await repo.load(execution.id);
 
     const replayed = replayExecution({
       id: persisted!.id,

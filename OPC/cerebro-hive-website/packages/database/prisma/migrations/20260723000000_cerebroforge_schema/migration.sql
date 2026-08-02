@@ -2,7 +2,52 @@
 -- CerebroForge™ Schema Migration
 -- Extends existing Project/Module/Requirement/GeneratedArtifact models
 -- Adds ForgeAgentRun and ForgeSession
+-- Also creates Repository, Branch, Commit tables
 -- =============================================================================
+
+-- ─── Create Repository ────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS "Repository" (
+  "id"          UUID NOT NULL DEFAULT gen_random_uuid(),
+  "projectId"   UUID NOT NULL REFERENCES "Project"("id") ON DELETE CASCADE,
+  "url"         TEXT NOT NULL,
+  "provider"    TEXT NOT NULL DEFAULT 'github',
+  "defaultBranch" TEXT NOT NULL DEFAULT 'main',
+  "createdAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT "Repository_pkey" PRIMARY KEY ("id")
+);
+
+CREATE INDEX IF NOT EXISTS "Repository_projectId_idx" ON "Repository"("projectId");
+
+-- ─── Create Branch ────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS "Branch" (
+  "id"          UUID NOT NULL DEFAULT gen_random_uuid(),
+  "repositoryId" UUID NOT NULL REFERENCES "Repository"("id") ON DELETE CASCADE,
+  "name"        TEXT NOT NULL,
+  "isDefault"   BOOLEAN NOT NULL DEFAULT false,
+  "createdAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT "Branch_pkey" PRIMARY KEY ("id")
+);
+
+CREATE INDEX IF NOT EXISTS "Branch_repositoryId_idx" ON "Branch"("repositoryId");
+
+-- ─── Create Commit ────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS "Commit" (
+  "id"          UUID NOT NULL DEFAULT gen_random_uuid(),
+  "repositoryId" UUID NOT NULL REFERENCES "Repository"("id") ON DELETE CASCADE,
+  "hash"        TEXT NOT NULL,
+  "message"     TEXT NOT NULL,
+  "author"      TEXT NOT NULL,
+  "agentType"   TEXT,
+  "createdAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT "Commit_pkey" PRIMARY KEY ("id")
+);
+
+CREATE INDEX IF NOT EXISTS "Commit_repositoryId_idx" ON "Commit"("repositoryId");
 
 -- ─── Extend Project ───────────────────────────────────────────────────────────
 ALTER TABLE "Project"
@@ -25,7 +70,9 @@ ALTER TABLE "Project"
 
 CREATE INDEX IF NOT EXISTS "Project_forgeStatus_idx" ON "Project"("forgeStatus");
 
--- ─── Extend Repository ────────────────────────────────────────────────────────
+-- ─── Extend Repository (additional columns) ────────────────────────────────────
+-- Note: These columns already exist from the CREATE TABLE above, but ALTER TABLE
+-- with IF NOT EXISTS is idempotent and safe
 ALTER TABLE "Repository"
   ADD COLUMN IF NOT EXISTS "provider"       TEXT NOT NULL DEFAULT 'github',
   ADD COLUMN IF NOT EXISTS "defaultBranch"  TEXT NOT NULL DEFAULT 'main';
@@ -142,7 +189,7 @@ CREATE INDEX IF NOT EXISTS "ForgeAgentRun_projectId_idx"  ON "ForgeAgentRun"("pr
 CREATE INDEX IF NOT EXISTS "ForgeAgentRun_agentType_idx"  ON "ForgeAgentRun"("agentType");
 CREATE INDEX IF NOT EXISTS "ForgeAgentRun_status_idx"     ON "ForgeAgentRun"("status");
 
--- ─── New: ForgeSession ────────────────────────────────────────────────────────
+-- ─── New: ForgeSession ─────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS "ForgeSession" (
   "id"        UUID         NOT NULL DEFAULT gen_random_uuid(),
   "projectId" UUID         NOT NULL REFERENCES "Project"("id") ON DELETE CASCADE,

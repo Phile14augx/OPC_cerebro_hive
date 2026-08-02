@@ -1,0 +1,28 @@
+{
+  "record": {
+    "caseId": "gate-b-workflow-scale",
+    "title": "Temporal execution semantics and scale (50 → 10,000 jobs)",
+    "adrs": [
+      "0009"
+    ],
+    "phase": 1,
+    "criteriaFingerprint": "8d48b4db",
+    "criteriaFixedAt": "2026-08-01",
+    "ranAt": "2026-08-01T09:57:56.130Z",
+    "verdict": "INCONCLUSIVE",
+    "findings": [
+      "Execution semantics validated (16 checks, no cluster required).",
+      "History model predicts single-workflow fan-out cannot reach 50,000 activities; child-workflow sharding is mandatory, not optional. See history-model output.",
+      "No Temporal cluster reachable (set TEMPORAL_ADDRESS). Scheduling throughput, real history growth and replay-after-restart remain unmeasured."
+    ],
+    "rows": []
+  },
+  "observations": {
+    "semantics": {
+      "ok": true,
+      "log": "\nGate B — execution semantics\n\nthe distinction ADR 0009 says is most easily botched\n  ok   non-zero tool exit is NOT retried\n  ok   zero exit completes successfully\n  ok   evicted pod IS retried\n  ok   unreachable backend IS retried\n  ok   exit 137 (OOM-killed tool) is an outcome, not infra\n\nnon-retryable infrastructure\n  ok   bad image digest fails immediately\n  ok   unsupported syscall fails immediately (deterministic)\n\nretry policy\n  ok   exhausted attempts fail permanently\n  ok   backoff is monotonically increasing\n  ok   backoff is capped\n  ok   jitter spreads retries\n\nexhaustiveness\n  ok   every infrastructure reason is classified\n  ok   no exit code leaks into retry\n\ndeterminism (replay safety)\n  ok   compliant workflow passes determinism probes\n  ok   non-deterministic workflow is caught\n\nwhat this does NOT establish\n  - scheduling throughput at scale        → needs a cluster\n  - real history growth                   → needs a cluster (model: history-model.mjs)\n  - async activity completion under load  → needs a cluster\n  - replay after worker restart           → needs a cluster\n\nsemantics OK — Gate B remains INCONCLUSIVE pending cluster measurement\n\n"
+    },
+    "model": "# Gate B — Workflow History Growth Model (ADR 0009)\n\n> **MODEL, NOT MEASUREMENT.** Computed from documented Temporal defaults and the\n> stated event model below. Produces a prediction for the real Gate B run to\n> confirm or refute — it does not itself satisfy Gate B.\n\n## Assumptions\n\n| Assumption | Value | Confidence |\n|---|---|---|\n| History count terminate limit | 51,200 | documented default, unverified on our cluster |\n| History count warn threshold | 10,240 | documented default, unverified |\n| Events per activity (base) | 3 | high — scheduled/started/completed is structural |\n| Completions per workflow task | 4 | LOW — depends on concurrency and poll timing |\n| Bytes per event | 512 | LOW — payload-dependent; assumes artifact refs not blobs |\n\nThe two low-confidence assumptions are the ones the real run must pin down.\n\n## Predicted history growth, single workflow\n\n| Activities | Activity events | Workflow-task events | Total events | % of terminate limit | Est. size | Status |\n|---|---|---|---|---|---|---|\n| 10 | 30 | 9 | 44 | 0.1% | 0.0 MiB | **ok** |\n| 100 | 300 | 75 | 380 | 0.7% | 0.2 MiB | **ok** |\n| 1,000 | 3,000 | 750 | 3,755 | 7.3% | 1.8 MiB | **ok** |\n| 10,000 | 30,000 | 7,500 | 37,505 | 73.3% | 18.3 MiB | **warns** |\n| 50,000 | 150,000 | 37,500 | 187,505 | 366.2% | 91.6 MiB | **TERMINATES** |\n\n## Finding\n\nMaximum activities in a single workflow, with 40% headroom: **8,190**.\n\nA 50,000-activity regression **cannot run as one workflow** — the model puts it at 187,505 events, 366% of the terminate limit. Temporal would terminate the run mid-flight.\n\nEven 10,000 activities reaches 37,505 events (73% of the limit) — inside the hard cap but past the warning threshold, with no margin for retries. A single retry storm would push it over.\n\nThis **validates the child-workflow-per-shard design** in ADR 0009 §8.3, and sharpens it:\n\n- The parent workflow must dispatch **child workflows**, not activities, beyond ~8,190 units.\n- Shard batch size should target ≤ 4,095 activities per child, leaving room for retries.\n- ADR 0009's \"500 concurrent children\" cap is about concurrency, not history. Both caps are needed and they are not the same constraint.\n- A parent coordinating N children spends ~5 events per child, so the parent tolerates far more shards than a flat workflow tolerates activities.\n\n## What the real Gate B run must confirm\n\n1. Actual configured limits on the deployed cluster (may differ from documented defaults).\n2. Real `completionsPerWorkflowTask` under our concurrency — the highest-leverage unknown.\n3. Real bytes per event with our payload shapes.\n4. Whether continue-as-new is needed for long-lived parents, and at what child count.\n5. Replay latency at each scale — history size drives worker memory and recovery time.\n\n",
+    "cluster": false
+  }
+}

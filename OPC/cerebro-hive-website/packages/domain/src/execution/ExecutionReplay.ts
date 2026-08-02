@@ -47,6 +47,7 @@ export function replayExecution(input: ExecutionReplayInput): Execution {
     metadata: input.metadata ?? {},
     createdAt: firstTransitionAt,
     updatedAt: firstTransitionAt,
+    version: 1,
     transitionHistory: [],
   });
 

@@ -1,0 +1,75 @@
+# Stage 4 — Network Chaos: Latency injection
+#
+# Hypothesis: 200ms added network latency between forge-api and its
+# dependencies causes p99 API latency to exceed 1s (SLO threshold),
+# triggering the latency burn-rate alert. Validates the multi-window
+# SLO model responds appropriately and the latency SLI panel in Grafana
+# reflects the degradation accurately.
+#
+# Two experiments:
+#   A. api-to-db-latency — latency between forge-api and postgres/pgbouncer
+#   B. inter-service-latency — latency across all cerebro-staging pods
+#      (simulates cross-AZ degradation)
+
+---
+# Experiment A: API → DB latency (200ms, jitter 50ms)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: api-to-db-latency
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage4-network
+    fault: latency
+    path: api-to-db
+    blast-radius: medium
+spec:
+  action: delay
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "forge-api"
+  delay:
+    latency: "200ms"
+    correlation: "25"
+    jitter: "50ms"
+  direction: to
+  target:
+    mode: all
+    selector:
+      namespaces:
+        - cerebro-staging
+      expressionSelectors:
+        - key: "app.kubernetes.io/name"
+          operator: In
+          values: ["postgresql", "pgbouncer", "redis"]
+  duration: "10m"
+
+---
+# Experiment B: Broad inter-service latency (cross-AZ simulation)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: inter-service-latency
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage4-network-broad
+    fault: latency
+    path: all-services
+    blast-radius: high
+spec:
+  action: delay
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "cerebro/component": "backend"   # applies to all labelled backend pods
+  delay:
+    latency: "100ms"
+    correlation: "50"
+    jitter: "30ms"
+  direction: both
+  duration: "5m"
