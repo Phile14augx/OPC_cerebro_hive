@@ -209,7 +209,7 @@ jobs:
 
       - name: Scan image with Trivy
         id: trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: scan-candidate/${{ matrix.name }}:${{ needs.setup.outputs.sha_short }}
           format: sarif
