@@ -1,0 +1,221 @@
+# Alertmanager Configuration — CerebroHive Platform
+# Routes alerts from Prometheus to the appropriate channels
+# based on severity, team, and SLO labels.
+#
+# Alert hierarchy:
+#   critical  → PagerDuty (page on-call) + #cerebro-incidents Slack
+#   warning   → #cerebro-alerts Slack
+#   info      → #cerebro-monitoring Slack
+#   sre team  → SRE-specific Slack + PagerDuty escalation
+#   ai-costs  → #cerebro-finops Slack + email to finance
+
+global:
+  resolve_timeout: 5m
+  slack_api_url: "{{ .SlackWebhookURL }}"   # injected from K8s secret
+
+  # SMTP for email notifications
+  smtp_smarthost: "smtp.sendgrid.net:587"
+  smtp_from: "alerts@cerebrohive.com"
+  smtp_auth_username: "apikey"
+  smtp_auth_password: "{{ .SendGridAPIKey }}"
+
+# ── Inhibition rules ──────────────────────────────────────────────────────────
+# Suppress warnings when a critical alert is already firing for the same service.
+inhibit_rules:
+  - source_matchers:
+      - severity="critical"
+    target_matchers:
+      - severity=~"warning|info"
+    equal: ["service", "namespace", "cluster"]
+
+  - source_matchers:
+      - alertname="KubernetesNodeNotReady"
+    target_matchers:
+      - alertname=~"KubePodNotRunning|KubeDeploymentReplicasMismatch"
+    equal: ["node"]
+
+# ── Routing tree ──────────────────────────────────────────────────────────────
+route:
+  # Default: anything not matched below → #cerebro-monitoring
+  receiver: slack-monitoring
+  group_by: ["alertname", "service", "namespace"]
+  group_wait:      30s
+  group_interval:  5m
+  repeat_interval: 4h
+
+  routes:
+    # ── Critical: page on-call immediately ─────────────────────────────────
+    - matchers:
+        - severity="critical"
+      receiver: pagerduty-critical
+      continue: true   # also send to Slack
+      group_wait: 10s
+      repeat_interval: 30m
+
+    - matchers:
+        - severity="critical"
+      receiver: slack-incidents
+      group_wait: 10s
+
+    # ── SLO burn rate ────────────────────────────────────────────────────────
+    - matchers:
+        - slo=~".+"
+        - severity="critical"
+      receiver: pagerduty-critical
+      group_wait: 0s   # Page immediately on SLO breach
+
+    - matchers:
+        - slo=~".+"
+        - severity="warning"
+      receiver: slack-sre
+      repeat_interval: 1h
+
+    # ── AI cost alerts ───────────────────────────────────────────────────────
+    - matchers:
+        - team="finops"
+      receiver: slack-finops
+      continue: true
+
+    - matchers:
+        - alertname=~"CerebroAICostBudget.*"
+        - severity="critical"
+      receiver: email-finance
+
+    # ── Security alerts ──────────────────────────────────────────────────────
+    - matchers:
+        - team="security"
+      receiver: slack-security
+      group_wait: 0s
+      repeat_interval: 15m
+
+    # ── SRE / infrastructure ─────────────────────────────────────────────────
+    - matchers:
+        - team="sre"
+        - severity="warning"
+      receiver: slack-sre
+      repeat_interval: 2h
+
+    # ── General warnings ─────────────────────────────────────────────────────
+    - matchers:
+        - severity="warning"
+      receiver: slack-alerts
+      repeat_interval: 2h
+
+    # ── Watchdog (must always be firing to confirm pipeline is alive) ────────
+    - matchers:
+        - alertname="Watchdog"
+      receiver: null-receiver
+
+# ── Receivers ─────────────────────────────────────────────────────────────────
+receivers:
+  - name: null-receiver
+
+  - name: pagerduty-critical
+    pagerduty_configs:
+      - service_key: "{{ .PagerDutyServiceKey }}"
+        severity: "{{ if eq .CommonLabels.severity \"critical\" }}critical{{ else }}warning{{ end }}"
+        description: "{{ .CommonAnnotations.summary }}"
+        details:
+          firing: "{{ .Alerts.Firing | len }}"
+          resolved: "{{ .Alerts.Resolved | len }}"
+          runbook: "{{ .CommonAnnotations.runbook_url }}"
+        client: "CerebroHive Alertmanager"
+        client_url: "https://monitoring.cerebrohive.com"
+
+  - name: slack-incidents
+    slack_configs:
+      - channel: "#cerebro-incidents"
+        send_resolved: true
+        title: "{{ if .Alerts.Firing }}🚨 CRITICAL{{ else }}✅ Resolved{{ end }} — {{ .CommonAnnotations.summary }}"
+        title_link: "{{ .CommonAnnotations.runbook_url }}"
+        color: "{{ if .Alerts.Firing }}danger{{ else }}good{{ end }}"
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Service:* {{ .Labels.service | default "n/a" }}
+          *Namespace:* {{ .Labels.namespace | default "n/a" }}
+          *Description:* {{ .Annotations.description }}
+          {{ if .Annotations.runbook_url }}*Runbook:* <{{ .Annotations.runbook_url }}|View>{{ end }}
+          {{ end }}
+        actions:
+          - type: button
+            text: "View Grafana"
+            url: "https://grafana.cerebrohive.com/d/cerebro-overview"
+          - type: button
+            text: "View Runbook"
+            url: "{{ .CommonAnnotations.runbook_url }}"
+
+  - name: slack-alerts
+    slack_configs:
+      - channel: "#cerebro-alerts"
+        send_resolved: true
+        title: "{{ if .Alerts.Firing }}⚠️ WARNING{{ else }}✅ Resolved{{ end }} — {{ .GroupLabels.alertname }}"
+        color: "{{ if .Alerts.Firing }}warning{{ else }}good{{ end }}"
+        text: |
+          {{ range .Alerts }}
+          *{{ .Annotations.summary }}*
+          {{ .Annotations.description | truncate 300 "…" }}
+          {{ end }}
+
+  - name: slack-sre
+    slack_configs:
+      - channel: "#cerebro-sre"
+        send_resolved: true
+        title: "{{ if .Alerts.Firing }}🔥 SLO Alert{{ else }}✅ Resolved{{ end }} — {{ .CommonAnnotations.summary }}"
+        color: "{{ if .Alerts.Firing }}danger{{ else }}good{{ end }}"
+        text: |
+          {{ range .Alerts }}
+          *SLO:* {{ .Labels.slo }}
+          *Description:* {{ .Annotations.description }}
+          {{ if .Annotations.runbook_url }}*Runbook:* <{{ .Annotations.runbook_url }}|View>{{ end }}
+          {{ end }}
+
+  - name: slack-security
+    slack_configs:
+      - channel: "#cerebro-security"
+        send_resolved: true
+        title: "🔐 Security Alert — {{ .CommonAnnotations.summary }}"
+        color: "danger"
+        text: |
+          {{ range .Alerts }}
+          *{{ .Annotations.summary }}*
+          {{ .Annotations.description }}
+          {{ end }}
+
+  - name: slack-finops
+    slack_configs:
+      - channel: "#cerebro-finops"
+        send_resolved: true
+        title: "💰 AI Cost Alert — {{ .CommonAnnotations.summary }}"
+        color: "warning"
+        text: |
+          {{ range .Alerts }}
+          *{{ .Annotations.summary }}*
+          {{ .Annotations.description }}
+          {{ end }}
+
+  - name: slack-monitoring
+    slack_configs:
+      - channel: "#cerebro-monitoring"
+        send_resolved: false   # Don't spam with info resolutions
+        title: "ℹ️ {{ .GroupLabels.alertname }}"
+        text: "{{ .CommonAnnotations.summary }}"
+
+  - name: email-finance
+    email_configs:
+      - to: "finance@cerebrohive.com, devops@cerebrohive.com"
+        subject: "🚨 AI Cost Budget Alert — CerebroHive"
+        body: |
+          AI Cost Budget Alert
+
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Fired at: {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+          {{ end }}
+
+          View dashboard: https://grafana.cerebrohive.com/d/cerebro-ai-costs
+
+# ── Notification templates ─────────────────────────────────────────────────────
+templates:
+  - /etc/alertmanager/templates/*.tmpl

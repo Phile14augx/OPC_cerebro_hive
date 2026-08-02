@@ -35,7 +35,8 @@
     "gate-c": "node tools/arch/gate-c/run-gate-c.mjs",
     "gate-c:self-test": "node tools/arch/gate-c/self-test.mjs",
     "gate-c:controls": "node tools/arch/gate-c/verify-controls.mjs",
-    "harness:status": "node tools/harness/cli.mjs status"
+    "harness:status": "node tools/harness/cli.mjs status",
+    "harness:self-test": "node tools/harness/self-test.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",

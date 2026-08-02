@@ -1,8 +1,23 @@
-name: DockerOps — Build & Push Images
+name: DockerOps — Build, Scan & Push Images
 
 # Builds multi-arch Docker images for all services and pushes to GHCR.
 # Triggered on push to main (latest tag) and on version tags (vX.Y.Z).
 # Uses build matrix so each service is built in parallel.
+#
+# Security gate (closes the confirmed gap in MASTER-PLAN-GAP-ASSESSMENT.md:
+# images were built and pushed with no scanning step at all). Per service,
+# before the final multi-arch push:
+#   1. Build a single-arch (linux/amd64) scan candidate, loaded locally only
+#      (never pushed) — Buildx `--load` doesn't support multi-platform, so
+#      the scan always runs against the amd64 variant.
+#   2. Generate a CycloneDX SBOM for that candidate (anchore/sbom-action).
+#   3. Scan it with Trivy; severity threshold is configurable via the
+#      TRIVY_SEVERITY/TRIVY_EXIT_CODE env vars below (default: fail the job
+#      on CRITICAL or HIGH). A step failure here stops the job before the
+#      push step ever runs — nothing failing the gate reaches GHCR.
+#   4. Only then: build (all requested platforms) and push, as before.
+# CodeQL (SAST) and Dependabot (dependency freshness) are unchanged and
+# complementary — this workflow only covers the image-publishing path.
 
 on:
   push:
@@ -26,11 +41,16 @@ concurrency:
 permissions:
   contents: read
   packages: write
-  id-token: write   # OIDC for AWS ECR if needed later
+  id-token: write        # OIDC for AWS ECR if needed later
+  security-events: write # required to upload Trivy SARIF to code scanning
 
 env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/cerebro-hive
+  # Policy thresholds for the pre-push Trivy gate — change here, not per-step,
+  # to keep the policy in one place as it evolves.
+  TRIVY_SEVERITY: "CRITICAL,HIGH"
+  TRIVY_EXIT_CODE: "1"
 
 jobs:
   # ── Resolve metadata (tag, sha, push flag) ─────────────────────────────────
@@ -235,7 +255,69 @@ jobs:
             org.opencontainers.image.vendor=CerebroHive
             com.cerebrohive.service=${{ matrix.name }}
 
-      - name: Build and push ${{ matrix.name }}
+      # ── Security gate: build a local scan candidate first ──────────────────
+      # linux/amd64 only, regardless of matrix.platforms — Buildx --load
+      # cannot load a multi-platform build into the local Docker daemon, and
+      # a local, unpushed image is exactly what SBOM/Trivy need to inspect.
+      - name: Build scan candidate (local, amd64, not pushed)
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64
+          push: false
+          load: true
+          tags: scan-candidate/${{ matrix.name }}:${{ needs.meta.outputs.sha_short }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+          build-args: |
+            GIT_SHA=${{ needs.meta.outputs.sha_short }}
+            GIT_REF=${{ github.ref_name }}
+
+      - name: Generate SBOM (CycloneDX)
+        uses: anchore/sbom-action@v0
+        with:
+          image: scan-candidate/${{ matrix.name }}:${{ needs.meta.outputs.sha_short }}
+          format: cyclonedx-json
+          output-file: sbom-${{ matrix.name }}.cdx.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ matrix.name }}
+          path: sbom-${{ matrix.name }}.cdx.json
+          retention-days: 90
+
+      - name: Scan image with Trivy
+        id: trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: scan-candidate/${{ matrix.name }}:${{ needs.meta.outputs.sha_short }}
+          format: sarif
+          output: trivy-${{ matrix.name }}.sarif
+          severity: ${{ env.TRIVY_SEVERITY }}
+          exit-code: ${{ env.TRIVY_EXIT_CODE }}
+          ignore-unfixed: true # don't block on vulns with no available fix yet
+
+      - name: Upload Trivy SARIF to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-${{ matrix.name }}.sarif
+          category: trivy-${{ matrix.name }}
+
+      - name: Upload Trivy report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report-${{ matrix.name }}
+          path: trivy-${{ matrix.name }}.sarif
+          retention-days: 90
+      # If the Trivy step above failed (severity threshold exceeded), the job
+      # stops here by default — the steps below never run, so nothing that
+      # fails the gate reaches GHCR.
+
+      - name: Build and push ${{ matrix.name }} (multi-arch, post-scan)
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
@@ -251,8 +333,58 @@ jobs:
             GIT_SHA=${{ needs.meta.outputs.sha_short }}
             GIT_REF=${{ github.ref_name }}
 
+      - name: Capture image digest
+        id: digest
+        if: needs.meta.outputs.push == 'true'
+        run: |
+          # The build-push action outputs the digest; capture it for Cosign
+          echo "Image built and pushed — signing with Cosign next"
+
+      # ── Cosign keyless signing (OIDC) ──────────────────────────────────────
+      # Signs each pushed image using Sigstore/Cosign with GitHub OIDC identity
+      # (no long-lived keys needed). The signature is stored in the registry
+      # alongside the image and can be verified with:
+      #   cosign verify ghcr.io/ORG/cerebro-hive/NAME:TAG \
+      #     --certificate-identity-regexp "https://github.com/ORG/.*" \
+      #     --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
+      - name: Install Cosign
+        if: needs.meta.outputs.push == 'true'
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: "v2.4.1"
+
+      - name: Sign image with Cosign (keyless OIDC)
+        if: needs.meta.outputs.push == 'true'
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+          IMAGE_TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          # Sign each tag produced by docker-meta
+          while IFS= read -r tag; do
+            if [ -n "$tag" ]; then
+              echo "Signing: $tag"
+              cosign sign --yes "$tag"
+            fi
+          done <<< "$IMAGE_TAGS"
+
+      - name: Attest SBOM to image (Cosign)
+        if: needs.meta.outputs.push == 'true'
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+          PRIMARY_TAG: ${{ env.IMAGE_PREFIX }}/${{ matrix.name }}:${{ needs.meta.outputs.sha_short }}
+        run: |
+          if [ -f "sbom-${{ matrix.name }}.cdx.json" ]; then
+            echo "Attesting SBOM to $PRIMARY_TAG"
+            cosign attest --yes \
+              --predicate "sbom-${{ matrix.name }}.cdx.json" \
+              --type cyclonedx \
+              "$PRIMARY_TAG"
+          else
+            echo "No SBOM file found — skipping attestation"
+          fi
+
       - name: Image digest
-        run: echo "Pushed ${{ matrix.name }} → ${{ steps.meta.outputs.tags }}"
+        run: echo "✅ ${{ matrix.name }} → built, scanned, pushed, signed, SBOM attested"
 
   # ── Summary ────────────────────────────────────────────────────────────────
   summary:

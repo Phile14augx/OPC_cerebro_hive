@@ -57,6 +57,8 @@ jobs:
         run: node tools/arch/gate-a/self-test.mjs
       - name: Harness case registry loads
         run: node tools/harness/cli.mjs list
+      - name: Harness invariants (declared fields cannot creep back)
+        run: node tools/harness/self-test.mjs
       - name: Gate B execution semantics (no cluster required)
         run: node tools/arch/gate-b/semantics-test.mjs
 

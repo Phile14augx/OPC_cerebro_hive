@@ -15,7 +15,7 @@ The column that matters most is **Proof of enforcement** — the test that fails
 | ADR | Decision | Enforcement mechanism | Proof of enforcement | Status |
 |---|---|---|---|---|
 | **0009** (D4) | Temporal behind `eda-workflow` façade | `dep-cruiser: eda-temporal-containment`; ESLint `no-restricted-imports` | `tools/arch/fixtures/violations/temporal-import` must be rejected | Enforced |
-| **0009** (D4) | Tool exit ≠ activity failure | `classify()` in `eda-workflow`; single decision point | `gate-b/semantics-test.mjs` — 16 checks incl. exit 137, exhaustive infra union, no exit code leaking to retry | **Enforced** |
+| **0009** (D4) | Tool exit ≠ activity failure | `classify()` in `eda-workflow`; single decision point | `gate-b/semantics-test.mjs` — 15 checks incl. exit 137, exhaustive infra union, no exit code leaking to retry | **Enforced** |
 | **0009** (D4) | History budget for fan-out | Two caps: 500 concurrent children, ~4,000 activities per child | `gate-b/history-model.mjs` (model); cluster confirmation pending | Model only |
 | **0010** (D7) | Forced RLS on every tenant table | `gate-c/schema.sql`; policy wraps `current_setting` in `(SELECT …)` to defeat generic plan caching | `gate-c/probes.mjs` — 8 postgres probes incl. prepared-statement plan cache, connection reuse, rollback residue | Harness ready, INCONCLUSIVE until CI run |
 | **0010** (D7) | No query without verified context | `VerifiedTenantContext` is unforgeable outside `eda-tenancy`; `TenantScopedRepository` takes it in the constructor | Type-level: repository construction without context does not compile | Enforced (types) |
@@ -57,6 +57,40 @@ Run by `pnpm run arch:check` on every PR:
 | README names governing ADRs | Reasoning becoming unfindable from the code |
 | Every EDA ADR has a row in this matrix | Decisions that are documentation rather than architecture |
 | Dead package detection | Accumulation of unused packages obscuring the real graph |
+
+---
+
+## 2.1 Evidence Provenance Model (Contract)
+
+Status reporting is generated, never transcribed. `pnpm harness:status` derives from artifacts; `--json` is the machine-readable contract.
+
+Every reported field carries provenance:
+
+| Provenance | Meaning | Examples |
+|---|---|---|
+| `observed` | Discovered live by executing a check or probing the environment | dependency availability, self-test counts |
+| `derived` | Computed from a recorded artifact | matrix rows, history model, probe module, SQL variant count |
+| `declared` | Authored, because it cannot be inferred | which runtime a gate needs, which script self-verifies it |
+
+`declared` is the category to keep minimal. All declared fields live in one `WIRING` block in `tools/harness/status.mjs`.
+
+### Invariants
+
+These are **design invariants, not incidental checks**. They preserve the evidence-driven property of the system, and each has been demonstrated to fail when violated (`tools/harness/self-test.mjs`, enforced in CI).
+
+| # | Invariant | Prevents |
+|---|---|---|
+| 1 | `declared <= gateCount` | Manually authored evidence growing independently of the gate model |
+| 2 | Every declared field originates from `WIRING_SOURCE` | Hand-authored evidence reintroduced elsewhere while the count stays legal |
+| 3 | Every established finding carries `provenance` and `from` | Unattributed evidence entering silently |
+
+Invariants 1 and 2 are complementary rather than redundant: an injected field from another module trips both, while a field with no provenance at all trips only 3. All three were verified by deliberate violation, not by observing a passing run.
+
+### Why this exists
+
+The status table was hand-transcribed twice and drifted both times — once conflating "no measurement exists" with "a measurement exists but was too noisy", once reporting infrastructure as provisioned when it was only provisionable. The first generated version then repeated the error with a hand-typed `established` map claiming 16 checks where the test had 15. Deriving the value corrected it on first execution.
+
+**Rule for contributors:** if a number about the system appears in documentation, it should be derived from the artifact that produces it, or it will eventually be wrong.
 
 ---
 

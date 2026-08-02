@@ -1,0 +1,18 @@
+# Grafana Dashboard Provisioning — CerebroHive
+# Dashboards are loaded from the /dashboards directory and kept in sync.
+# Changes made via UI are overwritten on restart — edit the JSON files.
+
+apiVersion: 1
+
+providers:
+  - name:            CerebroHive
+    orgId:           1
+    folder:          CerebroHive
+    folderUid:       cerebro-hive
+    type:            file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: false
+    options:
+      path:       /etc/grafana/dashboards
+      foldersFromFilesStructure: true

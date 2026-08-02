@@ -9,7 +9,7 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { listCases, getCase, runCase, summarise, VERDICT } from './kernel.mjs';
-import { computeStatus, renderStatusTable } from './status.mjs';
+import { computeStatus, renderStatusTable, provenanceSummary } from './status.mjs';
 import './cases/index.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -30,11 +30,16 @@ if (cmd === 'list') {
 }
 
 if (cmd === 'status') {
-  // Derived, never transcribed. This is the authoritative answer to
-  // "where do the gates stand"; anything hand-copied will drift from it.
-  const rows = computeStatus(listCases(), { measurementsDir: outDir, currentPhase: phase });
+  // Derived, never transcribed. --shallow skips executing self-tests when only
+  // verdicts are needed; the trade-off is fewer established findings, and the
+  // provenance summary makes that visible rather than silent.
+  const deep = !args.includes('--shallow');
+  const rows = await computeStatus(listCases(), { measurementsDir: outDir, currentPhase: phase, deep });
   if (args.includes('--json')) {
-    console.info(JSON.stringify({ generatedAt: new Date().toISOString(), phase, gates: rows }, null, 2));
+    console.info(JSON.stringify({
+      generatedAt: new Date().toISOString(), phase, deep,
+      provenance: provenanceSummary(rows), gates: rows,
+    }, null, 2));
     process.exit(0);
   }
   console.info(`\ngate status (phase ${String(phase)}, generated ${new Date().toISOString()})\n`);
@@ -42,12 +47,15 @@ if (cmd === 'status') {
   console.info('');
   for (const r of rows) {
     console.info(`  ${r.caseId}  ADR ${r.adrs.join(',')}`);
-    console.info(`    verdict:   ${r.verdict}  [${r.blocker}]`);
+    console.info(`    verdict:   ${r.verdict.value}  [${r.blocker}]  (${r.verdict.provenance}: ${r.verdict.from})`);
     console.info(`    ${r.detail}`);
     if (r.confidence) console.info(`    evidence:  ${r.evidenceKind} (confidence: ${r.confidence})`);
-    for (const e of r.established) console.info(`    established: ${e}`);
+    for (const e of r.established) console.info(`    established: ${e.value}  [${e.provenance} ← ${e.from}]`);
     console.info('');
   }
+  const p = provenanceSummary(rows);
+  console.info(`  provenance: observed=${String(p.observed)} derived=${String(p.derived)} declared=${String(p.declared)}`);
+  console.info('  (declared fields are configuration, not evidence — keep this number low)\n');
   process.exit(0);
 }
 
