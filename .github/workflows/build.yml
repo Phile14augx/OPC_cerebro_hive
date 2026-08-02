@@ -75,13 +75,18 @@ jobs:
       - name: Build service matrix
         id: matrix
         run: |
-          SERVICES='[
-            {"name":"studio",       "context":".", "dockerfile":"apps/studio/Dockerfile",         "image":"studio"},
-            {"name":"forge",        "context":".", "dockerfile":"apps/forge/Dockerfile",           "image":"forge"},
-            {"name":"platform-api", "context":".", "dockerfile":"apps/platform-api/Dockerfile",    "image":"platform-api"},
-            {"name":"forge-api",    "context":".", "dockerfile":"services/forge-api/Dockerfile",   "image":"forge-api"},
-            {"name":"ai-gateway",   "context":".", "dockerfile":"packages/ai-gateway/Dockerfile",  "image":"ai-gateway"}
-          ]'
+          # context/dockerfile are relative to the actions/checkout root, i.e. the
+          # true repo root — one level above this package. Building from "." with
+          # a bare "apps/studio/Dockerfile" silently resolved nothing (see the
+          # scan-gate verification run that caught this).
+          ROOT="OPC/cerebro-hive-website"
+          SERVICES="[
+            {\"name\":\"studio\",       \"context\":\"$ROOT\", \"dockerfile\":\"$ROOT/apps/studio/Dockerfile\",         \"image\":\"studio\"},
+            {\"name\":\"forge\",        \"context\":\"$ROOT\", \"dockerfile\":\"$ROOT/apps/forge/Dockerfile\",           \"image\":\"forge\"},
+            {\"name\":\"platform-api\", \"context\":\"$ROOT\", \"dockerfile\":\"$ROOT/apps/platform-api/Dockerfile\",    \"image\":\"platform-api\"},
+            {\"name\":\"forge-api\",    \"context\":\"$ROOT\", \"dockerfile\":\"$ROOT/services/forge-api/Dockerfile\",   \"image\":\"forge-api\"},
+            {\"name\":\"ai-gateway\",   \"context\":\"$ROOT\", \"dockerfile\":\"$ROOT/packages/ai-gateway/Dockerfile\",  \"image\":\"ai-gateway\"}
+          ]"
 
           INPUT="${{ github.event.inputs.services }}"
           if [[ -n "$INPUT" ]]; then
