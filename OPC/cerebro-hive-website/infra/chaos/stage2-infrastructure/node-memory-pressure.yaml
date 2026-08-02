@@ -1,0 +1,64 @@
+# Stage 2 — Infrastructure Chaos: Memory pressure
+#
+# Hypothesis: filling a pod's memory to near its limit triggers OOMKill
+# (if limit is tight) or swap pressure (if limit is generous). Validates
+# that the node memory pressure runbook's diagnosis steps surface the
+# correct pod, and that Kubernetes recovers without manual intervention.
+#
+# Two experiments:
+#   A. memory-stress-gradual — fills to 80% of container limit. Watches
+#      container_memory_working_set_bytes and checks alert fires.
+#   B. memory-oom — fills to 110% of limit. Expects OOMKill + container restart.
+#      Validates: CerebroPodCrashLooping alert fires and runbook is exercisable.
+
+---
+# Experiment A: Gradual memory fill (alert validation)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: memory-stress-gradual
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage2-infrastructure
+    resource: memory
+    blast-radius: low
+spec:
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "forge-api"
+  stressors:
+    memory:
+      workers: 1
+      size: "800MiB"    # assumes 1Gi container limit → 80% pressure
+      options:
+        - "--vm-keep"   # keep memory allocated (simulates leak, not burst)
+  duration: "10m"
+
+---
+# Experiment B: OOM trigger (CrashLoopBackOff validation)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: memory-stress-oom
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage2-infrastructure-oom
+    resource: memory
+    blast-radius: medium    # pod will be OOMKilled and restart
+spec:
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "worker"   # use a non-critical worker pod
+  stressors:
+    memory:
+      workers: 2
+      size: "2GiB"          # exceeds typical 1.5Gi limit → OOMKill
+      options:
+        - "--vm-keep"
+  duration: "2m"

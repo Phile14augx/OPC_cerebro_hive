@@ -1,0 +1,294 @@
+name: Chaos Engineering
+
+on:
+  # Weekly scheduled run — off-peak (Sunday 02:00 UTC)
+  schedule:
+    - cron: "0 2 * * 0"
+
+  # Manual dispatch — choose stage and experiment
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: "Chaos stage to run"
+        required: true
+        type: choice
+        options:
+          - stage1-workload
+          - stage2-infrastructure
+          - stage3-dependencies
+          - stage4-network
+          - stage5-ai
+          - all
+      experiment:
+        description: "Specific experiment name (leave blank to run all in stage)"
+        required: false
+        type: string
+      dry_run:
+        description: "Dry run — validate manifests but do not apply"
+        required: false
+        type: boolean
+        default: false
+
+# Only one chaos run at a time — experiments interfere with each other
+concurrency:
+  group: chaos-engineering
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write   # OIDC for AWS/EKS auth
+
+env:
+  CLUSTER_NAME: cerebro-staging   # NEVER target cerebro-prod
+  NAMESPACE: cerebro-chaos
+  CHAOS_MESH_NAMESPACE: chaos-testing
+  AWS_REGION: us-east-1
+
+jobs:
+  # ── Pre-flight: validate steady state before injecting faults ─────────────────
+  preflight:
+    name: Pre-flight steady state check
+    runs-on: ubuntu-latest
+    outputs:
+      safe_to_proceed: ${{ steps.check.outputs.safe }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CHAOS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig for staging cluster
+        run: |
+          aws eks update-kubeconfig \
+            --name ${{ env.CLUSTER_NAME }} \
+            --region ${{ env.AWS_REGION }}
+
+      - name: Check Chaos Mesh is installed
+        run: |
+          kubectl get pods -n ${{ env.CHAOS_MESH_NAMESPACE }} \
+            -l app.kubernetes.io/name=chaos-mesh \
+            --field-selector=status.phase=Running | grep -q chaos-controller-manager \
+            || (echo "❌ Chaos Mesh not running in ${{ env.CHAOS_MESH_NAMESPACE }}" && exit 1)
+
+      - name: Verify staging cluster is healthy
+        id: check
+        run: |
+          set -e
+
+          # All nodes ready
+          NOT_READY=$(kubectl get nodes --no-headers | grep -v " Ready" | wc -l)
+          if [ "$NOT_READY" -gt 0 ]; then
+            echo "❌ $NOT_READY nodes not ready — aborting chaos run"
+            echo "safe=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+          # No existing high-severity alerts firing
+          FIRING=$(kubectl exec -n monitoring deploy/alertmanager -- \
+            wget -qO- 'http://localhost:9093/api/v2/alerts?filter=severity=critical' \
+            | python3 -c "import sys,json; data=json.load(sys.stdin); print(len(data))" 2>/dev/null || echo "0")
+
+          if [ "$FIRING" -gt 0 ]; then
+            echo "❌ $FIRING critical alerts already firing — unsafe to inject additional faults"
+            echo "safe=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+          echo "✅ Cluster healthy — proceeding with chaos run"
+          echo "safe=true" >> $GITHUB_OUTPUT
+
+  # ── Run chaos experiments ──────────────────────────────────────────────────────
+  run-chaos:
+    name: Run chaos — ${{ github.event.inputs.stage || 'scheduled (all stages)' }}
+    runs-on: ubuntu-latest
+    needs: preflight
+    if: needs.preflight.outputs.safe_to_proceed == 'true'
+    environment: chaos-staging   # requires human approval for manual dispatch
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CHAOS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --name ${{ env.CLUSTER_NAME }} \
+            --region ${{ env.AWS_REGION }}
+
+      - name: Ensure chaos namespace exists
+        run: |
+          kubectl get namespace ${{ env.NAMESPACE }} 2>/dev/null \
+            || kubectl create namespace ${{ env.NAMESPACE }}
+
+          # Label namespace to allow Chaos Mesh injection
+          kubectl label namespace ${{ env.NAMESPACE }} \
+            chaos-mesh.org/inject=enabled --overwrite
+
+      - name: Determine experiment set
+        id: experiments
+        run: |
+          STAGE="${{ github.event.inputs.stage || 'all' }}"
+          EXPERIMENT="${{ github.event.inputs.experiment }}"
+
+          if [ -n "$EXPERIMENT" ]; then
+            # Single experiment by name
+            FILES=$(find infra/chaos/$STAGE -name "${EXPERIMENT}.yaml" 2>/dev/null)
+          elif [ "$STAGE" = "all" ]; then
+            FILES=$(find infra/chaos -name "*.yaml" | sort)
+          else
+            FILES=$(find infra/chaos/$STAGE -name "*.yaml" | sort)
+          fi
+
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "Found $(echo "$FILES" | wc -l) experiment files"
+
+      - name: Validate manifests (dry run)
+        run: |
+          echo "${{ steps.experiments.outputs.files }}" | while read file; do
+            if [ -f "$file" ]; then
+              echo "Validating: $file"
+              kubectl apply --dry-run=server -f "$file" || true
+            fi
+          done
+
+      - name: Apply chaos experiments
+        if: ${{ !github.event.inputs.dry_run }}
+        run: |
+          echo "${{ steps.experiments.outputs.files }}" | while read file; do
+            if [ -f "$file" ]; then
+              echo "Applying: $file"
+              kubectl apply -f "$file"
+
+              # Brief pause between experiments to allow observation
+              sleep 30
+            fi
+          done
+
+      - name: Monitor for 30 minutes
+        if: ${{ !github.event.inputs.dry_run }}
+        run: |
+          echo "Monitoring chaos experiments..."
+          for i in $(seq 1 6); do
+            echo "=== Check $i/6 ($(date -u)) ==="
+            kubectl get podchaos,networkchaos,httpchaos,stresschaos,iochaos,dnschaos \
+              -n ${{ env.NAMESPACE }} -o wide 2>/dev/null || true
+            echo ""
+            sleep 300   # 5 minutes between checks
+          done
+
+      - name: Capture metrics snapshot
+        if: ${{ !github.event.inputs.dry_run }}
+        run: |
+          echo "## Chaos Run Metrics Snapshot" >> $GITHUB_STEP_SUMMARY
+          echo "Timestamp: $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Query probe success rate during chaos window
+          kubectl exec -n monitoring deploy/prometheus -- \
+            wget -qO- 'http://localhost:9090/api/v1/query?query=avg_over_time(probe_success{job="cerebro-synthetic"}[30m])' \
+            | python3 -c "
+          import sys, json
+          data = json.load(sys.stdin)
+          results = data.get('data', {}).get('result', [])
+          print('| Service | Probe Success Rate (30m avg) |')
+          print('|---------|------------------------------|')
+          for r in results:
+            service = r['metric'].get('service', 'unknown')
+            value = float(r['value'][1])
+            status = '✅' if value == 1.0 else ('⚠️' if value > 0.9 else '❌')
+            print(f'| {service} | {status} {value:.3f} |')
+          " >> $GITHUB_STEP_SUMMARY 2>/dev/null || echo "Could not query Prometheus — check cluster connectivity" >> $GITHUB_STEP_SUMMARY
+
+  # ── Cleanup: remove all chaos experiments after the run ───────────────────────
+  cleanup:
+    name: Cleanup chaos experiments
+    runs-on: ubuntu-latest
+    needs: run-chaos
+    if: always()   # clean up even if chaos run fails
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CHAOS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --name ${{ env.CLUSTER_NAME }} \
+            --region ${{ env.AWS_REGION }}
+
+      - name: Delete all chaos objects
+        run: |
+          echo "Removing all chaos experiment objects..."
+
+          # Delete by CRD type to ensure nothing is left running
+          for crd in podchaos networkchaos httpchaos stresschaos iochaos dnschaos; do
+            kubectl delete $crd --all -n ${{ env.NAMESPACE }} --ignore-not-found --timeout=60s || true
+          done
+
+          # Delete budget exhaustion jobs
+          kubectl delete jobs -l experiment=budget-exhaustion \
+            -n ${{ env.NAMESPACE }} --ignore-not-found || true
+
+          echo "✅ Cleanup complete"
+
+      - name: Verify staging cluster recovered
+        run: |
+          # Allow 2 minutes for pods to stabilize after chaos is removed
+          sleep 120
+
+          NOT_READY=$(kubectl get pods -n cerebro-staging \
+            --field-selector='status.phase!=Running,status.phase!=Succeeded' \
+            --no-headers 2>/dev/null | wc -l)
+
+          if [ "$NOT_READY" -gt 0 ]; then
+            echo "⚠️ $NOT_READY pods still not running after cleanup — manual investigation required"
+            kubectl get pods -n cerebro-staging \
+              --field-selector='status.phase!=Running,status.phase!=Succeeded'
+          else
+            echo "✅ All pods recovered after chaos run"
+          fi
+
+  # ── Notify: post results to Slack ─────────────────────────────────────────────
+  notify:
+    name: Notify results
+    runs-on: ubuntu-latest
+    needs: [run-chaos, cleanup]
+    if: always()
+
+    steps:
+      - name: Post Slack summary
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_CHAOS_WEBHOOK }}
+        run: |
+          STATUS="${{ needs.run-chaos.result }}"
+          EMOJI="✅"
+          [ "$STATUS" != "success" ] && EMOJI="❌"
+
+          curl -s -X POST "$SLACK_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"text\": \"$EMOJI Chaos run complete\",
+              \"blocks\": [{
+                \"type\": \"section\",
+                \"text\": {
+                  \"type\": \"mrkdwn\",
+                  \"text\": \"*Chaos Engineering Run*\nStage: \`${{ github.event.inputs.stage || 'scheduled' }}\`\nStatus: \`$STATUS\`\nRun: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>\"
+                }
+              }]
+            }"

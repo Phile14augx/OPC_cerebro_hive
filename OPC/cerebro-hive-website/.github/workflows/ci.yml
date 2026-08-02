@@ -45,6 +45,11 @@ jobs:
       - name: Lint (Turborepo)
         run: pnpm turbo lint --color
 
+      # Catches the two silent SEO failures: a page that exists but is absent
+      # from the sitemap, and a sitemap entry whose page has been deleted.
+      - name: Sitemap drift check
+        run: pnpm sitemap:check
+
   # ── Job 2: Unit Tests ─────────────────────────────────────────────────────
   unit-tests:
     name: Unit Tests
@@ -186,7 +191,9 @@ jobs:
           path: apps/studio/storybook-static/
 
       - name: Run Chromatic visual regression
-        uses: chromaui/action@latest
+        # Pinned to a major version rather than @latest: a floating tag means an
+        # upstream release can silently change what runs against a repo secret.
+        uses: chromaui/action@v11
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           storybookBuildDir: apps/studio/storybook-static

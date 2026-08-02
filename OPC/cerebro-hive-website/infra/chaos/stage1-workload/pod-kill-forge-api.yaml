@@ -1,0 +1,53 @@
+# Stage 1 — Workload Chaos: forge-api pod kill
+#
+# Hypothesis: killing 1 of N forge-api pods causes <5s traffic disruption,
+# synthetic probes recover, and SLO burn rate stays below 1× (warning threshold).
+#
+# Steady state:
+#   - probe_success{service="platform-api"} == 1 for 5+ minutes
+#   - error rate < 0.1%
+#   - forge-api HPA maintains desired replica count
+#
+# Expected outcome:
+#   - kubernetes immediately restarts the killed pod
+#   - HPA reschedules a replacement within 60s
+#   - probe recovery within 30s (one probe interval)
+#   - no SLO alert fires (error budget consumed < 1 minute)
+#
+# Rollback: delete this PodChaos object
+#   kubectl delete podchaos forge-api-pod-kill -n cerebro-chaos
+#
+# Tool: Chaos Mesh (https://chaos-mesh.org/)
+# Install: helm install chaos-mesh chaos-mesh/chaos-mesh -n chaos-testing --create-namespace
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: forge-api-pod-kill
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage1-workload
+    service: forge-api
+    blast-radius: low
+spec:
+  action: pod-kill
+  mode: one          # kill exactly one pod at a time
+  selector:
+    namespaces:
+      - cerebro-staging   # STAGING ONLY — never target cerebro-prod directly
+    labelSelectors:
+      "app.kubernetes.io/name": "forge-api"
+  scheduler:
+    cron: "@every 10m"  # repeat every 10 min while experiment is active
+  gracePeriod: 0      # immediate SIGKILL — worst-case scenario
+  duration: "5m"      # run for 5 minutes then pause
+
+---
+# ── Verification Workflow (run after applying the experiment) ─────────────────
+# kubectl apply -f pod-kill-forge-api.yaml
+# # watch probe success:
+# watch -n5 "curl -s http://blackbox-exporter:9115/probe?target=https://api.cerebrohive-staging.com/health&module=https_2xx | grep probe_success"
+# # watch pod restarts:
+# kubectl get pods -n cerebro-staging -l app.kubernetes.io/name=forge-api -w
+# # watch error rate:
+# # promql: rate(http_requests_total{service="forge-api",status=~"5.."}[1m]) / rate(http_requests_total{service="forge-api"}[1m])

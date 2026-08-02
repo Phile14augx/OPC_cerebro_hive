@@ -19,6 +19,12 @@ on:
     # when nobody has touched the tenancy code.
     - cron: '0 4 * * 1'
 
+# Least-privilege token: these workflows only read the tree and report status.
+# Without an explicit block the job inherits the repository default, which is
+# write-all on many orgs.
+permissions:
+  contents: read
+
 jobs:
   isolation:
     runs-on: ubuntu-latest

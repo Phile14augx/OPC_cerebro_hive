@@ -1,0 +1,476 @@
+# Thanos Components — Store Gateway, Querier, Compactor, Query Frontend
+# Namespace: monitoring
+#
+# Deployment order:
+#   1. thanos-store-gateway   (reads blocks from S3)
+#   2. thanos-compactor       (compacts + downsamples blocks in S3)
+#   3. thanos-query           (federates sidecar + store-gateway)
+#   4. thanos-query-frontend  (caching layer + query splitting)
+
+---
+# ── ServiceAccount (IRSA) ────────────────────────────────────────────────────────
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: thanos
+  namespace: monitoring
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::ACCOUNT_ID:role/thanos-metrics-rw"
+
+---
+# ── Store Gateway ─────────────────────────────────────────────────────────────────
+# Reads historical blocks from S3 and serves them over gRPC to Thanos Query.
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: thanos-store-gateway
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: store-gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos
+      app.kubernetes.io/component: store-gateway
+  serviceName: thanos-store-gateway
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: thanos
+        app.kubernetes.io/component: store-gateway
+    spec:
+      serviceAccountName: thanos
+      containers:
+        - name: thanos-store-gateway
+          image: quay.io/thanos/thanos:v0.36.1
+          args:
+            - store
+            - --log.level=info
+            - --log.format=json
+            - --data-dir=/var/thanos/store
+            - --objstore.config-file=/etc/thanos/objstore.yaml
+            # Chunk pool size: balance memory vs. query performance
+            - --store.grpc.series-max-concurrency=20
+            - --selector.relabel-config=|
+                - source_labels: [cluster]
+                  regex: cerebro-.*
+                  action: keep
+            # Caching (in-memory — upgrade to memcached for production)
+            - --index-cache-size=2GB
+            - --chunk-pool-size=4GB
+          ports:
+            - name: grpc
+              containerPort: 10901
+            - name: http
+              containerPort: 10902
+          volumeMounts:
+            - name: data
+              mountPath: /var/thanos/store
+            - name: objstore-config
+              mountPath: /etc/thanos
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: 2
+              memory: 8Gi
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: objstore-config
+          secret:
+            secretName: thanos-objstore
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        storageClassName: gp3
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests:
+            storage: 20Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-store-gateway
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: store-gateway
+spec:
+  clusterIP: None   # headless for StatefulSet
+  ports:
+    - name: grpc
+      port: 10901
+      targetPort: grpc
+    - name: http
+      port: 10902
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: store-gateway
+
+---
+# ── Compactor ─────────────────────────────────────────────────────────────────────
+# Runs as a singleton Job/Deployment.
+# Compacts 2h → 2h, downsamples to 5m and 1h resolution.
+# 1-year retention for raw; indefinite for downsampled data.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-compactor
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: compactor
+spec:
+  replicas: 1   # MUST be singleton
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos
+      app.kubernetes.io/component: compactor
+  strategy:
+    type: Recreate   # Prevent two compactors running simultaneously
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: thanos
+        app.kubernetes.io/component: compactor
+    spec:
+      serviceAccountName: thanos
+      containers:
+        - name: thanos-compactor
+          image: quay.io/thanos/thanos:v0.36.1
+          args:
+            - compact
+            - --log.level=info
+            - --log.format=json
+            - --data-dir=/var/thanos/compactor
+            - --objstore.config-file=/etc/thanos/objstore.yaml
+            - --consistency-delay=30m
+            - --retention.resolution-raw=365d    # 1 year raw
+            - --retention.resolution-5m=730d     # 2 years 5m downsampled
+            - --retention.resolution-1h=1825d    # 5 years 1h downsampled
+            - --compact.concurrency=1
+            - --downsample.concurrency=1
+            - --wait                             # keep running (not one-shot)
+            - --wait-interval=5m
+          ports:
+            - name: http
+              containerPort: 10902
+          volumeMounts:
+            - name: data
+              mountPath: /var/thanos/compactor
+            - name: objstore-config
+              mountPath: /etc/thanos
+          resources:
+            requests:
+              cpu: 200m
+              memory: 2Gi
+            limits:
+              cpu: 1
+              memory: 6Gi
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: objstore-config
+          secret:
+            secretName: thanos-objstore
+
+---
+# ── Querier ───────────────────────────────────────────────────────────────────────
+# Federates across all sidecar gRPC endpoints + store gateway.
+# Deduplicates data from multiple Prometheus replicas using `replica` label.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-query
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: query
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos
+      app.kubernetes.io/component: query
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: thanos
+        app.kubernetes.io/component: query
+    spec:
+      serviceAccountName: thanos
+      containers:
+        - name: thanos-query
+          image: quay.io/thanos/thanos:v0.36.1
+          args:
+            - query
+            - --log.level=info
+            - --log.format=json
+            - --http-address=0.0.0.0:10902
+            - --grpc-address=0.0.0.0:10901
+
+            # Deduplicate on replica label (set in Prometheus externalLabels)
+            - --query.replica-label=replica
+
+            # Auto-discover Thanos sidecars via DNS SRV records
+            - --store=dnssrv+_grpc._tcp.prometheus-operated.monitoring.svc.cluster.local
+
+            # Static store gateway address
+            - --store=dnssrv+_grpc._tcp.thanos-store-gateway.monitoring.svc.cluster.local
+
+            # Query timeout
+            - --query.timeout=2m
+            - --query.max-concurrent=20
+
+            # Enable partial response (return available data on store failure)
+            - --query.partial-response
+          ports:
+            - name: grpc
+              containerPort: 10901
+            - name: http
+              containerPort: 10902
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-query
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: query
+spec:
+  ports:
+    - name: grpc
+      port: 10901
+      targetPort: grpc
+    - name: http
+      port: 10902
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: query
+
+---
+# ── Query Frontend (caching + query splitting) ───────────────────────────────────
+# Sits in front of Thanos Query. Splits long-range queries into smaller
+# intervals, caches results in-memory (or Memcached in production).
+# Grafana should point to this service, not directly to thanos-query.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-query-frontend
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: query-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos
+      app.kubernetes.io/component: query-frontend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: thanos
+        app.kubernetes.io/component: query-frontend
+    spec:
+      containers:
+        - name: thanos-query-frontend
+          image: quay.io/thanos/thanos:v0.36.1
+          args:
+            - query-frontend
+            - --log.level=info
+            - --log.format=json
+            - --http-address=0.0.0.0:10902
+            - --query-frontend.downstream-url=http://thanos-query.monitoring.svc.cluster.local:10902
+
+            # Split queries into 24h intervals for better caching
+            - --query-range.split-interval=24h
+
+            # In-memory response cache (upgrade to Memcached for multi-replica)
+            - --query-range.response-cache-config=|
+                type: IN-MEMORY
+                config:
+                  max_size: 500MB
+                  max_size_items: 10000
+                  validity: 10m
+
+            # Retry on temporary errors
+            - --query-range.max-retries-per-request=3
+
+            # Compress responses
+            - --query-frontend.compress-responses
+          ports:
+            - name: http
+              containerPort: 10902
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-query-frontend
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: query-frontend
+  annotations:
+    # Grafana datasource URL should point here:
+    # http://thanos-query-frontend.monitoring.svc.cluster.local:10902
+spec:
+  ports:
+    - name: http
+      port: 10902
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: query-frontend
+
+---
+# ── Ruler (optional) — evaluate Thanos recording/alerting rules ──────────────────
+# Use when rules need to span multiple Prometheus instances or
+# query more than 2h of history.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-ruler
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: thanos
+    app.kubernetes.io/component: ruler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos
+      app.kubernetes.io/component: ruler
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: thanos
+        app.kubernetes.io/component: ruler
+    spec:
+      serviceAccountName: thanos
+      containers:
+        - name: thanos-ruler
+          image: quay.io/thanos/thanos:v0.36.1
+          args:
+            - rule
+            - --log.level=info
+            - --log.format=json
+            - --data-dir=/var/thanos/ruler
+            - --eval-interval=1m
+            - --rule-file=/etc/thanos/rules/*.yaml
+            - --objstore.config-file=/etc/thanos/objstore.yaml
+            - --query=http://thanos-query.monitoring.svc.cluster.local:10902
+            - --alertmanagers.url=http://alertmanager-operated.monitoring.svc.cluster.local:9093
+            - --label=ruler_cluster="cerebro-prod"
+            - --label=ruler_replica="$(POD_NAME)"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          ports:
+            - name: grpc
+              containerPort: 10901
+            - name: http
+              containerPort: 10902
+          volumeMounts:
+            - name: data
+              mountPath: /var/thanos/ruler
+            - name: objstore-config
+              mountPath: /etc/thanos
+            - name: rules
+              mountPath: /etc/thanos/rules
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: objstore-config
+          secret:
+            secretName: thanos-objstore
+        - name: rules
+          configMap:
+            name: thanos-ruler-rules
+
+---
+# ── PodMonitor — scrape Thanos component metrics ─────────────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: thanos-components
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: thanos
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos
+  podMetricsEndpoints:
+    - port: http
+      path: /metrics
+      interval: 30s

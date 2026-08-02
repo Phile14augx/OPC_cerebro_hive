@@ -1,0 +1,40 @@
+# Stage 2 — Infrastructure Chaos: Node CPU stress
+#
+# Hypothesis: saturating CPU on a node triggers HPA scale-out and
+# Kubernetes evicts lower-priority pods. CerebroNodeHighCPU alert fires.
+# AI inference latency increases but stays below SLO (< 2× p99 target).
+#
+# Steady state:
+#   - Node CPU usage < 60%
+#   - HPA at min replicas
+#   - p99 inference latency < 2s
+#
+# Expected outcome:
+#   - cpu_usage_ratio on stressed node spikes to ~95%
+#   - HPA scale-out triggered within 90s
+#   - New pods scheduled on other nodes (anti-affinity rules respected)
+#   - No SLO burn alert fires (degraded but within budget)
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: node-cpu-stress
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage2-infrastructure
+    resource: cpu
+    blast-radius: medium
+spec:
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "forge-api"   # stress via a running pod
+  stressors:
+    cpu:
+      workers: 4          # 4 goroutines burning CPU
+      load: 90            # target 90% CPU utilization
+  duration: "5m"
+  containerNames:
+    - forge-api

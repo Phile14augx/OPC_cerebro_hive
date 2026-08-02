@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Activity, AlertTriangle, BarChart2, Zap } from "lucide-react";
+import { API, KEY } from "@/lib/platform-api";
 
-const API = process.env.NEXT_PUBLIC_PLATFORM_API_URL || "http://localhost:8090";
-const KEY = process.env.NEXT_PUBLIC_PLATFORM_DEMO_KEY || "";
 
 async function api<T>(path: string): Promise<T> {
   const res = await fetch(`${API}${path}`, { headers: KEY ? { Authorization: `Bearer ${KEY}` } : {} });

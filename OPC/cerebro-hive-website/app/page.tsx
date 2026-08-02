@@ -42,7 +42,7 @@ const TIERS = [
     border: "border-yellow-500/30",
     bg: "bg-yellow-500/5",
     icon: Database,
-    products: ["HiveLake™", "HiveAnalytics™", "HiveData™", "HiveObservatory™", "HiveGateway™", "HiveKnowledge™", "HiveConsole™", "HiveAPI™"],
+    products: ["HiveLake™", "HiveAnalytics™", "HiveData™", "HiveObservatory™", "HiveGateway™", "HiveKnowledge™", "HiveConsole™", "HiveMonitor™", "HiveAPI™", "Cerebro X™"],
     desc: "Enterprise data lake, analytics, observability, and API orchestration.",
   },
   {
@@ -53,7 +53,7 @@ const TIERS = [
     border: "border-primary-accent/30",
     bg: "bg-primary-accent/5",
     icon: Cpu,
-    products: ["HiveAgents™", "HiveModels™", "HiveAutomation™", "HivePlanner™", "HiveReasoner™", "HiveSemantic™", "HiveEvaluation™", "HiveForge™", "HiveOps™"],
+    products: ["HiveAgents™", "HiveModels™", "HiveAutomation™", "HivePlanner™", "HiveReasoner™", "HiveSemantic™", "HiveEvaluation™", "HiveForge™", "HiveOps™", "HiveWorkspace™"],
     desc: "Multi-agent orchestration, model registry, automated reasoning, and MLOps.",
   },
   {
@@ -64,7 +64,7 @@ const TIERS = [
     border: "border-purple-500/30",
     bg: "bg-purple-500/5",
     icon: Brain,
-    products: ["CerebroAgent™", "CerebroStudio™", "CerebroERP™", "CerebroFlow™", "CerebroCRM™", "CerebroHR™", "CerebroFinance™", "CerebroLearn™", "CerebroSearch™", "CerebroInsight™", "+ 8 more"],
+    products: ["CerebroAgent™", "CerebroStudio™", "CerebroERP™", "CerebroFlow™", "CerebroCRM™", "CerebroHR™", "CerebroFinance™", "CerebroLearn™", "CerebroSearch™", "CerebroInsight™", "CerebroAnalytics™", "CerebroPredict™", "CerebroGrowth™", "CerebroResearch™", "CerebroArchitect™", "+ 8 more"],
     desc: "18 purpose-built AI business applications for every enterprise function.",
   },
   {

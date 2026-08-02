@@ -1,0 +1,75 @@
+# Stage 3 — Dependency Chaos: PostgreSQL failure
+#
+# Two experiments:
+#   A. postgres-pod-kill — abrupt postgres pod kill. Tests whether forge-api
+#      handles connection loss gracefully (not a 500 storm) and recovers
+#      when postgres restarts. Validates CerebroDBConnectionPoolExhausted
+#      alert fires and the DB connection exhaustion runbook is accurate.
+#
+#   B. pgbouncer-http-abort — injects connection errors at PgBouncer
+#      via TCP abort. Closer to real network failure than pod kill.
+#      Validates the connection pool drains, error rate spikes, then
+#      settles once PgBouncer reconnects.
+#
+# Steady state:
+#   - pgbouncer cl_active / pool_size < 80%
+#   - http_requests error rate < 0.1%
+#   - probe_success{service="platform-api"} == 1
+#
+# Expected outcome (A):
+#   - forge-api returns 503 for DB-dependent requests during postgres downtime
+#   - Cached/static endpoints continue to serve
+#   - PgBouncer shows cl_waiting > 0 while postgres is down
+#   - CerebroHighErrorRate alert fires within 2 minutes
+#   - After postgres restarts, pool refills and error rate returns to 0
+
+---
+# Experiment A: Kill postgres pod
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: postgres-pod-kill
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage3-dependency
+    dependency: postgres
+    blast-radius: high
+spec:
+  action: pod-kill
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "postgresql"
+  gracePeriod: 0
+  duration: "3m"
+
+---
+# Experiment B: PgBouncer TCP abort (connection-level failure, not pod-level)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: pgbouncer-tcp-abort
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage3-dependency-network
+    dependency: pgbouncer
+    blast-radius: high
+spec:
+  action: partition
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "pgbouncer"
+  direction: both
+  target:
+    mode: all
+    selector:
+      namespaces:
+        - cerebro-staging
+      labelSelectors:
+        "app.kubernetes.io/name": "forge-api"
+  duration: "2m"

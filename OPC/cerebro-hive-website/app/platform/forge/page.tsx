@@ -9,10 +9,7 @@ const TEMPLATES = [
   { name: "Code Reviewer", description: "Pull request reviewer with AST analysis, security scanning, and HiveKnowledge RAG", tools: ["GitHub API","SonarQube","HiveKnowledge"], model: "claude-sonnet-5" },
   { name: "Customer Success", description: "CRM-integrated agent for churn prediction and next best action recommendations", tools: ["CerebroCRM","HiveKnowledge","Email API"], model: "claude-haiku-4-5" },
 ];
-const [PROMPT, setPromptExt] = [
-  `You are a Financial Analyst agent for CerebroHive.\n\nYour responsibilities:\n- Analyze financial data from connected data sources\n- Identify anomalies, trends, and cost optimization opportunities\n- Generate executive-ready narratives with cited data\n- Proactively flag budget variances exceeding 10%\n\nTools available: Bloomberg API, CerebroFinance, PostgreSQL\n\nAlways cite your data sources. Maintain professional tone.`,
-  null
-];
+const PROMPT = `You are a Financial Analyst agent for CerebroHive.\n\nYour responsibilities:\n- Analyze financial data from connected data sources\n- Identify anomalies, trends, and cost optimization opportunities\n- Generate executive-ready narratives with cited data\n- Proactively flag budget variances exceeding 10%\n\nTools available: Bloomberg API, CerebroFinance, PostgreSQL\n\nAlways cite your data sources. Maintain professional tone.`;
 export default function HiveForgePage() {
   const [tab, setTab] = useState<Tab>("prompts");
   const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);

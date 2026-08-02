@@ -2,9 +2,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Search } from "lucide-react";
+import { API, KEY } from "@/lib/platform-api";
 
-const API = process.env.NEXT_PUBLIC_PLATFORM_API_URL || "http://localhost:8090";
-const KEY = process.env.NEXT_PUBLIC_PLATFORM_DEMO_KEY || "";
 
 const DEMO_RESULTS = [
   { id: "r1", title: "Q3 2026 Financial Report", snippet: "Revenue grew 18% YoY to $6.8M driven by enterprise expansion. Operating expenses increased 12%…", type: "document", score: 0.94, source: "HiveData" },

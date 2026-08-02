@@ -1,25 +1,12 @@
-export const API = process.env.NEXT_PUBLIC_PLATFORM_API_URL || "http://localhost:8090";
-export const KEY = process.env.NEXT_PUBLIC_PLATFORM_DEMO_KEY || "";
+// Re-exported from the single shared platform API client.
+// See lib/platform-api.ts — this file previously carried its own duplicate copy
+// of API/KEY/api()/checkOnline(), which had drifted from the other product pages.
+export { API, KEY, api, checkOnline, PlatformApiError } from "@/lib/platform-api";
 
-export async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
-    ...init,
-    headers: {
-      ...(init?.body ? { "content-type": "application/json" } : {}),
-      authorization: `Bearer ${KEY}`,
-      ...(init?.headers ?? {}),
-    },
-  });
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error((body as { error?: { message?: string } }).error?.message ?? `HTTP ${res.status}`);
-  }
-  return res.json() as Promise<T>;
-}
 
-export async function checkOnline(): Promise<boolean> {
-  try { return await fetch(`${API}/health`).then(r => r.ok); } catch { return false; }
-}
+
+
+
 
 // ---------------- Knowledge Fabric ----------------
 

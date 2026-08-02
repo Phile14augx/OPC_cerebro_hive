@@ -1,0 +1,74 @@
+# Stage 3 — Dependency Chaos: NATS message broker failure
+#
+# NATS carries async events between platform services:
+# workflow state transitions, agent task dispatch, audit log streaming.
+#
+# Hypothesis: NATS going down causes async operations to queue or fail,
+# but synchronous API endpoints continue to respond (no coupling).
+# Work items queued during NATS downtime are replayed on reconnect
+# (persistent subjects / JetStream).
+#
+# Steady state:
+#   - nats_core_rtt_seconds < 5ms
+#   - No pending messages in dead-letter streams
+#   - Agent dispatch latency < 500ms
+#
+# Expected outcome:
+#   - Agent runs fail to start (dispatch fails gracefully with retry)
+#   - Workflow state transitions queue in-memory (bounded)
+#   - API endpoints return 200 for synchronous requests
+#   - After NATS restarts, JetStream replays queued messages
+#   - No duplicate processing (idempotency key validation)
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: nats-pod-kill
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage3-dependency
+    dependency: nats
+    blast-radius: medium
+spec:
+  action: pod-kill
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "nats"
+  gracePeriod: 0
+  duration: "3m"
+
+---
+# NATS cluster partition — splits the NATS cluster into two halves.
+# Validates: leader election, raft quorum behavior, client reconnect.
+# Only meaningful if NATS is deployed as a 3-node cluster.
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: nats-cluster-partition
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage3-dependency-partition
+    dependency: nats
+    blast-radius: high
+spec:
+  action: partition
+  mode: fixed
+  value: "1"
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "nats"
+  direction: both
+  target:
+    mode: fixed
+    value: "2"
+    selector:
+      namespaces:
+        - cerebro-staging
+      labelSelectors:
+        "app.kubernetes.io/name": "nats"
+  duration: "2m"

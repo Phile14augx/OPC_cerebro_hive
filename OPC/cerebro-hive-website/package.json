@@ -22,6 +22,7 @@
     "release": "semantic-release",
     "policy:check": "turbo policy:check",
     "prepare": "husky",
+    "sitemap:check": "node scripts/check-sitemap.mjs",
     "arch:check": "node tools/arch/check-architecture.mjs",
     "arch:boundaries": "depcruise --config .dependency-cruiser.js packages services apps",
     "arch:verify-rules": "bash tools/arch/verify-boundaries.sh",
