@@ -86,7 +86,7 @@ jobs:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
       - name: Upload SARIF to GitHub Security
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@v4.37.4
         if: always()
         with:
           sarif_file: semgrep.sarif
@@ -165,7 +165,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Trivy FS SARIF
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@v4.37.4
         if: always()
         with:
           sarif_file: trivy-fs.sarif
@@ -187,7 +187,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Trivy image SARIF
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@v4.37.4
         if: always()
         with:
           sarif_file: trivy-image.sarif
@@ -244,7 +244,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload IaC SARIF reports
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@v4.37.4
         if: always()
         with:
           sarif_file: checkov-tf.sarif
@@ -303,7 +303,7 @@ jobs:
           publish_results: true
 
       - name: Upload Scorecard SARIF
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@v4.37.4
         with:
           sarif_file: scorecard.sarif
           category: scorecard

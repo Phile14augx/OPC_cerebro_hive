@@ -201,7 +201,7 @@ jobs:
           output-file: sbom-${{ matrix.name }}.cdx.json
 
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sbom-${{ matrix.name }}
           path: sbom-${{ matrix.name }}.cdx.json
@@ -220,14 +220,14 @@ jobs:
 
       - name: Upload Trivy SARIF to code scanning
         if: always()
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@v4.37.4
         with:
           sarif_file: trivy-${{ matrix.name }}.sarif
           category: trivy-${{ matrix.name }}
 
       - name: Upload Trivy report artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-report-${{ matrix.name }}
           path: trivy-${{ matrix.name }}.sarif
