@@ -1,7 +1,7 @@
 # Enterprise Validation Harness — Assessment and Proposal
 
 **Status:** Proposal
-**Relates to:** `CEREBROEDA-VERIFICATION-MATRIX.md`, `CEREBROHIVE_CONSTITUTION.md`, `PRODUCT_REGISTRY.md`
+**Relates to:** `CEREBROEDA-VERIFICATION-MATRIX.md`, `CEREBROHIVE_CONSTITUTION.md`, `PRODUCT_REGISTRY.md`, `CEREBROEDA-PHASE-P0.9-VALIDATION-READINESS.md`
 **Implemented so far:** `tools/harness/kernel.mjs` + three registered cases
 
 ---

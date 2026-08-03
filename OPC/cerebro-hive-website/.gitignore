@@ -75,6 +75,11 @@ diff.txt
 out.zip
 pnpm-lock.yaml.*
 
+# feature-workflow automation: audit log and per-feature worktrees are
+# machine/session-local, never part of any feature's own diff or history.
+.agents/logs/
+.agents/worktrees/
+
 # credential-adjacent files
 si_keys.txt
 *.pem

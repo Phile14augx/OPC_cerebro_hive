@@ -98,6 +98,8 @@ The status table was hand-transcribed twice and drifted both times — once conf
 
 Three ADRs rest on unmeasured assumptions. Each has a gate that must run before the phase depending on it, and each has a pre-committed condition that reopens the ADR. The point of writing the reopening condition down now is that it is much harder to argue away later.
 
+**Current readiness status (environment-blocked, not implementation-blocked):** see `CEREBROEDA-PHASE-P0.9-VALIDATION-READINESS.md` for the full assessment, exit criteria, and recommended execution order for closing Gate A, Gate C, and the parser corpus.
+
 ### Gate A — gVisor overhead (ADR 0013)
 
 **Question:** what does gVisor actually cost on EDA I/O profiles? Published benchmarks do not cover this workload.
