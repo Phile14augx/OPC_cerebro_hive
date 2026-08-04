@@ -1,244 +1,544 @@
 # Codebase Structure
 
-**Analysis Date:** 2026-07-23
+**Analysis Date:** 2026-08-04
 
 ## Directory Layout
 
 ```
-cerebro-hive-website/                    # pnpm/Turborepo monorepo root
-├── apps/
-│   ├── studio/                          # Main Next.js 14 site (marketing + product console)
-│   │   ├── app/                         # App Router routes (route groups: (auth), (internal), (platform))
-│   │   ├── components/                  # Studio-specific React components
-│   │   ├── lib/                         # Studio-specific libs, incl. lib/agentos/ (AgentOS HTTP client)
-│   │   ├── platform/                    # Separate TS "kernel" scaffold (src/{ai,app,dev,domains,kernel,sdk})
-│   │   ├── public/, stories/, tests/    # Static assets, Storybook stories, Playwright/Vitest tests
-│   │   └── agentos/                     # THE BACKEND — Python/FastAPI AgentOS runtime (see below)
-│   ├── forge/                           # Next.js 14 site for CerebroForge product (has real content)
-│   ├── archive/, flow/, insight/,       # Empty directories — no package.json, no source files.
-│   │   ops/, search/                    # Placeholders for products described in root docs, not built.
-├── apps/studio/agentos/                 # AgentOS FastAPI backend (Python) — full breakdown below
-├── packages/                            # Shared TS packages (pnpm workspace `packages/*`)
-│   ├── ui/                              # Shared React component library (largest package, 74 files)
-│   ├── domain/, database/, capabilities/*  # Newer, mostly-unwired TS "domain services + Prisma"
-│   │                                        # scaffold (outbox pattern, repositories) — parallel/early-
-│   │                                        # stage effort, not connected to apps/studio/agentos.
-│   ├── ai/, ai-gateway/, auth/, events/, policy/, workflow/, sdk/, telemetry/, contracts/, ...
-│   └── icons-*/                         # Per-framework icon packages (react/vue/angular/cli/figma/web)
-├── services/                            # pnpm workspace `services/*` — mostly empty scaffolds
-│   ├── forge-api/                       # NestJS service, real content ("AI Software Factory backend")
-│   ├── contentops/                      # tsx-based Markdown-to-platform publishing pipeline, real content
-│   └── archive-api/, identity-api/,     # Empty directories — no package.json.
-│       gateway-api/, hiveops-api/, search-api/
-├── docs/                                # Long-form internal docs (playbooks, ADRs, superpowers specs)
-│   └── superpowers/specs/               # Design specs incl. CerebroBuild target architecture
-├── PRODUCT_SPECIFICATIONS/              # Per-product markdown specs (aspirational, not all implemented)
-├── .planning/                           # GSD planning artifacts (this document lives in codebase/)
-├── .github/workflows/                   # CI workflow definitions
-├── PRODUCT_REGISTRY.md                  # Canonical product catalog (aspirational — see ARCHITECTURE.md gap)
-├── CAPABILITY_ARCHITECTURE.md           # Canonical capability/layering doc (aspirational)
-├── CEREBROHIVE_CONSTITUTION.md          # Governing principles doc
-├── pnpm-workspace.yaml, turbo.json      # Monorepo tooling config
-└── package.json                         # Root workspace scripts (turbo build/dev/lint/test)
-```
-
-### `apps/studio/agentos/` (AgentOS backend — detailed)
-
-```
-agentos/
-├── app/
-│   ├── main.py                 FastAPI app + router mounting (entry point: uvicorn app.main:app)
-│   ├── config.py                pydantic-settings Settings (env-driven, .env)
-│   ├── db.py                    SQLAlchemy engine/session/Base, init_db()
-│   ├── security.py              API-key bearer auth dependency
-│   ├── middleware.py            SecurityHeaders / RequestGuard / AccessLog middleware
-│   ├── rate_limit.py            slowapi limiter config
-│   ├── models/                  SQLAlchemy models, one file per bounded context
-│   │   ├── registry.py            Agent
-│   │   ├── execution.py           Run, WorkflowRun
-│   │   ├── governance.py          Policy, Approval, AuditLog
-│   │   ├── memory.py, knowledge.py, conversation.py, tools.py, marketplace.py, observability.py, identity.py
-│   ├── core/                    THE REAL ENGINES — flat modules, framework-agnostic
-│   │   ├── runtime.py             Agent Runtime kernel (boot→plan→execute→reflect)
-│   │   ├── planner.py             Goal → PlanStep decomposition
-│   │   ├── workflow_engine.py     DAG executor (8 node types, Agent Mesh delegation/consensus)
-│   │   ├── governance_engine.py   Policy-as-code evaluator
-│   │   ├── context_engine.py      Memory + Knowledge + Policy fusion for reasoning steps
-│   │   ├── memory_engine.py       Working/episodic/semantic/long-term memory
-│   │   ├── knowledge_engine.py    RAG: chunk/embed/retrieve/cite
-│   │   ├── event_bus.py           In-process pub/sub + event log, optional NATS dual-publish
-│   │   ├── observability.py       Trace spans + metrics
-│   │   ├── evaluation.py          Post-run quality/groundedness scoring
-│   │   ├── cortex_engine.py       Forecasting (least-squares) + optimization (0/1-knapsack)
-│   │   ├── simulator_engine.py    Monte Carlo queue simulation
-│   │   ├── prompt_manager.py      Versioned prompt templates
-│   │   ├── skills.py              Skill package install/versioning
-│   │   ├── tool_framework.py      (legacy/alternate tool framework entry point)
-│   │   ├── tools/                 base.py (BaseTool/ToolError), builtin.py (4 built-in tools), registry.py
-│   │   ├── cerebro_x/              LLM Gateway: gateway.py, router.py, base.py, embeddings.py,
-│   │   │                          providers/{anthropic,openai,gemini,ollama,mock}.py
-│   │   ├── nats/                  NATSEventBus adapter (optional, engaged via NATS_URL)
-│   │   ├── retrieval/, search/    hybrid_search.py, fusion.py, engine.py — retrieval helpers
-│   │   ├── telemetry/             metrics.py, profiler.py, spans.py, trace.py
-│   │   ├── storage/                file_service.py
-│   │   ├── events/                bus.py, schemas.py (alternate event abstraction, check usage before extending)
-│   │   ├── sdk/                   ⚠ MOSTLY EMPTY (0-line files) — aspirational agent SDK restructure
-│   │   │                          of runtime/memory/planning/governance/evaluation/simulation/decision.
-│   │   │                          Do not build on this tree; it is not wired into any router.
-│   │   └── orchestrator/          ⚠ MOSTLY EMPTY (0-line files) — aspirational alt. to runtime.py/
-│   │                              workflow_engine.py. Only human.py (34 lines) has real content.
-│   ├── api/routers/              Thin FastAPI routers over app/core (THE MOUNTED, WORKING ROUTES)
-│   │   ├── agents.py, auth.py, runtime.py, memory.py, tools.py, skills.py, knowledge.py,
-│   │   │   context.py, workflows.py, governance.py, observability.py, cortex.py, simulator.py,
-│   │   │   marketplace.py   — all included in app/main.py
-│   ├── finance/                  Domain module: real double-entry ledger + invoice pipeline (mounted)
-│   ├── archive/                  Domain module: PARTIALLY real (pipeline/, documents/, prompts/, search/
-│   │                             have content) but NOT mounted in main.py — router.py is dead code path
-│   ├── platform/                 Domain module: mostly stubs; auth/keycloak.py and prompts/*.py (repository/
-│   │                             compiler/registry, 21-27 lines) have minor content, NOT mounted
-│   ├── flow/, copilot/, insight/, hiveops/, hiveshield/, studio/, runtime/
-│   │                             ⚠ ALL EMPTY (__init__.py only) — named in main.py docstring, no code
-│   ├── copilot/                  Empty — CerebroCopilot conversations/streaming, not implemented
-├── agents_store/                YAML agent definitions ("Agent Store") — finance_agent.yaml,
-│                                 research_agent.yaml, support_agent.yaml
-├── scripts/seed.py               Demo data loader (agents, skills, a governance policy)
-├── tests/                        pytest suite, fully offline via mock LLM provider
-│   ├── conftest.py, test_smoke.py, test_mesh.py, test_finance.py,
-│   │   test_cortex_simulator.py, test_context_governance_observability.py, test_production_gates.py
-├── docs/agentos-spec/            01-vision-and-architecture.md, 02-domain-driven-design.md,
-│                                 03-postgresql-schema.md — the target spec this MVP implements a slice of
-├── requirements.txt, Dockerfile, docker-compose.yml, DEPLOY.md, .env.example
-└── README.md                     Ground-truth "what's actually implemented" doc — read first
+cerebro-hive-website/
+├── apps/                          # Deployable applications (workspaces)
+│   ├── studio/                    # Frontend: Next.js marketing site + dashboard
+│   │   ├── app/                   # Next.js App Router pages
+│   │   ├── components/            # React Server/Client Components
+│   │   ├── public/                # Static assets (images, fonts)
+│   │   ├── scripts/               # Audit and utility scripts
+│   │   └── package.json           # Next.js, React, workflow SDK, query
+│   │
+│   ├── platform-api/              # Backend: Fastify REST API
+│   │   ├── src/
+│   │   │   ├── bootstrap.ts       # Fastify setup, middleware, route registration
+│   │   │   ├── server.ts          # Entry point, server start
+│   │   │   ├── middleware/        # Hooks (auth, context, logging)
+│   │   │   ├── modules/           # Feature routes grouped by domain
+│   │   │   │   ├── agents/        # Agent API (create, list, execute, conversation)
+│   │   │   │   ├── workflows/     # Workflow API
+│   │   │   │   ├── runtime/       # Runtime execution API
+│   │   │   │   ├── conversations/ # Agent conversations
+│   │   │   │   ├── executions/    # Execution kernel API
+│   │   │   │   ├── telemetry/     # Metrics and observability
+│   │   │   │   └── health/        # Liveness/readiness probes
+│   │   │   ├── errors/            # ErrorMapper (RFC 7807 Problem Details)
+│   │   │   └── types/             # TypeBox schemas, TypeScript interfaces
+│   │   └── package.json           # Fastify, TypeBox, Prisma
+│   │
+│   ├── forge/                     # Agent builder/development platform
+│   ├── platform/                  # Enterprise platform (TBD)
+│   └── pulse/                     # Analytics/metrics dashboard (TBD)
+│
+├── packages/                      # Reusable libraries (workspaces)
+│   ├── ai-gateway/                # Unified AI provider abstraction
+│   │   └── src/
+│   │       ├── gateway.ts         # Main AIGateway class
+│   │       ├── types.ts           # ChatRequest, ChatResponse, ProviderConfig
+│   │       ├── providers/         # Provider implementations
+│   │       │   ├── anthropic.provider.ts
+│   │       │   ├── openai.provider.ts
+│   │       │   └── base.provider.ts
+│   │       ├── circuit-breaker.ts # Resilience pattern
+│   │       ├── rate-limiter.ts    # Cost control
+│   │       ├── cache.ts           # Response memoization
+│   │       └── routing/           # Provider selection logic
+│   │
+│   ├── database/                  # Prisma ORM + repositories
+│   │   ├── src/repositories/      # Aggregate roots (Agent, Workflow, etc.)
+│   │   ├── src/transactions/      # Unit of Work pattern
+│   │   ├── prisma/schema.prisma   # (symlink to root `prisma/schema.prisma`)
+│   │   └── index.ts               # Prisma singleton, barrel exports
+│   │
+│   ├── domain/                    # Business logic & orchestration
+│   │   ├── index.ts               # Orchestrators, aggregates
+│   │   ├── ExecutionOrchestrator.ts
+│   │   └── (execution-related types)
+│   │
+│   ├── runtime-core/              # Execution runtime engine
+│   │   └── src/execution/
+│   │       ├── kernel/            # ExecutionRuntimeKernel
+│   │       ├── ExecutionStore.ts  # Execution persistence interface
+│   │       └── ExecutionReplayService.ts
+│   │
+│   ├── core-bus/                  # Command/Event bus (CQRS dispatch)
+│   │   └── src/
+│   │       ├── CommandBus.ts      # Command dispatcher
+│   │       └── EventBus.ts        # Event dispatcher
+│   │
+│   ├── auth/                      # Authentication & authorization
+│   │   ├── src/
+│   │   │   ├── jwt.ts             # JWT validation
+│   │   │   ├── strategies/        # Auth strategies (RS256, HS256)
+│   │   │   └── middleware.ts      # Express/Fastify middleware
+│   │
+│   ├── capabilities/              # Feature domains (sub-workspace)
+│   │   ├── agent-builder/         # Agent construction & runtime
+│   │   │   ├── src/
+│   │   │   │   ├── AgentRuntimeService.ts
+│   │   │   │   ├── services/      # Domain services
+│   │   │   │   ├── ports/         # Interfaces (provider pattern)
+│   │   │   │   ├── adapters/      # Implementations
+│   │   │   │   └── types.ts       # Domain types
+│   │   │   └── index.ts           # Barrel export
+│   │   │
+│   │   ├── workflow/              # Workflow orchestration
+│   │   ├── knowledge/             # Knowledge graph, embeddings
+│   │   ├── evaluation/            # Model evaluation, benchmarks
+│   │   ├── deployment/            # Deployment management
+│   │   └── memory/                # Memory engine (short/long-term)
+│   │
+│   ├── shared-types/              # Cross-cutting TypeScript types
+│   ├── api-client/                # TypeScript SDK for platform API
+│   ├── sdk/                       # Public SDK for external consumers
+│   ├── workflow/                  # Workflow DSL & runtime (frontend + backend)
+│   ├── agent-sdk/                 # Agent SDK for external consumers
+│   │
+│   ├── telemetry/                 # Observability & tracing
+│   ├── telemetry-core/            # OpenTelemetry integration
+│   ├── cache/                     # Cache layer (Redis backing)
+│   ├── queue/                     # Message queue (NATS/BullMQ backing)
+│   ├── config/                    # Configuration management
+│   ├── contracts/                 # Domain contracts (types, interfaces)
+│   ├── ui/                        # Shared React UI components
+│   ├── tables/                    # Data table abstractions
+│   ├── tokens/                    # Design tokens
+│   └── (40+ others)               # Additional capability packages
+│
+├── services/                      # Microservices (long-running processes)
+│   └── (TBD: worker services for async jobs)
+│
+├── app/                           # Next.js root layout (shared with apps/studio)
+├── api/                           # API utilities (security, validators)
+├── components/                    # Root-level shared components
+├── lib/                           # Utilities and helpers
+├── prisma/                        # Database schema
+│   └── schema.prisma              # Prisma schema (single source of truth)
+│
+├── tests/                         # Integration & E2E tests
+│   ├── integration/               # API integration tests
+│   │   ├── vitest.config.ts       # Vitest config for integration suite
+│   │   └── .env.test              # Test database URL, etc.
+│   └── e2e/                       # Playwright end-to-end tests
+│
+├── architecture/                  # Architecture documentation
+│   ├── manifesto/                 # 10-layer EIOS manifesto
+│   ├── capabilities/              # Capability model registry
+│   ├── reference/                 # Technical reference architectures
+│   └── adrs/                      # Architectural Decision Records (ADRs)
+│
+├── infra/                         # Infrastructure as Code
+│   ├── terraform/                 # Terraform modules (AWS, GCP, etc.)
+│   ├── k8s/                       # Kubernetes manifests
+│   ├── helm/                      # Helm charts
+│   └── assurance/                 # Compliance & assurance automation
+│
+├── k8s/                           # Additional Kubernetes configs (legacy location)
+├── nginx/                         # Nginx configuration
+├── tools/                         # Development & tooling scripts
+│   ├── arch/                      # Architecture verification tools
+│   │   ├── check-architecture.mjs # Lint architecture
+│   │   ├── gate-a/                # Gate A: self-tests
+│   │   ├── gate-b/                # Gate B: semantics
+│   │   └── gate-c/                # Gate C: controls
+│   ├── harness/                   # Test harness CLI
+│   └── assurance/                 # Assurance runner
+│
+├── scripts/                       # Monorepo automation scripts
+│   ├── feature-start.mjs          # Start feature branch
+│   ├── feature-finish.mjs         # Finish feature branch
+│   ├── feature-complete.mjs       # Completion workflow
+│   ├── repo-policy.mjs            # Repository policy enforcement
+│   ├── repo-health.mjs            # Health check
+│   └── check-sitemap.mjs          # Sitemap validation
+│
+├── .planning/                     # GSD planning outputs
+│   └── codebase/                  # Codebase documentation
+│       ├── ARCHITECTURE.md        # This file's sibling
+│       ├── STRUCTURE.md           # This file
+│       ├── STACK.md               # Technology stack
+│       ├── INTEGRATIONS.md        # External integrations
+│       ├── CONVENTIONS.md         # Coding conventions
+│       ├── TESTING.md             # Testing patterns
+│       └── CONCERNS.md            # Technical debt & issues
+│
+├── .github/                       # GitHub workflows & actions
+│   ├── workflows/                 # CI/CD pipeline definitions
+│   │   ├── build.yml              # Build, test, lint
+│   │   ├── infrastructure.yml     # Infrastructure deployment
+│   │   └── ci.yml                 # Primary CI workflow
+│   └── modernize/                 # Modernization scripts
+│
+├── .claude/                       # Claude Code configuration
+│   └── skills/                    # Project-specific skills (if present)
+│
+├── .turbo/                        # Turborepo cache
+├── .next/                         # Next.js build output
+├── .semgrep/                      # Semgrep security rules
+├── .storybook/                    # Storybook configuration
+├── node_modules/                  # Monorepo root dependencies
+├── pnpm-workspace.yaml            # pnpm workspace definition
+├── package.json                   # Root package.json (scripts, overrides)
+├── tsconfig.json                  # Root TypeScript config
+├── turbo.json                     # Turborepo config
+├── .eslintrc.base.json            # Root ESLint config
+├── .prettierrc                    # Prettier config
+└── README.md                      # Project README
 ```
 
 ## Directory Purposes
 
-**`apps/studio/agentos/app/core/` (flat files, not the `sdk/`/`orchestrator/` subtrees):**
-- Purpose: All working business logic for the AgentOS runtime.
-- Contains: One module per engine (runtime, planner, workflow, governance, context, memory, knowledge, event bus, observability, cortex, simulator, prompts, skills), each importable/testable standalone.
-- Key files: `runtime.py` (kernel), `workflow_engine.py` (DAG executor + Agent Mesh).
+### `apps/`
+**Purpose:** Standalone, deployable applications
 
-**`apps/studio/agentos/app/api/routers/`:**
-- Purpose: HTTP surface for the mounted (working) routes.
-- Contains: FastAPI `APIRouter`s, Pydantic request/response models, thin delegation to `app/core/*`.
-- Key files: `runtime.py` (agent execution entry point), `workflows.py` (DAG entry point), `agents.py` (registry CRUD), `governance.py` (approvals).
+Each app has:
+- Independent `package.json` (dependencies, build scripts)
+- Own `tsconfig.json` (can override root settings)
+- Own `eslint`, `prettier` configs (can extend root)
+- Entry point (`src/server.ts`, `app/page.tsx`, etc.)
 
-**`apps/studio/agentos/app/models/`:**
-- Purpose: SQLAlchemy ORM schema, one file per bounded context.
-- Contains: Declarative model classes only — no business logic.
+**Deployment:** Each app builds independently and deploys to its own environment (Vercel, AWS, etc.)
 
-**`apps/studio/agentos/app/core/sdk/` and `app/core/orchestrator/`:**
-- Purpose (aspirational): A cleaner, SDK-shaped restructure of the same runtime concepts.
-- Actual state: Nearly all files are 0 lines. Not imported by any router or the flat `app/core/*.py` engines.
-- Guidance: Do not add new logic here unless explicitly completing this restructure and repointing `main.py`/routers at it.
+### `packages/`
+**Purpose:** Reusable libraries shared across apps
 
-**`apps/studio/agentos/app/{archive,platform,finance,flow,copilot,insight,hiveops,hiveshield,studio,runtime}/` (top-level domain module dirs):**
-- Purpose (per `main.py` docstring): Future `/api/<domain>` service boundaries.
-- Actual state: Only `finance/` is complete and mounted. `archive/` has real pipeline/router code but is unmounted (dead code — verify before assuming it runs). Everything else is an empty `__init__.py`.
+**Convention:** `@cerebro/*` namespace (defined in root `package.json`)
 
-**`packages/` (root-level pnpm workspace):**
-- Purpose: Shared TypeScript code across Next.js apps.
-- Contains: `ui/` (component library, most mature), `ai/`, `ai-gateway/`, `auth/`, `events/`, `policy/`, `workflow/`, `sdk/`, `telemetry/`, `contracts/`, icon packages (`icons-*`).
-- Special note: `domain/`, `database/` (Prisma schema + migrations), and `capabilities/*` are a newer, separate "domain services + outbox pattern" effort (recent commits), largely unconnected to any running app — treat as early-stage, not production request path.
+**Types of packages:**
+- **Capability packages:** `@cerebro/*-capability` (feature domains)
+- **Core packages:** `@cerebro/{database,auth,ai-gateway,etc.}` (infrastructure)
+- **SDK packages:** `@cerebro/{sdk,api-client,agent-sdk}` (external-facing)
+- **UI packages:** `@cerebro/{ui,tables,tokens}` (design system)
 
-**`services/` (root-level pnpm workspace):**
-- Purpose: Standalone backend services separate from `apps/studio/agentos`.
-- Contains: `forge-api/` (NestJS, real), `contentops/` (tsx pipeline, real); `archive-api/`, `identity-api/`, `gateway-api/`, `hiveops-api/`, `search-api/` are empty placeholder directories.
+**Dependency graph:** packages → packages → apps
 
-**`docs/superpowers/specs/`:**
-- Purpose: Design specs for new capabilities, written before implementation.
-- Key file: `2026-07-23-cerebrobuild-design.md` — target architecture for CerebroBuild, explicitly designed to layer on `apps/studio/agentos`'s existing Workflow Engine/Agent Runtime/Tool Framework/Agent Registry (not a parallel stack).
+**Caching:** Each package caches its build output (`dist/`, `.tsbuildinfo`)
 
-**Root-level product docs (`PRODUCT_REGISTRY.md`, `CAPABILITY_ARCHITECTURE.md`, `PRODUCT_SPECIFICATIONS/*.md`):**
-- Purpose: Canonical, aspirational description of the full CerebroHive product family and platform layering.
-- Caution: Describes ~15 Cerebro products and ~9 Hive platform services as if independently built; only `apps/studio/agentos` + `apps/studio` (frontend) + `apps/forge` + `services/forge-api` + `services/contentops` have real code. Cross-check any claim here against actual directory contents before relying on it for planning.
+### `packages/capabilities/`
+**Purpose:** Nested workspace for capability-specific packages
+
+**Structure per capability:**
+```
+packages/capabilities/agent-builder/
+├── src/
+│   ├── types.ts                  # Domain types (Agentdef, ToolDefinition, etc.)
+│   ├── services/                 # Business logic
+│   │   └── AgentRuntimeService.ts
+│   ├── ports/                    # Interfaces (for dependency inversion)
+│   │   └── ExecutionProvider.ts
+│   ├── adapters/                 # Implementations
+│   │   ├── AnthropicAdapter.ts
+│   │   └── OpenAIAdapter.ts
+│   └── errors.ts                 # Domain-specific exceptions
+├── index.ts                      # Barrel export (public API only)
+└── package.json
+```
+
+### `prisma/`
+**Purpose:** Single source of truth for database schema
+
+**File:** `schema.prisma`
+
+**Commands:**
+```bash
+pnpm run prisma:generate    # Generate @prisma/client
+pnpm run prisma:migrate     # Run migrations
+```
+
+### `tests/`
+**Purpose:** Shared test configuration and suites
+
+**Subdirectories:**
+- `integration/` — API tests (need live database)
+- `e2e/` — Playwright tests (need live server)
+
+**Running:**
+```bash
+pnpm run test                    # Unit tests (each package)
+pnpm run test:integration        # Integration tests
+pnpm run test:e2e                # E2E tests (requires `pnpm run dev`)
+```
+
+### `architecture/`
+**Purpose:** Architecture governance documents
+
+**Usage:** Reference when making architectural decisions
+
+### `infra/`
+**Purpose:** Infrastructure as Code
+
+**Deployment targets:** AWS, GCP, Kubernetes, etc.
+
+### `tools/`
+**Purpose:** Monorepo automation and verification
+
+**Key tools:**
+- `arch/check-architecture.mjs` — Verify architecture boundaries
+- `harness/cli.mjs` — Run test harness
+- `assurance/runner.mjs` — Run compliance checks
+
+### `.planning/codebase/`
+**Purpose:** GSD (Generative Software Development) planning outputs
+
+**Contents:** 
+- ARCHITECTURE.md — System design
+- STRUCTURE.md — File layout and naming
+- STACK.md — Technology dependencies
+- INTEGRATIONS.md — External service contracts
+- CONVENTIONS.md — Coding standards
+- TESTING.md — Test patterns
+- CONCERNS.md — Technical debt & issues
 
 ## Key File Locations
 
-**Entry Points:**
-- `apps/studio/agentos/app/main.py`: FastAPI app definition, middleware, router mounting.
-- `apps/studio/app/` (Next.js App Router root): Studio frontend routes.
-- `apps/forge/app/`: Forge frontend routes.
-- `apps/studio/agentos/scripts/seed.py`: Demo data bootstrap.
+### Entry Points
 
-**Configuration:**
-- `apps/studio/agentos/app/config.py`: Backend settings (`Settings` class, env-driven via `.env`).
-- `apps/studio/agentos/.env.example`: Documents every backend env var (DB, LLM keys, Keycloak, NATS, MinIO, OpenSearch, Redis).
-- `pnpm-workspace.yaml`, `turbo.json`: Monorepo workspace + task graph config.
-- `.env` / `.env.example` (repo root): Frontend/monorepo-level env vars.
+**Frontend:**
+- `apps/studio/package.json` — `"dev": "next dev"`
+- `apps/studio/app/page.tsx` — Home page (hero → sections)
+- `apps/studio/app/(platform)/` — Platform routes (dashboard, builder, etc.)
 
-**Core Logic:**
-- `apps/studio/agentos/app/core/runtime.py`: Agent Runtime kernel — start here for anything touching agent execution.
-- `apps/studio/agentos/app/core/workflow_engine.py`: Workflow DAG executor — start here for anything touching multi-step/multi-agent orchestration (including CerebroBuild's planned workflow compiler target).
-- `apps/studio/agentos/app/core/governance_engine.py`: Policy evaluation.
+**Backend:**
+- `apps/platform-api/package.json` — `"dev": "tsx watch src/server.ts"`
+- `apps/platform-api/src/server.ts` — Starts Fastify server on port 3000
+- `apps/platform-api/src/bootstrap.ts` — Wires dependencies, registers routes
 
-**Testing:**
-- `apps/studio/agentos/tests/`: pytest suite (backend). Run via `pytest` from `apps/studio/agentos/`.
-- `apps/studio/tests/`: `api/`, `e2e/` (Playwright), `visual/` — frontend tests.
+### Configuration
+
+**Root configs:**
+- `package.json` — Monorepo scripts, dependencies, overrides
+- `pnpm-workspace.yaml` — Workspace definitions (`apps/*`, `packages/*`, etc.)
+- `turbo.json` — Build task definitions, caching policy
+- `tsconfig.json` — Root TypeScript settings
+
+**App-specific configs:**
+- `apps/studio/next.config.js` — Next.js build config
+- `apps/platform-api/tsconfig.json` — TypeScript overrides for API
+- `packages/*/package.json` — Per-package dependencies
+
+**Linting & formatting:**
+- `.eslintrc.base.json` — Root ESLint rules
+- `.prettierrc` — Prettier formatting rules
+- `.gitignore` — Files to exclude from git
+
+### Core Logic
+
+**Agent execution:**
+- `packages/capabilities/agent-builder/src/services/AgentRuntimeService.ts` — Agent loop
+- `packages/ai-gateway/src/gateway.ts` — LLM call routing
+
+**API routes:**
+- `apps/platform-api/src/modules/agents/agents.routes.ts` — Agent CRUD
+- `apps/platform-api/src/modules/runtime/runtime.routes.ts` — Execution API
+- `apps/platform-api/src/modules/conversations/conversations.routes.ts` — Chat API
+
+**Database:**
+- `packages/database/src/repositories/AgentRepository.ts` — Agent queries
+- `packages/database/src/repositories/WorkspaceRepository.ts` — Tenant isolation
+- `packages/database/index.ts` — Prisma singleton
+
+**Middleware:**
+- `apps/platform-api/src/middleware/AuthMiddleware.ts` — JWT validation
+- `apps/platform-api/src/middleware/WorkspaceAccessMiddleware.ts` — Tenant gating
+- `apps/platform-api/src/middleware/RequestContextMiddleware.ts` — Trace ID setup
+
+### Testing
+
+**Test configs:**
+- `tests/integration/vitest.config.ts` — Integration test runner
+- `.env.test` — Test database URL (in root; see .gitignore)
+
+**Sample test files:**
+- `packages/*/src/**/*.test.ts` — Unit tests (co-located)
+- `tests/integration/**/*.test.ts` — API integration tests
 
 ## Naming Conventions
 
-**Files (Python, `apps/studio/agentos`):**
-- `snake_case.py` throughout; one engine per file named `<domain>_engine.py` for standalone engines (`memory_engine.py`, `knowledge_engine.py`, `governance_engine.py`, `context_engine.py`, `cortex_engine.py`, `simulator_engine.py`) or bare `<domain>.py` when the domain is a single concept (`planner.py`, `skills.py`, `evaluation.py`).
-- Routers named after their resource, plural where the resource is a collection: `agents.py`, `workflows.py`, `tools.py`, `skills.py`; singular for cross-cutting concerns: `context.py`, `cortex.py`, `governance.py`.
-- Multi-file subsystems get their own package directory with `base.py` (interfaces), `registry.py` (registry pattern), and implementation files: `tools/`, `cerebro_x/`.
+### Files
 
-**Files (TypeScript, `apps/studio`, `apps/forge`, `packages/*`):**
-- Next.js App Router conventions: `page.tsx`, `layout.tsx`, route-group folders in parens (`(auth)`, `(platform)`, `(internal)`).
-- Components in `PascalCase.tsx`; grouped by feature under `components/<feature>/`.
+**Source files:**
+- Service classes: `MyService.ts` (PascalCase)
+- Utility functions: `helpers.ts`, `utils.ts` (camelCase)
+- Constants: `CONSTANTS.ts` (SCREAMING_SNAKE_CASE for exports)
+- Tests: `MyService.test.ts`, `MyService.spec.ts`
+- Types: `types.ts`, `contracts.ts`
 
 **Directories:**
-- Backend bounded-context grouping: one directory per domain under `app/models/`, `app/api/routers/`, and (aspirationally) `app/<domain>/`.
-- Frontend feature grouping: `components/<feature>/`, `lib/<feature>/`, mirrored by route folders under `app/`.
+- Feature directories: camelCase (`src/modules/agents/`)
+- Shared directories: lowercase plural (`src/repositories/`, `src/adapters/`)
+- Test directories: match source structure (`src/` → `tests/`)
+
+### Imports
+
+**Path aliases (configured in tsconfig.json per app):**
+- `@/` — App root (apps/studio)
+- `@cerebro/*` — Workspace packages (pnpm)
+
+**Organization (enforced by ESLint):**
+1. External packages (`react`, `lodash`, etc.)
+2. Workspace packages (`@cerebro/*`)
+3. Relative imports (`./`, `../`)
+
+### Functions & Variables
+
+**Naming:**
+- Functions: `camelCase` (`executeAgent`, `fetchUser`)
+- Constants: `SCREAMING_SNAKE_CASE` (module-level only)
+- Variables: `camelCase` (`agentId`, `workspaceId`)
+- Classes/Types: `PascalCase` (`AgentRepository`, `ExecutionState`)
+- Interfaces: `PascalCase`, no `I` prefix (`AIProvider`, not `IAIProvider`)
+
+**Prefixes for getters/setters:**
+- `get*()` — Retrieve (e.g., `getAgent()`)
+- `find*()` — Search with filter (e.g., `findByWorkspaceId()`)
+- `list*()` — Return collection (e.g., `listAgents()`)
+- `is*()`, `has*()` — Boolean checks (e.g., `isActive()`, `hasAccess()`)
 
 ## Where to Add New Code
 
-**New AgentOS engine/capability (e.g., CerebroBuild's Capability Graph Engine):**
-- Primary code: New flat module in `apps/studio/agentos/app/core/`, following the existing `<domain>_engine.py` pattern (see `context_engine.py` for a good template — dataclasses + a single `assemble()`/entry function, importing sibling engines directly rather than through the empty `sdk`/`orchestrator` trees).
-- Router: New file in `apps/studio/agentos/app/api/routers/`, mounted explicitly in `apps/studio/agentos/app/main.py`'s router-include block.
-- Models: New file in `apps/studio/agentos/app/models/` if new tables are needed; register any new SQLAlchemy model so `init_db()` (`app/db.py`) creates its table.
-- Tests: `apps/studio/agentos/tests/test_<feature>.py`, using `conftest.py`'s `client`/`auth_headers` fixtures (mock LLM provider, fully offline).
+### New Feature (Multi-layer)
 
-**New workflow node type (extending the DAG for capability graphs):**
-- Add a new `if node_type == "...":` branch in `apps/studio/agentos/app/core/workflow_engine.py::step()`, following the existing pattern of mutating `context`, `run.node_states[current_id]`, and publishing a `bus.publish(...)` event on completion/failure.
+**Example: Add a new Knowledgebase management capability**
 
-**New tool:**
-- Implementation: `apps/studio/agentos/app/core/tools/builtin.py` (or a new file, imported into `registry.py`), subclassing `BaseTool` (`app/core/tools/base.py`).
-- Register: Add `self.register(YourTool())` in `ToolRegistry.__init__` (`apps/studio/agentos/app/core/tools/registry.py`).
+1. **Domain model:**
+   - Create `packages/capabilities/knowledge/src/types.ts` — Define `Knowledgebase`, `Document` types
+   - Create `packages/database/src/repositories/KnowledgeRepository.ts` — Data access
 
-**New governance policy shape / operator:**
-- Add to `_OPS` dict in `apps/studio/agentos/app/core/governance_engine.py` (also reused by `workflow_engine._condition_matches`).
+2. **Business logic:**
+   - Create `packages/capabilities/knowledge/src/services/KnowledgeService.ts` — Orchestration
+   - Create `packages/capabilities/knowledge/index.ts` — Export public API
 
-**New frontend feature (Studio):**
-- Route: `apps/studio/app/<feature>/page.tsx` (or under an existing route group).
-- Components: `apps/studio/components/<feature>/`.
-- Data/client logic: `apps/studio/lib/<feature>/`; use `apps/studio/lib/agentos/*` as the pattern for talking to the backend.
+3. **API routes:**
+   - Create `apps/platform-api/src/modules/knowledge/knowledge.routes.ts` — REST endpoints
+   - Register in `apps/platform-api/src/bootstrap.ts` line ~130
 
-**Utilities:**
-- Backend: no dedicated `utils/` — small helpers live inline in the consuming engine module; shared cross-cutting helpers (JSON-safety, etc.) live in the module that owns the concept (e.g., `to_json_safe` in `app/core/tools/__init__.py`).
-- Frontend: `apps/studio/lib/` subfolders per concern (`analytics/`, `security/`, `metrics/`, `queue/`, `repositories/`).
+4. **Frontend:**
+   - Create `apps/studio/app/(platform)/knowledge/` — Dashboard pages
+   - Create `apps/studio/components/knowledge/` — UI components
+
+5. **Tests:**
+   - Create `packages/capabilities/knowledge/src/**/*.test.ts` — Unit tests
+   - Create `tests/integration/knowledge.test.ts` — API tests
+   - Create `tests/e2e/knowledge.spec.ts` — Playwright E2E tests
+
+### New Component/Module
+
+**Example: Add a React component for agent configuration**
+
+1. **Create file:** `apps/studio/components/agents/AgentConfigForm.tsx`
+2. **Imports:** Use path alias `import { Button } from '@/components/ui'`
+3. **Export:** Default or named
+4. **Tests:** Co-locate as `AgentConfigForm.test.tsx`
+
+### Shared Utilities
+
+**Example: Add a formatting helper used by multiple packages**
+
+1. **Create package:** `packages/common-utils/` (or use existing `packages/lib/`)
+2. **Add function:** `src/format.ts` → `export function formatWorkspaceId(id: string): string`
+3. **Export:** In `index.ts`
+4. **Add dependency:** In consuming package's `package.json`: `"@cerebro/common-utils": "workspace:*"`
+
+### New API Endpoint
+
+**Example: Add `POST /api/v1/agents/{id}/fork`**
+
+1. **Route handler:** Add to `apps/platform-api/src/modules/agents/agents.routes.ts`
+2. **TypeBox schema:** Define request/response in same file
+3. **Middleware:** Use existing `requireAuthHook`, `requireWorkspaceAccessHook`
+4. **Handler logic:**
+   - Call repository to fetch agent
+   - Validate permission
+   - Call domain service
+   - Return result or error
+
+**Pattern:**
+```typescript
+server.post<{ Params: { id: string } }>(
+  '/:id/fork',
+  { schema: { params: Type.Object({ id: Type.String() }) } },
+  async (request, reply) => {
+    const { id } = request.params;
+    const { tenantId, workspaceId } = request.cerebroContext;
+    
+    const agent = await agentRepository.getByIdAndWorkspaceId(id, workspaceId);
+    if (!agent) return reply.code(404).send({ /* error */ });
+    
+    const forked = await agentService.fork(agent);
+    return reply.code(201).send(forked);
+  }
+);
+```
+
+### New Package
+
+**When to create a new package:**
+- Code is reused by 2+ apps
+- Code is domain-specific (agent, workflow, knowledge)
+- Code is a cross-cutting concern (telemetry, cache, queue)
+
+**Steps:**
+1. Create `packages/my-package/`
+2. Create `packages/my-package/src/` with source files
+3. Create `packages/my-package/index.ts` — barrel export
+4. Create `packages/my-package/package.json`:
+   ```json
+   {
+     "name": "@cerebro/my-package",
+     "version": "1.0.0",
+     "private": true,
+     "main": "./src/index.ts",
+     "types": "./src/index.ts",
+     "dependencies": { /* workspace packages */ },
+     "devDependencies": { "typescript": "^5" }
+   }
+   ```
+5. Run `pnpm install` to update `pnpm-lock.yaml`
+6. Update workspaces that depend on it: `"@cerebro/my-package": "workspace:*"`
 
 ## Special Directories
 
-**`apps/studio/agentos/app/core/sdk/` and `app/core/orchestrator/`:**
-- Purpose: Aspirational SDK/orchestrator restructure.
-- Generated: No (hand-authored scaffolding, mostly empty).
-- Committed: Yes.
-- Guidance: Do not build new features here; verify actual usage (import graph) before trusting any file in these trees.
+### `.next/`
+**Purpose:** Next.js build output
+**Generated:** Yes (via `next build`)
+**Committed:** No (in .gitignore)
+**Cleared:** `pnpm run clean:build`
 
-**`apps/studio/agentos/agents_store/`:**
-- Purpose: YAML agent template definitions loaded by `scripts/seed.py`.
-- Generated: No.
-- Committed: Yes.
+### `.turbo/`
+**Purpose:** Turborepo task cache
+**Generated:** Yes (via `turbo build`, etc.)
+**Committed:** No (in .gitignore)
+**Cleared:** `pnpm run clean:build` or `turbo prune`
 
-**`apps/studio/agentos/.venv/`, `**/node_modules/`, `**/.next/`, `**/.turbo/`, `**/dist/`:**
-- Purpose: Build/dependency artifacts.
-- Generated: Yes.
-- Committed: No (should be gitignored; note repo root has some stray build artifacts like `tsconfig.tsbuildinfo`, `out.zip`, `diff.txt`, `ts-errors.log` checked into the working tree — verify `.gitignore` coverage before assuming these are ignored).
+### `node_modules/`
+**Purpose:** Monorepo dependencies
+**Generated:** Yes (via `pnpm install`)
+**Committed:** No (in .gitignore)
+**Reinstalled:** `pnpm install --frozen-lockfile` (CI)
 
-**`apps/studio/platform/` (TS, inside the Next.js app) vs. `apps/studio/agentos/` (Python backend):**
-- Purpose: Easy to confuse — `apps/studio/platform/` is a small TypeScript `src/{ai,app,dev,domains,kernel,sdk}` scaffold living inside the frontend app; `apps/studio/agentos/` is the real Python backend. They are unrelated codebases despite similar naming; always disambiguate by language/file extension when navigating.
+### `.pnpm-store/`
+**Purpose:** pnpm package store (hard links)
+**Generated:** Yes (via `pnpm install`)
+**Committed:** No (in .gitignore)
+**Preserved:** Across installs for speed
+
+### `prisma/`
+**Purpose:** Database schema and migrations
+**Generated:** No (manually created)
+**Committed:** Yes (schema.prisma, migration files)
+**Schema location:** `prisma/schema.prisma` (single truth)
+
+### `dist/` and `build/`
+**Purpose:** Package/app build outputs
+**Generated:** Yes (via `turbo build`)
+**Committed:** No (in .gitignore)
+**Outputs defined:** In `turbo.json` (each task)
 
 ---
 
-*Structure analysis: 2026-07-23*
+*Structure analysis: 2026-08-04*

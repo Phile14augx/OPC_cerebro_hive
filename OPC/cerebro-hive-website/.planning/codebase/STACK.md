@@ -1,170 +1,170 @@
 # Technology Stack
 
-**Analysis Date:** 2026-07-23
-
-## Repository Shape
-
-This is a pnpm/Turborepo monorepo (`cerebro-hive-os`) with three kinds of workspaces, declared in `pnpm-workspace.yaml` (`apps/*`, `packages/*`, `services/*`):
-
-- **`apps/*`** — Next.js frontends. Only two are actually implemented: `apps/studio` (the main CerebroHive marketing/product site, App Router) and `apps/forge` (a smaller Next.js app, App Router). `apps/archive`, `apps/flow`, `apps/insight`, `apps/ops`, `apps/search` exist as **empty directories** (workspace placeholders for planned product frontends — not yet scaffolded).
-- **`apps/studio/agentos/`** — the Python/FastAPI backend (AgentOS runtime). This is the target for the CerebroBuild capability work. It is a standalone service (its own `requirements.txt`, `Dockerfile`, `.venv`), not a pnpm workspace member, physically nested inside the `studio` Next.js app directory but operationally independent.
-- **`packages/*`** — shared TypeScript libraries (`@cerebro/*` scope): `ai`, `api-client`, `auth`, `config`, `contracts`, `database`, `domain`, `events`, `icons-*` (7 icon packages), `sdk`, `search`, `storage`, `telemetry`, `ui`, `workflow`. Several (`api-client`, `search`, `storage`) are empty stubs with no `package.json` yet.
-- **`services/*`** — standalone Node/TS backend services: `forge-api` (NestJS, implemented), `contentops` (implemented, content publishing pipeline). `archive-api`, `gateway-api`, `hiveops-api`, `identity-api`, `search-api` are **empty placeholder directories**.
+**Analysis Date:** 2026-08-04
 
 ## Languages
 
 **Primary:**
-- TypeScript 5.x — all Next.js apps (`apps/studio`, `apps/forge`) and shared `packages/*`
-- Python 3.12 — AgentOS backend (`apps/studio/agentos/`), pinned via `apps/studio/agentos/Dockerfile` (`python:3.12-slim`); no `.python-version`/`pyproject.toml` present, dependency floor set by `requirements.txt` (`>=` pins, no lockfile)
+- TypeScript 5.6.0+ - Used across all packages, apps, and services
+- JavaScript/Node.js - Runtime scripts and configuration files
 
 **Secondary:**
-- JavaScript — build/tooling scripts at repo root (`_shot*.js`, `refactor_theme.ts` is TS, `populate.py` is Python)
-- SQL — Prisma schema (`packages/database/prisma/schema.prisma`), Alembic migrations under `apps/studio/agentos` (via `alembic>=1.13` dependency)
+- Go - Gateway, swarm runtime, tool gateway, memory service, router service (defined in .env.example)
+- Python - Planner service, learning service, evaluation service (defined in .env.example)
+- Rust - API Gateway (defined in .env.example)
+- Java - Platform SVC, Academy SVC, CRM SVC (defined in .env.example)
+- C++ - ML gRPC service (defined in .env.example)
 
 ## Runtime
 
-**Node.js:**
-- Required `>=20.0.0` (`package.json` → `engines`)
-- CI pins Node 20 (`.github/workflows/ci.yml`)
+**Environment:**
+- Node.js >= 22.0.0 (as specified in root `package.json` engines)
+- Platform: Docker/Kubernetes deployment capable (multi-stage builds, standalone output)
 
-**Python:**
-- 3.12 (Docker base image for AgentOS)
-- No virtualenv lock file; dependencies resolved from `requirements.txt` floor pins at install time — **no `requirements-lock.txt`/`poetry.lock` present**, a reproducibility gap worth knowing before extending this service
-
-**Package Manager (JS/TS):**
-- pnpm 9 (`packageManager: "pnpm@9.0.0"` in root `package.json`; CI uses `pnpm/action-setup@v4` with `version: 9`)
-- Lockfile: `pnpm-lock.yaml` present at root (workspace-wide)
-- Note: `apps/studio` also has its own `package-lock.json` present alongside the pnpm lockfile — indicates npm was used there at some point; pnpm is the canonical manager per root config and CI.
-- `services/forge-api` and other services likely install independently via workspace protocol (`workspace:*` deps observed).
-
-**Package Manager (Python):**
-- pip (`pip install -r requirements.txt`), no Poetry/uv in use.
-
-## Monorepo Build Orchestration
-
-**Turborepo:**
-- Config: `turbo.json` (root)
-- Tasks: `build` (depends on `^build`, outputs `.next/**`, `dist/**`), `lint`, `dev` (persistent, uncached), `test`, `generate` (uncached)
-- `globalEnv` passthrough declared in `turbo.json`: `AI_PROVIDER`, `AI_MODEL_ID`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `FORGE_API_PORT`, `NEXT_PUBLIC_FORGE_API_URL`, `DATABASE_URL`, `REDIS_URL`, `NODE_ENV`
-- Root scripts (`package.json`): `build`/`dev`/`lint`/`test` all delegate to `turbo <task>`; `format` runs `prettier --write` directly (not turbo-orchestrated)
-
-**CI Pipeline (`.github/workflows/ci.yml`):**
-1. Checkout → pnpm 9 setup → Node 20 setup (pnpm-cached)
-2. `pnpm install --frozen-lockfile`
-3. `pnpm --filter @cerebro/database exec prisma generate`
-4. `pnpm --filter @cerebro/studio exec tsc --noEmit` (type check, studio only)
-5. `pnpm run lint || true` (non-blocking)
-6. `pnpm run build` (with `IS_FTP_DEPLOY=true`)
-7. Upload build artifacts
-
-Other workflows present: `deployment-status.yml`, `ftp-deploy.yml`, `pr-automation.yml`, `security-scan.yml`, `ssh-deploy.yml` (deployment/security automation, not build-critical).
+**Package Manager:**
+- pnpm >= 9.0.0, currently 9.15.0
+- Lockfile: `pnpm-lock.yaml` present
+- Workspace managed via `pnpm-workspace.yaml`
 
 ## Frameworks
 
-**Core (Frontend — `apps/studio`):**
-- Next.js 16.2.10 (App Router) — `apps/studio/package.json`
-- React 19.2.4 / React DOM 19.2.4
-- Tailwind CSS 4 (`@tailwindcss/postcss`)
-- Framer Motion 12, GSAP 3.15, Lenis (scroll), Three.js + `@react-three/fiber`/`drei`/`postprocessing` (3D)
-- `@xyflow/react` + `dagre`/`elkjs` (flow/graph diagrams — likely used for workflow visualization)
-- `@monaco-editor/react` (code editor)
-- Vercel AI SDK (`ai` 7.x, `@ai-sdk/openai`)
+**Core Frontend:**
+- Next.js 16.2.10 - Server-side rendering, static generation, API routes
+- React 19.2.4 - UI framework for all frontend applications
 
-**Core (Frontend — `apps/forge`):**
-- Next.js ^14.0.0 (older major than `studio`'s Next 16 — version drift between apps)
-- React ^18.2.0 (also older than `studio`'s React 19)
-- Tailwind CSS ^3.0.0 (older major than `studio`'s Tailwind 4)
-- Depends on workspace packages `@cerebro/ui`, `@cerebro/auth`
+**Backend APIs:**
+- Fastify 4.26.2 - Lightweight HTTP server (`@cerebro/platform-api`)
+- NestJS 10.0.0 - Full-featured backend framework for forge-api and other services
+- Express 4.19.2 - Used in auth middleware
 
-**Core (Backend — AgentOS, `apps/studio/agentos`):**
-- FastAPI `>=0.115` — main web framework, modular-monolith style (see `app/main.py`)
-- Uvicorn `[standard] >=0.32` — ASGI server
-- SQLAlchemy `>=2.0` (ORM, declarative `Base` in `app/db.py`), Alembic `>=1.13` (migrations)
-- Pydantic `>=2.9` + `pydantic-settings >=2.5` — request/response schemas and env-driven `Settings` (`app/config.py`)
-- `slowapi >=0.1.9` — rate limiting (`app/rate_limit.py`)
+**Workflow & Orchestration:**
+- Temporal.io 1.24.2 - Workflow engine (temporal-ui 2.27.1, @temporalio/client 1.11.7)
+- NATS JetStream 2.10 - Event bus and message streaming
 
-**Backend — `services/forge-api` (NestJS):**
-- NestJS 10 (`@nestjs/common`, `@nestjs/core`, `@nestjs/platform-express`, `@nestjs/swagger`, `@nestjs/config`, `@nestjs/event-emitter`)
-- Prisma Client 5.22 (schema shared from `packages/database/prisma/schema.prisma`)
-- `class-validator`/`class-transformer`, RxJS
-- Depends on workspace packages `@cerebro/ai`, `@cerebro/database`, `@cerebro/workflow`
-
-**Backend — `services/contentops`:**
-- Plain TS/Node (`tsx` runtime, no framework) — Markdown-to-platform publishing pipeline
-- `@anthropic-ai/sdk`, `chokidar` (file watch), `marked`, `node-cron`, `winston` (logging), `gray-matter`, `p-retry`
+**ORM & Database:**
+- Prisma 5.22.0 - Database ORM and migration tool
+- PostgreSQL 16 (pgvector extension) - Primary relational database
 
 **Testing:**
-- Frontend (`apps/studio`): Playwright (`@playwright/test`, `playwright.config.ts`), Vitest (`vitest.config.ts`, `vitest.shims.d.ts`) — both configured
-- Backend (AgentOS): pytest `>=8.3` + `pytest-asyncio >=0.24`, tests under `apps/studio/agentos/tests/` (runs fully offline via mock LLM provider per README)
-- `services/forge-api`: Jest (`test`/`test:watch` scripts)
+- Vitest 3.2.4+ - Unit/integration testing
+- Jest 29.7.0 - Testing framework (forge-api, other NestJS services)
+- Playwright 1.61.1+ - End-to-end testing (studio app)
 
-**Build/Dev tooling:**
-- ESLint 9 (flat config, `eslint.config.mjs` in `apps/studio`), `eslint-config-next` 16.2.10
-- Prettier (root `format` script covers `**/*.{ts,tsx,md}`)
-- Storybook (`.storybook/` at root)
-- `ts-morph` (AST tooling, likely for the `audit:enterprise` scripts in `apps/studio`)
-- `cross-env`, `@next/bundle-analyzer` (`analyze` script)
+**Build & Task Running:**
+- Turbo 2.0.0 - Monorepo build orchestration with task caching
+- TypeScript 5.6.0 - Type checking and compilation
+
+**Frontend UI & Visualization:**
+- React Three Fiber 9.6.1 - 3D graphics with Three.js
+- XYFlow 12.11.2 - Workflow/DAG visualization
+- Framer Motion 12.42.2 - Animation library
+- React Query (@tanstack/react-query 5.101.4) - Server state management
+- Zustand 5.0.14 - Client state management
+- Radix UI 1.6.6 - Headless component library
+- Tailwind CSS 4.0+ - Utility-first CSS framework
+- Monaco Editor 4.7.0 - Code editor component
+- Lucide React 1.25.0 - Icon library
+
+**Code Quality & Formatting:**
+- ESLint 9.0.0 - Linting with TypeScript support (@typescript-eslint/eslint-plugin 8.0.0)
+- Prettier 3.0.0 - Code formatter with import organization plugin
+- Dependency Cruiser 18.1.0 - Architecture validation and circular dependency detection
 
 ## Key Dependencies
 
-**Critical (AgentOS / Python):**
-- `anthropic >=0.34`, `openai >=1.52`, `google-genai >=0.2.0` — multi-provider LLM clients wired through `app/core/cerebro_x/gateway.py` (`CerebroXGateway`), with `tenacity >=9.0` for retries and `numpy >=1.26` for embedding math
-- `pyjwt[crypto] >=2.9` + `cryptography >=43.0` — JWT validation, positioned for Keycloak JWKS verification (`app/platform/auth/keycloak.py`)
-- `httpx >=0.27` — outbound HTTP (also used for async `TestClient` in tests)
-- `pyyaml >=6.0` — governance policy files (YAML rule engine)
-- `nats-py >=2.7` — NATS JetStream client (`app/core/nats/bus.py`), connected conditionally in `app/main.py` lifespan if `NATS_URL` is set
-- `opensearch-py >=2.7` — OpenSearch client (`app/core/search/hybrid_search.py`)
-- `minio >=7.2` — MinIO S3-compatible object storage client (`app/core/storage/file_service.py`)
-- `opentelemetry-api`/`sdk >=1.27` + `opentelemetry-instrumentation-fastapi` — tracing/metrics export hooks
+**Critical:**
+- @anthropic-ai/sdk 0.30.0 - Anthropic Claude LLM API client
+- openai 4.75.0 - OpenAI API client for GPT models
+- @prisma/client 5.22.0 - Database client generated from schema
+- fastify 4.26.2 - Backend HTTP server
+- next 16.2.10 - Next.js framework (frontend SSR)
 
-**Critical (JS/TS):**
-- `zod` — schema validation, used across `apps/studio`, `packages/contracts`
-- `@prisma/client` 5.22 — ORM client, shared schema at `packages/database/prisma/schema.prisma` (PostgreSQL + `pgvector`/`pgcrypto` extensions)
-- `bullmq` + `ioredis` (in `apps/studio`) — Redis-backed job queues
-- `jose` — JWT handling in `apps/studio` (frontend-side)
-- `@octokit/rest`, `@octokit/webhooks-methods` — GitHub API + webhook signature verification (in `apps/studio`)
+**AI & Gateway:**
+- @cerebro/ai-gateway (workspace) - Internal AI provider abstraction layer
+- @cerebro/ai (workspace) - AI service implementations
+- @cerebro/agent-builder-capability (workspace) - Agent creation and management
 
-**Infrastructure packages:**
-- `@cerebro/telemetry` — OpenTelemetry wrapper (`@opentelemetry/sdk-node`, auto-instrumentations, OTLP gRPC exporter)
-- `@cerebro/events` — NATS-based event package (`nats` 2.29.3), depends on `@cerebro/core-bus` (referenced but not found as a top-level package — likely an unresolved/renamed dependency, worth checking before relying on it)
-- `@cerebro/database` — Prisma client wrapper, single source of schema truth for all TS services
-- `@cerebro/domain` — depends on `@cerebro/database` + Prisma client directly (domain/outbox layer per recent commits)
+**Infrastructure & Messaging:**
+- ioredis 5.11.1 - Redis client for caching and job queues
+- bullmq 5.80.9 - Job queue library using Redis backend
+- nats 2.29.3 - NATS client for JetStream event bus
+- @temporalio/client 1.11.7 - Temporal workflow client
+
+**Authentication & Security:**
+- jose 6.2.3 - JWT token handling
+- bcryptjs 3.0.3 - Password hashing
+- @cerebro/auth (workspace) - Custom auth service with Keycloak integration
+
+**Client & API:**
+- @octokit/rest 22.0.1 - GitHub API client for webhook integration
+- @octokit/webhooks-methods 6.0.0 - GitHub webhook verification
+- aws-amplify 6.19.0 - AWS Amplify for auth and cloud services
+- @vercel/functions 3.7.5 - Vercel serverless functions support
+
+**Data & Serialization:**
+- zod 3.25.76 - TypeScript-first schema validation
+- gray-matter 4.0.3 - YAML frontmatter parsing for MDX
+
+**Utility Libraries:**
+- uuid 11.0.5 - UUID generation
+- date-fns 4.4.0 - Date manipulation
+- class-validator 0.14.0 - Decorator-based validation
+- class-transformer 0.5.1 - Object transformation
 
 ## Configuration
 
 **Environment:**
-- Root `.env` (present, not read — contains secrets) and `.env.example` (template) define: `DATABASE_URL`, `REDIS_URL`, `NEXTAUTH_SECRET`/`NEXTAUTH_URL`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `AI_PROVIDER`, `AI_MODEL_ID`, `FORGE_API_PORT`, `NEXT_PUBLIC_FORGE_API_URL`, `FORGE_DEFAULT_WORKSPACE_ID`
-- AgentOS has its own `.env`/`.env.example` inside `apps/studio/agentos/` (separate env surface from the root site): `DATABASE_URL`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `OLLAMA_BASE_URL`, `AGENTOS_JWT_SECRET`, `AGENTOS_ADMIN_SECRET`, `AGENTOS_ALLOWED_ORIGINS`, `AGENTOS_POLICY_FILE`
-- AgentOS `app/config.py` (`Settings` class, `pydantic-settings`) additionally exposes (not all in `.env.example` — supported but undocumented there): `keycloak_url`/`keycloak_realm`/`keycloak_client_id`/`keycloak_client_secret`, `nats_url`, `minio_endpoint`/`minio_access_key`/`minio_secret_key`/`minio_secure`, `opensearch_url`/`opensearch_user`/`opensearch_password`, `redis_url`/`redis_password`, `agent_store_dir`, `agentos_environment`, `agentos_max_body_bytes`, `agentos_request_timeout_seconds`
-- `.env` files exist at repo root and inside `apps/studio/agentos/` — contents not read per policy; treat as containing live secrets
+- Primary: `.env` file (containing DATABASE_URL, REDIS_URL, API keys)
+- Example: `.env.example` documents all required variables
+- Development: Optional `.env.local` or `.env.development`
+- Testing: `.env.test` for test environment (referenced in root package.json)
+- Build-time: `NEXT_PUBLIC_*` variables inlined into frontend bundle
 
-**Build:**
-- `apps/studio/next.config.ts`, `apps/forge/next.config.mjs` — per-app Next.js config
-- `apps/studio/tailwind.config.ts` (Tailwind 4), `apps/forge/tailwind.config.ts` (Tailwind 3)
-- `apps/studio/tsconfig.json`, root has multiple `.tsbuildinfo` artifacts (`tsconfig.tsbuildinfo`, `tsconfig.scoped3.tsbuildinfo`, `tsconfig.scoped4.tsbuildinfo`, `tsconfig.sitemap.json`) suggesting scoped/partial type-check passes are used, likely for the `audit:enterprise` tooling
-- `vercel.json` — Next.js framework, `npm run build`/`npm install` as build/install commands (note: this diverges from the pnpm-based root scripts; Vercel deploy path may bypass Turborepo orchestration)
-- AgentOS: `apps/studio/agentos/Dockerfile` (Python 3.12-slim base), `apps/studio/agentos/docker-compose.yml` (Postgres 17 + Redis + agentos service, standalone from root compose)
+**Build Configuration:**
+- `turbo.json` - Turbo monorepo task configuration
+- `tsconfig.base.json` - Shared TypeScript configuration
+- `tsconfig.json` - Root TypeScript configuration
+- `tsconfig.nextjs.json` - Next.js specific TypeScript config
+- `next.config.ts` - Next.js build configuration with static export support
+- `postcss.config.mjs` - PostCSS configuration for Tailwind
+- `.eslintrc.base.json` - Base ESLint configuration
+- `.eslintrc.eda.json` - EDA-specific linting rules
+- `.prettierrc.json` - Prettier formatting configuration
+- `.prettierignore` - Prettier ignore patterns
+
+**Development Containers:**
+- `docker-compose.yml` - Full local stack with 20+ services
 
 ## Platform Requirements
 
 **Development:**
-- Node.js >=20, pnpm 9
-- Python 3.12 + virtualenv for AgentOS (`python3 -m venv .venv`)
-- AgentOS runs fully offline by default: SQLite (`agentos.db`) + mock LLM provider, zero external services/API keys required
-- Root `docker-compose.yml` brings up the full "production-like" local stack: Postgres+pgvector, Redis, NATS JetStream, OpenSearch + Dashboards, MinIO, Keycloak, pgAdmin, and `forge-api`
+- Node.js 22.0.0 or higher
+- pnpm 9.0.0 or higher
+- Docker & Docker Compose (for local database, cache, services)
+- Recommended: VS Code with TypeScript support, ESLint extension
 
 **Production:**
-- Website (`apps/studio` and likely `apps/forge`): deployed via Vercel (`vercel.json`, `NEXT_PUBLIC_API_URL` env var placeholder) — also has FTP/SSH deploy GitHub Actions workflows (`ftp-deploy.yml`, `ssh-deploy.yml`), suggesting a secondary/alternate hosting target beyond Vercel
-- AgentOS backend: deployed as a standalone Dockerized service — `apps/studio/agentos/DEPLOY.md` documents Railway, Render, and Fly.io as supported targets, each needing `DATABASE_URL` (managed Postgres), `AGENTOS_ADMIN_SECRET`, `AGENTOS_ALLOWED_ORIGINS`, and optionally `ANTHROPIC_API_KEY`
-- `services/forge-api`: containerized via `services/forge-api/Dockerfile`, orchestrated in root `docker-compose.yml` on port 4005, depends on Postgres + Redis health checks
+- Deployment target: Docker/Kubernetes
+- Container runtime: Linux-based (Node.js 22+)
+- Services: PostgreSQL 16+, Redis 7+, NATS 2.10+, Temporal, Keycloak, OpenSearch, MinIO
+- CDN-ready frontend (Next.js standalone/static output modes)
 
-## Notes for CerebroBuild (layering on `apps/studio/agentos`)
+**Database:**
+- PostgreSQL 16 with pgvector extension (embeddings) and pgcrypto extensions
+- Connection pooling via Prisma
+- Schema migrations with Prisma Migrate
 
-- The AgentOS backend is a **single FastAPI modular monolith** (`app/main.py`), not microservices — new capability code should live under a new `app/<domain>/` module (following the pattern of `app/finance/`, `app/archive/`, `app/platform/`) with its own `router.py`, `models.py`, and be wired into `app/main.py`'s `include_router` calls plus `app/db.py`'s `init_db()` model imports.
-- The `app/core/capabilities/registry.py` module (`CapabilityRegistry`, `CapabilityMetadata`) already implements a lightweight IoC-container pattern for capability registration/health/versioning — check this before building a parallel registry for CerebroBuild.
-- Production infra (NATS, OpenSearch, MinIO, Keycloak, OPA, Temporal, Kubernetes) is **interface-stubbed, not deployed** in the MVP — `app/config.py` settings for these exist and are wired conditionally (e.g., NATS only connects if `nats_url` is set in `app/main.py` lifespan), but the default local/dev path uses SQLite + in-process pub/sub + mock LLM with zero external dependencies.
-- LLM access should go through `app/core/cerebro_x/gateway.py` (`CerebroXGateway.complete`/`acomplete`), which already handles the OpenAI → Anthropic → Gemini → Ollama → Mock fallback chain — do not call provider SDKs directly from new capability code.
+**Message Queue & Events:**
+- Redis 7+ for job queues (BullMQ)
+- NATS 2.10+ with JetStream for event streaming
+
+**Observability Stack (Optional):**
+- OpenTelemetry Collector 0.96.0
+- Prometheus 2.50.1
+- Grafana
+- Loki (log aggregation)
+- Tempo (distributed tracing)
 
 ---
 
-*Stack analysis: 2026-07-23*
+*Stack analysis: 2026-08-04*

@@ -1,437 +1,300 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-07-23
+**Analysis Date:** 2026-08-04
 
-This document covers the whole `cerebro-hive-website` monorepo, with a deep focus on
-`apps/studio/agentos` (the Python/FastAPI "AgentOS" runtime) since a new capability
-(**CerebroBuild**) is about to be built directly on top of it. AgentOS's own
-`apps/studio/agentos/README.md` already documents its MVP simplifications honestly (SQLite by
-default, in-process pub/sub instead of NATS, local vector similarity instead of OpenSearch, API
-keys instead of Keycloak/Vault, YAML rules instead of OPA). This document does not repeat that
-list verbatim — it adds the risks *underneath* those documented tradeoffs, plus everything the
-README doesn't mention: dead/duplicate code, git hygiene, and cross-repo scratch cruft.
+## Documentation & Governance Churn
 
-## Tech Debt
+**Strategic Documentation Deleted:**
+- Issue: Four key governance/capability documents deleted during current session without clear archival or replacement
+  - `CAPABILITY_ARCHITECTURE.md` - Capability system design
+  - `COMMERCIAL_STRATEGY.md` - Business/product strategy
+  - `PRODUCT_REGISTRY.md` - Product inventory and service catalog
+  - `SERVICES_PORTFOLIO.md` - Services architecture overview
+- Files: Repository root level (previously at project root)
+- Impact: Loss of architectural direction, capability mapping, and strategic context. No replacement documentation created. Onboarding and architectural decision-making severely hampered.
+- Fix approach: Reconstruct from architecture/ARCHITECTURE_INDEX.md and CEREBROHIVE_CONSTITUTION.md. Establish governance protocol for strategic doc changes. Consider version control strategy for these critical docs.
 
-**Two parallel, mostly-dead module trees inside AgentOS (`apps/studio/agentos/app/core/`):**
-- Issue: `app/core/` contains both the *live* flat modules that `app/main.py` actually imports
-  (`runtime.py`, `planner.py`, `memory_engine.py`, `knowledge_engine.py`, `workflow_engine.py`,
-  `governance_engine.py`, `tool_framework.py`, `event_bus.py`, `observability.py`, `cortex.py` /
-  `cortex_engine.py`, `simulator_engine.py`) **and** a second, larger, nested tree that
-  reimplements the same concepts under different names: `core/sdk/planning/*`,
-  `core/sdk/memory/*`, `core/sdk/governance/*`, `core/sdk/decision/*`, `core/sdk/evaluation/*`,
-  `core/sdk/capabilities/*`, `core/sdk/ai/*`, `core/orchestrator/{runtime,engine,dispatcher,
-  agents,pipeline,workflow,human}.py`, `core/planning/{planner,executor}.py`,
-  `core/events/{bus,schemas}.py`, `core/context/{builder,models}.py`, `core/retrieval/
-  {engine,fusion}.py`, `core/search/hybrid_search.py`, `core/storage/file_service.py`,
-  `core/telemetry/{metrics,profiler,spans,trace}.py`, `core/tools/{base,builtin,registry}.py`,
-  `core/cerebro_x/{base,gateway,router}.py` + `providers/*`, `core/nats/bus.py`,
-  `core/capabilities/registry.py`.
-- Files: `apps/studio/agentos/app/core/` (verify via `grep -rn "include_router"` in
-  `apps/studio/agentos/app` — only `app/main.py` and `app/archive/router.py` define any, and
-  `app/main.py` never imports `app/archive`).
-- Impact: `app/main.py` only imports the flat legacy modules, `app.finance`, and the legacy
-  routers in `app/api/routers/`. Everything under `core/sdk/`, `core/orchestrator/`,
-  `core/planning/`, `core/events/`, `core/context/`, `core/retrieval/`, `core/search/`,
-  `core/storage/`, `core/telemetry/`, `core/tools/`, `core/cerebro_x/` (beyond `embeddings.py`
-  and the provider used by the live gateway), and `core/capabilities/` is unreachable at runtime
-  — dead code with no test coverage. A contributor (human or an autonomous CerebroBuild agent)
-  editing "the planner" or "the memory engine" has a 50/50 chance of editing the unused copy and
-  seeing no effect, or worse, wiring CerebroBuild against the dead copy by mistake.
-- Fix approach: Before building CerebroBuild on this runtime, either (a) delete the unused trees
-  and their sibling model/schema files, or (b) rename them clearly (e.g. `core/_wip_sdk/`) and
-  add a top-of-file docstring noting they are not mounted, or (c) if they represent the intended
-  v2 direction, finish wiring one path and delete the other. Do not build new functionality by
-  extending the dead tree.
-
-**`app/main.py`'s own docstring describes routes that mostly don't exist yet:**
-- Issue: The module docstring in `app/main.py` advertises a full modular-monolith API surface —
-  `/api/platform`, `/api/archive`, `/api/runtime`, `/api/studio`, `/api/flow`, `/api/copilot`,
-  `/api/insight`, `/api/shield`, `/api/ops` — but the code below only mounts the legacy
-  `app/api/routers/*` routers (unprefixed, original paths) and `app.finance.router` (`/finance`).
-  `app/archive/router.py` defines its own `include_router` calls but is orphaned (never imported
-  by `main.py`), and the sibling `app/copilot/`, `app/flow/`, `app/hiveops/`, `app/hiveshield/`,
-  `app/insight/`, `app/platform/`, `app/studio/` packages contain only `__init__.py` files or
-  partial implementations (e.g. `app/platform/prompts/*` is fairly built out) with no router
-  wiring at all.
-- Files: `apps/studio/agentos/app/main.py`, `apps/studio/agentos/app/archive/`,
-  `apps/studio/agentos/app/copilot/`, `apps/studio/agentos/app/flow/`,
-  `apps/studio/agentos/app/hiveops/`, `apps/studio/agentos/app/hiveshield/`,
-  `apps/studio/agentos/app/insight/`, `apps/studio/agentos/app/platform/`,
-  `apps/studio/agentos/app/studio/`.
-- Impact: Reading `main.py`'s docstring or the root `/` payload (`app.get("/")`) gives a false
-  impression of what's actually live. Anyone (including an AI planning agent) using the docstring
-  as ground truth for "what AgentOS exposes today" will plan against endpoints that 404.
-- Fix approach: Either finish wiring these domain packages or strip the aspirational docstring
-  down to what's actually mounted, with a clearly separate "planned" section.
-
-**Two independent Next.js trees both implementing "platform" pages:**
-- Issue: The repo has a root-level `/app` directory (`app/(platform)/archive`,
-  `app/platform/{archive,copilot,flow,pulse,shield,x}`) that is a second, separate Next.js app
-  tree alongside `apps/studio/app` (which independently has `app/(platform)/`, `app/platform/`,
-  `app/agents`, `app/workflows`, `app/knowledge`, `app/evaluation(s)`, `app/insights`, etc. — a
-  much larger ~45-route tree). Root `package.json` (`cerebro-hive-os`) has its own build/dev/lint
-  scripts separate from the `apps/*` pnpm workspace packages.
-- Files: `app/` (repo root), `apps/studio/app/`.
-- Impact: Unclear which tree is canonical for the "platform" surface described in
-  `CAPABILITY_ARCHITECTURE.md` / `PRODUCT_REGISTRY.md`. Risk of the two diverging further, or of
-  a change being applied to one and not the other.
-- Fix approach: Confirm with the product docs which tree is the deployed marketing/platform site
-  and either delete or clearly document the other as legacy/scratch.
-
-**`apps/*` workspace members are wildly uneven in maturity — several don't exist at all:**
-- Issue: `pnpm-workspace.yaml` globs `apps/*`, and seven directories exist under `apps/`:
-  `archive`, `flow`, `forge`, `insight`, `ops`, `search`, `studio`. Of these, `apps/archive`,
-  `apps/flow`, `apps/insight`, `apps/ops`, and `apps/search` are **completely empty** directories
-  — no `package.json`, no source files, nothing (verified via `find apps/<name> -maxdepth 3`).
-  `apps/forge` is a minimal skeleton: `package.json` + `app/{layout.tsx,page.tsx,components,
-  globals.css}` only. `apps/studio` is the only fully built-out app (~45 route segments under
-  `app/`, its own `components/`, `lib/`, `platform/` subpackage with its own `migrations` and
-  `dist`, `stories/`, `tests/{api,e2e,visual}`, plus the entire `agentos/` backend nested inside
-  it).
-- Files: `apps/archive/`, `apps/flow/`, `apps/insight/`, `apps/ops/`, `apps/search/`,
-  `apps/forge/`, `apps/studio/`.
-- Impact: Anything that assumes "the five other apps are Next.js frontends of varying maturity"
-  is incorrect — five of the seven are empty placeholders, not partially-built frontends. `turbo
-  build` / `turbo dev` across the workspace will simply have nothing to do for those five.
-- Fix approach: Either scaffold them or remove the empty directories/workspace glob entries until
-  there's real content, so `apps/*` accurately reflects what's built.
-
-**AgentOS `agentos.db`, `test_agentos.db`, and `agentos.db-journal` are tracked in git:**
-- Issue: `git ls-files` confirms these binary SQLite files are committed:
-  `apps/studio/agentos/agentos.db` (~16 KB), `apps/studio/agentos/agentos.db-journal`,
-  `apps/studio/agentos/test_agentos.db` (~352 KB). These are runtime/test artifacts regenerated
-  by `scripts/seed.py` and the pytest suite, not source.
-- Impact: Every edit to local dev/test data creates a noisy binary diff in git history; repo
-  bloats over time; a local `agentos.db` could accidentally leak seeded-but-realistic-looking
-  data or diverge from what `scripts/seed.py` actually produces, confusing anyone who inspects it
-  as if it were fixture data.
-- Fix approach: Add `apps/studio/agentos/*.db` and `*.db-journal` to `.gitignore`, then
-  `git rm --cached` the three tracked files (they'll regenerate locally via `seed.py`/pytest).
-
-**Root-level scratch/debug files committed to git:**
-- Issue: The repo root has a large number of one-off scratch files that are tracked in git (not
-  just present locally): `check.html` (0 bytes), `error.html` (0 bytes), `_shot.js` through
-  `_shot6.js` and `__shot_services.js` (screenshot/debug scripts), `diff.txt` (~20 KB), `populate.py`,
-  `proxy.ts`, `refactor_theme.ts`, `roadmap.csv`, `scaffold_company_v3.ps1`,
-  `scaffold_home_v3.ps1`, `scaffold_insights.ps1`, `scaffold_research.ps1`,
-  `start-agentos-backend.bat`, `start-all.bat`, `start-website.bat`, `tsconfig.sitemap.json`, and
-  `si_keys.txt` (~41 KB, 3445 lines — verified content is a list of simple-icons slugs like
-  `SiZoom`/`SiZoho`, **not** real secrets, despite the alarming filename).
-  `build_output.log`, `ts-errors.log`, `out.zip` (12.6 MB), and the `tsconfig*.tsbuildinfo` files
-  exist on disk but are **not** tracked in git (confirmed via `git ls-files`) — so those are pure
-  local cruft, not a repo-hygiene problem, but still worth a cleanup pass.
-- Files: repo root (see list above).
-- Impact: Repo root reads as a workspace mid-debugging rather than a clean monorepo root; makes
-  it harder for a new contributor (or an AI agent scanning the root for "what matters here") to
-  distinguish real project config from one-off scripts. `si_keys.txt`'s name is actively
-  misleading and should be renamed even though its contents are benign.
-- Fix approach: Move `_shot*.js`, `scaffold_*.ps1`, `populate.py`, `proxy.ts`,
-  `refactor_theme.ts` into a `scripts/` or `tools/` directory (or delete if truly one-off and
-  no longer needed), delete the two 0-byte HTML files, rename or remove `si_keys.txt`, and
-  gitignore the already-untracked `*.log`, `*.tsbuildinfo`, and `out.zip`/`out/` patterns
-  explicitly so they can't accidentally get `git add -A`'d later.
-
-**`.next/` build artifacts are tracked in git despite being gitignored:**
-- Issue: The root `.gitignore` includes `.next/` and `out/`, yet `git ls-files | grep '\.next/'`
-  returns **5,486 tracked files**, all under `apps/forge/.next/` and `apps/studio/.next/`
-  (webpack cache `.pack`/`.pack.gz` files, manifests, prerendered HTML, etc. — `apps/forge/.next`
-  alone is ~85 MB on disk). This matches the parent conversation's observation that
-  `apps/forge/.next/*` shows as modified in `git status`.
-- Files: `apps/forge/.next/*`, `apps/studio/.next/*`.
-- Impact: `.gitignore` only prevents *new* untracked files from being added — it does not
-  untrack files that were already committed before the ignore rule existed (or before these apps
-  moved under a path the rule covers). Every local `next build`/`next dev` run now produces a
-  large, noisy diff in `git status` and risks someone committing regenerated build output,
-  bloating the repository and clogging PRs with binary-ish webpack cache diffs.
-- Fix approach: Run `git rm -r --cached apps/forge/.next apps/studio/.next` (and any other
-  tracked `.next` paths found via `git ls-files | grep '\.next/'`) in a dedicated cleanup commit,
-  then verify `git status` is clean after a fresh build. Consider `git gc`/history rewrite later
-  if repo size is a concern, but that's a separate, higher-risk operation.
-
-**Loosely pinned Python dependencies in AgentOS:**
-- Issue: `apps/studio/agentos/requirements.txt` pins every dependency with `>=` only (e.g.
-  `fastapi>=0.115`, `sqlalchemy>=2.0`, `anthropic>=0.34`, `openai>=1.52`) with no upper bounds and
-  no lockfile (no `requirements.lock`/`poetry.lock`/`pip-compile` output checked in).
-- Files: `apps/studio/agentos/requirements.txt`.
-- Impact: A fresh `pip install -r requirements.txt` today vs. in three months can silently pull
-  different major versions of FastAPI/SQLAlchemy/the LLM SDKs, causing environment drift between
-  dev machines and CI, or a CerebroBuild deployment picking up a breaking change unexpectedly.
-- Fix approach: Generate and commit a lockfile (`pip-compile`, `uv pip compile`, or switch to
-  `poetry`/`pdm`) so installs are reproducible; keep `requirements.txt`'s loose bounds as the
-  "compatible range" input if desired.
-
-## Known Bugs
-
-No `TODO`/`FIXME`/`HACK`/`XXX` markers were found anywhere in `apps/studio/agentos/app`
-(confirmed via repo-wide grep) — the codebase is unusually clean of inline "this is broken"
-markers, consistent with the README's practice of documenting simplifications explicitly rather
-than leaving scattered stubs. No confirmed functional bugs were identified in the areas explored
-(workflow engine, event bus, auth, middleware, routers). The items below are latent-risk patterns
-rather than reproducible bugs today.
-
-**SQLite concurrent-write contention under the `agent_vote` workflow node:**
-- Symptoms: `agent_vote` (`apps/studio/agentos/app/core/workflow_engine.py:200-304`) spins up a
-  `ThreadPoolExecutor` (up to 5 workers) and gives each thread its own `SessionLocal()`, each of
-  which calls `runtime_core.execute(...)`, which itself calls `db.commit()` at multiple points
-  (run creation, event bus publishes, trace/span writes). Under the default SQLite backend
-  (`connect_args={"check_same_thread": False}`, no WAL mode configured in
-  `apps/studio/agentos/app/db.py`), concurrent commits from multiple threads against the same
-  SQLite file can raise `sqlite3.OperationalError: database is locked`.
-- Files: `apps/studio/agentos/app/core/workflow_engine.py` (lines 200-304),
-  `apps/studio/agentos/app/db.py`.
-- Trigger: Run a workflow with an `agent_vote` node targeting 3+ agents against the default
-  SQLite database, especially under any concurrent load (multiple workflow runs at once).
-- Workaround: None built in. Switching `DATABASE_URL` to Postgres (already supported via
-  `_normalize_database_url` in `db.py`) removes this class of failure; SQLite's single-writer
-  model does not.
-
-## Security Considerations
-
-**Admin-secret gate on API-key issuance is a silent no-op by default:**
-- Risk: `require_admin_secret` in `apps/studio/agentos/app/security.py` explicitly does nothing
-  ("anyone can bootstrap a key") when `AGENTOS_ADMIN_SECRET` is unset — which is the default in
-  `apps/studio/agentos/app/config.py` (`agentos_admin_secret: str | None = None`). Anyone who can
-  reach `POST /auth/api-keys` on an unconfigured deployment can mint a valid bearer token and
-  call every other endpoint.
-- Files: `apps/studio/agentos/app/security.py`, `apps/studio/agentos/app/config.py`.
-- Current mitigation: The docstring on `require_admin_secret` explicitly calls out that
-  `AGENTOS_ADMIN_SECRET` "is required before deploying anywhere public," and comparison uses
-  `hmac.compare_digest` once set (no timing side-channel). This is a documented, intentional MVP
-  default, not an oversight — but it is a hard requirement that's easy to forget under deadline
-  pressure.
-- Recommendation: Before CerebroBuild (or anything else) exposes this service beyond localhost,
-  confirm `AGENTOS_ADMIN_SECRET` is set in every non-local environment, and consider failing
-  startup loudly (not just silently allowing open key issuance) when `agentos_environment ==
-  "production"` and the secret is unset — `Settings.is_production` already exists as a hook for
-  this check but isn't currently used to gate anything at startup.
-
-**Hardcoded default credentials in `docker-compose.yml`:**
-- Risk: The repo-root `docker-compose.yml` (not `apps/studio/agentos/docker-compose.yml`, which
-  is smaller and Postgres/Redis-only) sets fallback default passwords for every service if the
-  corresponding env var isn't set: `POSTGRES_PASSWORD:-supersecretpassword123`,
-  `REDIS_PASSWORD:-redispassword123` (used both as the Redis server password and in the
-  healthcheck), `OPENSEARCH_PASSWORD:-Opensearch@123!`, `MINIO_SECRET_KEY:-minioadmin123`,
-  `KEYCLOAK_ADMIN_PASSWORD:-admin123`, `PGADMIN_DEFAULT_PASSWORD:-admin123`, and a hardcoded
-  Cassandra password `temporal` (no env-var override at all for that one).
-- Files: `docker-compose.yml` (repo root).
-- Current mitigation: All are overridable via env vars, and this is clearly a local-dev compose
-  file rather than a deployment manifest.
-- Recommendation: If this compose file is ever used as a starting point for a real deployment
-  (directly or via copy-paste), these defaults will be silently active unless every env var is
-  explicitly set. Consider removing the fallback defaults entirely (forcing `docker compose up`
-  to fail loudly if the env vars aren't set) for any compose file that could plausibly reach a
-  non-local environment.
-
-**`agentos_jwt_secret` default value is a classic placeholder string:**
-- Risk: `apps/studio/agentos/app/config.py` defines `agentos_jwt_secret: str =
-  "change-me-in-production"`. A grep across the AgentOS app tree shows this setting is currently
-  **not read anywhere** outside its own definition — so today it's inert, not an active
-  vulnerability. But it's exactly the kind of default that gets wired up later (e.g. by a
-  Keycloak/JWT integration) without anyone renaming the placeholder.
-- Files: `apps/studio/agentos/app/config.py`.
-- Recommendation: If/when JWT-based auth is implemented (per the README's roadmap item 4),
-  require this to be set via env var with no usable default, rather than shipping a well-known
-  placeholder string that could be used to forge tokens if someone forgets to override it.
-
-**Rate limiting is in-memory / per-process only:**
-- Risk: `apps/studio/agentos/app/rate_limit.py` uses `slowapi` with the default in-memory
-  backend. The module's own docstring already flags this: "correct for a single instance, needs
-  a shared backend (Redis) once this is horizontally scaled to multiple processes/replicas."
-  Limits are keyed by `get_remote_address` (IP, respecting `X-Forwarded-For`), so any caller
-  behind a shared NAT/proxy can be starved by a noisy neighbor, and horizontally scaling AgentOS
-  (multiple uvicorn workers/replicas) makes the "100/minute" global limit effectively
-  "100/minute per process," not per deployment.
-- Files: `apps/studio/agentos/app/rate_limit.py`.
-- Recommendation: If CerebroBuild drives enough load to warrant multiple AgentOS replicas, swap
-  to a Redis-backed `slowapi` storage before relying on these limits for abuse protection.
-
-**Request timeout wraps the entire request, including long-running LLM/optimization calls:**
-- Risk: `RequestGuardMiddleware` (`apps/studio/agentos/app/middleware.py`) wraps every request in
-  `asyncio.wait_for(..., timeout=settings.agentos_request_timeout_seconds)`, defaulting to 30
-  seconds. This is a reasonable defense against a hung handler, but `POST /runtime/execute`
-  (agent runtime, which can itself call other agents via workflow delegation), `POST
-  /cortex/optimize` (0/1-knapsack), and `POST /simulator/run` (Monte Carlo simulation) can all
-  legitimately take longer than 30s for non-trivial inputs, especially when a real LLM provider
-  (not the mock) is in the loop and/or a workflow delegates to multiple sub-agents.
-- Files: `apps/studio/agentos/app/middleware.py`, `apps/studio/agentos/app/config.py`
-  (`agentos_request_timeout_seconds`).
-- Recommendation: For CerebroBuild specifically, if it plans to drive multi-step or multi-agent
-  workflows synchronously through `/runtime/execute` or `/workflows/*`, either raise this timeout
-  for those routes or move to an async job-submission + polling pattern rather than expecting a
-  single HTTP request/response to hold open for the full duration of a workflow.
-
-## Performance Bottlenecks
-
-**Knowledge retrieval is brute-force, unindexed, all-in-memory:**
-- Problem: `retrieve()` in `apps/studio/agentos/app/core/knowledge_engine.py` runs
-  `db.query(Chunk).all()` — loading every chunk row for every retrieval call — then computes
-  cosine similarity in a Python list comprehension against every chunk before sorting and slicing
-  the top-k.
-- Files: `apps/studio/agentos/app/core/knowledge_engine.py` (line ~44-61),
-  `apps/studio/agentos/app/core/cerebro_x/embeddings.py`.
-- Cause: No vector index (this is exactly what the README's "local vector similarity instead of
-  OpenSearch"/pgvector roadmap item addresses) and no pagination/limit on the initial `.all()`
-  query — every call pulls the entire `chunks` table into process memory regardless of corpus
-  size.
-- Improvement path: This is fine at demo/seed-data scale. Before CerebroBuild ingests any
-  nontrivial document/knowledge volume through this engine, prioritize the README's own roadmap
-  item 1 (Postgres + pgvector) — the brute-force scan will get linearly slower and eventually
-  memory-bound as the `chunks` table grows, with no warning signal before it happens (no query
-  limit, no timeout specific to this path beyond the global request timeout).
-
-**SQLite as the default datastore for a system designed around concurrent agent execution:**
-- Problem: Every write path (run creation, event log appends, trace/span writes, workflow state
-  transitions, governance audit log entries) goes through the same single SQLite file by default,
-  with SQLite's single-writer model.
-- Files: `apps/studio/agentos/app/db.py`.
-- Cause: `connect_args = {"check_same_thread": False}` is set for SQLite, but no `PRAGMA
-  journal_mode=WAL` or busy-timeout configuration is applied to reduce write-lock contention —
-  it's the out-of-the-box SQLite default.
-- Improvement path: Already covered by the README's roadmap item 1 (Postgres 17 + pgvector). Flag
-  this specifically for CerebroBuild: if CerebroBuild's workload involves parallel agent runs,
-  parallel workflow executions, or the `agent_vote` node under real load, plan to run against
-  Postgres from the start rather than discovering "database is locked" errors after the fact.
-
-**In-process event bus executes subscriber handlers synchronously, inline with the request:**
-- Problem: `EventBus.publish()` (`apps/studio/agentos/app/core/event_bus.py`) writes the event
-  row, commits, then calls every subscriber handler for that event type (and every `"*"`
-  wildcard subscriber) synchronously, in the same call stack as the original request/workflow
-  step, before returning.
-- Files: `apps/studio/agentos/app/core/event_bus.py`.
-- Cause: This is the documented MVP tradeoff for "in-process pub/sub instead of NATS" — there is
-  no queue, no worker pool, no backpressure; a slow or blocking subscriber directly slows every
-  request that publishes that event type.
-- Improvement path: Fine today because the only in-process subscribers are lightweight
-  (WebSocket streaming, test assertions per the module's own docstring). If CerebroBuild adds a
-  new subscriber that does meaningful work (e.g. calling out to another service), either make
-  that handler itself async/non-blocking or move to the documented NATS JetStream swap-in before
-  chaining slow work onto the publish path.
-
-## Fragile Areas
-
-**Workflow engine's `agent`/`agent_vote` delegation resumption logic:**
-- Files: `apps/studio/agentos/app/core/workflow_engine.py` (lines 144-304).
-- Why fragile: Sub-agent delegation resumption depends on the workflow's `context` dict carrying
-  forward keys like `{node_id}_run_id` across pause/resume cycles (so a re-entered `agent` node
-  re-checks the same sub-run instead of re-dispatching and re-triggering the sub-agent's own
-  governance approval indefinitely — the code comment on lines 151-155 explains this explicitly).
-  Any change to how `run.context` is persisted/serialized, or a change that clears/rekeys context
-  between steps, would silently break delegation resumption in a way that likely wouldn't
-  surface until a governance-gated sub-agent run needed to be resumed.
-- Safe modification: Treat `context[f"{current_id}_*"]` keys as part of the workflow run's
-  persisted contract; add a test in `tests/test_mesh.py` for any change that touches
-  `run.context` handling, node-state transitions, or the approval pause/resume path.
-- Test coverage: `apps/studio/agentos/tests/test_mesh.py` exists and appears to cover this area
-  directly — verify it covers the specific pause-then-resume-with-existing-sub-run branch (lines
-  156-163) before relying on it as a regression guard for CerebroBuild changes.
-
-**`MAX_STEPS = 50` hard cap on workflow execution:**
-- Files: `apps/studio/agentos/app/core/workflow_engine.py` (line 46).
-- Why fragile: This is the only runaway-loop guard for the DAG executor — any workflow definition
-  that legitimately needs more than 50 node transitions (e.g. a `loop` node with a high count
-  combined with several other nodes, or a larger DAG that CerebroBuild might generate
-  programmatically) will hard-fail with `"workflow exceeded MAX_STEPS (possible cycle)"` rather
-  than completing, with no way to raise the limit per-workflow today.
-- Safe modification: If CerebroBuild generates workflows with more than a handful of nodes, either
-  make `MAX_STEPS` configurable per workflow/run or confirm generated workflows always stay well
-  under this ceiling before relying on this engine for larger DAGs.
-
-**Duplicate module trees increase the chance of editing dead code (see Tech Debt above):**
-- Files: `apps/studio/agentos/app/core/sdk/*`, `apps/studio/agentos/app/core/orchestrator/*`,
-  and siblings listed in the Tech Debt section.
-- Why fragile: Because `app/main.py`'s import graph is the only reliable signal for "is this code
-  live," any AI-driven or fast-moving human edit to "the planner"/"the memory engine"/"the tool
-  registry" risks landing in the unmounted copy. This is a process risk more than a runtime bug,
-  but it's the single highest-leverage thing to fix before CerebroBuild starts making changes in
-  this directory, since an agent doing autonomous edits has no way to know which copy is real
-  without tracing the import graph first.
-- Safe modification: Before extending any `core/*` engine, `grep -rn "include_router\|from
-  app.core\.<module> import"` from `app/main.py` and `app/api/routers/` to confirm the module is
-  actually reachable.
-
-## Scaling Limits
-
-**Single-node, zero-external-infrastructure MVP (by design, per AgentOS's own README):**
-- Current capacity: Runs entirely on SQLite + in-process pub/sub + local vector similarity on a
-  single machine with zero external services — this is the explicit, documented design goal for
-  the MVP ("so the whole platform runs with zero external infrastructure on a laptop").
-- Limit: Knowledge retrieval (brute-force scan, see Performance Bottlenecks), SQLite writes under
-  concurrency, and in-process pub/sub (no cross-process fan-out, no durability across restarts —
-  in-flight subscriber state is lost on process crash/restart, though the event log itself is
-  durable in the database) all cap out well before any real production load.
-- Scaling path: The README's own "Roadmap to production" section (8 steps: Postgres+pgvector,
-  NATS JetStream, Temporal, Keycloak/OIDC, OPA, OpenSearch, MinIO, Kubernetes+Helm+Argo CD) is
-  the correct and already-documented path — nothing to add here except: do the Postgres swap
-  *first* if CerebroBuild is going to add write/read load, since that's the dependency most other
-  scaling steps sit on top of (workflow state, event log, memory/knowledge tables all live there).
-
-## Dependencies at Risk
-
-**Unpinned (`>=`-only) Python dependencies with no lockfile:**
-- Risk: See Tech Debt section above (`apps/studio/agentos/requirements.txt`).
-- Impact: Reproducibility risk for CI and for anyone standing up a fresh CerebroBuild dev
-  environment against this backend.
-- Migration plan: Introduce a lockfile (`pip-compile`/`uv`/`poetry`) as a low-effort, high-value
-  fix before CerebroBuild work ramps up, so the two efforts don't end up debugging environment
-  drift instead of actual code issues.
-
-## Missing Critical Features
-
-**Everything AgentOS's own README already flags as "intentionally not built":**
-Temporal (workflow engine is a custom DAG executor instead), NATS JetStream (in-process pub/sub
-instead), OpenSearch (local vector similarity instead), MinIO (local disk instead), Keycloak
-(API-key bearer auth instead), HashiCorp Vault (env vars instead), OPA (YAML policy rules
-instead), and Kubernetes/Helm (Dockerfile + docker-compose only). These are documented,
-intentional MVP scope cuts, not oversights — restated here only so this concerns document is a
-complete single reference. See `apps/studio/agentos/README.md` for the full rationale and the
-8-step roadmap to close each gap.
-
-**No production startup guard for insecure defaults:**
-- Problem: `Settings.is_production` (`apps/studio/agentos/app/config.py`) exists but nothing at
-  app startup actually checks it against `agentos_admin_secret` being unset, `agentos_jwt_secret`
-  still being the placeholder value, or the CORS allowlist still being `localhost:3000`. The app
-  will start and serve traffic in a production-labeled environment with every MVP default still
-  active.
-- Blocks: Safe promotion of this service to a shared/staging/production environment without a
-  manual pre-flight checklist.
-- Recommendation: Add a startup check in the `lifespan` handler (`apps/studio/agentos/app/
-  main.py`) that raises if `settings.is_production` is true and any of the known-unsafe defaults
-  are still in place (unset admin secret, placeholder JWT secret, default CORS origin).
-
-## Test Coverage Gaps
-
-**Large unmounted/duplicate module trees have no test coverage:**
-- What's not tested: `app/core/sdk/*`, `app/core/orchestrator/*`, `app/core/planning/*`,
-  `app/core/events/*`, `app/core/context/*`, `app/core/retrieval/*`, `app/core/search/*`,
-  `app/core/storage/*`, `app/core/telemetry/*`, `app/core/tools/*` (the newer registry under
-  `core/tools/`, distinct from the live `app/core/tool_framework.py`), `app/core/cerebro_x/*`
-  (beyond `embeddings.py`, which is used by the live workflow engine), `app/archive/*`,
-  `app/copilot/`, `app/flow/`, `app/hiveops/`, `app/hiveshield/`, `app/insight/`,
-  `app/platform/*`, `app/studio/`.
-- Files: See Tech Debt section for the full module list.
-- Risk: Low direct risk today since none of this is reachable via `main.py` — but if CerebroBuild
-  (or any future work) starts wiring any of these modules in, they'd be going live with zero
-  existing test coverage, unlike the legacy path which has `tests/test_smoke.py`,
-  `tests/test_mesh.py`, `tests/test_cortex_simulator.py`,
-  `tests/test_context_governance_observability.py`, `tests/test_production_gates.py`, and
-  `tests/test_finance.py` behind it.
-- Priority: Medium — not urgent while the code stays dead, but should block any decision to
-  "just wire up the existing `core/sdk/planning` module instead of writing a new one" without
-  first writing tests for it.
-
-**AgentOS test suite is smoke/integration-level, not exhaustive per-engine unit coverage:**
-- What's not tested: The six test files in `apps/studio/agentos/tests/` are scoped by feature
-  area (mesh/delegation, cortex+simulator, context+governance+observability, production gates,
-  finance, general smoke) rather than one file per engine module — there's no dedicated test file
-  visible for `knowledge_engine.py`, `memory_engine.py`, or `event_bus.py` in isolation (they may
-  be exercised indirectly via the smoke/mesh tests, but not verified here in detail).
-- Files: `apps/studio/agentos/tests/`.
-- Risk: Regressions in knowledge retrieval scoring, memory tier promotion/demotion logic, or
-  event bus fan-out behavior could pass CI without a dedicated test catching them.
-- Priority: Medium — worth a quick audit of what each existing test file actually exercises
-  before CerebroBuild starts depending on these engines' exact behavior.
+**Large Uncommitted Change Batch:**
+- Issue: 189 uncommitted files with modifications (as of analysis date) across nearly every `package.json` and several critical source files, including schema migrations and provider implementations
+- Files: Repository-wide (root package.json, all app/packages/ package.json files, database schema, provider implementations, workflow configs)
+- Impact: Unknown changes blocking merge verification. CI/git state mismatch. Risk of data loss or accidental revert. Impossible to know which changes are intended vs. work-in-progress.
+- Fix approach: Triage immediately. Stage intended changes, commit with clear message, verify CI pipeline. Discard or stash experimental changes. Establish pre-merge checklist including `git status` verification.
 
 ---
 
-*Concerns audit: 2026-07-23*
+## Validation Pipeline Coverage Gaps (P0 Risk)
+
+**Incomplete TypeScript/ESLint Coverage:**
+- Issue: `turbo typecheck` and `turbo lint` only run on 19% of packages (24 of 129 packages define these scripts). Turbo silently skips packages without the script and exits 0, masking coverage gaps.
+- Files: 
+  - 105 packages without `typecheck` script, including critical backend: `apps/platform-api`, `apps/studio`, `apps/platform`, `packages/runtime-core`, `packages/auth`, `packages/events`, `packages/database`, `packages/db`, `packages/contracts`, `packages/policy-core`, `services/forge-api`, `services/llm-gateway`, all `packages/capabilities/*`
+  - Only 24 packages define `typecheck` script
+  - Only 25 packages define `lint` script
+  - 41 of 129 packages define `test` script (32% coverage)
+- Impact: 
+  - Large batch of pre-existing type errors never surfaced by CI
+  - Security/correctness bugs in core platform services bypass validation
+  - Root Next.js application (`app/`, `components/`, `lib/`) entirely outside turbo pipeline
+  - Cannot trust CI green signal for merge approval
+- Fix approach:
+  1. Add `typecheck: "tsc --noEmit -p tsconfig.json"` script to all 105 packages lacking it (mechanical, non-breaking)
+  2. Add root scripts: `typecheck:site` and `lint:site` targeting root `tsconfig.json` and Next.js app
+  3. Wire root scripts into CI workflow alongside turbo tasks
+  4. Run pipeline end-to-end, collect type error backlog, triage by severity
+  5. Only after coverage is complete: run deliberate type-error test twice (once in root, once in previously-unchecked package) to verify CI catches failures
+
+**Root Application Not in Validation Pipeline:**
+- Issue: Root `package.json` (`cerebro-hive-os`) not included in `pnpm-workspace.yaml` members. Root `tsconfig.json` exists but never checked by `turbo typecheck`. `next lint` never runs on root.
+- Files: Root directory, root `package.json`, `tsconfig.json`, `next.config.ts`, root `app/`, `components/`, `lib/`
+- Impact: Audit report identified JSX-in-`.ts` file (`lib/auth.tsx`) that survived to release branch precisely because it bypassed root linting. Cannot catch Next.js-specific issues (broken links, missing routes, malformed pages).
+- Fix approach: Add root to workspace members in `pnpm-workspace.yaml` or create separate CI step for root-level validation
+- Note: Root `tsconfig.json` excludes `tests/` — verify if this is intentional before fixing
+
+**Undeclared `next` Dependency in Root:**
+- Issue: Root `package.json` declares no dependency on `next`, despite `next.config.ts` and entire site living at root. Build succeeds only because `next` is hoisted into root `node_modules` from workspace packages.
+- Files: Root `package.json` (devDependencies section)
+- Impact: Breaks under strict pnpm install modes (e.g., `--no-hoist`). Undeclared peer dependency risk. Build will fail in CI if workspace structure changes.
+- Fix approach: Add explicit `next: ">=15.3.4"` to root `package.json` devDependencies (matching version from workspace overrides)
+
+---
+
+## Execution & Persistence Shortfalls
+
+**InMemoryExecutionRepository — Temporary/Lossy Implementation:**
+- Issue: `ExecutionOrchestrator` uses `InMemoryExecutionRepository` (line 69, `apps/platform-api/src/bootstrap.ts`). Comment explicitly notes: "there is no database-backed `ExecutionRepository` yet (see hiveforge/TECHNICAL-DEBT.md §2), so every Execution created through this wiring is process-lifetime only, lost on restart."
+- Files: `packages/domain/src/execution/Execution.ts` (Phase 9 aggregate), `apps/platform-api/src/bootstrap.ts` (instantiation), `packages/domain/src/repositories/ExecutionRepository.ts` (interface only — no Prisma implementation)
+- Impact: 
+  - No execution history survives pod restart or deployment
+  - Audit trail lost; cannot replay or investigate failed executions
+  - Multi-instance deployments lose cross-pod execution context
+  - Phase 10.1/10.2 cannot finalize without this
+- Fix approach: Implement `PrismaExecutionRepository` mirroring existing `PrismaAgentRepository` pattern. Use schema from `packages/database/prisma/schema.prisma` execution models (recently added). Test replay semantics against determinism contract.
+
+**Incomplete ExecutionProvider Coverage:**
+- Issue: Only `AgentExecutionProvider` is real (line 70, bootstrap.ts). Other execution kinds ('Workflow', 'Tool', 'Evaluation') have no real providers. `runtime.routes.ts` explicitly rejects these kinds with "silently pretending to execute them" guard.
+- Files: `apps/platform-api/src/modules/runtime/AgentExecutionProvider.ts` (only real provider), `apps/platform-api/src/modules/runtime/ExecutionRuntimeService.ts` (rejection logic)
+- Impact: Workflow, tool, and evaluation executions cannot run. Platform blocked from multi-subsystem orchestration per Phase 9's governing invariant.
+- Fix approach: Implement `WorkflowExecutionProvider`, `ToolExecutionProvider`, `EvaluationExecutionProvider` following AgentExecutionProvider pattern. Coordinate with workflow engine (Temporal.io) for scheduler integration.
+
+**Database Schema Migration Scope (Major):**
+- Issue: Large set of new execution-tracking tables added to schema (AgentExecution, AgentExecutionStep, AgentExecutionEvent, AgentExecutionSnapshot, AgentExecutionMetric, AgentExecutionLease, AgentExecutionCheckpoint, AgentExecutionOutbox, AgentExecutionInbox) but no corresponding Prisma client generation or migration validation shown.
+- Files: `packages/database/prisma/schema.prisma` (additions starting at AgentExecution model), `packages/database/prisma/migrations/` (new migration files required but not verified), `packages/database/prisma/seed.ts` (seed data for new tables unknown)
+- Impact: Schema out of sync with runtime code. `prisma:generate` must run before deploy, or Prisma client will not include new models. Risk of runtime "model not found" errors.
+- Fix approach: Confirm `pnpm prisma:generate` has been run. Verify migration was created with `prisma migrate dev` or added to migration_lock.toml. Test schema validation against runtime code.
+
+---
+
+## Provider & Health Monitoring Gaps
+
+**RuntimeRegistry Double-Registration Guard (Hot-Reload Workaround):**
+- Issue: `registerAIGatewayProvider()` includes guard against double-registration (lines 94-100, `AIGatewayProviders.ts`) because `dev` mode runs via `tsx watch` — without this guard, hot-reload would hit "already registered" throw from `CapabilityDescriptor`.
+- Files: `apps/platform-api/src/modules/runtime/providers/AIGatewayProviders.ts` (guard present), `registerMockProviders()` (same latent gap unfixed — commented as out-of-scope)
+- Impact: Fragile hot-reload. Mask off real error (multiple providers registering concurrently). Blocks use of strict error checking in dev mode.
+- Fix approach: Move provider registration to bootstrapping layer (not event handler), or implement proper registration deduplication at `RuntimeRegistry` level. Consider unref() for polling interval to prevent process hold.
+
+**AIGateway Health Polling Lag:**
+- Issue: `syncHealth()` polls AIGateway health every 15 seconds (line 121, same file). Polling-based (not event-driven) because "AIGateway only exposes a point-in-time getHealth() snapshot (no change events)".
+- Files: `apps/platform-api/src/modules/runtime/providers/AIGatewayProviders.ts` (lines 115-122)
+- Impact: Up to 15-second staleness in health state. Circuit breaker trips invisible to registry for 15s. Risk of routing requests to degraded providers.
+- Fix approach: Add change-event API to AIGateway (upgrade priority), or reduce poll interval with cost tradeoff analysis. Alternatively, update docs to explain 15s propagation delay as SLA.
+
+---
+
+## CI/CD Infrastructure Instability
+
+**Recent Workflow Fixes Indicate Systemic Issues:**
+- Issue: Last 10 commits include 5 CI/workflow fixes:
+  - `fix(ci): fix github action versions in infrastructure.yml` (005d6dd)
+  - `fix(ci): correct invalid trivy-action version pin in build.yml` (4aa2b58)
+  - `fix(ci): fix malformed YAML in ssh-deploy.yml breaking every VPS deploy` (d6d15b4 & 28a4922 — committed twice)
+  - `fix(ci): port pre-push image scan gate into the active build.yml` (080eaa5)
+  - `fix(ci): add dummy index files to empty packages to fix TS18003 typecheck errors` (15220df)
+- Files: `.github/workflows/infrastructure.yml`, `.github/workflows/ci.yml`, `.github/workflows/build.yml`, `.github/workflows/ssh-deploy.yml`
+- Impact: Frequent workflow breakages block deployments. Multiple fixes suggest YAML syntax is error-prone or not validated in CI. Action versions unpinned or pinned incorrectly, leading to surprise behavior on re-run.
+- Fix approach:
+  1. Add YAML linting to CI (yamllint or pre-commit hook)
+  2. Pin all GitHub actions to major version tags (`actions/checkout@v4`, not `@main`)
+  3. Document workflow change review process (require workflow syntax validation before merge)
+  4. Audit all .github/workflows/*.yml for consistency (indentation, schema compliance)
+
+**Missing TypeCheck Gate in CI:**
+- Issue: Despite `pnpm typecheck` in root package.json, CI does not enforce it (as shown in STACK.md). This is consequence of coverage gap above — pipeline runs only on 24 packages, so CI green does not guarantee build soundness.
+- Files: `.github/workflows/ci.yml`, `.github/workflows/build.yml`
+- Impact: Type errors merge without detection. Release-blocking issues (like JSX-in-.ts) bypass CI.
+- Fix approach: Implement validation pipeline coverage fixes above. Then add explicit CI step: `pnpm typecheck:root && pnpm lint:root && turbo typecheck && turbo lint`.
+
+---
+
+## Security Considerations
+
+**Potential Credential Exposure (Pre-Existing, Unverified):**
+- Issue: Audit report notes "Secret exposure" finding with medium confidence. Git history unreachable on current mount, so "committed-vs-untracked is **unknown**". The mount cannot verify whether secrets were ever committed.
+- Files: Unknown (audit noted credential format found on disk, but specific files not listed in current context)
+- Impact: If secrets were committed to any branch, they are exposed until rotated. Automated secret scanning (e.g., git-secrets, TruffleHog) may have missed patterns.
+- Fix approach:
+  1. Run `git log --all -S "sk-" -S "AKIA" -S "MIIEvQIBA"` to search for known secret patterns in history
+  2. Run TruffleHog: `trufflehog filesystem .` in clean checkout
+  3. If secrets found, rotate immediately and force-push historical cleanup (requires coordination)
+  4. Add pre-commit hooks to block secret commits: `git-secrets --install` or similar
+
+**Hardcoded Environment in Swagger Config:**
+- Issue: `bootstrap.ts` hardcodes Swagger server URL to `http://localhost:3000` (line 81), will break in non-localhost deployments or reverse-proxy setups.
+- Files: `apps/platform-api/src/bootstrap.ts` (line 81)
+- Impact: Swagger UI points to wrong backend in production, confusing API consumers. Exposed in documentation if swagger is public-facing.
+- Fix approach: Replace with env var: `url: process.env.SWAGGER_SERVER_URL || 'http://localhost:3000'`
+
+---
+
+## Database & State Management Issues
+
+**Optimistic Concurrency Without Conflict Resolution:**
+- Issue: New `AgentExecution` schema includes `version` field for optimistic concurrency (line 333, schema.prisma), and `AgentExecutionLease` includes versioned lease (line 388). No corresponding conflict resolution logic visible in execution service.
+- Files: `packages/database/prisma/schema.prisma` (version fields added), `apps/platform-api/src/modules/runtime/ExecutionRuntimeService.ts` (no version-conflict handling shown)
+- Impact: Concurrent updates to same execution can silently fail or overwrite. Distributed workers holding leases cannot safely renew if version check is missing.
+- Fix approach: Implement version check in `ExecutionRepository.update()`: retry with backoff on version mismatch, or return conflict error for caller to handle. Document optimistic locking SLA.
+
+**Execution Event Sequencing:**
+- Issue: `AgentExecutionEvent` table includes `sequence` (BigInt) and unique constraint on `[executionId, sequence]`, but schema and comments suggest this is for event sourcing. No corresponding event replay service or event store visible yet.
+- Files: `packages/database/prisma/schema.prisma` (AgentExecutionEvent model, line 360), `packages/domain/src/execution/ExecutionReplayService.ts` (interface only, from bootstrap imports)
+- Impact: Events persisted but not replayed or validated. "Deterministic replay" (mentioned in Execution.ts line 40, ADR-040) cannot work without event store.
+- Fix approach: Implement event replay logic in `ExecutionReplayService`. Add integration test verifying replay produces identical state as original execution.
+
+**Checkpoints & Failover Semantics Undefined:**
+- Issue: `AgentExecutionCheckpoint` model exists (providerRequest, providerResponse, usage, finishReason, toolCalls) but purpose unclear. Is this for resumption after failure? Deterministic replay?
+- Files: `packages/database/prisma/schema.prisma` (line 391), no corresponding service visible
+- Impact: Unclear how checkpoints are used. Risk of stale checkpoint data persisting. Failover behavior untested.
+- Fix approach: Document checkpoint lifecycle and usage in ADR or architecture doc. Add service for checkpoint validation and cleanup. Test failover path that loads from checkpoint.
+
+---
+
+## Performance & Scaling Concerns
+
+**Polling-Based Health Integration (15s Latency):**
+- Issue: (Described above under "AIGateway Health Polling Lag") Polling interval of 15 seconds may be too coarse for fast-failing scenarios.
+- Files: `apps/platform-api/src/modules/runtime/providers/AIGatewayProviders.ts`
+- Impact: Slow failover detection. Requests routed to degraded provider for up to 15 seconds.
+- Fix approach: Reduce interval to 5 seconds (CPU cost tradeoff), or implement event-driven health updates in AIGateway.
+
+**Execution Snapshot Granularity Unspecified:**
+- Issue: `AgentExecutionSnapshot` model stores full state snapshot per execution, but no guidance on snapshot frequency or pruning strategy.
+- Files: `packages/database/prisma/schema.prisma` (line 371)
+- Impact: Unbounded growth of snapshot rows per execution. Large executions with many steps generate many snapshots. Storage and query performance degrade.
+- Fix approach: Define snapshot policy: every N events, or on state change threshold only? Add TTL or pruning job for old snapshots. Monitor snapshot table growth in production.
+
+**Metric Accumulation Strategy Missing:**
+- Issue: `AgentExecutionMetric` table stores individual metrics with timestamp. No aggregation, retention, or export strategy visible.
+- Files: `packages/database/prisma/schema.prisma` (line 381)
+- Impact: Metrics table grows unbounded. Querying becomes slow. Observability systems may not ingest individual metrics efficiently.
+- Fix approach: Define metrics lifecycle: export to observability platform (Prometheus, DataDog) in real-time, then prune from database after 30 days. Or pre-aggregate (min/max/p95) on ingest.
+
+---
+
+## Architecture & Abstraction Gaps
+
+**Phase 9 Execution Aggregate Marked Deprecated:**
+- Issue: `Execution` class in `packages/domain/src/execution/Execution.ts` (line 110) marked `@deprecated`: "This Phase 9 implementation is being superseded by Phase P5 Durable Event Sourcing in `packages/runtime-core/src/execution/`. Use `ExecutionManager` and `ExecutionEvent` instead."
+- Files: `packages/domain/src/execution/Execution.ts`, `packages/runtime-core/src/execution/` (new implementation location)
+- Impact: Two competing execution abstractions in codebase. Confusion about which to use. Risk of buggy code using deprecated version. Migration path unclear.
+- Fix approach: Complete migration to Phase P5 implementation. Update all code to use `ExecutionManager` and `ExecutionEvent`. Remove Phase 9 classes. Document migration in architecture ADR.
+
+**Tool Provider Not Implemented:**
+- Issue: `ToolProvider` interface exists (packages/runtime-core/src/plugins/CapabilityProvider.ts, line 75) with `invokeTool()` and `listAvailableTools()` methods, but no real implementation visible. Only `invokeModelWithTools()` (LLM tool calling) exists.
+- Files: `packages/runtime-core/src/plugins/CapabilityProvider.ts` (interface), no corresponding `packages/runtime-core/src/providers/ToolProvider.ts` or similar
+- Impact: Tools cannot be invoked as first-class capabilities. Tool results cannot be passed back to LLM in agentic loop (only direct LLM tool calls work). Limits agent autonomy.
+- Fix approach: Implement `ToolProvider` backed by registered tool registry. Coordinate with `ToolRuntime` and `ToolRegistry` (already in bootstrap).
+
+---
+
+## Test Coverage & Verification Gaps
+
+**Test Coverage Sparse (32% of Packages):**
+- Issue: Only 41 of 129 packages define `test` script. 88 packages have no test configuration.
+- Files: All packages without test scripts, especially critical ones: `apps/platform-api`, `apps/studio`, `packages/runtime-core`, `packages/auth`, `packages/database`, `packages/contracts`
+- Impact: No unit or integration test verification for core platform services. Risk of shipping untested code changes. Refactoring impossible without test safety net.
+- Fix approach: Add unit test for all packages (even if minimal). Start with `vitest` (already used in monorepo). At minimum, test public exports and critical functions.
+
+**ExecutionRepository Interface But No Tests:**
+- Issue: `ExecutionRepository.ts` is interface-only contract. No tests verify implementations meet contract.
+- Files: `packages/domain/src/repositories/ExecutionRepository.ts` (interface), no `ExecutionRepository.test.ts`
+- Impact: In-memory and Prisma implementations can diverge silently. Contract changes break all implementations without warning.
+- Fix approach: Create contract test that both in-memory and Prisma implementations pass. Include replay, concurrency, and edge-case scenarios.
+
+**Provider Registration Not Tested for Double-Registration:**
+- Issue: Double-registration guard in `registerAIGatewayProvider()` has no test. The guard itself is untested — calling it twice may still fail or cause undefined behavior.
+- Files: `apps/platform-api/src/modules/runtime/providers/AIGatewayProviders.ts`, no test file visible
+- Impact: Hot-reload bug can occur without warning. Test suite does not catch regression.
+- Fix approach: Add test: `AIGatewayProviders.test.ts` with case for registering provider twice in watch mode simulation.
+
+---
+
+## Development Workflow Friction
+
+**TypeScript Compiler Warnings Accumulating:**
+- Issue: Recent fix added "dummy index files to empty packages to fix TS18003 typecheck errors" (commit 15220df). This indicates empty packages were breaking builds, rather than being excluded or properly configured.
+- Files: All packages with dummy `index.ts` files added (specific files unknown without deep search), affected packages not yet identified
+- Impact: Dummy files clutter codebase. TS18003 suggests missing barrel exports or wrong tsconfig settings. Symptom, not root cause, treated.
+- Fix approach: Identify packages with dummy index.ts. Either (a) add real exports and documentation, (b) mark as internal/unused and move to `.audit-quarantine/`, or (c) fix tsconfig excludes to omit them from typecheck.
+
+**Manual Dependency Pinning (pnpm overrides):**
+- Issue: Root `package.json` includes large `pnpm.overrides` section (22 entries) to enforce specific versions globally (postcss, multer, lodash, uuid, etc.). Indicates indirect dependency conflicts or security patches applied downstream.
+- Files: Root `package.json` (lines 87-109)
+- Impact: Fragile — override changes require root package.json update. Hard to track why each override exists. Risk of breaking downstream packages if override is removed.
+- Fix approach: Document each override with GitHub issue link or security advisory. Add comments to root package.json explaining rationale. Audit overrides quarterly to remove stale ones.
+
+---
+
+## Known Technical Debt References
+
+**hiveforge/TECHNICAL-DEBT.md §2 (Referenced But Not Found):**
+- Issue: Comment in `bootstrap.ts` (line 61) references "see hiveforge/TECHNICAL-DEBT.md §2" regarding InMemoryExecutionRepository, but file not in repository root or apps/ subdirectory.
+- Files: Reference to `hiveforge/TECHNICAL-DEBT.md` (missing or in wrong location)
+- Impact: Debt is documented elsewhere but cannot be found from working directory. Fragmented tech debt tracking.
+- Fix approach: Confirm file location or recreate in `.planning/` directory. Consolidate all tech debt references into single CONCERNS.md or TECHNICAL-DEBT.md file.
+
+**audit/P0-AUTH-AUTHZ-GAP.md (Referenced But Not Found):**
+- Issue: Comment in `bootstrap.ts` (line 120) references "audit/P0-AUTH-AUTHZ-GAP.md" as the finding this closes, but file not present.
+- Files: Reference to `audit/P0-AUTH-AUTHZ-GAP.md` (missing)
+- Impact: Audit findings not actionable or reviewable. Cannot verify fix is complete.
+- Fix approach: Locate or recreate audit document. Add to `.planning/audits/` directory with date and status.
+
+---
+
+## Environmental & Configuration Concerns
+
+**Workspace Configuration Mismatch:**
+- Issue: `pnpm-workspace.yaml` globs `apps/*`, `packages/*`, `packages/capabilities/*`, `services/*` — repository root is not a workspace member. Root Next.js app, `app/`, `components/`, `lib/` are entirely outside workspace management.
+- Files: `pnpm-workspace.yaml` (glob patterns), root `package.json` (private: true, but not workspace member per workspace.yaml)
+- Impact: Root app dependency changes not detected by workspace resolvers. `pnpm install` in root behaves differently than in workspace. Cross-workspace links may break.
+- Fix approach: Test whether adding root to workspace.yaml breaks anything (runs root lint/typecheck). If safe, add root entry. Document workspace boundary in README.
+
+**Incomplete `.env.example` Files:**
+- Issue: Multiple `.env.example` files exist (noted in README: "copy `apps/studio/.env.example` to `apps/studio/.env.local`"), but completeness and accuracy unknown from current analysis.
+- Files: `apps/studio/.env.example`, likely others in `apps/`, `services/`
+- Impact: Developers may miss required env vars. Local setup fragile. CI environment setup error-prone.
+- Fix approach: Audit all .env.example files. Ensure every env var used in code has an entry. Add default values where safe (public URLs, non-secrets). Document each var's purpose.
+
+---
+
+## Summary of Critical Paths Forward
+
+**Immediate (Blocking):**
+1. Commit or discard 189 uncommitted changes (document decision)
+2. Fix validation pipeline coverage: add typecheck/lint to 105 packages and root
+3. Implement PrismaExecutionRepository to replace in-memory version
+4. Verify schema migration and prisma:generate run successfully
+
+**High Priority (1-2 weeks):**
+5. Reconstruct deleted strategic docs (CAPABILITY_ARCHITECTURE, COMMERCIAL_STRATEGY, etc.)
+6. Implement ExecutionProvider for Workflow, Tool, Evaluation kinds
+7. Add event replay service for deterministic execution
+8. Audit CI workflows for YAML correctness; add linting gate
+
+**Medium Priority (ongoing):**
+9. Add test coverage to 88 packages without tests
+10. Migrate Phase 9 Execution to Phase P5 implementation
+11. Implement ToolProvider and integrate with tool registry
+12. Document execution lifecycle (snapshots, checkpoints, leases) with examples
+
+---
+
+*Concerns audit: 2026-08-04*
