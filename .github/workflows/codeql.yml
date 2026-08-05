@@ -158,17 +158,19 @@ jobs:
 # Node Setup
 ###########################################################################
 
-    - name: Setup Node.js
-
+    - name: Setup pnpm
       if: matrix.language == 'javascript-typescript'
-
-      uses: actions/setup-node@v7
-
+      uses: pnpm/action-setup@v4
       with:
+        version: 9
 
+    - name: Setup Node.js
+      if: matrix.language == 'javascript-typescript'
+      uses: actions/setup-node@v7
+      with:
         node-version: 22
-
-        cache: npm
+        cache: pnpm
+        cache-dependency-path: OPC/cerebro-hive-website/pnpm-lock.yaml
 
 ###########################################################################
 # Python Setup
@@ -191,7 +193,7 @@ jobs:
     - name: Install Node Dependencies
       if: matrix.language == 'javascript-typescript'
       working-directory: OPC/cerebro-hive-website
-      run: npm ci
+      run: pnpm install --frozen-lockfile
 
 ###########################################################################
 # Install Python Dependencies
