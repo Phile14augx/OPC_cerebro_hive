@@ -1,5 +1,5 @@
 import { IResourceRepository, resourceRepository } from "../repositories/ResourceRepository";
-import { Resource } from "@prisma/client";
+import { Resource } from "@cerebro/db";
 
 export interface IResourceService {
   list(workspaceId: string): Promise<Resource[]>;

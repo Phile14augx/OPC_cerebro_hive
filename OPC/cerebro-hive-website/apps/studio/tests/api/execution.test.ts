@@ -4,7 +4,7 @@
  */
 
 import { DomainEventBus } from '../../lib/talent/infrastructure/events/eventBus';
-import { ExecutionStatus } from '@prisma/client';
+import { ExecutionStatus } from '@cerebro/db';
 
 describe('Execution Engine Vertical Slice', () => {
   let executionEventsFired: string[] = [];

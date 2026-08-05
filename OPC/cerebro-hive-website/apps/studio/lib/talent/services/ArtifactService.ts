@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { PrismaClient, AssessmentResource } from '@prisma/client';
+import { PrismaClient, AssessmentResource } from '@cerebro/db';
 
 const prisma = new PrismaClient();
 

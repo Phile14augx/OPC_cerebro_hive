@@ -1,6 +1,6 @@
 import { operationRepository } from "../../repositories/OperationRepository";
 import { eventStore } from "../../events/EventStore";
-import { Operation } from "@prisma/client";
+import { Operation } from "@cerebro/db";
 
 export type WorkflowState = 
   | "Pending"

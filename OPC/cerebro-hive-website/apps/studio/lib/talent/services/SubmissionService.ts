@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { PrismaClient, AssessmentSubmission, EvaluationResult } from '@prisma/client';
+import { PrismaClient, AssessmentSubmission, EvaluationResult } from '@cerebro/db';
 import { SessionService } from './SessionService';
 import { GradingPipeline } from '../engine/evaluation';
 import { GlobalEventBus } from '../engine/events';

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import { GlobalEventBus, TelemetryEvent } from '../engine/events';
 
 const prisma = new PrismaClient();

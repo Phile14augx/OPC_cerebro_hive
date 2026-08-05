@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { PrismaClient, Assessment, AssessmentVersion } from '@prisma/client';
+import { PrismaClient, Assessment, AssessmentVersion } from '@cerebro/db';
 import { AssessmentCompiler, CompiledAssessmentPackage } from '../compiler';
 import { AssessmentSchema } from '../types';
 import { TalentPolicyEngine } from '../auth/policy';

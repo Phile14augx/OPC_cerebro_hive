@@ -4,7 +4,7 @@
  */
 
 import { DomainEventBus } from '../../lib/talent/infrastructure/events/eventBus';
-import { SessionStatus } from '@prisma/client';
+import { SessionStatus } from '@cerebro/db';
 
 describe('Candidate Session Vertical Slice', () => {
   let sessionEventsFired: string[] = [];

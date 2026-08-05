@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { prisma } from '@/lib/prisma';
 import { AuditService } from './audit.service';
-import { Role } from '@prisma/client';
+import { Role } from '@cerebro/db';
 
 export class PlatformService {
   /**

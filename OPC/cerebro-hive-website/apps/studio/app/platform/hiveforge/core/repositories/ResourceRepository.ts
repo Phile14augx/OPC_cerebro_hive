@@ -1,4 +1,4 @@
-import { Resource } from "@prisma/client";
+import { Resource } from "@cerebro/db";
 
 export interface IResourceRepository {
   findById(id: string): Promise<Resource | null>;
@@ -8,7 +8,7 @@ export interface IResourceRepository {
   delete(id: string): Promise<void>;
 }
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@cerebro/db";
 const prisma = new PrismaClient();
 
 export class PrismaResourceRepository implements IResourceRepository {

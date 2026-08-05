@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { resourceService } from "../../../../platform/hiveforge/core/services/ResourceService";
-import { Resource } from "@prisma/client";
+import { Resource } from "@cerebro/db";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);

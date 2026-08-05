@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { PrismaClient, SkillProfileSnapshot } from '@prisma/client';
+import { PrismaClient, SkillProfileSnapshot } from '@cerebro/db';
 import { SkillGraphService } from '../graph/SkillGraphService';
 
 const prisma = new PrismaClient();

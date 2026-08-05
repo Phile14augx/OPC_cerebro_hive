@@ -15,6 +15,7 @@
   "dependencies": {
     "@ai-sdk/openai": "^4.0.16",
     "@cerebro/api-client": "workspace:^",
+    "@cerebro/db": "workspace:^",
     "@cerebro/sdk": "workspace:*",
     "@cerebro/workflow": "workspace:*",
     "@monaco-editor/react": "^4.7.0",

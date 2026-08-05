@@ -1,4 +1,4 @@
-import { Operation } from "@prisma/client";
+import { Operation } from "@cerebro/db";
 
 export interface IOperationRepository {
   findById(id: string): Promise<Operation | null>;
@@ -7,7 +7,7 @@ export interface IOperationRepository {
   update(id: string, data: Partial<Operation>): Promise<Operation>;
 }
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@cerebro/db";
 const prisma = new PrismaClient();
 
 export class PrismaOperationRepository implements IOperationRepository {

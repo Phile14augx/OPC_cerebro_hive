@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { PrismaClient, AssessmentSession, SessionStatus } from '@prisma/client';
+import { PrismaClient, AssessmentSession, SessionStatus } from '@cerebro/db';
 import { DomainEventBus } from '../infrastructure/events/eventBus';
 import { withTransaction } from '../infrastructure/database/transaction';
 

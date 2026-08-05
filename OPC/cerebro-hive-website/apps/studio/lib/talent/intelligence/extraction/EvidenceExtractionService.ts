@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import { DomainEventBus } from '../../infrastructure/events/eventBus';
 import { Logger } from '../../infrastructure/observability/logger';
 import { SkillGraphService } from '../core/SkillGraphService';

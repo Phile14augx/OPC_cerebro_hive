@@ -19,7 +19,7 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectsService } from '../projects/projects.service';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 
 // ── In-memory Prisma stub ──────────────────────────────────────────────────────
 // Models the race conditions that a real database's transaction isolation
