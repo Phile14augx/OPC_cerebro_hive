@@ -349,6 +349,9 @@ importers:
       '@cerebro/api-client':
         specifier: workspace:^
         version: link:../../packages/api-client
+      '@cerebro/db':
+        specifier: workspace:^
+        version: link:../../packages/db
       '@cerebro/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
