@@ -112,10 +112,16 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
       const executionContext: AgentExecutionContext = {
         conversationId,
         tenantId: cerebroContext.tenantId,
-        workspaceId: cerebroContext.workspaceId,
+        // workspaceId is typed optional on RequestContext, but this route is
+        // registered behind WorkspaceAccessMiddleware (bootstrap.ts), which
+        // 403s before this handler runs if it isn't a verified workspace of
+        // the authenticated tenant -- see RequestContextMiddleware.ts.
+        workspaceId: cerebroContext.workspaceId!,
         userId: cerebroContext.userId ?? 'anonymous',
-        traceId: cerebroContext.traceId,
-        correlationId: cerebroContext.correlationId,
+        // traceId/correlationId are typed optional but unconditionally set
+        // by requestContextHook on every request.
+        traceId: cerebroContext.traceId!,
+        correlationId: cerebroContext.correlationId!,
         agentVersionId: version.id,
         promptVersionId: version.id,
         modelId: version.modelId,

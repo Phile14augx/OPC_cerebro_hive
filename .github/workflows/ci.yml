@@ -78,6 +78,14 @@ jobs:
       - name: Build @cerebro/auth
         run: pnpm --filter @cerebro/auth run build
 
+      # @cerebro/ai-gateway publishes built dist/ output as its public
+      # interface too (main/types point at dist/, same ADR 0008 pattern
+      # as @cerebro/auth above). Must be built before anything importing
+      # @cerebro/ai-gateway -- platform-api's bootstrap.ts, server.ts,
+      # and AIGatewayProviders.ts all do.
+      - name: Build @cerebro/ai-gateway
+        run: pnpm --filter @cerebro/ai-gateway run build
+
       - name: Type check — studio
         run: pnpm --filter @cerebro/studio exec tsc --noEmit
 
@@ -177,6 +185,14 @@ jobs:
       - name: Build @cerebro/auth
         run: pnpm --filter @cerebro/auth run build
 
+      # @cerebro/ai-gateway publishes built dist/ output as its public
+      # interface too (main/types point at dist/, same ADR 0008 pattern
+      # as @cerebro/auth above). Must be built before anything importing
+      # @cerebro/ai-gateway -- platform-api's bootstrap.ts, server.ts,
+      # and AIGatewayProviders.ts all do.
+      - name: Build @cerebro/ai-gateway
+        run: pnpm --filter @cerebro/ai-gateway run build
+
       - name: Run unit tests
         run: pnpm run --if-present test
         env:
@@ -257,6 +273,14 @@ jobs:
       - name: Build @cerebro/auth
         run: pnpm --filter @cerebro/auth run build
 
+      # @cerebro/ai-gateway publishes built dist/ output as its public
+      # interface too (main/types point at dist/, same ADR 0008 pattern
+      # as @cerebro/auth above). Must be built before anything importing
+      # @cerebro/ai-gateway -- platform-api's bootstrap.ts, server.ts,
+      # and AIGatewayProviders.ts all do.
+      - name: Build @cerebro/ai-gateway
+        run: pnpm --filter @cerebro/ai-gateway run build
+
       - name: Run DB migrations
         run: pnpm --filter @cerebro/database exec prisma migrate deploy
         env:
@@ -329,6 +353,14 @@ jobs:
       # @cerebro/auth/react.
       - name: Build @cerebro/auth
         run: pnpm --filter @cerebro/auth run build
+
+      # @cerebro/ai-gateway publishes built dist/ output as its public
+      # interface too (main/types point at dist/, same ADR 0008 pattern
+      # as @cerebro/auth above). Must be built before anything importing
+      # @cerebro/ai-gateway -- platform-api's bootstrap.ts, server.ts,
+      # and AIGatewayProviders.ts all do.
+      - name: Build @cerebro/ai-gateway
+        run: pnpm --filter @cerebro/ai-gateway run build
 
       - name: Build ${{ matrix.app.name }}
         run: pnpm --filter "${{ matrix.app.filter }}" run build

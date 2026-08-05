@@ -45,19 +45,25 @@ export default async function telemetryRoutes(fastify: FastifyInstance) {
       });
 
       const traces = agentExecs.map(ex => {
-        const metrics: any = ex.metrics || {};
+        // AgentExecution.metrics is a relation (AgentExecutionMetric[]), not
+        // a JSON blob -- these values are real scalar fields on the model
+        // itself, not nested under a "metrics" object.
         return {
           id: ex.id,
-          traceId: metrics.traceId || `tr-${ex.id}`,
+          traceId: ex.traceId ?? `tr-${ex.id}`,
           timestamp: ex.startedAt.toISOString(),
           endpoint: `/v1/agents/${ex.agentId}/execute`,
           method: 'POST',
           status: ex.status === 'SUCCESS' ? 200 : 500,
-          durationMs: metrics.durationMs || 1000,
-          tokens: metrics.tokens || { prompt: 0, completion: 0, total: 0 },
-          costUsd: metrics.costUsd || 0,
-          model: metrics.model || 'unknown',
-          provider: metrics.provider || 'unknown'
+          durationMs: ex.durationMs ?? 1000,
+          tokens: {
+            prompt: ex.inputTokens ?? 0,
+            completion: ex.outputTokens ?? 0,
+            total: (ex.inputTokens ?? 0) + (ex.outputTokens ?? 0),
+          },
+          costUsd: ex.costUsd ?? 0,
+          model: ex.model ?? 'unknown',
+          provider: ex.provider ?? 'unknown'
         };
       });
 
@@ -84,19 +90,24 @@ export default async function telemetryRoutes(fastify: FastifyInstance) {
         });
       }
 
-      const metrics: any = ex.metrics || {};
+      // AgentExecution.metrics is a relation (AgentExecutionMetric[]), not
+      // a JSON blob -- these values are real scalar fields on the model.
       const summary = {
         id: ex.id,
-        traceId: metrics.traceId || `tr-${ex.id}`,
+        traceId: ex.traceId ?? `tr-${ex.id}`,
         timestamp: ex.startedAt.toISOString(),
         endpoint: `/v1/agents/${ex.agentId}/execute`,
         method: 'POST',
         status: ex.status === 'SUCCESS' ? 200 : 500,
-        durationMs: metrics.durationMs || 1000,
-        tokens: metrics.tokens || { prompt: 0, completion: 0, total: 0 },
-        costUsd: metrics.costUsd || 0,
-        model: metrics.model || 'unknown',
-        provider: metrics.provider || 'unknown'
+        durationMs: ex.durationMs ?? 1000,
+        tokens: {
+          prompt: ex.inputTokens ?? 0,
+          completion: ex.outputTokens ?? 0,
+          total: (ex.inputTokens ?? 0) + (ex.outputTokens ?? 0),
+        },
+        costUsd: ex.costUsd ?? 0,
+        model: ex.model ?? 'unknown',
+        provider: ex.provider ?? 'unknown'
       };
 
       // Pseudo spans based on the single execution
@@ -108,7 +119,7 @@ export default async function telemetryRoutes(fastify: FastifyInstance) {
           service: 'api-gateway',
           startTime: ex.startedAt.toISOString(),
           endTime: ex.completedAt?.toISOString() || new Date().toISOString(),
-          durationMs: metrics.durationMs || 1000,
+          durationMs: ex.durationMs ?? 1000,
           status: ex.status === 'SUCCESS' ? 'ok' : 'error',
           attributes: { 'http.status': summary.status }
         }

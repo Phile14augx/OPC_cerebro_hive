@@ -551,12 +551,15 @@ model WorkflowEdge {
 }
 
 model WorkflowExecution {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workflowId  String    @db.Uuid
-  workflow    Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  status      String
-  startedAt   DateTime  @default(now())
-  completedAt DateTime?
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflowId         String    @db.Uuid
+  workflow           Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  status             String
+  temporalWorkflowId String?
+  output             Json?
+  error              Json?
+  startedAt          DateTime  @default(now())
+  completedAt        DateTime?
 
   runs WorkflowRun[]
 }

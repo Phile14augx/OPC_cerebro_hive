@@ -72,7 +72,10 @@ export class AgentExecutionProvider implements ExecutionProviderPort {
     const executionContext: AgentExecutionContext = {
       conversationId: `exec-${execution.id.toString()}`,
       tenantId: execution.tenantId,
-      workspaceId: execution.workspaceId,
+      // workspaceId is optional on Execution (not every execution kind is
+      // workspace-scoped); fall back consistently with userId below rather
+      // than asserting a guarantee that doesn't hold at the domain level.
+      workspaceId: execution.workspaceId ?? '',
       userId: execution.userId ?? 'anonymous',
       traceId: execution.traceId,
       correlationId: execution.correlationId,

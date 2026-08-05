@@ -15,6 +15,8 @@ import { ExecutionManager } from '@cerebro/runtime-core/src/execution/ExecutionM
 import { ExecutionReplayService } from '@cerebro/runtime-core/src/execution/ExecutionReplayService';
 import { ExecutionIdempotencyGuard } from '@cerebro/runtime-core/src/execution/ExecutionIdempotency';
 import { ExecutionOutbox } from '@cerebro/runtime-core/src/execution/ExecutionOutbox';
+import { ReducerRegistry } from '@cerebro/runtime-core/src/registry/ReducerRegistry';
+import { ExecutionEventRegistry } from '@cerebro/runtime-core/src/registry/ExecutionEventRegistry';
 
 import { ExecutionCommandHandler } from '@cerebro/runtime-core/src/execution/commands/ExecutionCommandHandler';
 import { StartExecutionValidator, ResumeExecutionValidator, CancelExecutionValidator } from '@cerebro/runtime-core/src/execution/commands/ExecutionValidator';
@@ -84,7 +86,11 @@ async function main() {
 
   // 4d. P5 Durable Execution Components
   const executionStore = new PrismaExecutionStore(prisma);
-  const executionReplayService = new ExecutionReplayService(executionStore);
+  const executionReplayService = new ExecutionReplayService(
+    executionStore,
+    new ReducerRegistry(),
+    new ExecutionEventRegistry(),
+  );
   const executionIdempotencyGuard = new ExecutionIdempotencyGuard(executionStore);
   
   // Dummy Outbox implementation for now (to be replaced by PrismaExecutionOutbox)

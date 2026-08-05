@@ -44,6 +44,12 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
             executionId: Type.String(),
             status: Type.String(),
           }),
+          422: Type.Object({
+            type: Type.String(),
+            title: Type.String(),
+            status: Type.Number(),
+            detail: Type.String(),
+          }),
         },
       },
     },
@@ -64,8 +70,11 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
         tenantId: ctx.tenantId,
         workspaceId: ctx.workspaceId,
         userId: ctx.userId,
-        traceId: ctx.traceId,
-        correlationId: ctx.correlationId,
+        // traceId/correlationId are typed optional on RequestContext (some
+        // routes don't need them), but requestContextHook unconditionally
+        // sets both on every request -- see RequestContextMiddleware.ts.
+        traceId: ctx.traceId!,
+        correlationId: ctx.correlationId!,
         agentId: id,
         message,
       });

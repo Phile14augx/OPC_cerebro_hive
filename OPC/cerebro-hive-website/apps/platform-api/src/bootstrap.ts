@@ -1,4 +1,4 @@
-import Fastify from 'fastify';
+import Fastify, { FastifyError } from 'fastify';
 import cors from '@fastify/cors';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
@@ -26,7 +26,7 @@ import type { AIGateway } from '@cerebro/ai-gateway';
 import { ExecutionOrchestrator, InMemoryExecutionRepository } from '@cerebro/domain';
 import { AgentExecutionProvider } from './modules/runtime/AgentExecutionProvider';
 import { ExecutionRuntimeService } from './modules/runtime/ExecutionRuntimeService';
-import executionsRoutes from './modules/executions/executions.routes';
+import { executionsRoutes } from './modules/executions/executions.routes';
 import type { ExecutionRuntimeKernel } from '@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel';
 import type { ExecutionStore } from '@cerebro/runtime-core/src/execution/ExecutionStore';
 import type { ExecutionReplayService } from '@cerebro/runtime-core/src/execution/ExecutionReplayService';
@@ -91,7 +91,7 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
   server.addHook('onSend', onSendLog);
 
   // Global Error Handler
-  server.setErrorHandler((error, request, reply) => {
+  server.setErrorHandler((error: FastifyError, request, reply) => {
     // Fastify schema validation errors
     if (error.validation) {
       return reply.code(400).send({
@@ -125,7 +125,7 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
     // header with no check that it belongs to the authenticated tenant.
     protectedApi.addHook('preHandler', createRequireWorkspaceAccessHook(deps.workspaceRepository));
 
-    protectedApi.register(agentRoutes, { prefix: '/api/v1/agents', bus, agentRepository: deps.agentRepository });
+    protectedApi.register(agentRoutes, { prefix: '/api/v1/agents', agentRepository: deps.agentRepository });
     protectedApi.register(workflowsRoutes, { prefix: '/api/v1/workflows' });
     protectedApi.register(telemetryRoutes, { prefix: '/api/v1/telemetry' });
     protectedApi.register(runtimeRoutes, { prefix: '/api/v1/runtime', executionRuntimeService });

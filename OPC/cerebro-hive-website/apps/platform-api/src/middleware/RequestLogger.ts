@@ -76,11 +76,11 @@ export function onSendLog(
     // In production this calls the OTEL metrics SDK; mocked here to avoid
     // a hard dependency in the middleware layer.
     process.nextTick(() => emitMetric('authentication_failures_total', 1, {
-      path: request.routerPath ?? request.url,
+      path: request.routeOptions.url ?? request.url,
     }));
   } else if (reply.statusCode === 403) {
     process.nextTick(() => emitMetric('authorization_denied_total', 1, {
-      path: request.routerPath ?? request.url,
+      path: request.routeOptions.url ?? request.url,
       tenantId: ctx?.tenantId,
     }));
   }

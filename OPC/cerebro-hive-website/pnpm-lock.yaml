@@ -251,6 +251,9 @@ importers:
       '@cerebro/query':
         specifier: workspace:*
         version: link:../../packages/query
+      '@cerebro/runtime-contracts':
+        specifier: workspace:*
+        version: link:../../packages/runtime-contracts
       '@cerebro/runtime-core':
         specifier: workspace:^
         version: link:../../packages/runtime-core
@@ -273,6 +276,9 @@ importers:
         specifier: '>=5.3.3'
         version: 5.10.0
     devDependencies:
+      '@types/express':
+        specifier: ^4.17.21
+        version: 4.17.25
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.43
@@ -1737,6 +1743,10 @@ importers:
         version: 5.9.3
 
   packages/runtime-core:
+    dependencies:
+      '@cerebro/runtime-contracts':
+        specifier: workspace:*
+        version: link:../runtime-contracts
     devDependencies:
       typescript:
         specifier: ^5.0.0

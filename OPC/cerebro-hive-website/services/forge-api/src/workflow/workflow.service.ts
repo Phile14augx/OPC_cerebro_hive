@@ -60,7 +60,7 @@ export class WorkflowService {
         taskQueue: this.temporal.taskQueue,
       });
 
-      await db.execution.update({
+      await prisma.workflowExecution.update({
         where: { id: opts.executionId },
         data: { status: "RUNNING" }
       });
@@ -83,7 +83,7 @@ export class WorkflowService {
     } catch (err) {
       this.logger.error("Failed to start Temporal workflow", { err, executionId: opts.executionId });
 
-      await prisma.execution.update({
+      await prisma.workflowExecution.update({
         where: { id: opts.executionId },
         data: {
           status:     "FAILED",
@@ -97,7 +97,7 @@ export class WorkflowService {
   }
 
   async getStatus(executionId: string, orgId: string): Promise<WorkflowStatus | null> {
-    const execution = await prisma.execution.findUnique({ where: { id: executionId } });
+    const execution = await prisma.workflowExecution.findUnique({ where: { id: executionId } });
     if (!execution) return null;
 
     let temporalStatus: { status: string; closeTime?: Date; output?: unknown } | null = null;
@@ -120,12 +120,12 @@ export class WorkflowService {
   }
 
   async cancelExecution(executionId: string, orgId: string): Promise<void> {
-    const execution = await prisma.execution.findUnique({ where: { id: executionId } });
+    const execution = await prisma.workflowExecution.findUnique({ where: { id: executionId } });
     if (!execution?.temporalWorkflowId) return;
 
     await this.temporal.cancelWorkflow(execution.temporalWorkflowId);
 
-    await prisma.execution.update({
+    await prisma.workflowExecution.update({
       where: { id: executionId },
       data: {
         status:      "CANCELLED",
@@ -135,7 +135,7 @@ export class WorkflowService {
   }
 
   async sendSignal(executionId: string, orgId: string, signalName: string, payload: unknown): Promise<void> {
-    const execution = await prisma.execution.findUnique({ where: { id: executionId } });
+    const execution = await prisma.workflowExecution.findUnique({ where: { id: executionId } });
     if (!execution?.temporalWorkflowId) {
       throw new Error(`Execution ${executionId} has no associated Temporal workflow`);
     }

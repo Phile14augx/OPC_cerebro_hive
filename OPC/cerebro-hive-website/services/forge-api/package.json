@@ -23,7 +23,6 @@
     "@cerebro/ai": "workspace:*",
     "@cerebro/workflow": "workspace:*",
     "@prisma/adapter-pg": "^7.9.0",
-    "@cerebro/db": "workspace:*",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",

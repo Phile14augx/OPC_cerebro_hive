@@ -2,9 +2,18 @@ import { ExecutionStore } from './ExecutionStore';
 import { ExecutionReplayService } from './ExecutionReplayService';
 import { ExecutionStateMachine, ExecutionState } from './ExecutionStateMachine';
 import { ExecutionIdempotencyGuard } from './ExecutionIdempotency';
-import { ExecutionEvent, ExecutionStartedEvent, LLMStartedEvent, LLMCompletedEvent, ToolRequestedEvent } from './ExecutionEvent';
+import { ExecutionEvent, ExecutionStartedEvent, LLMStartedEvent, LLMCompletedEvent, ToolRequestedEvent } from '@cerebro/runtime-contracts/src/events/ExecutionEvent';
 import { ExecutionOutbox } from './ExecutionOutbox';
-import { LLMProvider, ToolProvider } from './plugins/CapabilityProvider';
+import { LLMProvider, ToolProvider } from '../plugins/CapabilityProvider';
+
+// TODO: ExecutionStore.updateExecution/appendEvents require a fencingToken
+// (see ADR-002-why-lease-fencing.md) to protect against a stale/zombie
+// worker mutating execution state after its lease expired. ExecutionManager
+// doesn't yet acquire a lease via ExecutionLeaseManager -- this placeholder
+// unblocks the type signature without pretending real fencing exists.
+// Wire a real lease-derived token here once ExecutionManager takes an
+// ExecutionLeaseManager dependency.
+const PLACEHOLDER_FENCING_TOKEN = 0n;
 
 export class ExecutionManager {
   constructor(
@@ -19,7 +28,7 @@ export class ExecutionManager {
   /**
    * Starts a new durable execution.
    */
-  async startExecution(agentId: string, agentVersionId: string, input: string): Promise<string> {
+  async startExecution(tenantId: string, agentId: string, agentVersionId: string, input: string): Promise<string> {
     const execution = await this.store.createExecution({
       id: crypto.randomUUID(),
       agentId,
@@ -36,6 +45,7 @@ export class ExecutionManager {
       occurredAt: new Date(),
       eventVersion: 1,
       schemaVersion: 1,
+      tenantId,
       payload: {
         agentId,
         agentVersionId,
@@ -43,11 +53,11 @@ export class ExecutionManager {
       },
     };
 
-    await this.store.appendEvents(execution.id, [startEvent]);
-    
+    await this.store.appendEvents(execution.id, [startEvent], PLACEHOLDER_FENCING_TOKEN);
+
     // Transition to QUEUED
     ExecutionStateMachine.validateTransition(execution.status, 'QUEUED');
-    await this.store.updateExecution(execution.id, { status: 'QUEUED' }, execution.version);
+    await this.store.updateExecution(execution.id, { status: 'QUEUED' }, execution.version, PLACEHOLDER_FENCING_TOKEN);
 
     // Queue for async processing
     await this.outbox.publish(execution.id, 'ResumeExecution', { sequence: 1n });
@@ -71,7 +81,7 @@ export class ExecutionManager {
     // Transition to RUNNING
     if (execution.status !== 'RUNNING') {
       ExecutionStateMachine.validateTransition(execution.status, 'RUNNING');
-      await this.store.updateExecution(executionId, { status: 'RUNNING' }, execution.version);
+      await this.store.updateExecution(executionId, { status: 'RUNNING' }, execution.version, PLACEHOLDER_FENCING_TOKEN);
     }
 
     const state = await this.replayService.replay(executionId);

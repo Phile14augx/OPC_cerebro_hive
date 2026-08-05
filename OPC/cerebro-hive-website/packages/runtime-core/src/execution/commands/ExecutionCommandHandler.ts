@@ -20,7 +20,7 @@ export class ExecutionCommandHandler {
     switch (command.type) {
       case 'StartExecutionCommand': {
         const payload = command.payload as any;
-        return this.executionManager.startExecution(payload.agentId, payload.agentVersionId, payload.input);
+        return this.executionManager.startExecution(command.tenantId, payload.agentId, payload.agentVersionId, payload.input);
       }
       case 'ResumeExecutionCommand': {
         const payload = command.payload as any;

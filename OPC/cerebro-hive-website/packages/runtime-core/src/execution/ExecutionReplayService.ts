@@ -93,7 +93,7 @@ export class ExecutionReplayService {
       if (options?.sequence && event.sequence > options.sequence) {
         break;
       }
-      if (options?.timestamp && event.timestamp && new Date(event.timestamp) > options.timestamp) {
+      if (options?.timestamp && event.occurredAt && new Date(event.occurredAt) > options.timestamp) {
         break;
       }
 
@@ -133,8 +133,8 @@ export class ExecutionReplayService {
     // 3. Create the Deterministic Context for the reducer
     const context: ReplayContext = {
       clock: {
-        now: () => (upcastedEvent.timestamp ? new Date(upcastedEvent.timestamp).getTime() : 0),
-        toISOString: () => (upcastedEvent.timestamp ? new Date(upcastedEvent.timestamp).toISOString() : new Date(0).toISOString())
+        now: () => (upcastedEvent.occurredAt ? new Date(upcastedEvent.occurredAt).getTime() : 0),
+        toISOString: () => (upcastedEvent.occurredAt ? new Date(upcastedEvent.occurredAt).toISOString() : new Date(0).toISOString())
       },
       random: {
         // Fallback or seeded random could be injected here if needed for replay
