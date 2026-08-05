@@ -13,9 +13,11 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0",
     "@prisma/client-runtime-utils": "^7.9.0",
     "@prisma/config": "^7.9.0",
+    "pg": "^8.22.0",
     "@cerebro/runtime-core": "workspace:*",
     "@cerebro/runtime-contracts": "workspace:*"
   },
