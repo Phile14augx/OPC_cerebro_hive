@@ -1,6 +1,6 @@
 import { RuntimeRegistry, CapabilityDescriptor } from '@cerebro/runtime-core';
-import type { LLMProvider, LLMMessage, ExecutionContext } from '@cerebro/runtime-core';
-import type { AIGateway } from '@cerebro/ai-gateway';
+import type { LLMProvider, LLMMessage, LLMToolDefinition, LLMInvocationResult, ExecutionContext } from '@cerebro/runtime-core';
+import type { AIGateway, ChatMessage, ToolDefinition } from '@cerebro/ai-gateway';
 
 /**
  * Real LLMProvider backed by the production AIGateway (circuit breaker,
@@ -22,14 +22,10 @@ export class AIGatewayLLMProvider implements LLMProvider {
   ): Promise<string> {
     const model = context.modelSelection?.model;
     const maxTokens = context.budget?.tokens;
-    // `provider` is intentionally not forwarded to the gateway request —
-    // AIGateway already does its own priority + health-based provider
-    // selection and failover; pinning a specific provider here would only
-    // get in the way of that.
 
     if (onToken) {
       let full = '';
-      for await (const chunk of this.gateway.stream({ messages, model, maxTokens })) {
+      for await (const chunk of this.gateway.stream({ messages: messages as ChatMessage[], model, maxTokens })) {
         if (chunk.delta) {
           onToken(chunk.delta);
           full += chunk.delta;
@@ -38,8 +34,48 @@ export class AIGatewayLLMProvider implements LLMProvider {
       return full;
     }
 
-    const response = await this.gateway.chat({ messages, model, maxTokens });
+    const response = await this.gateway.chat({ messages: messages as ChatMessage[], model, maxTokens });
     return response.content;
+  }
+
+  /**
+   * Extended invocation with tool support. Translates runtime-core's
+   * LLMToolDefinition[] to gateway's ToolDefinition[], forwards to
+   * AIGateway.chat(), and parses tool calls from the response.
+   *
+   * This is the method AgentRuntimeService calls when tools are available.
+   */
+  async invokeModelWithTools(
+    messages: LLMMessage[],
+    tools: LLMToolDefinition[],
+    context: ExecutionContext,
+  ): Promise<LLMInvocationResult> {
+    const model = context.modelSelection?.model;
+    const maxTokens = context.budget?.tokens;
+
+    const gatewayTools: ToolDefinition[] = tools.map(t => ({
+      name: t.name,
+      description: t.description,
+      inputSchema: t.inputSchema,
+    }));
+
+    const response = await this.gateway.chat({
+      messages: messages as ChatMessage[],
+      model,
+      maxTokens,
+      tools: gatewayTools.length > 0 ? gatewayTools : undefined,
+      toolChoice: gatewayTools.length > 0 ? 'auto' : undefined,
+    });
+
+    return {
+      content: response.content,
+      toolCalls: response.toolCalls?.map(tc => ({
+        id: tc.id,
+        name: tc.name,
+        arguments: tc.arguments,
+      })),
+      finishReason: response.finishReason === 'tool_use' ? 'tool_use' : 'stop',
+    };
   }
 }
 
@@ -69,7 +105,7 @@ export function registerAIGatewayProvider(gateway: AIGateway): void {
       capability: 'LLMProvider',
       version: '1.0.0',
       priority: 100,
-      supportedFeatures: ['streaming'],
+      supportedFeatures: ['streaming', 'tool-calling'],
       costClass: 'Medium',
     },
     () => new AIGatewayLLMProvider(gateway)
@@ -106,3 +142,4 @@ export function computeHealthFromGateway(gateway: AIGateway): 'Healthy' | 'Degra
   if (providers.some((p) => p.circuitState !== 'CLOSED')) return 'Degraded';
   return 'Healthy';
 }
+

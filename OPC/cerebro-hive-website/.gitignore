@@ -79,6 +79,7 @@ pnpm-lock.yaml.*
 # machine/session-local, never part of any feature's own diff or history.
 .agents/logs/
 .agents/worktrees/
+.claude/worktrees/
 
 # credential-adjacent files
 si_keys.txt
@@ -87,3 +88,4 @@ si_keys.txt
 *.p12
 *.pfx
 secrets.*.json
+.verify/

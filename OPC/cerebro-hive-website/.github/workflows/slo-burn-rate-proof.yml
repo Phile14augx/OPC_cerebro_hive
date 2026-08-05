@@ -1,0 +1,259 @@
+name: SLO Burn Rate Proof (SLO-3)
+
+on:
+  # Weekly — proves the pipeline is still connected
+  schedule:
+    - cron: '0 5 * * 2'   # Tuesdays 05:00 UTC
+
+  push:
+    branches: [main]
+    paths:
+      - infra/slo/**
+      - .github/workflows/slo-burn-rate-proof.yml
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (no actual injection)'
+        type: boolean
+        default: false
+      emit_evidence:
+        description: 'Emit evidence to register'
+        type: boolean
+        default: true
+      alert_wait_seconds:
+        description: 'Max seconds to wait for alert to fire'
+        required: false
+        default: '180'
+
+permissions:
+  contents: write
+  id-token: write
+
+env:
+  ASSURANCE_ENV: staging
+  EVIDENCE_DIR: evidence
+
+jobs:
+  # ── Lint: validate rule file syntax before probing ─────────────────────────
+  lint-rules:
+    name: Lint PrometheusRule
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate burn-rate-rules.yaml
+        run: |
+          python3 - <<'EOF'
+          import yaml, sys
+          with open('infra/slo/burn-rate-rules.yaml') as f:
+              doc = yaml.safe_load(f)
+          assert doc['kind'] == 'PrometheusRule', "expected PrometheusRule"
+          groups = doc['spec']['groups']
+          total_rules = sum(len(g.get('rules',[])) for g in groups)
+          recording = sum(1 for g in groups for r in g.get('rules',[]) if 'record' in r)
+          alerting  = sum(1 for g in groups for r in g.get('rules',[]) if 'alert' in r)
+          print(f"✅ PrometheusRule valid: {total_rules} rules ({recording} recording, {alerting} alerting)")
+          assert alerting >= 2, f"Expected ≥2 alert rules, got {alerting}"
+          EOF
+
+      - name: Check burn-rate-probe.sh syntax
+        run: |
+          chmod +x infra/slo/burn-rate-probe.sh
+          bash -n infra/slo/burn-rate-probe.sh
+          echo "✅ burn-rate-probe.sh syntax valid"
+
+      - name: Verify alert names in probe match rules file
+        run: |
+          python3 - <<'EOF'
+          import re
+
+          rules_txt = open('infra/slo/burn-rate-rules.yaml').read()
+          probe_txt = open('infra/slo/burn-rate-probe.sh').read()
+
+          rule_alerts = set(re.findall(r'- alert:\s+(\w+)', rules_txt))
+          probe_refs  = set(re.findall(r'TARGET_ALERT_NAME.*?[=:-]\s*["\']?(\w+)', probe_txt))
+          probe_refs |= set(re.findall(r'CerebroAPI\w+', probe_txt))
+
+          print(f"Alert rules defined: {rule_alerts}")
+          print(f"Alert names in probe: {probe_refs}")
+
+          primary = 'CerebroAPIHighBurnRate'
+          assert primary in rule_alerts, f"Primary probe alert '{primary}' not defined in rules file"
+          print(f"✅ Primary probe alert '{primary}' found in rules file")
+          EOF
+
+  # ── Apply rules to cluster ─────────────────────────────────────────────────
+  apply-rules:
+    name: Apply PrometheusRule to cluster
+    runs-on: ubuntu-latest
+    needs: lint-rules
+    environment: staging
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/setup-kubectl@v4
+
+      - name: Configure cluster access
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Apply PrometheusRule
+        run: |
+          kubectl apply -f infra/slo/burn-rate-rules.yaml
+          echo "✅ PrometheusRule applied"
+
+          # Wait for Prometheus to pick up the new rules
+          sleep 30
+          kubectl get prometheusrule -n cerebro-monitoring cerebro-slo-burn-rate -o yaml | \
+            grep -A2 "generation:" || true
+
+  # ── Run burn rate probe ────────────────────────────────────────────────────
+  probe:
+    name: Burn Rate Pipeline Proof
+    runs-on: ubuntu-latest
+    needs: apply-rules
+    environment: staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/setup-kubectl@v4
+
+      - name: Configure cluster access
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      # Port-forward Prometheus and Alertmanager for probe access
+      - name: Port-forward Prometheus
+        run: |
+          kubectl port-forward -n cerebro-monitoring svc/prometheus-operated 9090:9090 &
+          echo "PROMETHEUS_PF_PID=$!" >> $GITHUB_ENV
+          sleep 3
+
+      - name: Port-forward Alertmanager
+        run: |
+          kubectl port-forward -n cerebro-monitoring svc/alertmanager-operated 9093:9093 &
+          echo "AM_PF_PID=$!" >> $GITHUB_ENV
+          sleep 3
+
+      - name: Run burn rate probe
+        id: probe
+        env:
+          PROMETHEUS_URL: http://localhost:9090
+          ALERTMANAGER_URL: http://localhost:9093
+          FORGE_API_URL: ${{ secrets.FORGE_API_INTERNAL_URL }}
+          SLACK_PROBE_WEBHOOK: ${{ secrets.SLACK_SLO3_PROBE_WEBHOOK }}
+          PROBE_TOKEN: ${{ secrets.FORGE_PROBE_TOKEN }}
+          ASSURANCE_ENV: staging
+          INJECT_DURATION: "120"
+          ALERT_WAIT: ${{ github.event.inputs.alert_wait_seconds || '180' }}
+        run: |
+          chmod +x infra/slo/burn-rate-probe.sh
+          mkdir -p evidence
+
+          DRY_FLAG=""
+          [[ "${{ github.event.inputs.dry_run }}" == "true" ]] && DRY_FLAG="--dry-run"
+
+          EVIDENCE_FLAG=""
+          [[ "${{ github.event.inputs.emit_evidence }}" != "false" ]] && EVIDENCE_FLAG="--emit-evidence"
+
+          bash infra/slo/burn-rate-probe.sh $DRY_FLAG $EVIDENCE_FLAG \
+            --evidence-out evidence/slo3-evidence.json
+
+      - name: Stop port-forwards
+        if: always()
+        run: |
+          kill "${PROMETHEUS_PF_PID:-}" 2>/dev/null || true
+          kill "${AM_PF_PID:-}" 2>/dev/null || true
+
+      - name: Read evidence
+        if: always()
+        id: evidence
+        run: |
+          if [[ -f evidence/slo3-evidence.json ]]; then
+            STATUS=$(jq -r '.status' evidence/slo3-evidence.json)
+            ALERT=$(jq -r '.alert_name' evidence/slo3-evidence.json)
+            LATENCY=$(jq -r '.pipeline.total_propagation_latency_seconds' evidence/slo3-evidence.json)
+            PROM_LAT=$(jq -r '.pipeline.prometheus_latency_seconds' evidence/slo3-evidence.json)
+            AM_LAT=$(jq -r '.pipeline.alertmanager_latency_seconds' evidence/slo3-evidence.json)
+            SLACK_OK=$(jq -r '.pipeline.slack_delivery_confirmed' evidence/slo3-evidence.json)
+            echo "status=${STATUS}"       >> $GITHUB_OUTPUT
+            echo "alert=${ALERT}"         >> $GITHUB_OUTPUT
+            echo "latency=${LATENCY}"     >> $GITHUB_OUTPUT
+            echo "prom_lat=${PROM_LAT}"   >> $GITHUB_OUTPUT
+            echo "am_lat=${AM_LAT}"       >> $GITHUB_OUTPUT
+            echo "slack_ok=${SLACK_OK}"   >> $GITHUB_OUTPUT
+          fi
+
+      - name: Step summary
+        if: always()
+        run: |
+          STATUS="${{ steps.evidence.outputs.status || 'UNKNOWN' }}"
+          ICON=$( [[ "$STATUS" == "PASS" ]] && echo "✅" || echo "❌" )
+          cat >> $GITHUB_STEP_SUMMARY <<EOF
+          ## ${ICON} SLO-3: Burn Rate Alert Pipeline Proof
+
+          | Stage | Result | Latency |
+          |---|---|---|
+          | Error Injection | ✅ | — |
+          | Prometheus Fired | $([[ "${{ steps.evidence.outputs.status }}" == "PASS" ]] && echo "✅" || echo "❌") | ${{ steps.evidence.outputs.prom_lat }}s |
+          | Alertmanager Received | $([[ "${{ steps.evidence.outputs.status }}" == "PASS" ]] && echo "✅" || echo "❌") | ${{ steps.evidence.outputs.am_lat }}s |
+          | Slack Delivered | $([[ "${{ steps.evidence.outputs.slack_ok }}" == "true" ]] && echo "✅" || echo "⚠️") | — |
+
+          **Total propagation latency:** ${{ steps.evidence.outputs.latency }}s
+          **Alert:** \`${{ steps.evidence.outputs.alert }}\`
+          **SHA:** \`${{ github.sha }}\`
+          EOF
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: slo3-evidence-${{ github.run_number }}
+          path: evidence/slo3-evidence.json
+          retention-days: 365
+
+      - name: Commit evidence
+        if: steps.probe.outcome == 'success' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name  "cerebro-assurance[bot]"
+          git config user.email "assurance@cerebro-hive.io"
+          git add evidence/ 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No evidence changes"
+          else
+            git commit -m "ci(slo): SLO-3 burn rate proof evidence [skip ci]
+
+            Status: ${{ steps.evidence.outputs.status }}
+            Alert: ${{ steps.evidence.outputs.alert }}
+            Latency: ${{ steps.evidence.outputs.latency }}s
+            SHA: ${{ github.sha }}"
+            git push
+          fi
+
+      - name: Post to Slack
+        if: always() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_EVIDENCE_WEBHOOK }}
+        run: |
+          STATUS="${{ steps.evidence.outputs.status || 'UNKNOWN' }}"
+          LATENCY="${{ steps.evidence.outputs.latency || '?' }}"
+          ICON=$( [[ "$STATUS" == "PASS" ]] && echo "✅" || echo "🚨" )
+          COLOR=$( [[ "$STATUS" == "PASS" ]] && echo "good" || echo "danger" )
+
+          curl -fsSL -X POST "$SLACK_WEBHOOK_URL" \
+            -H 'Content-Type: application/json' \
+            -d "{
+              \"attachments\": [{
+                \"color\": \"$COLOR\",
+                \"text\": \"${ICON} *SLO-3 Burn Rate Pipeline Proof* — ${STATUS}\\nAlert: \`${{ steps.evidence.outputs.alert }}\`\\nPropagation latency: ${LATENCY}s | Slack: ${{ steps.evidence.outputs.slack_ok }}\\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>\"
+              }]
+            }"

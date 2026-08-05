@@ -10,7 +10,8 @@
     "start": "tsx src/index.ts",
     "build": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
-    "auth:linkedin": "tsx src/auth/linkedin-oauth.ts"
+    "auth:linkedin": "tsx src/auth/linkedin-oauth.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.0",

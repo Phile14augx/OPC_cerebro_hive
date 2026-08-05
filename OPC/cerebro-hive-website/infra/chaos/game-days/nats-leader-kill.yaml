@@ -1,0 +1,62 @@
+# Chaos Game Day: NATS Leader Kill
+#
+# Scenario: Kill the NATS JetStream leader node and verify:
+#   1. RAFT leader re-election completes within 30s
+#   2. JetStream streams resume consuming within 60s
+#   3. In-flight messages are not lost (JetStream at-least-once guarantee)
+#   4. Alertmanager fires NATSLeaderElection within 2 min
+#   5. forge-api agent task queue drains correctly after reconnect
+#
+# Maps to: CHAOS-1, DR-3, SLO-1
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: game-day-nats-leader-kill
+  namespace: cerebro-chaos
+  labels:
+    cerebro.io/game-day: "true"
+    cerebro.io/scenario: nats-leader-kill
+    cerebro.io/maps-to: "CHAOS-1,DR-3,SLO-1"
+spec:
+  action: pod-kill
+  mode: one
+  duration: "0s"
+
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      app.kubernetes.io/name: nats
+      nats.io/role: leader
+
+---
+# Companion: network partition between NATS nodes
+# Simulates split-brain (more severe than a kill)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: game-day-nats-partition
+  namespace: cerebro-chaos
+  labels:
+    cerebro.io/game-day: "true"
+    cerebro.io/scenario: nats-partition
+spec:
+  action: partition
+  mode: one
+  duration: "120s"
+
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      app.kubernetes.io/name: nats
+
+  direction: both
+  target:
+    selector:
+      namespaces:
+        - cerebro-staging
+      labelSelectors:
+        app.kubernetes.io/name: nats
+    mode: one

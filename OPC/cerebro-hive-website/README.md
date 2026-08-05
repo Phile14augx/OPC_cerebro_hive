@@ -1,13 +1,15 @@
-# Cerebro Hive Studio
+# CerebroHive Enterprise Intelligence Operating System (EIOS)
 
-This repository contains the Cerebro Studio frontend application, which consumes the Engineering Review API (M26.2 Baseline).
+This repository contains the CerebroHive EIOS platform codebase, previously known as Cerebro Studio.
 
-## Architecture
+## Architecture & Governance
 
-- **Transport & APIs**: REST via `@cerebro/api-client`, driven by Zod-based OpenAPI generation (ADR-012, ADR-013).
-- **Identity**: AWS Cognito as the reference Identity Provider implementation (ADR-014).
-- **Observability**: OpenTelemetry for tracing and structured JSON logging (ADR-015).
-- **Infrastructure**: AWS Lambda, DynamoDB, Amazon S3, and Amazon SNS (ADR-016).
+CerebroHive is built on a 10-Layer Enterprise Intelligence Operating System (EIOS) architecture. The vision drives the architecture, the architecture drives the implementation, and the implementation drives the products.
+
+**Start Here:**
+1. [EIOS Manifesto](file:///d:/%7BMY_PROJECTS%7D/%7BOPC_cerebro_hive%7D/OPC/cerebro-hive-website/architecture/manifesto/CEREBROHIVE_EIOS_MANIFESTO.md)
+2. [Architecture Taxonomy Index](file:///d:/%7BMY_PROJECTS%7D/%7BOPC_cerebro_hive%7D/OPC/cerebro-hive-website/architecture/ARCHITECTURE_INDEX.md)
+3. [EIOS Constitution](file:///d:/%7BMY_PROJECTS%7D/%7BOPC_cerebro_hive%7D/OPC/cerebro-hive-website/CEREBROHIVE_CONSTITUTION.md)
 
 ## Configuration
 

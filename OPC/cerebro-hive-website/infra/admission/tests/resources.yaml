@@ -1,0 +1,91 @@
+# Test resources for Kyverno policy tests
+# These mock Pod specs exercise the signed-image policy rules
+
+---
+# Test 1: Signed image (our namespace) — should be admitted
+apiVersion: v1
+kind: Pod
+metadata:
+  name: signed-pod-prod
+  namespace: cerebro-prod
+  labels:
+    app.kubernetes.io/name: forge-api
+spec:
+  runtimeClassName: gvisor
+  containers:
+    - name: forge-api
+      image: "ghcr.io/cerebro-hive/cerebro-hive/forge-api:sha-abc1234"
+      securityContext:
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+
+---
+# Test 2: Unsigned image (not from our supply chain) — should be rejected
+apiVersion: v1
+kind: Pod
+metadata:
+  name: unsigned-pod-prod
+  namespace: cerebro-prod
+  labels:
+    app.kubernetes.io/name: untrusted
+spec:
+  containers:
+    - name: app
+      image: "docker.io/library/nginx:latest"   # unsigned, external image
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+
+---
+# Test 3: System pod (excluded namespace) — should be admitted regardless
+apiVersion: v1
+kind: Pod
+metadata:
+  name: system-pod
+  namespace: kube-system
+spec:
+  containers:
+    - name: coredns
+      image: "registry.k8s.io/coredns/coredns:v1.10.1"
+
+---
+# Test 4: Pod with emergency bypass label — should be admitted
+apiVersion: v1
+kind: Pod
+metadata:
+  name: exempt-pod-prod
+  namespace: cerebro-prod
+  labels:
+    cerebro/supply-chain-exempt: "true"
+    cerebro/bypass-reason: "emergency-hotfix-2024-01-15"
+    cerebro/bypass-approver: "platform-lead"
+spec:
+  containers:
+    - name: emergency-fix
+      image: "ghcr.io/cerebro-hive/cerebro-hive/forge-api:hotfix-xyz"
+
+---
+# Test 5: Signed image in staging — should be admitted
+apiVersion: v1
+kind: Pod
+metadata:
+  name: signed-pod-staging
+  namespace: cerebro-staging
+  labels:
+    app.kubernetes.io/name: forge-api
+spec:
+  runtimeClassName: gvisor
+  containers:
+    - name: forge-api
+      image: "ghcr.io/cerebro-hive/cerebro-hive/forge-api:sha-def5678"
+      securityContext:
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]

@@ -14,6 +14,8 @@ export type {
   ProviderConfig,
   ProviderName,
   ChatMessage,
+  ToolDefinition,
+  ToolCall,
 } from './types';
 export { GatewayError, GATEWAY_ERRORS } from './types';
 

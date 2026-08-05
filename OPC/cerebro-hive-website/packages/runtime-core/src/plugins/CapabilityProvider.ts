@@ -28,12 +28,48 @@ export interface CapabilityProvider {
 }
 
 export interface LLMMessage {
-  role: 'system' | 'user' | 'assistant';
+  role: 'system' | 'user' | 'assistant' | 'tool';
   content: string;
+  toolCalls?: LLMToolCall[];
+  toolCallId?: string;
+}
+
+/** Provider-agnostic tool definition passed to LLM providers. */
+export interface LLMToolDefinition {
+  name: string;
+  description: string;
+  inputSchema: Record<string, any>;
+}
+
+/** A tool call returned by the model. */
+export interface LLMToolCall {
+  id: string;
+  name: string;
+  arguments: string;
+}
+
+/** Result from invokeModelWithTools — carries content and optional tool calls. */
+export interface LLMInvocationResult {
+  content: string;
+  toolCalls?: LLMToolCall[];
+  finishReason?: 'stop' | 'tool_use' | 'max_tokens';
 }
 
 export interface LLMProvider extends CapabilityProvider {
+  /** Basic invocation — returns content string only. */
   invokeModel(messages: LLMMessage[], context: ExecutionContext, onToken?: (token: string) => void): Promise<string>;
+
+  /**
+   * Extended invocation with tool support. Optional — if not implemented,
+   * the runtime falls back to invokeModel() (no tool calling).
+   * When implemented, this method receives tool definitions and returns
+   * a richer result that may include tool calls from the model.
+   */
+  invokeModelWithTools?(
+    messages: LLMMessage[],
+    tools: LLMToolDefinition[],
+    context: ExecutionContext,
+  ): Promise<LLMInvocationResult>;
 }
 
 export interface ToolProvider extends CapabilityProvider {

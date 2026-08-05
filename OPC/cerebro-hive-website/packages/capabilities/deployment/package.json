@@ -2,6 +2,9 @@
   "name": "@cerebro/deployment-capability",
   "version": "1.0.0",
   "main": "index.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "dependencies": {
     "@cerebro/domain": "workspace:*",
     "@cerebro/database": "workspace:*"

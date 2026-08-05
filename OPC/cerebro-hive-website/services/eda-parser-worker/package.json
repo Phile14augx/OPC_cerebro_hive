@@ -19,8 +19,11 @@
     "@types/node": "^22.0.0"
   },
   "dependencies": {
-    "@cerebro/eda-parser": "workspace:*",
+    "@cerebro/eda-domain": "workspace:*",
     "@cerebro/eda-findings": "workspace:*",
-    "@cerebro/eda-domain": "workspace:*"
+    "@cerebro/eda-parser": "workspace:*",
+    "@cerebro/eda-parsers": "workspace:*",
+    "@cerebro/eda-execution": "workspace:*",
+    "@cerebro/eda-workflow": "workspace:*"
   }
 }

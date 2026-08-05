@@ -1,0 +1,84 @@
+# infra/rbac/expected-roles.yaml
+#
+# Declarative specification of the expected RBAC posture for CerebroHive.
+# verify-rbac.sh validates the live cluster state against this specification.
+#
+# Format:
+#   service_accounts:     Allowed role bindings per SA
+#   forbidden_roles:      ClusterRoles that cerebro SAs must never hold
+#   max_verb_sets:        Maximum verb sets per service (principle of least privilege)
+
+metadata:
+  version: "1.0"
+  last_reviewed: "2026-08-03"
+  reviewer: "platform-team"
+  namespaces:
+    - cerebro-prod
+    - cerebro-staging
+
+service_accounts:
+  forge-api:
+    description: "NestJS API — needs to read secrets and write to NATS"
+    allowed_roles:
+      - cerebro-forge-api
+    max_verbs_per_resource:
+      secrets: [get]
+      configmaps: [get, list, watch]
+      pods: [get, list]
+    forbidden_verbs: ["*", delete, patch]
+
+  ai-gateway:
+    description: "AI provider proxy — needs to read model config secrets only"
+    allowed_roles:
+      - cerebro-ai-gateway
+    max_verbs_per_resource:
+      secrets: [get]
+      configmaps: [get]
+    forbidden_verbs: ["*", create, delete, patch, update]
+
+  worker:
+    description: "Background job processor — needs to read task queues"
+    allowed_roles:
+      - cerebro-worker
+    max_verbs_per_resource:
+      configmaps: [get, list]
+      jobs: [get, list, watch]
+    forbidden_verbs: ["*", delete]
+
+  studio:
+    description: "Next.js frontend — read-only metadata access"
+    allowed_roles:
+      - cerebro-studio-readonly
+    max_verbs_per_resource:
+      configmaps: [get, list]
+    forbidden_verbs: ["*", create, delete, patch, update]
+
+  argocd-server:
+    description: "ArgoCD — needs to manage app resources across namespaces"
+    allowed_roles:
+      - cerebro-argocd-server
+    # ArgoCD legitimately needs broader access — warn but don't fail
+    audit_only: true
+
+  default:
+    description: "Default SA — must have NO bindings"
+    allowed_roles: []
+    forbidden_verbs: ["*"]
+
+forbidden_roles:
+  # cerebro ServiceAccounts must never be bound to these
+  - cluster-admin
+  - system:masters
+  - admin
+  - edit
+
+wildcard_policy:
+  deny_wildcard_verbs: true
+  deny_wildcard_resources: true
+  deny_wildcard_api_groups: true
+  exceptions:
+    # None — wildcards must be refactored to explicit permissions
+
+escalation_paths:
+  # Explicit list of known-safe escalation paths (empty = none allowed)
+  allowed: []

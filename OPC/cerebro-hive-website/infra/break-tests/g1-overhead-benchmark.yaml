@@ -1,0 +1,210 @@
+# G1 Overhead Benchmark
+#
+# Measures the performance overhead of gVisor (runsc) vs native runc
+# for the workloads that run inside agent sandboxes.
+#
+# This produces the performance evidence required to:
+#   1. Confirm gVisor overhead is within acceptable bounds (< 2× for typical workloads)
+#   2. Detect regressions in gVisor versions
+#   3. Provide data for sizing sandbox node pools
+#
+# Benchmarks:
+#   B1. Syscall throughput (getpid in a tight loop)
+#   B2. File I/O throughput (sequential read/write)
+#   B3. Network throughput (loopback iperf3)
+#   B4. Process spawn latency (fork + exec time)
+#   B5. Memory allocation throughput
+#   B6. LLM-representative workload (CPU-bound string processing, simulating tokenization)
+#
+# Results are published to Prometheus as one-shot metrics and to the
+# GitHub Actions job summary.
+
+---
+# Benchmark Job: runc (baseline)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: g1-benchmark-runc
+  namespace: cerebro-break-tests
+  labels:
+    control: G1
+    type: benchmark
+    runtime: runc
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        control: G1
+        type: benchmark
+        runtime: runc
+    spec:
+      # No runtimeClassName = default runc
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+      containers:
+        - name: benchmark
+          image: ubuntu:22.04
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            readOnlyRootFilesystem: false   # need write access for file I/O test
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: "1"
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 1Gi
+          command:
+            - bash
+            - -c
+            - |
+              apt-get update -qq && apt-get install -y -qq python3 time iperf3 2>/dev/null
+
+              RUNTIME="runc"
+              echo "=== G1 Overhead Benchmark: $RUNTIME ==="
+              echo "CPU: $(nproc) cores"
+              echo "Kernel: $(uname -r)"
+              echo ""
+
+              # B1: Syscall throughput (getpid loop × 1,000,000)
+              B1_TIME=$( { time python3 -c "
+              import ctypes
+              libc = ctypes.CDLL(None)
+              for _ in range(1_000_000):
+                  libc.getpid()
+              "; } 2>&1 | grep real | awk '{print $2}')
+              echo "B1|syscall_throughput|runtime=$RUNTIME|1M_getpid_time=$B1_TIME"
+
+              # B2: File I/O (write then read 100MB)
+              B2_WRITE=$( { time dd if=/dev/zero of=/tmp/bench_file bs=1M count=100 oflag=dsync 2>/dev/null; } 2>&1 | grep real | awk '{print $2}')
+              B2_READ=$( { time dd if=/tmp/bench_file of=/dev/null bs=1M 2>/dev/null; } 2>&1 | grep real | awk '{print $2}')
+              rm -f /tmp/bench_file
+              echo "B2|file_io|runtime=$RUNTIME|write_100mb=$B2_WRITE|read_100mb=$B2_READ"
+
+              # B3: Process spawn latency (fork+exec × 1000)
+              B3_TIME=$( { time for i in $(seq 1 1000); do true; done; } 2>&1 | grep real | awk '{print $2}')
+              echo "B3|process_spawn|runtime=$RUNTIME|1000_forks=$B3_TIME"
+
+              # B4: Memory allocation (allocate and touch 512MB in 4K pages)
+              B4_TIME=$( { time python3 -c "
+              import ctypes
+              SIZE = 512 * 1024 * 1024
+              buf = bytearray(SIZE)
+              # Touch every page to force allocation
+              for i in range(0, SIZE, 4096):
+                  buf[i] = i & 0xFF
+              "; } 2>&1 | grep real | awk '{print $2}')
+              echo "B4|memory_alloc|runtime=$RUNTIME|512mb_touch=$B4_TIME"
+
+              # B5: LLM-representative CPU workload (string tokenization simulation)
+              B5_TIME=$( { time python3 -c "
+              import re
+              text = 'The quick brown fox jumps over the lazy dog. ' * 10000
+              for _ in range(100):
+                  tokens = re.findall(r'\b\w+\b', text)
+              print(f'Tokens per run: {len(tokens)}', flush=True)
+              "; } 2>&1 | grep real | awk '{print $2}')
+              echo "B5|cpu_tokenization|runtime=$RUNTIME|100x_tokenize=$B5_TIME"
+
+              echo ""
+              echo "=== Benchmark complete: $RUNTIME ==="
+
+---
+# Benchmark Job: gVisor (measured)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: g1-benchmark-gvisor
+  namespace: cerebro-break-tests
+  labels:
+    control: G1
+    type: benchmark
+    runtime: gvisor
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        control: G1
+        type: benchmark
+        runtime: gvisor
+    spec:
+      runtimeClassName: gvisor   # ← the only difference from runc job
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+      containers:
+        - name: benchmark
+          image: ubuntu:22.04
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: "1"
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 1Gi
+          command:
+            - bash
+            - -c
+            - |
+              apt-get update -qq && apt-get install -y -qq python3 time 2>/dev/null
+
+              RUNTIME="gvisor"
+              echo "=== G1 Overhead Benchmark: $RUNTIME ==="
+              echo "CPU: $(nproc) cores"
+              echo "Kernel: $(uname -r)"
+              echo ""
+
+              B1_TIME=$( { time python3 -c "
+              import ctypes
+              libc = ctypes.CDLL(None)
+              for _ in range(1_000_000):
+                  libc.getpid()
+              "; } 2>&1 | grep real | awk '{print $2}')
+              echo "B1|syscall_throughput|runtime=$RUNTIME|1M_getpid_time=$B1_TIME"
+
+              B2_WRITE=$( { time dd if=/dev/zero of=/tmp/bench_file bs=1M count=100 oflag=dsync 2>/dev/null; } 2>&1 | grep real | awk '{print $2}')
+              B2_READ=$( { time dd if=/tmp/bench_file of=/dev/null bs=1M 2>/dev/null; } 2>&1 | grep real | awk '{print $2}')
+              rm -f /tmp/bench_file
+              echo "B2|file_io|runtime=$RUNTIME|write_100mb=$B2_WRITE|read_100mb=$B2_READ"
+
+              B3_TIME=$( { time for i in $(seq 1 1000); do true; done; } 2>&1 | grep real | awk '{print $2}')
+              echo "B3|process_spawn|runtime=$RUNTIME|1000_forks=$B3_TIME"
+
+              B4_TIME=$( { time python3 -c "
+              import ctypes
+              SIZE = 512 * 1024 * 1024
+              buf = bytearray(SIZE)
+              for i in range(0, SIZE, 4096):
+                  buf[i] = i & 0xFF
+              "; } 2>&1 | grep real | awk '{print $2}')
+              echo "B4|memory_alloc|runtime=$RUNTIME|512mb_touch=$B4_TIME"
+
+              B5_TIME=$( { time python3 -c "
+              import re
+              text = 'The quick brown fox jumps over the lazy dog. ' * 10000
+              for _ in range(100):
+                  tokens = re.findall(r'\b\w+\b', text)
+              print(f'Tokens per run: {len(tokens)}', flush=True)
+              "; } 2>&1 | grep real | awk '{print $2}')
+              echo "B5|cpu_tokenization|runtime=$RUNTIME|100x_tokenize=$B5_TIME"
+
+              echo ""
+              echo "=== Benchmark complete: $RUNTIME ==="

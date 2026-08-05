@@ -1,0 +1,1 @@
+export const EDA_TEMPORAL_WORKER_VERSION = "0.0.0";

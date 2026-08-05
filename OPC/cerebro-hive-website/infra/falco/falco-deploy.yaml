@@ -1,0 +1,291 @@
+# Falco Runtime Security — CerebroHive Deployment
+#
+# Installs Falco as a DaemonSet on all nodes, loads the CerebroHive custom
+# rules, and configures alert fanout to:
+#   - Alertmanager (Prometheus alert pipeline → PagerDuty/OpsGenie)
+#   - Falcosidekick → Slack #sre-incidents channel
+#
+# Install:
+#   helm repo add falcosecurity https://falcosecurity.github.io/charts
+#   helm upgrade --install falco falcosecurity/falco \
+#     --namespace falco --create-namespace \
+#     --values infra/falco/falco-deploy.yaml \
+#     --set-file customRules."cerebro-rules\.yaml"=infra/falco/falco-rules.yaml
+#
+# Verify:
+#   kubectl get pods -n falco
+#   kubectl logs -n falco -l app.kubernetes.io/name=falco --tail=50
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Falco Helm chart values
+# ─────────────────────────────────────────────────────────────────────────────
+
+driver:
+  kind: ebpf           # Use the eBPF probe (no kernel module needed)
+  # kind: modern_ebpf  # Use this on kernel >= 5.8 for CO-RE (no compilation)
+
+image:
+  repository: falcosecurity/falco-no-driver
+  tag: "0.38.1"
+
+falco:
+  # Load our custom rules alongside the built-in ruleset
+  rules_file:
+    - /etc/falco/falco_rules.yaml
+    - /etc/falco/falco_rules.local.yaml
+    - /etc/falco/k8s_audit_rules.yaml
+    - /etc/falco/rules.d   # custom rules directory — cerebro-rules.yaml goes here
+
+  # Alert output — log to stdout (Falcosidekick picks these up) + file
+  json_output: true          # Machine-readable JSON for Falcosidekick
+  json_include_output_property: true
+  json_include_tags_property: true
+
+  log_level: info
+  log_stderr: true
+  log_syslog: false
+
+  # Output channels
+  stdout_output:
+    enabled: true
+
+  file_output:
+    enabled: true
+    keep_alive: false
+    filename: /var/log/falco/falco.log
+
+  # gRPC output for Falcosidekick integration
+  grpc_output:
+    enabled: true
+
+  grpc:
+    enabled: true
+    bind_address: "0.0.0.0:5060"
+    threadiness: 8
+
+  # Syscall buffer (increase if dropping events under load)
+  syscall_buf_size_preset: 4   # 16 MB per CPU
+
+  # Priority threshold: only alert on WARNING and above
+  priority: WARNING
+
+  # Buffered outputs reduce CPU overhead at cost of latency
+  buffered_outputs: false
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Falcosidekick — alert fanout
+# ─────────────────────────────────────────────────────────────────────────────
+
+falcosidekick:
+  enabled: true
+
+  image:
+    repository: falcosecurity/falcosidekick
+    tag: "2.29.0"
+
+  replicaCount: 2
+
+  config:
+    # Slack alert routing
+    slack:
+      webhookurl: ""          # Set via: kubectl create secret generic falco-slack ...
+      outputformat: "all"
+      minimumpriority: "error"
+      messageformat: |
+        🚨 *CerebroHive Security Alert* 🚨
+        *Rule:* {{ .Rule }}
+        *Priority:* {{ .Priority }}
+        *Output:* {{ .Output }}
+        *Pod:* {{ index .OutputFields "k8s.pod.name" }}
+        *Namespace:* {{ index .OutputFields "k8s.ns.name" }}
+        *Time:* {{ .Time }}
+
+    # Alertmanager integration (feeds Prometheus alert pipeline)
+    alertmanager:
+      hostport: "http://alertmanager.monitoring.svc.cluster.local:9093"
+      minimumpriority: "warning"
+      # Encode Falco rule name as the alertname so Alertmanager can route it
+      expiretimeout: "30s"
+      mutualtls: false
+      customseveritymap:
+        CRITICAL: critical
+        ERROR: critical
+        WARNING: warning
+        INFO: none
+
+    # Loki (store events for post-incident forensics)
+    loki:
+      hostport: "http://loki.monitoring.svc.cluster.local:3100"
+      minimumpriority: "info"
+      tenant: "cerebro"
+
+  # Resource limits for Falcosidekick
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "2801"
+    prometheus.io/path: "/metrics"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DaemonSet configuration
+# ─────────────────────────────────────────────────────────────────────────────
+
+tolerations:
+  - effect: NoSchedule
+    operator: Exists
+  - effect: NoExecute
+    operator: Exists
+
+# Mount host paths required by Falco
+mounts:
+  volumeMounts:
+    - mountPath: /host/var/run/docker.sock
+      name: docker-socket
+      readOnly: true
+    - mountPath: /host/proc
+      name: proc-fs
+      readOnly: true
+    - mountPath: /var/log/falco
+      name: falco-log
+
+  volumes:
+    - name: docker-socket
+      hostPath:
+        path: /var/run/docker.sock
+    - name: proc-fs
+      hostPath:
+        path: /proc
+    - name: falco-log
+      hostPath:
+        path: /var/log/falco
+        type: DirectoryOrCreate
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RBAC — Falco needs access to K8s metadata for enrichment
+# ─────────────────────────────────────────────────────────────────────────────
+
+serviceAccount:
+  create: true
+  name: falco
+
+rbac:
+  create: true
+
+# Additional ClusterRole rules for metadata enrichment
+extraRbacRules:
+  - apiGroups: [""]
+    resources: [pods, namespaces, nodes, replicationcontrollers, serviceaccounts]
+    verbs: [get, list, watch]
+  - apiGroups: [apps]
+    resources: [daemonsets, deployments, replicasets, statefulsets]
+    verbs: [get, list, watch]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Resources
+# ─────────────────────────────────────────────────────────────────────────────
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PrometheusRule — Falco alert → Alertmanager routing
+# ─────────────────────────────────────────────────────────────────────────────
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: falco-alerts
+  namespace: falco
+  labels:
+    app.kubernetes.io/name: falco
+    prometheus: kube-prometheus
+    role: alert-rules
+spec:
+  groups:
+    - name: falco.cerebro.rules
+      interval: 30s
+      rules:
+        # Alert when Falco drops events (syscall buffer overflow)
+        - alert: FalcoDroppedEvents
+          expr: |
+            rate(falco_events_dropped_total[5m]) > 0
+          for: 2m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "Falco is dropping events"
+            description: >
+              Falco dropped {{ $value | humanize }} events/sec in the last 5 minutes.
+              Increase syscall_buf_size_preset or reduce event volume.
+
+        # Alert when Falco itself is not running on a node
+        - alert: FalcoNotRunning
+          expr: |
+            kube_daemonset_status_number_available{daemonset="falco", namespace="falco"}
+              / kube_daemonset_status_desired_number_scheduled{daemonset="falco", namespace="falco"} < 1
+          for: 5m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "Falco DaemonSet is not fully available"
+            description: >
+              Falco is not running on all nodes. Security monitoring coverage is incomplete.
+
+        # Alert on CRITICAL Falco rules firing (forwarded from Falcosidekick → Alertmanager)
+        - alert: CerebroFalcoCriticalAlert
+          expr: |
+            increase(falcosidekick_falco_events_total{priority="critical"}[5m]) > 0
+          for: 0m
+          labels:
+            severity: critical
+            team: security
+          annotations:
+            summary: "Critical Falco security alert firing"
+            description: >
+              {{ $value }} CRITICAL Falco events in the last 5 minutes.
+              Check Falco logs and Loki for details.
+              Runbook: https://wiki.cerebro-hive.io/runbooks/falco-critical
+
+---
+# NetworkPolicy — Falcosidekick egress to notification endpoints
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: falcosidekick-egress
+  namespace: falco
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: falcosidekick
+  policyTypes: [Egress]
+  egress:
+    # Alertmanager
+    - ports:
+        - protocol: TCP
+          port: 9093
+    # Loki
+    - ports:
+        - protocol: TCP
+          port: 3100
+    # Slack (HTTPS)
+    - ports:
+        - protocol: TCP
+          port: 443
+    # DNS
+    - ports:
+        - protocol: UDP
+          port: 53

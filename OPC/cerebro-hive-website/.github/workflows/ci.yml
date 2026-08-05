@@ -45,10 +45,36 @@ jobs:
       - name: Lint (Turborepo)
         run: pnpm turbo lint --color
 
+      # Confirmed gap (2026-08-01): `pnpm-workspace.yaml` only declares
+      # apps/*, packages/*, packages/capabilities/*, services/* as workspace
+      # packages. The root-level Next.js app (app/, components/, lib/, its
+      # own tsconfig.json) is NOT a workspace package, and Turborepo does not
+      # include the root package in `turbo typecheck`/`turbo lint` above —
+      # so a type error introduced there was previously invisible to CI.
+      # This step runs the root's own tsconfig.json directly, matching what
+      # `pnpm typecheck:root` runs locally (see root package.json).
+      - name: Typecheck root Next.js app (not a Turborepo workspace package)
+        run: pnpm exec tsc -p tsconfig.json --noEmit
+
+      # Lint the root Next.js app (app/, components/, lib/). Same gap as the
+      # typecheck step above: turbo lint only covers workspace packages. Config
+      # is eslint.config.mjs at repo root; ignores apps/**, packages/**, etc.
+      # so this does not double-lint packages that have their own configs.
+      - name: Lint root Next.js app (not a Turborepo workspace package)
+        run: pnpm lint:root
+
       # Catches the two silent SEO failures: a page that exists but is absent
       # from the sitemap, and a sitemap entry whose page has been deleted.
       - name: Sitemap drift check
         run: pnpm sitemap:check
+
+      # Enforces monorepo conventions on every workspace package:
+      # - tsconfig.json present → "typecheck" script required
+      # - eslint config present → "lint" script required
+      # - vitest/jest config present → "test" script required
+      # - "typecheck" value must use canonical form
+      - name: Repository policy check
+        run: pnpm repo:policy
 
   # ── Job 2: Unit Tests ─────────────────────────────────────────────────────
   unit-tests:

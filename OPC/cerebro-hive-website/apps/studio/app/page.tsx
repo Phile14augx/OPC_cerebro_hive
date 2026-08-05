@@ -15,21 +15,21 @@ import { ExecutiveDecisionPlatform } from "@/components/home/v4-os/ExecutiveDeci
 import { HomeFaq } from "@/components/home/HomeFaq";
 
 export const metadata: Metadata = {
-  title: "CerebroHive — Enterprise AI Systems & Transformation",
+  title: "CerebroHive — Enterprise Intelligence Operating System (EIOS)",
   description:
-    "CerebroHive architects enterprise AI systems — AI Strategy, Platform Engineering, AI Agents, RAG, Knowledge Engineering, AI Governance, and AI Education. Serving 16+ industries worldwide.",
+    "CerebroHive is the Enterprise Intelligence Operating System (EIOS) — a complete AI-native ecosystem spanning infrastructure, development platforms, safety, and business applications.",
   keywords: [
-    "enterprise AI", "AI transformation", "AI consulting", "AI agents",
+    "enterprise AI", "EIOS", "Enterprise Intelligence Operating System", "AI transformation", "AI consulting", "AI agents",
     "retrieval augmented generation", "RAG", "LLM", "MLOps", "AI governance",
     "HivePulse", "Cerebro X", "knowledge engineering", "AI platform",
     "AI strategy", "multi-agent systems", "MCP", "AI education",
   ],
   alternates: { canonical: "https://cerebropchive.org" },
   openGraph: {
-    title: "CerebroHive — Enterprise AI Systems & Transformation",
+    title: "CerebroHive — Enterprise Intelligence Operating System (EIOS)",
     description: "Enterprise AI systems that transform how organizations operate, learn, and grow.",
     url: "https://cerebropchive.org",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "CerebroHive — Enterprise AI Systems" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "CerebroHive — EIOS" }],
   },
 };
 

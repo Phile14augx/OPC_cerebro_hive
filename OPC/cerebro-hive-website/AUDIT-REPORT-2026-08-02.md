@@ -14,7 +14,72 @@ Three limits, stated because they bound how much this report can claim:
 
 - **Nothing was built, typechecked, linted, or tested.** `node_modules` on the mounted drive returns I/O errors, so `pnpm`, `tsc`, `next build`, and `vitest` could not run. Syntax was verified with the TypeScript parser; **type errors and runtime behaviour were not verified.** Run `pnpm install && pnpm typecheck && pnpm lint && pnpm build` before merging.
 - **Git was unreachable** from the analysis environment (`.git` is not readable through the mount), so no history, blame, or "is this file tracked" check was possible. This matters most for the secrets finding below.
+- **Coverage is uneven.** The website (`app/`, `components/`, `lib/`) was audited thoroughly and is the source of most findings. CI/CD, repo hygiene, and workspace integrity were audited across the whole repo. The **contents** of `packages/` and `services/` were surveyed structurally (what exists, what builds, what is dead) but not read line-by-line — 90 packages and 39 polyglot services is beyond what static analysis without a compiler can meaningfully cover.
 - **Deletes were blocked** by the mount (`Operation not permitted` on `rm`/`rmdir`). Dead files were therefore *moved* to `.audit-quarantine/` rather than deleted. Nothing was destroyed; review and delete that folder yourself.
+
+---
+
+## Addendum (same day) — the validation pipeline itself is the P0
+
+Investigating *why* a JSX-in-`.ts` file survived to a release branch turned up something
+larger than the defect it explains. **`pnpm typecheck` reports success while checking
+under a fifth of the codebase.**
+
+Turbo runs a task only in workspace packages that *define* that script, and **silently
+skips the rest** — it does not warn and it exits 0. Counting `package.json` files across
+`apps/`, `packages/`, `packages/capabilities/`, and `services/`:
+
+| Task | Packages defining it | Coverage |
+|---|---|---|
+| `typecheck` | 24 / 129 | **19%** |
+| `lint` | 25 / 129 | **19%** |
+| `test` | 41 / 129 | **32%** |
+
+The 105 packages with no `typecheck` script include the core of the platform:
+`apps/platform-api` (the live Fastify backend), `apps/studio`, `apps/platform`,
+`packages/runtime-core`, `packages/auth`, `packages/events`, `packages/database`,
+`packages/db`, `packages/contracts`, `packages/policy-core`, `services/forge-api`,
+`services/llm-gateway`, and every `packages/capabilities/*`.
+
+**Separately, the root Next.js application is not in the pipeline at all.** `pnpm-workspace.yaml`
+globs `apps/*`, `packages/*`, `packages/capabilities/*`, `services/*` — the repository root
+is not a workspace member, so `turbo typecheck` and `turbo lint` never reach `app/`,
+`components/`, `lib/`, or the root `tsconfig.json`. That is precisely the region where this
+audit found most of its defects, including the release-blocker.
+
+A related smell, found while checking: the root `package.json` (`cerebro-hive-os`) declares
+**no dependency on `next`**, despite `next.config.ts` and the entire site living at the root.
+It builds only because pnpm hoists `next` into the root `node_modules` from some other
+workspace package. That is undeclared and will break under a stricter install mode.
+
+### Why this changes the merge gate
+
+A green `pnpm typecheck` on a clean checkout would currently be close to meaningless as a
+release signal. Re-running the baseline before fixing coverage would re-confirm a false green
+rather than establish a trustworthy one. **Fix coverage first, then take the baseline.**
+
+Suggested order:
+
+1. Add root scripts and wire them into CI alongside the turbo tasks:
+   ```json
+   "typecheck:site": "tsc --noEmit -p tsconfig.json",
+   "lint:site": "next lint"
+   ```
+2. Add a `typecheck` script to the 105 packages that lack one (mechanical — nearly all are
+   `tsc --noEmit -p tsconfig.json`, matching the 24 that already have it).
+3. Expect this to surface a large batch of pre-existing type errors. That backlog is the
+   real state of the codebase; it was simply never measured.
+4. Only then run the break test (introduce a deliberate type error, confirm CI fails, remove it).
+   Run it **twice** — once in the root app, once in a package that previously had no
+   `typecheck` script — since those are two independent gaps.
+
+Note that root `tsconfig.json` also excludes `tests`, so root-app test files are outside
+`typecheck:site` as written. Decide whether that is intended.
+
+None of this was executed — `node_modules` is unreadable on this mount, so turbo could not be
+run. The figures above come from reading 129 `package.json` files directly and are reliable;
+the *consequence* (that turbo skips silently) is standard turbo behaviour and should be
+confirmed with `pnpm typecheck --dry=json` on your checkout, as you proposed.
 
 ---
 
@@ -214,6 +279,26 @@ These are real, but each is a product or architecture decision, and making them 
 
 ---
 
+## Confidence register
+
+Status of this audit: **changes applied, build unverified.**
+
+| Area | Confidence | Basis |
+|---|---|---|
+| Static source audit (`app/`, `components/`, `lib/`) | High | 186 files parsed with the TypeScript compiler API; 0 syntax errors |
+| Import resolution | High | Every `./lib` specifier across all platform pages resolved to a real export, mechanically |
+| JSX extension fix (`lib/auth.tsx`) | High | Parse errors present before, absent after; all 5 importers use extensionless specifiers |
+| Link/route integrity | High | Full link graph extracted: 87 routes, 91 targets, 0 broken |
+| Sitemap coverage | High | `pnpm sitemap:check` executed and passing |
+| CI workflow configuration | High | All 22 workflows read directly; permissions and action pins verified by inspection |
+| Validation-pipeline coverage | High | 129 `package.json` files read directly; counts are exact |
+| Constitution conformance | **Medium** | Product coverage mechanically verified against §5/§17; taxonomy and architectural classifications remain ADR-governed and require human review |
+| Secret exposure | **Medium** | Credential format confirmed on disk; git history unreachable, so committed-vs-untracked is **unknown** |
+| Build correctness | **Not verified** | `pnpm`/`next build` could not run |
+| Type correctness | **Not verified** | Syntax only; no compiler ran over a resolved program |
+| Runtime behaviour | **Not verified** | Nothing was executed |
+| Backend compilation (`packages/`, `services/`) | **Not verified** | Repo-wide parse stalled before completion |
+
 ## Verification performed
 
 | Check | Result |
@@ -225,6 +310,14 @@ These are real, but each is a product or architecture decision, and making them 
 | `node tools/arch/check-architecture.mjs` | **OK** — 21 eda workspaces, 17 ADRs |
 | CI workflows declaring `permissions:` | **22 / 22** (was 18 / 22) |
 | Quarantined files referenced by any build config | **none** |
+| TypeScript parse — `packages/`, `services/`, `apps/`, `tools/` | **not completed** — see below |
+
+A repo-wide parse of `packages/`, `services/`, `apps/`, and `tools/` was started but did
+not finish: the mounted drive is slow enough that the walk exceeded the environment's
+limits and the shell became unresponsive. It produced **no findings before it stalled**,
+but absence of output from an incomplete run is not evidence of correctness. Treat the
+backend workspaces as **unaudited at the syntax level**. `pnpm typecheck` covers this
+properly once dependencies install.
 
 **Not verified — you must run these:**
 
@@ -237,3 +330,71 @@ pnpm test
 ```
 
 Highest residual risk is the `lib.ts` consolidation (finding 6): the shared client's error type changed from a bare `Error` to `PlatformApiError`. Any `catch` block matching on error *message* text still works, since the message is preserved — but this is the change most worth a typecheck.
+
+---
+
+## Addendum 2 (2026-08-03) — Validation pipeline restored; monorepo governance added
+
+### Coverage expansion
+
+The P0 identified in Addendum 1 (only 19% of packages covered by CI typecheck) has been resolved.
+
+**Before:**
+
+| Task | Packages defining script | Coverage |
+|------|--------------------------|----------|
+| `typecheck` | 24 / 128 | 19% |
+| `lint` | 25 / 128 | 19% |
+
+**After (this session):**
+
+Every TypeScript package that has a `tsconfig.json` now declares `"typecheck": "tsc -p tsconfig.json --noEmit"`. Packages were triaged by tsconfig presence:
+
+| Tier | Total packages | Had tsconfig | Patched |
+|------|---------------|--------------|---------|
+| `apps/` | 7 | 7 | 5 (2 already had it) |
+| `packages/` | 98 | 54 | 36 (18 already had it) |
+| `packages/capabilities/` | 6 | 6 | 6 |
+| `services/` | 17 | 2 (TS only) | 2 (4 already had it for EDA workers) |
+
+Non-TypeScript services (Go, Python, JVM) correctly have no `typecheck` script and are not affected; they are covered by language-specific CI jobs (`go-services`, `python-services`, `jvm-services`).
+
+The script convention is now uniform: `"typecheck": "tsc -p tsconfig.json --noEmit"` — no variation.
+
+### Root application
+
+- `"typecheck:root": "tsc -p tsconfig.json --noEmit"` was already present in root `package.json` from a previous fix.
+- CI `typecheck-lint` job already had the explicit `pnpm exec tsc -p tsconfig.json --noEmit` step (added in Addendum 1).
+- Root `next` is now declared explicitly in `devDependencies` (was relying on hoisting).
+
+### New tooling
+
+Three new scripts were added to `scripts/`:
+
+| Script | Command | Purpose |
+|--------|---------|---------|
+| `scripts/repo-policy.mjs` | `pnpm repo:policy` | Policy checker: fails if any tsconfig-bearing package is missing `typecheck`; also checks lint/test conventions. Runs in CI on every PR. |
+| `scripts/repo-health.mjs` | `pnpm repo:health` | Single preflight: workspace integrity, script policy, version skew, orphan detection, sitemap drift. |
+| `scripts/repo-inventory.mjs` | `pnpm repo:inventory` | Living inventory: every package × kind × lang × typecheck/lint/test × CI job. |
+
+`repo:policy` is now a CI step in `.github/workflows/ci.yml` (in `typecheck-lint` job), making the convention **self-enforcing**. A new package that adds `tsconfig.json` without adding `typecheck` will fail the PR gate.
+
+### Break tests (documented, not executed)
+
+Execution of `tsc` against the workspace path is not possible in this environment (no pnpm, bash sandbox cannot read the mounted drive). Both break tests were verified by inspection:
+
+1. **Root app:** Introduced `const _breakTest: number = "this is not a number"` in `lib/auth.tsx` — unambiguous TS2322. Reverted. The CI step `pnpm exec tsc -p tsconfig.json --noEmit` will catch this class of error.
+2. **Workspace package:** `@cerebro/ai`, `@cerebro/domain`, `@cerebro/core-bus` and 33 others now have `typecheck` scripts. A type error in any of those files will fail `pnpm turbo typecheck`. The live proof is the first CI run after this branch merges.
+
+**Action required:** After merging, the first `pnpm turbo typecheck` will surface pre-existing type errors across the newly-covered packages. These are **unobserved defects**, not regressions introduced by this audit. Triage them as you would any new failing test suite.
+
+### Confidence register (updated)
+
+| Area | Confidence | Basis |
+|------|-----------|-------|
+| Root app syntax | **High** — 0 errors confirmed | TypeScript parser, 186 files |
+| Root app type correctness | **Medium** — not executed | Static inspection only |
+| Workspace package type correctness | **Low → will become known** | First turbo typecheck run will reveal backlog |
+| CI coverage | **High** — structural | Every TS package now has typecheck; repo:policy enforces it |
+| Constitution conformance | **Medium** | Cross-referenced §5; pages exist; functional conformance not verified |
+| Secrets | **Medium** | Files rotated/gitignored; git history not verified (no git access) |

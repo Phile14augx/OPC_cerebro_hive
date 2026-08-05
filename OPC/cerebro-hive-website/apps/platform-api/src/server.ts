@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { bootstrap } from './bootstrap';
 
-import { AgentRepository, IdempotencyRepository, OutboxRepository, AuditRepository, WorkspaceRepository, PrismaUnitOfWork } from '@cerebro/database';
+import { AgentRepository, AgentConversationRepository, IdempotencyRepository, OutboxRepository, AuditRepository, WorkspaceRepository, PrismaUnitOfWork } from '@cerebro/database';
 import { AgentApplicationService, UnitOfWork, OutboxPublisher, AuditLogger, PolicyEngine, AgentValidator } from '@cerebro/domain';
 import { AgentBuilderCapability, AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
 import { createGateway } from '@cerebro/ai-gateway';
@@ -10,12 +10,23 @@ import { CommandBus, QueryBus, DomainEventBus } from '@cerebro/core-bus';
 import { CreateAgentCommand } from './modules/agents/agents.commands';
 import { CreateAgentCommandHandler } from './modules/agents/agents.handlers';
 
+import { PrismaExecutionStore } from '@cerebro/database';
+import { ExecutionManager } from '@cerebro/runtime-core/src/execution/ExecutionManager';
+import { ExecutionReplayService } from '@cerebro/runtime-core/src/execution/ExecutionReplayService';
+import { ExecutionIdempotencyGuard } from '@cerebro/runtime-core/src/execution/ExecutionIdempotency';
+import { ExecutionOutbox } from '@cerebro/runtime-core/src/execution/ExecutionOutbox';
+
+import { ExecutionCommandHandler } from '@cerebro/runtime-core/src/execution/commands/ExecutionCommandHandler';
+import { StartExecutionValidator, ResumeExecutionValidator, CancelExecutionValidator } from '@cerebro/runtime-core/src/execution/commands/ExecutionValidator';
+import { ExecutionRuntimeKernel } from '@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel';
+
 async function main() {
   // 1. Database
   const prisma = new PrismaClient();
 
   // 2. Repositories
   const agentRepo = new AgentRepository(prisma);
+  const agentConversationRepo = new AgentConversationRepository(prisma);
   const outboxRepo = new OutboxRepository(prisma);
   const auditRepo = new AuditRepository(prisma);
   const idempotencyRepo = new IdempotencyRepository(prisma);
@@ -52,6 +63,55 @@ async function main() {
   const toolRuntime = new ToolRuntime(toolRegistry);
   const agentRuntimeService = new AgentRuntimeService();
 
+  // 4c. Register built-in tools.
+  // Proof-of-concept: current_time. More tools will be added as real
+  // capabilities are implemented — this exists to verify the full
+  // tool-calling pipeline (model → gateway → runtime → executor → loop).
+  toolRegistry.register(
+    {
+      id: 'current-time',
+      name: 'current_time',
+      description: 'Returns the current date and time in ISO 8601 format. Use this when the user asks about the current time, date, or needs temporal context.',
+      version: '1.0.0',
+      executionMode: 'sync',
+      permissions: [],
+      timeoutMs: 5000,
+      retryPolicy: { maxRetries: 0, backoffFactor: 1 },
+      inputSchema: { type: 'object', properties: {}, required: [] },
+      outputSchema: { type: 'object', properties: { time: { type: 'string' } } },
+    },
+    { execute: async () => ({ time: new Date().toISOString() }) }
+  );
+
+  // 4d. P5 Durable Execution Components
+  const executionStore = new PrismaExecutionStore(prisma);
+  const executionReplayService = new ExecutionReplayService(executionStore);
+  const executionIdempotencyGuard = new ExecutionIdempotencyGuard(executionStore);
+  
+  // Dummy Outbox implementation for now (to be replaced by PrismaExecutionOutbox)
+  const dummyOutbox: ExecutionOutbox = {
+    publish: async () => {},
+    fetchPending: async () => [],
+    markSent: async () => {},
+    markFailed: async () => {}
+  };
+
+  const executionManager = new ExecutionManager(
+    executionStore,
+    executionReplayService,
+    executionIdempotencyGuard,
+    dummyOutbox,
+    null as any, // llmProvider to be resolved from registry
+    null as any  // toolProvider to be resolved from registry
+  );
+
+  const commandHandler = new ExecutionCommandHandler(executionManager);
+  commandHandler.registerValidator('StartExecutionCommand', new StartExecutionValidator());
+  commandHandler.registerValidator('ResumeExecutionCommand', new ResumeExecutionValidator());
+  commandHandler.registerValidator('CancelExecutionCommand', new CancelExecutionValidator());
+
+  const executionKernel = new ExecutionRuntimeKernel(commandHandler);
+
   // 5. Message Buses
   const commandBus = new CommandBus();
   const queryBus = new QueryBus();
@@ -64,10 +124,15 @@ async function main() {
   const server = await bootstrap(commandBus, {
     agentRuntimeService,
     agentRepository: agentRepo,
+    agentConversationRepository: agentConversationRepo,
     workspaceRepository: workspaceRepo,
     aiGateway,
     toolRuntime,
     toolRegistry,
+    unitOfWork: uow,
+    executionKernel,
+    executionStore,
+    executionReplayService,
   });
 
   try {
@@ -87,3 +152,4 @@ async function main() {
 }
 
 main();
+

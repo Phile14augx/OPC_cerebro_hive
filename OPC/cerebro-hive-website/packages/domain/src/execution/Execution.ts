@@ -107,6 +107,7 @@ export interface ExecutionProps {
  * pattern `WorkflowApplicationService` already uses — it does not publish it
  * itself; that wiring is Phase 9e's). `09-EXECUTION-LIFECYCLE-RUNTIME.md` §9c
  * is the orchestrator that will actually drive this aggregate end to end.
+ * @deprecated This Phase 9 implementation is being superseded by Phase P5 Durable Event Sourcing in `packages/runtime-core/src/execution/`. Use `ExecutionManager` and `ExecutionEvent` instead.
  */
 export class Execution {
   private constructor(private props: ExecutionProps) {}

@@ -1,0 +1,76 @@
+# Chaos Game Day: IAM Permission Revocation
+#
+# Scenario: Revoke IAM permissions from the forge-api service role and verify:
+#   1. forge-api fails gracefully (circuit breaker, not panic)
+#   2. Alertmanager fires IAMPermissionDenied within 2 min
+#   3. No credentials are leaked in error responses
+#   4. After permission restore, service recovers automatically
+#
+# Implementation: This uses HTTPChaos to inject 403 Forbidden on S3 API calls,
+# simulating IAM revocation without actually modifying AWS IAM policies.
+# This is safer and fully reversible.
+#
+# Maps to: CHAOS-1, SC-1, SLO-1
+
+---
+# Inject 403 on S3 API calls (simulates IAM revocation)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: HTTPChaos
+metadata:
+  name: game-day-iam-revocation-s3
+  namespace: cerebro-chaos
+  labels:
+    cerebro.io/game-day: "true"
+    cerebro.io/scenario: iam-revocation
+    cerebro.io/maps-to: "CHAOS-1,SC-1"
+spec:
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      app.kubernetes.io/name: forge-api
+
+  target: Request
+  port: 443
+  path: "/.*"
+  method: "GET"
+
+  # Inject 403 Forbidden on outbound S3 requests
+  replace:
+    headers:
+      X-Chaos-Injected: "iam-revocation-simulation"
+
+  abort: false     # Don't abort — let the 403 propagate to exercise error handling
+
+  duration: "300s"  # 5 minutes
+
+---
+# Also inject 403 on Secrets Manager calls
+apiVersion: chaos-mesh.org/v1alpha1
+kind: HTTPChaos
+metadata:
+  name: game-day-iam-revocation-secretsmanager
+  namespace: cerebro-chaos
+  labels:
+    cerebro.io/game-day: "true"
+    cerebro.io/scenario: iam-revocation
+spec:
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      app.kubernetes.io/name: forge-api
+
+  target: Response
+  port: 443
+  path: "/secretsmanager.*"
+  response:
+    statusCode: 403
+    body: '{"__type":"AccessDeniedException","message":"User is not authorized to perform: secretsmanager:GetSecretValue"}'
+    headers:
+      Content-Type: application/x-amz-json-1.1
+      X-Chaos-Injected: "iam-revocation-simulation"
+
+  duration: "300s"

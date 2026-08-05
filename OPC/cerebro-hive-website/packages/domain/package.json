@@ -6,11 +6,12 @@
   "types": "./index.ts",
   "scripts": {
     "lint": "eslint \"**/*.ts*\"",
-    "test": "vitest run"
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@cerebro/database": "workspace:*",
-    "@prisma/client": "^5.22.0"
+    "@prisma/client": "^7.9.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

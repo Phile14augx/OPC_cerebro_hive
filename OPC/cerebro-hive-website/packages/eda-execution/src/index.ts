@@ -1,2 +1,2 @@
 export * from "./execution-provider.js";
-export * from "./index.js";
+export * from "./local-provider.js";

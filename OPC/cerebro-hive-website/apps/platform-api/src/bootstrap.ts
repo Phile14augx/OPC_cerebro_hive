@@ -8,7 +8,7 @@ import { requestContextHook } from './middleware/RequestContextMiddleware';
 import { requireAuthHook } from './middleware/AuthMiddleware';
 import { createRequireWorkspaceAccessHook } from './middleware/WorkspaceAccessMiddleware';
 import { onRequestLog, onSendLog } from './middleware/RequestLogger';
-import type { WorkspaceRepository } from '@cerebro/database';
+import type { WorkspaceRepository, AgentConversationRepository, PrismaUnitOfWork } from '@cerebro/database';
 import { ErrorMapper } from './errors/ErrorMapper';
 import agentRoutes from './modules/agents/agents.routes';
 import workflowsRoutes from './modules/workflows/workflows.routes';
@@ -26,14 +26,23 @@ import type { AIGateway } from '@cerebro/ai-gateway';
 import { ExecutionOrchestrator, InMemoryExecutionRepository } from '@cerebro/domain';
 import { AgentExecutionProvider } from './modules/runtime/AgentExecutionProvider';
 import { ExecutionRuntimeService } from './modules/runtime/ExecutionRuntimeService';
+import executionsRoutes from './modules/executions/executions.routes';
+import type { ExecutionRuntimeKernel } from '@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel';
+import type { ExecutionStore } from '@cerebro/runtime-core/src/execution/ExecutionStore';
+import type { ExecutionReplayService } from '@cerebro/runtime-core/src/execution/ExecutionReplayService';
 
 export interface BootstrapDeps {
   agentRuntimeService: AgentRuntimeService;
   agentRepository: AgentRepository;
+  agentConversationRepository: AgentConversationRepository;
   workspaceRepository: WorkspaceRepository;
   aiGateway: AIGateway;
   toolRuntime: ToolRuntime;
   toolRegistry: ToolRegistry;
+  unitOfWork: PrismaUnitOfWork;
+  executionKernel: ExecutionRuntimeKernel;
+  executionStore: ExecutionStore;
+  executionReplayService: ExecutionReplayService;
 }
 
 export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
@@ -120,12 +129,20 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
     protectedApi.register(workflowsRoutes, { prefix: '/api/v1/workflows' });
     protectedApi.register(telemetryRoutes, { prefix: '/api/v1/telemetry' });
     protectedApi.register(runtimeRoutes, { prefix: '/api/v1/runtime', executionRuntimeService });
+    protectedApi.register(executionsRoutes, { 
+      prefix: '/api/v1/executions',
+      executionKernel: deps.executionKernel,
+      executionStore: deps.executionStore,
+    });
     protectedApi.register(conversationsRoutes, {
       prefix: '/api/v1/conversations',
       agentRuntimeService: deps.agentRuntimeService,
       agentRepository: deps.agentRepository,
+      agentConversationRepository: deps.agentConversationRepository,
+      unitOfWork: deps.unitOfWork,
     });
   });
 
   return server;
 }
+

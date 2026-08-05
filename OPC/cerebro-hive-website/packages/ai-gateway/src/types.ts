@@ -4,9 +4,34 @@
 
 export type ProviderName = 'anthropic' | 'openai' | 'google' | 'azure' | 'ollama';
 
+// ─── Tool-Calling Contract ───────────────────────────────────────────────────
+// Provider-agnostic abstraction: callers declare tools via ToolDefinition,
+// providers translate to/from their native format (Anthropic tool_use, OpenAI
+// function calling). Adding a new provider never changes the runtime.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Declares a tool the model may call. Schema follows JSON Schema. */
+export interface ToolDefinition {
+  name: string;
+  description: string;
+  inputSchema: Record<string, any>;
+}
+
+/** A tool invocation requested by the model. */
+export interface ToolCall {
+  id: string;
+  name: string;
+  /** JSON-encoded arguments string — all providers return this form. */
+  arguments: string;
+}
+
 export interface ChatMessage {
-  role: 'system' | 'user' | 'assistant';
+  role: 'system' | 'user' | 'assistant' | 'tool';
   content: string;
+  /** Present when role='assistant' and the model wants to call tools. */
+  toolCalls?: ToolCall[];
+  /** Present when role='tool' — ties the result back to the originating call. */
+  toolCallId?: string;
 }
 
 export interface ChatRequest {
@@ -17,6 +42,10 @@ export interface ChatRequest {
   temperature?: number;
   topP?: number;
   stream?: boolean;
+  /** Tool definitions the model may call. Omit or [] for no tools. */
+  tools?: ToolDefinition[];
+  /** Controls model tool-calling behavior. */
+  toolChoice?: 'auto' | 'none' | 'required' | { name: string };
   /** Org-level context for cost attribution and rate limiting */
   organizationId?: string;
   workflowId?: string;
@@ -30,6 +59,8 @@ export interface ChatResponse {
   content: string;
   model: string;
   provider: ProviderName;
+  /** Tool calls the model wants executed. Non-empty iff finishReason='tool_use'. */
+  toolCalls?: ToolCall[];
   usage: {
     inputTokens: number;
     outputTokens: number;
@@ -43,7 +74,7 @@ export interface ChatResponse {
   durationMs: number;
   ttftMs?: number;
   cached: boolean;
-  finishReason: 'stop' | 'max_tokens' | 'error' | 'cancelled';
+  finishReason: 'stop' | 'max_tokens' | 'tool_use' | 'error' | 'cancelled';
 }
 
 export interface StreamChunk {
