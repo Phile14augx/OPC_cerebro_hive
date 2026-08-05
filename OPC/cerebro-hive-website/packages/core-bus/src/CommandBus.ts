@@ -1,4 +1,4 @@
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 import { Result } from '@cerebro/domain';
 import { Command, ICommandHandler } from './Command';
 import { IMiddleware, MiddlewareNext } from './Middleware';

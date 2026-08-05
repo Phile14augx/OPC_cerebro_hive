@@ -1,4 +1,4 @@
-import { Workspace } from '@prisma/client';
+import { Workspace } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 export interface CreateWorkspaceInput {

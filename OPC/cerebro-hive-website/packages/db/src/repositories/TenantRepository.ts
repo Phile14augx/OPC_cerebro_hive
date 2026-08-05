@@ -1,4 +1,4 @@
-import { Tenant } from '@prisma/client';
+import { Tenant } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 export interface CreateTenantInput {

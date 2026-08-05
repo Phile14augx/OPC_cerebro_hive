@@ -1,7 +1,7 @@
 import { Execution, ExecutionCancellationSignal, ExecutionProviderPort, ExecutionProviderResult } from '@cerebro/domain';
 import type { AgentExecutionContext } from '@cerebro/domain';
 import type { AgentRuntimeService } from '@cerebro/agent-builder-capability';
-import type { AgentRepository } from '@cerebro/database';
+import type { AgentRepository } from '@cerebro/db';
 
 /**
  * Phase 10.1 — the real bridge between Phase 9's `ExecutionOrchestrator`

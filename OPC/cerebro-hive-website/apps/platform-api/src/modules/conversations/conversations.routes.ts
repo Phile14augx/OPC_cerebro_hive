@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import { Type } from '@sinclair/typebox';
 import { AgentRuntimeService } from '@cerebro/agent-builder-capability';
-import { AgentRepository, AgentConversationRepository, PrismaUnitOfWork } from '@cerebro/database';
+import { AgentRepository, AgentConversationRepository, PrismaUnitOfWork } from '@cerebro/db';
 import { AgentExecutionContext } from '@cerebro/domain';
 import { requirePermission } from '../../middleware/AuthMiddleware';
 

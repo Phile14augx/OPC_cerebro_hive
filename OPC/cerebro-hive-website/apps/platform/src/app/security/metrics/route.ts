@@ -147,7 +147,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-export const config = {
-  matcher: ["/security/metrics"],
-};
+

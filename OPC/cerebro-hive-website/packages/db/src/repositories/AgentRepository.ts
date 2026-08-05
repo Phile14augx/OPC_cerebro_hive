@@ -1,4 +1,4 @@
-import { Agent, AgentVersion, Prisma } from '@prisma/client';
+import { Agent, AgentVersion, Prisma } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 export interface CreateAgentInput {

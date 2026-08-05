@@ -1,4 +1,4 @@
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 import { DomainEvent, IntegrationEvent, IEventHandler } from './Event';
 
 export class DomainEventBus {

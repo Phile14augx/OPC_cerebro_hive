@@ -1,5 +1,5 @@
 import { Query, IQueryHandler } from '@cerebro/core-bus';
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 import { Result } from '@cerebro/domain';
 import { AgentQueryRepository } from './AgentQueryRepository';
 

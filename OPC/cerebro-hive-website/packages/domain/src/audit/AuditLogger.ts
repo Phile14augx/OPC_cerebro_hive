@@ -1,4 +1,4 @@
-import { AuditRepository, RequestContext } from '@cerebro/database';
+import { AuditRepository, RequestContext } from '@cerebro/db';
 import { ITransactionContext } from '../transactions/UnitOfWork';
 
 export class AuditLogger {

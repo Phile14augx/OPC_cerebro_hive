@@ -1,4 +1,4 @@
-import { OutboxRepository, RequestContext } from '@cerebro/database';
+import { OutboxRepository, RequestContext } from '@cerebro/db';
 import { HiveEventBus } from '@cerebro/domain-model';
 import { HiveEventEnvelope } from '@cerebro/domain-model';
 import { DomainEvent } from './DomainEvent';

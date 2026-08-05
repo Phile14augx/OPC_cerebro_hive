@@ -1,4 +1,4 @@
-import { IdempotencyRecord } from '@prisma/client';
+import { IdempotencyRecord } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 export interface CreateIdempotencyRecordInput {

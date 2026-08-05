@@ -31,6 +31,7 @@ export class ExecutionStateMachine {
     FAILED: [],
     CANCELLED: [],
     TIMED_OUT: [],
+    POISONED: [],
   };
 
   /**

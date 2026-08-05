@@ -1,4 +1,4 @@
-import { WorkflowRepository, RequestContext, IdempotencyRepository } from '@cerebro/database';
+import { WorkflowRepository, RequestContext, IdempotencyRepository } from '@cerebro/db';
 import { UnitOfWork } from '../transactions/UnitOfWork';
 import { OutboxPublisher } from '../events/OutboxPublisher';
 import { AuditLogger } from '../audit/AuditLogger';

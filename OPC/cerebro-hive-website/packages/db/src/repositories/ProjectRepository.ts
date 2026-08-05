@@ -1,4 +1,4 @@
-import { Project } from '@prisma/client';
+import { Project } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 export class ProjectRepository extends BaseRepository {

@@ -1,5 +1,5 @@
 import { WorkflowApplicationService, Result } from '@cerebro/domain';
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 
 export class WorkflowRuntime {
   constructor(private readonly workflowAppService: WorkflowApplicationService) {}

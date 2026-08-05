@@ -10,17 +10,17 @@ import { ITransactionContext } from '../transactions/UnitOfWork';
  * `packages/domain/src/execution/InMemoryExecutionRepository.ts` (Phase 9d,
  * reconciled to this contract post-9d) is the first real implementation —
  * standalone, not backed by
- * `@cerebro/database`'s live Prisma schema. Whether/how to migrate
+ * `@cerebro/db`'s live Prisma schema. Whether/how to migrate
  * `WorkflowExecution`/`AgentExecution` onto this contract remains
  * undecided, per `ADR-039` decision 6, unchanged by this file.
  *
  * Uses this package's own opaque `ITransactionContext` (see
- * `transactions/UnitOfWork.ts`), NOT `@cerebro/database`'s Prisma-coupled
+ * `transactions/UnitOfWork.ts`), NOT `@cerebro/db`'s Prisma-coupled
  * `IRepositoryOptions` — the same "don't reach across a bounded-context
  * boundary for one type" reasoning already applied to `ExecutionId` staying
  * off `packages/domain-model`'s `Identifier<Brand>`. A concrete future
  * Prisma-backed implementation is free to accept a `PrismaTransactionClient`
- * cast out of this opaque marker, exactly as `@cerebro/database`'s
+ * cast out of this opaque marker, exactly as `@cerebro/db`'s
  * repositories already do with their own `tx` option — that is an
  * implementation-side decision, not part of this contract.
  *

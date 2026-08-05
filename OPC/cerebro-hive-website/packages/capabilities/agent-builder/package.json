@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@cerebro/domain": "workspace:*",
-    "@cerebro/database": "workspace:*",
+    "@cerebro/db": "workspace:*",
     "@cerebro/capability-contracts": "workspace:*",
     "@cerebro/runtime-core": "workspace:*"
   },

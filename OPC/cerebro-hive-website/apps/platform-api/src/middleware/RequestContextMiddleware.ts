@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from 'fastify';
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 
 declare module 'fastify' {
   interface FastifyRequest {

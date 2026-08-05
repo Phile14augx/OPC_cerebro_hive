@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from './src/generated/client';
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
@@ -6,7 +6,7 @@ export const prisma = globalForPrisma.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
-export * from '@prisma/client';
+export * from './src/generated/client';
 
 export * from './src/repositories/context';
 export * from './src/repositories/BaseRepository';
@@ -23,6 +23,7 @@ export * from './src/repositories/ProjectRepository';
 export * from './src/repositories/AuditRepository';
 export * from './src/repositories/OutboxRepository';
 export * from './src/repositories/IdempotencyRepository';
+export * from './src/repositories/ApiKeyRepository';
 export * from './src/transactions/PrismaUnitOfWork';
 
 

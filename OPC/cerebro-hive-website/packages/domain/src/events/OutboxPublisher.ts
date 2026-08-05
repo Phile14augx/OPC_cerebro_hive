@@ -1,4 +1,4 @@
-import { OutboxRepository, RequestContext } from '@cerebro/database';
+import { OutboxRepository, RequestContext } from '@cerebro/db';
 import { DomainEvent } from './DomainEvent';
 import { ITransactionContext } from '../transactions/UnitOfWork';
 

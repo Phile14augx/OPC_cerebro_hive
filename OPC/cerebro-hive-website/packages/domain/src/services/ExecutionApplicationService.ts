@@ -1,4 +1,4 @@
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 import { UnitOfWork } from '../transactions/UnitOfWork';
 import { OutboxPublisher } from '../events/OutboxPublisher';
 import { ExecutionRepository } from '../execution/ExecutionRepository';

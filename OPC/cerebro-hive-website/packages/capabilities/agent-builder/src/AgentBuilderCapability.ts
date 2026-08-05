@@ -1,5 +1,5 @@
 import { AgentApplicationService, Result, DomainError } from '@cerebro/domain';
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 import { IAgentBuilderCapability, PublishAgentInput } from '@cerebro/capability-contracts';
 
 export class AgentBuilderCapability implements IAgentBuilderCapability {

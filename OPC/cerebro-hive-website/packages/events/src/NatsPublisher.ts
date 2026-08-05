@@ -1,4 +1,4 @@
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 import { IntegrationEvent, IIntegrationEventPublisher } from '@cerebro/core-bus';
 import { connect, NatsConnection, StringCodec, JetStreamClient } from 'nats';
 import { EventEnvelope } from './EventEnvelope';

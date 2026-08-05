@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/client';
 import { ExecutionStore, ExecutionRecord } from '@cerebro/runtime-core/src/execution/ExecutionStore';
-import { ExecutionEvent } from '@cerebro/runtime-core/src/execution/ExecutionEvent';
-import { ExecutionSnapshot } from '@cerebro/runtime-core/src/execution/ExecutionSnapshot';
+import { ExecutionEvent } from '@cerebro/runtime-contracts/src/events/ExecutionEvent';
+import { ExecutionSnapshot } from '@cerebro/runtime-contracts/src/snapshots/ExecutionSnapshot';
 import { ExecutionCheckpoint } from '@cerebro/runtime-core/src/execution/ExecutionCheckpoint';
 import { ExecutionState } from '@cerebro/runtime-core/src/execution/ExecutionStateMachine';
 
@@ -19,12 +19,14 @@ export class PrismaExecutionStore implements ExecutionStore {
         completedAt: execution.completedAt,
         metadata: execution.metadata ? (execution.metadata as any) : undefined,
         version: 1, // Start at version 1
+        traceId: execution.id,
       },
     });
 
     return {
       ...record,
       status: record.status as ExecutionState,
+      completedAt: record.completedAt ?? undefined,
       metadata: record.metadata as any,
     };
   }
@@ -111,6 +113,7 @@ export class PrismaExecutionStore implements ExecutionStore {
       schemaVersion: r.schemaVersion,
       payload: r.payload as any,
       occurredAt: r.occurredAt,
+      tenantId: (r as any).tenantId || 'default',
     }));
   }
 
@@ -140,6 +143,8 @@ export class PrismaExecutionStore implements ExecutionStore {
       sequence: record.sequence,
       createdAt: record.createdAt,
       state: record.state as any,
+      tenantId: (record as any).tenantId || 'default',
+      aggregateVersion: (record as any).aggregateVersion || Number(record.sequence),
     };
   }
 

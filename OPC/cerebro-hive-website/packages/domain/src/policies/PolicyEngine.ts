@@ -1,4 +1,4 @@
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 import { Decision, IPermissionPolicy } from './Decision';
 
 export class PolicyEngine {

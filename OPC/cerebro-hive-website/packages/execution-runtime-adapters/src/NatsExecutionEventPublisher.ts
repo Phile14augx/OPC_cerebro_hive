@@ -24,7 +24,7 @@ import { NatsIntegrationEventPublisher } from '@cerebro/events';
  *
  * VERIFICATION BOUNDARY (see `ADR-046`, honestly disclosed, not glossed
  * over): `@cerebro/events` transitively depends on `@cerebro/core-bus` and
- * `@cerebro/database`, and `@cerebro/database` depends on a `@prisma/client`
+ * `@cerebro/db`, and `@cerebro/db` depends on a `@prisma/client`
  * that has no generated client in this sandbox — the same constraint that
  * blocked a real cross-package `tsc` build throughout Phase 9e. This file
  * could NOT be typechecked via this repository's scratch-toolchain

@@ -1,4 +1,4 @@
-import { AuditLog } from '@prisma/client';
+import { AuditLog } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 export interface CreateAuditLogInput {

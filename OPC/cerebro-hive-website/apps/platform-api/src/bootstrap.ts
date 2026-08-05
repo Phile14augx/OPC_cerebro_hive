@@ -8,7 +8,7 @@ import { requestContextHook } from './middleware/RequestContextMiddleware';
 import { requireAuthHook } from './middleware/AuthMiddleware';
 import { createRequireWorkspaceAccessHook } from './middleware/WorkspaceAccessMiddleware';
 import { onRequestLog, onSendLog } from './middleware/RequestLogger';
-import type { WorkspaceRepository, AgentConversationRepository, PrismaUnitOfWork } from '@cerebro/database';
+import type { WorkspaceRepository, AgentConversationRepository, PrismaUnitOfWork } from '@cerebro/db';
 import { ErrorMapper } from './errors/ErrorMapper';
 import agentRoutes from './modules/agents/agents.routes';
 import workflowsRoutes from './modules/workflows/workflows.routes';
@@ -21,7 +21,7 @@ import { registerMockProviders } from './modules/runtime/providers/MockProviders
 import { registerAIGatewayProvider } from './modules/runtime/providers/AIGatewayProviders';
 import { registerToolRuntimeProvider } from './modules/runtime/providers/ToolRuntimeProvider';
 import type { AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
-import type { AgentRepository } from '@cerebro/database';
+import type { AgentRepository } from '@cerebro/db';
 import type { AIGateway } from '@cerebro/ai-gateway';
 import { ExecutionOrchestrator, InMemoryExecutionRepository } from '@cerebro/domain';
 import { AgentExecutionProvider } from './modules/runtime/AgentExecutionProvider';

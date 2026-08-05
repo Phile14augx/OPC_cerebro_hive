@@ -9,9 +9,13 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@cerebro/domain": "workspace:*"
+    "@cerebro/domain": "workspace:*",
+    "@cerebro/db": "workspace:*",
+    "@cerebro/runtime-core": "workspace:*",
+    "@cerebro/runtime-contracts": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "^26.1.2",
     "typescript": "^5.4.5"
   }
 }

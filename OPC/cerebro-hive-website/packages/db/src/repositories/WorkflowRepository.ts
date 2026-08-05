@@ -1,4 +1,4 @@
-import { Workflow, WorkflowVersion } from '@prisma/client';
+import { Workflow, WorkflowVersion } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 export interface CreateWorkflowInput {

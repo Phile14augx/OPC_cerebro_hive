@@ -1,4 +1,4 @@
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 
 export type MiddlewareNext<T> = () => Promise<T>;
 

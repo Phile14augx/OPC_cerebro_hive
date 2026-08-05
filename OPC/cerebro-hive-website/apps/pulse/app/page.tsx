@@ -31,8 +31,8 @@ export default function MissionControlPage() {
             key={widget.id} 
             className="flex flex-col"
             style={{ 
-              gridColumn: \`span \${widget.columnSpan} / span \${widget.columnSpan}\`, 
-              gridRow: \`span \${widget.rowSpan} / span \${widget.rowSpan}\` 
+              gridColumn: `span ${widget.columnSpan} / span ${widget.columnSpan}`, 
+              gridRow: `span ${widget.rowSpan} / span ${widget.rowSpan}` 
             }}
           >
             <WidgetHost 

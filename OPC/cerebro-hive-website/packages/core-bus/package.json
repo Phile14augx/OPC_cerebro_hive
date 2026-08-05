@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@cerebro/domain": "workspace:*",
-    "@cerebro/database": "workspace:*"
+    "@cerebro/db": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

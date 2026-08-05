@@ -20,7 +20,7 @@
  * `@cerebro/events` to declare this — same bounded-context-separation
  * reasoning as `ExecutionProviderPort` (Phase 9c) staying off
  * `HiveProviderExecutor`. It is also, honestly, a real environment
- * constraint: `@cerebro/database` (a transitive dependency of both
+ * constraint: `@cerebro/db` (a transitive dependency of both
  * `@cerebro/core-bus` and `packages/events`) depends on a generated
  * `@prisma/client` that does not exist in this sandbox, so a real
  * cross-package build was not possible to run here — the structural-

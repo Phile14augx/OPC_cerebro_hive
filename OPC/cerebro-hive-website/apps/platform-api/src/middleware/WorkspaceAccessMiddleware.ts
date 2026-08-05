@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { WorkspaceRepository } from '@cerebro/database';
+import { WorkspaceRepository } from '@cerebro/db';
 
 /**
  * Closes the gap noted in AuthMiddleware.ts and tracked as task #44: the

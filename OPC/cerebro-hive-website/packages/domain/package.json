@@ -10,12 +10,12 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@cerebro/database": "workspace:*",
+    "@cerebro/db": "workspace:*",
     "@prisma/client": "^7.9.0"
   },
   "devDependencies": {
+    "@types/node": "^20.19.43",
     "typescript": "^5.0.0",
-    "vitest": "^3.0.0",
-    "@types/node": "^20.0.0"
+    "vitest": "^3.0.0"
   }
 }

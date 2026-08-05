@@ -12,7 +12,7 @@ import { ITransactionContext } from '../transactions/UnitOfWork';
 
 /**
  * Phase 9d's first real `ExecutionRepository` implementation — standalone,
- * per explicit direction: an in-memory store, not `@cerebro/database`'s live
+ * per explicit direction: an in-memory store, not `@cerebro/db`'s live
  * Prisma schema. Reconciled (post-9d) to the mandatory-`expectedVersion`
  * contract `ExecutionRepository.ts` now declares: every stored entry tracks
  * the `version` value that was true the last time this Execution was

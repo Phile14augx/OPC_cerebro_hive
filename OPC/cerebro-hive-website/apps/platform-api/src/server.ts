@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { bootstrap } from './bootstrap';
 
-import { AgentRepository, AgentConversationRepository, IdempotencyRepository, OutboxRepository, AuditRepository, WorkspaceRepository, PrismaUnitOfWork } from '@cerebro/database';
+import { AgentRepository, AgentConversationRepository, IdempotencyRepository, OutboxRepository, AuditRepository, WorkspaceRepository, PrismaUnitOfWork } from '@cerebro/db';
 import { AgentApplicationService, UnitOfWork, OutboxPublisher, AuditLogger, PolicyEngine, AgentValidator } from '@cerebro/domain';
 import { AgentBuilderCapability, AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
 import { createGateway } from '@cerebro/ai-gateway';
@@ -10,7 +10,7 @@ import { CommandBus, QueryBus, DomainEventBus } from '@cerebro/core-bus';
 import { CreateAgentCommand } from './modules/agents/agents.commands';
 import { CreateAgentCommandHandler } from './modules/agents/agents.handlers';
 
-import { PrismaExecutionStore } from '@cerebro/database';
+import { PrismaExecutionStore } from '@cerebro/db';
 import { ExecutionManager } from '@cerebro/runtime-core/src/execution/ExecutionManager';
 import { ExecutionReplayService } from '@cerebro/runtime-core/src/execution/ExecutionReplayService';
 import { ExecutionIdempotencyGuard } from '@cerebro/runtime-core/src/execution/ExecutionIdempotency';

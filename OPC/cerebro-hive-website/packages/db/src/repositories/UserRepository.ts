@@ -1,4 +1,4 @@
-import { User, TenantMember } from '@prisma/client';
+import { User, TenantMember } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 export interface ProvisionUserInput {

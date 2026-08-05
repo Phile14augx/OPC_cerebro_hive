@@ -1,5 +1,5 @@
 import { Result } from '@cerebro/domain';
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 
 export interface PublishAgentInput {
   modelId: string;

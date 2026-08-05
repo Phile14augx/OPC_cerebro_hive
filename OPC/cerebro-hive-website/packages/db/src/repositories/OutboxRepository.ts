@@ -1,4 +1,4 @@
-import { OutboxEvent } from '@prisma/client';
+import { OutboxEvent } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 // So we define it without depending on domain package.

@@ -15,7 +15,7 @@ import { ExecutionStatus } from './ExecutionStatus';
  * `AuthorizationError` this file's callers throw. This is a same-package
  * reuse (`Decision.ts` already lives in `packages/domain`), not a
  * cross-bounded-context import — unlike `PolicyEngine.ts`, which this file
- * does NOT import, since that class couples to `@cerebro/database`'s
+ * does NOT import, since that class couples to `@cerebro/db`'s
  * `RequestContext` (a cross-package dependency this aggregate has
  * deliberately stayed off of throughout Phase 9, per `ExecutionId` and
  * `ExecutionProviderPort`'s own precedent).

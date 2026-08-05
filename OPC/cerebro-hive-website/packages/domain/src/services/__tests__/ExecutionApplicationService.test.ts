@@ -6,7 +6,7 @@ import { OutboxPublisher } from '../../events/OutboxPublisher';
 import { Execution } from '../../execution/Execution';
 import { ExecutionId } from '../../execution/ExecutionId';
 import { ExecutionStatus } from '../../execution/ExecutionStatus';
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 
 class MockUnitOfWork implements UnitOfWork {
   async execute<T>(work: (tx: ITransactionContext) => Promise<T>): Promise<T> {

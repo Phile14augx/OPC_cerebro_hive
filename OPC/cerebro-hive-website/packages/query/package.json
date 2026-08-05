@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@cerebro/domain": "workspace:*",
-    "@cerebro/database": "workspace:*",
+    "@cerebro/db": "workspace:*",
     "@cerebro/core-bus": "workspace:*"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { Document, DocumentVersion } from '@prisma/client';
+import { Document, DocumentVersion } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 export class KnowledgeRepository extends BaseRepository {

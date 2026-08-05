@@ -1,4 +1,4 @@
-import { Tool, ToolVersion, Prisma } from '@prisma/client';
+import { Tool, ToolVersion, Prisma } from '../generated/client';
 import { BaseRepository, IRepositoryOptions } from './BaseRepository';
 
 export interface CreateToolInput {

@@ -2,7 +2,7 @@
 import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
 import { PaginationQuery } from '../common/pagination';
-import { AgentRepository } from '@cerebro/database';
+import { AgentRepository } from '@cerebro/db';
 import { requirePermission } from '../../middleware/AuthMiddleware';
 
 const prisma = new PrismaClient();

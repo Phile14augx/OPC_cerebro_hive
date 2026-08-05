@@ -1,6 +1,6 @@
 import { RelayStrategy } from './RelayStrategy';
 import { IIntegrationEventPublisher } from '@cerebro/core-bus';
-import { RequestContext } from '@cerebro/database';
+import { RequestContext } from '@cerebro/db';
 
 export class OutboxRelayWorker {
   private running = false;

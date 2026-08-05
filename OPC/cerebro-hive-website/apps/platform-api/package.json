@@ -15,7 +15,7 @@
     "@cerebro/auth": "workspace:*",
     "@cerebro/capability-contracts": "workspace:*",
     "@cerebro/core-bus": "workspace:*",
-    "@cerebro/database": "workspace:*",
+    "@cerebro/db": "workspace:*",
     "@cerebro/domain": "workspace:*",
     "@cerebro/query": "workspace:*",
     "@cerebro/runtime-core": "workspace:^",

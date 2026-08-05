@@ -8,10 +8,6 @@ export const metadata: Metadata = {
 }
 
 import { AppShell } from '../shared/ui/AppShell';
-import { registerTelemetryWidgets } from '@cerebro/widgets-telemetry';
-
-// Register widgets early
-registerTelemetryWidgets();
 
 export default function RootLayout({
   children,

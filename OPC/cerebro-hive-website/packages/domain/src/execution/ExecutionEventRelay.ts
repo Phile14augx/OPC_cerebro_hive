@@ -8,7 +8,7 @@ import { ExecutionTelemetry, NoOpExecutionTelemetry } from './ExecutionTelemetry
  * `PollingRelayStrategy`/`OutboxRelayWorker` (adopted conceptually per
  * `ADR-043`) without importing them — same bounded-context-separation
  * reasoning as everywhere else in Phase 9 (this package does not depend on
- * `@cerebro/database` or `@cerebro/events`).
+ * `@cerebro/db` or `@cerebro/events`).
  *
  * `relayOnce()` processes one batch of pending entries and returns; it does
  * not itself loop, sleep, or schedule repeated calls — that's a live-wiring

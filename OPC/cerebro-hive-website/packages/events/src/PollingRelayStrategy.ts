@@ -1,5 +1,5 @@
 import { RelayStrategy } from './RelayStrategy';
-import { OutboxRepository, RequestContext } from '@cerebro/database';
+import { OutboxRepository, RequestContext } from '@cerebro/db';
 
 export class PollingRelayStrategy implements RelayStrategy {
   constructor(private readonly outboxRepo: OutboxRepository) {}

@@ -12,10 +12,10 @@ import { ExecutionEventContext, ExecutionIntegrationEventLike } from './Executio
  * Deliberately a NEW, execution-specific contract — NOT a reuse of
  * `packages/domain/src/events/OutboxPublisher.ts`'s existing `OutboxPublisher`
  * class, even though that class already implements exactly this pattern for
- * other aggregates. `OutboxPublisher` requires `@cerebro/database`'s
+ * other aggregates. `OutboxPublisher` requires `@cerebro/db`'s
  * `OutboxRepository`/`RequestContext` — importing it here would break the
  * same bounded-context separation `ADR-039` established for `Execution`
- * staying off `@cerebro/database` throughout every prior Phase 9 sub-phase.
+ * staying off `@cerebro/db` throughout every prior Phase 9 sub-phase.
  * A real Postgres-backed `ExecutionEventOutboxStore` implementation
  * (packages/execution-runtime-adapters' job, not built in this sandbox) is
  * free to reuse `OutboxPublisher`'s own table/schema conventions internally

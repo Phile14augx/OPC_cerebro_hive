@@ -7,7 +7,7 @@ import { PgQueryable } from './PgQueryable';
 // NOTE: imported from these specific submodule paths, not the `@cerebro/domain`
 // root barrel — the root `index.ts` also re-exports files (e.g.
 // `AgentApplicationService.ts`, `PolicyEngine.ts`) that depend on
-// `@cerebro/database`'s generated `@prisma/client`, which does not exist in
+// `@cerebro/db`'s generated `@prisma/client`, which does not exist in
 // this sandbox. Importing the specific execution/ submodules this file
 // actually needs avoids pulling that unrelated, unresolvable subtree into
 // this file's own typecheck — the same "scope tsc to execution/ only" pattern
