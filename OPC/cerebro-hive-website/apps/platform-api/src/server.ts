@@ -1,4 +1,4 @@
-import { PrismaClient } from '@cerebro/db';
+import { prisma } from '@cerebro/db';
 import { bootstrap } from './bootstrap';
 
 import { AgentRepository, AgentConversationRepository, IdempotencyRepository, OutboxRepository, AuditRepository, WorkspaceRepository, PrismaUnitOfWork } from '@cerebro/db';
@@ -21,8 +21,7 @@ import { StartExecutionValidator, ResumeExecutionValidator, CancelExecutionValid
 import { ExecutionRuntimeKernel } from '@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel';
 
 async function main() {
-  // 1. Database
-  const prisma = new PrismaClient();
+  // 1. Database (shared, adapter-wired singleton from @cerebro/db)
 
   // 2. Repositories
   const agentRepo = new AgentRepository(prisma);

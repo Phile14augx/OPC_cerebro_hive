@@ -1,3 +1,4 @@
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../generated/client';
 
 export interface ApiKeyRecord {
@@ -24,5 +25,10 @@ export class ApiKeyRepository {
   }
 }
 
-// In the actual app, this might be injected, but auth expects a singleton export
-export const apiKeyRepository = new ApiKeyRepository(new PrismaClient());
+// In the actual app, this might be injected, but auth expects a singleton export.
+// Prisma 7's generated client uses the WASM query compiler, which requires a
+// driver adapter -- see https://pris.ly/d/driver-adapters.
+const apiKeyRepositoryAdapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+export const apiKeyRepository = new ApiKeyRepository(
+  new PrismaClient({ adapter: apiKeyRepositoryAdapter }),
+);

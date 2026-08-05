@@ -1,7 +1,6 @@
 // @ts-nocheck
-import { PrismaClient, AssessmentResource } from '@cerebro/db';
+import { prisma, AssessmentResource } from '@cerebro/db';
 
-const prisma = new PrismaClient();
 
 export class ArtifactService {
   

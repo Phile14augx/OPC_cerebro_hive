@@ -1,10 +1,9 @@
 // @ts-nocheck
-import { PrismaClient, AssessmentSubmission, EvaluationResult } from '@cerebro/db';
+import { prisma, AssessmentSubmission, EvaluationResult } from '@cerebro/db';
 import { SessionService } from './SessionService';
 import { GradingPipeline } from '../engine/evaluation';
 import { GlobalEventBus } from '../engine/events';
 
-const prisma = new PrismaClient();
 const sessionService = new SessionService();
 const grader = new GradingPipeline();
 

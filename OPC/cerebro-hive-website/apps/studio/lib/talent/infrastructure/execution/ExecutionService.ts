@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { PrismaClient, ExecutionJob, ExecutionStatus } from '@cerebro/db';
+import { prisma, ExecutionJob, ExecutionStatus } from '@cerebro/db';
 import { DomainEventBus } from '../events/eventBus';
 import { withTransaction } from '../database/transaction';
 import { 
@@ -10,7 +10,6 @@ import {
 } from './providers/interfaces';
 import { MockQueueProvider, MockSandboxProvider, MockStreamingProvider } from './providers/MockProviders';
 
-const prisma = new PrismaClient();
 
 // Instantiate Mock Providers for Stage 3 Slice
 // In production, these would be injected via a DI container or Factory based on ENV vars

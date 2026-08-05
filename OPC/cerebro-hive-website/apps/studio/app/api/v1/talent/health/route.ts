@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@cerebro/db';
+import { prisma } from '@cerebro/db';
 
-const prisma = new PrismaClient();
 
 export async function GET() {
   const healthCheck = {

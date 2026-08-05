@@ -8,8 +8,7 @@ export interface IResourceRepository {
   delete(id: string): Promise<void>;
 }
 
-import { PrismaClient } from "@cerebro/db";
-const prisma = new PrismaClient();
+import { prisma } from "@cerebro/db";
 
 export class PrismaResourceRepository implements IResourceRepository {
   async findById(id: string): Promise<Resource | null> {

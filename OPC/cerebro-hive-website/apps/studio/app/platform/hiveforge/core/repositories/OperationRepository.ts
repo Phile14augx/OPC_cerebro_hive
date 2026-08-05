@@ -7,8 +7,7 @@ export interface IOperationRepository {
   update(id: string, data: Partial<Operation>): Promise<Operation>;
 }
 
-import { PrismaClient } from "@cerebro/db";
-const prisma = new PrismaClient();
+import { prisma } from "@cerebro/db";
 
 export class PrismaOperationRepository implements IOperationRepository {
   async findById(id: string): Promise<Operation | null> {

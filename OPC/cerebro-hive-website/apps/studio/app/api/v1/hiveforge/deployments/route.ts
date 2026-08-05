@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@cerebro/db";
+import { prisma } from "@cerebro/db";
 import { eventStore } from "../../../../platform/hiveforge/core/events/EventStore";
 import { deploymentOrchestrator } from "../../../../platform/hiveforge/core/engine/DeploymentOrchestrator";
 
-const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {

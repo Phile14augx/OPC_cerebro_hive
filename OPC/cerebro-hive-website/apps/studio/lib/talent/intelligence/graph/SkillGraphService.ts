@@ -1,7 +1,6 @@
 // @ts-nocheck
-import { PrismaClient, SkillEvidence } from '@cerebro/db';
+import { prisma, SkillEvidence } from '@cerebro/db';
 
-const prisma = new PrismaClient();
 
 export class SkillGraphService {
   

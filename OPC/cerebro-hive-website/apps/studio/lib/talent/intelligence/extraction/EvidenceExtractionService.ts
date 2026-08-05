@@ -1,12 +1,11 @@
 // @ts-nocheck
-import { PrismaClient } from '@cerebro/db';
+import { prisma } from '@cerebro/db';
 import { DomainEventBus } from '../../infrastructure/events/eventBus';
 import { Logger } from '../../infrastructure/observability/logger';
 import { SkillGraphService } from '../core/SkillGraphService';
 import { IAIEvaluatorProvider } from './providers/interfaces';
 import { MockEvaluatorProvider } from './providers/MockEvaluatorProvider';
 
-const prisma = new PrismaClient();
 const logger = new Logger('EvidenceExtractionService');
 const skillGraphService = new SkillGraphService();
 

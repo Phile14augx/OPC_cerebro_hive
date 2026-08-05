@@ -1,8 +1,7 @@
 // @ts-nocheck
-import { PrismaClient, SkillProfileSnapshot } from '@cerebro/db';
+import { prisma, SkillProfileSnapshot } from '@cerebro/db';
 import { SkillGraphService } from '../graph/SkillGraphService';
 
-const prisma = new PrismaClient();
 const graphService = new SkillGraphService();
 
 export class TemporalEvolutionService {

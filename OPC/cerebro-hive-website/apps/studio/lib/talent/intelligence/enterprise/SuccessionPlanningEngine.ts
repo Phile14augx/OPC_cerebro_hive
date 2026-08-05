@@ -1,7 +1,6 @@
 // @ts-nocheck
-import { PrismaClient } from '@cerebro/db';
+import { prisma } from '@cerebro/db';
 
-const prisma = new PrismaClient();
 
 export class SuccessionPlanningEngine {
   

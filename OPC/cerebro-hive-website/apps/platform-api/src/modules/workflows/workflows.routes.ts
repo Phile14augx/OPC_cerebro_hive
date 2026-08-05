@@ -1,9 +1,7 @@
 import { FastifyInstance } from 'fastify';
-import { PrismaClient } from '@cerebro/db';
+import { prisma } from '@cerebro/db';
 import { PaginationQuery } from '../common/pagination';
 import { requirePermission } from '../../middleware/AuthMiddleware';
-
-const prisma = new PrismaClient();
 
 export default async function workflowsRoutes(fastify: FastifyInstance) {
   // LIST WORKFLOWS

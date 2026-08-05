@@ -16,6 +16,7 @@
     "@ai-sdk/openai": "^4.0.16",
     "@cerebro/api-client": "workspace:^",
     "@cerebro/db": "workspace:^",
+    "@prisma/adapter-pg": "^7.9.0",
     "@cerebro/sdk": "workspace:*",
     "@cerebro/workflow": "workspace:*",
     "@monaco-editor/react": "^4.7.0",

@@ -6,8 +6,7 @@ export interface IDeploymentRepository {
   update(id: string, data: Partial<Deployment>): Promise<Deployment>;
 }
 
-import { PrismaClient } from "@cerebro/db";
-const prisma = new PrismaClient();
+import { prisma } from "@cerebro/db";
 
 export class PrismaDeploymentRepository implements IDeploymentRepository {
   async findById(id: string): Promise<Deployment | null> {

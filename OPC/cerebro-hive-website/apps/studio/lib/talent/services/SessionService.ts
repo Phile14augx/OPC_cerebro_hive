@@ -1,9 +1,8 @@
 // @ts-nocheck
-import { PrismaClient, AssessmentSession, SessionStatus } from '@cerebro/db';
+import { prisma, AssessmentSession, SessionStatus } from '@cerebro/db';
 import { DomainEventBus } from '../infrastructure/events/eventBus';
 import { withTransaction } from '../infrastructure/database/transaction';
 
-const prisma = new PrismaClient();
 
 export class SessionService {
   

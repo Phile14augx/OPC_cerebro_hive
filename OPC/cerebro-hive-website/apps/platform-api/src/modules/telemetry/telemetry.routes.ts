@@ -1,8 +1,6 @@
 import { FastifyInstance } from 'fastify';
-import { PrismaClient } from '@cerebro/db';
+import { prisma } from '@cerebro/db';
 import { requirePermission } from '../../middleware/AuthMiddleware';
-
-const prisma = new PrismaClient();
 
 export default async function telemetryRoutes(fastify: FastifyInstance) {
   fastify.addHook('preHandler', requirePermission('ai:usage_read'));

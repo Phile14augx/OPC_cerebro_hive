@@ -1,12 +1,11 @@
 // @ts-nocheck
-import { PrismaClient, Assessment, AssessmentVersion } from '@cerebro/db';
+import { prisma, Assessment, AssessmentVersion } from '@cerebro/db';
 import { AssessmentCompiler, CompiledAssessmentPackage } from '../compiler';
 import { AssessmentSchema } from '../types';
 import { TalentPolicyEngine } from '../auth/policy';
 import { withTransaction } from '../infrastructure/database/transaction';
 import { DomainEventBus } from '../infrastructure/events/eventBus';
 
-const prisma = new PrismaClient();
 const compiler = new AssessmentCompiler();
 const policy = new TalentPolicyEngine();
 

@@ -4,10 +4,9 @@
  * Separates immutable business events (compliance, auditing) from operational debug logs.
  */
 import { Logger } from './logger';
-import { PrismaClient } from '@cerebro/db';
+import { prisma } from '@cerebro/db';
 
 const operationalLogger = new Logger('Audit_Service');
-const prisma = new PrismaClient();
 
 export type AuditEventType = 
   | 'ASSESSMENT_CREATED'

@@ -1,7 +1,5 @@
 // @ts-nocheck
-import { PrismaClient, Prisma } from '@cerebro/db';
-
-const prisma = new PrismaClient();
+import { PrismaClient, Prisma, prisma } from '@cerebro/db';
 
 export type TransactionClient = Omit<
   PrismaClient,
