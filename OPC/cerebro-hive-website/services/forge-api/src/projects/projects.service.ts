@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, OnModuleInit, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import { projectGraph } from '@cerebro/workflow';
 import { CreateProjectDto } from './dto/create-project.dto';
 

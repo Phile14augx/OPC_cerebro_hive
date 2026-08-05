@@ -44,7 +44,7 @@ export class OutboxRelay {
 
     try {
       // 1. Fetch unpublished outbox events
-      const events = await this.outboxRepository.findUnpublished(this.batchSize);
+      const events = await this.outboxRepository.getPendingEvents(this.batchSize, { context: { tenantId: 'SYSTEM' } });
       if (events.length === 0) return;
 
       for (const record of events) {
@@ -55,14 +55,17 @@ export class OutboxRelay {
           const domainEvent = record.payload as any;
           
           const envelope: HiveEventEnvelope = {
-            event: domainEvent,
-            metadata: {
+            event: {
               eventId: record.id,
               eventType: record.eventType,
-              timestamp: record.createdAt,
+              occurredAt: record.createdAt,
+              aggregateId: domainEvent.aggregateId || 'unknown',
+              payload: domainEvent
+            },
+            metadata: {
               correlationId: record.correlationId || undefined,
-              traceId: record.traceId || undefined,
               tenantId: record.tenantId || undefined,
+              envelopeVersion: '1.0.0'
             }
           };
 
@@ -70,11 +73,11 @@ export class OutboxRelay {
           await this.eventBus.publish(envelope);
 
           // 4. Mark as delivered
-          await this.outboxRepository.markPublished(record.id);
+          await this.outboxRepository.markPublished(record.id, { context: { tenantId: 'SYSTEM' } });
 
         } catch (error: any) {
           // 5. Retry / Failure handling
-          await this.outboxRepository.markFailed(record.id, error.message);
+          await this.outboxRepository.markFailed(record.id, error.message, { context: { tenantId: 'SYSTEM' } });
         }
       }
     } catch (err) {

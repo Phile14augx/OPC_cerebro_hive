@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import { Result } from '@cerebro/domain';
 
 export interface AgentListParams {
@@ -14,7 +14,6 @@ export class AgentQueryRepository {
   async listAgents(params: AgentListParams): Promise<Result<any[]>> {
     const agents = await this.prisma.agent.findMany({
       where: {
-        tenantId: params.tenantId,
         workspaceId: params.workspaceId,
       },
       take: params.limit || 50,

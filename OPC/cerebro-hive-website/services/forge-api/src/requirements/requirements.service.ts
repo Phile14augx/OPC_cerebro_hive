@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import { FORGE_REQUIREMENTS_SCHEMA } from '@cerebro/ai';
 import { projectGraph } from '@cerebro/workflow';
 import type { ForgeRequirements } from '@cerebro/workflow';

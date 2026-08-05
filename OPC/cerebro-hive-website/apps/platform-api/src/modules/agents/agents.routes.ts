@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { FastifyInstance } from 'fastify';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import { PaginationQuery } from '../common/pagination';
 import { AgentRepository } from '@cerebro/db';
 import { requirePermission } from '../../middleware/AuthMiddleware';

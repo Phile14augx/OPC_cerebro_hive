@@ -61,8 +61,8 @@ async function runPolicyTest() {
     status: 'Active',
     trustLevel: 60,
     displayName: 'Junior Dev',
-    issuer: 'cerebro-auth',
-    authenticationSource: 'sso',
+    // issuer: 'cerebro-auth',
+    // authenticationSource: 'sso',
     email: 'junior@cerebrohive.com',
     metadata: {}
   };
@@ -73,7 +73,7 @@ async function runPolicyTest() {
     delegationChain: [],
     tenancy: { organizationId: 'org-1' },
     claims: { department: 'Engineering' },
-    authenticationMethod: 'sso',
+    // authenticationMethod: 'sso',
     correlationId: 'test-123'
   };
 

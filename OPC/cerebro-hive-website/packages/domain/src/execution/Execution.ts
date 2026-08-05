@@ -32,6 +32,13 @@ export interface ExecutionMetadata {
   readonly [key: string]: unknown;
 }
 
+export interface ExecutionTransitionOptions {
+  actor?: string;
+  reason?: string;
+  result?: unknown;
+  at?: Date;
+}
+
 /**
  * A single recorded transition (Phase 9b — `09-EXECUTION-LIFECYCLE-RUNTIME.md`
  * §9b, `ADR-040`). Every call to `Execution.transitionTo()` appends one of

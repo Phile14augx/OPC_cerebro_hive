@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import { AuthService } from '../lib/services/auth.service';
 import { PlatformService } from '../lib/services/platform.service';
 import { AuditService } from '../lib/services/audit.service';

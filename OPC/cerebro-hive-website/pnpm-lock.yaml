@@ -491,9 +491,6 @@ importers:
       '@playwright/test':
         specifier: ^1.61.1
         version: 1.62.0
-      '@prisma/client':
-        specifier: ^7.9.0
-        version: 7.9.1(prisma@7.9.1(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.3.3
@@ -699,6 +696,9 @@ importers:
         specifier: workspace:*
         version: link:../../runtime-core
     devDependencies:
+      '@types/node':
+        specifier: ^26.1.2
+        version: 26.1.2
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
@@ -715,6 +715,9 @@ importers:
         specifier: workspace:*
         version: link:../../domain
     devDependencies:
+      '@types/node':
+        specifier: ^26.1.2
+        version: 26.1.2
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
@@ -738,6 +741,9 @@ importers:
         specifier: workspace:*
         version: link:../../domain
     devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
@@ -792,6 +798,9 @@ importers:
         specifier: workspace:*
         version: link:../domain
     devDependencies:
+      '@types/node':
+        specifier: ^26.1.2
+        version: 26.1.2
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
@@ -878,7 +887,13 @@ importers:
       '@cerebro/domain':
         specifier: workspace:*
         version: link:../domain
+      '@cerebro/identity-core':
+        specifier: workspace:*
+        version: link:../identity-core
     devDependencies:
+      '@types/node':
+        specifier: ^26.1.2
+        version: 26.1.2
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
@@ -958,9 +973,12 @@ importers:
       '@cerebro/db':
         specifier: workspace:*
         version: link:../db
-      '@prisma/client':
-        specifier: ^7.9.0
-        version: 7.9.1(prisma@7.9.1(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
+      '@cerebro/domain-model':
+        specifier: workspace:*
+        version: link:../domain-model
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@types/node':
         specifier: ^20.19.43
@@ -1224,6 +1242,9 @@ importers:
       '@cerebro/eda-domain':
         specifier: workspace:*
         version: link:../eda-domain
+      '@cerebro/eda-execution':
+        specifier: workspace:*
+        version: link:../eda-execution
     devDependencies:
       '@types/node':
         specifier: ^22.0.0
@@ -1280,9 +1301,21 @@ importers:
 
   packages/events:
     dependencies:
+      '@cerebro/core-bus':
+        specifier: workspace:*
+        version: link:../core-bus
+      '@cerebro/db':
+        specifier: workspace:*
+        version: link:../db
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.43
       mitt:
         specifier: ^3.0.1
         version: 3.0.1
+      nats:
+        specifier: ^2.29.3
+        version: 2.29.3
 
   packages/execution-providers:
     dependencies:
@@ -1416,9 +1449,15 @@ importers:
 
   packages/icons:
     dependencies:
+      '@types/react':
+        specifier: 19.2.17
+        version: 19.2.17
       lucide-react:
         specifier: ^0.300.0
-        version: 0.300.0(react@19.2.4)
+        version: 0.300.0(react@18.3.1)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
 
   packages/icons-ai: {}
 
@@ -1621,6 +1660,9 @@ importers:
         specifier: workspace:*
         version: link:../domain
     devDependencies:
+      '@types/node':
+        specifier: ^26.1.2
+        version: 26.1.2
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
@@ -1760,6 +1802,10 @@ importers:
       '@cerebro/events':
         specifier: workspace:*
         version: link:../events
+    devDependencies:
+      '@types/node':
+        specifier: ^26.1.2
+        version: 26.1.2
 
   packages/tables:
     devDependencies:
@@ -2107,9 +2153,6 @@ importers:
       '@nestjs/swagger':
         specifier: ^7.0.0
         version: 7.4.2(@fastify/static@10.1.2)(@nestjs/common@10.4.22(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.22)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
-      '@prisma/client':
-        specifier: ^7.9.0
-        version: 7.9.1(prisma@7.9.1(@types/react@19.2.17)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
       '@temporalio/client':
         specifier: ^1.11.7
         version: 1.21.1
@@ -21418,10 +21461,6 @@ snapshots:
   lucide-react@0.300.0(react@18.3.1):
     dependencies:
       react: 18.3.1
-
-  lucide-react@0.300.0(react@19.2.4):
-    dependencies:
-      react: 19.2.4
 
   lucide-react@1.27.0(react@19.2.4):
     dependencies:

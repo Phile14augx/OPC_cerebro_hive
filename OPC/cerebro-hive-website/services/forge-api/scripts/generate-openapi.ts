@@ -51,7 +51,7 @@ const fakePrisma = new Proxy(
 );
 
 import { Global } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 
 @Global()
 @Module({

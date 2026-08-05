@@ -21,7 +21,7 @@ export type AgentConfig = z.infer<typeof AgentConfigSchema>;
 export const AgentStateSchema = z.object({
   id: z.string().uuid(),
   step: z.string().optional(),
-  context: z.record(z.any()).optional(),
+  context: z.record(z.string(), z.any()).optional(),
   timestamp: z.date().optional(),
 });
 

@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@cerebro/db";
 import { SignJWT } from "jose";
 
 const BASE   = process.env["PLATFORM_API_URL"] ?? "http://localhost:4000";

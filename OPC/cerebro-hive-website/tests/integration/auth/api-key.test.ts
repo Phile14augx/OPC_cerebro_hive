@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@cerebro/db";
 import { SignJWT } from "jose";
 import { createHash, randomBytes } from "node:crypto";
 

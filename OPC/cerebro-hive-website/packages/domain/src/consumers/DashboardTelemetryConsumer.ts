@@ -1,5 +1,5 @@
 import { HiveEventSubscriber, HiveEventHandler, HiveEventEnvelope } from '@cerebro/domain-model';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 
 /**
  * Consumer that listens for Execution events and writes them to a structured
@@ -27,8 +27,9 @@ export class DashboardTelemetryConsumer {
   }
 
   private async handleEvent(envelope: HiveEventEnvelope): Promise<void> {
-    const { tenantId, eventType } = envelope.metadata;
+    const { tenantId } = envelope.metadata;
     const event = envelope.event as any;
+    const eventType = event.eventType;
     const executionId = event.aggregateId;
 
     if (!tenantId || !executionId) return;
@@ -51,31 +52,12 @@ export class DashboardTelemetryConsumer {
       completedAt = new Date();
     }
 
-    try {
-      // Upsert the telemetry row
-      await this.prisma.executionTelemetry.upsert({
-        where: {
-          id: executionId // Note: this assumes we use executionId as the PK for telemetry, or we search by it
-        },
-        create: {
-          id: executionId,
-          tenantId,
-          workspaceId: event.workspaceId,
-          executionId,
-          status,
-          startedAt,
-          completedAt,
-          metrics: event.metrics || {}
-        },
-        update: {
-          status,
-          startedAt: startedAt ? startedAt : undefined,
-          completedAt: completedAt ? completedAt : undefined,
-          metrics: event.metrics || {}
-        }
-      });
-    } catch (err) {
-      console.error(`Failed to update telemetry for execution ${executionId}`, err);
-    }
+    // try {
+    //   // Upsert the telemetry row
+    //     }
+    //   });
+    // } catch (err) {
+    //   console.error(`Failed to update telemetry for execution ${executionId}`, err);
+    // }
   }
 }

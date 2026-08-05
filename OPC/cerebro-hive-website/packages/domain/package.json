@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@cerebro/db": "workspace:*",
-    "@prisma/client": "^7.9.0"
+    "@cerebro/domain-model": "workspace:*",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",

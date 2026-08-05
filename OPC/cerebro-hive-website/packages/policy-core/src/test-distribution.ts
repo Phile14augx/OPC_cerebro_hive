@@ -87,8 +87,9 @@ async function runDistributionTest() {
       status: 'Active',
       trustLevel: 90,
       displayName: 'Eng',
-      issuer: 'sso',
-      authenticationSource: 'sso',
+      email: 'eng@cerebrohive.com',
+      // issuer: 'sso',
+      // authenticationSource: 'sso',
       metadata: {}
     };
 
@@ -98,7 +99,7 @@ async function runDistributionTest() {
       delegationChain: [],
       tenancy: { organizationId: 'org-1' },
       claims: { department: 'Engineering' },
-      authenticationMethod: 'sso',
+      // authenticationMethod: 'sso',
       correlationId: 'req-1'
     };
 

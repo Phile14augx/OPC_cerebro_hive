@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import { requirePermission } from '../../middleware/AuthMiddleware';
 
 const prisma = new PrismaClient();

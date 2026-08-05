@@ -6,10 +6,12 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@cerebro/db": "workspace:*",
     "@cerebro/domain": "workspace:*",
-    "@cerebro/db": "workspace:*"
+    "@cerebro/identity-core": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "^26.1.2",
     "typescript": "^5.0.0"
   }
 }

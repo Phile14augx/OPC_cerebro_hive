@@ -31,7 +31,7 @@ with `AgentConversation` in Phase M10.4.
 
 ---
 
-## M10.1 — Real Agent Execution
+## M10.1 — Real Agent Execution <!-- status: pending -->
 
 **Depends on:** nothing (this is the foundation).
 
@@ -79,7 +79,7 @@ whose content came from a live Anthropic or OpenAI completion — verifiable via
 
 ---
 
-## M10.2 — Provider Tool Calling
+## M10.2 — Provider Tool Calling <!-- status: pending -->
 
 **Depends on:** M10.1.
 
@@ -122,7 +122,7 @@ structured, correctly-shaped `toolCalls` array from both Anthropic and OpenAI th
 
 ---
 
-## M10.3 — Tool Runtime
+## M10.3 — Tool Runtime <!-- status: pending -->
 
 **Depends on:** M10.2.
 
@@ -163,7 +163,7 @@ that incorporates the real tool's real output, observable end to end from the HT
 
 ---
 
-## M10.4 — Conversation Persistence
+## M10.4 — Conversation Persistence <!-- status: pending -->
 
 **Depends on:** M10.1 (can proceed in parallel with M10.2/M10.3 if useful).
 
@@ -205,7 +205,7 @@ restart.
 
 ---
 
-## M10.5 — Memory
+## M10.5 — Memory <!-- status: pending -->
 
 **Depends on:** M10.4.
 
@@ -243,7 +243,7 @@ correctly about something said much earlier, via retrieved context rather than f
 
 ---
 
-## M10.6 — Multi-Agent Runtime
+## M10.6 — Multi-Agent Runtime <!-- status: pending -->
 
 **Depends on:** M10.3 (tool-using single agent should be solid first).
 
@@ -284,7 +284,7 @@ persona.
 
 ---
 
-## M10.7 — SDK
+## M10.7 — SDK <!-- status: pending -->
 
 **Depends on:** M10.1–M10.6 substantially complete (SDKs freeze interfaces — build last on purpose).
 

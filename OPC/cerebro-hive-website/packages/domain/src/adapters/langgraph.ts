@@ -1,7 +1,7 @@
 // LangGraph Adapter Implementation
 // ADR-053: Cerebro Runtime Agent Framework Abstraction
 
-import { FrameworkAdapter, AgentConfig, AgentState, ExecutionParams, ExecutionResult } from '../types';
+import { FrameworkAdapter, AgentConfig, AgentState, ExecutionParams, ExecutionResult } from './types';
 
 /**
  * LangGraph Adapter

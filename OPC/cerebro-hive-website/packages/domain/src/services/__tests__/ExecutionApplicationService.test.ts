@@ -25,9 +25,9 @@ describe('ExecutionApplicationService (Atomicity & Persistence)', () => {
 
   beforeEach(() => {
     mockExecution = {
-      id: new ExecutionId('11111111-1111-1111-1111-111111111111'),
+      id: ExecutionId.of('11111111-1111-1111-1111-111111111111'),
       version: 0,
-      status: ExecutionStatus.QUEUED,
+      status: ExecutionStatus.Queued,
       transitionTo: vi.fn().mockReturnValue({ type: 'ExecutionStartedEvent', aggregateId: '11111111-1111-1111-1111-111111111111' })
     };
 
@@ -60,13 +60,13 @@ describe('ExecutionApplicationService (Atomicity & Persistence)', () => {
   it('atomicity: aggregate persistence and outbox persistence succeed together', async () => {
     await service.transition(
       '11111111-1111-1111-1111-111111111111',
-      ExecutionStatus.RUNNING,
+      ExecutionStatus.Running,
       {},
       mockContext
     );
 
     // Assert that the aggregate was transitioned
-    expect(mockExecution.transitionTo).toHaveBeenCalledWith(ExecutionStatus.RUNNING, {});
+    expect(mockExecution.transitionTo).toHaveBeenCalledWith(ExecutionStatus.Running, {});
 
     // Assert that both save and publish were called with the same transaction context
     expect(executionRepo.save).toHaveBeenCalledTimes(1);
@@ -89,7 +89,7 @@ describe('ExecutionApplicationService (Atomicity & Persistence)', () => {
     await expect(
       service.transition(
         '11111111-1111-1111-1111-111111111111',
-        ExecutionStatus.RUNNING,
+        ExecutionStatus.Running,
         {},
         mockContext
       )
@@ -107,7 +107,7 @@ describe('ExecutionApplicationService (Atomicity & Persistence)', () => {
     await expect(
       service.transition(
         '11111111-1111-1111-1111-111111111111',
-        ExecutionStatus.RUNNING,
+        ExecutionStatus.Running,
         {},
         mockContext
       )

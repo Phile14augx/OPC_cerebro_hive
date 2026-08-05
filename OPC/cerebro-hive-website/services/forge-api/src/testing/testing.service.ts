@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import { FORGE_TEST_SCHEMA } from '@cerebro/ai';
 import { projectGraph } from '@cerebro/workflow';
 import { AgentOrchestratorService } from '../agent/agent-orchestrator.service';

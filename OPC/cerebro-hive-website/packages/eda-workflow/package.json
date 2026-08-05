@@ -19,6 +19,7 @@
     "@types/node": "^22.0.0"
   },
   "dependencies": {
-    "@cerebro/eda-domain": "workspace:*"
+    "@cerebro/eda-domain": "workspace:*",
+    "@cerebro/eda-execution": "workspace:*"
   }
 }

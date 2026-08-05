@@ -7,12 +7,13 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@cerebro/domain": "workspace:*",
-    "@cerebro/db": "workspace:*",
     "@cerebro/capability-contracts": "workspace:*",
+    "@cerebro/db": "workspace:*",
+    "@cerebro/domain": "workspace:*",
     "@cerebro/runtime-core": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "^26.1.2",
     "typescript": "^5.0.0",
     "vitest": "^3.2.4"
   }

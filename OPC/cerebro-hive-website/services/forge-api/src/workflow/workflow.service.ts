@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { TemporalService } from "../temporal/temporal.service.js";
-import { executionRepository } from "@cerebro/db";
+import { prisma } from "@cerebro/db";
 import { connect, StringCodec } from "nats";
 import { randomUUID } from "node:crypto";
 
@@ -60,8 +60,9 @@ export class WorkflowService {
         taskQueue: this.temporal.taskQueue,
       });
 
-      await executionRepository.update(opts.executionId, {
-        status: "RUNNING",
+      await db.execution.update({
+        where: { id: opts.executionId },
+        data: { status: "RUNNING" }
       });
 
       void natsPublish("cerebro.workflow.execution.started", {
@@ -82,10 +83,13 @@ export class WorkflowService {
     } catch (err) {
       this.logger.error("Failed to start Temporal workflow", { err, executionId: opts.executionId });
 
-      await executionRepository.update(opts.executionId, {
-        status:     "FAILED",
-        error:      { message: err instanceof Error ? err.message : String(err) },
-        completedAt: new Date(),
+      await prisma.execution.update({
+        where: { id: opts.executionId },
+        data: {
+          status:     "FAILED",
+          error:      { message: err instanceof Error ? err.message : String(err) },
+          completedAt: new Date(),
+        }
       });
 
       throw err;
@@ -93,7 +97,7 @@ export class WorkflowService {
   }
 
   async getStatus(executionId: string, orgId: string): Promise<WorkflowStatus | null> {
-    const execution = await executionRepository.findById(executionId, orgId);
+    const execution = await prisma.execution.findUnique({ where: { id: executionId } });
     if (!execution) return null;
 
     let temporalStatus: { status: string; closeTime?: Date; output?: unknown } | null = null;
@@ -116,19 +120,22 @@ export class WorkflowService {
   }
 
   async cancelExecution(executionId: string, orgId: string): Promise<void> {
-    const execution = await executionRepository.findById(executionId, orgId);
+    const execution = await prisma.execution.findUnique({ where: { id: executionId } });
     if (!execution?.temporalWorkflowId) return;
 
     await this.temporal.cancelWorkflow(execution.temporalWorkflowId);
 
-    await executionRepository.update(executionId, {
-      status:      "CANCELLED",
-      completedAt: new Date(),
+    await prisma.execution.update({
+      where: { id: executionId },
+      data: {
+        status:      "CANCELLED",
+        completedAt: new Date(),
+      }
     });
   }
 
   async sendSignal(executionId: string, orgId: string, signalName: string, payload: unknown): Promise<void> {
-    const execution = await executionRepository.findById(executionId, orgId);
+    const execution = await prisma.execution.findUnique({ where: { id: executionId } });
     if (!execution?.temporalWorkflowId) {
       throw new Error(`Execution ${executionId} has no associated Temporal workflow`);
     }

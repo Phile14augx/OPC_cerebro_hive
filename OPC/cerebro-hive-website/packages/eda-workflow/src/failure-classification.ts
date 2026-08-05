@@ -108,6 +108,8 @@ export function classify(
         delayMs: computeDelayMs(policy, attempt, rand),
       };
     }
+    default:
+      throw new Error(`Unrecognized ExecutionResult kind: ${(result as any).kind}`);
   }
 }
 

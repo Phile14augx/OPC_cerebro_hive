@@ -5,7 +5,7 @@
 // =============================================================================
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import type { AIService } from '@cerebro/ai';
 import { FORGE_SYSTEM_PROMPTS } from '@cerebro/ai';
 import { projectGraph } from '@cerebro/workflow';

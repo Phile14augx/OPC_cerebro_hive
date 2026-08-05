@@ -28,7 +28,7 @@ export class ExecutionApplicationService {
     options: ExecutionTransitionOptions,
     context: RequestContext
   ): Promise<void> {
-    const id = new ExecutionId(executionId);
+    const id = ExecutionId.of(executionId);
 
     await this.uow.execute(async (tx) => {
       // 1. Load Aggregate
