@@ -24,11 +24,12 @@ To maximize long-term competitiveness, CerebroHive is organized as a layered pla
 ### Layer 2 — AI Infrastructure (Models & Compute)
 *   **Model Providers:** OpenAI, Anthropic, Google, xAI, DeepSeek, Qwen, Mistral, Cohere, Meta Llama, NVIDIA NIM
 *   **Inference:** vLLM, TensorRT-LLM, Ollama, llama.cpp, SGLang, Ray Serve, Triton Inference Server
-*   **Embeddings & Vector Databases:** Voyage, OpenAI, Cohere, Jina AI, Nomic, pgvector, Qdrant, Milvus, Weaviate, Pinecone, Chroma
+*   **Embeddings:** Voyage, OpenAI, Cohere, Jina AI, Nomic
+*   **Vector Databases:** pgvector, Qdrant, Milvus, Weaviate, Pinecone, Chroma
 *   **Reranking:** Cohere, Jina, BGE, ColBERT
 
 ### Layer 3 — Agent Runtime (The Engine)
-*Our competitive advantage. A bespoke, highly durable execution runtime.*
+*Instead of depending on LangGraph or CrewAI internally, CerebroHive builds* **Cerebro Runtime** *— a bespoke, highly durable execution runtime. This is our competitive advantage.*
 *   Durable Execution, Event Sourcing, State Machine, Checkpointing
 *   Multi-Agent Scheduler, Agent Registry, Tool Registry
 *   Memory Engine, Workflow Engine, Event Bus
@@ -79,32 +80,34 @@ To maximize long-term competitiveness, CerebroHive is organized as a layered pla
 
 The packaging of the EIOS layers into deliverable platforms:
 
-### 1. Enterprise Core
-*   **Cerebro X:** The core Enterprise AI Operating System unifying the layers.
+| Category | Product | Positioning |
+|---|---|---|
+| Enterprise Core | **Cerebro X** | Enterprise AI Operating System unifying the layers |
+| Development Platform | **Cerebro Studio** | AI Engineering Platform |
+| Knowledge | **Cerebro Archive** | Enterprise Knowledge Platform |
+| Workflow | **Cerebro Flow** | Workflow Automation |
+| Analytics | **Cerebro Insight** | Business Intelligence |
+| AI Assistant | **Cerebro Copilot** | Enterprise Assistant |
+| Operations | **HiveOps** | Operations Platform |
+| Security | **HiveShield** | AI Security Platform |
+| Data | **HiveData** | Lakehouse Platform |
+| Search | **HiveSearch** | Enterprise Search |
+| Integration | **HiveConnect** | Integration Platform |
+| API | **HiveAPI** | Developer Platform |
+| Identity | **HiveIdentity** | IAM Platform |
+| Messaging | **HiveEvent** | Enterprise Event Bus |
+| Storage | **HiveStore** | Object + Vector Storage |
+| Monitoring | **HiveObserve** | Observability Platform |
+| AI Gateway | **HiveAI Gateway** | Unified Model Router |
+| AI Marketplace | **Hive Marketplace** | Plugins, Agents, Models, Knowledge Packs, Workflows |
 
-### 2. Platforms & Builders
-*   **Cerebro Studio:** AI Engineering Platform
-*   **Cerebro Archive:** Enterprise Knowledge Platform
-*   **Cerebro Flow:** Workflow Automation
-*   **Cerebro Insight:** Business Intelligence
-*   **Cerebro Copilot:** Enterprise Assistant
+---
 
-### 3. Hive Platform Services
-*   **HiveOps:** Operations Platform
-*   **HiveShield:** AI Security Platform
-*   **HiveData:** Lakehouse Platform
-*   **HiveSearch:** Enterprise Search
-*   **HiveConnect:** Integration Platform
-*   **HiveAPI:** Developer Platform
-*   **HiveIdentity:** IAM Platform
-*   **HiveEvent:** Enterprise Event Bus
-*   **HiveStore:** Object + Vector Storage
-*   **HiveObserve:** Observability Platform
-*   **HiveAI Gateway:** Unified Model Router
-*   **Hive Marketplace:** Plugins, Agents, Models, Knowledge Packs, Workflows
+## Enterprise Products
 
-### 4. Enterprise Vertical Products
-*   Intelligence tailored for: HR, Finance, Legal, Manufacturing, Healthcare, Retail, Banking, Insurance, Telecom, Government, Smart City, Energy, Logistics, Education, Pharma, Aerospace, Defense, Construction, Mining, Agriculture.
+Industry-specific intelligence built on the same EIOS layers:
+
+HR Intelligence · Finance Intelligence · Legal Intelligence · Manufacturing Intelligence · Healthcare Intelligence · Retail Intelligence · Banking Intelligence · Insurance Intelligence · Telecom Intelligence · Government Intelligence · Smart City Intelligence · Energy Intelligence · Logistics Intelligence · Education Intelligence · Pharma Intelligence · Aerospace Intelligence · Defense Intelligence · Construction Intelligence · Mining Intelligence · Agriculture Intelligence
 
 ---
 
@@ -138,3 +141,18 @@ A dedicated arm for foundational research and future technologies to keep the EI
 13. **Scientific AI Platform**
 14. **AI Supercomputer Platform**
 15. **Global Enterprise Intelligence Network**
+
+---
+
+## Architecture Philosophy
+
+To maximize long-term competitiveness, CerebroHive is organized as a layered platform rather than a collection of disconnected products:
+
+*   **Infrastructure Layer:** Cloud, compute, networking, storage, observability.
+*   **Intelligence Layer:** Models, inference, retrieval, memory, reasoning, planning.
+*   **Platform Layer:** Runtime, orchestration, governance, security, identity, APIs.
+*   **Product Layer:** Cerebro Studio, Archive, Flow, Insight, Copilot, HiveOps, HiveShield, HiveData, and other enterprise applications.
+*   **Industry Layer:** Domain-specific solutions for banking, healthcare, manufacturing, government, retail, and more.
+*   **Research Layer:** Advanced AI, robotics, scientific computing, and emerging deep-tech initiatives.
+
+This architecture aligns with the industry's shift toward full-stack, governed AI platforms capable of supporting enterprise-scale agentic systems while remaining modular enough to evolve as AI technologies advance.
