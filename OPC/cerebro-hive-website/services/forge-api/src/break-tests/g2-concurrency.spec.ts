@@ -284,7 +284,7 @@ describe('G2 — Concurrency Controls', () => {
       // This test EXPECTS the non-atomic version to lose updates.
       // If it succeeds without loss, the event loop is serializing our async ops.
       // We document both outcomes — the race is real, just not always observable.
-      expect(actual).toBeLessThanOrEqualTo(expected);
+      expect(actual).toBeLessThanOrEqual(expected);
       // At minimum: at least one update succeeded
       expect(actual).toBeGreaterThanOrEqual(INCREMENT);
     });
