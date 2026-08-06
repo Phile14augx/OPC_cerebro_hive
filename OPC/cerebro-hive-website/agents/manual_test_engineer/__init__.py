@@ -1,0 +1,2 @@
+from .skills import MANUAL_TEST_ENGINEER_SKILLS
+__all__ = ["MANUAL_TEST_ENGINEER_SKILLS"]
