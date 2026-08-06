@@ -199,7 +199,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Chromatic needs full git history
+          fetch-depth: 0 # Chromatic needs full git history
 
       - uses: pnpm/action-setup@v4
         with:
@@ -226,9 +226,9 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           storybookBuildDir: apps/studio/storybook-static
-          exitZeroOnChanges: true   # Don't fail CI — open a review instead
+          exitZeroOnChanges: true # Don't fail CI — open a review instead
           autoAcceptChanges: "main" # Auto-accept on main (already reviewed)
-          onlyChanged: true         # Only test stories that changed
+          onlyChanged: true # Only test stories that changed
 
   # ── Job 6: Bundle Analysis ────────────────────────────────────────────────
   bundle-analysis:
