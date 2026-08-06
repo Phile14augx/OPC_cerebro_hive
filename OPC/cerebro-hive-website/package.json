@@ -8,6 +8,8 @@
     "lint:fix": "turbo lint -- --fix",
     "typecheck": "turbo typecheck",
     "typecheck:root": "tsc -p tsconfig.json --noEmit",
+    "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
+    "test:dashboard": "vitest run --config vitest.dashboard.config.ts",
     "lint:root": "eslint . --max-warnings=0",
     "test": "turbo test",
     "test:integration": "dotenv -e .env.test -- vitest run --config tests/integration/vitest.config.ts",
