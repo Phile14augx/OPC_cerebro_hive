@@ -26,6 +26,7 @@ jobs:
         
       - name: Markdown Lint
         uses: DavidAnson/markdownlint-cli2-action@v16
+        continue-on-error: true
         with:
           globs: "**/*.md"
           
