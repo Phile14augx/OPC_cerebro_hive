@@ -56,6 +56,9 @@ jobs:
       - name: Typecheck root Next.js app (not a Turborepo workspace package)
         run: pnpm exec tsc -p tsconfig.json --noEmit
 
+      - name: Typecheck root dashboard tests
+        run: pnpm typecheck:test
+
       # Lint the root Next.js app (app/, components/, lib/). Same gap as the
       # typecheck step above: turbo lint only covers workspace packages. Config
       # is eslint.config.mjs at repo root; ignores apps/**, packages/**, etc.
@@ -196,7 +199,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Chromatic needs full git history
+          fetch-depth: 0 # Chromatic needs full git history
 
       - uses: pnpm/action-setup@v4
         with:
@@ -223,9 +226,9 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           storybookBuildDir: apps/studio/storybook-static
-          exitZeroOnChanges: true   # Don't fail CI — open a review instead
+          exitZeroOnChanges: true # Don't fail CI — open a review instead
           autoAcceptChanges: "main" # Auto-accept on main (already reviewed)
-          onlyChanged: true         # Only test stories that changed
+          onlyChanged: true # Only test stories that changed
 
   # ── Job 6: Bundle Analysis ────────────────────────────────────────────────
   bundle-analysis:
