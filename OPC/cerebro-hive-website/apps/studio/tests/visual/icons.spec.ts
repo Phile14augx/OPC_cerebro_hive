@@ -41,7 +41,7 @@ test.describe('Icon Visual Regressions - Dark Mode', () => {
   test.use({ colorScheme: 'dark', reducedMotion: 'reduce' });
 
   for (const iconId of ICONS_TO_TEST) {
-    test('Idle - Dark Mode', async ({ page }) => {
+    test(`Idle - Dark Mode: ${iconId}`, async ({ page }) => {
       await page.goto(`/docs/icons/${iconId}`);
       const svg = page.locator('.icon-preview-container svg');
       await expect(svg).toHaveScreenshot(`${iconId}-idle-dark.png`);

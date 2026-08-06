@@ -34,12 +34,12 @@ jobs:
 
     - name: Run Enterprise Navigation & UI Audit
       working-directory: ./OPC/cerebro-hive-website
-      run: pnpm run audit:enterprise
+      run: pnpm --filter @cerebro/studio run audit:enterprise
 
     - name: Validate Enterprise Score
       working-directory: ./OPC/cerebro-hive-website
       run: |
-        SCORE=$(node -e "const fs = require('fs'); const s = JSON.parse(fs.readFileSync('audit/scores.json')); console.log(s.accessibility)")
+        SCORE=$(node -e "const fs = require('fs'); const s = JSON.parse(fs.readFileSync('apps/studio/audit/scores.json')); console.log(s.accessibility)")
         if [ "$SCORE" -lt 90 ]; then
           echo "Accessibility score ($SCORE%) is below the required 90% threshold."
           exit 1
@@ -53,4 +53,4 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: enterprise-executive-dashboard
-        path: OPC/cerebro-hive-website/audit/executive-dashboard.md
+        path: OPC/cerebro-hive-website/apps/studio/audit/executive-dashboard.md
