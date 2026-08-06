@@ -48,6 +48,7 @@ export function getCerebroSphereSnapshot(): DashboardSnapshot {
         agent: "Release Guardian",
         summary: "Validated production release",
         timestamp: "08:42 UTC",
+        timestampIso: "2026-08-07T08:42:00Z",
         state: "Completed",
       },
     ],

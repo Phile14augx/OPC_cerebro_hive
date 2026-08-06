@@ -135,7 +135,10 @@ export function CerebroSphereDashboard({ snapshot }: { snapshot: DashboardSnapsh
                       <h3 className="font-space text-lg font-semibold">{activity.agent}</h3>
                       <p className="mt-1 text-sm text-text-secondary">{activity.summary}</p>
                     </div>
-                    <time className="text-xs font-medium uppercase tracking-[0.14em] text-text-secondary">
+                    <time
+                      dateTime={activity.timestampIso}
+                      className="text-xs font-medium uppercase tracking-[0.14em] text-text-secondary"
+                    >
                       {activity.timestamp}
                     </time>
                   </div>

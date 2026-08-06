@@ -20,6 +20,7 @@ export interface AgentActivity {
   agent: string;
   summary: string;
   timestamp: string;
+  timestampIso: string;
   state: string;
 }
 
