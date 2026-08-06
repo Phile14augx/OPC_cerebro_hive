@@ -56,6 +56,9 @@ jobs:
       - name: Typecheck root Next.js app (not a Turborepo workspace package)
         run: pnpm exec tsc -p tsconfig.json --noEmit
 
+      - name: Typecheck root dashboard tests
+        run: pnpm typecheck:test
+
       # Lint the root Next.js app (app/, components/, lib/). Same gap as the
       # typecheck step above: turbo lint only covers workspace packages. Config
       # is eslint.config.mjs at repo root; ignores apps/**, packages/**, etc.
