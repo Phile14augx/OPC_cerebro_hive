@@ -109,3 +109,5 @@ _tmp_*/
 .next/
 *.tsbuildinfo
 hs_err_pid*.log
+# Turborepo execution cache
+.turbo/
