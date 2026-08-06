@@ -89,3 +89,11 @@ si_keys.txt
 *.pfx
 secrets.*.json
 .verify/
+
+# ── Corporate legal documents — NEVER commit ─────────────────────────────────
+# AoA, MoA, DIR-2, INC-9, NOC, Share certificates and any other statutory docs.
+# Store in a password-protected archive or a restricted private repository instead.
+legal-docs/
+
+# ── Local worktree checkouts (machine-local, created by Invoke-CerebroWorktreeDispatch) ──
+.worktrees/
