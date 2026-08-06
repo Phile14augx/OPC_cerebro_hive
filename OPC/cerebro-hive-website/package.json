@@ -123,7 +123,7 @@
       "@opentelemetry/propagator-jaeger": ">=1.28.0",
       "@fastify/static": ">=8.0.4",
       "sharp": ">=0.33.5",
-      "vitest": ">=3.2.4",
+      "vitest": "3.2.4",
       "vite": ">=6.0.0",
       "next": ">=15.3.4"
     }
