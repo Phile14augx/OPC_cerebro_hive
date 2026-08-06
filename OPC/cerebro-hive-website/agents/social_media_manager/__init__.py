@@ -1,0 +1,2 @@
+from .skills import SOCIAL_MEDIA_MANAGER_SKILLS
+__all__ = ["SOCIAL_MEDIA_MANAGER_SKILLS"]
