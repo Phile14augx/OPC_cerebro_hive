@@ -1,7 +1,5 @@
-export default function PulseHome() {
-  return (
-    <div>
-      <h1>Pulse Workspace</h1>
-    </div>
-  );
+import { redirect } from 'next/navigation';
+
+export default function PulseRoot() {
+  redirect('/dashboard/mission-control');
 }
