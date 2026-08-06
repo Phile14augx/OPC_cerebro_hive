@@ -34,7 +34,7 @@ describe('ExecutionCommandHandler', () => {
     const result = await handler.handle(cmd);
 
     expect(mockValidator.validate).toHaveBeenCalledWith(cmd);
-    expect(mockManager.startExecution).toHaveBeenCalledWith('a1', 'v1', 'hi');
+    expect(mockManager.startExecution).toHaveBeenCalledWith('tenant1', 'a1', 'v1', 'hi');
     expect(result).toBe('exec-123');
   });
 
