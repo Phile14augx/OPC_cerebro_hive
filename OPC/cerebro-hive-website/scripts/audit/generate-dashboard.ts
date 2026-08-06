@@ -81,10 +81,6 @@ function run() {
   const dashboardPath = path.join(outDir, 'executive-dashboard.md');
   fs.writeFileSync(dashboardPath, dashboardContent);
   
-  // Create artifact path
-  const artifactPath = path.join('C:\\Users\\LOQ\\.gemini\\antigravity-ide\\brain\\61b2f863-c8c5-4b91-af6c-87aa90fa93b6', 'executive-dashboard.md');
-  fs.writeFileSync(artifactPath, dashboardContent);
-  
   console.log(`Enterprise Dashboard generated at audit/executive-dashboard.md`);
 }
 
