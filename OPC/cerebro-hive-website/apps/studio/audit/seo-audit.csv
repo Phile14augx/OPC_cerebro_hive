@@ -1,0 +1,253 @@
+Page,MetadataStatus,MetadataType
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(auth)/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/about/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/about/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/academy/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/academy/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/careers/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/careers/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/case-studies/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/case-studies/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/client-portal/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/client-portal/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/community/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/community/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/company/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/contact/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/contact/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/developers/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/developers/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/handbook/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/handbook/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/industries/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/industries/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/insights/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/insights/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/knowledge/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/knowledge/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/learn/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/learn/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/operations/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/operations/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/products/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/products/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/prompts/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/prompts/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/research/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/research/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/services/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/services/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/sitemap/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/status/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/status/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(auth)/login/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(auth)/register/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(internal)/engineering/layout.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(internal)/engineering/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(internal)/metrics/layout.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(internal)/metrics/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/archive/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/archive/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/layout.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/academy/corporate-programs/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/academy/corporate-programs/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/academy/courses/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/academy/courses/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/academy/learning-paths/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/academy/learning-paths/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/academy/referral/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/academy/referral/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/case-studies/corporate-ai-training/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/case-studies/corporate-ai-training/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/case-studies/logistics-support-automation/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/case-studies/logistics-support-automation/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/case-studies/sales-pipeline-automation/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/case-studies/sales-pipeline-automation/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/developers/api/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/developers/architecture/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/developers/changelog/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/developers/releases/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/developers/roadmap/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/enterprise/dashboard/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/enterprise/dashboard/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/industries/[slug]/page.tsx,Present,Dynamic
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/legal/ai-ethics/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/legal/privacy/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/legal/security/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/legal/terms/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/[slug]/page.tsx,Present,Dynamic
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/archive/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/archive/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/cloud/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/cloud/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/copilot/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/copilot/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/flow/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/flow/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/forge/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/forge/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/growth/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/growth/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveforge/layout.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveforge/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveops/layout.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveops/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/insight/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/insight/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/live-runtime/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/live-runtime/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/pulse/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/pulse/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/shield/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/shield/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/studio/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/studio/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/swarm/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/swarm/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/x/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/x/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/playground/design-system/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/playground/design-system/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/products/[slug]/page.tsx,Present,Dynamic
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/products/agentos/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/products/cerebro-x/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/products/hivepulse/page.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/prompts/[id]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/research/[slug]/page.tsx,Present,Dynamic
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/ai-tools-directory/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/ai-tools-directory/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/blog/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/blog/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/templates/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/templates/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/whitepapers/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/whitepapers/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/reviews/[workflowId]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/services/[slug]/page.tsx,Present,Dynamic
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/tools/ai-readiness/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/tools/ai-readiness/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/tools/solution-finder/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/tools/solution-finder/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/agents/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/ai/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/analytics/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/evaluation/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/evaluations/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/hiveops/layout.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/hiveops/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/playground/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/runtime/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/settings/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/talent/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/layout.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/workflows/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/archive/documents/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/archive/prompts/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/archive/search/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/admin/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/agents/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/capabilities/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/dashboard/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/evaluation/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/events/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/governance/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/knowledge/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/models/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/prompts/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/runtime/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/settings/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/simulation/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/traces/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/workflows/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/docs/icons/[id]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/design-system/icons/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveforge/billing/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveforge/catalog/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveforge/compute/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveforge/data/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveforge/diagnostics/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveforge/inventory/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveforge/marketplace/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveops/[...slug]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/actions/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/agent-executor/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/aiops/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/compiler/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/data-platform/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/devops/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/digital-twin/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/governance/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/mlops/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/research/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/router/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/sdk/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/secops/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/swarm/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/web3/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/world-model/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/os/zero-trust/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/studio/[workspaceId]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/products/agentos/live-runtime/layout.tsx,Present,Static
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/products/agentos/live-runtime/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/research/[slug]/[articleSlug]/page.tsx,Present,Dynamic
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/resources/guides/[slug]/page.tsx,Present,Dynamic
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/talent/candidate/ide/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/talent/recruiter/assessments/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/talent/recruiter/copilot/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/agents/[id]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/analytics/[view]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/evaluations/[view]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/api/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/architect/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/backend/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/bots/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/codegen/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/database/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/deploy/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/desktop/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/docs/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/mobile/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/monitoring/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/planner/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/repos/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/requirements/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/review/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/testing/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/ui-studio/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/forge/web/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/hiveops/clusters/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/hiveops/costs/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/hiveops/deployments/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/hiveops/gitops/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/hiveops/pipelines/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/hiveops/security/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/talent/builder/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/talent/candidates/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/audit/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/compliance/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/governance/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/incidents/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/policies/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/providers/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/risk/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/security/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/trust/settings/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/workflows/[id]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/archive/documents/[id]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/workflows/[id]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/platform/hiveforge/catalog/[category]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/talent/assessments/[id]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/app/talent/candidates/[id]/page.tsx,Missing Metadata,None
+D:/{MY_PROJECTS}/{OPC_cerebro_hive}/OPC/cerebro-hive-website/apps/studio/app/(platform)/studio/workflows/[id]/executions/[execId]/page.tsx,Missing Metadata,None
