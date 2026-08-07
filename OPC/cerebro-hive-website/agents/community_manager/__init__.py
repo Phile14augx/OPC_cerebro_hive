@@ -1,0 +1,2 @@
+from .skills import COMMUNITY_MANAGER_SKILLS
+__all__ = ["COMMUNITY_MANAGER_SKILLS"]
