@@ -41,7 +41,7 @@ jobs:
       run: pnpm install --no-frozen-lockfile
 
     - name: Generate Prisma client
-      run: pnpm --filter @cerebro/database run generate
+      run: pnpm --filter @cerebro/db run generate
 
     - name: 🏗️ Build Project
       run: pnpm run build --filter @cerebro/studio

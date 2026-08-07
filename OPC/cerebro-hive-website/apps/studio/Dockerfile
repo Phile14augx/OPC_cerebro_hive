@@ -73,7 +73,7 @@ ARG SERVICE_NAME=studio
 COPY . .
 
 # Generate Prisma client
-RUN pnpm --filter @cerebro/database exec prisma generate
+RUN pnpm --filter @cerebro/db exec prisma generate
 
 # Build Next.js in standalone mode
 ENV NEXT_TELEMETRY_DISABLED=1
