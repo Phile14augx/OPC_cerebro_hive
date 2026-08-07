@@ -1,7 +1,7 @@
 # Codex Prisma Migration Review
 
-**Task:** X-P1-2  
-**Status:** BLOCK — migration has not been generated  
+**Task:** X-P1-2
+**Status:** BLOCK — migration has not been generated
 **Reviewed:** 2026-08-06 17:39 IST
 
 ## Schema and runtime evidence

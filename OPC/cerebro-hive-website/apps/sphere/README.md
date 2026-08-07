@@ -71,7 +71,7 @@ DATABASE_URL=postgresql://...
 REDIS_URL=redis://localhost:6379
 ANTHROPIC_API_KEY=sk-ant-...
 NEXT_PUBLIC_PLATFORM_API_URL=http://localhost:8090
-NEXT_PUBLIC_PULSE_URL=http://localhost:3002   # HivePulse — for alert acknowledgement
+NEXT_PUBLIC_PULSE_URL=http://localhost:3403   # HivePulse — for alert acknowledgement
 MONTHLY_AI_BUDGET_USD=10000                   # FinOps budget cap
 ```
 
@@ -79,7 +79,7 @@ MONTHLY_AI_BUDGET_USD=10000                   # FinOps budget cap
 
 ```bash
 pnpm --filter @cerebro/sphere dev
-# → http://localhost:3003
+# → http://localhost:3404
 ```
 
 ---

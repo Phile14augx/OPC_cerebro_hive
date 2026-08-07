@@ -56,6 +56,12 @@
 
 6. **Codex product cycle blocked by test toolchain baseline (2026-08-07 18:21 IST).** HiveCloud FinOps reporting was selected from the Codex-primary MegaPlan backlog and isolated on `feat/hivecloud-finops-summary` at `origin/main` `d3e4d10`. The untouched `pnpm test` baseline exited 1 during Vitest startup (`ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-evaluator`) before product code was written. No PR, merge, deployment, or production verification occurred. Restore the pinned Node 22.12.0/Vitest baseline before resuming this slice; no other product slice is safely unblocked while the required repository test gate is red.
 
+7. **Codex product cycle blocked by stale frozen lockfile (2026-08-07 21:08 IST).** The same HiveCloud FinOps slice was resumed from current `origin/main` `b4dae84` with no competing registered worktree. Before tests or product code, `pnpm install --frozen-lockfile` exited 1 with `ERR_PNPM_OUTDATED_LOCKFILE`: the `apps/sphere` importer in `pnpm-lock.yaml` has empty specifiers that do not match `apps/sphere/package.json`. No commit, PR, merge, deployment, or production verification occurred. Synchronize the lockfile on `origin/main`, then resume X-P1-3 and rerun the untouched full baseline; no other product slice is safely unblocked while the mandatory dependency gate is red.
+
+8. **Codex product cycle still blocked by Node/Vite package-import baseline (2026-08-08 00:08 IST).** X-P1-3 resumed from current `origin/main` `580ef518` with no competing registered worktree. Pinned `corepack pnpm install --frozen-lockfile` succeeded across all 139 workspace projects, confirming the stale lockfile was repaired. The untouched `corepack pnpm test` then exited 1 before product code: `@cerebro/eda-sdk` failed during Vitest/Vite startup with `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` from `vite@8.1.5` on Node `22.17.0`; Turbo stopped at 1/27 successful tasks. No commit, PR, merge, deployment, or production verification occurred. Restore the repository-wide Node/Vite/Vitest baseline, then resume X-P1-3; no other product slice is safely unblocked while the mandatory test gate is red.
+
+9. **Codex product cycle valid nested-workspace baseline remains blocked (2026-08-08 03:21 IST).** X-P1-3 resumed from unchanged `origin/main` `580ef5180dad` with no competing registered feature worktree. The repository tracks the runnable pnpm workspace under `OPC/cerebro-hive-website`; from that exact directory, escalated `corepack pnpm install --frozen-lockfile` succeeded across all 139 projects and 2,220 packages. The untouched `corepack pnpm test` then exited 1 before product code: `@cerebro/capability-registry` failed during Vitest startup with `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` imported by `vite@8.1.5` on Node `22.17.0`; Turbo stopped at 1/26 successful tasks. No implementation, commit, push, PR, CI run, merge, deployment, or production-health verification occurred. Restore the Node/Vite/Vitest baseline on `origin/main`, then resume X-P1-3; no other product slice is safely unblocked while the required repository test gate is red.
+
 ---
 
 ## Upcoming (not yet assigned)
@@ -65,4 +71,4 @@
 - **Phase P2 EIOS doc migration** — `architecture/ARCHITECTURE_INDEX.md` still lists `CEREBROHIVE_CONSTITUTION.md` (P1 update) and `CEREBROHIVE-6-MONTH-MASTER-PLAN.md` as pending migration.
 - **InMemoryExecutionRepository replacement** — execution history doesn't survive restart (CONCERNS.md finding #3).
 
-*Last updated: 2026-08-07 12:00 IST by CerebroHive Noon Audit*
+*Last updated: 2026-08-08 03:21 IST by Codex product delivery cycle*

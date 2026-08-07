@@ -153,16 +153,16 @@ Jan → Feb      Feb → Mar      Mar → Apr      Apr → May      May → Jun 
 ─────────────────────────────────────────────────────────────────────────────────────
 FOUNDATION     INFRA &        INTELLIGENCE   VERTICALS &    HARDENING &    GTM LAUNCH
 & CORE         DEV PLATFORM   & BUSINESS     SERVICES       PRODUCTION     & SCALE
-               
+
 Products 1-10  Products 11-20 Products 21-30 Products 31-40 Products 41-50 All 50 live
 Services 1-10  Services 11-20 Services 21-30 Services 31-40 Services 41-50 All 50 live
 
 CLAUDE:        CLAUDE:        CLAUDE:        CLAUDE:        CLAUDE:        CLAUDE:
 Orchestration  Agent logic    Business apps  Legal/HR/Sales Audit & QA     GTM engine
-               
+
 CODEX:         CODEX:         CODEX:         CODEX:         CODEX:         CODEX:
 Core APIs      Infra code     App backends   Vert. APIs     Load test      Pipeline
-               
+
 GEMINI:        GEMINI:        GEMINI:        GEMINI:        GEMINI:        GEMINI:
 Search/Archive Knowledge graph Analytics BI  Domain AI      Red team       Search GTM
 ─────────────────────────────────────────────────────────────────────────────────────
