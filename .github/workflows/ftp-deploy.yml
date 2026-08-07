@@ -57,7 +57,7 @@ jobs:
         cp -R apps/studio/.next/static apps/studio/.next/standalone/apps/studio/.next/static
 
     - name: 📂 Sync files to Hostinger
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      uses: SamKirkland/FTP-Deploy-Action@v4.4.0
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
