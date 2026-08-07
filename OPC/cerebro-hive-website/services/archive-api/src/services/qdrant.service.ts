@@ -10,7 +10,7 @@ export function getQdrantClient(): QdrantClient {
     }
     qdrantClient = new QdrantClient({
       url: env.QDRANT_URL,
-      apiKey: env.QDRANT_API_KEY,
+      ...(env.QDRANT_API_KEY ? { apiKey: env.QDRANT_API_KEY } : {}),
     });
   }
   return qdrantClient;

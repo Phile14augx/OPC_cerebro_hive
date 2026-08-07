@@ -7,6 +7,7 @@ import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import sensible from '@fastify/sensible';
 import { serializerCompiler, validatorCompiler, jsonSchemaTransform } from 'fastify-type-provider-zod';
+import { uploadRoutes } from './routes/upload.route.js';
 
 export async function buildApp() {
   const app = fastify({
@@ -44,11 +45,10 @@ export async function buildApp() {
     return { status: 'ok', service: 'archive-api' };
   });
 
-  // Register v1 routes (placeholders)
+  // Register v1 routes
   app.register(async (v1) => {
-    v1.post('/uploads', async (request, reply) => {
-      reply.status(201).send({ uploadId: 'upl_placeholder' });
-    });
+    await v1.register(uploadRoutes);
+
     v1.post('/search', async (request, reply) => {
       reply.send({ total: 0, results: [] });
     });
