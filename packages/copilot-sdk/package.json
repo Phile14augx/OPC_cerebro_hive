@@ -1,0 +1,16 @@
+{
+  "name": "@cerebro/copilot-sdk",
+  "version": "1.0.0",
+  "description": "CerebroCopilot — Enterprise AI Assistant SDK for CerebroHive AEOS",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.ts\""
+  },
+  "dependencies": {},
+  "devDependencies": { "typescript": "^5.0.0" },
+  "keywords": ["cerebro-copilot", "ai-assistant", "enterprise", "aeos"]
+}
