@@ -54,6 +54,8 @@
 
 5. **legal-docs/ exposure risk.** Six statutory corporate documents in the working tree. Confirm `legal-docs/` is in `.gitignore` before any bulk staging.
 
+6. **Codex product cycle blocked by test toolchain baseline (2026-08-07 18:21 IST).** HiveCloud FinOps reporting was selected from the Codex-primary MegaPlan backlog and isolated on `feat/hivecloud-finops-summary` at `origin/main` `d3e4d10`. The untouched `pnpm test` baseline exited 1 during Vitest startup (`ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-evaluator`) before product code was written. No PR, merge, deployment, or production verification occurred. Restore the pinned Node 22.12.0/Vitest baseline before resuming this slice; no other product slice is safely unblocked while the required repository test gate is red.
+
 ---
 
 ## Upcoming (not yet assigned)

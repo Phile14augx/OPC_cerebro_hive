@@ -101,3 +101,11 @@ desktop.ini
 *.sln
 *.sw?
 *~
+
+# CerebroHive protected paths
+legal-docs/
+.audit-quarantine/
+_tmp_*/
+.next/
+*.tsbuildinfo
+hs_err_pid*.log

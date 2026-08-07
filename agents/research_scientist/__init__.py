@@ -1,0 +1,3 @@
+from .skills import RESEARCH_SCIENTIST_SKILLS
+
+__all__ = ["RESEARCH_SCIENTIST_SKILLS"]
