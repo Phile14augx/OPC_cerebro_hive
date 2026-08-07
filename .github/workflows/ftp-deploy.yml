@@ -14,6 +14,9 @@ jobs:
   web-deploy:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
+    # FTP transfers should complete within minutes; do not let a stalled connection
+    # block every later production deployment for the default six-hour job limit.
+    timeout-minutes: 45
     defaults:
       run:
         working-directory: ./OPC/cerebro-hive-website
