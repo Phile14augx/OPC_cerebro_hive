@@ -213,4 +213,3 @@ git commit -m "feat(readiness): hand off consultation leads"
 - Spec coverage: Tasks 1–2 cover the public page, six factors, immediate result, and accessibility. Task 3 covers consent, hand-off, and truthful failure behavior.
 - Exclusions: authentication, payment, email reports, and CRM integration are not added.
 - Type consistency: `AssessmentResult` is the scoring output, consultation payload metadata, and the object guarded by the lead schema.
-

@@ -1885,4 +1885,3 @@ model ArchiveSearchQuery {
 
   @@index([tenantId, createdAt])
 }
-

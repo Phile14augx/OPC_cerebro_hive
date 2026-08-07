@@ -1,9 +1,9 @@
 # ADR-053: Cerebro Runtime as Framework-Agnostic Agent Execution Layer
 
-**Status:** Proposed  
-**Date:** 2026-08-02  
-**Author:** Agent Engineering Team  
-**Decision Drivers:**  
+**Status:** Proposed
+**Date:** 2026-08-02
+**Author:** Agent Engineering Team
+**Decision Drivers:**
 - Framework lock-in risk with LangChain/LangGraph
 - Need for vendor-agnostic agent platform
 - Enterprise requirements for multi-backend support
@@ -76,13 +76,13 @@ interface AgentFrameworkAdapter {
   // Agent lifecycle
   createAgent(config: AgentConfig): Promise<CerebroAgent>;
   executeAgent(agentId: string, input: any): Promise<ExecutionResult>;
-  
+
   // Tool registration
   registerTool(tool: CerebroTool): Promise<void>;
-  
+
   // Memory integration
   connectMemory(memory: CerebroMemory): Promise<void>;
-  
+
   // Graph operations
   buildGraph(workflow: CerebroWorkflow): Promise<void>;
 }
