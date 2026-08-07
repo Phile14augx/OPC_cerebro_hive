@@ -101,7 +101,8 @@
       "Bash(curl -s \"https://cerebropchive.org/?cachebust=$\\(date +%s\\)\" -H \"Cache-Control: no-cache\")",
       "Bash(curl -s -o /dev/null -w \"local:%{http_code}\\\\n\" http://localhost:3000/)",
       "Bash(ps -W)",
-      "Bash(curl -s -o /dev/null -w \"products:%{http_code}\\\\n\" http://localhost:3000/products/)"
+      "Bash(curl -s -o /dev/null -w \"products:%{http_code}\\\\n\" http://localhost:3000/products/)",
+      "Bash(echo \"EXIT=$?\")"
     ],
     "additionalDirectories": [
       "d:\\{MY_PROJECTS}\\{OPC_cerebro_hive}\\.github\\workflows",
