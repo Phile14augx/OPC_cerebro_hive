@@ -1,0 +1,23 @@
+{
+  "name": "@cerebro/runtime",
+  "version": "0.1.0",
+  "description": "CerebroHive Core Runtime that orchestrates execution providers and handles state, telemetry, and lifecycle.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@cerebro/contracts": "workspace:*",
+    "@cerebro/agent-sdk": "workspace:*",
+    "@cerebro/domain": "workspace:*",
+    "@cerebro/tooling": "workspace:*",
+    "@cerebro/ai-gateway": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
