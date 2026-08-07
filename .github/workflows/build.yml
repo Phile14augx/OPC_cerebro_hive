@@ -139,7 +139,7 @@ jobs:
       # Login to AWS ECR (production only)
       - name: Configure AWS credentials
         if: github.ref == 'refs/heads/main' || github.event.inputs.push_to_ecr == 'true'
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
