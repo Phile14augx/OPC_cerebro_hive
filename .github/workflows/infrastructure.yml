@@ -129,7 +129,7 @@ jobs:
 
       - name: Configure AWS OIDC credentials
         if: matrix.changed == 'true' || github.event_name == 'workflow_dispatch'
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ matrix.role_arn }}
           aws-region: ${{ env.AWS_REGION }}
@@ -214,7 +214,7 @@ jobs:
           fi
 
       - name: Configure AWS OIDC credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets[format('AWS_{0}_ROLE_ARN', steps.env.outputs.name)] }}
           aws-region: ${{ env.AWS_REGION }}
