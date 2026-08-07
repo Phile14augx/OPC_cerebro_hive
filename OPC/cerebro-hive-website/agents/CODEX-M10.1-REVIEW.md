@@ -1,7 +1,7 @@
 # Codex M10.1/M10.4 Merge-Readiness Review
 
-**Task:** X-P1-1  
-**Status:** BLOCK — no PR exists, and the worktree mixes milestone scope  
+**Task:** X-P1-1
+**Status:** BLOCK — no PR exists, and the worktree mixes milestone scope
 **Reviewed:** 2026-08-06 17:39 IST
 
 ## Evidence

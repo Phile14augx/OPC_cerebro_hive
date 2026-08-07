@@ -1,7 +1,7 @@
 # Codex M10.2 Provider Tool-Calling Test Plan
 
-**Task:** X-P2-1  
-**Status:** READY FOR IMPLEMENTATION  
+**Task:** X-P2-1
+**Status:** READY FOR IMPLEMENTATION
 **Scope:** `packages/ai-gateway/src/types.ts`, provider adapters, and `AgentRuntimeService`
 
 ## Contract under test
