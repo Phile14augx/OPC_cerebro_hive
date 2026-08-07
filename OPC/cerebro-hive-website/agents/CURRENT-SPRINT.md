@@ -58,6 +58,8 @@
 
 7. **Codex product cycle blocked by stale frozen lockfile (2026-08-07 21:08 IST).** The same HiveCloud FinOps slice was resumed from current `origin/main` `b4dae84` with no competing registered worktree. Before tests or product code, `pnpm install --frozen-lockfile` exited 1 with `ERR_PNPM_OUTDATED_LOCKFILE`: the `apps/sphere` importer in `pnpm-lock.yaml` has empty specifiers that do not match `apps/sphere/package.json`. No commit, PR, merge, deployment, or production verification occurred. Synchronize the lockfile on `origin/main`, then resume X-P1-3 and rerun the untouched full baseline; no other product slice is safely unblocked while the mandatory dependency gate is red.
 
+8. **Codex product cycle still blocked by Node/Vite package-import baseline (2026-08-08 00:08 IST).** X-P1-3 resumed from current `origin/main` `580ef518` with no competing registered worktree. Pinned `corepack pnpm install --frozen-lockfile` succeeded across all 139 workspace projects, confirming the stale lockfile was repaired. The untouched `corepack pnpm test` then exited 1 before product code: `@cerebro/eda-sdk` failed during Vitest/Vite startup with `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` from `vite@8.1.5` on Node `22.17.0`; Turbo stopped at 1/27 successful tasks. No commit, PR, merge, deployment, or production verification occurred. Restore the repository-wide Node/Vite/Vitest baseline, then resume X-P1-3; no other product slice is safely unblocked while the mandatory test gate is red.
+
 ---
 
 ## Upcoming (not yet assigned)
@@ -67,4 +69,4 @@
 - **Phase P2 EIOS doc migration** — `architecture/ARCHITECTURE_INDEX.md` still lists `CEREBROHIVE_CONSTITUTION.md` (P1 update) and `CEREBROHIVE-6-MONTH-MASTER-PLAN.md` as pending migration.
 - **InMemoryExecutionRepository replacement** — execution history doesn't survive restart (CONCERNS.md finding #3).
 
-*Last updated: 2026-08-07 21:08 IST by Codex product delivery cycle*
+*Last updated: 2026-08-08 00:08 IST by Codex product delivery cycle*
