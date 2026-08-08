@@ -78,7 +78,7 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
   await server.register(swagger, {
     openapi: {
       info: { title: 'CerebroHive Platform API', version: '1.0.0' },
-      servers: [{ url: 'http://localhost:3000' }],
+      servers: [{ url: 'http://localhost:3406' }],
     },
   });
   await server.register(swaggerUi, {
