@@ -1,34 +1,49 @@
-# Gemini Tasks — Midday Assignment 2026-08-07 12:00 IST
+# Gemini Tasks — Night Assignment 2026-08-08 03:00 IST
 
-**Audit session:** Noon | **Next check:** 3 AM tonight
+**Audit session:** Night (3 AM) | **Next check:** Noon 2026-08-08
 **Git commits reviewed:** 0 — git unreachable from audit sandbox; completion assessed via file modification timestamps
-**Tasks completed since last session (3 AM):** None confirmed — task files unchanged, no new artifacts detected
+**Tasks completed since last session (Noon 2026-08-07):** None confirmed — GEMINI-TASKS.md unchanged since 00:52 IST 2026-08-08
 
 ---
 
-## ⚠️ CRITICAL ESCALATION — 4th Cycle
+## ⚠️ CRITICAL ESCALATION — 5th Cycle
 
-G-P0-1 has been pending for **4 consecutive audit cycles** without a commit. `infra/README.md` was modified at 21:42 IST on Aug-06 (the modified content is confirmed on disk) but was never committed. G-P1-1 and G-P2-1 remain blocked behind it.
+G-P0-1 has been pending for **5 consecutive audit cycles** without a commit. `infra/README.md` was modified (content verified correct on disk) but remains uncommitted. G-P1-1 and G-P2-1 remain blocked behind it.
 
 | Task | Slipped cycles |
 |------|---------------|
-| G-P0-1: Commit documentation change-set | **4** |
-| G-P1-1: Validate Python agent-runner | 2 |
-| G-P2-1: Hermes tool-binding contract | 2 |
+| G-P0-1: Commit documentation change-set | **5** |
+| G-P1-1: Validate Python agent-runner | **3** |
+| G-P2-1: Hermes tool-binding contract | **3** |
+| G-P1-2: Commit docs/content-migration batch A | **1** |
 
-**Start G-P0-1 immediately. The infra/README.md content is already written — just validate and commit.**
+**Start G-P0-1 and G-P1-2a in parallel immediately — both are pure documentation, no code execution needed.**
+
+---
+
+## ✅ Completed Today (inferred from commits/file timestamps)
+*None — 0 commits detected since noon 2026-08-07.*
+
+## ⚠️ All Slipped Tasks (carrying forward)
+
+| Task | Last assigned | Slipped cycles | Notes |
+|------|--------------|---------------|-------|
+| G-P0-1: Commit documentation change-set | 2026-08-06 Noon | **5** | `infra/README.md` content verified correct; still not committed |
+| G-P1-1: Validate Python agent-runner | 2026-08-07 3 AM | **3** | Import check + registry validation pending |
+| G-P2-1: Hermes tool-binding contract | 2026-08-06 Noon | **3** | Blocked on G-P0-1 (INTEGRATION-NOTES.md must commit first) |
+| G-P1-2a: Commit docs/01–07 batch | 2026-08-07 3 AM | **1** | Pure docs, zero risk — should run alongside G-P0-1 |
 
 ---
 
 ## 🔴 P0 — Blockers (do first)
 
-### G-P0-1 · Commit the documentation change-set — CRITICAL (4 cycles)
+### G-P0-1 · Commit the documentation change-set — CRITICAL (5 cycles)
 
-**Context:** `infra/README.md` is already modified with correct content (Terraform/CDK ownership boundary). The full set of documentation files listed below needs review and commit. If the full set can't be validated at once, **commit what is accurate today** in passes.
+**Context:** `infra/README.md` is already modified with correct content (Terraform/CDK ownership boundary confirmed). Commit in two passes if needed.
 
 **Files to commit:**
 ```
-infra/README.md                                    ← already modified; verify Terraform/CDK claim is accurate
+infra/README.md                                    ← content confirmed correct; commit this first, no excuses
 MASTER-PLAN-EVOLUTION-LOG.md
 CEREBROHIVE_CONSTITUTION.md
 architecture/ARCHITECTURE_INDEX.md
@@ -39,18 +54,18 @@ agents/hermes/INTEGRATION-NOTES.md
 ```
 
 **Validation checklist before committing:**
-1. `infra/README.md` — `cerebro-review-stack` is correctly described as ephemeral CDK preview stack ✓ (confirmed in current file content). Commit this one first.
-2. `architecture/ARCHITECTURE_INDEX.md` — confirm all linked files exist in the repo.
-3. `agents/hermes/INTEGRATION-NOTES.md` — all endpoint references must be marked `[confirmed]`, `[missing]`, or `[TBD]`.
-4. Run secrets grep: `grep -rE "(sk-|ghp_|AKIA)" infra/ architecture/ docs/09-templates/ agents/hermes/`
+1. `infra/README.md` — `cerebro-review-stack` correctly described as ephemeral CDK preview stack ✓ (previously confirmed)
+2. `architecture/ARCHITECTURE_INDEX.md` — confirm all linked files exist in the repo
+3. `agents/hermes/INTEGRATION-NOTES.md` — all endpoint references marked `[confirmed]`, `[missing]`, or `[TBD]`
+4. Secrets check: `grep -rE "(sk-|ghp_|AKIA)" infra/ architecture/ docs/09-templates/ agents/hermes/`
 
 **Commit in two passes if needed:**
-- Pass 1 (commit today, no excuses): `infra/README.md`, `architecture/ARCHITECTURE_INDEX.md`, `MASTER-PLAN-*.md`, `CEREBROHIVE_CONSTITUTION.md`
-- Pass 2: Templates + Hermes integration notes
+- **Pass 1 (no further excuses — do this right now):** `infra/README.md`, `architecture/ARCHITECTURE_INDEX.md`, `MASTER-PLAN-*.md`, `CEREBROHIVE_CONSTITUTION.md`
+- **Pass 2:** Templates + Hermes integration notes
 
 Include `[G-P0-1]` in commit messages.
 
-**Success criteria:** All listed files committed (or a documented subset with reason for deferral); no guessed facts remain in committed files.
+**Success criteria:** All listed files committed (or a documented subset with reason for deferral); no guessed facts in committed files.
 **Complexity:** M | **Dependencies:** none
 
 ---
@@ -58,7 +73,7 @@ Include `[G-P0-1]` in commit messages.
 ## 🟠 P1 — Critical (start G-P1-1 and G-P1-2a in parallel with G-P0-1)
 
 ### G-P1-1 · Validate and commit the Python agent-runner role expansion
-**Slipped 2 cycles**
+**Slipped 3 cycles**
 
 **Files (from `agents/TRIAGE-REPORT-2026-08-06.md`, changeset `feat/agent-runner-python`, ~34 files):**
 ```
@@ -79,22 +94,22 @@ python -m pytest tests/ -x -q 2>&1 | head -50
 python -c "from agent_runner import registry; print(registry.list_agents())"
 python -c "from agent_runner import config; config.validate()"
 ```
-If tests don't exist, confirm all role modules import cleanly. Check `registry.py` for consistency with the `agents/` role subdirectories.
+If tests don't exist, confirm all role modules import cleanly. Check `registry.py` for consistency with the `agents/` role subdirectories in the main repo.
 
 Commit clean, validated code:
 ```
 feat(agent-runner): Python role expansion — validated import and registry wiring  [G-P1-1]
 ```
 
-**Success criteria:** import checks pass; registry is consistent; coherent code committed; any gaps documented.
-**Complexity:** M | **Dependencies:** C-P0-3 Phase A (confirm no scope overlap)
+**Success criteria:** Import checks pass; registry is consistent; coherent code committed; any gaps documented.
+**Complexity:** M | **Dependencies:** C-P0-3 Phase A (confirm no scope overlap before committing)
 
 ---
 
-### G-P1-2 · Begin committing docs/content-migration in batches
-**~1,200 files in docs/ — start with Commit A**
+### G-P1-2 · Commit docs/content-migration in batches
+**Slipped 1 cycle**
 
-**Commit A (do today):**
+**Commit A (do today — parallel with G-P0-1):**
 ```
 docs/01-company-foundation/
 docs/02-brand-messaging/
@@ -127,7 +142,7 @@ Include `[G-P1-2a]` and `[G-P1-2b]` in commit messages.
 ## 🟡 P2 — High (after G-P0-1)
 
 ### G-P2-1 · Produce a pre-integration Hermes tool-binding contract
-**Slipped 2 cycles | Blocked on G-P0-1**
+**Slipped 3 cycles | Blocked on G-P0-1**
 
 **Files:**
 ```
@@ -153,6 +168,8 @@ Commit with `[G-P2-1]`.
 
 ## How to use this file in Antigravity
 
-Start G-P0-1 and G-P1-2a in parallel — both are pure documentation, no code execution needed. Run G-P1-1 after confirming a Python environment is available. Always include the task ID in commit messages. Never commit `.env` or any file containing secret values.
+Start G-P0-1 Pass 1 and G-P1-2a in parallel — both are pure documentation, no code execution needed. Run G-P1-1 after confirming a Python environment is available. Always include the task ID in commit messages. Never commit `.env` or any file containing secret values.
 
-*Written by CerebroHive Noon Audit — 2026-08-07 12:00 IST*
+**Priority order if you can only do one thing:** G-P0-1 Pass 1 (content already written — just validate and commit). Then G-P1-2a (1,200 docs waiting). Then G-P1-1 (Python validation). Then G-P2-1 (once G-P0-1 lands).
+
+*Written by CerebroHive Night Audit — 2026-08-08 03:00 IST*

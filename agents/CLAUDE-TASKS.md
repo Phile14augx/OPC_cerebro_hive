@@ -1,33 +1,93 @@
-# Claude Tasks — Midday Assignment 2026-08-07 12:00 IST
+# Claude Tasks — Night Assignment 2026-08-08 03:00 IST
 
-**Audit session:** Noon | **Next check:** 3 AM tonight
+**Audit session:** Night (3 AM) | **Next check:** Noon 2026-08-08
 **Git commits reviewed:** 0 — git unreachable from audit sandbox; completion assessed via file modification timestamps
-**Tasks completed since last session (3 AM):** None confirmed — task files unchanged, no new artifacts detected
+**Tasks completed since last session (Noon 2026-08-07):** None confirmed — CLAUDE-TASKS.md and GEMINI-TASKS.md unchanged since 00:52 IST 2026-08-08
 
 ---
 
-## ⚠️ CRITICAL ESCALATION — 4th Cycle
+## ⚠️ CRITICAL ESCALATION — 5th Cycle + New P0 Blocker
 
-C-P0-1, C-P0-2, and C-P0-3 have now been pending across **4 consecutive audit cycles** (Noon Aug-06 → 3 AM Aug-07 → Noon Aug-07) with **zero commits**. This constitutes a delivery risk for the Month 2–4 plan. These tasks are unchanged from the 3 AM assignment. There is nothing new to plan — the work must simply be executed.
+C-P0-1, C-P0-2, and C-P0-3 have now been pending across **5 consecutive audit cycles** with **zero commits**. A new P0 blocker (C-P0-4) has been detected: the repository-wide test baseline is broken, blocking Codex's entire product delivery pipeline.
 
 | Task | Slipped cycles |
 |------|---------------|
-| C-P0-1: De-scope M10.1 worktree, commit, open PR | **4** |
-| C-P0-2: Apply Prisma migration | **4** |
-| C-P0-3a/b/c: Execute triage plan | **3** (analysis done) |
+| C-P0-1: De-scope M10.1 worktree, commit, open PR | **5** |
+| C-P0-2: Apply Prisma migration | **5** |
+| C-P0-3a/b/c: Execute triage plan | **4** (analysis done, execution pending) |
+| C-P0-4: Fix Node/Vite/Vitest baseline | **NEW — detected 03:21 IST** |
 
-**No P1 work until all three P0s have at least one commit.**
+**No P1 work until all P0s have at least one commit. C-P0-1, C-P0-2, C-P0-3, and C-P0-4 can all run in parallel.**
 
 ---
 
-## 🔴 P0 — Blockers (do first, can run in parallel)
+## ✅ Completed Today (inferred from commits/file timestamps)
+*None — 0 commits detected since noon 2026-08-07.*
 
-### C-P0-1 · De-scope M10.1 worktree then commit and push PR
-**Slipped 4 cycles — CRITICAL**
+## ⚠️ Slipped Tasks (carrying forward)
 
-**Context:** Codex's review (`agents/CODEX-M10.1-REVIEW.md`) found that the worktree mixes M10.1/M10.4 runtime files with M10.2 provider-tool files. The PR cannot be opened until scope is separated.
+| Task | Last assigned | Slipped cycles | Notes |
+|------|--------------|---------------|-------|
+| C-P0-1: De-scope M10.1 worktree | 2026-08-06 Noon | **5** | Mixed M10.1/M10.2 scope per CODEX-M10.1-REVIEW.md |
+| C-P0-2: Apply Prisma migration | 2026-08-06 Noon | **5** | No migration SQL exists; schema has AgentExecution* tables |
+| C-P0-3a: Commit audit/sprint files | 2026-08-06 Noon | **4** | No-code, lowest risk — should have been done first |
+| C-P0-3b: Commit architecture docs | 2026-08-07 3 AM | **2** | Depends on Phase A |
+| C-P0-3c: Commit root planning docs | 2026-08-07 3 AM | **2** | Depends on Phase A |
+| C-P1-1: Typecheck baseline | 2026-08-07 3 AM | 0 | Blocked on C-P0-1, C-P0-2 |
+| C-P1-2: M10.2 provider tool-calling | 2026-08-07 3 AM | 0 | Blocked on C-P0-1 (stash recovery) |
 
-**Step 1 — Park M10.2 files (do not delete):**
+---
+
+## 🔴 P0 — Blockers (do first — C-P0-1 through C-P0-4 can run in parallel)
+
+### C-P0-4 · Fix Node/Vite/Vitest baseline — NEW BLOCKER
+**Detected at 03:21 IST — blocks all product-slice test gating**
+
+**Symptom:** `corepack pnpm test` exits 1 during Vitest startup with `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` imported by `vite@8.1.5` on Node `22.17.0`. Turbo stops at 1/26 tasks. Failing package: `@cerebro/capability-registry`.
+
+**Investigation steps:**
+```bash
+# From repo root (OPC/cerebro-hive-website)
+node --version   # confirm Node 22.17.0
+pnpm exec vite --version   # confirm vite@8.1.5
+
+# Isolate the failure
+cd packages/capability-registry
+pnpm test 2>&1 | head -40
+```
+
+**Fix path A — Vite config (most likely):** Open `packages/capability-registry/vite.config.ts` (or `vitest.config.ts`). The `#module-sync-enabled` subpath import means the package has a `"imports"` map in `package.json` with a `#module-sync-enabled` key that Vite 8 cannot resolve. Check:
+```bash
+cat packages/capability-registry/package.json | jq '.imports'
+```
+Add or fix the subpath export to include a `"default"` fallback, or update the `resolve.conditions` in the vite config to include `"module-sync"`.
+
+**Fix path B — Vite 8 compat:** If the issue is repo-wide (all packages), check root `vite.config.ts` or `vitest.config.ts` for missing `resolve.conditions`. Vite 8 dropped some legacy CJS conditions. The fix is typically:
+```ts
+// vitest.config.ts
+export default defineConfig({
+  resolve: {
+    conditions: ['module-sync', 'module', 'browser', 'node']
+  }
+})
+```
+
+**Fix path C — Node/ESM alignment:** If neither A nor B resolves it, check if Node 22.17.0 changed the `#module-sync-enabled` behaviour. Pinning to `22.12.0` (the previously passing version per Codex history) via `.nvmrc` / `package.json#engines` may unblock immediately.
+
+**Commit with:**
+```
+fix(baseline): resolve ERR_PACKAGE_IMPORT_NOT_DEFINED vite@8/node22 baseline  [C-P0-4]
+```
+
+**Success criteria:** `corepack pnpm test` completes all 26 Turbo tasks without the `ERR_PACKAGE_IMPORT_NOT_DEFINED` error; no existing tests newly failing.
+**Complexity:** M | **Dependencies:** none
+
+---
+
+### C-P0-1 · De-scope M10.1 worktree, commit, open PR
+**Slipped 5 cycles — CRITICAL**
+
+**Step 1 — Park M10.2 files:**
 ```
 packages/ai-gateway/src/types.ts
 packages/ai-gateway/src/gateway.ts
@@ -35,7 +95,7 @@ packages/ai-gateway/src/providers/anthropic.provider.ts
 packages/ai-gateway/src/providers/openai.provider.ts
 apps/platform-api/src/modules/runtime/providers/ToolRuntimeProvider.ts
 ```
-Use `git stash` or a temporary branch to park these before committing M10.1.
+Use `git stash` or a temp branch `feat/m10.2-parked`.
 
 **Step 2 — Commit only M10.1/M10.4 scope** per `agents/M10.1-COMMIT-HANDOFF.md`:
 ```
@@ -57,23 +117,23 @@ pnpm turbo typecheck --filter=@cerebro/runtime --filter=@cerebro/agent-builder-c
 ---
 
 ### C-P0-2 · Apply and verify the Prisma migration
-**Slipped 4 cycles — CRITICAL**
+**Slipped 5 cycles — CRITICAL**
 
 **Files:** `packages/database/prisma/schema.prisma`, `packages/database/prisma/migrations/` (to be generated)
 
-From the `packages/database` directory:
 ```bash
-pnpm prisma migrate dev --name add-agent-execution-models-aug-07
+cd packages/database
+pnpm prisma migrate dev --name add-agent-execution-models-aug-08
 ```
-**Stop and escalate if you see any `DROP TABLE`, `DROP COLUMN`, or destructive `ALTER COLUMN`.** Then verify:
+**Stop and escalate if you see `DROP TABLE`, `DROP COLUMN`, or destructive `ALTER COLUMN`.** Then verify:
 ```bash
 pnpm prisma migrate status
 pnpm prisma generate
 ```
 
-Commit with message:
+Commit:
 ```
-feat(db): add AgentExecution* migration — aug-07  [C-P0-2]
+feat(db): add AgentExecution* migration — aug-08  [C-P0-2]
 ```
 
 **Success criteria:** `pnpm prisma migrate status` shows no pending migrations; no destructive SQL.
@@ -82,9 +142,7 @@ feat(db): add AgentExecution* migration — aug-07  [C-P0-2]
 ---
 
 ### C-P0-3 · Execute the triage plan — commit the safe changesets
-**Analysis done (TRIAGE-REPORT-2026-08-06.md exists); execution pending 3 cycles**
-
-Work through changesets in safety order. Each phase can be committed independently.
+**Analysis done (TRIAGE-REPORT-2026-08-06.md); execution pending 4 cycles**
 
 **Phase A — Audit/Sprint coordination (no code, no secrets — start here):**
 ```
@@ -97,7 +155,7 @@ agents/CerebroHive_AEOS_6Month_MegaPlan.md
 CURRENT-SPRINT.md (root — confirm not duplicate of agents/ version)
 PROGRESS.md, AGENT-RUNTIME-BACKLOG.md, AGENTS.md
 ```
-Verify `.gitignore` has `legal-docs/` before staging anything. Use the pre-written commit message from the TRIAGE-REPORT.
+Verify `.gitignore` has `legal-docs/` before staging anything. Use the pre-written commit message from TRIAGE-REPORT.
 
 **Phase B — Architecture docs:**
 Commit `architecture/` paths under `docs/architecture-update`.
@@ -109,7 +167,7 @@ Run `grep -r "sk-" --include="*.md"` to confirm no secrets, then commit:
 Defer to Gemini: `docs/**`, `services/agent-runner/`, `infra/` (G-P0-1 / G-P1-1 territory).
 
 **Success criteria:** Audit, architecture, and root planning files committed; `git status` visibly smaller.
-**Complexity:** L | **Dependencies:** none (parallel with C-P0-1, C-P0-2)
+**Complexity:** L | **Dependencies:** none (parallel with C-P0-1, C-P0-2, C-P0-4)
 
 ---
 
@@ -139,6 +197,8 @@ Commit with `[C-P1-2]` in the message.
 
 ## How to use this file
 
-Open in VS Code. Work P0s in parallel where possible — C-P0-1, C-P0-2, and Phase A of C-P0-3 can all start simultaneously. Include the task ID (e.g. `[C-P0-1]`) in every commit message so the night audit can automatically detect completion.
+Open in VS Code. C-P0-1, C-P0-2, C-P0-3 Phase A, and C-P0-4 can all start in parallel — each is independent. Include the task ID (e.g. `[C-P0-4]`) in every commit message so the noon audit can detect completion automatically.
 
-*Written by CerebroHive Noon Audit — 2026-08-07 12:00 IST*
+**Priority order if you can only do one thing:** C-P0-3 Phase A (no code, no risk, long overdue). Then C-P0-4 (unblocks Codex pipeline). Then C-P0-2 (migration). Then C-P0-1 (PR).
+
+*Written by CerebroHive Night Audit — 2026-08-08 03:00 IST*

@@ -175,3 +175,30 @@ Full detail and remediation approach for each: `.planning/codebase/CONCERNS.md`.
 - [ ] G-P0-1 Pass 1: Commit `infra/README.md`, `architecture/ARCHITECTURE_INDEX.md`, `MASTER-PLAN-*.md`, `CEREBROHIVE_CONSTITUTION.md` — **overdue; content already written**
 - [ ] G-P1-2a: Commit `docs/01` through `docs/07` content migration batch
 - [ ] G-P1-1: Validate Python agent-runner imports and commit coherent code
+
+---
+
+### 2026-08-08 (Night Audit — 03:00 IST)
+
+**Audit performed:**
+- Night audit ran at 03:00 IST. Git remains unreachable from audit sandbox (branch `main` has no commits); completion assessed via file modification timestamps.
+- 0 commits detected since noon 2026-08-07.
+- `agents/CLAUDE-TASKS.md` and `agents/GEMINI-TASKS.md` both unchanged since 00:52 IST — no confirmed agent execution since noon assignment.
+- `agents/CURRENT-SPRINT.md` was modified at 03:22 IST by Codex product delivery cycle (X-P1-3 attempt), adding blocker #9: `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` in `@cerebro/capability-registry` (vite@8.1.5 / Node 22.17.0). pnpm lockfile was previously repaired by Codex; Vite/Node ESM compat remains unresolved.
+- All Claude and Gemini P0 tasks escalated to **5th-cycle** slippage status (C-P0-3 execution: 4th cycle).
+- New task C-P0-4 introduced: fix Node/Vite/Vitest test baseline — assigned to Claude, blocks Codex's X-P1-3 and all future test-gated product slices.
+- Worktree `audit-local-dev-stabilization` exists under `.agents/worktrees/` with updated agent files (no new commits from it).
+
+**Shipped:**
+- `agents/CLAUDE-TASKS.md` — refreshed night assignment; C-P0-4 (Vite baseline fix) added as new P0; all slipped-cycle counts incremented
+- `agents/GEMINI-TASKS.md` — refreshed night assignment; all slipped-cycle counts incremented; priority order guidance added
+- `agents/CURRENT-SPRINT.md` — sprint board updated; X-P1-3 added with "blocked" status; Codex baseline failure history recorded
+- `PROGRESS.md` — this entry
+
+**Goals for 2026-08-08 (today):**
+- [ ] **C-P0-4 (NEW):** Fix `ERR_PACKAGE_IMPORT_NOT_DEFINED` in `@cerebro/capability-registry` / vite@8.1.5 / Node 22.17.0 — check `packages/capability-registry/package.json#imports`, vite/vitest config `resolve.conditions`, or pin Node 22.12.0
+- [ ] C-P0-3a: Commit audit/sprint coordination changeset — no code, no risk, 4 cycles overdue — **do this first**
+- [ ] C-P0-1: Park M10.2 files via stash; commit M10.1-only; open PR with `[C-P0-1]` in title
+- [ ] C-P0-2: Run `pnpm prisma migrate dev --name add-agent-execution-models-aug-08`; verify no destructive SQL; commit
+- [ ] G-P0-1 Pass 1: Commit `infra/README.md` + `MASTER-PLAN-*.md` + `CEREBROHIVE_CONSTITUTION.md` — content confirmed correct; 5 cycles overdue
+- [ ] G-P1-2a: Commit `docs/01` through `docs/07` content migration batch in parallel with G-P0-1
