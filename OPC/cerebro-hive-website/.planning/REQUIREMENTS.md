@@ -124,54 +124,54 @@ Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCHM-01 | — | Pending |
-| SCHM-02 | — | Pending |
-| NAV-01 | — | Pending |
-| NAV-02 | — | Pending |
-| WKSP-01 | — | Pending |
-| WKSP-02 | — | Pending |
-| WKSP-03 | — | Pending |
-| WKSP-04 | — | Pending |
-| WKSP-05 | — | Pending |
-| AIST-01 | — | Pending |
-| AIST-02 | — | Pending |
-| AIST-03 | — | Pending |
-| WKFL-01 | — | Pending |
-| WKFL-02 | — | Pending |
-| KHUB-01 | — | Pending |
-| KHUB-02 | — | Pending |
-| KHUB-03 | — | Pending |
-| KHUB-04 | — | Pending |
-| KHUB-05 | — | Pending |
-| KHUB-06 | — | Pending |
-| KHUB-07 | — | Pending |
-| KHUB-08 | — | Pending |
-| GOVN-01 | — | Pending |
-| GOVN-02 | — | Pending |
-| TALN-01 | — | Pending |
-| TALN-02 | — | Pending |
-| TALN-03 | — | Pending |
-| TALN-04 | — | Pending |
-| TALN-05 | — | Pending |
-| TALN-06 | — | Pending |
-| TALN-07 | — | Pending |
-| EXPL-01 | — | Pending |
-| EXPL-02 | — | Pending |
-| EXPL-03 | — | Pending |
-| EXPL-04 | — | Pending |
-| EXPL-05 | — | Pending |
-| CLNP-01 | — | Pending |
-| CLNP-02 | — | Pending |
-| CLNP-03 | — | Pending |
-| VERF-01 | — | Pending |
-| VERF-02 | — | Pending |
-| VERF-03 | — | Pending |
+| SCHM-01 | Phase 1 | Pending |
+| SCHM-02 | Phase 1 | Pending |
+| NAV-01 | Phase 1 | Pending |
+| NAV-02 | Phase 1 | Pending |
+| WKSP-01 | Phase 2 | Pending |
+| WKSP-02 | Phase 2 | Pending |
+| WKSP-03 | Phase 2 | Pending |
+| WKSP-04 | Phase 2 | Pending |
+| WKSP-05 | Phase 2 | Pending |
+| AIST-01 | Phase 3 | Pending |
+| AIST-02 | Phase 3 | Pending |
+| AIST-03 | Phase 3 | Pending |
+| WKFL-01 | Phase 3 | Pending |
+| WKFL-02 | Phase 3 | Pending |
+| KHUB-01 | Phase 4 | Pending |
+| KHUB-02 | Phase 4 | Pending |
+| KHUB-03 | Phase 4 | Pending |
+| KHUB-04 | Phase 4 | Pending |
+| KHUB-05 | Phase 4 | Pending |
+| KHUB-06 | Phase 4 | Pending |
+| KHUB-07 | Phase 4 | Pending |
+| KHUB-08 | Phase 4 | Pending |
+| GOVN-01 | Phase 5 | Pending |
+| GOVN-02 | Phase 5 | Pending |
+| TALN-01 | Phase 6 | Pending |
+| TALN-02 | Phase 6 | Pending |
+| TALN-03 | Phase 6 | Pending |
+| TALN-04 | Phase 6 | Pending |
+| TALN-05 | Phase 6 | Pending |
+| TALN-06 | Phase 6 | Pending |
+| TALN-07 | Phase 6 | Pending |
+| EXPL-01 | Phase 7 | Pending |
+| EXPL-02 | Phase 7 | Pending |
+| EXPL-03 | Phase 7 | Pending |
+| EXPL-04 | Phase 7 | Pending |
+| EXPL-05 | Phase 7 | Pending |
+| CLNP-01 | Phase 8 | Pending |
+| CLNP-02 | Phase 8 | Pending |
+| CLNP-03 | Phase 8 | Pending |
+| VERF-01 | Phase 8 | Pending |
+| VERF-02 | Phase 8 | Pending |
+| VERF-03 | Phase 8 | Pending |
 
 **Coverage:**
-- v1 requirements: 41 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 41 ⚠️ (expected — roadmapper fills this in next)
+- v1 requirements: 42 total (corrected from initial miscount of 41 — recounted directly from the list above)
+- Mapped to phases: 42/42 ✓
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-08-09*
-*Last updated: 2026-08-09 after initial definition*
+*Last updated: 2026-08-09 after roadmap creation — all 42 v1 requirements mapped across 8 phases, traceability populated*
