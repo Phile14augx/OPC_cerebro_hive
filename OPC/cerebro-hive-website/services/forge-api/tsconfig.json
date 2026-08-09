@@ -14,12 +14,7 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strict": true,
-    "paths": {
-      "@cerebro/ai": ["../../packages/ai/src/index.ts"],
-      "@cerebro/workflow": ["../../packages/workflow/src/index.ts"],
-      "@cerebro/database": ["../../packages/database/index.ts"]
-    }
+    "strict": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

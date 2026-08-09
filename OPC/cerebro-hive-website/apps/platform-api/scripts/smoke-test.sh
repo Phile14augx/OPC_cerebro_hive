@@ -10,12 +10,12 @@
 #   - Postgres is running and migrated (DATABASE_URL set)
 #   - ANTHROPIC_API_KEY or OPENAI_API_KEY is set in the environment the
 #     server runs with
-#   - `pnpm --filter @cerebro/platform-api dev` is running (default: port 3000)
+#   - `pnpm --filter @cerebro/platform-api dev` is running (default: port 3406)
 #
-# Usage: BASE_URL=http://localhost:3000 ./scripts/smoke-test.sh
+# Usage: BASE_URL=http://localhost:3406 ./scripts/smoke-test.sh
 
 set -euo pipefail
-BASE_URL="${BASE_URL:-http://localhost:3000}"
+BASE_URL="${BASE_URL:-http://localhost:3406}"
 WORKSPACE_HEADER='x-workspace-id: smoke-test-workspace'
 TENANT_HEADER='x-tenant-id: smoke-test-tenant'
 

@@ -85,7 +85,7 @@ pnpm --filter @cerebro/pulse dev
 
 # Or from this directory
 pnpm dev
-# → http://localhost:3002
+# → http://localhost:3403
 ```
 
 ## AI ownership

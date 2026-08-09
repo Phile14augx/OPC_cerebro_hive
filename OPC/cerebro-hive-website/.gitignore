@@ -1,8 +1,26 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# pnpm's local content-addressable package store/cache — never committed,
+# same category of gap as node_modules/ below.
+.pnpm-store/
+
+# python (agentos and any other python-tooled subdirectories)
+# .venv contains symlinks git can't index on Windows ("Function not
+# implemented") which hard-fails `git add -A` for the entire repo.
+.venv/
+venv/
+__pycache__/
+*.pyc
+
 # dependencies
-/node_modules
-/.pnp
+# (unanchored — this is a pnpm workspace monorepo; every package under
+# apps/*, services/*, packages/* gets its own node_modules/, plus pnpm nests
+# more node_modules/ dirs inside dependencies for peer-conflict resolution.
+# An anchored `/node_modules` only matches the repo root and misses all of
+# those, which would otherwise pull gigabytes of dependency code into the
+# first commit.)
+node_modules/
+.pnp/
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -11,7 +29,9 @@
 !.yarn/versions
 
 # testing
-/coverage
+# (unanchored for the same reason as node_modules/ above — coverage output
+# is generated per-package, not just at the repo root.)
+coverage/
 
 # next.js
 .next/
@@ -24,7 +44,12 @@ out/
 **/src/generated/
 
 # production
-/build
+# `dist/` was missing entirely — every package's `tsc`/`nest build` output
+# (packages/db/dist, packages/workflow/dist, services/*/dist, etc.) was
+# neither tracked nor ignored, which would have swept all of it into the
+# first commit as regenerable build artifacts.
+dist/
+build/
 
 # misc
 .DS_Store
@@ -35,6 +60,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+
+# JVM crash dumps (found at repo root — not source content)
+hs_err_pid*.log
+replay_pid*.log
 
 # env files — never commit real values
 .env*
@@ -66,6 +95,13 @@ __shot_*.js
 _tmp_*
 scaffold_*.ps1
 .audit-quarantine/
+# More of the same, found loose at repo root during this session's initial
+# commit (same pattern, didn't match the globs above).
+/scratch/
+/fix.js
+/fix.py
+/fix_workflows.py
+/replace_prisma.py
 
 # build / tool output that must never be committed
 build_output.log

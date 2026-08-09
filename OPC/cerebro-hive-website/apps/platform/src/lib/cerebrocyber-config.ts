@@ -228,9 +228,9 @@ export const DEVOPS_CONFIG = {
 
 export const CORS_CONFIG = {
   allowedOrigins: [
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3400",
     "https://*.cerebrohive.com",
-    "https://localhost:3000",
+    "https://localhost:3400",
   ],
   allowedMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: [

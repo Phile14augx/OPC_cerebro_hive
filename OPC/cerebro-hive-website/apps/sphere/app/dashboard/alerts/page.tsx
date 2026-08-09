@@ -13,7 +13,7 @@ async function fetchDashboard(): Promise<DashboardData> {
 
 async function acknowledge(id: string): Promise<void> {
   // Route through HivePulse's /api/alerts endpoint for acknowledge
-  const base = process.env.NEXT_PUBLIC_PULSE_URL ?? 'http://localhost:3002';
+  const base = process.env.NEXT_PUBLIC_PULSE_URL ?? 'http://localhost:3403';
   await fetch(`${base}/api/alerts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

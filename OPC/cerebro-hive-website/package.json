@@ -126,6 +126,9 @@
       "vitest": "3.2.4",
       "vite": ">=6.0.0",
       "next": ">=15.3.4"
+    },
+    "patchedDependencies": {
+      "gray-matter@4.0.3": "patches/gray-matter@4.0.3.patch"
     }
   },
   "lint-staged": {

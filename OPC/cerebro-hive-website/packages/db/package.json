@@ -2,9 +2,10 @@
   "name": "@cerebro/db",
   "version": "1.0.0",
   "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc && node -e \"require('fs').cpSync('src/generated/client','dist/src/generated/client',{recursive:true})\"",
     "generate": "prisma generate",
     "push": "prisma db push",
     "migrate:dev": "prisma migrate dev",

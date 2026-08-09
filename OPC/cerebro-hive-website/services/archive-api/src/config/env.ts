@@ -5,7 +5,7 @@ dotenv.config();
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  PORT: z.string().transform(Number).default('3000'),
+  PORT: z.string().transform(Number).default('3405'),
   DATABASE_URL: z.string().optional(),
   REDIS_URL: z.string().optional(),
   QDRANT_URL: z.string().optional(),

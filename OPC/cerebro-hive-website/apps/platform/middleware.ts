@@ -209,7 +209,7 @@ export default async function middleware(request: NextRequest) {
   // CORS headers
   response.headers.set(
     "Access-Control-Allow-Origin",
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3400"
   );
   response.headers.set(
     "Access-Control-Allow-Methods",

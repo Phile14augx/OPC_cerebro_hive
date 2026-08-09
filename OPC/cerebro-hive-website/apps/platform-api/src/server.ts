@@ -147,7 +147,7 @@ async function main() {
     // and the actual listening socket (3000) never matched — the pod could
     // not have passed a readiness check against api.cerebrohive.com. See
     // audit/MILESTONE-25.5-PRODUCTION-READINESS.md.
-    const port = Number(process.env.PORT) || 3000;
+    const port = Number(process.env.PORT) || 3406;
     await server.listen({ port, host: '0.0.0.0' });
     server.log.info(`CerebroHive Platform API is running on http://localhost:${port}`);
   } catch (err) {

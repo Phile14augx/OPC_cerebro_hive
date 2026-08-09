@@ -32,7 +32,7 @@ export function Uploader() {
 
     try {
       // 1. Request presigned URL from API
-      const res = await fetch('http://localhost:3000/api/v1/uploads', {
+      const res = await fetch('http://localhost:3405/api/v1/uploads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -61,7 +61,7 @@ export function Uploader() {
       }
 
       // 3. (Optional) Complete upload callback to API can be added here
-      // await fetch(`http://localhost:3000/api/v1/uploads/${data.uploadId}/complete`, { method: 'POST' });
+      // await fetch(`http://localhost:3405/api/v1/uploads/${data.uploadId}/complete`, { method: 'POST' });
 
       setStatus('success');
     } catch (error: unknown) {
