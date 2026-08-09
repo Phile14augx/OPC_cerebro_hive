@@ -48,6 +48,13 @@ Close the schema/version unknowns that would otherwise blow up later phase sizin
 - **D-10:** `Policy` model exists in `packages/db/prisma/schema.prisma` but is a bare 3-field stub (`id`, `name`, `rules Json`) — no tenant/org scoping, no audit fields. Needs schema extension before Phase 5 (Governance) can build real CRUD against it. Confirming/closing this gap is this phase's job; building the extended Governance UI is Phase 5's.
 - **D-11:** Talent OS (`Candidate`/`Assessment`/`HiringPipeline`/`Question`) and Explore (`Template`/`MarketplaceItem`/`IndustryPack`) have **zero** backing models — confirmed via direct `grep` against schema.prisma. This phase's job is confirming/documenting the gap (already done); actual schema design happens in Phase 5 (Talent OS)/Phase 7 (Explore) per the roadmap, matching SCHM-01's phrasing ("gaps are confirmed and closed before their phases are sized").
 
+### Post-research amendments (2026-08-10, after 01-RESEARCH.md)
+
+- **D-13:** `Sidebar.tsx` hand-picks only 8 of 14 nav groups by hardcoded title match — 6 groups (HiveOps, Automation, Research, Academy, Business, Support = 34 items) are unreachable from the UI even after routing/placeholders are fixed. In scope for this phase: fix `Sidebar.tsx` to render all 14 groups from `platformNavigation` (iterate, don't hand-pick), so NAV-01's "resolves to a real page" is actually reachable, not just resolvable-by-URL.
+- **D-14:** Broken hardcoded links found outside the formal 99-item registry (e.g. `Sidebar.tsx`'s pinned-favorites pointing at nonexistent routes) are in scope too — same NAV-01 intent (zero dead links in the sidebar), not registry-only.
+- **D-15:** `FORGE-02`'s "unbacked" pages are not blank stubs — several (e.g. `forge/backend/page.tsx`) render fabricated stats and fake interactive elements (e.g. a "Generate Backend" button wired to a `setTimeout`, not a real call). These need active removal of the fake behavior, not just a placeholder layered on top.
+- **D-16:** `Policy`'s tenant scoping follows the **Organization** pattern (matches GOVN-01's "scoped per organization" wording and the newer Organization/billing subsystem), not the older Tenant→Workspace pattern used by Agent/Workflow.
+
 ### BullMQ version reconciliation (SCHM-02) — mechanical, Claude's discretion
 
 - **D-12:** `services/archive-api` pins `bullmq@^6`, `services/archive-worker` pins `bullmq@^5`. Reconcile to a single major version (v6, matching archive-api and the more current major) before Phase 4 (Knowledge Hub) starts producer/consumer wiring. No user preference needed — straightforward dependency alignment.
