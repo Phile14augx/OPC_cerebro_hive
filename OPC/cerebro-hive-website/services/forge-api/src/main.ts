@@ -1,3 +1,20 @@
+// Must run before any other import: @cerebro/db (pulled in transitively via
+// AppModule -> DatabaseModule) constructs its Prisma driver adapter from
+// process.env.DATABASE_URL at module-evaluation time, not lazily. Unlike
+// archive-api/platform-api (run via `tsx watch`, which auto-loads .env),
+// `nest start --watch` has no built-in .env loading, and @nestjs/config's
+// ConfigModule only populates process.env during Nest's async bootstrap —
+// well after AppModule's imports (and @cerebro/db's adapter construction)
+// have already evaluated with an undefined connection string. That earlier,
+// permanently-undefined adapter is what @cerebro/db's singleton keeps using
+// for the rest of the process's life, which surfaced as `SASL:
+// SCRAM-SERVER-FIRST-MESSAGE: client password must be a string` the moment
+// any request actually queried the database. Loading dotenv here, first,
+// fixes it at the source instead of masking it downstream.
+import * as path from 'path';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
