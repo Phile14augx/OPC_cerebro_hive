@@ -72,9 +72,9 @@ async function fetchPlatformHealth(): Promise<PlatformHealth> {
   const hourAgo = new Date(Date.now() - 3_600_000);
   const usageLastHour = await prisma.aIUsageRecord.aggregate({
     where: { createdAt: { gte: hourAgo } },
-    _sum: { cost: true },
-  }).catch(() => ({ _sum: { cost: null } }));
-  const costBurnRateHr = Number(usageLastHour._sum.cost ?? 0);
+    _sum: { costUsd: true },
+  }).catch(() => ({ _sum: { costUsd: null } }));
+  const costBurnRateHr = Number(usageLastHour._sum.costUsd ?? 0);
 
   const criticalAlerts = alertCounts;
   const overallStatus: HealthStatus =
@@ -325,13 +325,13 @@ async function fetchFinOps(): Promise<FinOpsSnapshot> {
   monthStart.setHours(0, 0, 0, 0);
 
   const [today, mtd, byAgent] = await Promise.all([
-    prisma.aIUsageRecord.aggregate({ where: { createdAt: { gte: todayStart } }, _sum: { cost: true } }).catch(() => ({ _sum: { cost: null } })),
-    prisma.aIUsageRecord.aggregate({ where: { createdAt: { gte: monthStart } }, _sum: { cost: true } }).catch(() => ({ _sum: { cost: null } })),
-    prisma.aIUsageRecord.groupBy({ by: ['agentId'], _sum: { cost: true }, orderBy: { _sum: { cost: 'desc' } }, take: 1 }).catch(() => []),
+    prisma.aIUsageRecord.aggregate({ where: { createdAt: { gte: todayStart } }, _sum: { costUsd: true } }).catch(() => ({ _sum: { costUsd: null } })),
+    prisma.aIUsageRecord.aggregate({ where: { createdAt: { gte: monthStart } }, _sum: { costUsd: true } }).catch(() => ({ _sum: { costUsd: null } })),
+    prisma.aIUsageRecord.groupBy({ by: ['agentId'], _sum: { costUsd: true }, orderBy: { _sum: { costUsd: 'desc' } }, take: 1 }).catch(() => []),
   ]);
 
-  const costTodayUsd = Number(today._sum.cost ?? 0);
-  const costMtdUsd   = Number(mtd._sum.cost ?? 0);
+  const costTodayUsd = Number(today._sum.costUsd ?? 0);
+  const costMtdUsd   = Number(mtd._sum.costUsd ?? 0);
   // Project to end of month
   const dayOfMonth   = new Date().getDate();
   const daysInMonth  = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
@@ -344,7 +344,7 @@ async function fetchFinOps(): Promise<FinOpsSnapshot> {
   const topSpender   = topSpenderId
     ? ((await prisma.agent.findUnique({ where: { id: topSpenderId }, select: { name: true } }))?.name ?? topSpenderId)
     : 'N/A';
-  const topSpenderCostUsd = Number(byAgent[0]?._sum.cost ?? 0);
+  const topSpenderCostUsd = Number(byAgent[0]?._sum.costUsd ?? 0);
 
   return { costTodayUsd, costMtdUsd, costProjectedMonthUsd, budgetMonthUsd, budgetUsedPct: clamp(budgetUsedPct), topSpender, topSpenderCostUsd };
 }

@@ -3,6 +3,7 @@
  * POST /api/scenarios  — create + analyse a new scenario via Claude
  */
 import { NextRequest, NextResponse } from 'next/server';
+import type { Prisma } from '@cerebro/db';
 import { prisma } from '@/shared/lib/db';
 import { analyseScenario } from '@/shared/lib/claude-client';
 import { computeEnterpriseHealth } from '@/shared/lib/health-score';
@@ -96,7 +97,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<{ scenario: S
           assumption: body.assumption,
           timeHorizon: body.timeHorizon ?? '90d',
           ...analysis,
-        } as Record<string, unknown>,
+        } as unknown as Prisma.InputJsonValue,
       },
     });
 

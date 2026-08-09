@@ -3,6 +3,7 @@
  * POST /api/briefings         — generate a new briefing via Claude, persist to DB
  */
 import { NextRequest, NextResponse } from 'next/server';
+import type { Prisma } from '@cerebro/db';
 import { prisma } from '@/shared/lib/db';
 import { generateBriefing } from '@/shared/lib/claude-client';
 import { computeEnterpriseHealth } from '@/shared/lib/health-score';
@@ -133,7 +134,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<{ briefing: B
           recommendations: aiContent.recommendations,
           kpiSnapshot: pillars.flatMap(p => p.kpis.slice(0, 2)),
           readTime,
-        } as Record<string, unknown>,
+        } as unknown as Prisma.InputJsonValue,
       },
     });
 

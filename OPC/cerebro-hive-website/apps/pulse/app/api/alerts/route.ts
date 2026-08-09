@@ -42,7 +42,7 @@ export async function GET(): Promise<NextResponse<{ alerts: StrategicAlert[]; to
       category: a.category ?? 'operations',
     }));
 
-    const enrichmentMap = alertsForEnrichment.length > 0
+    const enrichmentMap: Record<string, string[]> = alertsForEnrichment.length > 0
       ? await enrichAlertActions(alertsForEnrichment).catch(() => ({}))
       : {};
 

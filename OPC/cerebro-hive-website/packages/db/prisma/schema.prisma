@@ -19,6 +19,7 @@ model Tenant {
   slug        String  @unique
   billingPlan String  @default("enterprise")
   isActive    Boolean @default(true)
+  metadata    Json?
 
   workspaces   Workspace[]
   members      TenantMember[]
@@ -34,8 +35,9 @@ model Workspace {
   tenantId String @db.Uuid
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  name String
-  slug String @unique
+  name      String
+  slug      String  @unique
+  isDefault Boolean @default(false)
 
   agents    Agent[]
   workflows Workflow[]
@@ -1133,10 +1135,14 @@ model Policy {
 // -----------------------------------------------------------------------------
 
 model Metric {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
-  value     Float
-  timestamp DateTime @default(now())
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  value      Float
+  unit       String?
+  category   String?
+  target     Float?
+  metadata   Json?
+  recordedAt DateTime @default(now())
 }
 
 model Trace {
@@ -1162,8 +1168,15 @@ model Log {
 
 model Alert {
   id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String
+  title         String
+  message       String
+  severity      String         @default("info")
+  source        String?
+  category      String?
+  pillar        String?
   status        String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   notifications Notification[]
 }
 
@@ -1179,14 +1192,17 @@ model HealthCheck {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   service   String
   status    String
-  timestamp DateTime @default(now())
+  checkedAt DateTime @default(now())
 }
 
 model Incident {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title     String
-  status    String
-  createdAt DateTime @default(now())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  description String   @db.Text
+  severity    String   @default("info")
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 // -----------------------------------------------------------------------------

@@ -4,6 +4,7 @@
  * generate intelligent default agents, workflows, and a welcome narrative.
  */
 import { NextRequest, NextResponse } from 'next/server';
+import type { Prisma } from '@cerebro/db';
 import { prisma } from '@/shared/lib/db';
 import { generateOnboardingDefaults } from '@/shared/lib/claude-client';
 import type { OnboardingConfig, OnboardingResult } from '@/shared/lib/types';
@@ -24,13 +25,13 @@ export async function POST(req: NextRequest): Promise<NextResponse<OnboardingRes
       data: {
         name: config.tenantName.trim(),
         slug: config.tenantName.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
-        plan: config.size === 'enterprise' ? 'ENTERPRISE' : config.size === 'mid-market' ? 'BUSINESS' : 'STARTER',
+        billingPlan: config.size === 'enterprise' ? 'ENTERPRISE' : config.size === 'mid-market' ? 'BUSINESS' : 'STARTER',
         metadata: {
           industry: config.industry,
           size: config.size,
           goals: config.goals,
           onboardedAt: new Date().toISOString(),
-        } as Record<string, unknown>,
+        } as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -38,6 +39,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<OnboardingRes
     const workspace = await prisma.workspace.create({
       data: {
         name: `${config.tenantName} Workspace`,
+        slug: `${tenant.slug}-workspace`,
         tenantId: tenant.id,
         isDefault: true,
       },
