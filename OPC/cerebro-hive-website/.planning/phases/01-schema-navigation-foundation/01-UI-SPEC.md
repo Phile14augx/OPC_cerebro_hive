@@ -56,14 +56,16 @@ Exceptions: `PlaceholderModule`'s wrapping container uses `min-h-[60vh]` (viewpo
 
 Reusing the project's existing fluid type scale (`app/theme/typography.css`) — no new sizes introduced.
 
+Verified against `apps/studio/app/theme/typography.css`: the project defines exactly **two** theme-driven text-weight tokens — `--font-weight-body` (400 light / 500 dark) and `--font-weight-heading` (700 light / 800 dark). (A third token, `--font-weight-heavy` (700 light / 900 dark), exists in the file but is scoped to buttons — `.theme-button-primary`, `.btn-primary/.btn-ghost/.btn-orange` in `globals.css` — not to any text role in this contract, so it is out of scope here and must not be applied to Body/Label/Heading/Display text.)
+
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | 14px (`text-sm`) | 400 light / 500 dark (`--font-weight-body`, theme-driven) | 1.5 (dark) / 1.6 (light), via `--line-height-body` |
-| Label (eyebrow/group tag) | 12px (`text-xs`), `uppercase tracking-widest font-bold` | 700 | 1.4 |
+| Label (eyebrow/group tag) | 12px (`text-xs`), `uppercase tracking-widest font-[var(--font-weight-heading)]` | 700 light / 800 dark (`--font-weight-heading` — **same token as Heading/Display**, referenced via Tailwind's arbitrary-value syntax, never a hardcoded `font-bold`/`700` literal) | 1.4 |
 | Heading (`PlaceholderModule` H1, section headers) | 18px (`text-lg`) | 700 light / 800 dark (`--font-weight-heading`) | 1.2 |
-| Display (page H1, e.g. "Backend Studio") | 30px (`text-3xl`) | 700 light / 800 dark | 1.2 |
+| Display (page H1, e.g. "Backend Studio") | 30px (`text-3xl`) | 700 light / 800 dark (`--font-weight-heading`) | 1.2 |
 
-Do not introduce a 5th size or a 3rd weight for any of the four in-scope surfaces. `PlaceholderModule`'s status line ("Status: Planned") uses the existing `Badge` component's own type treatment (`text-xs font-bold`) — do not hand-style it separately.
+**2-weight cap (locked):** across all four rows, only two weight *values* ever coexist in a given theme — `--font-weight-body` (the low weight: 400 light / 500 dark) and `--font-weight-heading` (the high weight: 700 light / 800 dark), the latter shared identically by Label, Heading, and Display. Because Label references the same `--font-weight-heading` token rather than a hardcoded `700`, it automatically tracks to 800 in dark mode alongside Heading/Display — no third weight value ever renders concurrently. Do not introduce a 5th size, and do not introduce any literal weight (e.g. Tailwind's fixed `font-bold`/`font-semibold` utilities, or `--font-weight-heavy`) for Body, Label, Heading, or Display in any of the four in-scope surfaces. `PlaceholderModule`'s status line ("Status: Planned") uses the existing `Badge` component's own type treatment (`text-xs font-bold`) — that is the `Badge` component's pre-existing, frozen internal styling (out of scope for this contract to alter) and is not a text role governed by this table; do not hand-style it separately.
 
 ---
 
@@ -115,7 +117,7 @@ Accent reserved for: active sidebar nav item, primary CTA buttons (`Button` defa
 
 ### 1. `PlaceholderModule` (new — `app/(platform)/app/components/ui/PlaceholderModule.tsx`)
 
-Composition (locked): `Card` (outer, centered via a `min-h-[60vh] flex items-center justify-center` wrapper) → icon chip (`w-12 h-12 rounded-xl bg-surface-elevated border border-border`, centers a single `lucide-react` icon at `size={22}` in `text-text-muted` — **never** in the accent color, this is a neutral/informational state) → eyebrow (`{group} / {title}`, `text-xs font-bold uppercase tracking-widest text-text-muted`) → heading (`Not yet available`, `text-lg font-space font-bold text-text-primary`) → body copy (`text-sm text-text-secondary`) → `Badge variant="secondary"` showing `Status: {Planned|Disabled}`.
+Composition (locked): `Card` (outer, centered via a `min-h-[60vh] flex items-center justify-center` wrapper) → icon chip (`w-12 h-12 rounded-xl bg-surface-elevated border border-border`, centers a single `lucide-react` icon at `size={22}` in `text-text-muted` — **never** in the accent color, this is a neutral/informational state) → eyebrow (`{group} / {title}`, `text-xs font-[var(--font-weight-heading)] uppercase tracking-widest text-text-muted`) → heading (`Not yet available`, `text-lg font-space font-[var(--font-weight-heading)] text-text-primary`) → body copy (`text-sm text-text-secondary`) → `Badge variant="secondary"` showing `Status: {Planned|Disabled}`.
 
 Props (locked shape): `{ group: string; title: string; status: "planned" | "disabled" }`. No `onClick`/CTA prop — this component is informational only, never interactive beyond whatever global nav already exists.
 
@@ -123,11 +125,11 @@ Applies to: all `planned`/`disabled` registry entries rendered via the catch-all
 
 ### 2. Breadcrumb (new, lightweight — Studio-local, D-08)
 
-Prop shape: `{ label: string; href?: string }[]`, rendered as `label` (`text-text-secondary`) separated by a `ChevronRight size={12} className="text-text-muted"`, last item unstyled-as-link in `text-text-primary font-bold` (current page, no href). Do **not** port `components/discovery/Breadcrumbs.tsx` (marketing-site component — emits `JsonLd`, uses shadcn `text-foreground` tokens per RESEARCH.md's Anti-Pattern note). Source of truth for both breadcrumb and page `<title>` is the same navigation registry entry matched by the current path — one lookup, two consumers, per D-08.
+Prop shape: `{ label: string; href?: string }[]`, rendered as `label` (`text-text-secondary`) separated by a `ChevronRight size={12} className="text-text-muted"`, last item unstyled-as-link in `text-text-primary font-[var(--font-weight-heading)]` (current page, no href). Do **not** port `components/discovery/Breadcrumbs.tsx` (marketing-site component — emits `JsonLd`, uses shadcn `text-foreground` tokens per RESEARCH.md's Anti-Pattern note). Source of truth for both breadcrumb and page `<title>` is the same navigation registry entry matched by the current path — one lookup, two consumers, per D-08.
 
 ### 3. `Sidebar.tsx` group-rendering fix (D-13 — behavioral, not visual)
 
-The 6 currently-unrendered groups (HiveOps, Automation, Research, Academy, Business, Support) must render through **the exact same visual treatment already coded** for the existing `sections.map(...)` block (lines ~219-261 of the current file): `text-xs font-bold uppercase tracking-widest text-text-muted` section header, `space-y-0.5` item list, each item using the existing active/inactive class ternary (`bg-surface-elevated text-text-primary font-bold shadow-sm border border-border` when active, `text-text-secondary hover:bg-surface hover:text-text-primary border border-transparent` when inactive). No new visual variant is introduced for these 6 groups — they must be visually indistinguishable in styling from the 6 groups already rendering today, differing only in which titles/items appear. Do not give newly-surfaced groups a "new" badge, highlight color, or different spacing to call attention to them.
+The 6 currently-unrendered groups (HiveOps, Automation, Research, Academy, Business, Support) must render through **the exact same visual treatment already coded** for the existing `sections.map(...)` block (lines ~219-261 of the current file): `text-xs font-bold uppercase tracking-widest text-text-muted` section header, `space-y-0.5` item list, each item using the existing active/inactive class ternary (`bg-surface-elevated text-text-primary font-bold shadow-sm border border-border` when active, `text-text-secondary hover:bg-surface hover:text-text-primary border border-transparent` when inactive). This is pre-existing, frozen code being reused verbatim (not newly authored by this contract) — no new visual variant is introduced for these 6 groups, and this contract does not require retrofitting the existing `sections.map(...)` block's literal `font-bold` classes to the `font-[var(--font-weight-heading)]` form used elsewhere in this document, since doing so is out of this phase's scope (a behavioral fix, not a restyle). They must be visually indistinguishable in styling from the 6 groups already rendering today, differing only in which titles/items appear. Do not give newly-surfaced groups a "new" badge, highlight color, or different spacing to call attention to them.
 
 ### 4. FORGE-01 loading/error/empty consistency (no visual redesign — consistency pass)
 
