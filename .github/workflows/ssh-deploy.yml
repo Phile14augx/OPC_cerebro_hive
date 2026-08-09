@@ -43,7 +43,14 @@ jobs:
       run: pnpm install --no-frozen-lockfile
 
     - name: Generate Prisma client
-      run: pnpm --filter @cerebro/database run generate
+      # Package was renamed packages/database -> packages/db (name: @cerebro/db)
+      # before this workflow was last touched. `--filter @cerebro/database`
+      # matches zero packages, so pnpm silently no-ops and exits 0 -- this step
+      # showed green while never actually running `prisma generate`, so
+      # packages/db/src/generated/client never existed and every downstream
+      # build depending on @cerebro/db failed with "Cannot find module
+      # '../generated/client'".
+      run: pnpm --filter @cerebro/db run generate
 
     - name: Build (standalone)
       run: pnpm run build --filter @cerebro/studio
