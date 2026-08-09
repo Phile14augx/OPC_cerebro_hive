@@ -14,8 +14,15 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Navigation (NAV)
 
-- [ ] **NAV-01**: Every sidebar navigation destination in Studio resolves to a real page — zero 404s
-- [ ] **NAV-02**: Every destination without a backing feature (this milestone or deferred) shows an honest "not yet available" state instead of a 404 or fake content
+- [ ] **NAV-01**: Every sidebar navigation destination in Studio resolves to a real page — zero 404s. Scope note (discovered during Phase 1 discuss-phase): the navigation registry has 99 items across 14 groups, not the 5 originally described in this document's scope — this requirement covers all 99.
+- [ ] **NAV-02**: Every destination without a backing feature (this milestone or deferred) shows an honest "not yet available" state instead of a 404 or fake content, driven by an `implementationStatus` field on the shared navigation registry (not one-off hardcoded placeholder pages)
+
+### CerebroForge (FORGE)
+
+<!-- Added during Phase 1 discuss-phase (2026-08-10): CerebroForge is a 19-item nav group discovered outside REQUIREMENTS.md's original 5-pillar scope. Its backend (services/forge-api) already works end-to-end (fixed this session), so the user chose functional implementation over a placeholder for the 9 items with an existing controller. -->
+
+- [ ] **FORGE-01**: The 9 CerebroForge nav items with an existing `forge-api` controller (Forge Overview, AI Planner, Requirements Studio, Architecture Studio, Code Generation, Testing Intelligence, AI Code Review, Deployment Studio, AI Documentation) are wired to real functionality — correct routing, correct API connection to the existing controller, usable (non-decorative) states. Deep UX polish is explicitly out of scope for this phase.
+- [ ] **FORGE-02**: The remaining 10 CerebroForge nav items with no backend controller today (UI/UX Studio, Backend Studio, Database Studio, API Studio, Mobile Studio, Web Studio, Desktop Studio, CerebroBots, Repository Manager, Monitoring & Ops) show the same honest "not yet available" placeholder as NAV-02 — no new forge-api backend surface is built for them in this phase.
 
 ### Core Workspace (WKSP)
 
@@ -128,6 +135,8 @@ Populated during roadmap creation.
 | SCHM-02 | Phase 1 | Pending |
 | NAV-01 | Phase 1 | Pending |
 | NAV-02 | Phase 1 | Pending |
+| FORGE-01 | Phase 1 | Pending |
+| FORGE-02 | Phase 1 | Pending |
 | WKSP-01 | Phase 2 | Pending |
 | WKSP-02 | Phase 2 | Pending |
 | WKSP-03 | Phase 2 | Pending |
@@ -168,10 +177,10 @@ Populated during roadmap creation.
 | VERF-03 | Phase 8 | Pending |
 
 **Coverage:**
-- v1 requirements: 42 total (corrected from initial miscount of 41 — recounted directly from the list above)
-- Mapped to phases: 42/42 ✓
+- v1 requirements: 44 total (42 from roadmap creation + FORGE-01, FORGE-02 added during Phase 1 discuss-phase after discovering the nav registry has 99 items, not the ~30 originally scoped, and that CerebroForge's 19-item group has a working backend)
+- Mapped to phases: 44/44 ✓
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-08-09*
-*Last updated: 2026-08-09 after roadmap creation — all 42 v1 requirements mapped across 8 phases, traceability populated*
+*Last updated: 2026-08-10 after Phase 1 discuss-phase — added FORGE-01/FORGE-02, amended NAV-01/NAV-02 scope notes, all 44 v1 requirements mapped across 8 phases*

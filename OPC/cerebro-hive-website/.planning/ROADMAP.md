@@ -12,7 +12,7 @@ This milestone converts Studio from a mostly-mocked front end into a fully wired
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Schema & Navigation Foundation** - Close schema/version unknowns and make every nav destination honest (real page or clear "not yet available") before later phases are sized
+- [ ] **Phase 1: Schema & Navigation Foundation** - Close schema/version unknowns and make every one of the navigation registry's 99 destinations honest (real page, or clear "not yet available") before later phases are sized; CerebroForge's 9 backend-backed items get real functionality
 - [ ] **Phase 2: Core Workspace** - Real, tenant-scoped Organization/Project/Team CRUD and workspace switching that every later pillar attaches to
 - [ ] **Phase 3: Core AI — AI Studio + Workflows** - Real Agent CRUD with model/provider selection and playground testing, plus agent-only Workflows with real execution history
 - [ ] **Phase 4: Core AI — Knowledge Hub** - From-scratch, idempotent document ingestion pipeline (upload → extract → chunk → embed → entities/tags) and tenant-scoped semantic search
@@ -27,11 +27,16 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Goal**: Every sidebar destination resolves to something honest, and the schema/version unknowns that would otherwise blow up later phase sizing are closed first
 **Mode:** mvp
 **Depends on**: Nothing (first phase)
-**Requirements**: SCHM-01, SCHM-02, NAV-01, NAV-02
+**Requirements**: SCHM-01, SCHM-02, NAV-01, NAV-02, FORGE-01, FORGE-02
+
+**Scope amendment (2026-08-10, via discuss-phase):** The navigation registry turned out to have 99 items across 14 groups, not the ~30 originally assumed from REQUIREMENTS.md's 5 named pillars. CerebroForge (19 items) has a working backend (`services/forge-api`, fixed this session) — user chose functional implementation for CerebroForge's 9 backend-having items over a placeholder (FORGE-01/FORGE-02), while the other 8 newly-discovered groups (HiveOps, Infrastructure, Data, Automation, Research, Academy, Business, Support — 50 items) get the standard honest placeholder alongside everything else NAV-02 already covered. See `01-CONTEXT.md` for the full decision record.
+
 **Success Criteria** (what must be TRUE):
-  1. Every sidebar nav destination in Studio, when clicked, renders either a real page or an honest "not yet available" placeholder — never a 404
-  2. Governance, Talent OS, and Explore's Prisma schema gaps are confirmed model-by-model (exists / stub / absent), removing the sizing unknown for Phases 5-7
-  3. `archive-worker` and `archive-api` run on a single reconciled BullMQ major version, unblocking Phase 4's producer/consumer wiring
+  1. All 99 sidebar nav destinations in Studio, when clicked, render either a real page or an honest "not yet available" placeholder — never a 404
+  2. The 9 CerebroForge items with an existing forge-api controller (Forge Overview, AI Planner, Requirements Studio, Architecture Studio, Code Generation, Testing Intelligence, AI Code Review, Deployment Studio, AI Documentation) are wired to real, working functionality
+  3. Every non-functional destination (the 10 remaining CerebroForge items plus the 50 items across HiveOps/Infrastructure/Data/Automation/Research/Academy/Business/Support) renders from a single registry-driven placeholder component keyed by an `implementationStatus` field — not one-off hardcoded pages
+  4. Governance, Talent OS, and Explore's Prisma schema gaps are confirmed model-by-model (exists / stub / absent), removing the sizing unknown for Phases 5-7
+  5. `archive-worker` and `archive-api` run on a single reconciled BullMQ major version, unblocking Phase 4's producer/consumer wiring
 **Plans**: TBD
 **UI hint**: yes
 
