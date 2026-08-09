@@ -14,7 +14,9 @@
 
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { randomUUID } from "crypto";
+// Node's `crypto` module isn't available in the Edge Runtime middleware always
+// runs under — use the Web Crypto API's global `crypto.randomUUID()` instead,
+// which Edge Runtime (and modern Node/browsers) provide natively.
 
 // ============================================================================
 // CONFIGURATION FROM ENVIRONMENT
@@ -107,7 +109,7 @@ const SENSITIVE_KEYWORDS = [
 
 export default async function middleware(request: NextRequest) {
   const startTime = Date.now();
-  const requestId = randomUUID();
+  const requestId = crypto.randomUUID();
   const clientIP =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip") ||
@@ -195,10 +197,17 @@ export default async function middleware(request: NextRequest) {
   );
 
   // Content Security Policy for dark intelligence UI
+  // Next.js/Turbopack dev mode calls eval() to reconstruct RSC stack traces for
+  // debugging (React never does this in production) — 'unsafe-eval' is scoped
+  // to non-production so the deployed CSP stays strict.
+  const scriptSrc =
+    process.env.NODE_ENV === "production"
+      ? "script-src 'self' 'unsafe-inline'; "
+      : "script-src 'self' 'unsafe-inline' 'unsafe-eval'; ";
   response.headers.set(
     "Content-Security-Policy",
     "default-src 'self'; " +
-      "script-src 'self' 'unsafe-inline'; " +
+      scriptSrc +
       "style-src 'self' 'unsafe-inline'; " +
       "img-src 'self' data: https: blob:; " +
       "font-src 'self' https://fonts.gstatic.com; " +

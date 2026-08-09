@@ -40,11 +40,20 @@ const nextConfig: NextConfig = {
             value: "camera=(), microphone=(), geolocation=(), payment=()",
           },
           // Content Security Policy for dark intelligence UI
+          // NOTE: this duplicates middleware.ts's CSP (both are independently
+          // applied; this one wins on the served response) — kept in sync by
+          // hand until the two are consolidated into one source.
+          // Next.js/Turbopack dev mode calls eval() to reconstruct RSC stack
+          // traces for debugging (React never does this in production) —
+          // 'unsafe-eval' is scoped to non-production so the deployed CSP
+          // stays strict.
           {
             key: "Content-Security-Policy",
             value:
               "default-src 'self'; " +
-              "script-src 'self' 'unsafe-inline'; " +
+              (process.env.NODE_ENV === "production"
+                ? "script-src 'self' 'unsafe-inline'; "
+                : "script-src 'self' 'unsafe-inline' 'unsafe-eval'; ") +
               "style-src 'self' 'unsafe-inline'; " +
               "img-src 'self' data: https: blob:; " +
               "font-src 'self' https://fonts.gstatic.com; " +
