@@ -1,7 +1,12 @@
-import { Execution, ExecutionCancellationSignal, ExecutionProviderPort, ExecutionProviderResult } from '@cerebro/domain';
-import type { AgentExecutionContext } from '@cerebro/domain';
-import type { AgentRuntimeService } from '@cerebro/agent-builder-capability';
-import type { AgentRepository } from '@cerebro/db';
+import type { AgentRuntimeService } from "@cerebro/agent-builder-capability";
+import type { AgentRepository } from "@cerebro/db";
+import type { AgentExecutionContext } from "@cerebro/domain";
+import {
+  Execution,
+  ExecutionCancellationSignal,
+  ExecutionProviderPort,
+  ExecutionProviderResult,
+} from "@cerebro/domain";
 
 /**
  * Phase 10.1 — the real bridge between Phase 9's `ExecutionOrchestrator`
@@ -30,24 +35,27 @@ import type { AgentRepository } from '@cerebro/db';
 export class AgentExecutionProvider implements ExecutionProviderPort {
   constructor(
     private readonly agentRuntimeService: AgentRuntimeService,
-    private readonly agentRepository: AgentRepository
+    private readonly agentRepository: AgentRepository,
   ) {}
 
   async execute(
     execution: Execution,
-    _opts?: { cancellationSignal?: ExecutionCancellationSignal }
+    _opts?: { cancellationSignal?: ExecutionCancellationSignal },
   ): Promise<ExecutionProviderResult> {
-    if (execution.kind !== 'Agent') {
+    if (execution.kind !== "Agent") {
       return {
-        outcome: 'failed',
+        outcome: "failed",
         reason: `AgentExecutionProvider only supports execution.kind === 'Agent' — got '${execution.kind}'. No real provider exists yet for this kind (see TECHNICAL-DEBT.md).`,
       };
     }
 
-    const { agentId, message } = (execution.metadata ?? {}) as { agentId?: string; message?: string };
+    const { agentId, message } = (execution.metadata ?? {}) as {
+      agentId?: string;
+      message?: string;
+    };
     if (!agentId || !message) {
       return {
-        outcome: 'failed',
+        outcome: "failed",
         reason: `Execution ${execution.id.toString()} is missing required metadata (agentId/message) for an Agent execution.`,
       };
     }
@@ -61,10 +69,12 @@ export class AgentExecutionProvider implements ExecutionProviderPort {
       timestamp: new Date(),
     };
 
-    const version = await this.agentRepository.getLatestVersion(agentId, { context: requestContext });
+    const version = await this.agentRepository.getLatestVersion(agentId, {
+      context: requestContext,
+    });
     if (!version) {
       return {
-        outcome: 'failed',
+        outcome: "failed",
         reason: `No published version found for agent ${agentId}.`,
       };
     }
@@ -75,8 +85,8 @@ export class AgentExecutionProvider implements ExecutionProviderPort {
       // workspaceId is optional on Execution (not every execution kind is
       // workspace-scoped); fall back consistently with userId below rather
       // than asserting a guarantee that doesn't hold at the domain level.
-      workspaceId: execution.workspaceId ?? '',
-      userId: execution.userId ?? 'anonymous',
+      workspaceId: execution.workspaceId ?? "",
+      userId: execution.userId ?? "anonymous",
       traceId: execution.traceId,
       correlationId: execution.correlationId,
       agentVersionId: version.id,
@@ -85,18 +95,25 @@ export class AgentExecutionProvider implements ExecutionProviderPort {
       memory: { workingMemory: {}, conversationHistory: [] },
       availableTools: [],
       tokenBudget: { maxTokens: 4096, tokensUsed: 0 },
-      executionMode: 'sync',
+      executionMode: "sync",
     };
 
     try {
-      const result = await this.agentRuntimeService.execute(executionContext, message, version.instructions);
-      if (result?.status === 'suspended') {
-        return { outcome: 'waiting', reason: result.reason ?? 'suspended pending an async tool call' };
+      const result = await this.agentRuntimeService.execute(
+        executionContext,
+        message,
+        version.instructions,
+      );
+      if (result?.status === "suspended") {
+        return {
+          outcome: "waiting",
+          reason: result.reason ?? "suspended pending an async tool call",
+        };
       }
-      return { outcome: 'completed', result };
+      return { outcome: "completed", result };
     } catch (err) {
       const reason = err instanceof Error ? err.message : String(err);
-      return { outcome: 'failed', reason };
+      return { outcome: "failed", reason };
     }
   }
 }

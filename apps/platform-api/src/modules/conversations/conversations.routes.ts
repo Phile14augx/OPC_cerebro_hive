@@ -1,9 +1,9 @@
-import { FastifyInstance, FastifyPluginOptions } from 'fastify';
-import { Type } from '@sinclair/typebox';
-import { AgentRuntimeService } from '@cerebro/agent-builder-capability';
-import { AgentRepository, AgentConversationRepository, PrismaUnitOfWork } from '@cerebro/db';
-import { AgentExecutionContext } from '@cerebro/domain';
-import { requirePermission } from '../../middleware/AuthMiddleware';
+import { AgentRuntimeService } from "@cerebro/agent-builder-capability";
+import { AgentConversationRepository, AgentRepository, PrismaUnitOfWork } from "@cerebro/db";
+import { AgentExecutionContext } from "@cerebro/domain";
+import { Type } from "@sinclair/typebox";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { requirePermission } from "../../middleware/AuthMiddleware";
 
 export interface ConversationsRouteOptions extends FastifyPluginOptions {
   agentRuntimeService: AgentRuntimeService;
@@ -21,17 +21,20 @@ export interface ConversationsRouteOptions extends FastifyPluginOptions {
  *  - Idempotency: duplicate message submissions are prevented via Idempotency-Key header
  *  - Conversation history from DB threaded into AgentExecutionContext
  */
-export default async function conversationsRoutes(fastify: FastifyInstance, opts: ConversationsRouteOptions) {
+export default async function conversationsRoutes(
+  fastify: FastifyInstance,
+  opts: ConversationsRouteOptions,
+) {
   const { agentRuntimeService, agentRepository, agentConversationRepository, unitOfWork } = opts;
 
   // Both routes trigger real (billed) LLM execution — gate on ai:chat,
   // consistent with @cerebro/auth's permission map.
-  fastify.addHook('preHandler', requirePermission('ai:chat'));
+  fastify.addHook("preHandler", requirePermission("ai:chat"));
 
   // ─── POST / — Create Conversation ──────────────────────────────────────────
 
   fastify.post(
-    '/',
+    "/",
     {
       schema: {
         body: Type.Object({ agentId: Type.String() }),
@@ -41,23 +44,22 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
       const { agentId } = request.body as { agentId: string };
       const cerebroContext = request.cerebroContext;
 
-      const conversation = await agentConversationRepository.createConversation(
-        agentId,
-        { context: cerebroContext }
-      );
+      const conversation = await agentConversationRepository.createConversation(agentId, {
+        context: cerebroContext,
+      });
 
       return reply.status(201).send({
         id: conversation.id,
         agentId: conversation.agentId,
         createdAt: conversation.createdAt,
       });
-    }
+    },
   );
 
   // ─── POST /:id/messages — Send Message ─────────────────────────────────────
 
   fastify.post(
-    '/:id/messages',
+    "/:id/messages",
     {
       schema: {
         body: Type.Object({ message: Type.String() }),
@@ -69,16 +71,15 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
       const cerebroContext = request.cerebroContext;
 
       // 1. Load conversation with history
-      const conversation = await agentConversationRepository.loadWithMessages(
-        conversationId,
-        { context: cerebroContext }
-      );
+      const conversation = await agentConversationRepository.loadWithMessages(conversationId, {
+        context: cerebroContext,
+      });
 
       if (!conversation) {
         return reply.code(404).send({
           success: false,
           error: {
-            code: 'CONVERSATION_NOT_FOUND',
+            code: "CONVERSATION_NOT_FOUND",
             message: `Conversation ${conversationId} not found`,
             requestId: cerebroContext.traceId,
           },
@@ -86,16 +87,15 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
       }
 
       // 2. Resolve agent and latest version
-      const version = await agentRepository.getLatestVersion(
-        conversation.agentId,
-        { context: cerebroContext }
-      );
+      const version = await agentRepository.getLatestVersion(conversation.agentId, {
+        context: cerebroContext,
+      });
 
       if (!version) {
         return reply.code(404).send({
           success: false,
           error: {
-            code: 'AGENT_NOT_FOUND',
+            code: "AGENT_NOT_FOUND",
             message: `No published version found for agent ${conversation.agentId}`,
             requestId: cerebroContext.traceId,
           },
@@ -103,8 +103,8 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
       }
 
       // 3. Build conversation history from persisted messages
-      const conversationHistory = conversation.messages.map(m => ({
-        role: m.role as 'system' | 'user' | 'assistant',
+      const conversationHistory = conversation.messages.map((m) => ({
+        role: m.role as "system" | "user" | "assistant",
         content: m.content,
       }));
 
@@ -117,7 +117,7 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
         // 403s before this handler runs if it isn't a verified workspace of
         // the authenticated tenant -- see RequestContextMiddleware.ts.
         workspaceId: cerebroContext.workspaceId!,
-        userId: cerebroContext.userId ?? 'anonymous',
+        userId: cerebroContext.userId ?? "anonymous",
         // traceId/correlationId are typed optional but unconditionally set
         // by requestContextHook on every request.
         traceId: cerebroContext.traceId!,
@@ -131,7 +131,7 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
         },
         availableTools: [],
         tokenBudget: { maxTokens: 4096, tokensUsed: 0 },
-        executionMode: 'sync',
+        executionMode: "sync",
       };
 
       // 5. Execute — timing + cost capture
@@ -139,7 +139,7 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
       const result = await agentRuntimeService.execute(
         executionContext,
         message,
-        version.instructions
+        version.instructions,
       );
       const executionDurationMs = Date.now() - executionStart;
 
@@ -154,8 +154,8 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
         // Persist user message
         await agentConversationRepository.appendMessage(
           conversationId,
-          { role: 'user', content: message },
-          txOptions
+          { role: "user", content: message },
+          txOptions,
         );
 
         // Persist all runtime messages (assistant + tool results)
@@ -163,7 +163,7 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
           for (const msg of result.messages) {
             // Skip system and user messages — they're either the prompt
             // (already in agent config) or the user input (just persisted)
-            if (msg.role === 'system' || msg.role === 'user') continue;
+            if (msg.role === "system" || msg.role === "user") continue;
 
             await agentConversationRepository.appendMessage(
               conversationId,
@@ -176,7 +176,7 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
                   traceId: cerebroContext.traceId,
                 },
               },
-              txOptions
+              txOptions,
             );
           }
         }
@@ -191,7 +191,6 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
           traceId: cerebroContext.traceId,
         },
       });
-    }
+    },
   );
 }
-

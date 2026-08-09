@@ -1,4 +1,4 @@
-import { DomainError } from '@cerebro/domain';
+import { DomainError } from "@cerebro/domain";
 
 export interface ProblemDetails {
   type: string;
@@ -17,10 +17,10 @@ export class ErrorMapper {
 
     // Unhandled / Unexpected Errors
     return {
-      type: 'about:blank',
-      title: 'Internal Server Error',
+      type: "about:blank",
+      title: "Internal Server Error",
       status: 500,
-      detail: 'An unexpected failure occurred.',
+      detail: "An unexpected failure occurred.",
       traceId,
     };
   }
@@ -34,19 +34,19 @@ export class ErrorMapper {
     };
 
     switch (error.code) {
-      case 'VALIDATION_ERROR':
+      case "VALIDATION_ERROR":
         return { ...defaultDetails, status: 400 };
-      case 'AUTHORIZATION_ERROR':
-      case 'POLICY_VIOLATION_ERROR':
+      case "AUTHORIZATION_ERROR":
+      case "POLICY_VIOLATION_ERROR":
         return { ...defaultDetails, status: 403 };
-      case 'NOT_FOUND_ERROR':
+      case "NOT_FOUND_ERROR":
         return { ...defaultDetails, status: 404 };
-      case 'CONFLICT_ERROR':
-      case 'CONCURRENCY_ERROR':
+      case "CONFLICT_ERROR":
+      case "CONCURRENCY_ERROR":
         return { ...defaultDetails, status: 409 };
-      case 'DUPLICATE_COMMAND_ERROR':
+      case "DUPLICATE_COMMAND_ERROR":
         return { ...defaultDetails, status: 409 }; // Alternatively could be 200 with cached result, but 409 is standard for explicit duplicates without idempotency fetch mechanism exposed here
-      case 'EXTERNAL_DEPENDENCY_ERROR':
+      case "EXTERNAL_DEPENDENCY_ERROR":
         return { ...defaultDetails, status: 503 };
       default:
         return { ...defaultDetails, status: 422 }; // BusinessRuleViolation or InvariantViolation

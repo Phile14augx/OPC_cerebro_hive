@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from 'fastify';
+import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
 
 /**
  * Structured request logger — Production Hardening Sprint (observability gate).
@@ -54,11 +54,11 @@ export function onSendLog(
   const ctx = request.cerebroContext;
 
   const record: RequestLogRecord = {
-    requestId: ctx?.traceId ?? 'unknown',
-    tenantId: ctx?.tenantId ?? 'unauthenticated',
+    requestId: ctx?.traceId ?? "unknown",
+    tenantId: ctx?.tenantId ?? "unauthenticated",
     userId: ctx?.userId,
     workspaceId: ctx?.workspaceId,
-    traceId: ctx?.correlationId ?? ctx?.traceId ?? 'unknown',
+    traceId: ctx?.correlationId ?? ctx?.traceId ?? "unknown",
     method: request.method,
     url: request.url,
     statusCode: reply.statusCode,
@@ -69,20 +69,24 @@ export function onSendLog(
   // Emit as a structured JSON log line.  Fastify's built-in pino logger
   // serialises this efficiently; it flows to Loki via the OTEL exporter
   // configured in templates/configmap.yaml.
-  request.log.info(record, 'request completed');
+  request.log.info(record, "request completed");
 
   // Emit metric counter for auth failures so dashboards can alert on them.
   if (reply.statusCode === 401) {
     // In production this calls the OTEL metrics SDK; mocked here to avoid
     // a hard dependency in the middleware layer.
-    process.nextTick(() => emitMetric('authentication_failures_total', 1, {
-      path: request.routeOptions.url ?? request.url,
-    }));
+    process.nextTick(() =>
+      emitMetric("authentication_failures_total", 1, {
+        path: request.routeOptions.url ?? request.url,
+      }),
+    );
   } else if (reply.statusCode === 403) {
-    process.nextTick(() => emitMetric('authorization_denied_total', 1, {
-      path: request.routeOptions.url ?? request.url,
-      tenantId: ctx?.tenantId,
-    }));
+    process.nextTick(() =>
+      emitMetric("authorization_denied_total", 1, {
+        path: request.routeOptions.url ?? request.url,
+        tenantId: ctx?.tenantId,
+      }),
+    );
   }
 
   done();
@@ -93,5 +97,7 @@ function emitMetric(name: string, value: number, labels: Record<string, string |
   // TODO: Replace with `otelMeter.createCounter(name).add(value, labels)` once
   // the @opentelemetry/sdk-metrics package is added as a dependency.
   // Kept as a named function so the call sites above don't need to change.
-  void name; void value; void labels;
+  void name;
+  void value;
+  void labels;
 }

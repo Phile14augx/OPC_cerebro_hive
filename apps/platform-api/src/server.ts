@@ -1,26 +1,48 @@
-import { prisma } from '@cerebro/db';
-import { bootstrap } from './bootstrap';
+import { prisma } from "@cerebro/db";
+import { bootstrap } from "./bootstrap";
 
-import { AgentRepository, AgentConversationRepository, IdempotencyRepository, OutboxRepository, AuditRepository, WorkspaceRepository, PrismaUnitOfWork } from '@cerebro/db';
-import { AgentApplicationService, UnitOfWork, OutboxPublisher, AuditLogger, PolicyEngine, AgentValidator } from '@cerebro/domain';
-import { AgentBuilderCapability, AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
-import { createGateway } from '@cerebro/ai-gateway';
+import {
+  AgentBuilderCapability,
+  AgentRuntimeService,
+  ToolRegistry,
+  ToolRuntime,
+} from "@cerebro/agent-builder-capability";
+import { createGateway } from "@cerebro/ai-gateway";
+import {
+  AgentConversationRepository,
+  AgentRepository,
+  AuditRepository,
+  IdempotencyRepository,
+  OutboxRepository,
+  PrismaUnitOfWork,
+  WorkspaceRepository,
+} from "@cerebro/db";
+import {
+  AgentApplicationService,
+  AgentValidator,
+  AuditLogger,
+  OutboxPublisher,
+  PolicyEngine,
+} from "@cerebro/domain";
 
-import { CommandBus, QueryBus, DomainEventBus } from '@cerebro/core-bus';
-import { CreateAgentCommand } from './modules/agents/agents.commands';
-import { CreateAgentCommandHandler } from './modules/agents/agents.handlers';
+import { CommandBus, DomainEventBus, QueryBus } from "@cerebro/core-bus";
+import { CreateAgentCommandHandler } from "./modules/agents/agents.handlers";
 
-import { PrismaExecutionStore } from '@cerebro/db';
-import { ExecutionManager } from '@cerebro/runtime-core/src/execution/ExecutionManager';
-import { ExecutionReplayService } from '@cerebro/runtime-core/src/execution/ExecutionReplayService';
-import { ExecutionIdempotencyGuard } from '@cerebro/runtime-core/src/execution/ExecutionIdempotency';
-import { ExecutionOutbox } from '@cerebro/runtime-core/src/execution/ExecutionOutbox';
-import { ReducerRegistry } from '@cerebro/runtime-core/src/registry/ReducerRegistry';
-import { ExecutionEventRegistry } from '@cerebro/runtime-core/src/registry/ExecutionEventRegistry';
+import { PrismaExecutionStore } from "@cerebro/db";
+import { ExecutionIdempotencyGuard } from "@cerebro/runtime-core/src/execution/ExecutionIdempotency";
+import { ExecutionManager } from "@cerebro/runtime-core/src/execution/ExecutionManager";
+import { ExecutionOutbox } from "@cerebro/runtime-core/src/execution/ExecutionOutbox";
+import { ExecutionReplayService } from "@cerebro/runtime-core/src/execution/ExecutionReplayService";
+import { ExecutionEventRegistry } from "@cerebro/runtime-core/src/registry/ExecutionEventRegistry";
+import { ReducerRegistry } from "@cerebro/runtime-core/src/registry/ReducerRegistry";
 
-import { ExecutionCommandHandler } from '@cerebro/runtime-core/src/execution/commands/ExecutionCommandHandler';
-import { StartExecutionValidator, ResumeExecutionValidator, CancelExecutionValidator } from '@cerebro/runtime-core/src/execution/commands/ExecutionValidator';
-import { ExecutionRuntimeKernel } from '@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel';
+import { ExecutionCommandHandler } from "@cerebro/runtime-core/src/execution/commands/ExecutionCommandHandler";
+import {
+  CancelExecutionValidator,
+  ResumeExecutionValidator,
+  StartExecutionValidator,
+} from "@cerebro/runtime-core/src/execution/commands/ExecutionValidator";
+import { ExecutionRuntimeKernel } from "@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel";
 
 async function main() {
   // 1. Database (shared, adapter-wired singleton from @cerebro/db)
@@ -47,7 +69,7 @@ async function main() {
     auditLogger,
     policyEngine,
     agentValidator,
-    idempotencyRepo
+    idempotencyRepo,
   );
 
   // 4. Capability Layer
@@ -70,18 +92,19 @@ async function main() {
   // tool-calling pipeline (model → gateway → runtime → executor → loop).
   toolRegistry.register(
     {
-      id: 'current-time',
-      name: 'current_time',
-      description: 'Returns the current date and time in ISO 8601 format. Use this when the user asks about the current time, date, or needs temporal context.',
-      version: '1.0.0',
-      executionMode: 'sync',
+      id: "current-time",
+      name: "current_time",
+      description:
+        "Returns the current date and time in ISO 8601 format. Use this when the user asks about the current time, date, or needs temporal context.",
+      version: "1.0.0",
+      executionMode: "sync",
       permissions: [],
       timeoutMs: 5000,
       retryPolicy: { maxRetries: 0, backoffFactor: 1 },
-      inputSchema: { type: 'object', properties: {}, required: [] },
-      outputSchema: { type: 'object', properties: { time: { type: 'string' } } },
+      inputSchema: { type: "object", properties: {}, required: [] },
+      outputSchema: { type: "object", properties: { time: { type: "string" } } },
     },
-    { execute: async () => ({ time: new Date().toISOString() }) }
+    { execute: async () => ({ time: new Date().toISOString() }) },
   );
 
   // 4d. P5 Durable Execution Components
@@ -92,13 +115,13 @@ async function main() {
     new ExecutionEventRegistry(),
   );
   const executionIdempotencyGuard = new ExecutionIdempotencyGuard(executionStore);
-  
+
   // Dummy Outbox implementation for now (to be replaced by PrismaExecutionOutbox)
   const dummyOutbox: ExecutionOutbox = {
     publish: async () => {},
     fetchPending: async () => [],
     markSent: async () => {},
-    markFailed: async () => {}
+    markFailed: async () => {},
   };
 
   const executionManager = new ExecutionManager(
@@ -107,13 +130,13 @@ async function main() {
     executionIdempotencyGuard,
     dummyOutbox,
     null as any, // llmProvider to be resolved from registry
-    null as any  // toolProvider to be resolved from registry
+    null as any, // toolProvider to be resolved from registry
   );
 
   const commandHandler = new ExecutionCommandHandler(executionManager);
-  commandHandler.registerValidator('StartExecutionCommand', new StartExecutionValidator());
-  commandHandler.registerValidator('ResumeExecutionCommand', new ResumeExecutionValidator());
-  commandHandler.registerValidator('CancelExecutionCommand', new CancelExecutionValidator());
+  commandHandler.registerValidator("StartExecutionCommand", new StartExecutionValidator());
+  commandHandler.registerValidator("ResumeExecutionCommand", new ResumeExecutionValidator());
+  commandHandler.registerValidator("CancelExecutionCommand", new CancelExecutionValidator());
 
   const executionKernel = new ExecutionRuntimeKernel(commandHandler);
 
@@ -123,7 +146,7 @@ async function main() {
   const eventBus = new DomainEventBus();
 
   // Register Handlers
-  commandBus.register('CreateAgentCommand', new CreateAgentCommandHandler(agentBuilderCapability));
+  commandBus.register("CreateAgentCommand", new CreateAgentCommandHandler(agentBuilderCapability));
 
   // 6. Bootstrap Fastify
   const server = await bootstrap(commandBus, {
@@ -148,7 +171,7 @@ async function main() {
     // not have passed a readiness check against api.cerebrohive.com. See
     // audit/MILESTONE-25.5-PRODUCTION-READINESS.md.
     const port = Number(process.env.PORT) || 3406;
-    await server.listen({ port, host: '0.0.0.0' });
+    await server.listen({ port, host: "0.0.0.0" });
     server.log.info(`CerebroHive Platform API is running on http://localhost:${port}`);
   } catch (err) {
     server.log.error(err);
@@ -157,4 +180,3 @@ async function main() {
 }
 
 main();
-

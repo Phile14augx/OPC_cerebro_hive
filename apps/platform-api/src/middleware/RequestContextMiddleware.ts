@@ -1,13 +1,17 @@
-import { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from 'fastify';
-import { RequestContext } from '@cerebro/db';
+import { RequestContext } from "@cerebro/db";
+import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
 
-declare module 'fastify' {
+declare module "fastify" {
   interface FastifyRequest {
     cerebroContext: RequestContext;
   }
 }
 
-export function requestContextHook(request: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) {
+export function requestContextHook(
+  request: FastifyRequest,
+  reply: FastifyReply,
+  done: HookHandlerDoneFunction,
+) {
   // tenantId / userId / roles / permissions are NOT set here anymore — they
   // used to be read straight from x-tenant-id / x-user-id headers with no
   // verification, which meant any caller could claim to be any tenant. Real
@@ -27,18 +31,18 @@ export function requestContextHook(request: FastifyRequest, reply: FastifyReply,
   // silently resolve to a fake 'default-workspace' id that was never a real
   // row and would previously have passed every downstream ownership check
   // by definition.
-  const workspaceId = request.headers['x-workspace-id'] as string | undefined;
+  const workspaceId = request.headers["x-workspace-id"] as string | undefined;
 
-  const traceId = (request.headers['x-trace-id'] as string) || `trace-${Date.now()}`;
-  const correlationId = (request.headers['x-correlation-id'] as string) || traceId;
+  const traceId = (request.headers["x-trace-id"] as string) || `trace-${Date.now()}`;
+  const correlationId = (request.headers["x-correlation-id"] as string) || traceId;
 
   request.cerebroContext = {
-    tenantId: 'unauthenticated', // overwritten by requireAuthHook on protected routes
+    tenantId: "unauthenticated", // overwritten by requireAuthHook on protected routes
     workspaceId,
     userId: undefined,
     traceId,
     correlationId,
-    timestamp: new Date()
+    timestamp: new Date(),
   };
 
   done();

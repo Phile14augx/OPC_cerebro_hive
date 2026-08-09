@@ -1,4 +1,3 @@
-
 export class IntegrationEventPipeline {
   async handleEngineeringReviewPublished(event: any) {
     // 1. Transform Operational Event -> Dimensional Facts & Dims

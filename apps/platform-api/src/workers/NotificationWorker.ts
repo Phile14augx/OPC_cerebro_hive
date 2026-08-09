@@ -1,16 +1,16 @@
 // @ts-nocheck
-import { BaseWorker } from '@cerebro/events';
+import { BaseWorker } from "@cerebro/events";
 
 interface NotificationPayload {
   userId: string;
-  type: 'email' | 'push' | 'in_app';
+  type: "email" | "push" | "in_app";
   subject: string;
   body: string;
 }
 
 export class NotificationWorker extends BaseWorker<NotificationPayload> {
   constructor(natsConnection: any) {
-    super('notification.send', natsConnection);
+    super("notification.send", natsConnection);
   }
 
   async handle(payload: NotificationPayload, headers?: Record<string, string>): Promise<void> {
@@ -18,4 +18,3 @@ export class NotificationWorker extends BaseWorker<NotificationPayload> {
     // Scaffold: Send via SendGrid, Twilio, or Websockets
   }
 }
-

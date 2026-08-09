@@ -1,13 +1,13 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
 import {
-  safeVerifyJWT,
-  isSystemAdmin,
-  getRealmRoles,
   getClientRoles,
   getPermissions,
+  getRealmRoles,
+  isSystemAdmin,
+  safeVerifyJWT,
   type CerebroJWTPayload,
   type OrgRole,
-} from '@cerebro/auth/server';
+} from "@cerebro/auth/server";
+import { FastifyReply, FastifyRequest } from "fastify";
 
 /**
  * Real authentication, replacing the mock header-based identity that used to
@@ -34,12 +34,12 @@ import {
  * been added yet — tracked as a follow-up, not silently treated as solved.
  */
 export async function requireAuthHook(request: FastifyRequest, reply: FastifyReply): Promise<void> {
-  const header = request.headers['authorization'];
+  const header = request.headers["authorization"];
 
-  if (typeof header !== 'string' || !header.startsWith('Bearer ')) {
+  if (typeof header !== "string" || !header.startsWith("Bearer ")) {
     reply.code(401).send({
-      error: 'UNAUTHORIZED',
-      message: 'Bearer token required',
+      error: "UNAUTHORIZED",
+      message: "Bearer token required",
       requestId: request.cerebroContext?.traceId,
     });
     return;
@@ -48,10 +48,10 @@ export async function requireAuthHook(request: FastifyRequest, reply: FastifyRep
   const token = header.slice(7);
   const result = await safeVerifyJWT(token);
 
-  if ('error' in result) {
+  if ("error" in result) {
     reply.code(401).send({
-      error: 'UNAUTHORIZED',
-      message: result.isExpired ? 'Token expired' : 'Invalid token',
+      error: "UNAUTHORIZED",
+      message: result.isExpired ? "Token expired" : "Invalid token",
       requestId: request.cerebroContext?.traceId,
     });
     return;
@@ -66,7 +66,7 @@ export async function requireAuthHook(request: FastifyRequest, reply: FastifyRep
   // system admins mirrors how @cerebro/auth's own requirePermission/requireRole
   // treat req.auth.isAdmin (short-circuit, bypass the permission map).
   const permissions = isAdmin
-    ? ['*']
+    ? ["*"]
     : payload.org_role
       ? getPermissions(payload.org_role as OrgRole)
       : [];
@@ -89,12 +89,15 @@ export async function requireAuthHook(request: FastifyRequest, reply: FastifyRep
  * permission beyond "authenticated + owns the workspace."
  */
 export function requirePermission(permission: string) {
-  return async function requirePermissionHook(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+  return async function requirePermissionHook(
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ): Promise<void> {
     const permissions = request.cerebroContext.permissions ?? [];
-    if (permissions.includes('*') || permissions.includes(permission)) return;
+    if (permissions.includes("*") || permissions.includes(permission)) return;
 
     reply.code(403).send({
-      error: 'FORBIDDEN',
+      error: "FORBIDDEN",
       message: `Missing permission: ${permission}`,
       requestId: request.cerebroContext.traceId,
     });

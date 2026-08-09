@@ -1,8 +1,8 @@
-import { ICommandHandler } from '@cerebro/core-bus';
-import { Result } from '@cerebro/domain';
-import { RequestContext } from '@cerebro/db';
-import { IAgentBuilderCapability } from '@cerebro/capability-contracts';
-import { CreateAgentCommand } from './agents.commands';
+import { IAgentBuilderCapability } from "@cerebro/capability-contracts";
+import { ICommandHandler } from "@cerebro/core-bus";
+import { RequestContext } from "@cerebro/db";
+import { Result } from "@cerebro/domain";
+import { CreateAgentCommand } from "./agents.commands";
 
 export class CreateAgentCommandHandler implements ICommandHandler<CreateAgentCommand, any> {
   constructor(private readonly agentBuilder: IAgentBuilderCapability) {}
@@ -12,7 +12,7 @@ export class CreateAgentCommandHandler implements ICommandHandler<CreateAgentCom
       command.agentId,
       command.payload,
       context,
-      command.idempotencyKey
+      command.idempotencyKey,
     );
   }
 }

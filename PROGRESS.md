@@ -202,3 +202,28 @@ Full detail and remediation approach for each: `.planning/codebase/CONCERNS.md`.
 - [ ] C-P0-2: Run `pnpm prisma migrate dev --name add-agent-execution-models-aug-08`; verify no destructive SQL; commit
 - [ ] G-P0-1 Pass 1: Commit `infra/README.md` + `MASTER-PLAN-*.md` + `CEREBROHIVE_CONSTITUTION.md` — content confirmed correct; 5 cycles overdue
 - [ ] G-P1-2a: Commit `docs/01` through `docs/07` content migration batch in parallel with G-P0-1
+
+---
+
+### 2026-08-08 (Noon Audit — 12:00 IST)
+
+**Audit performed:**
+- Noon audit ran at 12:00 IST. Git remains unreachable from audit sandbox (branch `main` has no commits); completion assessed via file modification timestamps.
+- 0 commits detected since 3 AM audit. `agents/CLAUDE-TASKS.md`, `agents/GEMINI-TASKS.md`, and `agents/CURRENT-SPRINT.md` all last modified at 06:27–06:28 IST (3 AM audit writes) — no agent activity confirmed since.
+- Targeted search of `agents/`, `packages/capability-registry/`, and `infra/` directories confirmed no files modified after the 3 AM audit output.
+- All P0 tasks escalated to **6th-cycle** slippage (C-P0-3 execution: 5th cycle; C-P0-4: 1st cycle complete).
+- No new blockers detected beyond what was recorded at 3 AM.
+
+**Shipped:**
+- `agents/CLAUDE-TASKS.md` — refreshed noon assignment; C-P0-3 Phase A re-emphasised as minimum viable first commit; all slipped-cycle counts incremented
+- `agents/GEMINI-TASKS.md` — refreshed noon assignment; G-P0-1 and G-P1-2a highlighted as zero-blocker parallel starts; all counts incremented
+- `agents/CURRENT-SPRINT.md` — sprint board updated with 6th-cycle counts and noon baseline failure history entry
+- `PROGRESS.md` — this entry
+
+**Goals for 2026-08-08 afternoon/evening:**
+- [ ] C-P0-3a: Commit audit/sprint coordination changeset — **minimum viable action; no code, no risk, 5 cycles overdue**
+- [ ] C-P0-4: Fix `ERR_PACKAGE_IMPORT_NOT_DEFINED` in `@cerebro/capability-registry` / vite@8.1.5 — unblocks Codex pipeline
+- [ ] C-P0-2: Run Prisma migration, verify no destructive SQL, commit
+- [ ] C-P0-1: Park M10.2 files, commit M10.1-only scope, open PR
+- [ ] G-P0-1 Pass 1: Commit `infra/README.md` + `MASTER-PLAN-*.md` + `CEREBROHIVE_CONSTITUTION.md` — content confirmed correct multiple sessions ago
+- [ ] G-P1-2a: Commit `docs/01`–`docs/07` content migration batch in parallel with G-P0-1

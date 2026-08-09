@@ -1,4 +1,4 @@
-import { Type } from '@sinclair/typebox';
+import { Type } from "@sinclair/typebox";
 
 export const PublishAgentDto = Type.Object({
   modelId: Type.String(),

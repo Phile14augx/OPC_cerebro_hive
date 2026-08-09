@@ -1,8 +1,6 @@
-
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
 export class EngineeringReviewController {
-  
   // GET /api/v1/workflows/:workflowId/reviews
   async getReviewsForWorkflow(req: Request, res: Response) {
     const { workflowId } = req.params;
@@ -10,7 +8,7 @@ export class EngineeringReviewController {
     // Cursor-based pagination logic here
     res.json({
       data: [], // EngineeringReviewSummaryDTO[]
-      nextCursor: null
+      nextCursor: null,
     });
   }
 
@@ -22,7 +20,7 @@ export class EngineeringReviewController {
       statistics: {},
       findings: [],
       recommendations: [],
-      provenance: {}
+      provenance: {},
     });
   }
 
@@ -30,7 +28,7 @@ export class EngineeringReviewController {
   async checkFreshness(req: Request, res: Response) {
     const { reviewId } = req.params;
     // Forces live evaluation
-    res.json({ status: 'CURRENT' });
+    res.json({ status: "CURRENT" });
   }
 
   // GET /api/v1/reviews/:reviewId/evidence/:findingId
@@ -40,7 +38,7 @@ export class EngineeringReviewController {
     res.json({
       findingId,
       evidenceSummary: {},
-      evidenceGraph: null // loaded on next expansion
+      evidenceGraph: null, // loaded on next expansion
     });
   }
 
@@ -52,7 +50,7 @@ export class EngineeringReviewController {
       targetReviewId: target,
       verdictChanged: false,
       newFindings: [],
-      resolvedFindings: []
+      resolvedFindings: [],
     });
   }
 }

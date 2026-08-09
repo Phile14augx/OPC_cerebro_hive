@@ -1,6 +1,12 @@
-import { RuntimeRegistry, CapabilityDescriptor } from '@cerebro/runtime-core';
-import type { LLMProvider, LLMMessage, LLMToolDefinition, LLMInvocationResult, ExecutionContext } from '@cerebro/runtime-core';
-import type { AIGateway, ChatMessage, ToolDefinition } from '@cerebro/ai-gateway';
+import type { AIGateway, ChatMessage, ToolDefinition } from "@cerebro/ai-gateway";
+import type {
+  ExecutionContext,
+  LLMInvocationResult,
+  LLMMessage,
+  LLMProvider,
+  LLMToolDefinition,
+} from "@cerebro/runtime-core";
+import { CapabilityDescriptor, RuntimeRegistry } from "@cerebro/runtime-core";
 
 /**
  * Real LLMProvider backed by the production AIGateway (circuit breaker,
@@ -18,14 +24,18 @@ export class AIGatewayLLMProvider implements LLMProvider {
   async invokeModel(
     messages: LLMMessage[],
     context: ExecutionContext,
-    onToken?: (token: string) => void
+    onToken?: (token: string) => void,
   ): Promise<string> {
     const model = context.modelSelection?.model;
     const maxTokens = context.budget?.tokens;
 
     if (onToken) {
-      let full = '';
-      for await (const chunk of this.gateway.stream({ messages: messages as ChatMessage[], model, maxTokens })) {
+      let full = "";
+      for await (const chunk of this.gateway.stream({
+        messages: messages as ChatMessage[],
+        model,
+        maxTokens,
+      })) {
         if (chunk.delta) {
           onToken(chunk.delta);
           full += chunk.delta;
@@ -34,7 +44,11 @@ export class AIGatewayLLMProvider implements LLMProvider {
       return full;
     }
 
-    const response = await this.gateway.chat({ messages: messages as ChatMessage[], model, maxTokens });
+    const response = await this.gateway.chat({
+      messages: messages as ChatMessage[],
+      model,
+      maxTokens,
+    });
     return response.content;
   }
 
@@ -53,7 +67,7 @@ export class AIGatewayLLMProvider implements LLMProvider {
     const model = context.modelSelection?.model;
     const maxTokens = context.budget?.tokens;
 
-    const gatewayTools: ToolDefinition[] = tools.map(t => ({
+    const gatewayTools: ToolDefinition[] = tools.map((t) => ({
       name: t.name,
       description: t.description,
       inputSchema: t.inputSchema,
@@ -64,17 +78,17 @@ export class AIGatewayLLMProvider implements LLMProvider {
       model,
       maxTokens,
       tools: gatewayTools.length > 0 ? gatewayTools : undefined,
-      toolChoice: gatewayTools.length > 0 ? 'auto' : undefined,
+      toolChoice: gatewayTools.length > 0 ? "auto" : undefined,
     });
 
     return {
       content: response.content,
-      toolCalls: response.toolCalls?.map(tc => ({
+      toolCalls: response.toolCalls?.map((tc) => ({
         id: tc.id,
         name: tc.name,
         arguments: tc.arguments,
       })),
-      finishReason: response.finishReason === 'tool_use' ? 'tool_use' : 'stop',
+      finishReason: response.finishReason === "tool_use" ? "tool_use" : "stop",
     };
   }
 }
@@ -96,19 +110,19 @@ export function registerAIGatewayProvider(gateway: AIGateway): void {
 
   const alreadyRegistered = registry
     .listCapabilities()
-    .some((d) => d.metadata.capability === 'LLMProvider' && d.metadata.name === 'AIGateway-LLM');
+    .some((d) => d.metadata.capability === "LLMProvider" && d.metadata.name === "AIGateway-LLM");
   if (alreadyRegistered) return;
 
   const descriptor = new CapabilityDescriptor<LLMProvider>(
     {
-      name: 'AIGateway-LLM',
-      capability: 'LLMProvider',
-      version: '1.0.0',
+      name: "AIGateway-LLM",
+      capability: "LLMProvider",
+      version: "1.0.0",
       priority: 100,
-      supportedFeatures: ['streaming', 'tool-calling'],
-      costClass: 'Medium',
+      supportedFeatures: ["streaming", "tool-calling"],
+      costClass: "Medium",
     },
-    () => new AIGatewayLLMProvider(gateway)
+    () => new AIGatewayLLMProvider(gateway),
   );
 
   registry.register(descriptor);
@@ -135,11 +149,12 @@ function syncHealth(descriptor: CapabilityDescriptor<LLMProvider>, gateway: AIGa
  * Exported standalone so it's unit-testable without a timer or a real
  * gateway (see AIGatewayProviders.test.ts).
  */
-export function computeHealthFromGateway(gateway: AIGateway): 'Healthy' | 'Degraded' | 'Unavailable' {
+export function computeHealthFromGateway(
+  gateway: AIGateway,
+): "Healthy" | "Degraded" | "Unavailable" {
   const { providers } = gateway.getHealth();
-  if (providers.length === 0) return 'Unavailable';
-  if (providers.every((p) => p.circuitState === 'OPEN')) return 'Unavailable';
-  if (providers.some((p) => p.circuitState !== 'CLOSED')) return 'Degraded';
-  return 'Healthy';
+  if (providers.length === 0) return "Unavailable";
+  if (providers.every((p) => p.circuitState === "OPEN")) return "Unavailable";
+  if (providers.some((p) => p.circuitState !== "CLOSED")) return "Degraded";
+  return "Healthy";
 }
-
