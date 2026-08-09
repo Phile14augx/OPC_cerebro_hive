@@ -20,7 +20,8 @@ spec:
       actions:
         - type: allow
           description: "Normal development velocity. Feature work continues."
-        - type: allow_risky_changes: true
+        - type: allow_risky_changes
+          description: "Budget is healthy enough to permit higher-risk deploys."
 
     # ── Yellow: 25–50% consumed ──────────────────────────────────────────────
     - name: caution

@@ -39,6 +39,7 @@ function ApprovalsPanel({ online }: { online: boolean | null }) {
       setApprovals(await api<Approval[]>(`/v1/governance/approvals${q}`));
     } catch { /* noop */ }
   }, [online, statusFilter]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   const decide = async (id: string, decision: "approved" | "rejected") => {
@@ -98,6 +99,7 @@ function CompliancePanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setPosture(await api<CompliancePosture>("/v1/governance/compliance")); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   return (
@@ -134,6 +136,7 @@ function GrantsPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setGrants((await api<{ grants: ToolGrant[] }>("/v1/zerotrust/grants")).grants); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {
@@ -183,6 +186,7 @@ function McpPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setServers((await api<{ servers: McpServerRegistration[] }>("/v1/zerotrust/mcp-servers")).servers); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   const register = async () => {
@@ -255,6 +259,7 @@ function TokensPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setTokens((await api<{ tokens: CapabilityToken[] }>("/v1/zerotrust/tokens")).tokens); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   const issue = async () => {
@@ -268,13 +273,14 @@ function TokensPanel({ online }: { online: boolean | null }) {
     } catch { /* noop */ } finally { setBusy(false); }
   };
 
+  // eslint-disable-next-line react-hooks/purity -- Date.now() comparison for display-only expiry status; acceptable staleness between renders, not used for derived state.
   const isExpired = (t: CapabilityToken) => new Date(t.expiresAt).getTime() < Date.now();
 
   return (
     <div className="mt-6 space-y-6">
       <section className="rounded-xl border border-border bg-surface/40 p-4">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">Issue capability token</h2>
-        <p className="mt-1 text-xs text-text-secondary">Short-lived, scoped token bounding an agent's blast radius even if its reasoning is compromised.</p>
+        <p className="mt-1 text-xs text-text-secondary">Short-lived, scoped token bounding an agent&apos;s blast radius even if its reasoning is compromised.</p>
         <div className="mt-3 grid gap-3 sm:grid-cols-4">
           <Field label="Agent ID"><input className={inputCls} value={form.agentId} onChange={e => setForm(f => ({ ...f, agentId: e.target.value }))} placeholder="agent-support-01" /></Field>
           <Field label="Tools (comma-sep)"><input className={inputCls} value={form.toolsRaw} onChange={e => setForm(f => ({ ...f, toolsRaw: e.target.value }))} placeholder="send_email, read_crm" /></Field>
@@ -329,7 +335,7 @@ export default function HiveShieldPage() {
       <p className="mt-5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">HiveShield™</p>
       <h1 className="mt-2 text-3xl font-bold text-text-primary md:text-4xl">Governance, approvals, and Zero Trust agent security in one console</h1>
       <p className="mt-3 max-w-2xl text-text-secondary">
-        HiveShield is the security and governance control plane over CerebroHive's existing Governance and
+        HiveShield is the security and governance control plane over CerebroHive&apos;s existing Governance and
         Zero Trust domains: approval workflows, compliance control mappings, deny-by-default tool grants,
         MCP server risk review, and short-lived capability tokens — all backed by the same live policy engine
         and audit trail every other product on the platform uses.

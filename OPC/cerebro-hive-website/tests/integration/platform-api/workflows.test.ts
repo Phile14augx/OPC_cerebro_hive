@@ -381,9 +381,9 @@ describe("Cross-org isolation", () => {
   });
 
   it("listing from other org returns empty (not main org workflows)", async () => {
-    const { data } = await api<{ items: unknown[] }>(
+    const { data } = await api<{ items: { id: string }[] }>(
       "GET", "/v1/workflows", undefined, otherOrgToken,
     );
-    expect(data.items.some((w: any) => w.id === wfInMainOrg)).toBe(false);
+    expect(data.items.some((w) => w.id === wfInMainOrg)).toBe(false);
   });
 });

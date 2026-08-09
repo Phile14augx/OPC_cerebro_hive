@@ -235,7 +235,7 @@ export default function LearningPathsPage() {
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-wider text-text-secondary mb-3">
-                  What You'll Be Able to Do
+                  What You&apos;ll Be Able to Do
                 </p>
                 <ul className="space-y-2">
                   {path.outcomes.map((o) => (

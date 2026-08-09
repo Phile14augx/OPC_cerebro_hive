@@ -86,6 +86,7 @@ function BrowsePanel({ online }: { online: boolean | null }) {
     try { setList(await api<DocList>(`${BASE}/documents?${params}`)); } catch { /* noop */ }
   }, [online, page, domain]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(refresh, 8000); return () => clearInterval(id); }, [refresh]);
 
   const totalPages = list ? Math.ceil(list.total / list.page_size) : 1;
@@ -229,7 +230,7 @@ function SearchPanel({ online }: { online: boolean | null }) {
   return (
     <div className="mt-6 space-y-6">
       <p className="text-xs text-text-secondary">
-        Full-text and semantic search across all archived documents. Results are ranked by relevance using the platform's hybrid retrieval pipeline (dense + BM25).
+        Full-text and semantic search across all archived documents. Results are ranked by relevance using the platform&apos;s hybrid retrieval pipeline (dense + BM25).
       </p>
       <section className="rounded-xl border border-border bg-surface/40 p-4">
         <Field label="Search query">

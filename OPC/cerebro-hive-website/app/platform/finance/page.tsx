@@ -35,6 +35,7 @@ function AccountsPanel({ online }: { online: boolean | null }) {
       setAccounts(accs); setTrialBalance(tb);
     } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(refresh, 6000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {
@@ -105,6 +106,7 @@ function PartiesPanel({ online }: { online: boolean | null }) {
     if (!online) return;
     try { setParties(await api<Party[]>("/finance/parties")); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(refresh, 6000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {
@@ -154,6 +156,7 @@ function JournalPanel({ online }: { online: boolean | null }) {
     if (!online) return;
     try { setEntries(await api<JournalEntry[]>("/finance/journal-entries")); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(refresh, 6000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {
@@ -212,6 +215,7 @@ function InvoicesPanel({ online }: { online: boolean | null }) {
     if (!online) return;
     try { setInvoices(await api<Invoice[]>("/finance/invoices")); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(refresh, 6000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {

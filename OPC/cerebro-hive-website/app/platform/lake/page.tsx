@@ -138,7 +138,7 @@ export default function HiveLakePage() {
       <Link href="/platform" className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-primary-accent transition-colors"><ArrowLeft size={14} /> Platform</Link>
       <p className="mt-5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">HiveLake™ · Tier 2</p>
       <h1 className="mt-2 text-3xl font-bold text-text-primary md:text-4xl">Apache Iceberg data lake — Bronze / Silver / Gold with time-travel</h1>
-      <p className="mt-3 max-w-2xl text-text-secondary">HiveLake is the platform's open table format data lake. All platform events, agent traces, and business facts flow through Bronze → Silver → Gold zones. Every write is an immutable Iceberg snapshot — query any point in history, roll back without data movement.</p>
+      <p className="mt-3 max-w-2xl text-text-secondary">HiveLake is the platform&apos;s open table format data lake. All platform events, agent traces, and business facts flow through Bronze → Silver → Gold zones. Every write is an immutable Iceberg snapshot — query any point in history, roll back without data movement.</p>
       <div className="mt-6 flex flex-wrap gap-2 border-b border-border">
         {TABS.map(([t, label, Icon]) => (
           <button key={t} onClick={() => setTab(t)} className={`inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold transition-colors ${tab === t ? "border-b-2 border-primary-accent text-primary-accent" : "text-text-secondary hover:text-text-primary"}`}><Icon size={14} />{label}</button>

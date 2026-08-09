@@ -126,7 +126,7 @@ export default function IndustryServicesPage() {
       </Link>
       <p className="mt-5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">Category E · 10 Services</p>
       <h1 className="mt-2 text-3xl font-bold text-text-primary md:text-4xl">Industry Solutions</h1>
-      <p className="mt-3 max-w-2xl text-text-secondary">Vertical-specific AI transformation programs for healthcare, banking, insurance, manufacturing, retail, supply chain, government, education, energy, and telecom. Each engagement is pre-built on proven patterns for the industry's unique regulatory and operational requirements.</p>
+      <p className="mt-3 max-w-2xl text-text-secondary">Vertical-specific AI transformation programs for healthcare, banking, insurance, manufacturing, retail, supply chain, government, education, energy, and telecom. Each engagement is pre-built on proven patterns for the industry&apos;s unique regulatory and operational requirements.</p>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[280px_1fr]">
         <nav className="space-y-1">

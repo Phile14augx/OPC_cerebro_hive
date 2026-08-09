@@ -295,7 +295,7 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
       <div className="mt-10 rounded-2xl border border-border bg-surface/40 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <p className="font-bold text-text-primary">Ready to start?</p>
-          <p className="text-sm text-text-secondary mt-0.5">Book a discovery call — we'll scope the engagement in 1 hour.</p>
+          <p className="text-sm text-text-secondary mt-0.5">Book a discovery call — we&apos;ll scope the engagement in 1 hour.</p>
         </div>
         <Link
           href="/contact"

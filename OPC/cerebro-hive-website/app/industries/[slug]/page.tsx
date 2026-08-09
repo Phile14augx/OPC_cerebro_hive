@@ -800,7 +800,7 @@ export default async function IndustryPage({
         <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-text-secondary mb-2">
           Client Outcome
         </p>
-        <p className="text-sm text-text-primary italic leading-relaxed">"{ind.caseStudy}"</p>
+        <p className="text-sm text-text-primary italic leading-relaxed">&quot;{ind.caseStudy}&quot;</p>
       </div>
 
       {/* Related services */}
@@ -828,7 +828,7 @@ export default async function IndustryPage({
             Ready to build your {ind.name} AI program?
           </p>
           <p className="text-sm text-text-secondary mt-0.5">
-            Book a discovery call — we'll scope the engagement in 1 hour.
+            Book a discovery call — we&apos;ll scope the engagement in 1 hour.
           </p>
         </div>
         <Link

@@ -29,6 +29,6 @@ if (typeof process !== "undefined") {
 if (typeof globalThis.EventSource === "undefined") {
   const { EventSource } = await import("eventsource").catch(() => ({ EventSource: undefined }));
   if (EventSource) {
-    (globalThis as any).EventSource = EventSource;
+    Object.assign(globalThis, { EventSource });
   }
 }

@@ -182,7 +182,7 @@ export default function CorporateProgramsPage() {
       <div className="rounded-2xl border border-border bg-surface/40 p-6">
         <h3 className="font-bold text-text-primary mb-2">Need a fully custom program?</h3>
         <p className="text-sm text-text-secondary mb-4">
-          We build bespoke corporate training programs from scratch — custom curriculum, custom labs, live delivery by CerebroHive engineers, and your organization's branding on every certificate. Ideal for organizations deploying AI at scale who need their teams upskilled on a specific platform or methodology.
+          We build bespoke corporate training programs from scratch — custom curriculum, custom labs, live delivery by CerebroHive engineers, and your organization&apos;s branding on every certificate. Ideal for organizations deploying AI at scale who need their teams upskilled on a specific platform or methodology.
         </p>
         <Link
           href="/contact"

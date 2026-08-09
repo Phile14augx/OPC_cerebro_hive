@@ -102,7 +102,7 @@ function QueryPanel() {
 function MetricsPanel() {
   return (
     <div className="mt-6 space-y-4">
-      <p className="text-xs text-text-secondary">The dbt semantic layer enforces a single definition for every business metric. No more "whose revenue number is right?" — every team queries the same certified metric definitions.</p>
+      <p className="text-xs text-text-secondary">The dbt semantic layer enforces a single definition for every business metric. No more &quot;whose revenue number is right?&quot; — every team queries the same certified metric definitions.</p>
       <div className="space-y-2">
         {METRICS.map(m => (
           <div key={m.name} className="rounded-xl border border-border bg-surface/40 p-4">

@@ -440,12 +440,23 @@ function HiveAssistantPanel({ onClose }: { onClose: () => void }) {
 // ─── TopBar ─────────────────────────────────────────────────────────────────────
 
 export default function TopBar() {
+  const pathname = usePathname();
   const [open, setOpen] = useState<Panel>(null);
+  // Tracks the pathname `open` was last computed for, so navigation can
+  // close any open panel by adjusting state during render (the pattern
+  // React recommends for "reset state when a prop changes") instead of a
+  // useEffect, which would call setState synchronously in the effect body
+  // and trigger a redundant extra render.
+  const [openForPathname, setOpenForPathname] = useState(pathname);
   const [notifCount, setNotifCount] = useState(
     SEED_NOTIFICATIONS.filter((n) => !n.read).length
   );
-  const pathname = usePathname();
   const { user } = useAuth();
+
+  if (pathname !== openForPathname) {
+    setOpenForPathname(pathname);
+    setOpen(null);
+  }
 
   const toggle = useCallback((panel: Panel) => {
     setOpen((prev) => (prev === panel ? null : panel));
@@ -465,9 +476,6 @@ export default function TopBar() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
-
-  // Close on navigation
-  useEffect(() => { setOpen(null); }, [pathname]);
 
   const initial = (user?.given_name ?? user?.name ?? "U").charAt(0).toUpperCase();
 

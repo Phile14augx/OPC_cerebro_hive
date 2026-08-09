@@ -169,7 +169,7 @@ export default function SolutionsPage() {
 
       <div className="mt-14 rounded-2xl border border-border bg-surface/40 p-8 text-center">
         <h2 className="font-space text-2xl font-bold text-text-primary mb-3">Not sure which solution fits?</h2>
-        <p className="text-text-secondary mb-6">Start with an AI Readiness Assessment — we'll map your situation to the right solution mix.</p>
+        <p className="text-text-secondary mb-6">Start with an AI Readiness Assessment — we&apos;ll map your situation to the right solution mix.</p>
         <Link
           href="/contact"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary-accent text-background font-bold text-sm hover:opacity-90 transition-opacity"

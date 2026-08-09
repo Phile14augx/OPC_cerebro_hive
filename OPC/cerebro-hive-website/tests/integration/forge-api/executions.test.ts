@@ -188,7 +188,7 @@ describe("GET /v1/executions/:id/logs", () => {
     expect([200, 404]).toContain(res.status);
     if (res.status === 200) {
       const body = await res.json() as { logs?: unknown[] } | unknown[];
-      const logs = Array.isArray(body) ? body : (body as any).logs ?? [];
+      const logs = Array.isArray(body) ? body : (body.logs ?? []);
       expect(Array.isArray(logs)).toBe(true);
     }
   });

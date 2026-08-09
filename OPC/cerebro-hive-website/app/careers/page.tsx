@@ -127,10 +127,10 @@ export default function CareersPage() {
           Careers
         </p>
         <h1 className="font-space text-4xl font-bold text-text-primary md:text-5xl">
-          Build What's Next in Enterprise AI
+          Build What&apos;s Next in Enterprise AI
         </h1>
         <p className="mt-4 text-text-secondary max-w-2xl text-lg">
-          We're a small team of engineers and strategists building the platform, products, and services that enterprises use to run production AI systems. If you like shipping things that matter, we should talk.
+          We&apos;re a small team of engineers and strategists building the platform, products, and services that enterprises use to run production AI systems. If you like shipping things that matter, we should talk.
         </p>
       </div>
 
@@ -207,7 +207,7 @@ export default function CareersPage() {
       {/* Open application */}
       <div className="rounded-2xl border border-border bg-surface/40 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <p className="font-bold text-text-primary">Don't see the right role?</p>
+          <p className="font-bold text-text-primary">Don&apos;t see the right role?</p>
           <p className="text-sm text-text-secondary mt-0.5">
             We hire for exceptional people. Send us your background and what you want to work on.
           </p>

@@ -98,7 +98,7 @@ export default function AcademyPage() {
           Enterprise AI Education
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-text-secondary text-lg">
-          Practitioner-grade courses and certifications built by the engineers who architect enterprise AI systems for the world's most demanding organizations.
+          Practitioner-grade courses and certifications built by the engineers who architect enterprise AI systems for the world&apos;s most demanding organizations.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-8">
           {STATS.map((s) => (

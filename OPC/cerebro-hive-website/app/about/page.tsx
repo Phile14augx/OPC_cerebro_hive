@@ -56,7 +56,7 @@ export default function AboutPage() {
           We Build Enterprise AI Systems
         </h1>
         <p className="mt-5 text-lg text-text-secondary max-w-2xl leading-relaxed">
-          CerebroHive is an enterprise AI systems company — 50 platform products, 50 professional services, and an Academy that trains the teams building tomorrow's AI infrastructure. We believe AI transformation is an engineering problem, not a consulting project.
+          CerebroHive is an enterprise AI systems company — 50 platform products, 50 professional services, and an Academy that trains the teams building tomorrow&apos;s AI infrastructure. We believe AI transformation is an engineering problem, not a consulting project.
         </p>
       </div>
 

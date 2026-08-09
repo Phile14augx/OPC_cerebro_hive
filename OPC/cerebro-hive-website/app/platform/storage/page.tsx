@@ -298,7 +298,7 @@ export default function HiveStoragePage() {
         Tool registry — register, inspect, and invoke platform capabilities
       </h1>
       <p className="mt-3 max-w-2xl text-text-secondary">
-        HiveStorage is the platform tool store. Every capability an agent can invoke — builtin platform functions, external MCP servers, or custom integrations — is registered here with its input schema and permission requirements. Agents can only use tools they've been explicitly granted.
+        HiveStorage is the platform tool store. Every capability an agent can invoke — builtin platform functions, external MCP servers, or custom integrations — is registered here with its input schema and permission requirements. Agents can only use tools they&apos;ve been explicitly granted.
       </p>
       <div className="mt-5 flex items-center gap-2 text-sm">
         <span className={`inline-block h-2.5 w-2.5 rounded-full ${online === null ? "bg-border" : online ? "bg-primary-accent" : "bg-red-500"}`} />

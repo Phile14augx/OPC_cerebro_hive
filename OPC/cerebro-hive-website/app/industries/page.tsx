@@ -34,7 +34,7 @@ export default function IndustriesPage() {
           15 Industries. Pre-Built AI Programs.
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-text-secondary text-lg">
-          Vertical-specific AI transformation programs with pre-built patterns for each industry's unique regulatory and operational requirements.
+          Vertical-specific AI transformation programs with pre-built patterns for each industry&apos;s unique regulatory and operational requirements.
         </p>
       </div>
 

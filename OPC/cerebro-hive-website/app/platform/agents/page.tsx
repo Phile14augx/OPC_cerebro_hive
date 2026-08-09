@@ -28,6 +28,7 @@ function RegistryPanel({ online }: { online: boolean | null }) {
     if (!online) return;
     try { setAgents(await api<Agent[]>("/agents")); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(refresh, 6000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {
@@ -104,7 +105,7 @@ function RunPanel({ online }: { online: boolean | null }) {
 
   return (
     <div className="mt-6 space-y-6">
-      <p className="text-xs text-text-secondary">Execute an agent against the runtime. The agent's tool grants are enforced at execution time — any tool call outside the granted set is denied. All executions are traced via HiveEvaluation.</p>
+      <p className="text-xs text-text-secondary">Execute an agent against the runtime. The agent&apos;s tool grants are enforced at execution time — any tool call outside the granted set is denied. All executions are traced via HiveEvaluation.</p>
       <section className="rounded-xl border border-border bg-surface/40 p-4 space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">Execute agent</h2>
         <Field label="Agent">

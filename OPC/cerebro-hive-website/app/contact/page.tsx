@@ -64,10 +64,10 @@ export default function ContactPage() {
           Contact
         </p>
         <h1 className="font-space text-4xl font-bold text-text-primary md:text-5xl">
-          Let's Talk
+          Let&apos;s Talk
         </h1>
         <p className="mt-3 text-text-secondary max-w-xl">
-          Whether you're scoping an AI strategy engagement, evaluating the platform, or exploring training programs — book a call and we'll scope the right starting point in 1 hour.
+          Whether you&apos;re scoping an AI strategy engagement, evaluating the platform, or exploring training programs — book a call and we&apos;ll scope the right starting point in 1 hour.
         </p>
       </div>
 
@@ -78,7 +78,7 @@ export default function ContactPage() {
             <div className="rounded-2xl border border-primary-accent/30 bg-primary-accent/5 p-8 text-center">
               <CheckCircle size={32} className="text-primary-accent mx-auto mb-4" />
               <h2 className="text-xl font-bold text-text-primary mb-2">
-                We'll be in touch within 1 business day.
+                We&apos;ll be in touch within 1 business day.
               </h2>
               <p className="text-sm text-text-secondary">
                 A CerebroHive team member will reach out to schedule a discovery call and confirm engagement scope.
@@ -220,7 +220,7 @@ export default function ContactPage() {
               Not Sure Where to Start?
             </p>
             <p className="text-xs text-text-secondary mb-3">
-              Start with an AI Readiness Assessment. We'll map your current state, identify the highest-value opportunities, and recommend the right starting point.
+              Start with an AI Readiness Assessment. We&apos;ll map your current state, identify the highest-value opportunities, and recommend the right starting point.
             </p>
             <p className="text-xs font-semibold text-primary-accent">4–6 weeks · From $45,000</p>
           </div>

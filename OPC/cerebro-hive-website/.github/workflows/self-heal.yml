@@ -437,12 +437,12 @@ jobs:
 
             COMMIT_MSG="fix(healbot): auto-fix ${FIX_TYPE} errors [heal-cycle-${CYCLE}]
 
-HealBot auto-fix on cycle ${CYCLE}/${MAX_HEAL_CYCLES}
-Error type: ${FIX_TYPE}
-Original error: ${EXCERPT}
-Triggered by: https://github.com/${{ github.repository }}/actions/runs/${{ steps.meta.outputs.run_id }}
+            HealBot auto-fix on cycle ${CYCLE}/${MAX_HEAL_CYCLES}
+            Error type: ${FIX_TYPE}
+            Original error: ${EXCERPT}
+            Triggered by: https://github.com/${{ github.repository }}/actions/runs/${{ steps.meta.outputs.run_id }}
 
-[skip-healbot]"
+            [skip-healbot]"
 
             git commit -m "$COMMIT_MSG"
             git push origin "${{ steps.meta.outputs.branch }}"

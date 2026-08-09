@@ -96,10 +96,10 @@ describe("API Key lifecycle", () => {
       "GET", "/v1/api-keys",
     );
     expect(status).toBe(200);
-    const items = Array.isArray(data) ? data : (data as any).items ?? [];
-    const match = items.find((k: any) => k.id === createdKeyId);
+    const items = Array.isArray(data) ? data : (data.items ?? []);
+    const match = items.find((k) => k.id === createdKeyId);
     expect(match).toBeTruthy();
-    expect((match as any).raw).toBeUndefined(); // never expose raw on list
+    expect(match?.raw).toBeUndefined(); // never expose raw on list
   });
 
   it("API key authenticates successfully against protected route", async () => {

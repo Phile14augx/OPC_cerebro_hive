@@ -331,7 +331,7 @@ export default function HiveIdentityPage() {
       <p className="mt-5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">HiveIdentity™ · Tier 0</p>
       <h1 className="mt-2 text-3xl font-bold text-text-primary md:text-4xl">Zero-trust identity for every agent, service, and human principal</h1>
       <p className="mt-3 max-w-2xl text-text-secondary">
-        HiveIdentity is the authentication and authorization root for the Intelligence Mesh. Every agent is a registered principal with an explicit identity. Tool grants are deny-by-default. Capability tokens bound an agent's blast radius to exactly the tools it needs for a single task. MCP servers require risk-tiered approval before agents can connect.
+        HiveIdentity is the authentication and authorization root for the Intelligence Mesh. Every agent is a registered principal with an explicit identity. Tool grants are deny-by-default. Capability tokens bound an agent&apos;s blast radius to exactly the tools it needs for a single task. MCP servers require risk-tiered approval before agents can connect.
       </p>
 
       <div className="mt-5 flex items-center gap-2 text-sm">

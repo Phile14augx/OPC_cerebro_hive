@@ -42,7 +42,7 @@ export default function HiveMarketplacePage() {
       <Link href="/platform" className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-primary-accent transition-colors"><ArrowLeft size={14} /> Platform</Link>
       <p className="mt-5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">HiveMarketplace™ · Tier 5</p>
       <h1 className="mt-2 text-3xl font-bold text-text-primary md:text-4xl">Enterprise marketplace — certified solutions, partner bundles, one-click deploy</h1>
-      <p className="mt-3 max-w-2xl text-text-secondary">HiveMarketplace is the enterprise solution store. Every listing is certified by CerebroHive, tested against the platform's security requirements, and deployable in one click. Publishers monetize through revenue sharing.</p>
+      <p className="mt-3 max-w-2xl text-text-secondary">HiveMarketplace is the enterprise solution store. Every listing is certified by CerebroHive, tested against the platform&apos;s security requirements, and deployable in one click. Publishers monetize through revenue sharing.</p>
       <div className="mt-6 flex flex-wrap gap-2">
         {categories.map(c=><button key={c} onClick={()=>setFilter(c)} className={`rounded-full border px-3 py-1 text-xs font-semibold capitalize transition-colors ${filter===c?"border-primary-accent text-primary-accent bg-primary-accent/10":"border-border text-text-secondary hover:text-text-primary"}`}>{c}</button>)}
       </div>

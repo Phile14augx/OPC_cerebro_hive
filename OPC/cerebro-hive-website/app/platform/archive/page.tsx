@@ -34,6 +34,7 @@ function DocumentsPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setDocs((await api<{ documents: KnowledgeDocument[] }>("/v1/knowledge/documents")).documents); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 7000); return () => clearInterval(id); }, [refresh]);
 
   const ingest = async () => {
@@ -172,6 +173,7 @@ function InsightsPanel({ online }: { online: boolean | null }) {
     } catch { /* noop */ }
     try { setAnalytics(await api<HubAnalytics>("/v1/hub/analytics")); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 8000); return () => clearInterval(id); }, [refresh]);
 
   const generate = async () => {

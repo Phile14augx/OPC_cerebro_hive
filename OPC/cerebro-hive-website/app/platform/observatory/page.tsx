@@ -31,6 +31,7 @@ function OverviewPanel() {
     } catch { setOnline(false); }
   }, []);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(refresh, 8000); return () => clearInterval(id); }, [refresh]);
 
   const kpis = summary ? Object.entries(summary) : [

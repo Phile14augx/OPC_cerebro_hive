@@ -36,7 +36,7 @@ export default function CerebroLearnPage() {
       </Link>
       <p className="mt-5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">CerebroLearn™ · Tier 4</p>
       <h1 className="mt-2 text-3xl font-bold text-text-primary md:text-4xl">Adaptive enterprise learning — personalized paths, skills gap AI, compliance certification</h1>
-      <p className="mt-3 max-w-2xl text-text-secondary">CerebroLearn continuously upskills the enterprise workforce. An AI tutor adapts learning paths to each employee's role and pace, identifies org-wide skills gaps before they become risks, and tracks compliance certifications with automatic expiry alerts.</p>
+      <p className="mt-3 max-w-2xl text-text-secondary">CerebroLearn continuously upskills the enterprise workforce. An AI tutor adapts learning paths to each employee&apos;s role and pace, identifies org-wide skills gaps before they become risks, and tracks compliance certifications with automatic expiry alerts.</p>
 
       <div className="mt-6 flex flex-wrap gap-2 border-b border-border">
         {(["paths", "skills", "analytics"] as Tab[]).map(t => (

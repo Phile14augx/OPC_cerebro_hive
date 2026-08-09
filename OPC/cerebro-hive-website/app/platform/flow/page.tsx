@@ -33,6 +33,7 @@ function WorkflowsPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setWorkflows(await api<Workflow[]>("/v1/flow/workflows")); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 8000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {
@@ -127,6 +128,7 @@ function IntegrationsPanel({ online }: { online: boolean | null }) {
     try { setCatalog(await api<ConnectorDescriptor[]>("/v1/connect/catalog")); } catch { /* noop */ }
     try { setInstances(await api<ConnectorInstance[]>("/v1/connect/instances")); } catch { /* noop */ }
   }, [online]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 8000); return () => clearInterval(id); }, [refresh]);
 
   const configure = async () => {
@@ -187,6 +189,7 @@ function ApprovalsPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { const q = statusFilter ? `?status=${statusFilter}` : ""; setApprovals(await api<Approval[]>(`/v1/governance/approvals${q}`)); } catch { /* noop */ }
   }, [online, statusFilter]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 6000); return () => clearInterval(id); }, [refresh]);
 
   const decide = async (id: string, decision: "approved" | "rejected") => {

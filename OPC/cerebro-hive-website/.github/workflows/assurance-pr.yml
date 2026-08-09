@@ -152,41 +152,41 @@ jobs:
 
             const body = `## 🛡️ Assurance Gate — PR #${{ github.event.pull_request.number }}
 
-| | |
-|---|---|
-| **CEC Score** | ${cecIcon} **${cecPct}%** (target: ${cecScore?.cec_target_pct ?? 90}%) |
-| **Evidence generated** | ${thisRunEntries.length} controls run |
-| **Proven / Passed** | ${proven.length} |
-| **Failed** | ${failed.length} |
-| **Blocked** | ${blocked.length} |
-| **Architectural regressions** | ${regressions.length === 0 ? '✅ 0' : `❌ ${regressions.length}`} |
+            | | |
+            |---|---|
+            | **CEC Score** | ${cecIcon} **${cecPct}%** (target: ${cecScore?.cec_target_pct ?? 90}%) |
+            | **Evidence generated** | ${thisRunEntries.length} controls run |
+            | **Proven / Passed** | ${proven.length} |
+            | **Failed** | ${failed.length} |
+            | **Blocked** | ${blocked.length} |
+            | **Architectural regressions** | ${regressions.length === 0 ? '✅ 0' : `❌ ${regressions.length}`} |
 
-### Self-Assurance
-| Status | Check |
-|---|---|
-${selfResults}
+            ### Self-Assurance
+            | Status | Check |
+            |---|---|
+            ${selfResults}
 
-${failed.length > 0 ? `### Failures
-| Control | Class | Details |
-|---|---|---|
-${failureBreakdown}
+            ${failed.length > 0 ? `### Failures
+            | Control | Class | Details |
+            |---|---|---|
+            ${failureBreakdown}
 
-` : ''}### Provenance
-| Field | Value |
-|---|---|
-| Commit | \`${{ github.sha }}\` |
-| Branch | \`${{ github.head_ref }}\` |
-| Workflow run | [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
-| Evidence artifact | [assurance-evidence-${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+            ` : ''}### Provenance
+            | Field | Value |
+            |---|---|
+            | Commit | \`${{ github.sha }}\` |
+            | Branch | \`${{ github.head_ref }}\` |
+            | Workflow run | [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+            | Evidence artifact | [assurance-evidence-${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
 
-<details><summary>Runner output</summary>
+            <details><summary>Runner output</summary>
 
-\`\`\`
-${runnerOutput}
-\`\`\`
-</details>
+            \`\`\`
+            ${runnerOutput}
+            \`\`\`
+            </details>
 
-> _Evidence is immutable and hash-chained. Every entry traces to this workflow run._`;
+            > _Evidence is immutable and hash-chained. Every entry traces to this workflow run._`;
 
             // Find and update existing comment, or create new one
             const { data: comments } = await github.rest.issues.listComments({

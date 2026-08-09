@@ -53,10 +53,11 @@ spec:
             - --objstore.config-file=/etc/thanos/objstore.yaml
             # Chunk pool size: balance memory vs. query performance
             - --store.grpc.series-max-concurrency=20
-            - --selector.relabel-config=|
-                - source_labels: [cluster]
-                  regex: cerebro-.*
-                  action: keep
+            - |
+              --selector.relabel-config=
+              - source_labels: [cluster]
+                regex: cerebro-.*
+                action: keep
             # Caching (in-memory — upgrade to memcached for production)
             - --index-cache-size=2GB
             - --chunk-pool-size=4GB
@@ -327,12 +328,13 @@ spec:
             - --query-range.split-interval=24h
 
             # In-memory response cache (upgrade to Memcached for multi-replica)
-            - --query-range.response-cache-config=|
-                type: IN-MEMORY
-                config:
-                  max_size: 500MB
-                  max_size_items: 10000
-                  validity: 10m
+            - |
+              --query-range.response-cache-config=
+              type: IN-MEMORY
+              config:
+                max_size: 500MB
+                max_size_items: 10000
+                validity: 10m
 
             # Retry on temporary errors
             - --query-range.max-retries-per-request=3
