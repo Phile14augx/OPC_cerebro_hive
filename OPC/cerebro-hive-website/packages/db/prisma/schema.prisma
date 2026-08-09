@@ -1500,7 +1500,7 @@ model Organization {
 }
 
 model OrgMembership {
-  userId   String
+  userId   String   @db.Uuid
   orgId    String
   role     UserRole @default(MEMBER)
   joinedAt DateTime @default(now())
@@ -1518,7 +1518,7 @@ model Invitation {
   orgId       String
   email       String
   role        UserRole
-  invitedById String
+  invitedById String    @db.Uuid
   token       String    @unique
   expiresAt   DateTime
   acceptedAt  DateTime?
@@ -1734,170 +1734,170 @@ model ModelEntry {
 // -----------------------------------------------------------------------------
 
 model ArchiveDocument {
-  id              String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId        String                   @db.Uuid
-  title           String
-  description     String?                  @db.Text
-  documentType    String
-  currentVersionId String?                 @db.Uuid
-  ownerId         String?                  @db.Uuid
-  visibility      String                   @default("PRIVATE")
-  status          String                   @default("ACTIVE")
-  createdAt       DateTime                 @default(now())
-  updatedAt       DateTime                 @updatedAt
-  deletedAt       DateTime?
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId         String    @db.Uuid
+  title            String
+  description      String?   @db.Text
+  documentType     String
+  currentVersionId String?   @db.Uuid
+  ownerId          String?   @db.Uuid
+  visibility       String    @default("PRIVATE")
+  status           String    @default("ACTIVE")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
 
-  versions        ArchiveDocumentVersion[]
-  tags            ArchiveDocumentTag[]
-  acls            ArchiveDocumentAcl[]
+  versions ArchiveDocumentVersion[]
+  tags     ArchiveDocumentTag[]
+  acls     ArchiveDocumentAcl[]
 
   @@index([tenantId])
 }
 
 model ArchiveDocumentVersion {
-  id                String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  documentId        String                   @db.Uuid
-  document          ArchiveDocument          @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  versionNumber     Int                      @default(1)
-  storageKey        String
-  originalFilename  String
-  mimeType          String
-  byteSize          BigInt
-  checksumSha256    String
-  processingStatus  String                   @default("CREATED")
-  language          String                   @default("en")
-  pageCount         Int                      @default(0)
-  wordCount         Int                      @default(0)
-  createdBy         String?                  @db.Uuid
-  createdAt         DateTime                 @default(now())
-  processedAt       DateTime?
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  documentId       String          @db.Uuid
+  document         ArchiveDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  versionNumber    Int             @default(1)
+  storageKey       String
+  originalFilename String
+  mimeType         String
+  byteSize         BigInt
+  checksumSha256   String
+  processingStatus String          @default("CREATED")
+  language         String          @default("en")
+  pageCount        Int             @default(0)
+  wordCount        Int             @default(0)
+  createdBy        String?         @db.Uuid
+  createdAt        DateTime        @default(now())
+  processedAt      DateTime?
 
-  chunks            ArchiveDocumentChunk[]
-  runs              ArchiveProcessingRun[]
+  chunks ArchiveDocumentChunk[]
+  runs   ArchiveProcessingRun[]
 
   @@unique([documentId, versionNumber])
 }
 
 model ArchiveDocumentChunk {
-  id              String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId        String                   @db.Uuid
-  documentId      String                   @db.Uuid
-  versionId       String                   @db.Uuid
-  version         ArchiveDocumentVersion   @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId        String                 @db.Uuid
+  documentId      String                 @db.Uuid
+  versionId       String                 @db.Uuid
+  version         ArchiveDocumentVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
   chunkIndex      Int
-  text            String                   @db.Text
-  tokenCount      Int                      @default(0)
+  text            String                 @db.Text
+  tokenCount      Int                    @default(0)
   pageStart       Int?
   pageEnd         Int?
   sectionPath     Json?
   contentHash     String
-  embeddingStatus String                   @default("PENDING")
-  createdAt       DateTime                 @default(now())
+  embeddingStatus String                 @default("PENDING")
+  createdAt       DateTime               @default(now())
 
-  entities        ArchiveChunkEntity[]
+  entities ArchiveChunkEntity[]
 
   @@index([versionId])
   @@index([contentHash])
 }
 
 model ArchiveEntity {
-  id            String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId      String                   @db.Uuid
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId      String   @db.Uuid
   canonicalName String
   entityType    String
-  description   String?                  @db.Text
-  createdAt     DateTime                 @default(now())
-  updatedAt     DateTime                 @updatedAt
+  description   String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  chunks        ArchiveChunkEntity[]
+  chunks ArchiveChunkEntity[]
 
   @@unique([tenantId, canonicalName, entityType])
 }
 
 model ArchiveChunkEntity {
-  chunkId       String                   @db.Uuid
-  entityId      String                   @db.Uuid
-  chunk         ArchiveDocumentChunk     @relation(fields: [chunkId], references: [id], onDelete: Cascade)
-  entity        ArchiveEntity            @relation(fields: [entityId], references: [id], onDelete: Cascade)
-  confidence    Float                    @default(1.0)
-  source        String                   @default("EXTRACTED")
+  chunkId    String               @db.Uuid
+  entityId   String               @db.Uuid
+  chunk      ArchiveDocumentChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+  entity     ArchiveEntity        @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  confidence Float                @default(1.0)
+  source     String               @default("EXTRACTED")
 
   @@id([chunkId, entityId])
 }
 
 model ArchiveTag {
-  id            String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId      String                   @db.Uuid
-  name          String
-  slug          String
-  type          String                   @default("AUTO")
-  createdAt     DateTime                 @default(now())
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String   @db.Uuid
+  name      String
+  slug      String
+  type      String   @default("AUTO")
+  createdAt DateTime @default(now())
 
-  documents     ArchiveDocumentTag[]
+  documents ArchiveDocumentTag[]
 
   @@unique([tenantId, slug])
 }
 
 model ArchiveDocumentTag {
-  documentId    String                   @db.Uuid
-  tagId         String                   @db.Uuid
-  document      ArchiveDocument          @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  tag           ArchiveTag               @relation(fields: [tagId], references: [id], onDelete: Cascade)
-  confidence    Float                    @default(1.0)
-  source        String                   @default("AUTO")
-  approvedBy    String?                  @db.Uuid
+  documentId String          @db.Uuid
+  tagId      String          @db.Uuid
+  document   ArchiveDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  tag        ArchiveTag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  confidence Float           @default(1.0)
+  source     String          @default("AUTO")
+  approvedBy String?         @db.Uuid
 
   @@id([documentId, tagId])
 }
 
 model ArchiveDocumentAcl {
-  documentId    String                   @db.Uuid
-  document      ArchiveDocument          @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId    String          @db.Uuid
+  document      ArchiveDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
   principalType String
   principalId   String
   permission    String
-  createdAt     DateTime                 @default(now())
+  createdAt     DateTime        @default(now())
 
   @@id([documentId, principalType, principalId])
 }
 
 model ArchiveProcessingRun {
-  id              String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  versionId       String                   @db.Uuid
-  version         ArchiveDocumentVersion   @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  versionId       String                 @db.Uuid
+  version         ArchiveDocumentVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
   pipelineVersion String
-  status          String                   @default("QUEUED")
-  currentStage    String                   @default("CREATED")
-  startedAt       DateTime                 @default(now())
+  status          String                 @default("QUEUED")
+  currentStage    String                 @default("CREATED")
+  startedAt       DateTime               @default(now())
   completedAt     DateTime?
   errorCode       String?
-  errorMessage    String?                  @db.Text
-  retryCount      Int                      @default(0)
+  errorMessage    String?                @db.Text
+  retryCount      Int                    @default(0)
   traceId         String?
 
-  events          ArchiveProcessingEvent[]
+  events ArchiveProcessingEvent[]
 }
 
 model ArchiveProcessingEvent {
-  id              String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  runId           String                   @db.Uuid
-  run             ArchiveProcessingRun     @relation(fields: [runId], references: [id], onDelete: Cascade)
-  stage           String
-  status          String
-  details         Json?
-  createdAt       DateTime                 @default(now())
+  id        String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  runId     String               @db.Uuid
+  run       ArchiveProcessingRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  stage     String
+  status    String
+  details   Json?
+  createdAt DateTime             @default(now())
 }
 
 model ArchiveSearchQuery {
-  id              String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId        String                   @db.Uuid
-  userId          String?                  @db.Uuid
-  queryHash       String
-  mode            String                   @default("HYBRID")
-  filters         Json?
-  resultCount     Int                      @default(0)
-  durationMs      Int                      @default(0)
-  createdAt       DateTime                 @default(now())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String   @db.Uuid
+  userId      String?  @db.Uuid
+  queryHash   String
+  mode        String   @default("HYBRID")
+  filters     Json?
+  resultCount Int      @default(0)
+  durationMs  Int      @default(0)
+  createdAt   DateTime @default(now())
 
   @@index([tenantId, createdAt])
 }
