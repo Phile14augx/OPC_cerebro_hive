@@ -53,9 +53,9 @@ export const aiNavigation: NavGroup = {
   items: [
     { title: "AI Overview", href: "/app/ai", icon: LayoutDashboard },
     { title: "AI Studio", href: "/app/ai/studio", icon: LayoutPanelLeft },
-    { title: "AI Agents", href: "/app/ai/agents", icon: Bot },
-    { title: "AI Workflows", href: "/app/ai/workflows", icon: GitMerge },
-    { title: "AI Playground", href: "/app/ai/playground", icon: Gamepad2 },
+    { title: "AI Agents", href: "/app/agents", icon: Bot },
+    { title: "AI Workflows", href: "/app/workflows", icon: GitMerge },
+    { title: "AI Playground", href: "/app/playground", icon: Gamepad2 },
     { title: "AI Models", href: "/app/ai/models", icon: Network },
     { title: "Prompt Library", href: "/app/ai/prompts", icon: Library },
     { title: "Knowledge Hub", href: "/app/ai/knowledge", icon: BookOpen },
@@ -102,7 +102,7 @@ export const dataNavigation: NavGroup = {
     { title: "ETL", href: "/app/data/etl", icon: GitPullRequest },
     { title: "Data Warehouse", href: "/app/data/warehouse", icon: Database },
     { title: "Lakehouse", href: "/app/data/lakehouse", icon: FileSpreadsheet },
-    { title: "Analytics", href: "/app/data/analytics", icon: PieChart },
+    { title: "Analytics", href: "/app/analytics", icon: PieChart },
     { title: "BI", href: "/app/data/bi", icon: LineChart },
   ],
 };
@@ -112,13 +112,13 @@ export const securityNavigation: NavGroup = {
   href: "/app/security",
   icon: ShieldCheck,
   items: [
-    { title: "Security Overview", href: "/app/security", icon: LayoutDashboard },
+    { title: "Security Overview", href: "/app/trust/security", icon: LayoutDashboard },
     { title: "IAM", href: "/app/security/iam", icon: KeyRound },
     { title: "Roles", href: "/app/security/roles", icon: UsersRound },
     { title: "Secrets", href: "/app/security/secrets", icon: FileKey2 },
-    { title: "Audit Logs", href: "/app/security/audit", icon: ScrollText },
-    { title: "Compliance", href: "/app/security/compliance", icon: CheckCircle2 },
-    { title: "Policies", href: "/app/security/policies", icon: ShieldAlert },
+    { title: "Audit Logs", href: "/app/trust/audit", icon: ScrollText },
+    { title: "Compliance", href: "/app/trust/compliance", icon: CheckCircle2 },
+    { title: "Policies", href: "/app/trust/policies", icon: ShieldAlert },
   ],
 };
 
