@@ -408,17 +408,19 @@ Note: Talent OS's 2 missing routes are NOT in CONTEXT.md's D-05 "8 groups" list 
 | A2 | Target BullMQ version `^6.0.9` is "latest v6" as of research date — confirmed via `npm view bullmq versions`, but not re-verified against the registry at plan-time | Standard Stack | Low risk — any `^6.x` satisfies SCHM-02's "reconcile to a single major version" requirement; exact patch pinned doesn't matter |
 | A3 | No auth guard on the 9 forge-api controllers is intentional/acceptable for this phase (not something Phase 1 must fix) — inferred from D-04's "don't over-polish" framing, not an explicit CONTEXT.md statement | Pattern 3 | If wrong (i.e., the user actually wants auth added), FORGE-01 tasks would need an added `@UseGuards` step; low implementation cost either way, worth a quick confirmation at plan/discuss time if not already settled |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Should the catch-all also handle completely unregistered paths (like the `pinnedFavorites` `/app/automation/workflows` bug) with a placeholder, or let them 404?**
+1. **RESOLVED — Should the catch-all also handle completely unregistered paths (like the `pinnedFavorites` `/app/automation/workflows` bug) with a placeholder, or let them 404?**
    - What we know: D-01 says "zero 404s, phase-wide" for the 99 *registered* destinations; it's silent on paths that are linked from elsewhere in the UI but aren't in the registry at all.
    - What's unclear: Whether "phase-wide" should be read as "every link anywhere in Studio" or strictly "every registry item."
    - Recommendation: Cheap to make the catch-all's fallback (no registry match) render a generic placeholder instead of `notFound()` — strictly safer and closer to the spirit of D-01/D-07 ("never a bare blank screen"). Flag as a planner decision, not a blocker.
+   - **Resolution:** User confirmed via a direct question ("Yes, fix those too") — recorded as CONTEXT.md D-14. Plan 01-01 Task 2 implements this: the catch-all's fallback never calls `notFound()`, unregistered paths render an `Unknown / {path}` placeholder.
 
-2. **Should Phase 1 fix `Sidebar.tsx`'s missing-6-groups issue, or is that arguably a pre-existing bug outside SCHM/NAV's stated scope?**
+2. **RESOLVED — Should Phase 1 fix `Sidebar.tsx`'s missing-6-groups issue, or is that arguably a pre-existing bug outside SCHM/NAV's stated scope?**
    - What we know: NAV-01 says "every sidebar navigation destination... resolves" — implying the destinations must be reachable *from the sidebar*, not just resolvable by direct URL.
    - What's unclear: CONTEXT.md's D-01/D-05 focus entirely on route resolution (404 vs. placeholder), never explicitly mentioning that the Sidebar component itself doesn't render 6 groups.
    - Recommendation: Treat this as in-scope — a "sidebar navigation destination" that isn't in the sidebar is definitionally not resolved "from the sidebar." Include the `Sidebar.tsx` restructure as a required task, not optional cleanup.
+   - **Resolution:** User confirmed via a direct question ("Yes, fix it") — recorded as CONTEXT.md D-13. Plan 01-04 Task 1 makes this mandatory: `Sidebar.tsx` is restructured to render all 14 `platformNavigation` groups generically instead of 8 hand-picked ones.
 
 ## Environment Availability
 
