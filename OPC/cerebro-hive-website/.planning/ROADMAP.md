@@ -37,7 +37,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Every non-functional destination (the 10 remaining CerebroForge items plus the 50 items across HiveOps/Infrastructure/Data/Automation/Research/Academy/Business/Support) renders from a single registry-driven placeholder component keyed by an `implementationStatus` field — not one-off hardcoded pages
   4. Governance, Talent OS, and Explore's Prisma schema gaps are confirmed model-by-model (exists / stub / absent), removing the sizing unknown for Phases 5-7
   5. `archive-worker` and `archive-api` run on a single reconciled BullMQ major version, unblocking Phase 4's producer/consumer wiring
-**Plans**: TBD
+**Plans**: 7 (01-01 nav registry + placeholder infra, 01-02 FORGE-01 real wiring, 01-03 schema gaps + BullMQ, 01-04 Sidebar/Topbar/Breadcrumbs fix, 01-05 FORGE-02 fake-data removal, 01-06 HiveOps placeholders, 01-07 phase-wide verification)
 **UI hint**: yes
 
 ### Phase 2: Core Workspace
@@ -144,7 +144,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Schema & Navigation Foundation | 0/TBD | Not started | - |
+| 1. Schema & Navigation Foundation | 0/7 | Planned | - |
 | 2. Core Workspace | 0/TBD | Not started | - |
 | 3. Core AI — AI Studio + Workflows | 0/TBD | Not started | - |
 | 4. Core AI — Knowledge Hub | 0/TBD | Not started | - |
