@@ -36,3 +36,30 @@ registry — out of scope per the Scope Boundary rule.
 `tsc --noEmit` pass restricted to the touched files reports zero errors —
 none of the 7 failures above reference `Sidebar.tsx`, `Topbar.tsx`, or
 `Breadcrumbs.tsx`.
+
+## Logged during 01-05
+
+### Same pre-existing `@cerebro/studio` typecheck/build baseline failures (unrelated to the 10 CerebroForge pages)
+
+`pnpm --filter @cerebro/studio typecheck` and `pnpm --filter @cerebro/studio build`
+fail on the identical 7 pre-existing files listed above (`case-studies/*`,
+`layout.tsx`, `ServicesOverview.tsx`, `Scene.tsx`, `ThemeProvider.tsx`) — none
+of which were touched by this plan. `next build`'s Turbopack compile step
+reports `✓ Compiled successfully`, confirming all 10 rewritten
+`forge/<tool>/page.tsx` files compile cleanly; only the pre-existing
+production-typecheck failure in `case-studies/corporate-ai-training/page.tsx`
+blocks a green `build` exit code, unchanged from 01-04's finding.
+
+### `pnpm --filter @cerebro/studio lint` fails to start (broken `@typescript-eslint` install, pre-existing, unrelated to code)
+
+`eslint` crashes at startup with `Cannot find module './parser-options'` while
+loading `@typescript-eslint/types` — a corrupted/incomplete `node_modules`
+artifact (`parser-options.d.ts` exists but `parser-options.js` does not) in
+the shared pnpm store, not something any Phase 1 plan's file changes could
+cause. Excluded from Rule 3 auto-fix per the package-manager-install
+exclusion (reinstalling/patching `node_modules` is out of scope for an
+executor). Verified instead via the plan's own grep gates (`PlaceholderModule`
+present, zero `StatCard`/`setTimeout` occurrences across all 10 files) and a
+manual visual scan of each of the 10 rewritten files for unused imports —
+each file imports only `PlaceholderModule` and nothing else, so no
+unused-import lint error is possible regardless of this tooling breakage.
