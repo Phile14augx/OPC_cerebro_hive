@@ -1,4 +1,4 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from '@sinclair/typebox';
 
 export const PaginationQuery = Type.Object({
   page: Type.Optional(Type.Number({ default: 1, minimum: 1 })),

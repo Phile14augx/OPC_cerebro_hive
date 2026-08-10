@@ -1,6 +1,6 @@
-import { ToolRegistry, ToolRuntime } from "@cerebro/agent-builder-capability";
-import type { ExecutionContext, ToolProvider } from "@cerebro/runtime-core";
-import { CapabilityDescriptor, RuntimeRegistry } from "@cerebro/runtime-core";
+import { RuntimeRegistry, CapabilityDescriptor } from '@cerebro/runtime-core';
+import type { ToolProvider, ExecutionContext } from '@cerebro/runtime-core';
+import { ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
 
 /**
  * Real ToolProvider backed by the existing ToolRuntime/ToolRegistry
@@ -19,17 +19,13 @@ import { CapabilityDescriptor, RuntimeRegistry } from "@cerebro/runtime-core";
 export class ToolRuntimeToolProvider implements ToolProvider {
   constructor(
     private readonly toolRuntime: ToolRuntime,
-    private readonly toolRegistry: ToolRegistry,
+    private readonly toolRegistry: ToolRegistry
   ) {}
 
   async initialize(): Promise<void> {}
   async dispose(): Promise<void> {}
 
-  async invokeTool(
-    toolName: string,
-    args: Record<string, any>,
-    context: ExecutionContext,
-  ): Promise<any> {
+  async invokeTool(toolName: string, args: Record<string, any>, context: ExecutionContext): Promise<any> {
     return this.toolRuntime.executeTool(toolName, args, context);
   }
 
@@ -44,29 +40,24 @@ export class ToolRuntimeToolProvider implements ToolProvider {
  * the LLM side, there's no external network dependency here that needs a
  * fallback story.
  */
-export function registerToolRuntimeProvider(
-  toolRuntime: ToolRuntime,
-  toolRegistry: ToolRegistry,
-): void {
+export function registerToolRuntimeProvider(toolRuntime: ToolRuntime, toolRegistry: ToolRegistry): void {
   const registry = RuntimeRegistry.getInstance();
 
   const alreadyRegistered = registry
     .listCapabilities()
-    .some(
-      (d) => d.metadata.capability === "ToolProvider" && d.metadata.name === "ToolRuntime-Tools",
-    );
+    .some((d) => d.metadata.capability === 'ToolProvider' && d.metadata.name === 'ToolRuntime-Tools');
   if (alreadyRegistered) return;
 
   const descriptor = new CapabilityDescriptor<ToolProvider>(
     {
-      name: "ToolRuntime-Tools",
-      capability: "ToolProvider",
-      version: "1.0.0",
+      name: 'ToolRuntime-Tools',
+      capability: 'ToolProvider',
+      version: '1.0.0',
       priority: 10,
     },
-    () => new ToolRuntimeToolProvider(toolRuntime, toolRegistry),
+    () => new ToolRuntimeToolProvider(toolRuntime, toolRegistry)
   );
 
   registry.register(descriptor);
-  descriptor.setHealth("Healthy");
+  descriptor.setHealth('Healthy');
 }

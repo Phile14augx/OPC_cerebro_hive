@@ -258,6 +258,83 @@ gate, and resume the approved X-P1-3 HiveCloud FinOps implementation.
 
 ---
 
+## Automation delivery cycle — 2026-08-10 12:08 IST
+
+### X-P1-3 · HiveCloud FinOps reporting vertical slice — BLOCKED
+
+**Primary owner:** Codex (MegaPlan product 48, HiveCloud). **Selection outcome:**
+X-P1-3 remains the highest-priority unfinished Codex product slice, but it is
+already active in the registered `feat/hivecloud-finops-summary` worktree, so
+this cycle did not duplicate or modify it. That worktree is at spec commit
+`879935a`, is 21 commits behind current `origin/main`, and contains pre-existing
+uncommitted `pnpm-lock.yaml` and `.npmrc` changes. No open PR exists for the
+branch.
+
+**Dependency evidence:** remote and cached `origin/main` both resolve to
+`a856f4821c73f3426e5546f29c70c957265204dc`. The root Vite override remains
+`>=6.0.0`, and the lockfile still contains 13 Vite 8 references and zero Vite 7
+references. `CURRENT-SPRINT.md` assigns the Vite/Node baseline repair C-P0-0 to
+Claude; there is no Vite/baseline repair branch. The Archive API lock importer
+also remains stale against all seven Fastify plugin ranges, with its validated
+repair preserved in stash `4d9c2aefc4a95eabc49ffecaf332854379ffe1c0`.
+
+**Workflow evidence:** GitHub keyring access succeeded. After clearing
+`GITHUB_TOKEN`, the repository-mandated cleanup deleted 102 failed Actions runs;
+a fresh query reports zero remaining. No feature worktree, dependency install,
+baseline run, implementation, commit, push, PR, merge, deployment, or live
+health claim occurred in this cycle.
+
+**Status:** blocked safely by ownership/concurrency and the unlanded C-P0-0
+baseline dependency. **Next unblocked slice:** after C-P0-0 lands green on
+`origin/main`, recreate and ship the Archive API Fastify lockfile synchronization
+from fresh main; then the existing X-P1-3 owner can rebase, rerun the untouched
+full baseline, and implement the approved FinOps contract test-first.
+
+---
+
+## Automation delivery cycle - 2026-08-10 13:13 IST
+
+### C-P0-0 + C-P2-1 prerequisite slice - BLOCKED
+
+**Primary owner:** Codex by explicit user authorization. **Selected scope:**
+land the Node 22-compatible Vite 7 baseline together with the preserved Archive
+Fastify importer synchronization because both modify the root lockfile, then
+resume the existing X-P1-3 FinOps worktree. Required lifecycle setup created
+`fix/vite-node-baseline` from exact `origin/main` `a856f482`.
+
+**Preservation evidence:** the existing FinOps worktree's only uncommitted
+`.npmrc` and lockfile artifacts are preserved in verified stash
+`877513865d5d0c198b7f0c8d080e3cab37d92667`; its branch and approved design
+commit `879935a` remain recoverable. Archive stash
+`4d9c2aefc4a95eabc49ffecaf332854379ffe1c0` remains intact, and its lockfile
+change was restored into the prerequisite worktree.
+
+**TDD and validation evidence:** untouched frozen install reproduced the stale
+Archive importer failure. After adding the Windows virtual-store path bound,
+constraining root Vite to `^7.0.0`, restoring the seven Archive importer ranges,
+and regenerating the lock, frozen install succeeds across 138 workspaces. The
+lock has zero Vite 8 and 13 Vite 7 references. EDA UI and Archive API tests pass,
+Archive API build passes, full typecheck passes 92/92 tasks, and the full test
+suite passes. The empty, unreferenced `services/archive-worker` scaffold was
+removed after it independently failed lint/build with no source inputs.
+
+**Blocking evidence:** repository-wide lint is red on broader mainline state:
+the root flat ESLint config globally ignores `apps/**`, `packages/**`, and
+`services/**`, while multiple workspace packages have lint scripts but no local
+flat config; Platform also contains independent lint violations. A separate
+full build completes 40/44 tasks and fails in `@cerebro/sphere` page-data
+collection because the required production `REDIS_URL` is unavailable.
+
+**Status:** stopped safely before commit, push, PR, GitHub Actions, review,
+merge, deployment, or live health verification. The uncommitted prerequisite
+worktree is preserved. Failed-Actions cleanup was verified against an empty
+failure list after clearing `GITHUB_TOKEN`. **Next unblocked slice:** restore a
+green repository lint baseline and provide approved Sphere build configuration;
+then rerun all gates, atomically land this prerequisite, recreate/rebase the
+FinOps worktree, and resume X-P1-3 test-first.
+
+---
+
 ## How to use this file
 
 Work in priority order. Keep Codex output limited to the stated audit/review

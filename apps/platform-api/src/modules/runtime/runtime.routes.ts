@@ -1,7 +1,7 @@
-import type { ExecutionStatus } from "@cerebro/domain";
-import { Type } from "@sinclair/typebox";
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
-import { ExecutionRuntimeService, PauseNotSupportedError } from "./ExecutionRuntimeService";
+import { FastifyInstance, FastifyPluginOptions } from 'fastify';
+import { Type } from '@sinclair/typebox';
+import type { ExecutionStatus } from '@cerebro/domain';
+import { ExecutionRuntimeService, PauseNotSupportedError } from './ExecutionRuntimeService';
 
 export interface RuntimeRouteOptions extends FastifyPluginOptions {
   executionRuntimeService: ExecutionRuntimeService;
@@ -28,11 +28,11 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
 
   // Execute
   server.post(
-    "/execute",
+    '/execute',
     {
       schema: {
-        description: "Start a new Agent execution",
-        tags: ["Runtime"],
+        description: 'Start a new Agent execution',
+        tags: ['Runtime'],
         body: Type.Object({
           type: Type.String(), // e.g., 'Agent' — only 'Agent' has a real provider today (see AgentExecutionProvider.ts)
           id: Type.String(), // agentId
@@ -57,10 +57,10 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
       const { type, id, message } = request.body as { type: string; id: string; message: string };
       const ctx = request.cerebroContext;
 
-      if (type !== "Agent") {
+      if (type !== 'Agent') {
         return reply.code(422).send({
-          type: "https://api.cerebrohive.com/errors/unsupported-execution-kind",
-          title: "Unsupported execution kind",
+          type: 'https://api.cerebrohive.com/errors/unsupported-execution-kind',
+          title: 'Unsupported execution kind',
           status: 422,
           detail: `No real execution provider exists yet for kind '${type}' — only 'Agent' is supported (see TECHNICAL-DEBT.md).`,
         });
@@ -83,37 +83,37 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
         executionId: execution.id.toString(),
         status: execution.status,
       });
-    },
+    }
   );
 
   // Pause — honestly not supported by the current domain model (see
   // ExecutionRuntimeService.pauseExecution()'s own doc comment).
   server.post(
-    "/pause",
+    '/pause',
     {
       schema: {
-        description: "Pause a running execution (not currently supported)",
-        tags: ["Runtime"],
+        description: 'Pause a running execution (not currently supported)',
+        tags: ['Runtime'],
         body: Type.Object({ executionId: Type.String() }),
       },
     },
     async (_request, reply) => {
       return reply.code(501).send({
-        type: "https://api.cerebrohive.com/errors/not-implemented",
-        title: "Pause is not supported",
+        type: 'https://api.cerebrohive.com/errors/not-implemented',
+        title: 'Pause is not supported',
         status: 501,
         detail: new PauseNotSupportedError().message,
       });
-    },
+    }
   );
 
   // Resume
   server.post(
-    "/resume",
+    '/resume',
     {
       schema: {
-        description: "Resume a WAITING execution",
-        tags: ["Runtime"],
+        description: 'Resume a WAITING execution',
+        tags: ['Runtime'],
         body: Type.Object({ executionId: Type.String() }),
         response: { 200: Type.Object({ executionId: Type.String(), status: Type.String() }) },
       },
@@ -122,16 +122,16 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
       const { executionId } = request.body as { executionId: string };
       const execution = await executionRuntimeService.resumeExecution(executionId);
       return reply.send({ executionId: execution.id.toString(), status: execution.status });
-    },
+    }
   );
 
   // Cancel
   server.post(
-    "/cancel",
+    '/cancel',
     {
       schema: {
-        description: "Cancel an execution",
-        tags: ["Runtime"],
+        description: 'Cancel an execution',
+        tags: ['Runtime'],
         body: Type.Object({ executionId: Type.String(), reason: Type.Optional(Type.String()) }),
         response: { 200: Type.Object({ executionId: Type.String(), status: Type.String() }) },
       },
@@ -139,21 +139,18 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
     async (request, reply) => {
       const { executionId, reason } = request.body as { executionId: string; reason?: string };
       const ctx = request.cerebroContext;
-      const execution = await executionRuntimeService.cancelExecution(executionId, {
-        actor: ctx.userId,
-        reason,
-      });
+      const execution = await executionRuntimeService.cancelExecution(executionId, { actor: ctx.userId, reason });
       return reply.send({ executionId: execution.id.toString(), status: execution.status });
-    },
+    }
   );
 
   // Get Executions
   server.get(
-    "/executions",
+    '/executions',
     {
       schema: {
-        description: "List executions for the caller's tenant",
-        tags: ["Runtime"],
+        description: 'List executions for the caller\'s tenant',
+        tags: ['Runtime'],
         querystring: Type.Object({
           status: Type.Optional(Type.String()),
           limit: Type.Optional(Type.Integer()),
@@ -169,23 +166,18 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
         limit,
       });
       return reply.send(
-        executions.map((e) => ({
-          id: e.id.toString(),
-          kind: e.kind,
-          status: e.status,
-          createdAt: e.createdAt,
-        })),
+        executions.map((e) => ({ id: e.id.toString(), kind: e.kind, status: e.status, createdAt: e.createdAt }))
       );
-    },
+    }
   );
 
   // Get Execution by ID
   server.get(
-    "/executions/:id",
+    '/executions/:id',
     {
       schema: {
-        description: "Get execution details",
-        tags: ["Runtime"],
+        description: 'Get execution details',
+        tags: ['Runtime'],
         params: Type.Object({ id: Type.String() }),
         response: { 200: Type.Any() },
       },
@@ -200,7 +192,7 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
         createdAt: execution.createdAt,
         transitionHistory: execution.transitionHistory,
       });
-    },
+    }
   );
 
   // Server-Sent Events stream — Phase 10 scope note: this now reports a
@@ -210,26 +202,26 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
   // pattern, per ADR-049 decision 5) and is not built in this pass — see
   // ADR-052's Deferred section.
   server.get(
-    "/events/stream",
+    '/events/stream',
     {
       schema: {
-        description: "Stream runtime events via SSE (not yet wired to real events — see ADR-052)",
-        tags: ["Runtime"],
+        description: 'Stream runtime events via SSE (not yet wired to real events — see ADR-052)',
+        tags: ['Runtime'],
         querystring: Type.Object({ executionId: Type.Optional(Type.String()) }),
       },
     },
     async (_request, reply) => {
-      reply.raw.setHeader("Content-Type", "text/event-stream");
-      reply.raw.setHeader("Cache-Control", "no-cache");
-      reply.raw.setHeader("Connection", "keep-alive");
+      reply.raw.setHeader('Content-Type', 'text/event-stream');
+      reply.raw.setHeader('Cache-Control', 'no-cache');
+      reply.raw.setHeader('Connection', 'keep-alive');
       reply.raw.write(
         `data: ${JSON.stringify({
-          type: "NotYetWired",
-          detail: "Real event streaming is not implemented in this pass — see ADR-052.",
-        })}\n\n`,
+          type: 'NotYetWired',
+          detail: 'Real event streaming is not implemented in this pass — see ADR-052.',
+        })}\n\n`
       );
       reply.raw.end();
-    },
+    }
   );
 }
 

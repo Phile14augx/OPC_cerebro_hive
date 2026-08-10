@@ -1,5 +1,5 @@
-import { WorkspaceRepository } from "@cerebro/db";
-import { FastifyReply, FastifyRequest } from "fastify";
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { WorkspaceRepository } from '@cerebro/db';
 
 /**
  * Closes the gap noted in AuthMiddleware.ts and tracked as task #44: the
@@ -19,16 +19,13 @@ import { FastifyReply, FastifyRequest } from "fastify";
  * route group.
  */
 export function createRequireWorkspaceAccessHook(workspaceRepository: WorkspaceRepository) {
-  return async function requireWorkspaceAccessHook(
-    request: FastifyRequest,
-    reply: FastifyReply,
-  ): Promise<void> {
+  return async function requireWorkspaceAccessHook(request: FastifyRequest, reply: FastifyReply): Promise<void> {
     const { workspaceId, traceId } = request.cerebroContext;
 
     if (!workspaceId) {
       reply.code(400).send({
-        error: "BAD_REQUEST",
-        message: "x-workspace-id header is required",
+        error: 'BAD_REQUEST',
+        message: 'x-workspace-id header is required',
         requestId: traceId,
       });
       return;
@@ -44,8 +41,8 @@ export function createRequireWorkspaceAccessHook(workspaceRepository: WorkspaceR
       // distinct "exists but not yours" error would let a caller enumerate
       // other tenants' workspace IDs by watching which ones 404 vs 403.
       reply.code(403).send({
-        error: "FORBIDDEN",
-        message: "Workspace not found or not accessible to this tenant",
+        error: 'FORBIDDEN',
+        message: 'Workspace not found or not accessible to this tenant',
         requestId: traceId,
       });
       return;
