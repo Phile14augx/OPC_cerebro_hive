@@ -1,49 +1,59 @@
-# Gemini Tasks — Noon Assignment 2026-08-08 12:00 IST
+# Gemini Tasks — Night Assignment 2026-08-10 03:00 IST
 
-**Audit session:** Noon | **Next check:** 3 AM tonight (2026-08-09)
-**Git commits reviewed:** 0 — git reports no commits on `main`; completion assessed via file modification timestamps
-**Tasks completed since last session (3 AM 2026-08-08):** None — GEMINI-TASKS.md unchanged since 06:27 IST
-
----
-
-## ⚠️ CRITICAL ESCALATION — 6th Cycle
-
-G-P0-1 has now been pending for **6 consecutive audit cycles** without a commit. `infra/README.md` content was verified correct multiple sessions ago. G-P1-1 and G-P2-1 remain blocked behind it. G-P1-2a (pure docs) has slipped 2 cycles with no blockers.
-
-| Task | Slipped cycles |
-|------|---------------|
-| G-P0-1: Commit documentation change-set | **6** |
-| G-P1-1: Validate Python agent-runner | **4** |
-| G-P2-1: Hermes tool-binding contract | **4** |
-| G-P1-2a: Commit docs/01–07 batch | **2** |
-
-**G-P0-1 and G-P1-2a have no blockers and no code risk. Start both in parallel immediately.**
+**Audit session:** Night (3 AM) | **Next check:** Noon 2026-08-10
+**Git commits reviewed:** 0 — git unreachable from audit sandbox; assessed via file modification timestamps
+**Tasks completed since last session (Noon 2026-08-09):** Significant new work on disk — not yet committed
 
 ---
 
-## ✅ Completed Today (inferred from commits/file timestamps)
-*None — 0 commits detected since 3 AM 2026-08-08. No file modifications in tracked directories since 06:28 IST.*
+## ✅ Completed Today (inferred from file timestamps — 2026-08-09 afternoon)
 
-## ⚠️ All Slipped Tasks (carrying forward)
+- **M26.1 Architecture Review batch** — ~25 new audit files created at 17:41 IST in `audit/`:
+  - `audit/EXECUTIVE-AUDIT-SUMMARY.md`
+  - `audit/HIVEFORGE-SLICES-1-4-GOVERNANCE-BACKLOG.md`
+  - `audit/SLICE-5-EXECUTION-LIFECYCLE-REVIEW.md`
+  - `audit/ARCHITECTURAL-REVIEW-UNPLANNED-VERTICAL-SLICE.md`
+  - `audit/INFRA-RECONCILIATION-PLAN.md`
+  - `audit/DEPLOYMENT-ARCHITECTURE-DISCOVERY.md`
+  - `audit/CREDENTIAL-PROVIDER-COLLISION-REVIEW.md`
+  - `audit/P0-AUTH-AUTHZ-GAP.md` (34KB — critical security finding)
+  - `audit/POLYGLOT-ARCHITECTURE-MAP.md`
+  - `audit/MILESTONE-25.5-PRODUCTION-READINESS.md`
+  - `audit/MILESTONE-25.4C-RUNTIME-INTEGRATION.md`
+  - `audit/SERVICES-PLATFORM-API-CLASSIFICATION.md`
+  - `audit/RESPONSIBILITY-MATRIX.md`
+  - `audit/RESILIENCE-AUDIT.md`
+  - `audit/PLATFORM-IDENTITY-PERSISTENCE-AUDIT.md`
+  - `audit/LIVE-ENDPOINT-INVESTIGATION.md`
+  - `audit/M26.1-BASELINE.md`, `M26.1-ARCHITECTURE-01 through 06.md`, `M26.1-INDEX.md`,
+    `M26.1-IMPLEMENTATION-ROADMAP.md`, `M26.1-ENGINEERING-REVIEW-ASSISTANT-BRIEF.md`
+  - `audit/seo-audit.csv`, `audit/scores.json`, `audit/orphan-candidates.md`,
+    `audit/scaffold-ranking.md`, `audit/name-collisions.md`, `audit/inventory-table.md`,
+    `audit/accessibility-audit.csv`, `audit/adr/` (3 ADR files)
+  - `audit/APPS-STUDIO-AUDIT.md`, `audit/AGENTOS-DEPLOYMENT-CONSISTENCY-AUDIT.md`
 
-| Task | Last assigned | Slipped cycles | Notes |
-|------|--------------|---------------|-------|
-| G-P0-1: Commit documentation change-set | 2026-08-06 Noon | **6** | `infra/README.md` content verified correct — still not committed |
-| G-P1-1: Validate Python agent-runner | 2026-08-07 3 AM | **4** | Import check + registry validation pending |
-| G-P2-1: Hermes tool-binding contract | 2026-08-06 Noon | **4** | Blocked on G-P0-1 |
-| G-P1-2a: Commit docs/01–07 batch | 2026-08-07 3 AM | **2** | Pure docs, no blockers — should run alongside G-P0-1 |
+**None of the above is committed. Approximately 30+ audit files are uncommitted.**
+
+---
+
+## ⚠️ Slipped Tasks (carrying forward)
+
+| Task | Slipped cycles | Status |
+|------|---------------|--------|
+| G-P0-1: Review and commit documentation change-set | **5** | unstarted — content already written |
+| G-P1-1: Validate and commit Python agent-runner roles | **3** | unstarted |
+| G-P2-1: Hermes pre-integration tool-binding contract | **3** | blocked on G-P0-1 |
 
 ---
 
 ## 🔴 P0 — Blockers (do first)
 
-### G-P0-1 · Commit the documentation change-set — CRITICAL (6 cycles)
+### G-P0-1 · Commit the documentation change-set + new audit batch — CRITICAL (5 cycles)
+**The scope has grown: the original doc files PLUS the entire new M26.1 audit batch.**
 
-`infra/README.md` content has been confirmed correct in multiple prior sessions. There is no validation left to do — commit it.
-
-**Files to commit:**
+**Pass 1 — Original documentation (commit today, no excuses):**
 ```
-infra/README.md                                    ← content confirmed correct; commit this now
+infra/README.md                          ← content confirmed correct; Terraform/CDK boundary claim accurate
 MASTER-PLAN-EVOLUTION-LOG.md
 CEREBROHIVE_CONSTITUTION.md
 architecture/ARCHITECTURE_INDEX.md
@@ -53,28 +63,72 @@ docs/09-templates/27-pitch-deck-template.md
 agents/hermes/INTEGRATION-NOTES.md
 ```
 
-**Secrets check before staging:**
-```bash
-grep -rE "(sk-|ghp_|AKIA)" infra/ architecture/ docs/09-templates/ agents/hermes/
+**Pre-commit checklist:**
+1. Secrets grep: `grep -rE "(sk-|ghp_|AKIA)" infra/ architecture/ docs/09-templates/ agents/hermes/`
+2. Confirm all `architecture/ARCHITECTURE_INDEX.md` linked files exist in the repo
+3. Confirm `agents/hermes/INTEGRATION-NOTES.md` has all endpoints marked `[confirmed]`, `[missing]`, or `[TBD]`
+4. Verify `.gitignore` has `legal-docs/` before staging anything
+
+Commit message: `docs: reviewed documentation change-set — infra, arch-index, master-plan, constitution  [G-P0-1]`
+
+**Pass 2 — New M26.1 audit batch (all docs, no code):**
 ```
+audit/EXECUTIVE-AUDIT-SUMMARY.md
+audit/HIVEFORGE-SLICES-1-4-GOVERNANCE-BACKLOG.md
+audit/SLICE-5-EXECUTION-LIFECYCLE-REVIEW.md
+audit/ARCHITECTURAL-REVIEW-UNPLANNED-VERTICAL-SLICE.md
+audit/INFRA-RECONCILIATION-PLAN.md
+audit/DEPLOYMENT-ARCHITECTURE-DISCOVERY.md
+audit/CREDENTIAL-PROVIDER-COLLISION-REVIEW.md
+audit/P0-AUTH-AUTHZ-GAP.md
+audit/POLYGLOT-ARCHITECTURE-MAP.md
+audit/MILESTONE-25.5-PRODUCTION-READINESS.md
+audit/MILESTONE-25.4C-RUNTIME-INTEGRATION.md
+audit/SERVICES-PLATFORM-API-CLASSIFICATION.md
+audit/RESPONSIBILITY-MATRIX.md
+audit/RESILIENCE-AUDIT.md
+audit/PLATFORM-IDENTITY-PERSISTENCE-AUDIT.md
+audit/LIVE-ENDPOINT-INVESTIGATION.md
+audit/M26.1-BASELINE.md
+audit/M26.1-ARCHITECTURE-01-CONTEXT-DIAGRAM.md
+audit/M26.1-ARCHITECTURE-02-BOUNDED-CONTEXT.md
+audit/M26.1-ARCHITECTURE-03-DOMAIN-MODEL.md
+audit/M26.1-ARCHITECTURE-04-SERVICE-BOUNDARIES.md
+audit/M26.1-ARCHITECTURE-05-PERSISTENCE-MODEL.md
+audit/M26.1-ARCHITECTURE-06-EXTENSION-FRAMEWORK.md
+audit/M26.1-INDEX.md
+audit/M26.1-IMPLEMENTATION-ROADMAP.md
+audit/M26.1-ENGINEERING-REVIEW-ASSISTANT-BRIEF.md
+audit/M26.2-VERTICAL-SLICE-RECONCILIATION.md
+audit/M26.3-CONTRIBUTOR-INTERFACE-RECONCILIATION.md
+audit/seo-audit.csv
+audit/scores.json
+audit/orphan-candidates.md
+audit/scaffold-ranking.md
+audit/name-collisions.md
+audit/inventory-table.md
+audit/accessibility-audit.csv
+audit/adr/ADR-001-engineering-review-is-advisory.md
+audit/adr/ADR-002-canpublishworkflow-remains-sole-authorization.md
+audit/adr/ADR-003-evidence-is-the-primary-artifact.md
+audit/APPS-STUDIO-AUDIT.md
+audit/AGENTOS-DEPLOYMENT-CONSISTENCY-AUDIT.md
+```
+Secrets grep on all `audit/` paths before staging.
+Commit: `docs(audit): M26.1 architecture review batch + M26.2/M26.3 + SEO/accessibility audits  [G-P0-1b]`
 
-**Commit in two passes if needed:**
-- **Pass 1 (no more delays):** `infra/README.md`, `architecture/ARCHITECTURE_INDEX.md`, `MASTER-PLAN-*.md`, `CEREBROHIVE_CONSTITUTION.md`
-- **Pass 2:** Templates + Hermes integration notes
-
-Include `[G-P0-1]` in all commit messages.
-
-**Success criteria:** At minimum Pass 1 committed; no guessed facts in committed files.
-**Complexity:** S | **Dependencies:** none
+**Success criteria:** Both passes committed; no secrets in any committed file; `git status` for `audit/`
+and `infra/` paths is clean.
+**Complexity:** M | **Dependencies:** none
 
 ---
 
-## 🟠 P1 — Critical (start G-P1-1 and G-P1-2a in parallel with G-P0-1)
+## 🟠 P1 — Critical (start G-P1-1 and G-P1-2 in parallel with G-P0-1)
 
 ### G-P1-2 · Commit docs/content-migration in batches
-**2 cycles — no blockers, pure documentation**
+**Slipped 0 new cycles but still pending. Instructions unchanged.**
 
-**Commit A (parallel with G-P0-1):**
+**Commit A (do today):**
 ```
 docs/01-company-foundation/
 docs/02-brand-messaging/
@@ -84,19 +138,19 @@ docs/05-industries/
 docs/06-gtm-playbook/
 docs/07-sales-playbook/
 ```
-
-**Pre-commit secrets check:**
+Pre-commit:
 ```bash
 grep -rE "(sk-|ghp_|AKIA)" docs/01-company-foundation docs/02-brand-messaging docs/03-products docs/04-services docs/05-industries docs/06-gtm-playbook docs/07-sales-playbook
 ```
+Spot-check 3–5 files per subdirectory. Use commit message from `agents/TRIAGE-REPORT-2026-08-06.md`.
+Include `[G-P1-2a]` in the commit message.
 
-Spot-check 3–5 files per subdirectory for correct markdown. Use pre-written commit message from `agents/TRIAGE-REPORT-2026-08-06.md`. Include `[G-P1-2a]` in the message.
-
-**Commit B (after A and G-P0-1):**
+**Commit B (only if Commit A done):**
 ```
 docs/08-delivery-operations/ and beyond
 docs/products/, docs/services/, docs/solutions/, docs/strategy/
 ```
+Include `[G-P1-2b]`.
 
 **Success criteria:** At minimum Commit A lands; no secrets in any committed file.
 **Complexity:** M | **Dependencies:** none
@@ -104,9 +158,18 @@ docs/products/, docs/services/, docs/solutions/, docs/strategy/
 ---
 
 ### G-P1-1 · Validate and commit the Python agent-runner role expansion
-**4 cycles**
+**Slipped 3 cycles.**
 
-**Files (changeset `feat/agent-runner-python`, ~34 files):**
+```bash
+cd services/agent-runner
+python -m pytest tests/ -x -q 2>&1 | head -50
+python -c "from agent_runner import registry; print(registry.list_agents())"
+python -c "from agent_runner import config; config.validate()"
+```
+If tests don't exist, confirm all role modules import cleanly. Check `registry.py` against the
+50+ role subdirectories now present in `agents/`.
+
+**Files:**
 ```
 services/agent-runner/src/agent_runner/config.py
 services/agent-runner/src/agent_runner/main.py
@@ -115,56 +178,74 @@ services/agent-runner/src/agent_runner/base_agent.py
 services/agent-runner/src/agent_runner/orchestrator.py
 services/agent-runner/src/agent_runner/llm.py
 services/agent-runner/src/agent_runner/coding.py
-services/agent-runner/src/agent_runner/roles/        ← all role modules
+services/agent-runner/src/agent_runner/roles/
 ```
+Commit: `feat(agent-runner): Python role expansion — validated import and registry wiring  [G-P1-1]`
 
-**Validation steps:**
-```bash
-cd services/agent-runner
-python -m pytest tests/ -x -q 2>&1 | head -50
-python -c "from agent_runner import registry; print(registry.list_agents())"
-python -c "from agent_runner import config; config.validate()"
-```
+**Success criteria:** Import checks pass; registry is consistent; coherent code committed.
+**Complexity:** M | **Dependencies:** C-P0-3 Phase A (confirm no scope overlap)
 
-If tests don't exist, confirm all role modules import cleanly. Commit with:
-```
-feat(agent-runner): Python role expansion — validated import and registry wiring  [G-P1-1]
-```
+---
 
-**Success criteria:** Import checks pass; registry consistent; coherent code committed; gaps documented.
-**Complexity:** M | **Dependencies:** C-P0-3 Phase A (scope check — confirm no overlap before committing)
+### G-P1-3 · Summarize the P0-AUTH-AUTHZ-GAP.md finding and create an action plan
+**NEW — Critical security finding from today's audit batch.**
+
+`audit/P0-AUTH-AUTHZ-GAP.md` (34KB) was produced by today's M26.1 review and flags a P0-level
+auth/authz gap. Read this file and produce:
+
+1. **`agents/AUTH-GAP-ACTION-PLAN.md`** — a prioritized action list (P0/P1/P2) of concrete remediation
+   steps with exact file paths to modify and success criteria for each item.
+2. Identify which items are Claude's responsibility (TypeScript/Next.js auth routes) vs. Python/infra.
+3. Flag any items that touch `packages/auth/`, `apps/platform-api/`, or `apps/platform/middleware.ts`.
+
+Commit: `docs(security): auth-authz gap action plan from M26.1 audit  [G-P1-3]`
+
+**Success criteria:** Action plan committed; all P0 items have an owner and a file-level task.
+**Complexity:** S | **Dependencies:** G-P0-1b (audit files committed first, or read from disk)
 
 ---
 
 ## 🟡 P2 — High (after G-P0-1)
 
 ### G-P2-1 · Produce a pre-integration Hermes tool-binding contract
-**4 cycles | Blocked on G-P0-1**
+**Slipped 3 cycles. Blocked on G-P0-1.**
 
-**Files:**
-```
-agents/hermes/agent.yaml
-agents/hermes/skills.py
-agents/hermes/INTEGRATION-NOTES.md
-apps/platform-api/src/modules/agents/
-```
-
-For each tool Hermes declares in `agent.yaml` and `skills.py`, trace to a platform-api route and mark:
+For each tool Hermes declares in `agents/hermes/agent.yaml` and `agents/hermes/skills.py`, trace to a
+platform-api route. Mark each:
 - `✅ confirmed` — route found at exact path
 - `❌ missing` — route does not exist (Claude must implement)
 - `⏳ external` — served by an external service
 
-Update `agents/hermes/INTEGRATION-NOTES.md` with a binding table. No guessing — mark it missing if you can't find the route. Commit with `[G-P2-1]`.
+Update `agents/hermes/INTEGRATION-NOTES.md` with a binding table. No guessing.
+Commit: `docs(hermes): tool-binding contract — endpoint disposition table  [G-P2-1]`
 
-**Success criteria:** Every Hermes tool has a disposition.
+**Success criteria:** Every Hermes tool has a disposition; no endpoint assumed.
 **Complexity:** S | **Dependencies:** G-P0-1
 
 ---
 
+### G-P2-2 · Read and digest M26.1-IMPLEMENTATION-ROADMAP.md for sprint integration
+**NEW — follow-on from today's M26.1 audit.**
+
+`audit/M26.1-IMPLEMENTATION-ROADMAP.md` likely contains a phased implementation plan from the
+architecture review. Read it and:
+1. Identify any items that overlap with current sprint tasks (add to existing tasks as context)
+2. Identify any net-new items that need to be created as new sprint tasks
+3. Write a brief summary section at the bottom of `agents/CURRENT-SPRINT.md` titled
+   `## M26.1 Implementation Roadmap — Sprint Integration`
+
+This does not require a separate commit — roll into G-P0-1b.
+
+**Complexity:** S | **Dependencies:** G-P0-1b
+
+---
+
 ## How to use this file in Antigravity
+Start G-P0-1 Pass 1 and Pass 2 in parallel — all documentation, no code execution needed.
+G-P1-2 Commit A can run simultaneously (pure docs, no code). G-P1-1 needs a Python environment.
+G-P1-3 can run on disk (read P0-AUTH-AUTHZ-GAP.md without committing first).
 
-Start G-P0-1 Pass 1 and G-P1-2a in parallel — both are pure documentation, no code execution needed. Run G-P1-1 after a Python environment is available. Always include the task ID in commit messages. Never commit `.env` or any file containing secret values.
+Always include the task ID (e.g. `[G-P0-1]`) in every commit message.
+Never commit `.env` or any file containing secret values.
 
-**Priority order if you can only do one thing:** G-P0-1 Pass 1 (content already written and verified — just commit it). Then G-P1-2a. Then G-P1-1. Then G-P2-1.
-
-*Written by CerebroHive Noon Audit — 2026-08-08 12:00 IST*
+*Written by CerebroHive Night Audit — 2026-08-10 03:00 IST*

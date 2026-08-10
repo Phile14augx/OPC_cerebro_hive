@@ -1,115 +1,140 @@
-# CerebroHive Sprint Board — Noon Audit 2026-08-08 12:00 IST
+# CerebroHive Sprint Board — Night Audit 2026-08-10 03:00 IST
 
-**Master-plan focus:** Month 2–4 — web platform, automation MVP, and CerebroAgent beta
-**Commits since 3 AM 2026-08-08:** 0 (git reports no commits on `main`; assessed via file modification timestamps)
-**Top blocker:** All P0s at 6 consecutive audit cycles with zero commits. Node/Vite/Vitest test baseline broken (`ERR_PACKAGE_IMPORT_NOT_DEFINED` in `@cerebro/capability-registry`) at 1 cycle. No code has been committed to git in this project since before 2026-08-05.
+**Master-plan focus:** Month 2–4 — web platform, automation MVP, CerebroAgent beta
+**Commits since noon:** 0 (git unreachable from audit sandbox; assessed via file modification timestamps)
+**Top blocker:** Vite/Node baseline regression (`ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` from `vite@8.1.5` on Node 22.17.0) blocks all Codex product delivery. Five consecutive cycles with zero commits on all legacy P0s. Critical delivery risk.
 
 ---
 
 ## Sprint Task Board
 
-| ID | Task | Priority | Agent | Status | Slipped cycles | Dependencies |
-|---|---|---|---|---|---|---|
-| C-P0-1 | De-scope M10.2 from worktree, commit M10.1, open PR | P0 🔴 | Claude | **CRITICAL — 6 cycles** | 6 | none |
-| C-P0-2 | Apply and verify Prisma migration | P0 🔴 | Claude | **CRITICAL — 6 cycles** | 6 | none |
-| C-P0-3a | Execute triage: commit audit/sprint files (Phase A) | P0 🔴 | Claude | **CRITICAL — 5 cycles** | 5 | none |
-| C-P0-3b | Execute triage: commit architecture docs (Phase B) | P0 🔴 | Claude | pending | 3 | none |
-| C-P0-3c | Execute triage: commit root planning docs (Phase C) | P0 🔴 | Claude | pending | 3 | none |
-| C-P0-4 | Fix Node/Vite/Vitest baseline (ERR_PACKAGE_IMPORT_NOT_DEFINED) | P0 🔴 | Claude | **1 cycle** | 1 | none |
-| G-P0-1 | Review and commit documentation change-set | P0 🔴 | Gemini | **CRITICAL — 6 cycles** (infra/README.md modified, not committed) | 6 | none |
-| C-P1-1 | Establish runtime typecheck baseline | P1 🟠 | Claude | pending | 0 | C-P0-1, C-P0-2 |
-| C-P1-2 | M10.2 provider tool-calling foundation | P1 🟠 | Claude | pending | 0 | C-P0-1 (stash recovery) |
-| G-P1-1 | Validate and commit Python agent-runner roles | P1 🟠 | Gemini | pending | 4 | C-P0-3a scope check |
-| G-P1-2 | Commit docs/content-migration in batches | P1 🟠 | Gemini | pending | 2 | none |
-| G-P2-1 | Hermes pre-integration tool-binding contract | P2 🟡 | Gemini | pending | 4 | G-P0-1 |
-| X-P0-1 | Create changeset manifest | P0 | Codex | **done** ✅ | — | — |
-| X-P1-1 | Verify M10.1/M10.4 PR merge readiness | P1 | Codex | blocked — no PR exists | — | C-P0-1 |
-| X-P1-2 | Validate Prisma migration safety and coverage | P1 | Codex | blocked — no migration SQL | — | C-P0-2 |
-| X-P1-3 | HiveCloud FinOps summary slice | P1 | Codex | **blocked — untouched Vite/Node test baseline** | — | C-P0-4 follow-up |
-| X-P2-1 | Prepare M10.2 provider-tool test matrix | P2 | Codex | **done** ✅ | — | — |
+| ID       | Task                                                                | Priority | Agent  | Status                       | Slipped cycles | Dependencies         |
+| -------- | ------------------------------------------------------------------- | -------- | ------ | ---------------------------- | -------------- | -------------------- |
+| C-P0-0   | Fix Vite/Node baseline regression (unblocks all Codex product work) | P0 🔴    | Claude | **NEW — CRITICAL**           | 0              | none                 |
+| C-P0-1   | De-scope M10.2 from worktree, commit M10.1, open PR                 | P0 🔴    | Claude | **CRITICAL — 5 cycles**      | 5              | none                 |
+| C-P0-2   | Apply and verify Prisma migration                                   | P0 🔴    | Claude | **CRITICAL — 5 cycles**      | 5              | none                 |
+| C-P0-3a  | Execute triage: commit audit/sprint files (Phase A)                 | P0 🔴    | Claude | **CRITICAL — 4 cycles**      | 4              | none                 |
+| C-P0-3b  | Execute triage: commit architecture docs (Phase B)                  | P0 🔴    | Claude | pending                      | 2              | none                 |
+| C-P0-3c  | Execute triage: commit root planning docs (Phase C)                 | P0 🔴    | Claude | pending                      | 2              | none                 |
+| C-P0-3d  | Commit new Studio platform features (Phase D — new Aug 9 work)      | P0 🔴    | Claude | **NEW**                      | 0              | C-P0-1 scope sep.   |
+| C-P0-3e  | Commit agent-sdk / ai / ai-gateway / agent-ops updates (Phase E)   | P0 🔴    | Claude | **NEW**                      | 0              | C-P0-1 scope sep.   |
+| G-P0-1   | Review and commit documentation change-set (Pass 1 — orig. docs)    | P0 🔴    | Gemini | **CRITICAL — 5 cycles**      | 5              | none                 |
+| G-P0-1b  | Commit new M26.1 audit batch (~30+ files) (Pass 2)                  | P0 🔴    | Gemini | **NEW**                      | 0              | none                 |
+| C-P1-1   | Establish runtime typecheck baseline                                | P1 🟠    | Claude | pending                      | 0              | C-P0-1, C-P0-2      |
+| C-P1-2   | M10.2 provider tool-calling foundation                              | P1 🟠    | Claude | pending                      | 0              | C-P0-1              |
+| C-P1-3   | Studio Phase 1 — Schema & Navigation Foundation                     | P1 🟠    | Claude | **NEW — ready to plan**      | 0              | C-P0-3d             |
+| G-P1-1   | Validate and commit Python agent-runner roles                       | P1 🟠    | Gemini | **CRITICAL — 3 cycles**      | 3              | C-P0-3a scope check |
+| G-P1-2a  | Commit docs/content-migration Batch A (docs/01–07)                  | P1 🟠    | Gemini | pending                      | 0              | none                 |
+| G-P1-2b  | Commit docs/content-migration Batch B (docs/08+)                    | P1 🟠    | Gemini | pending (after 2a)           | 0              | G-P1-2a             |
+| G-P1-3   | Auth/authz gap action plan from P0-AUTH-AUTHZ-GAP.md               | P1 🟠    | Gemini | **NEW**                      | 0              | G-P0-1b (or disk)   |
+| C-P2-1   | Land Archive lockfile fix (stash 4d9c2aef)                          | P2 🟡    | Claude | **NEW — stash preserved**    | 0              | C-P0-0              |
+| G-P2-1   | Hermes pre-integration tool-binding contract                        | P2 🟡    | Gemini | **3 cycles**                 | 3              | G-P0-1              |
+| G-P2-2   | M26.1 roadmap sprint integration summary                            | P2 🟡    | Gemini | **NEW**                      | 0              | G-P0-1b             |
+| X-P0-1   | Create changeset manifest                                           | P0       | Codex  | **done** ✅                  | —              | —                    |
+| X-P1-1   | Verify M10.1/M10.4 PR merge readiness                               | P1       | Codex  | blocked — no PR exists       | —              | C-P0-1              |
+| X-P1-2   | Validate Prisma migration safety and coverage                       | P1       | Codex  | blocked — no migration SQL   | —              | C-P0-2              |
+| X-P1-3   | HiveCloud FinOps reporting slice                                    | P1       | Codex  | blocked — Vite baseline red  | —              | C-P0-0, C-P2-1      |
+| X-P2-1   | Prepare M10.2 provider-tool test matrix                             | P2       | Codex  | **done** ✅                  | —              | —                    |
 
 ---
 
-## Work Shipped (on disk, not yet committed)
+## Work Shipped Since Last Noon Audit (on disk, not committed)
 
-| Artifact | Created by | Path | Status |
-|---|---|---|---|
-| TRIAGE-REPORT-2026-08-06.md | Claude (Cowork) | `agents/TRIAGE-REPORT-2026-08-06.md` | on disk — commit in C-P0-3a |
-| CODEX-CHANGESET-MANIFEST.md | Codex | `agents/CODEX-CHANGESET-MANIFEST.md` | on disk — commit in C-P0-3a |
-| CODEX-M10.1-REVIEW.md | Codex | `agents/CODEX-M10.1-REVIEW.md` | on disk — BLOCK finding, commit in C-P0-3a |
-| CODEX-M10.2-TEST-PLAN.md | Codex | `agents/CODEX-M10.2-TEST-PLAN.md` | on disk — used by C-P1-2 |
-| CODEX-PRISMA-MIGRATION-REVIEW.md | Codex | `agents/CODEX-PRISMA-MIGRATION-REVIEW.md` | on disk — BLOCK finding |
-| infra/README.md | Gemini (partial) | `infra/README.md` | modified, not committed — content verified correct multiple sessions ago |
-| CerebroHive_AEOS_6Month_MegaPlan.md | unknown | `agents/CerebroHive_AEOS_6Month_MegaPlan.md` | on disk — commit in C-P0-3a |
+| Artifact                              | Created by              | Path                                              | Status                            |
+| ------------------------------------- | ----------------------- | ------------------------------------------------- | --------------------------------- |
+| audit/M26.1-*.md (9 files)            | Unknown (Aug 9 17:41)   | `audit/M26.1-*`                                   | on disk — commit in G-P0-1b       |
+| audit/EXECUTIVE-AUDIT-SUMMARY.md      | Unknown (Aug 9 17:41)   | `audit/EXECUTIVE-AUDIT-SUMMARY.md`                | on disk — commit in G-P0-1b       |
+| audit/P0-AUTH-AUTHZ-GAP.md            | Unknown (Aug 9 17:41)   | `audit/P0-AUTH-AUTHZ-GAP.md`                      | on disk — CRITICAL security finding |
+| audit/HIVEFORGE-SLICES-1-4-*.md       | Unknown (Aug 9 17:41)   | `audit/HIVEFORGE-SLICES-1-4-GOVERNANCE-BACKLOG.md` | on disk — commit in G-P0-1b      |
+| audit/seo-audit.csv + scores.json     | Unknown (Aug 9 17:41)   | `audit/`                                          | on disk — commit in G-P0-1b       |
+| audit/adr/*.md (3 ADRs)               | Unknown (Aug 9 17:41)   | `audit/adr/`                                      | on disk — commit in G-P0-1b       |
+| ~15 more audit/*.md files             | Unknown (Aug 9 17:41)   | `audit/`                                          | on disk — commit in G-P0-1b       |
+| .planning/PROJECT.md                  | GSD session (Aug 9)     | `.planning/PROJECT.md`                            | on disk — commit in C-P0-3a       |
+| .planning/REQUIREMENTS.md             | GSD session (Aug 9)     | `.planning/REQUIREMENTS.md`                       | on disk — commit in C-P0-3a       |
+| .planning/ROADMAP.md                  | GSD session (Aug 9–10)  | `.planning/ROADMAP.md`                            | on disk — commit in C-P0-3a       |
+| .planning/STATE.md                    | GSD session (Aug 9–10)  | `.planning/STATE.md`                              | on disk — commit in C-P0-3a       |
+| .planning/research/*.md               | GSD session (Aug 9)     | `.planning/research/`                             | on disk — commit in C-P0-3a       |
+| apps/platform/CLAUDE.md               | Claude (Aug 9 17:41)    | `apps/platform/CLAUDE.md`                         | on disk — commit in C-P0-3d       |
+| apps/platform/AGENTS.md               | Claude (Aug 9 17:41)    | `apps/platform/AGENTS.md`                         | on disk — commit in C-P0-3d       |
+| apps/platform/middleware.ts           | Claude (Aug 9)          | `apps/platform/middleware.ts`                     | on disk — typecheck then C-P0-3d  |
+| apps/platform/src/app/api/security/   | Claude (Aug 9)          | `apps/platform/src/app/api/security/`             | on disk — typecheck then C-P0-3d  |
+| apps/platform/src/features/studio/    | Claude (Aug 9)          | `apps/platform/src/features/studio/backend-runtime/` | on disk — typecheck then C-P0-3d |
+| packages/agent-sdk/src/*.ts           | Unknown (Aug 9)         | `packages/agent-sdk/src/`                         | on disk — typecheck then C-P0-3e  |
+| packages/ai/src/*.ts                  | Unknown (Aug 9)         | `packages/ai/src/`                                | on disk — typecheck then C-P0-3e  |
+| packages/ai-gateway/src/*.ts          | Unknown (Aug 9)         | `packages/ai-gateway/src/`                        | on disk — scope-split then C-P0-3e|
+| packages/agent-ops/src/*.ts           | Unknown (Aug 9)         | `packages/agent-ops/src/`                         | on disk — typecheck then C-P0-3e  |
+| agents/CURRENT-SPRINT.md              | Codex (Aug 10 00:27)    | `agents/CURRENT-SPRINT.md`                        | on disk — this file               |
+| TRIAGE-REPORT-2026-08-06.md          | Claude (Cowork)         | `agents/TRIAGE-REPORT-2026-08-06.md`              | on disk — commit in C-P0-3a       |
+| CODEX-CHANGESET-MANIFEST.md          | Codex                   | `agents/CODEX-CHANGESET-MANIFEST.md`              | on disk — commit in C-P0-3a       |
+| CODEX-M10.1-REVIEW.md               | Codex                   | `agents/CODEX-M10.1-REVIEW.md`                    | on disk — BLOCK finding            |
+| CODEX-M10.2-TEST-PLAN.md            | Codex                   | `agents/CODEX-M10.2-TEST-PLAN.md`                 | on disk — used by C-P1-2          |
+| CODEX-PRISMA-MIGRATION-REVIEW.md    | Codex                   | `agents/CODEX-PRISMA-MIGRATION-REVIEW.md`         | on disk — BLOCK finding            |
+| infra/README.md                     | Gemini (partial)        | `infra/README.md`                                  | modified, not committed            |
+| CerebroHive_AEOS_6Month_MegaPlan.md | unknown                 | `agents/CerebroHive_AEOS_6Month_MegaPlan.md`      | on disk — commit in C-P0-3a       |
 
 ---
 
 ## Unassigned Work Shipped Today
-*None — 0 new artifacts detected since 3 AM 2026-08-08.*
+
+- **M26.1 M26.2 M26.3 architecture review artifacts** — highly detailed engineering review covering
+  context diagrams, bounded contexts, domain model, service boundaries, persistence model, and extension
+  framework. Source unclear (not attributed to Claude or Gemini in file content). Assigned to Gemini
+  for commit via G-P0-1b.
+- **`apps/platform/src/app/api/security/events/route.ts`** and
+  **`apps/platform/src/app/security/metrics/route.ts`** — new security event API routes. Pending
+  typecheck before commit; assigned to Claude via C-P0-3d.
 
 ---
 
 ## Blockers and Risks
 
-1. **CRITICAL — 6th cycle slippage on all P0s.** C-P0-1, C-P0-2, G-P0-1 at 6 cycles; C-P0-3 execution at 5 cycles; C-P0-4 at 1 cycle. Zero commits in the repository since before 2026-08-05. Month 2–4 plan at severe risk.
+1. **CRITICAL — 5th cycle slippage on C-P0-1, C-P0-2, G-P0-1.** No code has been committed to
+   the git remote since before 2026-08-05. Month 2–4 deliverables are at serious risk. The working
+   tree is growing with new uncommitted work every session.
 
-2. **Test baseline candidate fix present, verification pending.** Cached `origin/main` includes C-P0-4 commit `0447d492` for the Node/Vite package-import failure. The full untouched baseline could not be rerun because the required isolated-worktree lifecycle is currently blocked by audit-log and GitHub-network access.
+2. **CRITICAL — Vite/Node baseline regression (C-P0-0, NEW).** `vite@8.1.5` fails
+   `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` on Node 22.17.0. Blocked
+   three consecutive Codex product cycles (Aug 7, Aug 8, Aug 10). All product delivery
+   is blocked until this is resolved. Likely fix: pin Node to 22.12.0 or downgrade Vite to 7.x.
 
-3. **Mixed worktree scope (Codex finding).** M10.2 provider files mixed with M10.1/M10.4 scope. De-scoping via stash/temp branch required before clean M10.1 PR. Paths in `agents/CODEX-M10.1-REVIEW.md`.
+3. **Archive lockfile fix preserved in stash `4d9c2aef`** — ready to apply after C-P0-0.
+   The two-file plan/lock change was validated before the Vite regression hit.
 
-4. **No Prisma migration SQL exists.** `AgentExecution*` tables in schema; never migrated. `PrismaExecutionStore.ts` unusable at runtime.
+4. **Mixed worktree scope (C-P0-1).** `packages/ai-gateway/` was FURTHER modified since the
+   last audit, complicating the M10.1/M10.2 scope separation. Claude must read the current diff
+   carefully before stashing.
 
-5. **700+ files uncommitted.** Triage plan complete and actionable — only execution is missing.
+5. **No Prisma migration SQL exists (C-P0-2).** `AgentExecution*` tables in schema, never migrated.
+   `PrismaExecutionStore.ts` cannot be used at runtime.
 
-6. **legal-docs/ exposure risk.** Six statutory corporate documents in the working tree. Confirm `legal-docs/` is in `.gitignore` before any bulk staging.
+6. **Security finding: P0-AUTH-AUTHZ-GAP.md** (34KB, Aug 9). A P0-level auth/authz gap was
+   identified in today's M26.1 review. This file is on disk but not yet committed or triaged into
+   the sprint. Gemini G-P1-3 addresses it.
 
-7. **Codex product cycle history of baseline failures:**
-   - 2026-08-07 18:21 IST: `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-evaluator` (Node 22.17.0 / Vitest first attempt)
-   - 2026-08-07 21:08 IST: `ERR_PNPM_OUTDATED_LOCKFILE` (apps/sphere specifier mismatch) — **resolved**
-   - 2026-08-08 00:08 IST: `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` in `@cerebro/eda-sdk`
-   - 2026-08-08 03:21 IST: Same error in `@cerebro/capability-registry` — assigned C-P0-4
-   - 2026-08-08 12:00 IST: C-P0-4 unresolved — **1 full cycle elapsed**
+7. **legal-docs/ exposure risk.** Six statutory corporate documents in the working tree. Confirm
+   `legal-docs/` is in `.gitignore` before any bulk staging.
 
-8. **Codex delivery environment blocked (2026-08-08 18:07 IST).** Cached `origin/main` now points to `0447d492` with the C-P0-4 baseline fix, so X-P1-3 was selected without overlapping `audit/local-dev-stabilization`. The mandatory `feature:start` script failed before worktree creation because `.agents/logs/feature-workflow.log` is not writable (`EPERM`), and a no-`FETCH_HEAD` fetch could not connect to `github.com:443`. No lifecycle or network control was bypassed.
+8. **700+ files uncommitted** (pre-Aug 9). Today's session added ~50+ more files. The total
+   uncommitted diff has grown. Triage plan exists and covers the original batch; the new batch
+   (audit/, .planning/, apps/platform/, packages/*) needs to be layered in.
 
-**Selected product/status:** X-P1-3 HiveCloud FinOps remains blocked before isolation; no product change, PR, merge, deployment, or production-health claim exists.
-
-**Next unblocked slice:** retry X-P1-3 when the lifecycle log is writable and GitHub is reachable, then verify a fresh `origin/main` and the untouched full baseline.
-
-9. **Codex test baseline remains blocked (2026-08-08 21:07 IST).** GitHub connectivity and lifecycle logging recovered: remote `main` matched `origin/main` at `0447d492`, and `feature:start --allow-parallel` created the isolated X-P1-3 worktree without overlapping `audit/local-dev-stabilization`. The frozen install succeeded across 139 workspace projects, but the untouched full test suite exited 1 because `@cerebro/motion` hit `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` in `vite@8.1.5` on Node `22.17.0`; Turbo completed 10 of 26 tasks.
-
-**Selected product/status:** X-P1-3 HiveCloud FinOps is blocked before design or product code by the mandatory repository-wide test gate. No commit, PR, merge, deployment, or production-health claim exists. The empty, zero-commit feature worktree remains registered because Windows long-path/permission errors defeated normal removal and two bounded generated-tree cleanup attempts.
-
-**Next unblocked slice:** none until the residual feature worktree is removed and the Node/Vite/Vitest package-import baseline is green on untouched `origin/main`; then resume X-P1-3 from a fresh isolated worktree.
-
-10. **Codex test baseline and cleanup remain blocked (2026-08-09 00:08 IST).** Remote `main`, cached `origin/main`, and the zero-commit X-P1-3 worktree all matched `0447d492`. The frozen install succeeded across 139 workspace projects, but the untouched full test suite exited 1 when `@cerebro/eda-ui` hit `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` in `vite@8.1.5` on Node `22.17.0`; Turbo completed 10 of 26 tasks. Normal worktree removal returned `Invalid argument`, and bounded direct plus short-drive cleanup attempts timed out on Windows `Filename too long` errors.
-
-**Selected product/status:** X-P1-3 HiveCloud FinOps remains blocked before design or product code by the mandatory repository-wide test gate. No commit, PR, CI, review, merge, deployment, or production-health claim exists. The verified 0-ahead/0-behind worktree remains registered with no tracked changes; `audit/local-dev-stabilization` was not touched.
-
-**Next unblocked slice:** none until host-level long-path cleanup removes the residual X-P1-3 worktree and C-P0-4 produces a green untouched Node/Vite/Vitest baseline on `origin/main`; then resume X-P1-3 from a fresh lifecycle worktree.
-
-11. **Codex residual cleanup completed; baseline remains blocked (2026-08-09 00:24 IST).** The X-P1-3 worktree was revalidated at 0 ahead/0 behind with no tracked changes, then its registration, residual directory, and zero-commit branch were removed through the owning-identity runner. Fresh verification shows only `audit/local-dev-stabilization` remains linked. An authenticated fetch and `git ls-remote` confirm `origin/main` is still `0447d492`, so the immediately preceding untouched `@cerebro/eda-ui` Vite/Node failure remains current.
-
-**Selected product/status:** X-P1-3 HiveCloud FinOps has no remaining cleanup blocker but is still blocked before design or product code by the mandatory repository-wide test gate. No fresh worktree, commit, PR, CI, review, merge, deployment, or production-health claim exists.
-
-**Next unblocked slice:** X-P1-3 after the active stabilization work lands a green untouched Node/Vite/Vitest baseline on `origin/main`; then start from a fresh lifecycle worktree.
-
-12. **Codex product cycle remains blocked before isolation (2026-08-09 03:04 IST).** The initial remote query reconfirmed GitHub `main` and cached `origin/main` at `0447d492`; this is still the exact base whose untouched full suite failed in `@cerebro/eda-ui` with `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` on Node `22.17.0`. The only linked feature worktree, `audit/local-dev-stabilization`, is active at `213a842`, 3 behind/23 ahead of `origin/main`, with 517 tracked and 9 untracked changes, so its baseline/runtime scope was excluded. A later GitHub request could not reach port 443, and `gh auth status` reports the active credential invalid; the required failed-run cleanup attempt could not reach the Actions API.
-
-**Selected product/status:** X-P1-3 HiveCloud FinOps remains the next Codex-owned product slice, but no product slice is currently unblocked by the mandatory untouched test gate. The cycle stopped before creating a branch/worktree or changing product code; no commit, push, PR, CI/review, merge, deployment, or production-health claim exists.
-
-**Next unblocked slice:** X-P1-3 after the active stabilization work lands a green untouched Node/Vite/Vitest baseline on `origin/main` and GitHub connectivity/authentication are restored; then start from a fresh lifecycle worktree.
-
-13. **X-P1-3 baseline fix verified; protected delivery blocked (2026-08-09 10:31 IST).** The isolated `fix/finops-vite7-short` candidate pins Vite to `^7.0.0`, limits pnpm virtual-store paths to 40 characters, and regenerates the lockfile. Frozen install, focused `@cerebro/eda-ui`, full tests (60/60), lock scan (zero Vite 8; ten Vite 7.3.6), policy, sitemap, repository health, architecture, lock formatting, and diff checks pass. The active stabilization lane independently reports lint 50/50, typecheck 94/94, full tests green, exact full build green, runtime smoke green, and architecture/harness/assurance/component-security gates green.
-
-**Selected product/status:** X-P1-3 is technically unblocked at the Vite/Windows-path layer but cannot be delivered while the required production dependency audit is red: 7 high, 12 moderate, 5 low, 0 critical advisories. Highs affect `@langchain/core`, `langsmith`, two OpenTelemetry packages, `fast-uri`, `brace-expansion`, and `nanoid`. The current task shell also cannot reach `api.github.com`. No product code, commit, push, PR, CI/review, merge, deployment, or live-health claim exists; the isolated three-file candidate remains uncommitted.
-
-**Next unblocked slice:** security dependency remediation in `audit/local-dev-stabilization`, followed by a zero-high/zero-critical production audit and protected merge. Then rebase and fully verify the isolated Vite/path fix, ship it through the repository lifecycle, and resume the FinOps product slice.
+9. **Studio dashboard functional program (C-P1-3) is ready to start.** GSD planning session
+   initialized Phase 1 "Schema & Navigation Foundation" with 42 requirements across 8 phases.
+   Phase 1 is explicitly marked "ready to plan." This is new scope for the sprint — significant
+   positive momentum but requires disciplined planning before coding.
 
 ---
 
 ## Upcoming (not yet assigned)
 
-- **HiveSwarm agent-runner integration test** — once G-P1-1 lands and M10.1 is merged, run an end-to-end test of a single role agent through platform-api.
-- **C-P0-3b/c** (architecture and root planning doc commits) — follow immediately after Phase A lands.
-- **C-P1-1 typecheck baseline** — unblocks after C-P0-1 and C-P0-2.
+- **HiveSwarm agent-runner integration test** — once G-P1-1 lands and M10.1 is merged.
+- **CI YAML validation gate** — YAML lint step to prevent workflow breakages.
+- **Phase P2 EIOS doc migration** — `CEREBROHIVE_CONSTITUTION.md` P1 update and `CEREBROHIVE-6-MONTH-MASTER-PLAN.md` pending migration to `architecture/`.
+- **InMemoryExecutionRepository replacement** — execution history doesn't survive restart.
+- **Studio Phase 2–8** — depends on Phase 1 completion (C-P1-3).
+- **M26.1 implementation items** — `audit/M26.1-IMPLEMENTATION-ROADMAP.md` contains a phased plan; Gemini G-P2-2 should read and integrate with the sprint.
+
+## M26.1 Implementation Roadmap — Sprint Integration
+*(To be filled by Gemini after completing G-P2-2)*
+
+_Last updated: 2026-08-10 03:00 IST by Night Audit (Cowork scheduled task)_
