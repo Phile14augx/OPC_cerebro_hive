@@ -1128,6 +1128,17 @@ model Policy {
   id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name  String
   rules Json
+
+  orgId        String
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  description String?
+  isActive    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orgId])
 }
 
 // -----------------------------------------------------------------------------
@@ -1497,6 +1508,7 @@ model Organization {
   invoices      Invoice[]
   usageBudgets  UsageBudget[]
   prompts       Prompt[]
+  policies      Policy[]
 }
 
 model OrgMembership {
