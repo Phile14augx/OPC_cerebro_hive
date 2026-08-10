@@ -34,7 +34,7 @@ export function Sidebar() {
 
   const pinnedFavorites = [
     { title: "AI Studio", href: "/app/ai/studio", icon: platformNavigation.find(g => g.title === "AI")?.items.find(i => i.title === "AI Studio")?.icon },
-    { title: "Workflows", href: "/app/automation/workflows", icon: platformNavigation.find(g => g.title === "Automation")?.items[0]?.icon },
+    { title: "Workflows", href: "/app/automation/builder", icon: platformNavigation.find(g => g.title === "Automation")?.items[0]?.icon },
     { title: "Knowledge Hub", href: "/app/ai/knowledge", icon: platformNavigation.find(g => g.title === "AI")?.items.find(i => i.title === "Knowledge Hub")?.icon },
   ];
 
