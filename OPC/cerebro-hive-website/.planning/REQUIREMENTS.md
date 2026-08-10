@@ -9,8 +9,8 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Schema & Version Reconciliation (SCHM)
 
-- [ ] **SCHM-01**: Governance, Talent OS, and Explore's Prisma schema gaps are confirmed and closed before their phases are sized (Policy model exists but is a bare stub with no tenant scoping; Talent OS and Explore have zero backing models)
-- [ ] **SCHM-02**: `archive-worker` and `archive-api`'s BullMQ major version is reconciled to a single version before producer/consumer wiring begins
+- [x] **SCHM-01**: Governance, Talent OS, and Explore's Prisma schema gaps are confirmed and closed before their phases are sized (Policy model exists but is a bare stub with no tenant scoping; Talent OS and Explore have zero backing models)
+- [x] **SCHM-02**: `archive-worker` and `archive-api`'s BullMQ major version is reconciled to a single version before producer/consumer wiring begins
 
 ### Navigation (NAV)
 
@@ -131,8 +131,8 @@ Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCHM-01 | Phase 1 | Pending |
-| SCHM-02 | Phase 1 | Pending |
+| SCHM-01 | Phase 1 | Complete |
+| SCHM-02 | Phase 1 | Complete |
 | NAV-01 | Phase 1 | Complete |
 | NAV-02 | Phase 1 | Complete |
 | FORGE-01 | Phase 1 | Complete |
