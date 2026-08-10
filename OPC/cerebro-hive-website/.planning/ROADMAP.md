@@ -144,7 +144,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Schema & Navigation Foundation | 4/7 | In Progress|  |
+| 1. Schema & Navigation Foundation | 5/7 | In Progress|  |
 | 2. Core Workspace | 0/TBD | Not started | - |
 | 3. Core AI — AI Studio + Workflows | 0/TBD | Not started | - |
 | 4. Core AI — Knowledge Hub | 0/TBD | Not started | - |
