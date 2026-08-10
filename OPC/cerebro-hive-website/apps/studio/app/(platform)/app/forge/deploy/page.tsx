@@ -70,14 +70,18 @@ function DeploymentStudioPageInner() {
         <h1 className="text-3xl font-space font-bold text-text-primary">Deployment Intelligence</h1>
         <p className="text-text-secondary mt-1">
           AI generates Docker, Kubernetes, Terraform, Helm charts, and full CI/CD pipelines. One click to production.
+          {!projectId && <span className="text-text-muted ml-1">— No project selected</span>}
         </p>
       </div>
 
       {/* Error */}
       {error && (
-        <Card className="p-4 border-red-500/20 bg-red-500/5 flex items-center gap-3">
+        <Card className="p-4 border-red-500/20 bg-red-500/5 flex items-start gap-3">
           <AlertTriangle size={16} className="text-red-400 shrink-0" />
-          <p className="text-sm text-red-400">{error}</p>
+          <div className="flex-1">
+            <p className="text-sm text-red-400">{error}</p>
+            <Button variant="ghost" size="sm" className="mt-2" onClick={handleDeploy}>Try again</Button>
+          </div>
         </Card>
       )}
 
