@@ -14,8 +14,8 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Navigation (NAV)
 
-- [ ] **NAV-01**: Every sidebar navigation destination in Studio resolves to a real page — zero 404s. Scope note (discovered during Phase 1 discuss-phase): the navigation registry has 99 items across 14 groups, not the 5 originally described in this document's scope — this requirement covers all 99.
-- [ ] **NAV-02**: Every destination without a backing feature (this milestone or deferred) shows an honest "not yet available" state instead of a 404 or fake content, driven by an `implementationStatus` field on the shared navigation registry (not one-off hardcoded placeholder pages)
+- [x] **NAV-01**: Every sidebar navigation destination in Studio resolves to a real page — zero 404s. Scope note (discovered during Phase 1 discuss-phase): the navigation registry has 99 items across 14 groups, not the 5 originally described in this document's scope — this requirement covers all 99.
+- [x] **NAV-02**: Every destination without a backing feature (this milestone or deferred) shows an honest "not yet available" state instead of a 404 or fake content, driven by an `implementationStatus` field on the shared navigation registry (not one-off hardcoded placeholder pages)
 
 ### CerebroForge (FORGE)
 
@@ -133,8 +133,8 @@ Populated during roadmap creation.
 |-------------|-------|--------|
 | SCHM-01 | Phase 1 | Pending |
 | SCHM-02 | Phase 1 | Pending |
-| NAV-01 | Phase 1 | Pending |
-| NAV-02 | Phase 1 | Pending |
+| NAV-01 | Phase 1 | Complete |
+| NAV-02 | Phase 1 | Complete |
 | FORGE-01 | Phase 1 | Pending |
 | FORGE-02 | Phase 1 | Pending |
 | WKSP-01 | Phase 2 | Pending |
