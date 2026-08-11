@@ -129,3 +129,7 @@ Two CerebroForge pages already have a `page.tsx` that renders fabricated content
 Actual removal of the fabricated content (replacing page bodies with `PlaceholderModule`) is FORGE-02 scope, owned by a later plan (01-05/01-06 per the phase objective) — this plan only sets the registry status field truthfully.
 
 All 7 HiveOps pages fall into the same category (existing `page.tsx`, hardcoded arrays, zero backend calls) — demoted to `planned` per D-05, which explicitly names HiveOps as a placeholder group this phase.
+
+## Corrections
+
+No correction was required. Plan 01-07 Task 1's `read_first` specifically flagged `hiveops/security/page.tsx` as a candidate reclassification pending 01-06's verdict. Plan 01-06 (see `01-06-SUMMARY.md`, "Decisions Made") investigated the file's single `/api/`-shaped pattern-scan match and confirmed it was a false positive — a hardcoded literal string (`"apps/studio/app/api/auth/route.ts"`) inside a fabricated mock `FINDINGS` array entry, not a real backend call, `fetch(`, `useSWR`, `useQuery`, or other data-hook usage. `hiveops/security/page.tsx` was converted to the shared `PlaceholderModule` identically to its six HiveOps siblings, and its registry-table row above (`HiveOps | Security | /app/hiveops/security | planned | ...`) required no change. No other rows in this document were found to need correction during this plan's Task 1 review.
