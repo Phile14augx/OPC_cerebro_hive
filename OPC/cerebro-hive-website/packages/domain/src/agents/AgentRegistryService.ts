@@ -31,4 +31,20 @@ export class AgentRegistryService {
       }, { context }));
     } catch (error) { return Result.fail(normalizeAgentRegistryError(error)); }
   }
+
+  async listVersions(agentId: string, context: AgentRegistryActorContext): Promise<Result<unknown>> {
+    const denied = requireAgentCapability(context, 'agent.read');
+    if (denied) return Result.fail(denied);
+    try { return Result.ok(await this.repository.listVersions(agentId, { context })); }
+    catch (error) { return Result.fail(normalizeAgentRegistryError(error)); }
+  }
+
+  async getVersion(agentId: string, versionId: string, context: AgentRegistryActorContext): Promise<Result<unknown>> {
+    const denied = requireAgentCapability(context, 'agent.read');
+    if (denied) return Result.fail(denied);
+    try {
+      const version = await this.repository.getVersion(agentId, versionId, { context });
+      return version ? Result.ok(version) : Result.fail(normalizeAgentRegistryError({ code: 'AGENT_NOT_FOUND' }));
+    } catch (error) { return Result.fail(normalizeAgentRegistryError(error)); }
+  }
 }
