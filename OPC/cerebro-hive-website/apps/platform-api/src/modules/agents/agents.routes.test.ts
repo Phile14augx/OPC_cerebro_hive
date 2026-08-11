@@ -45,4 +45,28 @@ describe('agent registry routes', () => {
     expect(response.json().error.code).toBe('AGENT_DRAFT_REVISION_CONFLICT');
     expect(response.json().error.details.currentRevision).toBe(4);
   });
+
+  it('requires and forwards an idempotency key for publication', async () => {
+    let command: Record<string, unknown> | undefined;
+    const app = await createApp({
+      publicationService: {
+        publish: async (_id: string, value: Record<string, unknown>) => {
+          command = value;
+          return { isSuccess: true, data: {} };
+        },
+      },
+    });
+
+    const missing = await app.inject({ method: 'POST', url: '/a1/publish', payload: { expectedDraftRevision: 2 } });
+    expect(missing.statusCode).toBe(400);
+    expect(missing.json().error.code).toBe('AGENT_IDEMPOTENCY_KEY_REQUIRED');
+
+    const accepted = await app.inject({
+      method: 'POST', url: '/a1/publish',
+      headers: { 'idempotency-key': 'publish-a1-r2' },
+      payload: { expectedDraftRevision: 2 },
+    });
+    expect(accepted.statusCode).toBe(201);
+    expect(command?.idempotencyKey).toBe('publish-a1-r2');
+  });
 });

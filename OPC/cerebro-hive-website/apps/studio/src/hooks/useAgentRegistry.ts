@@ -59,7 +59,10 @@ export function useUpdateAgentDraft(id: string) {
 export function usePublishAgentDraft(id: string) {
   const agentClient = useAgentClient();
   const invalidate = useInvalidateAgent(id);
-  return useMutation({ mutationFn: (command: PublishAgentDraftCommand) => agentClient.publishDraft(id, command), onSuccess: invalidate });
+  return useMutation({
+    mutationFn: (command: PublishAgentDraftCommand) => agentClient.publishDraft(id, command, `agent-publish:${id}:revision:${command.expectedDraftRevision}`),
+    onSettled: invalidate,
+  });
 }
 
 export function useTransitionAgentLifecycle(id: string) {

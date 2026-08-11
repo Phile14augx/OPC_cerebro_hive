@@ -17,3 +17,11 @@ Studio requires the `NEXT_PUBLIC_API_URL` environment variable to be set to poin
 Please copy `apps/studio/.env.example` to `apps/studio/.env.local` to configure your environment.
 
 See ADRs in the architecture governance documents for more details.
+
+## Agent Registry
+
+The canonical `/app/agents` Studio surface and `/api/v1/agents` API now provide a workspace-scoped Agent Registry. `Agent` is the stable identity, `AgentDraft` is the only mutable definition, and publication creates immutable `AgentVersion` snapshots before advancing the active-version pointer.
+
+Studio requires `NEXT_PUBLIC_API_URL` and a selected workspace ID in `localStorage['cerebro.workspaceId']` (or `NEXT_PUBLIC_WORKSPACE_ID`). The authenticated access token and workspace header are sent by the registry hooks.
+
+Migration operators should follow [the Agent Registry migration runbook](docs/agent-registry/migration-runbook.md). Tool-permission and knowledge-source declarations are metadata only in this first slice; they are not runtime authorization or retrieval configuration.

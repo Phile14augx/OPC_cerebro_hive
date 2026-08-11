@@ -37,6 +37,8 @@ export interface PublishAgentDraftPersistenceInput {
   modelId: string;
   actorId: string | null;
   nextLifecycleStatus: 'DRAFT' | 'SANDBOX' | 'CERTIFIED';
+  idempotencyKeyHash: string;
+  idempotencyFingerprint: string;
   auditMetadata?: Record<string, unknown>;
 }
 
@@ -158,6 +160,32 @@ export class AgentRepository extends BaseRepository {
     return db.agentVersion.findFirst({ where: { id: versionId, agentId, agent: { workspaceId } } });
   }
 
+  async preparePublication(
+    agentId: string,
+    input: { expectedDraftRevision: number; idempotencyKeyHash: string; idempotencyFingerprint: string },
+    options: IRepositoryOptions,
+  ) {
+    const db = this.getClient(options);
+    const { workspaceId } = this.workspaceFilter(options.context);
+    const agent = await db.agent.findFirst({ where: { id: agentId, workspaceId }, include: { draft: true } });
+    if (!agent?.draft) throw new AgentRegistryRepositoryError('AGENT_NOT_FOUND', 'Agent draft not found');
+
+    const idempotency = await db.idempotencyRecord.findUnique({
+      where: { tenantId_requestHash: { tenantId: options.context.tenantId, requestHash: input.idempotencyKeyHash } },
+    });
+    if (!idempotency) return { agent, replay: null };
+    if (idempotency.operation !== 'agent.version.publish' || idempotency.responseHash !== input.idempotencyFingerprint) {
+      throw new AgentRegistryRepositoryError('AGENT_IDEMPOTENCY_CONFLICT', 'The idempotency key was already used for a different publication request');
+    }
+    if (idempotency.status !== 'completed') return { agent, replay: null };
+
+    const version = await db.agentVersion.findFirst({
+      where: { agentId, sourceDraftId: agent.draft.id, sourceDraftRevision: input.expectedDraftRevision },
+    });
+    if (!version) throw new AgentRegistryRepositoryError('AGENT_IDEMPOTENCY_CONFLICT', 'The completed publication result could not be reconstructed');
+    return { agent, replay: { agent, version, draft: agent.draft, replayed: true } };
+  }
+
   private async inTransaction<T>(
     options: IRepositoryOptions,
     work: (tx: PrismaTransactionClient) => Promise<T>,
@@ -183,6 +211,31 @@ export class AgentRepository extends BaseRepository {
         include: { draft: true },
       });
       if (!agent?.draft) throw new AgentRegistryRepositoryError('AGENT_NOT_FOUND', 'Agent draft not found');
+
+      const idempotency = await tx.idempotencyRecord.findUnique({
+        where: {
+          tenantId_requestHash: {
+            tenantId: options.context.tenantId,
+            requestHash: input.idempotencyKeyHash,
+          },
+        },
+      });
+      if (idempotency) {
+        if (idempotency.operation !== 'agent.version.publish' || idempotency.responseHash !== input.idempotencyFingerprint) {
+          throw new AgentRegistryRepositoryError('AGENT_IDEMPOTENCY_CONFLICT', 'The idempotency key was already used for a different publication request');
+        }
+        if (idempotency.status === 'completed') {
+          const replayedVersion = await tx.agentVersion.findFirst({
+            where: { agentId, sourceDraftId: agent.draft.id, sourceDraftRevision: input.expectedDraftRevision },
+          });
+          if (!replayedVersion) {
+            throw new AgentRegistryRepositoryError('AGENT_IDEMPOTENCY_CONFLICT', 'The completed publication result could not be reconstructed');
+          }
+          return { agent, version: replayedVersion, draft: agent.draft, replayed: true };
+        }
+        throw new AgentRegistryRepositoryError('AGENT_IDEMPOTENCY_CONFLICT', 'The publication request is already in progress');
+      }
+
       if (agent.draft.revision !== input.expectedDraftRevision) {
         throw new AgentRegistryRepositoryError(
           'AGENT_DRAFT_REVISION_CONFLICT',
@@ -197,6 +250,17 @@ export class AgentRepository extends BaseRepository {
           { baseVersionId: agent.draft.baseVersionId, activeVersionId: agent.activeVersionId },
         );
       }
+
+      await tx.idempotencyRecord.create({
+        data: {
+          tenantId: options.context.tenantId,
+          workspaceId,
+          operation: 'agent.version.publish',
+          requestHash: input.idempotencyKeyHash,
+          responseHash: input.idempotencyFingerprint,
+          status: 'pending',
+        },
+      });
 
       const latest = await tx.agentVersion.findFirst({
         where: { agentId },
@@ -281,8 +345,17 @@ export class AgentRepository extends BaseRepository {
       if (rebased.count !== 1) {
         throw new AgentRegistryRepositoryError('AGENT_DRAFT_REVISION_CONFLICT', 'Draft changed during publication');
       }
+      await tx.idempotencyRecord.update({
+        where: {
+          tenantId_requestHash: {
+            tenantId: options.context.tenantId,
+            requestHash: input.idempotencyKeyHash,
+          },
+        },
+        data: { status: 'completed' },
+      });
       const draft = await tx.agentDraft.findUniqueOrThrow({ where: { id: agent.draft.id } });
-      return { agent: { ...agent, activeVersionId: version.id, lifecycleStatus: input.nextLifecycleStatus }, version, draft };
+      return { agent: { ...agent, activeVersionId: version.id, lifecycleStatus: input.nextLifecycleStatus }, version, draft, replayed: false };
     });
   }
 
@@ -291,18 +364,42 @@ export class AgentRepository extends BaseRepository {
     input: { from: 'DRAFT' | 'SANDBOX' | 'CERTIFIED' | 'PRODUCTION' | 'SUSPENDED'; to: 'DRAFT' | 'SANDBOX' | 'CERTIFIED' | 'PRODUCTION' | 'SUSPENDED'; actorId: string | null },
     options: IRepositoryOptions,
   ) {
-    const db = this.getClient(options);
     const { workspaceId } = this.workspaceFilter(options.context);
-    const result = await db.agent.updateMany({
-      where: { id: agentId, workspaceId, lifecycleStatus: input.from },
-      data: { lifecycleStatus: input.to, statusChangedAt: new Date(), statusChangedBy: input.actorId },
+    return this.inTransaction(options, async tx => {
+      const changedAt = new Date();
+      const result = await tx.agent.updateMany({
+        where: { id: agentId, workspaceId, lifecycleStatus: input.from },
+        data: { lifecycleStatus: input.to, statusChangedAt: changedAt, statusChangedBy: input.actorId },
+      });
+      if (result.count !== 1) {
+        const agent = await tx.agent.findFirst({ where: { id: agentId, workspaceId }, select: { lifecycleStatus: true } });
+        if (!agent) throw new AgentRegistryRepositoryError('AGENT_NOT_FOUND', 'Agent not found');
+        throw new AgentRegistryRepositoryError('AGENT_LIFECYCLE_CONFLICT', 'Agent lifecycle changed', { currentStatus: agent.lifecycleStatus });
+      }
+      await tx.auditLog.create({
+        data: {
+          workspaceId,
+          userId: input.actorId,
+          action: 'agent.lifecycle.transitioned',
+          resource: 'Agent',
+          resourceId: agentId,
+          metadata: { from: input.from, to: input.to, changedAt: changedAt.toISOString() },
+        },
+      });
+      await tx.outboxEvent.create({
+        data: {
+          aggregateId: agentId,
+          aggregateType: 'Agent',
+          eventType: 'agent.lifecycle.transitioned',
+          tenantId: options.context.tenantId,
+          traceId: options.context.traceId,
+          correlationId: options.context.correlationId,
+          partitionKey: workspaceId,
+          payload: { workspaceId, agentId, from: input.from, to: input.to, changedAt: changedAt.toISOString() },
+        },
+      });
+      return tx.agent.findFirstOrThrow({ where: { id: agentId, workspaceId }, include: { activeVersion: true, draft: true } });
     });
-    if (result.count !== 1) {
-      const agent = await db.agent.findFirst({ where: { id: agentId, workspaceId }, select: { lifecycleStatus: true } });
-      if (!agent) throw new AgentRegistryRepositoryError('AGENT_NOT_FOUND', 'Agent not found');
-      throw new AgentRegistryRepositoryError('AGENT_LIFECYCLE_CONFLICT', 'Agent lifecycle changed', { currentStatus: agent.lifecycleStatus });
-    }
-    return db.agent.findFirstOrThrow({ where: { id: agentId, workspaceId }, include: { activeVersion: true, draft: true } });
   }
 
   async getActiveVersion(agentId: string, options: IRepositoryOptions & { allowLegacyFallback?: boolean }) {

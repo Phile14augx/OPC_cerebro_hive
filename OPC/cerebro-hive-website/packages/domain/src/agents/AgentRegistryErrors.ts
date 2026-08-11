@@ -16,7 +16,7 @@ export interface AgentRegistryActorContext {
 }
 
 export function requireAgentCapability(context: AgentRegistryActorContext, permission: string): AgentRegistryError | null {
-  return context.permissions.includes(permission)
+  return context.permissions.includes('*') || context.permissions.includes(permission)
     ? null
     : new AgentRegistryError('AGENT_FORBIDDEN', `Missing required capability: ${permission}`);
 }

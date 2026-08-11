@@ -86,7 +86,29 @@ export default async function agentRoutes(fastify: FastifyInstance, services: Ag
 
   fastify.post('/:id/publish', { schema: { params: AgentIdParams, body: PublishDraftBody } }, async (request, reply) => {
     const { id } = request.params as { id: string };
-    return sendResult(reply, request, await services.publicationService.publish(id, request.body as any, actor(request)), 201);
+    const rawKey = request.headers['idempotency-key'];
+    const idempotencyKey = Array.isArray(rawKey) ? rawKey[0] : rawKey;
+    if (!idempotencyKey?.trim()) {
+      return reply.code(400).send({
+        success: false,
+        error: {
+          code: 'AGENT_IDEMPOTENCY_KEY_REQUIRED',
+          message: 'An Idempotency-Key header is required for publication',
+          details: {},
+          requestId: request.cerebroContext.traceId,
+        },
+      });
+    }
+    return sendResult(
+      reply,
+      request,
+      await services.publicationService.publish(
+        id,
+        { expectedDraftRevision: (request.body as { expectedDraftRevision: number }).expectedDraftRevision, idempotencyKey },
+        actor(request),
+      ),
+      201,
+    );
   });
 
   fastify.post('/:id/lifecycle', { schema: { params: AgentIdParams, body: LifecycleBody } }, async (request, reply) => {
