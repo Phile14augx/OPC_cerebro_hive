@@ -27,8 +27,8 @@ See: .planning/PROJECT.md (updated 2026-08-09)
 
 Phase: 1 (Schema & Navigation Foundation) — EXECUTING
 Plan: 7 of 7
-Status: Ready to execute
-Last activity: 2026-08-10
+Status: Task 1 (whole-program gate) complete, Task 2 (human click-through checkpoint) pending
+Last activity: 2026-08-11
 
 Progress: [█████████░] 86%
 
@@ -76,6 +76,7 @@ Recent decisions affecting current work:
 - [Phase 01-03]: apps/studio and apps/studio/platform bullmq pins (^5.80.9) deliberately left unbumped - different queue consumers, out of SCHM-02 scope
 - [Phase 01-03]: Talent OS and Explore schema design deferred to Phase 6/7 per D-11; this plan only confirms and documents absence
 - [Phase 01-06]: hiveops/security/page.tsx's single /api/ pattern match confirmed a false positive (hardcoded mock finding string, not a real backend call) - converted like its six siblings, no 01-NAV-STATUS.md reclassification needed
+- [Phase 01-07 Task 1]: Whole-program gate run — nav route audit, PlaceholderModule test, prisma migrate status, typecheck and test all green; pnpm lint and pnpm build (unfiltered) do NOT exit 0, both on confirmed pre-existing packages outside every file this phase modified (repo-wide missing ESLint configs across ~21 packages, @cerebro/archive-worker's empty src/ scaffold, @cerebro/sphere's missing build-time REDIS_URL). Task 2 (human click-through) withheld pending orchestrator/user decision on whether these pre-existing gaps block sign-off.
 
 ### Pending Todos
 
@@ -84,8 +85,9 @@ None yet.
 ### Blockers/Concerns
 
 - [Phase 1]: Governance/Talent OS/Explore schema existence must be confirmed before those phases (5-7) are planned in detail — Phase 1 closes this
-- [Phase 4]: BullMQ major-version mismatch between `archive-api` (^6) and `archive-worker` (^5) must be reconciled in Phase 1 before Phase 4 producer/consumer wiring starts
+- [Phase 4]: BullMQ major-version mismatch between `archive-api` (^6) and `archive-worker` (^5) must be reconciled in Phase 1 before Phase 4 producer/consumer wiring starts — RESOLVED by plan 01-03, reconfirmed green by plan 01-07 Task 1
 - [Phase 3]: `InMemoryExecutionRepository` persistence limitation — confirm `hiveforge` branch status before presenting Workflow execution history as durable
+- [Phase 1 gate]: Plan 01-07 Task 1's whole-program gate — `pnpm lint` and `pnpm build`, run unfiltered exactly per the plan's acceptance criteria, do not exit 0. Both failures are confirmed pre-existing, outside every file any Phase 1 plan modified: (1) ~21 workspace packages (including `@cerebro/studio`, `@cerebro/db`, `@cerebro/forge-api`) lack their own local ESLint flat config and fall through to the root `eslint.config.mjs`'s blanket ignore of `apps/**`/`packages/**`/`services/**`, producing a hard "all files ignored" error; (2) `@cerebro/archive-worker` has zero files under `src/` (an empty scaffold since its original commit, Knowledge Hub/Phase 4 scope) so `tsc` fails with TS18003; (3) `@cerebro/sphere` (untouched by any Phase 1 plan) needs `REDIS_URL` passed through at build time for its `/api/dashboard` static-generation step. Full detail and exact commands in `01-VALIDATION.md`'s "Whole-Program Gate Results" section. Orchestrator/user must decide whether these pre-existing gaps block Task 2's human click-through and phase sign-off, or are accepted as a separately-tracked cleanup item.
 
 ## Deferred Items
 
