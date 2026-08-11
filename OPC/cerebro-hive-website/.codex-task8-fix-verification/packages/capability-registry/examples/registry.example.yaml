@@ -1,0 +1,109 @@
+# Capability Registry — example document
+#
+# Maps the Hermes MCP stack (PR #24) into the agentOS capability model.
+# Secrets are NEVER stored here — only the env var NAMES the provider needs
+# (resolved from ~/.hermes/.env at connect time).
+schemaVersion: "1.0.0"
+generatedBy: "cerebrohive/agentos"
+capabilities:
+  - capability: source-control
+    displayName: "Source Control"
+    description: "Repository read/PR/issue operations across providers."
+    version: "1.0.0"
+    category: vcs
+    risk: medium
+    auth: oauth
+    providers:
+      - id: github
+        kind: mcp
+        transport: stdio
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-github"]
+        connectionEnv: [GITHUB_TOKEN]
+        trustTier: catalog
+      - id: gitlab
+        kind: mcp
+        transport: http
+        url: "https://mcp.gitlab.com/mcp"
+        auth: oauth
+        trustTier: manual
+    operations:
+      - id: read_repo
+        risk: low
+      - id: create_pr
+        risk: medium
+      - id: list_issues
+        risk: low
+    policy:
+      allow: ["read*", "create_pr", "list_issues"]
+      deny: ["delete_repository", "force_push"]
+      requireApproval: ["force_push"]
+
+  - capability: design-context
+    displayName: "Design Context"
+    description: "Figma design tokens / code-connect bridge."
+    version: "1.0.0"
+    category: design
+    risk: low
+    auth: oauth
+    providers:
+      - id: figma
+        kind: mcp
+        transport: http
+        url: "https://mcp.figma.com/mcp"
+        auth: oauth
+        trustTier: catalog
+    operations:
+      - id: read_design_tokens
+      - id: read_code_connect
+    policy:
+      allow: ["read*"]
+      deny: ["write_canvas"]
+
+  - capability: workflow-automation
+    displayName: "Workflow Automation"
+    description: "n8n workflow management bridge."
+    version: "1.0.0"
+    category: automation
+    risk: medium
+    auth: none
+    providers:
+      - id: n8n
+        kind: mcp
+        transport: stdio
+        command: npx
+        args: ["-y", "@n8n/mcp"]
+        trustTier: catalog
+    operations:
+      - id: list_workflows
+        risk: low
+      - id: trigger_workflow
+        risk: medium
+    policy:
+      allow: ["list*", "trigger_workflow"]
+      deny: ["delete_workflow"]
+
+  - capability: database-query
+    displayName: "Database Query"
+    description: "Postgres / pgvector read access for CerebroArchive, Talent OS."
+    version: "1.0.0"
+    category: data
+    risk: high
+    auth: apiKey
+    providers:
+      - id: postgres
+        kind: mcp
+        transport: stdio
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-postgres"]
+        connectionEnv: [DATABASE_URL]
+        trustTier: manual
+    operations:
+      - id: read_query
+        risk: medium
+      - id: schema_inspect
+        risk: low
+    policy:
+      allow: ["read*", "schema_inspect"]
+      deny: ["drop*", "delete*", "truncate*"]
+      maxRisk: high

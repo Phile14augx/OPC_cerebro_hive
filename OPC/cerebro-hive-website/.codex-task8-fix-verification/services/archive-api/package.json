@@ -1,0 +1,41 @@
+{
+  "name": "@cerebro/archive-api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lint": "eslint src/",
+    "test": "vitest run --passWithNoTests",
+    "test:integration": "vitest run -c vitest.integration.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1105.0",
+    "@aws-sdk/s3-request-presigner": "^3.1105.0",
+    "@cerebro/archive-contracts": "workspace:*",
+    "@fastify/cors": "^11.3.0",
+    "@fastify/helmet": "^13.1.0",
+    "@fastify/multipart": "^10.1.0",
+    "@fastify/rate-limit": "^11.2.0",
+    "@fastify/sensible": "^6.0.4",
+    "@fastify/swagger": "^9.8.1",
+    "@fastify/swagger-ui": "^6.1.1",
+    "@qdrant/js-client-rest": "^1.19.0",
+    "@sentry/node": "^8.0.0",
+    "bullmq": "^6.0.8",
+    "dotenv": "^16.4.5",
+    "fastify": ">=5.3.3",
+    "fastify-type-provider-zod": "^4.0.0",
+    "pino": "^9.0.0",
+    "prom-client": "^15.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "pino-pretty": "^11.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": ">=3.2.4"
+  }
+}

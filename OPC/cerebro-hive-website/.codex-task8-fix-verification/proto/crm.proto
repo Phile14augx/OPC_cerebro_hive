@@ -1,0 +1,265 @@
+syntax = "proto3";
+package cerebro.crm.v1;
+
+option java_package = "com.cerebro.proto.crm";
+option java_multiple_files = true;
+
+service CrmService {
+  // Leads / contact form
+  rpc SubmitLead(SubmitLeadRequest) returns (Lead);
+  rpc GetLead(GetLeadRequest) returns (Lead);
+  rpc ListLeads(ListLeadsRequest) returns (ListLeadsResponse);
+  rpc UpdateLeadStatus(UpdateLeadStatusRequest) returns (Lead);
+  rpc ScoreLead(ScoreLeadRequest) returns (LeadScore);
+
+  // Bookings
+  rpc CreateBooking(CreateBookingRequest) returns (Booking);
+  rpc GetBooking(GetBookingRequest) returns (Booking);
+  rpc CancelBooking(CancelBookingRequest) returns (CancelBookingResponse);
+  rpc ListBookings(ListBookingsRequest) returns (ListBookingsResponse);
+
+  // Contacts (CRM records)
+  rpc GetContact(GetContactRequest) returns (Contact);
+  rpc ListContacts(ListContactsRequest) returns (ListContactsResponse);
+  rpc UpdateContact(UpdateContactRequest) returns (Contact);
+
+  // Referrals
+  rpc RegisterReferral(RegisterReferralRequest) returns (ReferralPartner);
+  rpc GetReferralStats(GetReferralStatsRequest) returns (ReferralStats);
+  rpc TrackConversion(TrackConversionRequest) returns (Conversion);
+}
+
+// ─── Leads ───────────────────────────────────────────────────────────────────
+
+enum LeadStatus {
+  LEAD_STATUS_UNSPECIFIED = 0;
+  LEAD_STATUS_NEW = 1;
+  LEAD_STATUS_CONTACTED = 2;
+  LEAD_STATUS_QUALIFIED = 3;
+  LEAD_STATUS_PROPOSAL_SENT = 4;
+  LEAD_STATUS_WON = 5;
+  LEAD_STATUS_LOST = 6;
+  LEAD_STATUS_DISQUALIFIED = 7;
+}
+
+enum EngagementType {
+  ENGAGEMENT_UNSPECIFIED = 0;
+  ENGAGEMENT_AI_STRATEGY = 1;
+  ENGAGEMENT_PLATFORM_DEMO = 2;
+  ENGAGEMENT_PROFESSIONAL_SERVICES = 3;
+  ENGAGEMENT_ACADEMY = 4;
+  ENGAGEMENT_PARTNERSHIP = 5;
+  ENGAGEMENT_GENERAL = 6;
+}
+
+message SubmitLeadRequest {
+  string full_name = 1;
+  string email = 2;
+  string company = 3;
+  optional string role = 4;
+  EngagementType engagement_type = 5;
+  optional string message = 6;
+  optional string utm_source = 7;
+  optional string utm_medium = 8;
+  optional string utm_campaign = 9;
+  optional string referral_code = 10;
+}
+
+message Lead {
+  string id = 1;
+  string full_name = 2;
+  string email = 3;
+  string company = 4;
+  optional string role = 5;
+  EngagementType engagement_type = 6;
+  optional string message = 7;
+  LeadStatus status = 8;
+  int32 score = 9; // 0–100 AI-computed lead score
+  optional string assigned_to = 10;
+  int64 created_at = 11;
+  int64 updated_at = 12;
+  optional string utm_source = 13;
+}
+
+message GetLeadRequest {
+  string lead_id = 1;
+}
+
+message ListLeadsRequest {
+  optional LeadStatus status = 1;
+  optional EngagementType engagement_type = 2;
+  optional string assigned_to = 3;
+  int32 page = 4;
+  int32 page_size = 5;
+  optional string sort_by = 6; // "created_at", "score"
+  optional bool sort_desc = 7;
+}
+
+message ListLeadsResponse {
+  repeated Lead leads = 1;
+  int32 total = 2;
+}
+
+message UpdateLeadStatusRequest {
+  string lead_id = 1;
+  LeadStatus status = 2;
+  optional string note = 3;
+  optional string assigned_to = 4;
+}
+
+message ScoreLeadRequest {
+  string lead_id = 1;
+}
+
+message LeadScore {
+  string lead_id = 1;
+  int32 score = 2;
+  repeated string signals = 3;
+  string recommendation = 4;
+}
+
+// ─── Bookings ────────────────────────────────────────────────────────────────
+
+enum BookingStatus {
+  BOOKING_STATUS_UNSPECIFIED = 0;
+  BOOKING_STATUS_PENDING = 1;
+  BOOKING_STATUS_CONFIRMED = 2;
+  BOOKING_STATUS_COMPLETED = 3;
+  BOOKING_STATUS_CANCELLED = 4;
+  BOOKING_STATUS_NO_SHOW = 5;
+}
+
+message CreateBookingRequest {
+  string lead_id = 1;
+  string meeting_type = 2; // "discovery", "demo", "scoping"
+  int64 requested_at = 3;  // Unix timestamp preferred time
+  optional string notes = 4;
+}
+
+message Booking {
+  string id = 1;
+  string lead_id = 2;
+  string meeting_type = 3;
+  int64 scheduled_at = 4;
+  BookingStatus status = 5;
+  optional string meeting_url = 6;
+  optional string calendar_event_id = 7;
+  int64 created_at = 8;
+}
+
+message GetBookingRequest {
+  string booking_id = 1;
+}
+
+message CancelBookingRequest {
+  string booking_id = 1;
+  optional string reason = 2;
+}
+
+message CancelBookingResponse {
+  bool success = 1;
+}
+
+message ListBookingsRequest {
+  optional string lead_id = 1;
+  optional BookingStatus status = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ListBookingsResponse {
+  repeated Booking bookings = 1;
+  int32 total = 2;
+}
+
+// ─── Contacts ────────────────────────────────────────────────────────────────
+
+message Contact {
+  string id = 1;
+  string email = 2;
+  string full_name = 3;
+  string company = 4;
+  optional string phone = 5;
+  optional string linkedin = 6;
+  repeated string tags = 7;
+  map<string, string> custom_fields = 8;
+  int64 created_at = 9;
+  int64 last_activity_at = 10;
+}
+
+message GetContactRequest {
+  oneof identifier {
+    string id = 1;
+    string email = 2;
+  }
+}
+
+message ListContactsRequest {
+  optional string tag = 1;
+  optional string company = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ListContactsResponse {
+  repeated Contact contacts = 1;
+  int32 total = 2;
+}
+
+message UpdateContactRequest {
+  string id = 1;
+  optional string phone = 2;
+  optional string linkedin = 3;
+  repeated string tags = 4;
+  map<string, string> custom_fields = 5;
+}
+
+// ─── Referrals ───────────────────────────────────────────────────────────────
+
+message ReferralPartner {
+  string id = 1;
+  string email = 2;
+  string full_name = 3;
+  string referral_code = 4;
+  string status = 5;  // "pending", "approved", "suspended"
+  int64 created_at = 6;
+}
+
+message RegisterReferralRequest {
+  string email = 1;
+  string full_name = 2;
+  optional string website = 3;
+  optional string description = 4;
+}
+
+message GetReferralStatsRequest {
+  string partner_id = 1;
+  optional int64 from = 2;
+  optional int64 to = 3;
+}
+
+message ReferralStats {
+  string partner_id = 1;
+  int32 total_clicks = 2;
+  int32 total_conversions = 3;
+  int32 total_earnings_cents = 4;
+  int32 pending_payout_cents = 5;
+  int32 paid_out_cents = 6;
+}
+
+message TrackConversionRequest {
+  string referral_code = 1;
+  string product_type = 2;
+  int32 amount_cents = 3;
+  string order_id = 4;
+}
+
+message Conversion {
+  string id = 1;
+  string partner_id = 2;
+  string product_type = 3;
+  int32 amount_cents = 4;
+  int32 commission_cents = 5;
+  string status = 6;
+  int64 created_at = 7;
+}

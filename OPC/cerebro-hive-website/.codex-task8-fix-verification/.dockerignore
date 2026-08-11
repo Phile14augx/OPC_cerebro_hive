@@ -1,0 +1,92 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Root .dockerignore
+# Keeps build context lean for all multi-stage Dockerfiles
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI / GitHub
+.github
+
+# Node
+node_modules
+**/node_modules
+**/.pnpm-store
+
+# Next.js build outputs (builder stage copies these specifically)
+**/.next
+**/out
+**/dist
+**/build
+
+# Test artifacts
+**/coverage
+**/__tests__
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/jest.config.*
+**/vitest.config.*
+**/.jest*
+
+# Docs & markdown (not needed at runtime)
+**/*.md
+docs/
+**/*.mdx
+
+# Local env files (NEVER bake secrets into images)
+.env
+.env.*
+!.env.example
+
+# Editor configs
+.vscode
+.idea
+**/*.swp
+**/*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Terraform state (never in image)
+**/*.tfstate
+**/*.tfstate.*
+**/.terraform
+**/terraform.tfvars
+**/*.tfplan
+
+# Logs
+**/*.log
+**/logs/
+
+# Docker
+**/Dockerfile*
+**/.dockerignore
+docker-compose*.yml
+
+# Infra (not needed in app images)
+infra/
+scripts/
+
+# Kubernetes manifests
+**/k8s/
+**/helm/
+
+# Semgrep / security
+.semgrep/
+
+# Python
+**/__pycache__
+**/*.pyc
+**/.venv
+**/venv
+
+# Misc
+*.bak
+*.tmp
+.turbo

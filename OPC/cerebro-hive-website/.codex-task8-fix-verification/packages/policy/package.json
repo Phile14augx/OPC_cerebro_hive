@@ -1,0 +1,19 @@
+{
+  "name": "@cerebro/policy",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint \"src/**/*.ts\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@cerebro/config": "workspace:*",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.5"
+  }
+}

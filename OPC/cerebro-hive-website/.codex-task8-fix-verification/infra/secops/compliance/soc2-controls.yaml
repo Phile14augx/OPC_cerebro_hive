@@ -1,0 +1,235 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# ComplianceOps — SOC 2 Type II Control Mapping
+# Maps CerebroHive's technical controls to SOC 2 Trust Service Criteria.
+# Used for audit evidence collection and continuous compliance monitoring.
+# ──────────────────────────────────────────────────────────────────────────────
+
+metadata:
+  standard: SOC2-Type-II
+  version: "2017-revision"
+  lastReviewed: "2026-07-01"
+  owner: security@cerebrohive.com
+  nextReview: "2026-10-01"
+
+trustServiceCriteria:
+
+  # ── CC1: Control Environment ──────────────────────────────────────────────
+  - id: CC1.1
+    title: "COSO Principle 1 — Entity demonstrates commitment to integrity and ethical values"
+    controls:
+      - id: CC1.1.1
+        title: Code of Conduct
+        implementation: "docs/code-of-conduct.md"
+        evidence: "Annual attestation in HRIS"
+        automated: false
+        status: implemented
+
+      - id: CC1.1.2
+        title: Security Policy
+        implementation: "docs/security-policy.md"
+        evidence: "Git commit history, annual review"
+        automated: false
+        status: implemented
+
+  # ── CC2: Communication & Information ─────────────────────────────────────
+  - id: CC2.1
+    title: "Entity obtains or generates relevant, quality information to support internal control"
+    controls:
+      - id: CC2.1.1
+        title: Centralized Audit Logging
+        implementation: |
+          - OTel collector → Loki (infra/docker/otel-collector.yaml)
+          - All services emit structured JSON logs with trace correlation
+          - Log retention: 90 days hot, 1 year cold (S3)
+        evidence: "Grafana Loki dashboards, S3 lifecycle policy"
+        automated: true
+        monitoringQuery: "sum(rate(log_entries_total[5m])) > 0"
+        status: implemented
+
+      - id: CC2.1.2
+        title: Security Event Alerting
+        implementation: |
+          - Falco runtime rules (infra/secops/falco/rules.yaml)
+          - Alertmanager → PagerDuty + Slack (infra/docker/alertmanager.yml)
+        evidence: "Falco event logs, PagerDuty incident history"
+        automated: true
+        status: implemented
+
+  # ── CC6: Logical & Physical Access ────────────────────────────────────────
+  - id: CC6.1
+    title: "Entity implements logical access security measures"
+    controls:
+      - id: CC6.1.1
+        title: Istio mTLS Zero-Trust
+        implementation: "infra/k8s/base/istio/peer-authentication.yaml"
+        description: "All inter-service traffic encrypted with mTLS STRICT mode"
+        automated: true
+        status: implemented
+
+      - id: CC6.1.2
+        title: Istio Authorization Policies (least privilege)
+        implementation: "infra/k8s/base/istio/authorization-policies.yaml"
+        description: "Default deny-all; only documented service-to-service flows allowed"
+        automated: true
+        status: implemented
+
+      - id: CC6.1.3
+        title: Secrets Management via AWS Secrets Manager
+        implementation: "infra/k8s/base/external-secrets/external-secrets.yaml"
+        description: "No secrets in Git; all loaded at runtime via External Secrets Operator"
+        automated: true
+        status: implemented
+
+      - id: CC6.1.4
+        title: IRSA (no long-lived AWS credentials)
+        implementation: "infra/terraform/modules/irsa/main.tf"
+        description: "All AWS access via OIDC AssumeRoleWithWebIdentity; no static keys"
+        automated: true
+        status: implemented
+
+      - id: CC6.1.5
+        title: Container image signing
+        implementation: ".github/workflows/docker-build.yml"
+        description: "All images signed with Cosign; admission webhook enforces signed images"
+        automated: true
+        status: implemented
+
+      - id: CC6.1.6
+        title: Pod Security Standards (Restricted profile)
+        implementation: "infra/k8s/base/kustomization.yaml (namespace labels)"
+        description: "K8s Pod Security Admission enforces restricted profile on cerebro-hive namespace"
+        automated: true
+        status: implemented
+
+  - id: CC6.2
+    title: "Prior to granting access, entity registers and authorizes new users"
+    controls:
+      - id: CC6.2.1
+        title: RBAC — least privilege K8s roles
+        implementation: "infra/k8s/base/rbac.yaml"
+        automated: true
+        status: implemented
+
+      - id: CC6.2.2
+        title: GitHub repository access via SSO
+        implementation: "Organization SSO + required 2FA"
+        automated: false
+        evidence: "GitHub audit log export"
+        status: implemented
+
+  # ── CC7: System Operations ────────────────────────────────────────────────
+  - id: CC7.1
+    title: "Entity monitors system components for anomalies that might indicate malicious acts"
+    controls:
+      - id: CC7.1.1
+        title: Falco runtime security
+        implementation: "infra/secops/falco/rules.yaml"
+        description: "9 custom Falco rules for privilege escalation, data exfil, crypto mining"
+        automated: true
+        status: implemented
+
+      - id: CC7.1.2
+        title: AI-powered incident triage
+        implementation: ".github/workflows/aiops-incident-triage.yml"
+        automated: true
+        status: implemented
+
+      - id: CC7.1.3
+        title: Prometheus alerting for SLO breaches
+        implementation: "infra/sre/sloth/cerebro-hive-slos.yaml"
+        automated: true
+        status: implemented
+
+  - id: CC7.2
+    title: "Entity monitors system components and evaluates anomalies"
+    controls:
+      - id: CC7.2.1
+        title: OpenSSF Scorecard
+        implementation: ".github/workflows/security.yml"
+        description: "Runs weekly; fails CI if score < 7.0"
+        automated: true
+        status: implemented
+
+      - id: CC7.2.2
+        title: Dependency vulnerability scanning (OSV/Trivy)
+        implementation: ".github/workflows/security.yml"
+        automated: true
+        status: implemented
+
+  # ── CC8: Change Management ────────────────────────────────────────────────
+  - id: CC8.1
+    title: "Entity authorizes, designs, develops, configures, and tests infrastructure changes"
+    controls:
+      - id: CC8.1.1
+        title: GitOps via ArgoCD
+        implementation: "infra/argocd/"
+        description: "All infrastructure changes via PR; no manual kubectl apply in production"
+        automated: true
+        status: implemented
+
+      - id: CC8.1.2
+        title: Canary deployments (Argo Rollouts)
+        implementation: "infra/helm/cerebro-hive/templates/rollout.yaml"
+        description: "5%→25%→50%→100% canary with Prometheus analysis gates"
+        automated: true
+        status: implemented
+
+      - id: CC8.1.3
+        title: Policy-as-Code gate
+        implementation: ".github/workflows/policy-gate.yml"
+        description: "OPA/Conftest validates all IaC changes before merge"
+        automated: true
+        status: implemented
+
+      - id: CC8.1.4
+        title: Semantic versioning + SBOM
+        implementation: ".github/workflows/release.yml"
+        description: "Syft SBOM generated on every release; attached to GitHub release"
+        automated: true
+        status: implemented
+
+  # ── A1: Availability ──────────────────────────────────────────────────────
+  - id: A1.1
+    title: "Entity maintains minimum capacity and performance commitments"
+    controls:
+      - id: A1.1.1
+        title: SLO definitions
+        implementation: "infra/sre/sloth/cerebro-hive-slos.yaml"
+        description: "7 SLOs defined; 99.9%+ availability for all production services"
+        automated: true
+        status: implemented
+
+      - id: A1.1.2
+        title: HPA autoscaling
+        implementation: "infra/helm/cerebro-hive/templates/hpa.yaml"
+        automated: true
+        status: implemented
+
+      - id: A1.1.3
+        title: Multi-AZ deployment
+        implementation: "infra/helm/cerebro-hive/templates/_helpers.tpl (topologySpreadConstraints)"
+        automated: true
+        status: implemented
+
+      - id: A1.1.4
+        title: PodDisruptionBudgets
+        implementation: "infra/k8s/base/"
+        automated: true
+        status: implemented
+
+  # ── PI1: Processing Integrity ─────────────────────────────────────────────
+  - id: PI1.1
+    title: "Entity implements policies and procedures over system inputs"
+    controls:
+      - id: PI1.1.1
+        title: Input validation via Kyverno
+        implementation: "infra/policy/kyverno/cerebro-hive-policies.yaml"
+        automated: true
+        status: implemented
+
+      - id: PI1.1.2
+        title: LLM eval quality gate
+        implementation: ".github/workflows/llmops-eval-gate.yml"
+        description: "All prompt changes must pass automated correctness/safety evals"
+        automated: true
+        status: implemented

@@ -1,0 +1,62 @@
+# Stage 1 — Workload Chaos: AI Gateway pod kill
+#
+# Hypothesis: killing one ai-gateway pod causes inference requests to retry
+# against a surviving replica with no user-visible error (retry budget covers it).
+#
+# Steady state:
+#   - probe_success{service="ai-gateway"} == 1
+#   - llm_requests_total error rate < 0.1%
+#   - streaming connections gracefully migrate
+#
+# Expected outcome:
+#   - in-flight streaming requests get a connection reset; clients retry
+#   - new requests route to healthy replicas within one keepalive interval
+#   - probe_success recovers within 30s
+#   - no CerebroHighErrorRate alert fires
+#
+# Key validation: check that InstrumentedAIProvider emits
+#   llm_errors_total{error_type="connection_reset"} — not a silent failure.
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: ai-gateway-pod-kill
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage1-workload
+    service: ai-gateway
+    blast-radius: medium   # streaming connections are non-recoverable mid-stream
+spec:
+  action: pod-kill
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "ai-gateway"
+  gracePeriod: 0
+  duration: "3m"
+
+---
+# Container kill variant — kills the container but not the pod.
+# Tests restart policy without eviction. Run separately.
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: ai-gateway-container-kill
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage1-workload-container
+    service: ai-gateway
+    blast-radius: low
+spec:
+  action: container-kill
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "ai-gateway"
+  containerNames:
+    - ai-gateway
+  duration: "2m"

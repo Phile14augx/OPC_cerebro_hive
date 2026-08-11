@@ -1,0 +1,96 @@
+# Stage 4 — Network Chaos: DNS failure
+#
+# DNS failure is among the most disruptive real-world network faults
+# because many connection pools and service discovery mechanisms
+# cache DNS results — failures surface unpredictably as old entries expire.
+#
+# Hypothesis:
+#   A. DNS errors returned for external LLM provider hostnames cause
+#      InstrumentedAIProvider to emit llm_errors_total{error_type="dns"}.
+#      The AI gateway falls back to provider routing or returns a 503.
+#
+#   B. DNS errors for internal services (postgres, redis) cause immediate
+#      connection failures on cache misses. Tests whether service clients
+#      use hardcoded cluster-local IPs (resilient) or re-resolve on each
+#      connection (vulnerable).
+#
+# DNSChaos injects fake responses (error or wrong IP) at the pod level
+# via iptables rules that intercept DNS traffic.
+
+---
+# Experiment A: External DNS failure (LLM provider endpoints)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: DNSChaos
+metadata:
+  name: dns-external-providers
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage4-network
+    fault: dns
+    scope: external
+    blast-radius: high
+spec:
+  action: error            # return SERVFAIL for matching patterns
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "ai-gateway"
+  patterns:
+    - "api.anthropic.com"
+    - "api.openai.com"
+    - "generativelanguage.googleapis.com"
+  duration: "3m"
+
+---
+# Experiment B: Internal DNS failure (cluster-local services)
+# Less blast radius — CoreDNS resolves .cluster.local; this injects
+# errors for specific service names to test re-resolution behavior.
+apiVersion: chaos-mesh.org/v1alpha1
+kind: DNSChaos
+metadata:
+  name: dns-internal-services
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage4-network
+    fault: dns
+    scope: internal
+    blast-radius: medium
+spec:
+  action: error
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "forge-api"
+  patterns:
+    - "redis.cerebro-staging.svc.cluster.local"
+    - "nats.cerebro-staging.svc.cluster.local"
+  duration: "2m"
+
+---
+# Experiment C: DNS random IP (wrong IP returned)
+# Tests whether clients validate server certificates (TLS mismatch
+# would fail loudly rather than silently connecting to a wrong host).
+apiVersion: chaos-mesh.org/v1alpha1
+kind: DNSChaos
+metadata:
+  name: dns-random-ip-external
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage4-network
+    fault: dns-spoof
+    blast-radius: low
+spec:
+  action: random          # return a random IP (simulates DNS poisoning)
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "ai-gateway"
+  patterns:
+    - "api.anthropic.com"
+  duration: "1m"

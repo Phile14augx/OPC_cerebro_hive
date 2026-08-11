@@ -1,0 +1,103 @@
+syntax = "proto3";
+package cerebro.auth.v1;
+
+option java_package = "com.cerebro.proto.auth";
+option java_multiple_files = true;
+
+// ─── Auth Service ────────────────────────────────────────────────────────────
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (AuthResponse);
+  rpc Login(LoginRequest) returns (AuthResponse);
+  rpc Refresh(RefreshRequest) returns (AuthResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  rpc GetUser(GetUserRequest) returns (UserProfile);
+  rpc UpdateUser(UpdateUserRequest) returns (UserProfile);
+  rpc RequestPasswordReset(PasswordResetRequest) returns (PasswordResetResponse);
+  rpc ConfirmPasswordReset(ConfirmResetRequest) returns (AuthResponse);
+}
+
+// ─── Messages ────────────────────────────────────────────────────────────────
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string full_name = 3;
+  string company = 4;
+  string role = 5;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+  bool remember_me = 3;
+}
+
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
+message LogoutRequest {
+  string refresh_token = 1;
+}
+
+message LogoutResponse {
+  bool success = 1;
+}
+
+message ValidateTokenRequest {
+  string access_token = 1;
+}
+
+message ValidateTokenResponse {
+  bool valid = 1;
+  string user_id = 2;
+  string email = 3;
+  string role = 4;
+  int64 expires_at = 5;
+}
+
+message GetUserRequest {
+  string user_id = 1;
+}
+
+message UpdateUserRequest {
+  string user_id = 1;
+  optional string full_name = 2;
+  optional string company = 3;
+  optional string role = 4;
+  optional string phone = 5;
+}
+
+message AuthResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expires_in = 3;
+  UserProfile user = 4;
+}
+
+message UserProfile {
+  string id = 1;
+  string email = 2;
+  string full_name = 3;
+  string company = 4;
+  string role = 5;
+  string plan = 6;
+  int64 created_at = 7;
+  repeated string permissions = 8;
+}
+
+message PasswordResetRequest {
+  string email = 1;
+}
+
+message PasswordResetResponse {
+  bool sent = 1;
+  string message = 2;
+}
+
+message ConfirmResetRequest {
+  string token = 1;
+  string new_password = 2;
+}

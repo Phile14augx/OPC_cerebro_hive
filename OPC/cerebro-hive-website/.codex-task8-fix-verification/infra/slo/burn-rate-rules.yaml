@@ -1,0 +1,210 @@
+# infra/slo/burn-rate-rules.yaml
+#
+# Prometheus SLO burn rate alerting rules for CerebroHive API.
+#
+# Burn rate model: Google SRE Workbook multi-window, multi-burn-rate approach.
+# SLO target: 99.9% availability (0.1% error budget = 43.2 min/month)
+#
+# Alert tiers:
+#   CRITICAL (page): burn rate > 14.4× for 1h  → consumes 2% budget in 1h
+#   WARNING  (ticket): burn rate > 6×  for 6h  → consumes 5% budget in 6h
+#   INFO     (log): burn rate > 3×    for 3d  → worth watching
+#
+# Applied by: .github/workflows/slo-burn-rate-proof.yml
+# Probed by:  infra/slo/burn-rate-probe.sh
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cerebro-slo-burn-rate
+  namespace: cerebro-monitoring
+  labels:
+    app.kubernetes.io/part-of: cerebro-hive
+    prometheus: kube-prometheus
+    role: alert-rules
+    cerebro.io/control: SLO-3
+    cerebro.io/domain: reliability
+
+spec:
+  groups:
+    # ── Recording rules (pre-compute expensive queries) ─────────────────────
+    - name: cerebro.slo.recording
+      interval: 30s
+      rules:
+        # 5-minute error rate
+        - record: cerebro:api_error_rate5m
+          expr: |
+            sum(rate(http_requests_total{
+              job="forge-api",
+              status=~"5..",
+              namespace=~"cerebro-prod|cerebro-staging"
+            }[5m]))
+            /
+            sum(rate(http_requests_total{
+              job="forge-api",
+              namespace=~"cerebro-prod|cerebro-staging"
+            }[5m]))
+
+        # 30-minute error rate
+        - record: cerebro:api_error_rate30m
+          expr: |
+            sum(rate(http_requests_total{
+              job="forge-api",
+              status=~"5..",
+              namespace=~"cerebro-prod|cerebro-staging"
+            }[30m]))
+            /
+            sum(rate(http_requests_total{
+              job="forge-api",
+              namespace=~"cerebro-prod|cerebro-staging"
+            }[30m]))
+
+        # 1-hour error rate
+        - record: cerebro:api_error_rate1h
+          expr: |
+            sum(rate(http_requests_total{
+              job="forge-api",
+              status=~"5..",
+              namespace=~"cerebro-prod|cerebro-staging"
+            }[1h]))
+            /
+            sum(rate(http_requests_total{
+              job="forge-api",
+              namespace=~"cerebro-prod|cerebro-staging"
+            }[1h]))
+
+        # 6-hour error rate
+        - record: cerebro:api_error_rate6h
+          expr: |
+            sum(rate(http_requests_total{
+              job="forge-api",
+              status=~"5..",
+              namespace=~"cerebro-prod|cerebro-staging"
+            }[6h]))
+            /
+            sum(rate(http_requests_total{
+              job="forge-api",
+              namespace=~"cerebro-prod|cerebro-staging"
+            }[6h]))
+
+        # 3-day error rate
+        - record: cerebro:api_error_rate3d
+          expr: |
+            sum(rate(http_requests_total{
+              job="forge-api",
+              status=~"5..",
+              namespace=~"cerebro-prod|cerebro-staging"
+            }[3d]))
+            /
+            sum(rate(http_requests_total{
+              job="forge-api",
+              namespace=~"cerebro-prod|cerebro-staging"
+            }[3d]))
+
+        # SLO error budget remaining (percentage of monthly budget left)
+        - record: cerebro:api_error_budget_remaining
+          expr: |
+            1 - (
+              sum(increase(http_requests_total{
+                job="forge-api",
+                status=~"5..",
+                namespace="cerebro-prod"
+              }[30d]))
+              /
+              sum(increase(http_requests_total{
+                job="forge-api",
+                namespace="cerebro-prod"
+              }[30d]))
+            ) / 0.001
+
+        # Burn rate (current error rate ÷ SLO error rate budget)
+        # SLO = 99.9%, so error budget rate = 0.001
+        - record: cerebro:api_burn_rate1h
+          expr: cerebro:api_error_rate1h / 0.001
+
+        - record: cerebro:api_burn_rate6h
+          expr: cerebro:api_error_rate6h / 0.001
+
+    # ── Alert rules ──────────────────────────────────────────────────────────
+    - name: cerebro.slo.alerts
+      rules:
+        # CRITICAL: Fast burn — 14.4× for 1h (consumes 2% budget/hour)
+        # This is the alert that burn-rate-probe.sh validates
+        - alert: CerebroAPIHighBurnRate
+          expr: |
+            cerebro:api_burn_rate1h > 14.4
+            and
+            cerebro:api_error_rate5m > 0.001
+          for: 2m
+          labels:
+            severity: critical
+            team: sre
+            control: SLO-3
+            slo: "99.9"
+          annotations:
+            summary: "CerebroHive API burning error budget at {{ $value | humanize }}× rate"
+            description: |
+              The API error rate has been above the SLO budget error rate for 2 minutes.
+              Current burn rate: {{ $value | humanize }}× (threshold: 14.4×)
+              At this rate, the monthly error budget will be exhausted in {{ printf "%.1f" (div 100.0 (mul $value 100.0 | div 720.0)) }}h.
+            runbook: https://github.com/cerebro-hive/cerebro-hive/blob/main/docs/runbooks/api-high-error-rate.md
+            dashboard: https://grafana.cerebro-hive.io/d/api-slo
+            value: "{{ $value | humanize }}"
+
+        # WARNING: Slow burn — 6× for 6h (consumes 5% budget in 24h)
+        - alert: CerebroAPISlowBurnRate
+          expr: |
+            cerebro:api_burn_rate6h > 6
+            and
+            cerebro:api_error_rate30m > 0.001
+          for: 15m
+          labels:
+            severity: warning
+            team: sre
+            control: SLO-3
+          annotations:
+            summary: "CerebroHive API slow burn — {{ $value | humanize }}× rate"
+            description: |
+              The API is burning error budget at a slow but sustained rate.
+              Current 6h burn rate: {{ $value | humanize }}× (threshold: 6×)
+            runbook: https://github.com/cerebro-hive/cerebro-hive/blob/main/docs/runbooks/api-high-error-rate.md
+            value: "{{ $value | humanize }}"
+
+        # INFO: Error budget below 50%
+        - alert: CerebroAPIErrorBudgetLow
+          expr: cerebro:api_error_budget_remaining < 0.50
+          for: 0m
+          labels:
+            severity: info
+            team: sre
+            control: SLO-3
+          annotations:
+            summary: "CerebroHive API error budget below 50%"
+            description: "{{ printf \"%.0f\" (mul $value 100) }}% of monthly error budget remaining."
+
+        # CRITICAL: Error budget exhausted
+        - alert: CerebroAPIErrorBudgetExhausted
+          expr: cerebro:api_error_budget_remaining <= 0
+          for: 0m
+          labels:
+            severity: critical
+            team: sre
+            control: SLO-3
+          annotations:
+            summary: "CerebroHive API error budget EXHAUSTED"
+            description: "Monthly SLO error budget is exhausted. All remaining errors violate the SLO."
+
+        # Probe alert: injected by burn-rate-probe.sh to test the pipeline
+        # This rule fires when the synthetic probe metric is present
+        - alert: CerebroAPIHighBurnRate_ProbeTest
+          expr: |
+            cerebro_slo3_probe_active == 1
+          for: 0m
+          labels:
+            severity: critical
+            team: sre
+            probe: "true"
+            control: SLO-3
+          annotations:
+            summary: "SLO-3 PROBE: synthetic burn rate alert (assurance test)"
+            description: "This alert is intentionally triggered by the SLO-3 burn rate probe for pipeline verification."

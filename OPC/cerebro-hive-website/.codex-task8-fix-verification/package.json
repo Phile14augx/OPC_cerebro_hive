@@ -1,0 +1,207 @@
+{
+  "name": "cerebro-hive-os",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint -- --fix",
+    "typecheck": "turbo typecheck",
+    "typecheck:root": "tsc -p tsconfig.json --noEmit",
+    "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
+    "test:dashboard": "vitest run --config vitest.dashboard.config.ts",
+    "lint:root": "eslint . --max-warnings=0",
+    "test": "turbo test",
+    "test:integration": "dotenv -e .env.test -- vitest run --config tests/integration/vitest.config.ts",
+    "test:integration:watch": "dotenv -e .env.test -- vitest --config tests/integration/vitest.config.ts",
+    "test:e2e": "turbo test:e2e",
+    "test:coverage": "turbo test -- --coverage",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\" --ignore-path .prettierignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\" --ignore-path .prettierignore",
+    "clean": "turbo clean && find . -name 'node_modules' -type d -prune -not -path './.git/*' | xargs rm -rf",
+    "clean:build": "turbo clean",
+    "validate:architecture": "depcruise --config .dependency-cruiser.js packages apps",
+    "prisma:validate": "turbo prisma:validate",
+    "prisma:format": "turbo prisma:format",
+    "prisma:generate": "turbo prisma:generate",
+    "prisma:migrate": "turbo prisma:migrate:deploy",
+    "release": "semantic-release",
+    "policy:check": "turbo policy:check",
+    "prepare": "husky",
+    "sitemap:check": "node scripts/check-sitemap.mjs",
+    "repo:policy": "node scripts/repo-policy.mjs",
+    "repo:policy:fix": "node scripts/repo-policy.mjs --fix",
+    "repo:health": "node scripts/repo-health.mjs",
+    "repo:inventory": "node scripts/repo-inventory.mjs",
+    "repo:inventory:json": "node scripts/repo-inventory.mjs --json",
+    "feature:start": "node scripts/feature-start.mjs",
+    "feature:finish": "node scripts/feature-finish.mjs",
+    "feature:complete": "node scripts/feature-complete.mjs",
+    "agent:dispatch": "node scripts/agent-dispatch.mjs",
+    "agent:dispatch:dry": "node scripts/agent-dispatch.mjs --dry-run",
+    "agent:dispatch:local": "node scripts/agent-dispatch.mjs --skip-ci",
+    "agent:dispatch:resume": "node scripts/agent-dispatch.mjs --resume",
+    "agent:dispatch:approve": "node scripts/agent-dispatch.mjs --require-approval",
+    "backlog:next": "node scripts/backlog-parser.mjs next",
+    "backlog:list": "node scripts/backlog-parser.mjs list",
+    "backlog:mark": "node scripts/backlog-parser.mjs mark",
+    "arch:check": "node tools/arch/check-architecture.mjs",
+    "arch:boundaries": "depcruise --config .dependency-cruiser.js packages services apps",
+    "arch:verify-rules": "bash tools/arch/verify-boundaries.sh",
+    "corpus:signatures": "vitest run --passWithNoTests tools/arch/corpus",
+    "harness": "node tools/harness/cli.mjs",
+    "harness:list": "node tools/harness/cli.mjs list",
+    "harness:gate": "node tools/harness/cli.mjs gate",
+    "gate-a:self-test": "node tools/arch/gate-a/self-test.mjs",
+    "gate-b:semantics": "node tools/arch/gate-b/semantics-test.mjs",
+    "gate-b:model": "node tools/arch/gate-b/history-model.mjs",
+    "gate-c": "node tools/arch/gate-c/run-gate-c.mjs",
+    "gate-c:self-test": "node tools/arch/gate-c/self-test.mjs",
+    "gate-c:controls": "node tools/arch/gate-c/verify-controls.mjs",
+    "harness:status": "node tools/harness/cli.mjs status",
+    "harness:self-test": "node tools/harness/self-test.mjs",
+    "test:invariants": "node --experimental-strip-types --no-warnings packages/eda-findings/test/invariants.ts",
+    "assurance": "bash infra/assurance/run-local.sh",
+    "assurance:register": "bash infra/assurance/register-evidence.sh",
+    "assurance:cec": "bash infra/assurance/run-local.sh --cec-only",
+    "assurance:dashboard": "bash infra/assurance/run-local.sh --dashboard-only",
+    "assurance:run": "node tools/assurance/runner.mjs",
+    "assurance:run:ci": "node tools/assurance/runner.mjs --env ci",
+    "assurance:list": "node tools/assurance/runner.mjs --list",
+    "assurance:verify": "node tools/assurance/runner.mjs --verify-chain",
+    "assurance:self-test": "node tools/assurance/runner.mjs --self-test descriptor-validation && node tools/assurance/runner.mjs --self-test evidence-schema-validation && node tools/assurance/runner.mjs --self-test hash-chain-integrity && node tools/assurance/runner.mjs --self-test cec-determinism"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.1",
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "dependency-cruiser": "^18.1.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "16.2.10",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-unicorn": "^55.0.0",
+    "husky": "^9.0.0",
+    "jsdom": "26.1.0",
+    "lint-staged": "^15.0.0",
+    "next": ">=15.3.4",
+    "prettier": "^3.0.0",
+    "prettier-plugin-organize-imports": "^4.0.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "turbo": "^2.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.17",
+      "@types/react-dom": "19.2.3",
+      "uuid": ">=9.0.1",
+      "fastify": ">=5.3.3",
+      "postcss": ">=8.5.4",
+      "multer": ">=2.0.0",
+      "lodash": ">=4.17.21",
+      "js-yaml": ">=4.1.0",
+      "glob": ">=11.0.0",
+      "find-my-way": ">=9.2.0",
+      "fast-uri": ">=3.0.3",
+      "brace-expansion": ">=2.0.2",
+      "minimatch": ">=9.0.0",
+      "@opentelemetry/exporter-prometheus": ">=0.57.0",
+      "@opentelemetry/propagator-jaeger": ">=1.28.0",
+      "@fastify/static": ">=8.0.4",
+      "sharp": ">=0.33.5",
+      "vitest": "3.2.4",
+      "vite": ">=6.0.0",
+      "next": ">=15.3.4"
+    },
+    "patchedDependencies": {
+      "gray-matter@4.0.3": "patches/gray-matter@4.0.3.patch"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx,json,md,yaml,yml}": [
+      "prettier --write"
+    ],
+    "*.{tf,tfvars}": [
+      "terraform fmt -"
+    ],
+    "*.rego": [
+      "opa fmt -w"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "feat",
+          "fix",
+          "docs",
+          "style",
+          "refactor",
+          "perf",
+          "test",
+          "build",
+          "ci",
+          "chore",
+          "revert",
+          "infra",
+          "security"
+        ]
+      ],
+      "scope-enum": [
+        1,
+        "always",
+        [
+          "studio",
+          "forge",
+          "platform-api",
+          "forge-api",
+          "ai-gateway",
+          "telemetry",
+          "db",
+          "auth",
+          "queue",
+          "config",
+          "shared-types",
+          "llmops",
+          "agent-ops",
+          "knowledge-ops",
+          "k8s",
+          "helm",
+          "terraform",
+          "argocd",
+          "ci",
+          "deps",
+          "release"
+        ]
+      ],
+      "body-max-line-length": [
+        1,
+        "always",
+        200
+      ]
+    }
+  }
+}

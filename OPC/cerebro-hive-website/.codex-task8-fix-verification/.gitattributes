@@ -1,0 +1,6 @@
+* text=auto
+
+# Shell scripts must use LF on all platforms
+scripts/*.sh text eol=lf
+.github/workflows/*.yml text eol=lf
+nginx/*.conf text eol=lf

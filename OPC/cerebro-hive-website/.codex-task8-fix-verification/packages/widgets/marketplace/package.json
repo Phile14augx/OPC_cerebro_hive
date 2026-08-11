@@ -1,0 +1,11 @@
+{
+  "name": "@cerebro/widgets-marketplace",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@cerebro/marketplace-sdk": "workspace:*",
+    "@cerebro/plugins": "workspace:*",
+    "@cerebro/ui": "workspace:*"
+  }
+}

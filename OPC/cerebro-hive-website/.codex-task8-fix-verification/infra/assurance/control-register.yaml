@@ -1,0 +1,319 @@
+# CerebroHive Control Evidence Register
+#
+# Machine-readable register of every assurance control, its execution status,
+# and the evidence artifacts that prove it. This file is the schema/seed —
+# the live register is produced as control-register.json by the evidence chain
+# pipeline and updated by register-evidence.sh on every CI run.
+#
+# Schema:
+#   id:           Unique control identifier (e.g. G1, G2, SC-1)
+#   name:         Human-readable name
+#   domain:       security | reliability | supply-chain | performance | compliance
+#   description:  What this control proves
+#   target:       Designed | Automated | Proven | Continuous
+#   automation:   GitHub Actions workflow that executes this control
+#   evidence_key: Key in the evidence index used by register-evidence.sh
+#   slo_link:     Related SLO (optional)
+#   last_run:     Set by pipeline — ISO 8601 timestamp
+#   last_status:  Set by pipeline — PASS | FAIL | SKIP | UNKNOWN
+#   last_sha:     Set by pipeline — git SHA of the run
+#   last_artifact: Set by pipeline — artifact URL or path
+#   cec_weight:   Contribution to CEC score (1-3, higher = more critical)
+
+controls:
+  # ── Security controls ────────────────────────────────────────────────────
+  - id: G1
+    name: Agent Sandbox Isolation
+    domain: security
+    description: >
+      Agent code runs in gVisor (runsc). Blocked syscalls, capabilities dropped,
+      readOnlyRootFilesystem, non-root UID. All 10 escape techniques are blocked
+      AND detected by Falco/Tetragon.
+    target: Continuous
+    automation: .github/workflows/runtime-detection-validation.yml
+    evidence_key: g1_escape_suite
+    cec_weight: 3
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: G2
+    name: Concurrency Safety
+    domain: security
+    description: >
+      Project store operations are safe under concurrent access. No lost updates,
+      no phantom reads, no torn writes across 10 concurrent goroutines.
+    target: Continuous
+    automation: .github/workflows/ci.yml
+    evidence_key: g2_concurrency_suite
+    cec_weight: 2
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: SC-1
+    name: Image Signing and SBOM Attestation
+    domain: supply-chain
+    description: >
+      Every container image is signed via Cosign keyless OIDC and has an attached
+      SPDX + CycloneDX SBOM attestation. Admission policy (Kyverno) enforces
+      signature presence in cerebro-prod/staging.
+    target: Continuous
+    automation: .github/workflows/supply-chain.yml
+    evidence_key: supply_chain_attestation
+    cec_weight: 3
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: SC-2
+    name: SLSA Level 3 Provenance
+    domain: supply-chain
+    description: >
+      SLSA Level 3 provenance generated for all images via slsa-github-generator.
+      Provenance proves the artifact was built by this specific workflow run on
+      this specific commit.
+    target: Continuous
+    automation: .github/workflows/supply-chain.yml
+    evidence_key: slsa_provenance
+    cec_weight: 2
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: SC-3
+    name: Vulnerability Scanning (Grype + Trivy)
+    domain: supply-chain
+    description: >
+      Every image is scanned with Grype (against SBOM) and Trivy before push.
+      SARIF uploaded to GitHub Security tab. Build fails on CRITICAL findings.
+    target: Continuous
+    automation: .github/workflows/docker-build.yml
+    evidence_key: vuln_scan
+    cec_weight: 2
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: DET-1
+    name: Runtime Threat Detection (Falco)
+    domain: security
+    description: >
+      13 Falco rules covering all 8 attack categories. 10/10 break test
+      techniques produce detectable Falco events within 30s.
+    target: Continuous
+    automation: .github/workflows/runtime-detection-validation.yml
+    evidence_key: falco_detection
+    cec_weight: 3
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: DET-2
+    name: eBPF Enforcement (Tetragon)
+    domain: security
+    description: >
+      9 Tetragon TracingPolicies. 6 high-risk techniques trigger SIGKILL
+      before the syscall completes. Backstop for gVisor + seccomp.
+    target: Continuous
+    automation: .github/workflows/runtime-detection-validation.yml
+    evidence_key: tetragon_enforcement
+    cec_weight: 3
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: RBAC-1
+    name: Admission Policy (Kyverno)
+    domain: security
+    description: >
+      ClusterPolicy require-signed-images enforces Cosign signature + SBOM
+      attestation in cerebro-prod/staging. Tested with 5 Kyverno CLI test vectors.
+    target: Continuous
+    automation: .github/workflows/supply-chain.yml
+    evidence_key: kyverno_policy
+    cec_weight: 2
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: API-1
+    name: OpenAPI Drift Detection
+    domain: security
+    description: >
+      NestJS OpenAPI spec is generated on every PR touching forge-api/src.
+      Drift from committed spec fails the PR. Every non-health path requires
+      bearerAuth security definition.
+    target: Continuous
+    automation: .github/workflows/openapi-drift.yml
+    evidence_key: openapi_drift
+    cec_weight: 1
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  # ── Reliability controls ──────────────────────────────────────────────────
+  - id: SLO-1
+    name: API Availability SLO (≥99.95%)
+    domain: reliability
+    description: >
+      k6 load test validates error rate < 0.05% at 10/100/1000 VU tiers.
+      P95 < 250ms, P99 < 750ms.
+    target: Continuous
+    automation: .github/workflows/slo-load-test.yml
+    evidence_key: slo_availability
+    slo_link: "API Availability 99.95%"
+    cec_weight: 3
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: SLO-2
+    name: AI Job Completion SLO (≥99%)
+    domain: reliability
+    description: >
+      k6 scenarioAgentWorkflow validates end-to-end agent runs succeed ≥99%
+      of the time under load.
+    target: Continuous
+    automation: .github/workflows/slo-load-test.yml
+    evidence_key: slo_ai_completion
+    slo_link: "AI Job Completion 99%"
+    cec_weight: 2
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: SLO-3
+    name: SLO Burn Rate Alerting
+    domain: reliability
+    description: >
+      Multi-window burn rate model (1h/6h/24h/3d). Chaos Mesh injects 600ms
+      latency; workflow asserts CerebroSLOErrorBudgetCritical fires within 5 min.
+    target: Continuous
+    automation: .github/workflows/slo-burn-validation.yml
+    evidence_key: slo_burn_alert
+    cec_weight: 2
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: DR-1
+    name: PostgreSQL Restore Verification
+    domain: reliability
+    description: >
+      Nightly restore from S3 basebackup into disposable namespace. Smoke tests:
+      table count, row counts, write test, index health, checksum. RTO ≤ 30 min.
+    target: Continuous
+    automation: .github/workflows/restore-verification.yml
+    evidence_key: pg_restore
+    cec_weight: 3
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: DR-2
+    name: MinIO Restore Verification
+    domain: reliability
+    description: >
+      Nightly restore from S3 replica. Smoke tests: bucket presence, object
+      counts, CRUD round-trip. RTO ≤ 15 min.
+    target: Continuous
+    automation: .github/workflows/restore-verification.yml
+    evidence_key: minio_restore
+    cec_weight: 2
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: DR-3
+    name: NATS JetStream Restore Verification
+    domain: reliability
+    description: >
+      Nightly restore from snapshot. Smoke tests: JetStream status, stream
+      presence, pub/sub round-trip, persist+replay. RTO ≤ 20 min.
+    target: Continuous
+    automation: .github/workflows/restore-verification.yml
+    evidence_key: nats_restore
+    cec_weight: 2
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: CHAOS-1
+    name: Workload Fault Injection
+    domain: reliability
+    description: >
+      Stage 1-5 Chaos Mesh experiments: pod kills, node stress, disk fill,
+      network latency/partition/DNS failure, AI provider faults. Weekly schedule.
+    target: Continuous
+    automation: .github/workflows/chaos.yml
+    evidence_key: chaos_experiments
+    cec_weight: 2
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  - id: PRF-1
+    name: G1 Overhead Benchmark (gVisor vs runc)
+    domain: performance
+    description: >
+      Quarterly benchmark: 5 tests (syscall, I/O, fork, memory, CPU).
+      gVisor overhead must be < 3× runc for all tests.
+    target: Continuous
+    automation: .github/workflows/g1-overhead-benchmark.yml
+    evidence_key: g1_benchmark
+    cec_weight: 1
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+  # ── Compliance controls ───────────────────────────────────────────────────
+  - id: PRR-1
+    name: Production Readiness Review
+    domain: compliance
+    description: >
+      11 subsystems evaluated against 7 questions each (restore, rotate,
+      upgrade, backup, recover, observe, audit). Score: 70.8%.
+    target: Automated
+    automation: docs/production-readiness-review.md
+    evidence_key: prr_score
+    cec_weight: 2
+    last_run: ~
+    last_status: UNKNOWN
+    last_sha: ~
+    last_artifact: ~
+
+# ── CEC calculation ──────────────────────────────────────────────────────────
+# CEC = (controls with last_status=PASS * cec_weight) /
+#        (total controls * max_weight) * 100
+#
+# Target: ≥ 90%
+# Current (seed): UNKNOWN for all — will be updated on first evidence chain run
+
+metadata:
+  schema_version: "1.0"
+  cec_target_pct: 90
+  total_controls: 18
+  domains:
+    - security
+    - supply-chain
+    - reliability
+    - performance
+    - compliance

@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@import "./theme/colors.css";
+@import "./theme/typography.css";
+@import "./theme/elevation.css";
+@import "./theme/motion.css";
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: var(--line-height-body);
+  overflow-x: hidden;
+}
+
+main {
+  min-height: calc(100vh - 72px);
+}
+
+/* Font helpers */
+.font-space  { font-family: var(--font-space), sans-serif; }
+.font-inter  { font-family: var(--font-inter), sans-serif; }
+.font-plex   { font-family: var(--font-plex), monospace; }
+.font-jetbrains { font-family: var(--font-jetbrains), monospace; }
+
+/* Heading defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space), sans-serif;
+  font-weight: var(--font-weight-heading);
+  line-height: 1.2;
+  color: var(--text-primary);
+  letter-spacing: var(--letter-spacing-heading);
+}
+
+p { font-family: var(--font-inter), sans-serif; }
+
+/* Layout */
+.container-wide {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Shared card primitives */
+.theme-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  box-shadow: var(--elevation-raised);
+  transition: all var(--motion-duration) var(--motion-easing-default);
+}
+.theme-card:hover {
+  box-shadow: var(--elevation-popover), var(--glow-primary);
+  transform: translateY(-2px);
+  border-color: var(--text-accent);
+}
+
+.theme-panel {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--elevation-floating);
+}
+
+.theme-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+}
+
+/* Keyframe animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes glowDim {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

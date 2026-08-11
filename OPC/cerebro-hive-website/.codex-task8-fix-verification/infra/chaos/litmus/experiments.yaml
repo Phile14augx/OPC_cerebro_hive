@@ -1,0 +1,261 @@
+---
+# LitmusChaos experiments — CerebroHive resilience validation
+# Run monthly in staging and weekly in production (smoke-only)
+# Ref: https://docs.litmuschaos.io/docs/chaos-engineering
+
+# ── 1. Pod Kill — validates PDB + HPA response ────────────────────────────────
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: platform-api-pod-kill
+  namespace: cerebro-staging
+spec:
+  appinfo:
+    appns:    cerebro-staging
+    applabel: "app.kubernetes.io/name=platform-api"
+    appkind:  deployment
+  chaosServiceAccount: litmus-admin
+  monitoring: true
+  jobCleanUpPolicy: retain
+  experiments:
+    - name: pod-delete
+      spec:
+        components:
+          env:
+            - name:  TOTAL_CHAOS_DURATION
+              value: "60"           # seconds
+            - name:  CHAOS_INTERVAL
+              value: "10"           # kill a pod every 10s
+            - name:  FORCE
+              value: "false"        # graceful shutdown
+            - name:  PODS_AFFECTED_PERC
+              value: "50"           # kill 50% of pods
+        probe:
+          - name:            platform-api-liveness
+            type:            httpProbe
+            mode:            Continuous
+            runProperties:
+              probeTimeout:  10
+              interval:      5
+              retry:         3
+              probePollingInterval: 2
+            httpProbe/inputs:
+              url:          http://platform-api.cerebro-staging.svc.cluster.local/health
+              insecureSkipTLS: false
+              method:
+                get:
+                  criteria:     ==
+                  responseCode: "200"
+
+---
+# ── 2. Network Chaos — partition between forge-api and platform-api ───────────
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: network-partition-forge-platform
+  namespace: cerebro-staging
+spec:
+  appinfo:
+    appns:    cerebro-staging
+    applabel: "app.kubernetes.io/name=forge-api"
+    appkind:  deployment
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: pod-network-partition
+      spec:
+        components:
+          env:
+            - name:  TOTAL_CHAOS_DURATION
+              value: "120"
+            - name:  NETWORK_INTERFACE
+              value: eth0
+            - name:  DESTINATION_IPS
+              value: ""   # Block all egress
+            - name:  DESTINATION_HOSTS
+              value: "platform-api.cerebro-staging.svc.cluster.local"
+            - name:  POLICY
+              value: egress
+        probe:
+          - name: circuit-breaker-probe
+            type: cmdProbe
+            mode: Edge
+            runProperties:
+              probeTimeout:  30
+              interval:      10
+              retry:         3
+            cmdProbe/inputs:
+              command: |
+                curl -sf http://forge-api.cerebro-staging.svc.cluster.local/health/ready \
+                  | jq -e '.status == "degraded"'
+              source:
+                image: curlimages/curl:8.1.2
+              comparator:
+                type:     int
+                criteria: ==
+                value:    "0"
+
+---
+# ── 3. CPU Stress — validate HPA scale-up ────────────────────────────────────
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: platform-api-cpu-stress
+  namespace: cerebro-staging
+spec:
+  appinfo:
+    appns:    cerebro-staging
+    applabel: "app.kubernetes.io/name=platform-api"
+    appkind:  deployment
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: pod-cpu-hog
+      spec:
+        components:
+          env:
+            - name:  TOTAL_CHAOS_DURATION
+              value: "180"
+            - name:  CPU_CORES
+              value: "2"
+            - name:  PODS_AFFECTED_PERC
+              value: "60"
+        probe:
+          - name:    hpa-scale-up-probe
+            type:    k8sProbe
+            mode:    Continuous
+            runProperties:
+              probeTimeout:  60
+              interval:      15
+              retry:         5
+              probePollingInterval: 5
+            k8sProbe/inputs:
+              group:     apps
+              version:   v1
+              resource:  deployments
+              namespace: cerebro-staging
+              fieldSelector: metadata.name=platform-api
+              labelSelector: "app.kubernetes.io/name=platform-api"
+              operation: present
+
+---
+# ── 4. Memory Stress — validate OOM handling ─────────────────────────────────
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: forge-api-memory-stress
+  namespace: cerebro-staging
+spec:
+  appinfo:
+    appns:    cerebro-staging
+    applabel: "app.kubernetes.io/name=forge-api"
+    appkind:  deployment
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: pod-memory-hog
+      spec:
+        components:
+          env:
+            - name:  TOTAL_CHAOS_DURATION
+              value: "120"
+            - name:  MEMORY_CONSUMPTION
+              value: "512"  # MB
+            - name:  PODS_AFFECTED_PERC
+              value: "50"
+
+---
+# ── 5. Node drain — validate pod rescheduling ────────────────────────────────
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: node-drain-staging
+  namespace: cerebro-staging
+spec:
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: node-drain
+      spec:
+        components:
+          env:
+            - name:  TOTAL_CHAOS_DURATION
+              value: "90"
+            - name:  NODE_LABEL
+              value: "role=worker"
+            - name:  REINJECTION_DELAY
+              value: "60"   # seconds before uncordoning
+        probe:
+          - name: pod-availability
+            type: cmdProbe
+            mode: Continuous
+            runProperties:
+              probeTimeout: 30
+              interval:     10
+              retry:        5
+            cmdProbe/inputs:
+              command: |
+                kubectl get pods -n cerebro-staging \
+                  -l app.kubernetes.io/name=platform-api \
+                  --field-selector=status.phase=Running \
+                  | grep -c Running
+              comparator:
+                type:     int
+                criteria: ">="
+                value:    "2"  # At least 2 pods must remain Running
+
+---
+# ── 6. NATS JetStream chaos — topic partition ────────────────────────────────
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: nats-pod-delete
+  namespace: nats
+spec:
+  appinfo:
+    appns:    nats
+    applabel: "app.kubernetes.io/name=nats"
+    appkind:  statefulset
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: pod-delete
+      spec:
+        components:
+          env:
+            - name:  TOTAL_CHAOS_DURATION
+              value: "60"
+            - name:  CHAOS_INTERVAL
+              value: "20"
+            - name:  FORCE
+              value: "false"
+            - name:  PODS_AFFECTED_PERC
+              value: "33"  # Kill 1 of 3 NATS nodes
+
+---
+# ── RBAC for Litmus ───────────────────────────────────────────────────────────
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: litmus-admin
+  namespace: cerebro-staging
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: litmus-admin
+rules:
+  - apiGroups: ["", "apps", "batch", "extensions", "litmuschaos.io"]
+    resources:  ["*"]
+    verbs:      ["*"]
+  - apiGroups: [""]
+    resources:  ["nodes"]
+    verbs:      ["get", "list", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: litmus-admin
+subjects:
+  - kind:      ServiceAccount
+    name:      litmus-admin
+    namespace: cerebro-staging
+roleRef:
+  kind:     ClusterRole
+  name:     litmus-admin
+  apiGroup: rbac.authorization.k8s.io

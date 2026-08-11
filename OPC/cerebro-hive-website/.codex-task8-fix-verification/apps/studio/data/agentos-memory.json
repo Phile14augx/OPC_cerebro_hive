@@ -1,0 +1,32 @@
+{
+  "records": [
+    {
+      "id": "mem_mrxym975_1",
+      "tier": "shortTerm",
+      "sessionId": "session_eio5yru4",
+      "content": "step 1: Enumerate the options being compared: Compare AgentOS, . a generic RAG chatbot for enterprise support. -> Enumerate the options being compared: Compare AgentOS, . a generic RAG chatbot for enterprise support.",
+      "createdAt": 1784838262289
+    },
+    {
+      "id": "mem_mrxym9d3_2",
+      "tier": "shortTerm",
+      "sessionId": "session_eio5yru4",
+      "content": "step 2: Score each option against implied criteria -> Score each option against implied criteria",
+      "createdAt": 1784838262503
+    },
+    {
+      "id": "mem_mrxym9ml_3",
+      "tier": "shortTerm",
+      "sessionId": "session_eio5yru4",
+      "content": "step 3: Select and justify the strongest branch -> Select and justify the strongest branch",
+      "createdAt": 1784838262845
+    },
+    {
+      "id": "mem_mrxym9qg_4",
+      "tier": "episodic",
+      "sessionId": "session_eio5yru4",
+      "content": "input=\"Compare AgentOS vs. a generic RAG chatbot for enterprise support.\" strategy=Tree_of_Thoughts answer=\"Using Tree of Thoughts, the runtime reasoned through 3 step(s) for \"Compare AgentOS vs. a generic RAG chatbot for enterprise support.\". Select and justify the s\" latencyMs=699",
+      "createdAt": 1784838262984
+    }
+  ]
+}

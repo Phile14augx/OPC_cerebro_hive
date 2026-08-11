@@ -1,0 +1,77 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: cerebro-hive-staging
+
+resources:
+  - ../../base
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Staging — production-like config with staging endpoints
+# Runs the same Rollout strategy as prod but with auto-promotion enabled
+# ──────────────────────────────────────────────────────────────────────────────
+
+commonLabels:
+  environment: staging
+
+patches:
+  # Auto-promote canary in staging (no manual approval needed)
+  - patch: |-
+      - op: replace
+        path: /spec/strategy/canary/autoPromotionEnabled
+        value: true
+      - op: replace
+        path: /spec/strategy/canary/autoPromotionSeconds
+        value: 600
+    target:
+      kind: Rollout
+      name: studio-rollout
+
+  # Staging ingress hosts
+  - patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: staging.app.cerebrohive.com
+      - op: replace
+        path: /spec/rules/1/host
+        value: staging.forge.cerebrohive.com
+      - op: replace
+        path: /spec/rules/2/host
+        value: staging.api.cerebrohive.com
+    target:
+      kind: Ingress
+      name: cerebro-hive-ingress
+
+  # HPA: 2-6 replicas in staging
+  - patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 2
+      - op: replace
+        path: /spec/maxReplicas
+        value: 6
+    target:
+      kind: HorizontalPodAutoscaler
+      name: studio
+
+configMapGenerator:
+  - name: cerebro-hive-config
+    literals:
+      - APP_URL=https://staging.app.cerebrohive.com
+      - NEXT_PUBLIC_API_URL=https://staging.api.cerebrohive.com
+      - NEXT_PUBLIC_AI_GATEWAY_URL=https://staging.api.cerebrohive.com/ai
+      - OTEL_ENDPOINT=http://otel-collector.cerebro-hive-monitoring.svc.cluster.local:4317
+      - NATS_URL=nats://nats.cerebro-hive-staging.svc.cluster.local:4222
+      - AI_GATEWAY_RATE_LIMIT_RPM=300
+
+images:
+  - name: ghcr.io/cerebro-hive/cerebro-hive/studio
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/forge
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/platform-api
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/forge-api
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/ai-gateway
+    newTag: latest

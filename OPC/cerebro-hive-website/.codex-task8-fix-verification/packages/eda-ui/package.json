@@ -1,0 +1,22 @@
+{
+  "name": "@cerebro/eda-ui",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "cerebroEda": {
+    "layer": "edge",
+    "adr": [
+      "0017"
+    ],
+    "scaffoldUntilPhase": 2
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0",
+    "@types/node": "^22.0.0"
+  }
+}

@@ -1,0 +1,249 @@
+---
+# Prometheus Recording Rules — CerebroHive Platform
+# Pre-aggregated metrics for fast dashboard queries and alert evaluation.
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cerebro-recording-rules
+  namespace: monitoring
+  labels:
+    prometheus:  kube-prometheus
+    role:        alert-rules
+    release:     kube-prometheus-stack
+spec:
+  groups:
+
+    # ── HTTP Latency ────────────────────────────────────────────────────────────
+    - name: cerebro.http.latency
+      interval: 30s
+      rules:
+        - record: cerebro:http:request_duration_p50:rate5m
+          expr: |
+            histogram_quantile(0.50,
+              rate(http_request_duration_seconds_bucket{job=~"cerebro-.*"}[5m])
+            )
+        - record: cerebro:http:request_duration_p95:rate5m
+          expr: |
+            histogram_quantile(0.95,
+              rate(http_request_duration_seconds_bucket{job=~"cerebro-.*"}[5m])
+            )
+        - record: cerebro:http:request_duration_p99:rate5m
+          expr: |
+            histogram_quantile(0.99,
+              rate(http_request_duration_seconds_bucket{job=~"cerebro-.*"}[5m])
+            )
+        - record: cerebro:http:request_rate:rate5m
+          expr: |
+            sum by (service, status_code) (
+              rate(http_requests_total{job=~"cerebro-.*"}[5m])
+            )
+        - record: cerebro:http:error_rate:rate5m
+          expr: |
+            sum by (service) (
+              rate(http_requests_total{job=~"cerebro-.*",status_code=~"5.."}[5m])
+            ) / sum by (service) (
+              rate(http_requests_total{job=~"cerebro-.*"}[5m])
+            )
+
+    # ── SLO Burn Rates ─────────────────────────────────────────────────────────
+    - name: cerebro.slo.availability
+      interval: 60s
+      rules:
+        # Error budget burn rates for 99.9% SLO (0.1% error budget)
+        - record: cerebro:slo:availability:burn_rate_1h
+          expr: |
+            (
+              sum(rate(http_requests_total{job=~"cerebro-.*",status_code=~"5.."}[1h]))
+            ) / (
+              sum(rate(http_requests_total{job=~"cerebro-.*"}[1h]))
+            ) / 0.001  # Divide by error budget = 1 - 0.999
+        - record: cerebro:slo:availability:burn_rate_6h
+          expr: |
+            (
+              sum(rate(http_requests_total{job=~"cerebro-.*",status_code=~"5.."}[6h]))
+            ) / (
+              sum(rate(http_requests_total{job=~"cerebro-.*"}[6h]))
+            ) / 0.001
+        - record: cerebro:slo:availability:burn_rate_1d
+          expr: |
+            (
+              sum(rate(http_requests_total{job=~"cerebro-.*",status_code=~"5.."}[1d]))
+            ) / (
+              sum(rate(http_requests_total{job=~"cerebro-.*"}[1d]))
+            ) / 0.001
+        # Latency SLO — 95% of requests under 500ms
+        - record: cerebro:slo:latency_slo_compliance:rate5m
+          expr: |
+            sum(rate(http_request_duration_seconds_bucket{
+              job=~"cerebro-.*",
+              le="0.5"
+            }[5m])) / sum(rate(http_request_duration_seconds_count{job=~"cerebro-.*"}[5m]))
+
+    # ── Workflow Execution ──────────────────────────────────────────────────────
+    - name: cerebro.workflow
+      interval: 30s
+      rules:
+        - record: cerebro:workflow:execution_rate:rate5m
+          expr: |
+            sum by (status) (
+              rate(cerebro_workflow_executions_total[5m])
+            )
+        - record: cerebro:workflow:success_rate:rate5m
+          expr: |
+            sum(rate(cerebro_workflow_executions_total{status="completed"}[5m])) /
+            sum(rate(cerebro_workflow_executions_total[5m]))
+        - record: cerebro:workflow:duration_p95:rate5m
+          expr: |
+            histogram_quantile(0.95,
+              rate(cerebro_workflow_duration_seconds_bucket[5m])
+            )
+        - record: cerebro:workflow:active_executions
+          expr: |
+            sum(cerebro_workflow_executions_active)
+        - record: cerebro:workflow:queue_depth
+          expr: |
+            sum(nats_jetstream_consumer_pending_count{stream_name="CEREBRO_WORKFLOW"})
+
+    # ── AI Cost ────────────────────────────────────────────────────────────────
+    - name: cerebro.ai.cost
+      interval: 60s
+      rules:
+        - record: cerebro:ai:cost_per_hour:rate1h
+          expr: |
+            sum by (model, provider) (
+              rate(cerebro_ai_cost_usd_total[1h])
+            ) * 3600
+        - record: cerebro:ai:tokens_per_minute:rate5m
+          expr: |
+            sum by (model) (
+              rate(cerebro_ai_tokens_total[5m])
+            ) * 60
+        - record: cerebro:ai:cache_hit_rate:rate5m
+          expr: |
+            sum(rate(cerebro_ai_cache_hits_total[5m])) /
+            sum(rate(cerebro_ai_requests_total[5m]))
+        - record: cerebro:ai:request_latency_p99:rate5m
+          expr: |
+            histogram_quantile(0.99,
+              rate(cerebro_ai_request_duration_seconds_bucket[5m])
+            )
+        - record: cerebro:ai:error_rate:rate5m
+          expr: |
+            sum(rate(cerebro_ai_requests_total{status="error"}[5m])) /
+            sum(rate(cerebro_ai_requests_total[5m]))
+
+    # ── Database ───────────────────────────────────────────────────────────────
+    - name: cerebro.database
+      interval: 30s
+      rules:
+        - record: cerebro:db:query_duration_p99:rate5m
+          expr: |
+            histogram_quantile(0.99,
+              rate(prisma_client_queries_duration_histogram_ms_bucket[5m])
+            )
+        - record: cerebro:db:slow_queries:rate5m
+          expr: |
+            sum(rate(prisma_client_queries_total{slow="true"}[5m]))
+        - record: cerebro:db:connection_pool_utilization
+          expr: |
+            prisma_client_active_connections /
+            prisma_client_total_connection_slots
+        - record: cerebro:db:rds_cpu:avg5m
+          expr: |
+            avg(aws_rds_cpuutilization_average)
+
+    # ── NATS JetStream ─────────────────────────────────────────────────────────
+    - name: cerebro.nats
+      interval: 30s
+      rules:
+        - record: cerebro:nats:messages_per_second:rate5m
+          expr: |
+            sum by (stream_name) (
+              rate(nats_jetstream_stream_messages_total[5m])
+            )
+        - record: cerebro:nats:consumer_lag:total
+          expr: |
+            sum by (stream_name, consumer_name) (
+              nats_jetstream_consumer_pending_count
+            )
+        - record: cerebro:nats:ack_rate:rate5m
+          expr: |
+            sum by (stream_name) (
+              rate(nats_jetstream_messages_acked_total[5m])
+            )
+
+    # ── Kubernetes Resources ───────────────────────────────────────────────────
+    - name: cerebro.k8s
+      interval: 60s
+      rules:
+        - record: cerebro:k8s:pod_cpu_utilization
+          expr: |
+            sum by (pod, namespace) (
+              rate(container_cpu_usage_seconds_total{namespace=~"cerebro-.*"}[5m])
+            ) / sum by (pod, namespace) (
+              kube_pod_container_resource_requests{resource="cpu",namespace=~"cerebro-.*"}
+            )
+        - record: cerebro:k8s:pod_memory_utilization
+          expr: |
+            sum by (pod, namespace) (
+              container_memory_working_set_bytes{namespace=~"cerebro-.*"}
+            ) / sum by (pod, namespace) (
+              kube_pod_container_resource_requests{resource="memory",namespace=~"cerebro-.*"}
+            )
+        - record: cerebro:k8s:namespace_cost_per_hour
+          expr: |
+            sum by (namespace) (
+              label_replace(
+                kube_pod_container_resource_requests{resource="cpu",namespace=~"cerebro-.*"},
+                "cost_type", "cpu", "", ""
+              )
+            ) * 0.04 +  # $0.04/vCPU-hour (approximate on-demand)
+            sum by (namespace) (
+              label_replace(
+                kube_pod_container_resource_requests{resource="memory",namespace=~"cerebro-.*"},
+                "cost_type", "memory", "", ""
+              )
+            ) / 1073741824 * 0.005  # $0.005/GiB-hour
+
+    # ── Temporal ───────────────────────────────────────────────────────────────
+    - name: cerebro.temporal
+      interval: 30s
+      rules:
+        - record: cerebro:temporal:workflow_start_rate:rate5m
+          expr: |
+            sum(rate(temporal_workflow_start_total[5m]))
+        - record: cerebro:temporal:workflow_failed_rate:rate5m
+          expr: |
+            sum(rate(temporal_workflow_failed_total[5m]))
+        - record: cerebro:temporal:schedule_to_start_p99:rate5m
+          expr: |
+            histogram_quantile(0.99,
+              rate(temporal_workflow_task_schedule_to_start_latency_bucket{
+                task_queue="cerebro-workflows"
+              }[5m])
+            )
+        - record: cerebro:temporal:activity_failed_rate:rate5m
+          expr: |
+            sum by (activity_type) (
+              rate(temporal_activity_failed_total[5m])
+            )
+
+    # ── Business KPIs ──────────────────────────────────────────────────────────
+    - name: cerebro.business
+      interval: 5m
+      rules:
+        - record: cerebro:business:active_orgs_1d
+          expr: |
+            count(
+              count by (org_id) (
+                rate(http_requests_total{job=~"cerebro-.*"}[1d])
+              )
+            )
+        - record: cerebro:business:api_calls_per_minute:rate5m
+          expr: |
+            sum(rate(http_requests_total{job=~"cerebro-.*"}[5m])) * 60
+        - record: cerebro:business:agent_run_success_rate:rate5m
+          expr: |
+            sum(rate(cerebro_agent_runs_total{status="completed"}[5m])) /
+            sum(rate(cerebro_agent_runs_total[5m]))

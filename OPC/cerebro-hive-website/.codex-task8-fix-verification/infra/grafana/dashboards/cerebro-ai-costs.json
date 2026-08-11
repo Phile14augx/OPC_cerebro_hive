@@ -1,0 +1,188 @@
+{
+  "__inputs": [
+    { "name": "DS_PROMETHEUS", "label": "Prometheus", "type": "datasource", "pluginId": "prometheus" }
+  ],
+  "description": "AI cost tracking — token usage, provider spend, per-workspace costs, budget burn rates",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [
+    { "icon": "external link", "title": "Platform Overview", "url": "/d/cerebro-overview", "type": "link" },
+    { "icon": "external link", "title": "SLO Tracker", "url": "/d/cerebro-slo", "type": "link" }
+  ],
+  "panels": [
+    {
+      "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100, "title": "Cost Overview", "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 100 }, { "color": "red", "value": 250 }] } } },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+      "id": 1, "title": "Spend Today",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
+      "type": "stat",
+      "targets": [{ "expr": "cerebro:ai:cost_usd:today", "legendFormat": "Today" }]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": { "defaults": { "unit": "currencyUSD", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 3000 }, { "color": "red", "value": 4500 }] } } },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+      "id": 2, "title": "Spend This Month",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "type": "stat",
+      "targets": [{ "expr": "cerebro:ai:cost_usd:month", "legendFormat": "Month" }]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } } },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
+      "id": 3, "title": "Tokens Today",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
+      "type": "stat",
+      "targets": [{ "expr": "cerebro:ai:tokens_total:today", "legendFormat": "Tokens" }]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "max": 1, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.7 }, { "color": "red", "value": 0.9 }] } } },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
+      "id": 4, "title": "Monthly Budget Used",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "type": "stat",
+      "targets": [{ "expr": "cerebro:ai:cost_usd:month / cerebro:ai:cost_budget_usd:month", "legendFormat": "% Used" }]
+    },
+    {
+      "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "id": 101, "title": "Daily Spend Trend", "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "currencyUSD", "custom": { "fillOpacity": 15, "lineWidth": 2 } } },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 6 },
+      "id": 10, "title": "Daily AI Spend by Provider",
+      "options": { "tooltip": { "mode": "multi", "sort": "desc" }, "legend": { "displayMode": "table", "placement": "right", "calcs": ["lastNotNull", "sum", "max"] } },
+      "type": "timeseries",
+      "targets": [
+        { "expr": "sum by (provider) (rate(ai_gateway_cost_usd_total{namespace=~\"cerebro-.*\"}[1h])) * 3600", "legendFormat": "{{provider}}" }
+      ]
+    },
+    {
+      "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 14 },
+      "id": 102, "title": "Token Usage", "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" } },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 15 },
+      "id": 20, "title": "Token Rate by Model (tokens/min)",
+      "type": "timeseries",
+      "targets": [
+        { "expr": "sum by (model) (rate(ai_gateway_tokens_total{namespace=~\"cerebro-.*\"}[5m])) * 60", "legendFormat": "{{model}}" }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" } },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 15 },
+      "id": 21, "title": "Token Distribution (prompt vs completion)",
+      "type": "timeseries",
+      "targets": [
+        { "expr": "sum by (token_type) (rate(ai_gateway_tokens_total{namespace=~\"cerebro-.*\"}[5m])) * 60", "legendFormat": "{{token_type}}" }
+      ]
+    },
+    {
+      "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 23 },
+      "id": 103, "title": "Per-Workspace & Per-Agent Costs", "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "unit": "currencyUSD" },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Workspace" }, "properties": [{ "id": "custom.width", "value": 180 }] },
+          { "matcher": { "id": "byName", "options": "Cost (Month)" }, "properties": [{ "id": "custom.displayMode", "value": "color-background" }, { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 200 }, { "color": "red", "value": 800 }] } }] }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+      "id": 30, "title": "Top Workspaces by Cost",
+      "transformations": [{ "id": "sortBy", "options": { "fields": [{ "desc": true, "displayName": "Cost (Month)" }] } }],
+      "type": "table",
+      "targets": [{
+        "expr": "topk(10, sum by (workspace_id) (ai_gateway_cost_usd_total{namespace=~\"cerebro-.*\",range=\"month\"}))",
+        "legendFormat": "{{workspace_id}}",
+        "instant": true,
+        "format": "table"
+      }]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": { "unit": "currencyUSD" },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Agent" }, "properties": [{ "id": "custom.width", "value": 220 }] }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+      "id": 31, "title": "Top Agents by Cost",
+      "type": "table",
+      "targets": [{
+        "expr": "topk(10, sum by (agent_name) (ai_gateway_cost_usd_total{namespace=~\"cerebro-.*\",range=\"month\"}))",
+        "legendFormat": "{{agent_name}}",
+        "instant": true,
+        "format": "table"
+      }]
+    },
+    {
+      "collapsed": false, "gridPos": { "h": 1, "w": 24, "x": 0, "y": 32 },
+      "id": 104, "title": "Budget Alerts", "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" }, "unit": "percentunit", "min": 0, "max": 1,
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.7 }, { "color": "red", "value": 0.9 }] }
+        }
+      },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 33 },
+      "id": 40, "title": "Budget Consumption by Workspace",
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
+      },
+      "type": "gauge",
+      "targets": [{
+        "expr": "ai_gateway_cost_usd_total{range=\"month\"} / ai_gateway_cost_budget_usd",
+        "legendFormat": "{{workspace_id}}",
+        "instant": true
+      }]
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 38,
+  "tags": ["cerebro-hive", "ai", "costs", "finops"],
+  "templating": {
+    "list": [
+      {
+        "current": {}, "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "definition": "label_values(ai_gateway_cost_usd_total, workspace_id)",
+        "hide": 0, "includeAll": true, "multi": true, "name": "workspace",
+        "options": [], "refresh": 2, "sort": 1, "type": "query", "label": "Workspace"
+      },
+      {
+        "current": {}, "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "definition": "label_values(ai_gateway_tokens_total, provider)",
+        "hide": 0, "includeAll": true, "multi": true, "name": "provider",
+        "options": [], "refresh": 2, "sort": 1, "type": "query", "label": "Provider"
+      }
+    ]
+  },
+  "time": { "from": "now-7d", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "CerebroHive — AI Costs",
+  "uid":   "cerebro-ai-costs",
+  "version": 1
+}

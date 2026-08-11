@@ -1,0 +1,153 @@
+# Tempo Configuration — CerebroHive Distributed Tracing
+# Receives spans via OTLP (gRPC + HTTP), Jaeger, Zipkin.
+# Stores traces in S3, queries via Grafana Tempo data source.
+# Integrated with the OTel collector pipeline.
+
+server:
+  http_listen_port: 3200
+  log_level:        info
+  log_format:       json
+
+# ── Distributor — receives spans from OTel Collector ─────────────────────────
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+    jaeger:
+      protocols:
+        thrift_http:
+          endpoint: 0.0.0.0:14268
+        grpc:
+          endpoint: 0.0.0.0:14250
+    zipkin:
+      endpoint: 0.0.0.0:9411
+
+# ── Ingester ─────────────────────────────────────────────────────────────────
+ingester:
+  trace_idle_period:   10s
+  max_block_bytes:     104857600   # 100 MiB
+  max_block_duration:  5m
+  lifecycler:
+    ring:
+      kvstore:
+        store: memberlist
+      replication_factor: 3
+
+# ── Memberlist ────────────────────────────────────────────────────────────────
+memberlist:
+  join_members:
+    - tempo-memberlist.monitoring.svc.cluster.local:7946
+
+# ── Compactor ────────────────────────────────────────────────────────────────
+compactor:
+  compaction:
+    block_retention:        720h    # 30-day default
+    compacted_block_retention: 1h
+    compaction_window:      1h
+    max_compaction_objects: 6000000
+    max_block_bytes:        107374182400   # 100 GiB
+
+# ── Storage ───────────────────────────────────────────────────────────────────
+storage:
+  trace:
+    backend: s3
+    s3:
+      bucket:           cerebro-hive-tempo-traces
+      endpoint:         s3.us-east-1.amazonaws.com
+      region:           us-east-1
+      # Credentials from IRSA (IAM Roles for Service Accounts)
+      # No access_key/secret_key needed when IRSA is configured.
+      hedge_requests_at:          400ms
+      hedge_requests_up_to:       2
+    pool:
+      max_workers: 100
+      queue_depth: 10000
+    wal:
+      path: /var/tempo/wal
+    block:
+      bloom_filter_false_positive: 0.05
+      v2_index_downsample_bytes:   1000
+      v2_encoding:                 snappy
+
+# ── Query Frontend ────────────────────────────────────────────────────────────
+query_frontend:
+  search:
+    concurrent_jobs:    1000
+    target_bytes_per_job: 104857600   # 100 MiB
+  trace_by_id:
+    query_shards: 10
+  max_retries: 3
+
+# ── Querier ───────────────────────────────────────────────────────────────────
+querier:
+  frontend_worker:
+    frontend_address: tempo-query-frontend.monitoring.svc.cluster.local:9095
+  max_concurrent_queries: 20
+  search:
+    external_backend: false
+    prefer_self: 10
+
+# ── Metrics Generator (span → Prometheus metrics) ─────────────────────────────
+# Generates RED metrics (Rate, Error, Duration) from trace data.
+# These feed the Grafana service graph and latency dashboards.
+metrics_generator:
+  registry:
+    external_labels:
+      source:  tempo
+      cluster: cerebro-hive
+  storage:
+    path: /var/tempo/generator/wal
+    remote_write:
+      - url: http://prometheus.monitoring.svc.cluster.local:9090/api/v1/write
+        send_exemplars: true
+  processors:
+    - service-graphs:
+        dimensions:
+          - http.method
+          - http.status_code
+          - service.name
+        histogram_buckets: [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024, 2.048]
+        max_items: 10000
+        wait:      10s
+        store:
+          ttl:      2m
+          max_items: 10000
+    - span-metrics:
+        dimensions:
+          - http.method
+          - http.status_code
+          - service.name
+          - db.system
+          - messaging.system
+        intrinsic_dimensions:
+          service:     true
+          span_name:   true
+          span_kind:   true
+          status_code: true
+        histogram_buckets: [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024, 2.048]
+
+# ── Overrides (per-tenant retention etc.) ─────────────────────────────────────
+overrides:
+  defaults:
+    metrics_generator:
+      processors:
+        - service-graphs
+        - span-metrics
+  per_tenant_override_config: /etc/tempo/overrides.yaml
+
+# ── Cache (query results) ─────────────────────────────────────────────────────
+cache:
+  caches:
+    - roles:
+        - bloom
+        - parquet-footer
+        - parquet-column-idx
+        - parquet-offset-idx
+      memcached:
+        host:    tempo-memcached.monitoring.svc.cluster.local
+        service: memcached-client
+        timeout: 500ms

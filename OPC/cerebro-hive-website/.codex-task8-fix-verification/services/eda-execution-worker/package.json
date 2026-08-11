@@ -1,0 +1,26 @@
+{
+  "name": "@cerebro/eda-execution-worker",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "cerebroEda": {
+    "layer": "service",
+    "adr": [
+      "0013"
+    ]
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0",
+    "@types/node": "^22.0.0"
+  },
+  "dependencies": {
+    "@cerebro/eda-execution": "workspace:*",
+    "@cerebro/eda-domain": "workspace:*",
+    "@cerebro/eda-security": "workspace:*"
+  }
+}

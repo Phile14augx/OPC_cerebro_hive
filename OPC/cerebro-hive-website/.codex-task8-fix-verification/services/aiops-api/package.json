@@ -1,0 +1,10 @@
+{
+  "name": "@cerebro/aiops-api",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@cerebro/aiops-sdk": "workspace:*",
+    "@cerebro/events": "workspace:*"
+  }
+}

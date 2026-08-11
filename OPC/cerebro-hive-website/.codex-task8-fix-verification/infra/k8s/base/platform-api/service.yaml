@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: platform-api
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: platform-api
+    app.kubernetes.io/component: platform-api
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9090"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: platform-api
+    app.kubernetes.io/component: platform-api
+  ports:
+    - name: http
+      port: 4000
+      targetPort: http
+      protocol: TCP
+    - name: metrics
+      port: 9090
+      targetPort: metrics
+      protocol: TCP

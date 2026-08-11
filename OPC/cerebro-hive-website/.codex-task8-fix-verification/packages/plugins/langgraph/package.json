@@ -1,0 +1,21 @@
+{
+  "name": "@cerebro/plugin-langgraph",
+  "version": "0.1.0",
+  "description": "LangGraph Execution Provider Plugin for Cerebro Runtime.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@cerebro/contracts": "workspace:*",
+    "@cerebro/runtime": "workspace:*",
+    "@cerebro/plugin-sdk": "workspace:*",
+    "@langchain/langgraph": "^0.0.30"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

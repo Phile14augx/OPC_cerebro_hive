@@ -1,0 +1,62 @@
+# Thanos Sidecar — injected alongside each Prometheus instance
+# This is a patch for the kube-prometheus-stack Prometheus CRD.
+# Apply with:
+#   kubectl patch prometheus kube-prometheus-stack-prometheus \
+#     -n monitoring --type=merge --patch-file infra/thanos/thanos-sidecar.yaml
+#
+# Or add these fields to your Helm values under prometheus.prometheusSpec:
+
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: kube-prometheus-stack-prometheus
+  namespace: monitoring
+spec:
+  # Disable local long-term retention — Thanos handles that
+  retention: 2h
+  retentionSize: ""
+
+  # Enable Thanos sidecar
+  thanos:
+    image: quay.io/thanos/thanos:v0.36.1
+    version: v0.36.1
+    objectStorageConfig:
+      name: thanos-objstore
+      key: objstore.yaml
+
+    # Expose gRPC for Thanos Query to scrape store APIs
+    grpcListenLocal: false
+
+    # Resource limits for the sidecar
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  # Expose the Thanos sidecar Service (required for Query federation)
+  serviceMonitorSelector: {}
+  serviceMonitorNamespaceSelector: {}
+
+  # Prometheus remote write to Thanos Receive (alternative to sidecar)
+  # Uncomment if using Thanos Receive instead of sidecar+GCS block upload.
+  # remoteWrite:
+  #   - url: http://thanos-receive.monitoring.svc.cluster.local:19291/api/v1/receive
+
+  # External labels — required for Thanos to distinguish replicas
+  externalLabels:
+    cluster: cerebro-prod
+    replica: "$(POD_NAME)"
+    region: us-east-1
+
+  # Persistent volume for Prometheus TSDB (WAL + 2h blocks before upload)
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: gp3
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests:
+            storage: 50Gi

@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Lint staged files
+pnpm lint-staged
+
+# Type-check changed packages only
+pnpm turbo typecheck --filter='[HEAD^1]' --continue

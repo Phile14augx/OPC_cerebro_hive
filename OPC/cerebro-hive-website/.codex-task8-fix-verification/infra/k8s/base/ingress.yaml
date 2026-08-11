@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cerebro-hive-public
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+spec:
+  tls:
+    - hosts:
+        - app.cerebrohive.com
+        - forge.cerebrohive.com
+        - api.cerebrohive.com
+        - gateway.cerebrohive.com
+      secretName: cerebro-hive-tls
+  rules:
+    - host: app.cerebrohive.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: studio, port: { name: http } }
+    - host: forge.cerebrohive.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: forge, port: { name: http } }
+    - host: api.cerebrohive.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: platform-api, port: { name: http } }
+    - host: gateway.cerebrohive.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: ai-gateway, port: { name: http } }

@@ -1,0 +1,41 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# ArgoCD Application — Monitoring Stack (Prometheus + Grafana)
+# Auto-syncs on main — monitoring is non-critical for the release gate.
+# ──────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cerebro-hive-monitoring
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: cerebro-hive
+    component: monitoring
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cerebro-hive
+
+  source:
+    repoURL: https://github.com/cerebrohive/cerebro-hive-website
+    targetRevision: main
+    path: infra/k8s/base/monitoring
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m
+
+  revisionHistoryLimit: 5

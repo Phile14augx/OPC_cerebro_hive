@@ -1,0 +1,16 @@
+{
+  "$comment": "Gate C criteria — ADR 0010. Every probe must FAIL to breach. Any success reopens the ADR.",
+  "fixedAt": "2026-08-01",
+  "probes": [
+    "cross-tenant-row-read",
+    "unset-current-org",
+    "stale-pooled-connection",
+    "cross-tenant-presign",
+    "adversarial-embedding-retrieval",
+    "cross-tenant-volume-access",
+    "service-account-token-escalation",
+    "uncleared-export-class-read"
+  ],
+  "requireAllProbesBlocked": true,
+  "$note": "adversarial-embedding-retrieval uses near-identical vectors. The naive version with dissimilar vectors passes even when isolation is entirely broken."
+}

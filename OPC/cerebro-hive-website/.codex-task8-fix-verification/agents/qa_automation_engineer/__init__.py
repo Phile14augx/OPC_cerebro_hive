@@ -1,0 +1,2 @@
+from .skills import QA_AUTOMATION_ENGINEER_SKILLS
+__all__ = ["QA_AUTOMATION_ENGINEER_SKILLS"]

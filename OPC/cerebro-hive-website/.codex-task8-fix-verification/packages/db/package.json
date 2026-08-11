@@ -1,0 +1,34 @@
+{
+  "name": "@cerebro/db",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').cpSync('src/generated/client','dist/src/generated/client',{recursive:true})\"",
+    "generate": "prisma generate",
+    "push": "prisma db push",
+    "migrate:dev": "prisma migrate dev",
+    "studio": "prisma studio",
+    "lint": "eslint \"**/*.ts*\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.9.0",
+    "@prisma/client": "^7.9.0",
+    "@prisma/client-runtime-utils": "^7.9.0",
+    "@prisma/config": "^7.9.0",
+    "pg": "^8.22.0",
+    "@cerebro/runtime-core": "workspace:*",
+    "@cerebro/runtime-contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "prisma": "^7.9.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.0.0"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

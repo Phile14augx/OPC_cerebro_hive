@@ -1,0 +1,207 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive SLO Definitions — Sloth format
+# https://sloth.dev
+#
+# Generate PrometheusRules with:
+#   sloth generate -i infra/sre/sloth/cerebro-hive-slos.yaml -o infra/k8s/base/sre/
+#
+# Burn-rate windows: 1h (fast), 6h (slow) — multi-window multi-burn-rate alerts
+# ──────────────────────────────────────────────────────────────────────────────
+
+version: "prometheus/v1"
+
+service: cerebro-hive
+
+labels:
+  team: platform-engineering
+  environment: production
+
+slos:
+
+  # ── CerebroStudio — availability ──────────────────────────────────────────
+  - name: studio-availability
+    objective: 99.9
+    description: >
+      99.9% of studio HTTP requests succeed (non-5xx) over a 30-day rolling window.
+    sli:
+      events:
+        error_query: |
+          sum(rate(http_server_requests_total{service="studio",status_code=~"5.."}[{{.window}}]))
+        total_query: |
+          sum(rate(http_server_requests_total{service="studio"}[{{.window}}]))
+    alerting:
+      name: StudioAvailabilitySLO
+      labels:
+        severity: critical
+        service: studio
+      annotations:
+        summary: "Studio SLO burn rate exceeded"
+        runbook_url: "https://runbooks.cerebrohive.com/studio/availability"
+      page_alert:
+        labels:
+          severity: critical
+          channel: pagerduty
+      ticket_alert:
+        labels:
+          severity: warning
+          channel: slack
+
+  # ── CerebroStudio — latency ───────────────────────────────────────────────
+  - name: studio-latency
+    objective: 95.0
+    description: >
+      95% of studio requests complete within 2 seconds (P95 < 2000ms).
+    sli:
+      events:
+        error_query: |
+          sum(rate(http_server_request_duration_ms_bucket{service="studio",le="2000"}[{{.window}}]))
+        total_query: |
+          sum(rate(http_server_request_duration_ms_count{service="studio"}[{{.window}}]))
+    alerting:
+      name: StudioLatencySLO
+      labels:
+        severity: warning
+        service: studio
+      annotations:
+        summary: "Studio latency SLO burn rate exceeded"
+        runbook_url: "https://runbooks.cerebrohive.com/studio/latency"
+      page_alert:
+        labels:
+          severity: warning
+      ticket_alert:
+        labels:
+          severity: info
+
+  # ── Platform API — availability ───────────────────────────────────────────
+  - name: platform-api-availability
+    objective: 99.95
+    description: >
+      99.95% of platform-api requests succeed. Stricter than UI — API errors cascade.
+    sli:
+      events:
+        error_query: |
+          sum(rate(http_server_requests_total{service="platform-api",status_code=~"5.."}[{{.window}}]))
+        total_query: |
+          sum(rate(http_server_requests_total{service="platform-api"}[{{.window}}]))
+    alerting:
+      name: PlatformAPIAvailabilitySLO
+      labels:
+        severity: critical
+        service: platform-api
+      annotations:
+        summary: "Platform API SLO burn rate exceeded"
+        runbook_url: "https://runbooks.cerebrohive.com/platform-api/availability"
+      page_alert:
+        labels:
+          severity: critical
+          channel: pagerduty
+      ticket_alert:
+        labels:
+          severity: warning
+
+  # ── Platform API — latency ────────────────────────────────────────────────
+  - name: platform-api-latency
+    objective: 99.0
+    description: >
+      99% of platform-api requests complete within 500ms.
+    sli:
+      events:
+        error_query: |
+          sum(rate(http_server_request_duration_ms_bucket{service="platform-api",le="500"}[{{.window}}]))
+        total_query: |
+          sum(rate(http_server_request_duration_ms_count{service="platform-api"}[{{.window}}]))
+    alerting:
+      name: PlatformAPILatencySLO
+      labels:
+        severity: warning
+        service: platform-api
+      annotations:
+        summary: "Platform API latency SLO burn rate exceeded"
+        runbook_url: "https://runbooks.cerebrohive.com/platform-api/latency"
+      page_alert:
+        labels:
+          severity: warning
+      ticket_alert:
+        labels:
+          severity: info
+
+  # ── AI Gateway — availability ──────────────────────────────────────────────
+  - name: ai-gateway-availability
+    objective: 99.5
+    description: >
+      99.5% of AI gateway requests succeed. Lower than API services — LLM providers
+      have inherent transient failures. Excludes 429 (rate limit) from error budget.
+    sli:
+      events:
+        error_query: |
+          sum(rate(ai_errors_total{provider=~".+"}[{{.window}}]))
+        total_query: |
+          sum(rate(ai_requests_total{provider=~".+"}[{{.window}}]))
+    alerting:
+      name: AIGatewayAvailabilitySLO
+      labels:
+        severity: critical
+        service: ai-gateway
+      annotations:
+        summary: "AI Gateway SLO burn rate exceeded"
+        runbook_url: "https://runbooks.cerebrohive.com/ai-gateway/availability"
+      page_alert:
+        labels:
+          severity: critical
+          channel: pagerduty
+      ticket_alert:
+        labels:
+          severity: warning
+
+  # ── AI Gateway — response time ─────────────────────────────────────────────
+  - name: ai-gateway-response-time
+    objective: 90.0
+    description: >
+      90% of AI non-streaming requests complete within 10 seconds.
+      Streaming TTFT (time-to-first-token) SLO: 90% under 2 seconds.
+    sli:
+      events:
+        error_query: |
+          sum(rate(ai_request_duration_ms_bucket{le="10000"}[{{.window}}]))
+        total_query: |
+          sum(rate(ai_request_duration_ms_count[{{.window}}]))
+    alerting:
+      name: AIGatewayResponseTimeSLO
+      labels:
+        severity: warning
+        service: ai-gateway
+      annotations:
+        summary: "AI Gateway response time SLO exceeded"
+        runbook_url: "https://runbooks.cerebrohive.com/ai-gateway/latency"
+      page_alert:
+        labels:
+          severity: warning
+      ticket_alert:
+        labels:
+          severity: info
+
+  # ── Forge API — workflow execution success ─────────────────────────────────
+  - name: forge-api-workflow-success
+    objective: 99.0
+    description: >
+      99% of HiveForge workflow executions complete successfully.
+    sli:
+      events:
+        error_query: |
+          sum(rate(cerebro_agent_tasks_completed_total{status="failure"}[{{.window}}]))
+        total_query: |
+          sum(rate(cerebro_agent_tasks_completed_total[{{.window}}]))
+    alerting:
+      name: ForgeAPIWorkflowSuccessSLO
+      labels:
+        severity: warning
+        service: forge-api
+      annotations:
+        summary: "Forge API workflow success SLO exceeded"
+        runbook_url: "https://runbooks.cerebrohive.com/forge-api/workflows"
+      page_alert:
+        labels:
+          severity: warning
+      ticket_alert:
+        labels:
+          severity: info

@@ -1,0 +1,392 @@
+# Tetragon eBPF Tracing Policies — CerebroHive Runtime Enforcement
+#
+# Tetragon provides kernel-level enforcement via eBPF: it can not only detect
+# but also KILL or OVERRIDE syscalls in real time, before the kernel services them.
+# This complements Falco (which detects after the fact) with active prevention.
+#
+# Architecture:
+#   Falco  → detection (alert after syscall completes)
+#   Tetragon → enforcement (SIGKILL before syscall completes, or both)
+#
+# Install:
+#   helm repo add cilium https://helm.cilium.io
+#   helm upgrade --install tetragon cilium/tetragon \
+#     --namespace tetragon --create-namespace
+#   kubectl apply -f infra/tetragon/tracing-policies.yaml
+#
+# Verify:
+#   kubectl get tracingpolicy
+#   kubectl exec -n tetragon ds/tetragon -- tetra getevents -o compact
+#
+# Note: TracingPolicy is Tetragon's CRD. TracingPolicyNamespaced scopes to
+# a single namespace. We use cluster-scoped policies with namespace selectors.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Policy 1: Block + Detect ptrace in agent namespaces
+# gVisor already blocks this; Tetragon adds a backstop for runc containers.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: cerebro-block-ptrace
+  annotations:
+    cerebro.io/description: "Block ptrace(2) in agent namespaces — backstop for gVisor"
+    cerebro.io/maps-to: "G1.7, CEREBRO_PTRACE_ATTACH"
+spec:
+  podSelector:
+    matchLabels:
+      cerebro.io/sandboxed: "true"
+  namespaceSelector:
+    matchNames:
+      - cerebro-prod
+      - cerebro-staging
+
+  kprobes:
+    - call: "sys_ptrace"
+      syscall: true
+      return: true
+      args:
+        - index: 0
+          type: int    # request (PTRACE_ATTACH = 16)
+        - index: 1
+          type: int    # pid
+      # ACTION: kill the calling process immediately
+      selectors:
+        - matchArgs:
+            - index: 0
+              operator: NotEqual
+              values:
+                - "0"   # PTRACE_TRACEME (self — used by runtime tools, allowed)
+          matchActions:
+            - action: Sigkill
+        - matchActions:
+            - action: Post   # Also emit a Tetragon event for logging
+
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# Policy 2: Block raw socket creation
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: cerebro-block-raw-socket
+  annotations:
+    cerebro.io/description: "Block AF_PACKET and SOCK_RAW socket creation"
+    cerebro.io/maps-to: "G1.2, CEREBRO_RAW_SOCKET"
+spec:
+  namespaceSelector:
+    matchNames:
+      - cerebro-prod
+      - cerebro-staging
+
+  kprobes:
+    - call: "sys_socket"
+      syscall: true
+      return: false
+      args:
+        - index: 0
+          type: int    # domain
+        - index: 1
+          type: int    # type
+        - index: 2
+          type: int    # protocol
+      selectors:
+        # Block AF_PACKET (domain=17) entirely
+        - matchArgs:
+            - index: 0
+              operator: Equal
+              values:
+                - "17"   # AF_PACKET
+          matchActions:
+            - action: Sigkill
+            - action: Post
+
+        # Block SOCK_RAW (type=3) for AF_INET (2) and AF_INET6 (10)
+        - matchArgs:
+            - index: 0
+              operator: In
+              values:
+                - "2"    # AF_INET
+                - "10"   # AF_INET6
+            - index: 1
+              operator: Equal
+              values:
+                - "3"    # SOCK_RAW
+          matchActions:
+            - action: Sigkill
+            - action: Post
+
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# Policy 3: Block kernel module loading
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: cerebro-block-kernel-modules
+  annotations:
+    cerebro.io/description: "Block init_module and finit_module syscalls"
+    cerebro.io/maps-to: "G1 blocked syscalls, CEREBRO_KERNEL_MODULE_LOAD"
+spec:
+  namespaceSelector:
+    matchNames:
+      - cerebro-prod
+      - cerebro-staging
+
+  kprobes:
+    - call: "sys_init_module"
+      syscall: true
+      selectors:
+        - matchActions:
+            - action: Sigkill
+            - action: Post
+
+    - call: "sys_finit_module"
+      syscall: true
+      selectors:
+        - matchActions:
+            - action: Sigkill
+            - action: Post
+
+    - call: "sys_delete_module"
+      syscall: true
+      selectors:
+        - matchActions:
+            - action: Sigkill
+            - action: Post
+
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# Policy 4: Block user namespace creation
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: cerebro-block-user-ns
+  annotations:
+    cerebro.io/description: "Block unshare(CLONE_NEWUSER) and clone(CLONE_NEWUSER)"
+    cerebro.io/maps-to: "G1.10, CEREBRO_USER_NS_CREATION"
+spec:
+  namespaceSelector:
+    matchNames:
+      - cerebro-prod
+      - cerebro-staging
+
+  kprobes:
+    - call: "sys_unshare"
+      syscall: true
+      args:
+        - index: 0
+          type: uint32   # clone_flags
+      selectors:
+        # CLONE_NEWUSER = 0x10000000
+        - matchArgs:
+            - index: 0
+              operator: Mask
+              values:
+                - "268435456"   # 0x10000000 = CLONE_NEWUSER
+          matchActions:
+            - action: Sigkill
+            - action: Post
+
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# Policy 5: Block writes to sysrq-trigger and sensitive /proc paths
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: cerebro-block-sysrq-and-proc
+  annotations:
+    cerebro.io/description: "Block writes to /proc/sysrq-trigger and /dev/mem"
+    cerebro.io/maps-to: "G1.5, G1.3, CEREBRO_SYSRQ_TRIGGER, CEREBRO_SENSITIVE_FILE_READ"
+spec:
+  namespaceSelector:
+    matchNames:
+      - cerebro-prod
+      - cerebro-staging
+
+  # Use kfunc for open() path filtering (more precise than kprobe for file paths)
+  kprobes:
+    - call: "sys_openat"
+      syscall: true
+      return: false
+      args:
+        - index: 0
+          type: int       # dirfd
+        - index: 1
+          type: "char_buf"  # pathname
+        - index: 2
+          type: int       # flags
+      selectors:
+        - matchArgs:
+            - index: 1
+              operator: Prefix
+              values:
+                - "/proc/sysrq-trigger"
+          matchActions:
+            - action: Sigkill
+            - action: Post
+
+        - matchArgs:
+            - index: 1
+              operator: Prefix
+              values:
+                - "/dev/mem"
+                - "/dev/kmem"
+                - "/proc/kcore"
+          matchActions:
+            - action: Sigkill
+            - action: Post
+
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# Policy 6: Detect (log) perf_event_open — side-channel indicator
+# No kill here: perf_event_open returns EPERM in sandboxed containers,
+# so we log for detection evidence without redundant kill.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: cerebro-detect-perf-event
+  annotations:
+    cerebro.io/description: "Detect perf_event_open (side-channel probe)"
+    cerebro.io/maps-to: "G1, CEREBRO_PERF_EVENT_OPEN"
+spec:
+  namespaceSelector:
+    matchNames:
+      - cerebro-prod
+      - cerebro-staging
+
+  kprobes:
+    - call: "sys_perf_event_open"
+      syscall: true
+      return: true
+      selectors:
+        - matchActions:
+            - action: Post   # Log only — gVisor/seccomp already blocks this
+
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# Policy 7: Detect IMDS network access (169.254.169.254)
+# Tetragon can enforce at the network call level pre-connect.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: cerebro-block-imds-access
+  annotations:
+    cerebro.io/description: "Block TCP connect to 169.254.169.254 (AWS IMDS)"
+    cerebro.io/maps-to: "G1.1, CEREBRO_IMDS_ACCESS"
+spec:
+  namespaceSelector:
+    matchNames:
+      - cerebro-prod
+      - cerebro-staging
+
+  kprobes:
+    - call: "tcp_connect"
+      syscall: false
+      args:
+        - index: 0
+          type: "sock"
+      selectors:
+        - matchArgs:
+            - index: 0
+              operator: Equal
+              values:
+                - "169.254.169.254:80"
+                - "169.254.169.254:443"
+          matchActions:
+            - action: Sigkill
+            - action: Post
+
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# Policy 8: Detect memfd_create (fileless code execution)
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: cerebro-block-memfd-exec
+  annotations:
+    cerebro.io/description: "Block memfd_create + execveat (fileless malware)"
+    cerebro.io/maps-to: "CEREBRO_MEMFD_EXEC"
+spec:
+  namespaceSelector:
+    matchNames:
+      - cerebro-prod
+      - cerebro-staging
+
+  kprobes:
+    - call: "sys_memfd_create"
+      syscall: true
+      selectors:
+        - matchActions:
+            - action: Sigkill
+            - action: Post
+
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# Policy 9: Execution tracing — record all exec events in agent containers
+# This creates an immutable audit trail of every process spawned.
+# No kill — observation only, for forensics.
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: cerebro-exec-audit
+  annotations:
+    cerebro.io/description: "Audit trail of all exec events in cerebro namespaces"
+    cerebro.io/maps-to: "forensics, incident timeline"
+spec:
+  namespaceSelector:
+    matchNames:
+      - cerebro-prod
+      - cerebro-staging
+
+  kprobes:
+    - call: "sys_execve"
+      syscall: true
+      return: true
+      args:
+        - index: 0
+          type: "char_buf"   # filename
+        - index: 1
+          type: "char_buf_array"  # argv (first 10 args)
+      selectors:
+        - matchActions:
+            - action: Post   # Emit exec event to Tetragon gRPC output
+
+    - call: "sys_execveat"
+      syscall: true
+      return: true
+      args:
+        - index: 1
+          type: "char_buf"
+        - index: 2
+          type: "char_buf_array"
+      selectors:
+        - matchActions:
+            - action: Post
+
+---
+# ─────────────────────────────────────────────────────────────────────────────
+# Tetragon export config — ship events to Loki and Alertmanager
+# Apply via Helm: --set tetragon.exportFilename=/var/run/cilium/tetragon/tetragon.log
+# ─────────────────────────────────────────────────────────────────────────────
+# (Tetragon exports events as JSON to a file; a sidecar or Promtail picks these
+# up and ships them to Loki. The Helm chart configures this via values.)
+#
+# Example Helm values for Tetragon export + Prometheus metrics:
+#
+# tetragon:
+#   exportFilename: /var/run/cilium/tetragon/tetragon.log
+#   prometheusPort: 2112
+#
+# tetragonOperator:
+#   enabled: true
+#
+# export:
+#   securityEventFilters:
+#     - event_set: [PROCESS_EXEC, PROCESS_EXIT, PROCESS_KPROBE, PROCESS_TRACEPOINT]

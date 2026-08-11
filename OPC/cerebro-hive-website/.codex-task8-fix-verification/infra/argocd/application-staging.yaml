@@ -1,0 +1,84 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# ArgoCD Application — CerebroHive Staging
+# GitOps: any push to main auto-syncs to staging.
+# ──────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cerebro-hive-staging
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: cerebro-hive
+    environment: staging
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    # Notify Slack on sync events
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: cerebro-deployments
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: cerebro-alerts
+    notifications.argoproj.io/subscribe.on-health-degraded.slack: cerebro-alerts
+spec:
+  project: cerebro-hive
+
+  source:
+    repoURL: https://github.com/cerebrohive/cerebro-hive-website
+    targetRevision: main
+    path: infra/helm/cerebro-hive
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-staging.yaml
+      parameters:
+        # Images are updated here by the docker-build workflow via ArgoCD image updater
+        - name: studio.image.tag
+          value: "latest"
+        - name: forge.image.tag
+          value: "latest"
+        - name: platformApi.image.tag
+          value: "latest"
+        - name: forgeApi.image.tag
+          value: "latest"
+        - name: aiGateway.image.tag
+          value: "latest"
+        - name: swarmApi.image.tag
+          value: "latest"
+        - name: swarmRuntime.image.tag
+          value: "latest"
+        - name: agentRunner.image.tag
+          value: "latest"
+        - name: plannerService.image.tag
+          value: "latest"
+        - name: memoryService.image.tag
+          value: "latest"
+        - name: toolGateway.image.tag
+          value: "latest"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cerebro-hive
+
+  syncPolicy:
+    automated:
+      prune: true         # Remove resources deleted from git
+      selfHeal: true      # Correct drift automatically
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  revisionHistoryLimit: 5
+
+  # Health assessment overrides
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas   # HPA manages replicas, ignore drift

@@ -1,0 +1,43 @@
+---
+# ──────────────────────────────────────────────────────────────────────────────
+# cert-manager Certificate — wildcard TLS via Let's Encrypt (or ACM)
+# ──────────────────────────────────────────────────────────────────────────────
+
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: devops@cerebrohive.com
+    privateKeySecretRef:
+      name: letsencrypt-prod-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+      - dns01:
+          route53:
+            region: us-east-1
+            hostedZoneID: ""   # Override in environment overlay
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cerebro-hive-tls
+  namespace: cerebro-hive
+spec:
+  secretName: cerebro-hive-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: "*.cerebrohive.com"
+  dnsNames:
+    - cerebrohive.com
+    - "*.cerebrohive.com"
+    - app.cerebrohive.com
+    - api.cerebrohive.com
+    - forge.cerebrohive.com
+    - gateway.cerebrohive.com

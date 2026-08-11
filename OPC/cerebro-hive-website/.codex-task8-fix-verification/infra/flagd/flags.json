@@ -1,0 +1,132 @@
+{
+  "$schema": "https://flagd.dev/schema/v0/flags.json",
+  "flags": {
+    "ai-streaming-enabled": {
+      "state": "ENABLED",
+      "variants": {
+        "on": true,
+        "off": false
+      },
+      "defaultVariant": "on",
+      "targeting": {}
+    },
+
+    "ai-gateway-provider": {
+      "state": "ENABLED",
+      "variants": {
+        "anthropic": "anthropic",
+        "openai": "openai",
+        "google": "google",
+        "azure": "azure"
+      },
+      "defaultVariant": "anthropic",
+      "targeting": {
+        "if": [
+          { "===": [{ "var": "workspaceId" }, "enterprise-001"] },
+          "azure",
+          "anthropic"
+        ]
+      }
+    },
+
+    "rag-enabled": {
+      "state": "ENABLED",
+      "variants": {
+        "on": true,
+        "off": false
+      },
+      "defaultVariant": "on",
+      "targeting": {}
+    },
+
+    "multi-agent-workflows": {
+      "state": "ENABLED",
+      "variants": {
+        "on": true,
+        "off": false
+      },
+      "defaultVariant": "off",
+      "targeting": {
+        "if": [
+          {
+            "in": [{ "var": "userId" }, ["beta-001", "beta-002", "beta-003"]]
+          },
+          "on",
+          "off"
+        ]
+      }
+    },
+
+    "hive-forge-enabled": {
+      "state": "ENABLED",
+      "variants": {
+        "on": true,
+        "off": false
+      },
+      "defaultVariant": "off",
+      "targeting": {
+        "if": [
+          { "===": [{ "var": "plan" }, "enterprise"] },
+          "on",
+          "off"
+        ]
+      }
+    },
+
+    "cerebro-archive-indexing": {
+      "state": "ENABLED",
+      "variants": {
+        "on": true,
+        "off": false
+      },
+      "defaultVariant": "on",
+      "targeting": {}
+    },
+
+    "llm-response-cache": {
+      "state": "ENABLED",
+      "variants": {
+        "on": true,
+        "off": false
+      },
+      "defaultVariant": "on",
+      "targeting": {}
+    },
+
+    "ai-cost-tracking": {
+      "state": "ENABLED",
+      "variants": {
+        "on": true,
+        "off": false
+      },
+      "defaultVariant": "on",
+      "targeting": {}
+    },
+
+    "new-studio-ui": {
+      "state": "DISABLED",
+      "variants": {
+        "on": true,
+        "off": false
+      },
+      "defaultVariant": "off",
+      "targeting": {}
+    },
+
+    "hive-ops-dashboard": {
+      "state": "ENABLED",
+      "variants": {
+        "on": true,
+        "off": false
+      },
+      "defaultVariant": "off",
+      "targeting": {
+        "if": [
+          { "===": [{ "var": "role" }, "admin"] },
+          "on",
+          "off"
+        ]
+      }
+    }
+  }
+}

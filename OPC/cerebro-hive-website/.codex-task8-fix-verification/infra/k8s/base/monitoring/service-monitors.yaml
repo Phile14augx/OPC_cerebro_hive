@@ -1,0 +1,87 @@
+---
+# ──────────────────────────────────────────────────────────────────────────────
+# Prometheus ServiceMonitors — scrape all CerebroHive services
+# ──────────────────────────────────────────────────────────────────────────────
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: studio-monitor
+  namespace: cerebro-hive-monitoring
+  labels:
+    app.kubernetes.io/part-of: cerebro-hive
+    release: kube-prometheus-stack
+spec:
+  namespaceSelector:
+    matchNames: [cerebro-hive]
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: studio
+  endpoints:
+    - port: http
+      path: /api/metrics
+      interval: 30s
+      scrapeTimeout: 10s
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: platform-api-monitor
+  namespace: cerebro-hive-monitoring
+  labels:
+    app.kubernetes.io/part-of: cerebro-hive
+    release: kube-prometheus-stack
+spec:
+  namespaceSelector:
+    matchNames: [cerebro-hive]
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: platform-api
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+      scrapeTimeout: 10s
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ai-gateway-monitor
+  namespace: cerebro-hive-monitoring
+  labels:
+    app.kubernetes.io/part-of: cerebro-hive
+    release: kube-prometheus-stack
+spec:
+  namespaceSelector:
+    matchNames: [cerebro-hive]
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ai-gateway
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+      scrapeTimeout: 10s
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: forge-api-monitor
+  namespace: cerebro-hive-monitoring
+  labels:
+    app.kubernetes.io/part-of: cerebro-hive
+    release: kube-prometheus-stack
+spec:
+  namespaceSelector:
+    matchNames: [cerebro-hive]
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: forge-api
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+      scrapeTimeout: 10s

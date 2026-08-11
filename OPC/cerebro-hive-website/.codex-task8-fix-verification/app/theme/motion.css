@@ -1,0 +1,29 @@
+/* ============================================================
+   CEREBRO HIVE DESIGN SYSTEM v2 — Motion Tokens
+   ============================================================ */
+
+:root {
+  --motion-duration-fast: 150ms;
+  --motion-duration: 250ms;
+  --motion-duration-slow: 400ms;
+  --motion-easing-default: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --motion-easing-linear: linear;
+  --motion-easing-in: cubic-bezier(0.4, 0, 1, 1);
+  --motion-easing-out: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.dark {
+  --motion-duration-fast: 200ms;
+  --motion-duration: 500ms;
+  --motion-duration-slow: 700ms;
+  --motion-easing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-easing-linear: linear;
+  --motion-easing-in: cubic-bezier(0.4, 0, 1, 1);
+  --motion-easing-out: cubic-bezier(0, 0, 0.2, 1);
+}
+
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-timing-function: var(--motion-easing-out);
+  transition-duration: var(--motion-duration-fast);
+}

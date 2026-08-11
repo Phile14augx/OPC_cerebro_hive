@@ -1,0 +1,19 @@
+{
+  "name": "@cerebro/event-bus",
+  "version": "0.1.0",
+  "description": "CerebroHive Event Bus leveraging NATS JetStream.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@cerebro/contracts": "workspace:*",
+    "nats": "^2.29.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

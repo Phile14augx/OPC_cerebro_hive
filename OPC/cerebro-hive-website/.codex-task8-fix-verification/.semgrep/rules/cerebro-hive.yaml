@@ -1,0 +1,244 @@
+rules:
+  # ──────────────────────────────────────────────────────────────────────────
+  # CerebroHive — Custom Semgrep Security Rules
+  # Applied in addition to OWASP Top 10 and TypeScript rulesets.
+  # ──────────────────────────────────────────────────────────────────────────
+
+  # ── LLM Security ──────────────────────────────────────────────────────────
+
+  - id: prompt-injection-risk
+    message: |
+      Potential prompt injection: user input is concatenated directly into a prompt string.
+      Use structured message arrays or template functions instead of string interpolation.
+    severity: WARNING
+    languages: [typescript, javascript]
+    patterns:
+      - pattern: |
+          `...${$USER_INPUT}...`
+      - metavariable-regex:
+          metavariable: $USER_INPUT
+          regex: "(userInput|userMessage|query|question|prompt|input|content|text)"
+    metadata:
+      category: security
+      cwe: CWE-74
+      owasp: LLM01
+      references:
+        - https://owasp.org/www-project-top-10-for-large-language-model-applications/
+
+  - id: llm-api-key-hardcoded
+    message: |
+      Hardcoded LLM API key detected. Use environment variables or AWS Secrets Manager.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern: |
+          apiKey: "$KEY"
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: "^(sk-|claude-|AIza|sk-ant-)[A-Za-z0-9_-]{10,}"
+    metadata:
+      category: security
+      cwe: CWE-798
+
+  - id: llm-output-not-sanitized
+    message: |
+      LLM output rendered as HTML without sanitization. This can lead to XSS
+      if the LLM returns malicious content. Use dangerouslySetInnerHTML only
+      with a sanitization library (e.g., DOMPurify).
+    severity: ERROR
+    languages: [typescript, javascript, tsx]
+    patterns:
+      - pattern: |
+          dangerouslySetInnerHTML={{ __html: $LLM_VAR }}
+    metadata:
+      category: security
+      cwe: CWE-79
+      owasp: A03
+
+  # ── Authentication & Authorization ────────────────────────────────────────
+
+  - id: missing-auth-check
+    message: |
+      Route handler may be missing authentication check.
+      All API routes should call verifyAuth() or use the auth middleware.
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern: |
+          export async function $METHOD(req: Request, ...) {
+            ...
+          }
+      - pattern-not: |
+          export async function $METHOD(req: Request, ...) {
+            ...verifyAuth(...)...
+          }
+      - pattern-not: |
+          export async function $METHOD(req: Request, ...) {
+            ...getSession(...)...
+          }
+    paths:
+      include:
+        - "apps/*/app/api/**"
+        - "apps/*/pages/api/**"
+    metadata:
+      category: security
+      cwe: CWE-306
+
+  - id: jwt-algorithm-none
+    message: |
+      JWT verification allows 'none' algorithm which disables signature checking.
+      Always specify allowed algorithms explicitly.
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern: |
+      jwt.verify($TOKEN, $SECRET, { algorithms: ["none"] })
+    metadata:
+      category: security
+      cwe: CWE-327
+
+  # ── Injection ─────────────────────────────────────────────────────────────
+
+  - id: raw-sql-with-template-literal
+    message: |
+      Raw SQL query built with template literal — potential SQL injection.
+      Use Prisma query builder or parameterized queries.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern: |
+          $DB.$EXEC(`...${$VAR}...`)
+      - metavariable-regex:
+          metavariable: $DB
+          regex: "(db|prisma|pool|client|connection)"
+    metadata:
+      category: security
+      cwe: CWE-89
+      owasp: A03
+
+  - id: unsafe-deserialization
+    message: |
+      eval() is dangerous and can lead to Remote Code Execution.
+      Remove all eval() calls and use safer alternatives.
+    severity: ERROR
+    languages: [typescript, javascript]
+    pattern: eval(...)
+    metadata:
+      category: security
+      cwe: CWE-95
+
+  # ── Data Exposure ─────────────────────────────────────────────────────────
+
+  - id: sensitive-data-in-logs
+    message: |
+      Potentially sensitive data logged. Avoid logging passwords, API keys,
+      tokens, or PII. Use structured logging with field allowlists.
+    severity: WARNING
+    languages: [typescript, javascript]
+    patterns:
+      - pattern: |
+          console.$LOG(..., $SENSITIVE, ...)
+      - metavariable-regex:
+          metavariable: $SENSITIVE
+          regex: "(password|passwd|secret|token|apiKey|api_key|credit_card|ssn|private_key)"
+    metadata:
+      category: security
+      cwe: CWE-532
+
+  - id: error-stack-trace-exposed
+    message: |
+      Stack trace exposed in API response. This leaks internal implementation
+      details to clients. Use a generic error message in production.
+    severity: WARNING
+    languages: [typescript, javascript]
+    patterns:
+      - pattern: |
+          res.json({ error: $ERR.stack })
+      - pattern: |
+          res.json({ stack: $ERR.stack })
+    metadata:
+      category: security
+      cwe: CWE-209
+
+  # ── CerebroHive Architecture Rules ───────────────────────────────────────
+
+  - id: direct-db-access-from-frontend
+    message: |
+      Direct Prisma database access detected in a frontend app (studio/forge).
+      Database access must go through the platform-api or forge-api service layers.
+      This enforces DDD boundaries and prevents data layer coupling.
+    severity: ERROR
+    languages: [typescript]
+    patterns:
+      - pattern: |
+          import { ... } from "@cerebro/database"
+    paths:
+      include:
+        - "apps/studio/**"
+        - "apps/forge/**"
+    metadata:
+      category: architecture
+      team: platform
+
+  - id: ai-gateway-bypass
+    message: |
+      Direct LLM SDK call detected outside of the @cerebro/ai-gateway package.
+      All LLM calls must go through the AI Gateway for cost tracking, rate limiting,
+      failover, and observability.
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern: |
+          new Anthropic(...)
+      - pattern: |
+          new OpenAI(...)
+    paths:
+      exclude:
+        - "packages/ai-gateway/**"
+        - "packages/ai/**"
+    metadata:
+      category: architecture
+      team: ai-platform
+
+  - id: missing-error-handling
+    message: |
+      async function without try/catch or .catch(). Unhandled promise rejections
+      will crash the process. Add explicit error handling.
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern: |
+          async function $FUNC(...) {
+            await $EXPR;
+          }
+      - pattern-not: |
+          async function $FUNC(...) {
+            try { ... } catch($E) { ... }
+          }
+    metadata:
+      category: reliability
+
+  # ── SSRF Prevention ───────────────────────────────────────────────────────
+
+  - id: ssrf-url-from-user
+    message: |
+      URL fetched with user-controlled input — potential SSRF.
+      Validate and allowlist URLs before making external requests.
+    severity: ERROR
+    languages: [typescript, javascript]
+    patterns:
+      - pattern: |
+          fetch($URL, ...)
+      - metavariable-pattern:
+          metavariable: $URL
+          patterns:
+            - pattern: $REQ.$FIELD
+    paths:
+      include:
+        - "apps/*/app/api/**"
+        - "apps/*/pages/api/**"
+        - "services/**"
+        - "packages/**"
+    metadata:
+      category: security
+      cwe: CWE-918
+      owasp: A10

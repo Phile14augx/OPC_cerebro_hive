@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CerebroSphere Design Tokens ──────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-void:          #050507;
+  --bg-primary:       #09090d;
+  --bg-surface:       #0f0f14;
+  --bg-elevated:      #16161e;
+  --bg-overlay:       #1c1c26;
+
+  /* Brand — cerebro indigo/violet */
+  --brand-core:       #6366f1;
+  --brand-bright:     #818cf8;
+  --brand-subtle:     rgba(99,102,241,0.10);
+  --brand-glow:       rgba(99,102,241,0.25);
+
+  /* Accent — sphere gold */
+  --accent-gold:      #f59e0b;
+  --accent-gold-dim:  rgba(245,158,11,0.15);
+
+  /* Role colours */
+  --role-ceo:         #a78bfa;   /* violet */
+  --role-cto:         #38bdf8;   /* sky */
+  --role-coo:         #34d399;   /* emerald */
+  --role-dept:        #fb923c;   /* orange */
+
+  /* Status */
+  --status-healthy:   #22c55e;
+  --status-degraded:  #f59e0b;
+  --status-critical:  #ef4444;
+  --status-unknown:   #6b7280;
+  --status-offline:   #374151;
+
+  /* Text */
+  --text-primary:     #f1f5f9;
+  --text-secondary:   #94a3b8;
+  --text-muted:       #475569;
+  --text-brand:       #818cf8;
+
+  /* Borders */
+  --border-subtle:    rgba(255,255,255,0.06);
+  --border-default:   rgba(255,255,255,0.09);
+  --border-strong:    rgba(255,255,255,0.14);
+
+  /* Radius */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --radius-xl:  20px;
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg-void);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Sphere glow animations ───────────────────────────────────────────────── */
+@keyframes sphere-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--brand-glow); }
+  50%       { box-shadow: 0 0 0 8px transparent; }
+}
+
+@keyframes status-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes grid-reveal {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Utility classes ──────────────────────────────────────────────────────── */
+.sphere-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.sphere-card:hover {
+  border-color: var(--border-strong);
+}
+
+.sphere-card.interactive:hover {
+  border-color: var(--brand-core);
+  box-shadow: 0 0 0 1px var(--brand-glow);
+  cursor: pointer;
+}
+
+.gradient-brand {
+  background: linear-gradient(135deg, var(--brand-core), var(--brand-bright));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot.healthy  { background: var(--status-healthy); }
+.status-dot.degraded { background: var(--status-degraded); }
+.status-dot.critical { background: var(--status-critical); animation: status-blink 1.2s ease-in-out infinite; }
+.status-dot.unknown  { background: var(--status-unknown); }
+.status-dot.offline  { background: var(--status-offline); }
+
+.fade-in   { animation: fade-in 320ms ease-out both; }
+.slide-in  { animation: slide-in 280ms ease-out both; }
+.grid-reveal { animation: grid-reveal 400ms ease-out both; }
+
+/* ── Scrollbar ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }

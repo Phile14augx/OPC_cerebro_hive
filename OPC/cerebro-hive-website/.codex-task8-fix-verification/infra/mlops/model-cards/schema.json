@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cerebrohive.com/schemas/model-card/v1",
+  "title": "CerebroHive Model Card",
+  "description": "Standardized metadata sheet for all models deployed on the CerebroHive platform",
+  "type": "object",
+  "required": ["modelDetails", "intendedUse", "metrics", "ethicsAndFairness", "deployment"],
+  "properties": {
+    "modelDetails": {
+      "type": "object",
+      "required": ["name", "version", "type", "architecture", "trainedBy", "trainedDate"],
+      "properties": {
+        "name":         { "type": "string", "description": "Human-readable model name" },
+        "version":      { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "mlflowRunId":  { "type": "string", "description": "MLflow run ID for reproducibility" },
+        "type": {
+          "type": "string",
+          "enum": ["classification", "regression", "embedding", "generation", "reranker", "fine-tuned-llm"]
+        },
+        "architecture": { "type": "string", "description": "e.g. transformer, bi-encoder, BERT-base" },
+        "baseModel":    { "type": "string", "description": "Foundation model if fine-tuned" },
+        "trainedBy":    { "type": "string", "description": "Team or individual" },
+        "trainedDate":  { "type": "string", "format": "date" },
+        "description":  { "type": "string" },
+        "paperUrl":     { "type": "string", "format": "uri" },
+        "repositoryUrl":{ "type": "string", "format": "uri" },
+        "license":      { "type": "string", "default": "proprietary" }
+      }
+    },
+
+    "trainingData": {
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name":        { "type": "string" },
+              "description": { "type": "string" },
+              "size":        { "type": "string", "description": "e.g. '50k examples'" },
+              "dateRange":   { "type": "string" },
+              "license":     { "type": "string" },
+              "pii":         { "type": "boolean", "description": "Contains PII?" }
+            }
+          }
+        },
+        "preprocessing":   { "type": "string" },
+        "splitRatios": {
+          "type": "object",
+          "properties": {
+            "train": { "type": "number" },
+            "val":   { "type": "number" },
+            "test":  { "type": "number" }
+          }
+        }
+      }
+    },
+
+    "intendedUse": {
+      "type": "object",
+      "required": ["primaryUse", "outOfScope"],
+      "properties": {
+        "primaryUse":   { "type": "string" },
+        "users":        { "type": "array", "items": { "type": "string" } },
+        "useCases":     { "type": "array", "items": { "type": "string" } },
+        "outOfScope":   { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "metrics": {
+      "type": "object",
+      "required": ["evaluation"],
+      "properties": {
+        "evaluation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["metric", "value", "dataset"],
+            "properties": {
+              "metric":   { "type": "string", "description": "e.g. accuracy, F1, NDCG@10" },
+              "value":    { "type": "number" },
+              "threshold": { "type": "number", "description": "Minimum acceptable value" },
+              "dataset":  { "type": "string" },
+              "split":    { "type": "string", "enum": ["train", "val", "test"] }
+            }
+          }
+        },
+        "performance": {
+          "type": "object",
+          "properties": {
+            "p50LatencyMs": { "type": "number" },
+            "p95LatencyMs": { "type": "number" },
+            "p99LatencyMs": { "type": "number" },
+            "throughputQps": { "type": "number" },
+            "modelSizeMb":  { "type": "number" },
+            "gpuRequired":  { "type": "boolean" }
+          }
+        }
+      }
+    },
+
+    "ethicsAndFairness": {
+      "type": "object",
+      "required": ["biasAnalysis", "limitations"],
+      "properties": {
+        "biasAnalysis": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "attribute": { "type": "string", "description": "e.g. gender, race, age" },
+              "findings":  { "type": "string" },
+              "mitigations": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "limitations":        { "type": "array", "items": { "type": "string" } },
+        "recommendations":    { "type": "array", "items": { "type": "string" } },
+        "humanOversightRequired": { "type": "boolean", "default": true }
+      }
+    },
+
+    "deployment": {
+      "type": "object",
+      "required": ["stage", "endpoint"],
+      "properties": {
+        "stage": {
+          "type": "string",
+          "enum": ["development", "staging", "production", "deprecated"]
+        },
+        "endpoint":        { "type": "string", "description": "Inference endpoint URL" },
+        "inferenceEngine": { "type": "string", "description": "e.g. triton, torchserve, vllm" },
+        "scalingPolicy":   { "type": "string" },
+        "monitoringDashboard": { "type": "string", "format": "uri" },
+        "driftDetection": {
+          "type": "object",
+          "properties": {
+            "enabled":          { "type": "boolean" },
+            "method":           { "type": "string", "description": "e.g. PSI, KS-test, HDDDM" },
+            "threshold":        { "type": "number" },
+            "referenceDataset": { "type": "string" }
+          }
+        },
+        "retrainingTriggers": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "contacts": {
+      "type": "object",
+      "properties": {
+        "modelOwner":  { "type": "string" },
+        "team":        { "type": "string" },
+        "slack":       { "type": "string" },
+        "oncall":      { "type": "string" }
+      }
+    }
+  }
+}

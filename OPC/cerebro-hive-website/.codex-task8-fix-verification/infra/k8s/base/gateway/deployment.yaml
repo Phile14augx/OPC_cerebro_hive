@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: gateway
+    app.kubernetes.io/component: api-gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gateway
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gateway
+        app.kubernetes.io/component: api-gateway
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9091"
+        prometheus.io/path: "/metrics"
+        sidecar.istio.io/proxyCPU: "50m"
+        sidecar.istio.io/proxyMemory: "64Mi"
+    spec:
+      serviceAccountName: gateway
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: gateway
+      containers:
+        - name: gateway
+          image: cerebrohive/gateway:latest
+          ports:
+            - containerPort: 8900
+              name: http
+              protocol: TCP
+            - containerPort: 9091
+              name: metrics
+              protocol: TCP
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "8900"
+            - name: KEYCLOAK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: keycloak-url
+            - name: KEYCLOAK_REALM
+              value: cerebro
+            - name: KEYCLOAK_CLIENT_ID
+              value: cerebro-gateway
+            - name: PLATFORM_SVC_URL
+              value: http://platform-svc:8081
+            - name: ACADEMY_SVC_URL
+              value: http://academy-svc:8082
+            - name: CRM_SVC_URL
+              value: http://crm-svc:8083
+            - name: ML_SVC_GRPC_URL
+              value: http://ml-svc:50051
+            - name: PLATFORM_API_URL
+              value: http://platform-api:4000
+            - name: FORGE_API_URL
+              value: http://forge-api:4005
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: database-url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: redis-url
+            - name: NATS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: nats-url
+            - name: ALLOWED_ORIGINS
+              valueFrom:
+                configMapKeyRef:
+                  name: cerebro-config
+                  key: allowed-origins
+            - name: RATE_LIMIT_RPS
+              value: "100"
+            - name: RATE_LIMIT_BURST
+              value: "200"
+            - name: RUST_LOG
+              value: info
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8900
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8900
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            readOnlyRootFilesystem: true
+      terminationGracePeriodSeconds: 30

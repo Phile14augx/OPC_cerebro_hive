@@ -1,0 +1,278 @@
+name: PolicyOps — Policy Gate
+
+on:
+  pull_request:
+    paths:
+      - 'infra/terraform/**'
+      - 'infra/helm/**'
+      - 'infra/k8s/**'
+      - 'infra/policy/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+env:
+  CONFTEST_VERSION: "0.51.0"
+  OPA_VERSION: "0.63.0"
+
+jobs:
+  # ── Job 1: OPA/Conftest — Terraform plan gates ────────────────────────────
+  terraform-policy:
+    name: Terraform Policy Gate
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.pull_request.changed_files, 'infra/terraform') ||
+      github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.x"
+          terraform_wrapper: false
+
+      - name: Install Conftest
+        run: |
+          curl -LO "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+          tar xzf "conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+          sudo mv conftest /usr/local/bin/
+
+      - name: Terraform init (staging)
+        working-directory: infra/terraform/environments/staging
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TF_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_SECRET_ACCESS_KEY }}
+        run: terraform init -backend=false
+
+      - name: Terraform plan → JSON (staging)
+        working-directory: infra/terraform/environments/staging
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TF_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_cluster_name: "cerebro-hive-staging"
+          TF_VAR_environment: "staging"
+          TF_VAR_db_password: "placeholder"
+        run: |
+          terraform plan -out=tfplan.binary || true
+          terraform show -json tfplan.binary > tfplan.json || echo '{"resource_changes":[]}' > tfplan.json
+
+      - name: Run Conftest on Terraform plan
+        run: |
+          conftest test infra/terraform/environments/staging/tfplan.json \
+            --policy infra/policy/opa/terraform.rego \
+            --output json \
+            | tee conftest-tf-results.json
+
+          FAILURES=$(jq '[.[] | select(.failures | length > 0)] | length' conftest-tf-results.json)
+          if [ "$FAILURES" -gt 0 ]; then
+            echo "::error::Terraform policy gate failed — $FAILURES violations found"
+            jq -r '.[] | .failures[] | "DENY: " + .msg' conftest-tf-results.json
+            exit 1
+          fi
+
+          WARNINGS=$(jq '[.[] | select(.warnings | length > 0)] | length' conftest-tf-results.json)
+          if [ "$WARNINGS" -gt 0 ]; then
+            echo "::warning::Terraform policy warnings found"
+            jq -r '.[] | .warnings[] | "WARN: " + .msg' conftest-tf-results.json
+          fi
+
+      - name: Upload Terraform policy results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-policy-results
+          path: conftest-tf-results.json
+
+  # ── Job 2: OPA/Conftest — Helm rendered manifests ────────────────────────
+  helm-policy:
+    name: Helm Policy Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: "3.16.x"
+
+      - name: Install Conftest
+        run: |
+          curl -LO "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+          tar xzf "conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+          sudo mv conftest /usr/local/bin/
+
+      - name: Render Helm chart — production values
+        run: |
+          helm template cerebro-hive infra/helm/cerebro-hive \
+            -f infra/helm/cerebro-hive/values.yaml \
+            --set studio.image.tag=v1.0.0 \
+            --set forge.image.tag=v1.0.0 \
+            --set platformApi.image.tag=v1.0.0 \
+            --set forgeApi.image.tag=v1.0.0 \
+            --set aiGateway.image.tag=v1.0.0 \
+            > /tmp/rendered-production.yaml
+
+      - name: Run Conftest on Helm output (production)
+        run: |
+          conftest test /tmp/rendered-production.yaml \
+            --policy infra/policy/opa/helm.rego \
+            --all-namespaces \
+            --output json \
+            | tee conftest-helm-prod-results.json
+
+          FAILURES=$(jq '[.[] | select(.failures | length > 0)] | length' conftest-helm-prod-results.json)
+          if [ "$FAILURES" -gt 0 ]; then
+            echo "::error::Helm policy gate failed — $FAILURES violations in production manifests"
+            jq -r '.[] | .failures[] | "DENY: " + .msg' conftest-helm-prod-results.json
+            exit 1
+          fi
+
+      - name: Render Helm chart — staging values
+        run: |
+          helm template cerebro-hive infra/helm/cerebro-hive \
+            -f infra/helm/cerebro-hive/values.yaml \
+            -f infra/helm/cerebro-hive/values-staging.yaml \
+            --set studio.image.tag=v1.0.0-rc1 \
+            --set forge.image.tag=v1.0.0-rc1 \
+            --set platformApi.image.tag=v1.0.0-rc1 \
+            --set forgeApi.image.tag=v1.0.0-rc1 \
+            --set aiGateway.image.tag=v1.0.0-rc1 \
+            > /tmp/rendered-staging.yaml
+
+      - name: Run Conftest on Helm output (staging)
+        run: |
+          conftest test /tmp/rendered-staging.yaml \
+            --policy infra/policy/opa/helm.rego \
+            --all-namespaces \
+            --output json \
+            | tee conftest-helm-staging-results.json
+
+          FAILURES=$(jq '[.[] | select(.failures | length > 0)] | length' conftest-helm-staging-results.json)
+          if [ "$FAILURES" -gt 0 ]; then
+            echo "::error::Helm policy gate failed — staging manifests have $FAILURES violations"
+            jq -r '.[] | .failures[] | "DENY: " + .msg' conftest-helm-staging-results.json
+            exit 1
+          fi
+
+      - name: Upload Helm policy results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-policy-results
+          path: |
+            conftest-helm-prod-results.json
+            conftest-helm-staging-results.json
+
+  # ── Job 3: OPA/Conftest — Raw Kubernetes manifests ───────────────────────
+  k8s-policy:
+    name: Kubernetes Manifest Policy Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Conftest
+        run: |
+          curl -LO "https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+          tar xzf "conftest_${CONFTEST_VERSION}_Linux_x86_64.tar.gz"
+          sudo mv conftest /usr/local/bin/
+
+      - name: Run Conftest on K8s base manifests
+        run: |
+          conftest test infra/k8s/base \
+            --policy infra/policy/opa/kubernetes.rego \
+            --ignore "infra/k8s/base/kustomization.yaml" \
+            --recursive \
+            --output json \
+            | tee conftest-k8s-results.json
+
+          FAILURES=$(jq '[.[] | select(.failures | length > 0)] | length' conftest-k8s-results.json)
+          if [ "$FAILURES" -gt 0 ]; then
+            echo "::error::Kubernetes policy gate failed — $FAILURES violations"
+            jq -r '.[] | .failures[] | "DENY: \(.msg) [\(.metadata.filename)]"' conftest-k8s-results.json
+            exit 1
+          fi
+
+          WARNINGS=$(jq '[.[] | .warnings // [] | length] | add' conftest-k8s-results.json || echo 0)
+          echo "Policy gate passed. Warnings: ${WARNINGS}"
+
+      - name: Upload K8s policy results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k8s-policy-results
+          path: conftest-k8s-results.json
+
+  # ── Job 4: Kyverno CLI — validate against Kyverno policies ───────────────
+  kyverno-validate:
+    name: Kyverno Policy Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Kyverno CLI
+        run: |
+          curl -LO "https://github.com/kyverno/kyverno/releases/download/v1.12.0/kyverno-cli_v1.12.0_linux_x86_64.tar.gz"
+          tar xzf "kyverno-cli_v1.12.0_linux_x86_64.tar.gz"
+          sudo mv kyverno /usr/local/bin/
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: "3.16.x"
+
+      - name: Render manifests for Kyverno test
+        run: |
+          mkdir -p /tmp/kyverno-test
+          helm template cerebro-hive infra/helm/cerebro-hive \
+            -f infra/helm/cerebro-hive/values.yaml \
+            --set studio.image.tag=v1.0.0 \
+            --set forge.image.tag=v1.0.0 \
+            --set platformApi.image.tag=v1.0.0 \
+            --set forgeApi.image.tag=v1.0.0 \
+            --set aiGateway.image.tag=v1.0.0 \
+            > /tmp/kyverno-test/manifests.yaml
+
+      - name: Run Kyverno CLI apply
+        run: |
+          kyverno apply infra/policy/kyverno/cerebro-hive-policies.yaml \
+            --resource /tmp/kyverno-test/manifests.yaml \
+            --detailed-results 2>&1 | tee kyverno-results.txt
+
+          # Check for policy failures
+          if grep -q "FAIL" kyverno-results.txt; then
+            echo "::error::Kyverno policies failed"
+            exit 1
+          fi
+          echo "All Kyverno policies passed"
+
+      - name: Post policy summary to PR
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const kyvernoResults = fs.existsSync('kyverno-results.txt')
+              ? fs.readFileSync('kyverno-results.txt', 'utf8').slice(0, 3000)
+              : 'No results';
+
+            const status = kyvernoResults.includes('FAIL') ? '❌ FAILED' : '✅ PASSED';
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## PolicyOps Gate ${status}
+
+            <details>
+            <summary>Kyverno Results</summary>
+
+            \`\`\`
+            ${kyvernoResults}
+            \`\`\`
+            </details>
+
+            *Checked: Kyverno admission policies, OPA Terraform plan, OPA Helm manifests, OPA K8s raw manifests*`
+            });

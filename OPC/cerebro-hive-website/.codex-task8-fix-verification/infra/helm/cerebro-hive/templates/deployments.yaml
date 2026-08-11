@@ -1,0 +1,270 @@
+{{/*
+─────────────────────────────────────────────────────────────────────────────
+Macro: renders a Deployment + Service + HPA + PDB for one CerebroHive service.
+Usage: {{ include "cerebro-hive.service" (dict "name" "studio" "cfg" .Values.studio "root" .) }}
+─────────────────────────────────────────────────────────────────────────────
+*/}}
+{{- define "cerebro-hive.service" -}}
+{{- $name := .name -}}
+{{- $cfg  := .cfg  -}}
+{{- $root := .root -}}
+{{- if $cfg.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: {{ $name }}
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+spec:
+  replicas: {{ $cfg.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+      app.kubernetes.io/instance: {{ $root.Release.Name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ $name }}
+        app.kubernetes.io/instance: {{ $root.Release.Name }}
+        app.kubernetes.io/part-of: cerebro-hive
+        app.kubernetes.io/version: {{ $cfg.image.tag | default $root.Chart.AppVersion | quote }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: {{ $cfg.port | quote }}
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: {{ include "cerebro-hive.serviceAccountName" $root }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      {{- if eq $name "platform-api" }}
+      initContainers:
+        - name: db-migrate
+          image: "{{ $cfg.image.repository }}:{{ $cfg.image.tag | default $root.Chart.AppVersion }}"
+          imagePullPolicy: {{ $cfg.image.pullPolicy | default "IfNotPresent" }}
+          command: ["pnpm", "prisma", "migrate", "deploy"]
+          envFrom:
+            - secretRef:
+                name: {{ $root.Values.secrets.existingSecret }}
+                optional: true
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { cpu: 200m, memory: 256Mi }
+      {{- end }}
+      containers:
+        - name: {{ $name }}
+          image: "{{ $cfg.image.repository }}:{{ $cfg.image.tag | default $root.Chart.AppVersion }}"
+          imagePullPolicy: {{ $cfg.image.pullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: {{ $cfg.port }}
+              protocol: TCP
+          env:
+            - name: NODE_ENV
+              value: {{ $root.Values.global.environment | default "production" }}
+            # PORT was never injected here — the app's own listen() call had
+            # to fall back to a hardcoded default that didn't match this
+            # containerPort, so the Service/probes and the actual listening
+            # socket disagreed. See audit/P0-AUTH-AUTHZ-GAP.md and
+            # audit/INFRA-RECONCILIATION-PLAN.md for the full trace.
+            - name: PORT
+              value: {{ $cfg.port | quote }}
+            {{- range $k, $v := $cfg.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ $root.Values.secrets.existingSecret }}
+                optional: true
+            {{- /* ai-gateway and forge-api already needed this; platform-api
+                   needed it too (it's the one that actually constructs the
+                   AIGateway client) but was missing from the equivalent list
+                   in the other template generation. See
+                   audit/INFRA-RECONCILIATION-PLAN.md's "new finding". */}}
+            {{- if or (eq $name "ai-gateway") (eq $name "forge-api") (eq $name "platform-api") }}
+            - secretRef:
+                name: cerebro-hive-ai-secrets
+                optional: true
+            {{- end }}
+            {{- if eq $name "ai-gateway" }}
+            - configMapRef:
+                name: ai-gateway-config
+                optional: true
+            {{- end }}
+          resources:
+            {{- toYaml ($cfg.resources | default $root.Values.global.resources) | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          {{- if $cfg.probes }}
+          livenessProbe:
+            httpGet:
+              path: {{ $cfg.probes.liveness.path }}
+              port: http
+            initialDelaySeconds: {{ $cfg.probes.liveness.initialDelaySeconds | default 30 }}
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: {{ $cfg.probes.readiness.path }}
+              port: http
+            initialDelaySeconds: {{ $cfg.probes.readiness.initialDelaySeconds | default 10 }}
+            periodSeconds: 5
+            failureThreshold: 3
+          {{- end }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: {{ $name }}
+                topologyKey: kubernetes.io/hostname
+      # NOTE: deliberately not adding a topologySpreadConstraints block that
+      # calls a "cerebro-hive.topologySpreadConstraints" helper — that helper
+      # is referenced by Set 1's deployment.yaml/rollout.yaml/service.yaml
+      # but is NOT defined anywhere in _helpers.tpl. See the new finding in
+      # audit/INFRA-RECONCILIATION-PLAN.md: Set 1 calls at least 6 helper
+      # templates that don't exist in this chart at all, which would make it
+      # fail to render outright, not just diverge from Set 2. Don't repeat
+      # that mistake here — left as a real follow-up (define the helper
+      # properly) rather than a broken reference.
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $name }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: {{ $name }}
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: {{ $name }}
+    app.kubernetes.io/instance: {{ $root.Release.Name }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+---
+{{- if and $cfg.autoscaling $cfg.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ $name }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" $root | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ $name }}
+  minReplicas: {{ $cfg.autoscaling.minReplicas | default 1 }}
+  maxReplicas: {{ $cfg.autoscaling.maxReplicas | default 5 }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ $cfg.autoscaling.targetCPUUtilizationPercentage | default 70 }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+{{- end }}
+{{- if $root.Values.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $name }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" $root | nindent 4 }}
+spec:
+  minAvailable: {{ $root.Values.podDisruptionBudget.minAvailable | default 1 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+      app.kubernetes.io/instance: {{ $root.Release.Name }}
+---
+{{- end }}
+{{- if and $cfg.ingress $cfg.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $name }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.labels" $root | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    {{- if $root.Values.global.tls.enabled }}
+    cert-manager.io/cluster-issuer: {{ $root.Values.global.tls.issuer }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    {{- end }}
+spec:
+  {{- if $root.Values.global.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ $cfg.ingress.host }}
+      secretName: {{ $name }}-tls
+  {{- end }}
+  rules:
+    - host: {{ $cfg.ingress.host }}
+      http:
+        paths:
+          - path: {{ $cfg.ingress.path | default "/" }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $name }}
+                port:
+                  name: http
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/* ── Render all services ──────────────────────────────────────────────────── */}}
+{{ include "cerebro-hive.service" (dict "name" "studio"          "cfg" .Values.studio          "root" .) }}
+{{ include "cerebro-hive.service" (dict "name" "forge"           "cfg" .Values.forge           "root" .) }}
+{{ include "cerebro-hive.service" (dict "name" "platform-api"    "cfg" .Values.platformApi     "root" .) }}
+{{ include "cerebro-hive.service" (dict "name" "forge-api"       "cfg" .Values.forgeApi        "root" .) }}
+{{ include "cerebro-hive.service" (dict "name" "ai-gateway"      "cfg" .Values.aiGateway       "root" .) }}
+{{ include "cerebro-hive.service" (dict "name" "swarm-api"       "cfg" .Values.swarmApi        "root" .) }}
+{{ include "cerebro-hive.service" (dict "name" "swarm-runtime"   "cfg" .Values.swarmRuntime    "root" .) }}
+{{ include "cerebro-hive.service" (dict "name" "agent-runner"    "cfg" .Values.agentRunner     "root" .) }}
+{{ include "cerebro-hive.service" (dict "name" "planner-service" "cfg" .Values.plannerService  "root" .) }}
+{{ include "cerebro-hive.service" (dict "name" "memory-service"  "cfg" .Values.memoryService   "root" .) }}
+{{ include "cerebro-hive.service" (dict "name" "tool-gateway"    "cfg" .Values.toolGateway     "root" .) }}

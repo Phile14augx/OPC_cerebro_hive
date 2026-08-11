@@ -1,0 +1,21 @@
+{
+  "name": "@cerebro/engineering-review",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1096.0",
+    "@aws-sdk/client-s3": "^3.1096.0",
+    "@aws-sdk/client-sns": "^3.1096.0",
+    "@aws-sdk/util-dynamodb": "^3.996.7",
+    "@cerebro/api-client": "workspace:^",
+    "@opentelemetry/api": "^1.8.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+  }
+}

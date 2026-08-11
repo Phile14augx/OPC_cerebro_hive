@@ -1,0 +1,621 @@
+[
+  {
+    "id": "menu",
+    "component": "Menu",
+    "category": "navigation",
+    "aliases": [
+      "hamburger"
+    ],
+    "keywords": [
+      "hamburger",
+      "sidebar",
+      "nav"
+    ],
+    "intent": [
+      "navigation"
+    ],
+    "searchWeight": 10
+  },
+  {
+    "id": "sidebar-left",
+    "component": "SidebarLeft",
+    "category": "navigation",
+    "aliases": [
+      "drawer"
+    ],
+    "keywords": [
+      "drawer",
+      "nav",
+      "side"
+    ],
+    "intent": [
+      "navigation"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "message",
+    "component": "Message",
+    "category": "chat",
+    "aliases": [
+      "chat"
+    ],
+    "keywords": [
+      "talk",
+      "speak",
+      "text"
+    ],
+    "intent": [
+      "communication",
+      "support"
+    ],
+    "searchWeight": 20
+  },
+  {
+    "id": "message-dots",
+    "component": "MessageDots",
+    "category": "chat",
+    "aliases": [
+      "typing"
+    ],
+    "keywords": [
+      "typing",
+      "reply"
+    ],
+    "intent": [
+      "communication"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "send",
+    "component": "Send",
+    "category": "chat",
+    "aliases": [
+      "submit"
+    ],
+    "keywords": [
+      "submit",
+      "go",
+      "arrow"
+    ],
+    "intent": [
+      "action",
+      "communication"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "bot-avatar",
+    "component": "BotAvatar",
+    "category": "chat",
+    "aliases": [
+      "assistant"
+    ],
+    "keywords": [
+      "ai",
+      "assistant",
+      "robot"
+    ],
+    "intent": [
+      "ai",
+      "support"
+    ],
+    "searchWeight": 30
+  },
+  {
+    "id": "user-avatar",
+    "component": "UserAvatar",
+    "category": "chat",
+    "aliases": [
+      "customer"
+    ],
+    "keywords": [
+      "person",
+      "customer",
+      "profile"
+    ],
+    "intent": [
+      "account"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "workflow-nodes",
+    "component": "WorkflowNodes",
+    "category": "workflow",
+    "aliases": [
+      "network"
+    ],
+    "keywords": [
+      "graph",
+      "nodes",
+      "connections"
+    ],
+    "intent": [
+      "orchestration",
+      "ai"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "pipeline",
+    "component": "Pipeline",
+    "category": "workflow",
+    "aliases": [
+      "flow"
+    ],
+    "keywords": [
+      "process",
+      "flow",
+      "steps"
+    ],
+    "intent": [
+      "orchestration"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "sparkles",
+    "component": "Sparkles",
+    "category": "actions",
+    "aliases": [
+      "generate",
+      "magic"
+    ],
+    "keywords": [
+      "ai",
+      "generate",
+      "magic",
+      "smart"
+    ],
+    "intent": [
+      "ai",
+      "creation"
+    ],
+    "searchWeight": 50
+  },
+  {
+    "id": "zap",
+    "component": "Zap",
+    "category": "actions",
+    "aliases": [
+      "quick"
+    ],
+    "keywords": [
+      "quick",
+      "fast",
+      "action"
+    ],
+    "intent": [
+      "action"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "document",
+    "component": "Document",
+    "category": "files",
+    "aliases": [
+      "file"
+    ],
+    "keywords": [
+      "doc",
+      "pdf",
+      "text"
+    ],
+    "intent": [
+      "content"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "attachment",
+    "component": "Attachment",
+    "category": "files",
+    "aliases": [
+      "paperclip"
+    ],
+    "keywords": [
+      "upload",
+      "link",
+      "attach"
+    ],
+    "intent": [
+      "upload",
+      "content"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "status-online",
+    "component": "StatusOnline",
+    "category": "status",
+    "aliases": [
+      "success"
+    ],
+    "keywords": [
+      "active",
+      "ok",
+      "success"
+    ],
+    "intent": [
+      "status"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "status-offline",
+    "component": "StatusOffline",
+    "category": "status",
+    "aliases": [
+      "error"
+    ],
+    "keywords": [
+      "error",
+      "down",
+      "fail"
+    ],
+    "intent": [
+      "status"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "thumbs-up",
+    "component": "ThumbsUp",
+    "category": "communication",
+    "aliases": [
+      "like"
+    ],
+    "keywords": [
+      "good",
+      "like",
+      "approve"
+    ],
+    "intent": [
+      "feedback"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "thumbs-down",
+    "component": "ThumbsDown",
+    "category": "communication",
+    "aliases": [
+      "dislike"
+    ],
+    "keywords": [
+      "bad",
+      "dislike",
+      "reject"
+    ],
+    "intent": [
+      "feedback"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "refresh",
+    "component": "Refresh",
+    "category": "actions",
+    "aliases": [
+      "reload"
+    ],
+    "keywords": [
+      "reload",
+      "sync",
+      "again"
+    ],
+    "intent": [
+      "action",
+      "sync"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "copy",
+    "component": "Copy",
+    "category": "actions",
+    "aliases": [
+      "duplicate"
+    ],
+    "keywords": [
+      "duplicate",
+      "clipboard"
+    ],
+    "intent": [
+      "action"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "database",
+    "component": "Database",
+    "category": "database",
+    "aliases": [
+      "db"
+    ],
+    "keywords": [
+      "sql",
+      "storage",
+      "postgres",
+      "mysql"
+    ],
+    "intent": [
+      "data"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "server",
+    "component": "Server",
+    "category": "infrastructure",
+    "aliases": [
+      "host"
+    ],
+    "keywords": [
+      "compute",
+      "node",
+      "bare-metal"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "cloud",
+    "component": "Cloud",
+    "category": "cloud",
+    "aliases": [],
+    "keywords": [
+      "aws",
+      "azure",
+      "gcp",
+      "hosting"
+    ],
+    "intent": [
+      "infrastructure"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "cloud-compute",
+    "component": "CloudCompute",
+    "category": "cloud",
+    "aliases": [],
+    "keywords": [
+      "processing",
+      "cloud-function"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "shield",
+    "component": "Shield",
+    "category": "security",
+    "aliases": [],
+    "keywords": [
+      "protection",
+      "firewall",
+      "secure"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "lock",
+    "component": "Lock",
+    "category": "security",
+    "aliases": [],
+    "keywords": [
+      "secure",
+      "encryption",
+      "private"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "settings",
+    "component": "Settings",
+    "category": "navigation",
+    "aliases": [
+      "gear"
+    ],
+    "keywords": [
+      "preferences",
+      "options",
+      "config"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "search",
+    "component": "Search",
+    "category": "navigation",
+    "aliases": [
+      "magnifier"
+    ],
+    "keywords": [
+      "find",
+      "lookup",
+      "query"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "ai-brain",
+    "component": "AiBrain",
+    "category": "ai",
+    "aliases": [
+      "brain"
+    ],
+    "keywords": [
+      "intelligence",
+      "neural",
+      "smart"
+    ],
+    "intent": [
+      "ai"
+    ],
+    "searchWeight": 40
+  },
+  {
+    "id": "file-code",
+    "component": "FileCode",
+    "category": "files",
+    "aliases": [
+      "code"
+    ],
+    "keywords": [
+      "source",
+      "script",
+      "json"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "file-json",
+    "component": "FileJson",
+    "category": "files",
+    "aliases": [
+      "json"
+    ],
+    "keywords": [
+      "data",
+      "api"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "chart-bar",
+    "component": "ChartBar",
+    "category": "analytics",
+    "aliases": [
+      "graph"
+    ],
+    "keywords": [
+      "graph",
+      "data",
+      "metrics"
+    ],
+    "intent": [
+      "analytics"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "chart-pie",
+    "component": "ChartPie",
+    "category": "analytics",
+    "aliases": [
+      "pie"
+    ],
+    "keywords": [
+      "graph",
+      "data",
+      "metrics"
+    ],
+    "intent": [
+      "analytics"
+    ],
+    "searchWeight": 0
+  },
+  {
+    "id": "home",
+    "component": "Home",
+    "category": "dashboard",
+    "aliases": [
+      "house"
+    ],
+    "keywords": [
+      "main",
+      "start",
+      "landing"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "users",
+    "component": "Users",
+    "category": "enterprise",
+    "aliases": [
+      "team"
+    ],
+    "keywords": [
+      "team",
+      "group",
+      "organization"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "building",
+    "component": "Building",
+    "category": "enterprise",
+    "aliases": [
+      "company"
+    ],
+    "keywords": [
+      "company",
+      "office",
+      "hq"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "loader",
+    "component": "Loader",
+    "category": "status",
+    "aliases": [
+      "loading"
+    ],
+    "keywords": [
+      "spinner",
+      "loading",
+      "wait"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "terminal",
+    "component": "Terminal",
+    "category": "developer",
+    "aliases": [
+      "console"
+    ],
+    "keywords": [
+      "cli",
+      "console",
+      "prompt"
+    ],
+    "intent": [],
+    "searchWeight": 0
+  },
+  {
+    "id": "api",
+    "component": "Api",
+    "category": "developer",
+    "aliases": [
+      "webhook"
+    ],
+    "keywords": [
+      "endpoint",
+      "integration",
+      "rest"
+    ],
+    "intent": [
+      "integration"
+    ],
+    "searchWeight": 0
+  }
+]

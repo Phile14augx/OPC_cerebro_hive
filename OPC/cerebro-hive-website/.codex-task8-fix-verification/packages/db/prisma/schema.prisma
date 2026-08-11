@@ -1,0 +1,2027 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+  output          = "../src/generated/client"
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [pgvector(map: "vector"), pgcrypto]
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 1: PLATFORM FOUNDATION
+// -----------------------------------------------------------------------------
+
+model Tenant {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  slug        String  @unique
+  billingPlan String  @default("enterprise")
+  isActive    Boolean @default(true)
+  metadata    Json?
+
+  workspaces   Workspace[]
+  members      TenantMember[]
+  environments Environment[]
+  apiKeys      APIKey[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Workspace {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId String @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  name      String
+  slug      String  @unique
+  isDefault Boolean @default(false)
+
+  agents    Agent[]
+  workflows Workflow[]
+  projects  Project[]
+  apiKeys   APIKey[]
+  auditLogs AuditLog[]
+  operatingDepartments    OperatingDepartment[]
+  operatingRelationships  OperatingGraphRelationship[]
+  operatingActivityEvents OperatingActivityEvent[]
+  operatingTasks          OperatingTask[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+model User {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String  @unique
+  name      String?
+  avatarUrl String?
+
+  tenantMembers TenantMember[]
+  sessions      Session[]
+  auditLogs     AuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orgMemberships OrgMembership[]
+  invitations    Invitation[]    @relation("InvitedBy")
+}
+
+model TenantMember {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId String @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId   String @db.Uuid
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roleId   String @db.Uuid
+  role     Role   @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, userId])
+}
+
+model Role {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+
+  permissions Permission[]
+  members     TenantMember[]
+
+  createdAt DateTime @default(now())
+}
+
+model Permission {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roleId   String @db.Uuid
+  role     Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  action   String // e.g. "create:agent", "read:workspace"
+  resource String
+
+  @@unique([roleId, action, resource])
+}
+
+model APIKey {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String     @db.Uuid
+  tenant      Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workspaceId String?    @db.Uuid
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  name      String
+  keyHash   String    @unique
+  expiresAt DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String    @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId      String?   @db.Uuid
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  action     String
+  resource   String
+  resourceId String?
+  metadata   Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([workspaceId])
+  @@index([userId])
+}
+
+model FeatureFlag {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key       String  @unique
+  isEnabled Boolean @default(false)
+  rules     Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Environment {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId String @db.Uuid
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name     String // dev, staging, prod
+
+  createdAt DateTime @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 2: AI & AGENT DOMAIN
+// -----------------------------------------------------------------------------
+
+model Agent {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String    @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  departmentId String?               @db.Uuid
+  department   OperatingDepartment? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  name        String
+  description String?
+  avatarUrl   String?
+  isActive    Boolean @default(true)
+
+  versions      AgentVersion[]
+  executions    AgentExecution[]
+  conversations AgentConversation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workspaceId])
+  @@index([departmentId])
+}
+
+model OperatingDepartment {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId   String    @db.Uuid
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name          String
+  slug          String
+  description   String?
+  theme         String
+  leaderAgentId String?   @db.Uuid
+  metadata      Json?
+  agents        Agent[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([workspaceId, slug])
+  @@index([workspaceId])
+}
+
+model OperatingGraphRelationship {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId    String    @db.Uuid
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceType     String
+  sourceId       String
+  targetType     String
+  targetId       String
+  relationship   String
+  status         String    @default("healthy")
+  metadata       Json?
+  lastActivityAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([workspaceId, sourceType, sourceId, targetType, targetId, relationship])
+  @@index([workspaceId, sourceId])
+  @@index([workspaceId, targetId])
+}
+
+model OperatingActivityEvent {
+  id          BigInt    @id @default(autoincrement())
+  workspaceId String    @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  eventType   String
+  entityType  String
+  entityId    String
+  actorId     String?
+  status      String
+  summary     Json
+  occurredAt  DateTime  @default(now())
+
+  @@index([workspaceId, id])
+  @@index([workspaceId, eventType, occurredAt])
+}
+
+model OperatingTask {
+  id          String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String                  @db.Uuid
+  workspace   Workspace               @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  title       String
+  prompt      String?                 @db.Text
+  status      OperatingTaskStatus     @default(QUEUED)
+  targetType  String
+  targetId    String
+  createdById String                  @db.Uuid
+  executionId String?                 @db.Uuid
+  input       Json                    @default("{}")
+  output      Json?
+  error       Json?
+  version     Int                     @default(1)
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  steps       OperatingTaskStep[]
+  artifacts   OperatingTaskArtifact[]
+
+  @@index([workspaceId, status, createdAt])
+  @@index([workspaceId, targetType, targetId])
+}
+
+model OperatingTaskStep {
+  id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  taskId      String              @db.Uuid
+  task        OperatingTask       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  position    Int
+  label       String
+  status      OperatingTaskStatus @default(QUEUED)
+  detail      String?
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  @@unique([taskId, position])
+}
+
+model OperatingTaskArtifact {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  taskId    String        @db.Uuid
+  task      OperatingTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  name      String
+  mediaType String
+  uri       String
+  sizeBytes BigInt?
+  metadata  Json?
+  createdAt DateTime      @default(now())
+
+  @@index([taskId, createdAt])
+}
+
+model AgentVersion {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agentId String @db.Uuid
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  version Int
+
+  modelId String  @db.Uuid
+  model   AIModel @relation(fields: [modelId], references: [id], onDelete: Restrict)
+
+  instructions String @db.Text
+  config       Json?
+
+  capabilities AgentCapability[]
+  tools        AgentTool[]
+  prompts      PromptTemplate[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([agentId, version])
+}
+
+model AgentCapability {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agentVersionId String       @db.Uuid
+  agentVersion   AgentVersion @relation(fields: [agentVersionId], references: [id], onDelete: Cascade)
+  name           String
+  config         Json?
+}
+
+model Tool {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+
+  categoryId String?       @db.Uuid
+  category   ToolCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  versions ToolVersion[]
+
+  createdAt DateTime @default(now())
+}
+
+model ToolCategory {
+  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name  String
+  tools Tool[]
+}
+
+model ToolVersion {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  toolId  String @db.Uuid
+  tool    Tool   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  version Int
+
+  schema      Json
+  endpoint    String?
+  handlerCode String? @db.Text
+
+  agentVersions AgentTool[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([toolId, version])
+}
+
+model AgentTool {
+  agentVersionId String       @db.Uuid
+  toolVersionId  String       @db.Uuid
+  agentVersion   AgentVersion @relation(fields: [agentVersionId], references: [id], onDelete: Cascade)
+  toolVersion    ToolVersion  @relation(fields: [toolVersionId], references: [id], onDelete: Cascade)
+
+  @@id([agentVersionId, toolVersionId])
+}
+
+model PromptTemplate {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agentVersionId String       @db.Uuid
+  agentVersion   AgentVersion @relation(fields: [agentVersionId], references: [id], onDelete: Cascade)
+  name           String
+  template       String       @db.Text
+  variables      Json?
+}
+
+model KnowledgeSource {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  type String // document, web, database
+  uri  String
+
+  collections KnowledgeCollectionSource[]
+}
+
+model KnowledgeCollection {
+  id      String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name    String
+  sources KnowledgeCollectionSource[]
+}
+
+model KnowledgeCollectionSource {
+  collectionId String              @db.Uuid
+  sourceId     String              @db.Uuid
+  collection   KnowledgeCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  source       KnowledgeSource     @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, sourceId])
+}
+
+model Memory {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agentId String @db.Uuid
+  context Json
+
+  snapshots MemorySnapshot[]
+}
+
+model MemorySnapshot {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  memoryId  String   @db.Uuid
+  memory    Memory   @relation(fields: [memoryId], references: [id], onDelete: Cascade)
+  payload   Json
+  createdAt DateTime @default(now())
+}
+
+model AgentExecution {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agentId        String @db.Uuid
+  agentVersionId String @db.Uuid
+
+  agent Agent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  status   String
+  provider String?
+  model    String?
+
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  durationMs  Int?
+
+  costUsd         Float?
+  inputTokens     Int?
+  outputTokens    Int?
+  reasoningTokens Int?
+
+  traceId  String
+  metadata Json?
+
+  version Int @default(1) // Optimistic concurrency control
+
+  steps       AgentExecutionStep[]
+  events      AgentExecutionEvent[]
+  snapshots   AgentExecutionSnapshot[]
+  metrics     AgentExecutionMetric[]
+  leases      AgentExecutionLease[]
+  checkpoints AgentExecutionCheckpoint[]
+  outbox      AgentExecutionOutbox[]
+  inbox       AgentExecutionInbox[]
+}
+
+model AgentExecutionStep {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  executionId String         @db.Uuid
+  execution   AgentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  stepNumber Int
+  type       String // LLM, Tool
+  status     String
+
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  durationMs  Int?
+
+  input  Json?
+  output Json?
+  error  String? @db.Text
+
+  @@unique([executionId, stepNumber])
+}
+
+model AgentExecutionEvent {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  executionId String         @db.Uuid
+  execution   AgentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  sequence      BigInt
+  type          String // ExecutionStarted, LLMStarted, ToolRequested, etc.
+  eventVersion  Int    @default(1)
+  schemaVersion Int    @default(1)
+
+  payload    Json
+  occurredAt DateTime @default(now())
+
+  @@unique([executionId, sequence])
+}
+
+model AgentExecutionSnapshot {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  executionId String         @db.Uuid
+  execution   AgentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  sequence  BigInt // Sequence number of the latest event included in this snapshot
+  state     Json // Full snapshot of working memory, messages, context
+  createdAt DateTime @default(now())
+}
+
+model AgentExecutionMetric {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  executionId String         @db.Uuid
+  execution   AgentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  name      String
+  value     Float
+  unit      String
+  timestamp DateTime @default(now())
+}
+
+model AgentExecutionLease {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  executionId String         @unique @db.Uuid
+  execution   AgentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  ownerId   String // ID of the distributed worker holding the lease
+  expiresAt DateTime
+  version   Int      @default(1) // Optimistic concurrency for lease renewal
+}
+
+model AgentExecutionCheckpoint {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  executionId String         @db.Uuid
+  execution   AgentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  stepNumber       Int
+  providerRequest  Json?
+  providerResponse Json?
+  usage            Json?
+  finishReason     String?
+  toolCalls        Json?
+
+  createdAt DateTime @default(now())
+
+  @@unique([executionId, stepNumber])
+}
+
+model AgentExecutionOutbox {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  executionId String         @db.Uuid
+  execution   AgentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  type        String
+  payload     Json
+  status      String    @default("PENDING") // PENDING, SENT, FAILED
+  retries     Int       @default(0)
+  nextRetryAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AgentExecutionInbox {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  executionId String         @db.Uuid
+  execution   AgentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  eventId String @unique // External event ID to deduplicate
+  type    String
+  payload Json
+  status  String @default("PROCESSED") // PROCESSED, FAILED
+
+  createdAt DateTime @default(now())
+}
+
+model AgentConversation {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agentId String @db.Uuid
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  messages AgentMessage[]
+
+  memory    Json? // Stores working memory and long-term memory context
+  artifacts Json? // Stores generated artifacts (e.g. files, charts)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AgentMessage {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  conversationId String            @db.Uuid
+  conversation   AgentConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String
+  content        String            @db.Text
+
+  toolInvocations Json? // Stores tool calls (requests and results)
+  metadata        Json? // Token usage, latency, etc.
+
+  createdAt DateTime @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 3: WORKFLOW DOMAIN
+// -----------------------------------------------------------------------------
+
+model WorkflowTemplate {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  definition Json
+  workflows  Workflow[]
+}
+
+model Workflow {
+  id          String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String            @db.Uuid
+  workspace   Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  templateId  String?           @db.Uuid
+  template    WorkflowTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  name       String
+  versions   WorkflowVersion[]
+  executions WorkflowExecution[]
+  schedules  Schedule[]
+  triggers   Trigger[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WorkflowVersion {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflowId String   @db.Uuid
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  version    Int
+
+  nodes WorkflowNode[]
+  edges WorkflowEdge[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([workflowId, version])
+}
+
+model WorkflowNode {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflowVersionId String          @db.Uuid
+  workflowVersion   WorkflowVersion @relation(fields: [workflowVersionId], references: [id], onDelete: Cascade)
+  name              String
+  type              String
+  config            Json?
+
+  outgoingEdges  WorkflowEdge[]          @relation("SourceNode")
+  incomingEdges  WorkflowEdge[]          @relation("TargetNode")
+  stepExecutions WorkflowStepExecution[]
+}
+
+model WorkflowEdge {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflowVersionId String          @db.Uuid
+  workflowVersion   WorkflowVersion @relation(fields: [workflowVersionId], references: [id], onDelete: Cascade)
+  sourceNodeId      String          @db.Uuid
+  sourceNode        WorkflowNode    @relation("SourceNode", fields: [sourceNodeId], references: [id])
+  targetNodeId      String          @db.Uuid
+  targetNode        WorkflowNode    @relation("TargetNode", fields: [targetNodeId], references: [id])
+  condition         String?
+}
+
+model WorkflowExecution {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflowId         String    @db.Uuid
+  workflow           Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  status             String
+  temporalWorkflowId String?
+  output             Json?
+  error              Json?
+  startedAt          DateTime  @default(now())
+  completedAt        DateTime?
+
+  runs WorkflowRun[]
+}
+
+model WorkflowRun {
+  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflowExecutionId String            @db.Uuid
+  workflowExecution   WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+  status              String
+
+  steps WorkflowStepExecution[]
+}
+
+model WorkflowStepExecution {
+  id     String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  runId  String       @db.Uuid
+  run    WorkflowRun  @relation(fields: [runId], references: [id], onDelete: Cascade)
+  nodeId String       @db.Uuid
+  node   WorkflowNode @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+
+  status      String
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  logs        Json?
+}
+
+model Trigger {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflowId String   @db.Uuid
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  type       String
+  config     Json
+}
+
+model Schedule {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflowId String   @db.Uuid
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  cron       String
+  isActive   Boolean  @default(true)
+}
+
+model Event {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type      String
+  payload   Json
+  createdAt DateTime @default(now())
+}
+
+model Queue {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  status    String
+  payload   Json
+  createdAt DateTime @default(now())
+}
+
+model OutboxEvent {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  aggregateId   String
+  aggregateType String
+  eventType     String
+  payload       Json
+  headers       Json      @default("{}")
+  traceId       String?
+  correlationId String?
+  tenantId      String?   @db.Uuid
+  partitionKey  String?
+  schemaVersion String    @default("1.0")
+  retryCount    Int       @default(0)
+  status        String    @default("pending") // pending | published | failed
+  error         String?   @db.Text
+  createdAt     DateTime  @default(now())
+  publishedAt   DateTime?
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([tenantId])
+}
+
+model IdempotencyRecord {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId     String    @db.Uuid
+  workspaceId  String?   @db.Uuid
+  operation    String
+  requestHash  String
+  responseHash String?
+  status       String    @default("pending") // pending | completed | failed
+  createdAt    DateTime  @default(now())
+  expiresAt    DateTime?
+
+  @@unique([tenantId, requestHash])
+  @@index([requestHash])
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 4: PROJECT & SOFTWARE ENGINEERING DOMAIN
+// -----------------------------------------------------------------------------
+
+// ForgePhase: idea → planning → architecture → design → implementation → testing → deployment → monitoring
+// ForgeStatus: draft | active | paused | completed | failed
+
+model Project {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String    @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+
+  // CerebroForge fields
+  prompt       String?  @db.Text // original natural-language build prompt
+  forgeStatus  String   @default("draft") // draft | planning | architecting | designing | generating | testing | deploying | completed
+  forgePhase   String   @default("idea") // idea | planning | architecture | design | implementation | testing | deployment
+  stack        Json? // { frontend, backend, mobile, database, infra }
+  frameworks   String[] @default([])
+  actorList    String[] @default([])
+  totalModules Int      @default(0)
+  totalStories Int      @default(0)
+  totalApis    Int      @default(0)
+  planJson     Json? // full structured plan from AI Planner
+  archJson     Json? // architecture decisions JSON
+  designTokens Json? // color palette, typography, etc.
+  repoOwner    String? // GitHub owner/org
+  repoName     String? // GitHub repo name
+  repoUrl      String?
+  activeAgents String[] @default([])
+
+  repositories  Repository[]
+  sprints       Sprint[]
+  milestones    Milestone[]
+  modules       Module[]
+  requirements  Requirement[]
+  agentRuns     ForgeAgentRun[]
+  artifacts     GeneratedArtifact[]
+  forgeSessions ForgeSession[]
+  archDecisions ArchitectureDecision[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workspaceId])
+  @@index([forgeStatus])
+}
+
+model Repository {
+  id            String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId     String  @db.Uuid
+  project       Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  url           String
+  provider      String  @default("github") // github | gitlab | bitbucket
+  defaultBranch String  @default("main")
+
+  branches Branch[]
+  commits  Commit[]
+
+  @@index([projectId])
+}
+
+model Branch {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  repositoryId String     @db.Uuid
+  repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  name         String
+  isDefault    Boolean    @default(false)
+}
+
+model Commit {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  repositoryId String     @db.Uuid
+  repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  hash         String
+  message      String
+  author       String
+  agentType    String? // which agent made this commit
+  createdAt    DateTime   @default(now())
+
+  @@index([repositoryId])
+}
+
+model Module {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId   String  @db.Uuid
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name        String
+  description String? @db.Text
+  priority    String  @default("medium") // critical | high | medium | low
+  storyCount  Int     @default(0)
+  apiCount    Int     @default(0)
+  status      String  @default("pending") // pending | generating | done
+
+  features Feature[]
+
+  @@unique([projectId, name])
+  @@index([projectId])
+}
+
+model Feature {
+  id                 String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  moduleId           String  @db.Uuid
+  module             Module  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  name               String
+  description        String? @db.Text
+  acceptanceCriteria String? @db.Text
+  status             String  @default("pending")
+  tasks              Task[]
+
+  @@index([moduleId])
+}
+
+model Task {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  featureId      String?  @db.Uuid
+  feature        Feature? @relation(fields: [featureId], references: [id], onDelete: SetNull)
+  sprintId       String?  @db.Uuid
+  sprint         Sprint?  @relation(fields: [sprintId], references: [id], onDelete: SetNull)
+  title          String
+  status         String   @default("todo") // todo | in_progress | done
+  agentType      String?
+  estimatedHours Float?
+
+  @@index([featureId])
+}
+
+model Sprint {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId String    @db.Uuid
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  goal      String?
+  startDate DateTime?
+  endDate   DateTime?
+  tasks     Task[]
+
+  @@index([projectId])
+}
+
+model Milestone {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId String    @db.Uuid
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title     String
+  dueDate   DateTime?
+  weekLabel String? // e.g. "Week 1-2"
+  order     Int       @default(0)
+
+  @@index([projectId])
+}
+
+model Requirement {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId   String  @db.Uuid
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type        String // functional | non_functional | actor | entity | api_contract
+  title       String
+  description String? @db.Text
+  priority    String  @default("medium")
+
+  @@index([projectId])
+  @@index([type])
+}
+
+model ArchitectureDecision {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId String  @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title     String
+  context   String  @db.Text
+  decision  String  @db.Text
+  status    String  @default("accepted") // proposed | accepted | deprecated | superseded
+  pattern   String? // microservices | monolith | ddd | cqrs | event_driven | hexagonal
+  techStack Json?
+
+  @@index([projectId])
+}
+
+model GeneratedArtifact {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId  String   @db.Uuid
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type       String // file | test | migration | dockerfile | k8s_manifest | terraform | openapi
+  filePath   String? // relative path in repo, e.g. "src/patients/patient.service.ts"
+  language   String? // typescript | python | go | sql | yaml | hcl
+  serviceId  String? // which microservice this belongs to
+  content    String   @db.Text
+  lineCount  Int      @default(0)
+  status     String   @default("pending") // pending | generating | done | failed
+  agentType  String? // which agent produced this
+  commitHash String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([projectId, filePath])
+  @@index([projectId])
+  @@index([status])
+  @@index([serviceId])
+}
+
+// Tracks every AI agent invocation within a forge project
+model ForgeAgentRun {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId    String    @db.Uuid
+  project      Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  agentType    String // pm | architect | ux | frontend | backend | mobile | desktop | chatbot | database | qa | security | devops | docs
+  phase        String // which ForgePhase triggered this run
+  status       String    @default("queued") // queued | running | completed | failed
+  systemPrompt String    @db.Text
+  userPrompt   String    @db.Text
+  response     String?   @db.Text
+  tokensIn     Int       @default(0)
+  tokensOut    Int       @default(0)
+  durationMs   Int?
+  model        String? // which AI model was used
+  errorMessage String?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([projectId])
+  @@index([agentType])
+  @@index([status])
+}
+
+// Active forge session — tracks SSE/WS connections
+model ForgeSession {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId String   @db.Uuid
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String?  @db.Uuid
+  phase     String // current active phase
+  isActive  Boolean  @default(true)
+  clientId  String? // SSE/WS client identifier
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([isActive])
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 5: KNOWLEDGE & RAG DOMAIN
+// -----------------------------------------------------------------------------
+
+model Document {
+  id       String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title    String
+  versions DocumentVersion[]
+}
+
+model DocumentVersion {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  documentId String   @db.Uuid
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  version    Int
+  content    String   @db.Text
+  chunks     Chunk[]
+}
+
+model Chunk {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  documentVersionId String          @db.Uuid
+  documentVersion   DocumentVersion @relation(fields: [documentVersionId], references: [id], onDelete: Cascade)
+  content           String          @db.Text
+  embeddings        Embedding[]
+}
+
+model Embedding {
+  id      String                       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  chunkId String                       @db.Uuid
+  chunk   Chunk                        @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+  vector  Unsupported("vector(1536)")?
+  model   String
+}
+
+model VectorIndex {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String
+  config Json
+}
+
+model Citation {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  source String
+  text   String @db.Text
+}
+
+model KnowledgeGraphNode {
+  id         String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  label      String
+  properties Json?
+  outgoing   KnowledgeGraphEdge[] @relation("SourceKEdge")
+  incoming   KnowledgeGraphEdge[] @relation("TargetKEdge")
+}
+
+model KnowledgeGraphEdge {
+  id       String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sourceId String             @db.Uuid
+  source   KnowledgeGraphNode @relation("SourceKEdge", fields: [sourceId], references: [id])
+  targetId String             @db.Uuid
+  target   KnowledgeGraphNode @relation("TargetKEdge", fields: [targetId], references: [id])
+  type     String
+}
+
+model Ontology {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String
+  schema Json
+}
+
+model Tag {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String @unique
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 6: AI MODEL MANAGEMENT
+// -----------------------------------------------------------------------------
+
+model AIProvider {
+  id     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String // OpenAI, Anthropic
+  models AIModel[]
+}
+
+model AIModel {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  providerId String     @db.Uuid
+  provider   AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  name       String
+
+  versions      ModelVersion[]
+  agentVersions AgentVersion[]
+}
+
+model ModelVersion {
+  id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelId String  @db.Uuid
+  model   AIModel @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  version String
+
+  pricing      ModelPricing[]
+  deployments  ModelDeployment[]
+  capabilities ModelCapability[]
+}
+
+model ModelPricing {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelVersionId String       @db.Uuid
+  modelVersion   ModelVersion @relation(fields: [modelVersionId], references: [id], onDelete: Cascade)
+  inputCost      Float
+  outputCost     Float
+}
+
+model ModelCapability {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelVersionId String       @db.Uuid
+  modelVersion   ModelVersion @relation(fields: [modelVersionId], references: [id], onDelete: Cascade)
+  capability     String
+}
+
+model ModelDeployment {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelVersionId String       @db.Uuid
+  modelVersion   ModelVersion @relation(fields: [modelVersionId], references: [id], onDelete: Cascade)
+  endpoint       String
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 7: INFRASTRUCTURE DOMAIN
+// -----------------------------------------------------------------------------
+
+model Provider {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+}
+
+model CloudAccount {
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name    String
+  regions Region[]
+}
+
+model Region {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  cloudAccountId String       @db.Uuid
+  cloudAccount   CloudAccount @relation(fields: [cloudAccountId], references: [id], onDelete: Cascade)
+  name           String
+  resources      Resource[]
+}
+
+model Resource {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  regionId    String? @db.Uuid
+  region      Region? @relation(fields: [regionId], references: [id], onDelete: Cascade)
+  type        String?
+  workspaceId String? @db.Uuid
+  blueprintId String? @db.Uuid
+  status      String  @default("pending")
+  config      Json?
+  cost        Float?
+
+  deployments Deployment[]
+  operations  Operation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Deployment {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resourceId String   @db.Uuid
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  status     String
+  config     Json?
+
+  versions   DeploymentVersion[]
+  operations Operation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// HiveForge deployment orchestration — tracks execution of a Deployment
+// against a Resource (queued/running/completed/failed lifecycle).
+model Operation {
+  id           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resourceId   String      @db.Uuid
+  resource     Resource    @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  deploymentId String?     @db.Uuid
+  deployment   Deployment? @relation(fields: [deploymentId], references: [id], onDelete: Cascade)
+  status       String
+  type         String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DeploymentVersion {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deploymentId String     @db.Uuid
+  deployment   Deployment @relation(fields: [deploymentId], references: [id], onDelete: Cascade)
+  config       Json
+}
+
+model Secret {
+  id       String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key      String
+  versions SecretVersion[]
+}
+
+model SecretVersion {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  secretId String @db.Uuid
+  secret   Secret @relation(fields: [secretId], references: [id], onDelete: Cascade)
+  value    String // Encrypted payload
+}
+
+model Configuration {
+  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key   String
+  value Json
+}
+
+model Policy {
+  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name  String
+  rules Json
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 8: OBSERVABILITY DOMAIN
+// -----------------------------------------------------------------------------
+
+model Metric {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  value      Float
+  unit       String?
+  category   String?
+  target     Float?
+  metadata   Json?
+  recordedAt DateTime @default(now())
+}
+
+model Trace {
+  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name  String
+  spans Span[]
+}
+
+model Span {
+  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  traceId    String @db.Uuid
+  trace      Trace  @relation(fields: [traceId], references: [id], onDelete: Cascade)
+  operation  String
+  durationMs Int
+}
+
+model Log {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  level     String
+  message   String   @db.Text
+  timestamp DateTime @default(now())
+}
+
+model Alert {
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String
+  message       String
+  severity      String         @default("info")
+  source        String?
+  category      String?
+  pillar        String?
+  status        String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  notifications Notification[]
+}
+
+model Notification {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alertId String @db.Uuid
+  alert   Alert  @relation(fields: [alertId], references: [id], onDelete: Cascade)
+  channel String
+  status  String
+}
+
+model HealthCheck {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  service   String
+  status    String
+  checkedAt DateTime @default(now())
+}
+
+model Incident {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  description String   @db.Text
+  severity    String   @default("info")
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 9: MARKETPLACE DOMAIN
+// -----------------------------------------------------------------------------
+
+model Plugin {
+  id       String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name     String
+  versions PluginVersion[]
+}
+
+model PluginVersion {
+  id            String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pluginId      String               @db.Uuid
+  plugin        Plugin               @relation(fields: [pluginId], references: [id], onDelete: Cascade)
+  version       String
+  installations PluginInstallation[]
+}
+
+model PluginInstallation {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pluginVersionId String        @db.Uuid
+  pluginVersion   PluginVersion @relation(fields: [pluginVersionId], references: [id], onDelete: Cascade)
+  status          String
+}
+
+model Extension {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String
+  config Json
+}
+
+model Integration {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String
+  status String
+}
+
+model Connector {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  type String
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 10: AI SOFTWARE FACTORY
+// -----------------------------------------------------------------------------
+
+model Application {
+  id       String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name     String
+  versions ApplicationVersion[]
+}
+
+model ApplicationVersion {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  applicationId String      @db.Uuid
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  version       String
+
+  screens Screen[]
+  apis    API[]
+}
+
+model Screen {
+  id                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  applicationVersionId String             @db.Uuid
+  applicationVersion   ApplicationVersion @relation(fields: [applicationVersionId], references: [id], onDelete: Cascade)
+  name                 String
+  pages                Page[]
+}
+
+model Page {
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  screenId   String      @db.Uuid
+  screen     Screen      @relation(fields: [screenId], references: [id], onDelete: Cascade)
+  path       String
+  components Component[]
+}
+
+model Component {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pageId String @db.Uuid
+  page   Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  name   String
+  code   String @db.Text
+}
+
+model API {
+  id                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  applicationVersionId String             @db.Uuid
+  applicationVersion   ApplicationVersion @relation(fields: [applicationVersionId], references: [id], onDelete: Cascade)
+  name                 String
+  endpoints            Endpoint[]
+}
+
+model Endpoint {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  apiId  String @db.Uuid
+  api    API    @relation(fields: [apiId], references: [id], onDelete: Cascade)
+  path   String
+  method String
+}
+
+model DatabaseSchema {
+  id       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name     String
+  entities Entity[]
+}
+
+model Entity {
+  id               String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  databaseSchemaId String         @db.Uuid
+  databaseSchema   DatabaseSchema @relation(fields: [databaseSchemaId], references: [id], onDelete: Cascade)
+  name             String
+  fields           Json
+}
+
+model DTO {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String
+  schema Json
+}
+
+model Service {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  code String @db.Text
+}
+
+model TestSuite {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String
+  status String
+}
+
+model DeploymentTarget {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  url  String
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 12: RUNTIME ENGINE
+// -----------------------------------------------------------------------------
+
+/// Immutable append-only events generated during executions.
+model ExecutionEvent {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String   @db.Uuid // For tenant isolation
+  executionId String   @db.Uuid // Loose relation to WorkflowExecution or AgentExecution
+  eventType   String // e.g., ExecutionStarted, ToolInvoked
+  eventSource String // e.g., AgentRuntime, WorkflowRuntime
+  payload     Json // Event-specific data payload
+  timestamp   DateTime @default(now())
+
+  @@index([executionId])
+  @@index([workspaceId])
+  @@index([eventType])
+}
+
+/// Structured checkpoints for pausing/resuming executions.
+model ExecutionCheckpoint {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId     String   @db.Uuid
+  executionId     String   @db.Uuid // Loose relation to WorkflowExecution or AgentExecution
+  currentNode     String? // Step or Node ID currently executing
+  completedSteps  String[] // Array of completed step/node IDs
+  contextSnapshot Json // Snapshot of ExecutionContext
+  variables       Json? // Execution variables
+  pendingActions  Json? // Queue of pending actions
+  eventOffset     Int // Number of events processed at this checkpoint
+  createdAt       DateTime @default(now())
+
+  @@index([executionId])
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 5: LEGACY MODELS MIGRATED
+// -----------------------------------------------------------------------------
+
+enum OperatingTaskStatus {
+  QUEUED
+  RUNNING
+  PAUSED
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum UserStatus {
+  ACTIVE
+  INVITED
+  SUSPENDED
+  DELETED
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+  BILLING_ADMIN
+}
+
+enum AuthProvider {
+  KEYCLOAK
+  GOOGLE
+  GITHUB
+  MICROSOFT
+  EMAIL
+}
+
+enum OrgStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING_DELETION
+  DELETED
+}
+
+enum PlanTier {
+  FREE
+  STARTER
+  PRO
+  ENTERPRISE
+  ENTERPRISE_PLUS
+}
+
+enum WorkflowStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  DEPRECATED
+}
+
+enum ExecutionStatus {
+  QUEUED
+  RUNNING
+  WAITING_FOR_HUMAN
+  COMPLETED
+  FAILED
+  TIMEOUT
+  CANCELLED
+}
+
+enum AgentStatus {
+  ACTIVE
+  INACTIVE
+  DEPRECATED
+  BETA
+  DRAFT
+}
+
+enum DocumentStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+  DELETED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  TRIALING
+  INCOMPLETE
+}
+
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  UNCOLLECTIBLE
+  VOID
+}
+
+enum AuditSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+model Organization {
+  id           String    @id @default(dbgenerated("('org_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  name         String
+  slug         String    @unique
+  logoUrl      String?
+  status       OrgStatus @default(ACTIVE)
+  plan         PlanTier  @default(FREE)
+  ownerId      String
+  billingEmail String?
+  taxId        String? // encrypted
+  settings     Json      @default("{}")
+
+  members       OrgMembership[]
+  invitations   Invitation[]
+  aiUsage       AIUsageRecord[]
+  subscriptions Subscription[]
+  invoices      Invoice[]
+  usageBudgets  UsageBudget[]
+  prompts       Prompt[]
+}
+
+model OrgMembership {
+  userId   String   @db.Uuid
+  orgId    String
+  role     UserRole @default(MEMBER)
+  joinedAt DateTime @default(now())
+
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  org  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@id([userId, orgId])
+  @@index([orgId, role])
+  @@map("org_memberships")
+}
+
+model Invitation {
+  id          String    @id @default(uuid())
+  orgId       String
+  email       String
+  role        UserRole
+  invitedById String    @db.Uuid
+  token       String    @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  invitedBy User         @relation("InvitedBy", fields: [invitedById], references: [id])
+
+  @@index([orgId, email])
+  @@index([token])
+  @@map("invitations")
+}
+
+model KnowledgeDocument {
+  id           String         @id @default(dbgenerated("('doc_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  collectionId String
+  orgId        String
+  title        String
+  sourceUrl    String?
+  sourceType   String
+  mimeType     String?
+  contentHash  String
+  charCount    Int            @default(0)
+  chunkCount   Int            @default(0)
+  status       DocumentStatus @default(PENDING)
+  error        String?
+  metadata     Json           @default("{}")
+}
+
+model AIUsageRecord {
+  id           String   @id @default(uuid())
+  orgId        String
+  workflowId   String?
+  executionId  String?
+  agentId      String?
+  userId       String?
+  provider     String
+  model        String
+  inputTokens  Int
+  outputTokens Int
+  totalTokens  Int
+  costUsd      Decimal  @db.Decimal(12, 6)
+  durationMs   Int
+  ttftMs       Int?
+  cached       Boolean  @default(false)
+  streamed     Boolean  @default(false)
+  error        String?
+  finishReason String?
+  requestId    String
+  traceId      String?
+  createdAt    DateTime @default(now())
+
+  org Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt])
+  @@index([orgId, provider, model])
+  @@index([executionId])
+  @@map("ai_usage_records")
+}
+
+model Subscription {
+  id                   String             @id @default(uuid())
+  orgId                String
+  stripeSubscriptionId String             @unique
+  plan                 String
+  status               SubscriptionStatus
+  interval             String
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean            @default(false)
+  canceledAt           DateTime?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  seats                Int                @default(1)
+  addons               Json               @default("[]")
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  org      Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  invoices Invoice[]
+
+  @@index([orgId, status])
+  @@map("subscriptions")
+}
+
+model Invoice {
+  id              String        @id @default(uuid())
+  orgId           String
+  subscriptionId  String?
+  stripeInvoiceId String        @unique
+  status          InvoiceStatus
+  amount          Int // cents
+  currency        String        @default("usd")
+  tax             Int           @default(0)
+  periodStart     DateTime
+  periodEnd       DateTime
+  paidAt          DateTime?
+  invoiceUrl      String?
+  pdfUrl          String?
+  lineItems       Json          @default("[]")
+  createdAt       DateTime      @default(now())
+
+  org          Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  @@index([orgId, status])
+  @@map("invoices")
+}
+
+model UsageBudget {
+  orgId           String   @id
+  monthlyCapUsd   Decimal  @db.Decimal(10, 2)
+  alertThreshold  Decimal  @default(0.8) @db.Decimal(4, 3)
+  alertEmail      String
+  hardCap         Boolean  @default(false)
+  currentSpendUsd Decimal  @default(0) @db.Decimal(12, 6)
+  periodStart     DateTime
+  periodEnd       DateTime
+  updatedAt       DateTime @updatedAt
+
+  org Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@map("usage_budgets")
+}
+
+model Prompt {
+  id            String   @id @default(uuid())
+  orgId         String
+  name          String
+  slug          String
+  description   String   @default("")
+  status        String   @default("DRAFT") // DRAFT | PUBLISHED | DEPRECATED
+  category      String   @default("general")
+  tags          String[] @default([])
+  activeVersion Int      @default(1)
+  createdById   String?
+  updatedById   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  org      Organization    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  versions PromptVersion[]
+  evalRuns EvalRun[]
+
+  @@unique([orgId, slug])
+  @@index([orgId, status])
+  @@index([orgId, category])
+  @@map("prompts")
+}
+
+model PromptVersion {
+  id          String   @id @default(uuid())
+  promptId    String
+  orgId       String
+  version     Int
+  content     String // rendered template string
+  model       String
+  variables   String[] @default([])
+  description String   @default("")
+  changelog   String   @default("")
+  contentHash String
+  tags        String[] @default([])
+  isActive    Boolean  @default(false)
+  createdBy   String?
+  metrics     Json? // { successRate, avgTokens, avgLatencyMs, runs }
+
+  prompt Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
+}
+
+model EvalDataset {
+  id          String @id @default(uuid())
+  orgId       String
+  name        String
+  description String @default("")
+  rowCount    Int    @default(0)
+  schema      Json   @default("{}")
+}
+
+model EvalRun {
+  id         String  @id @default(uuid())
+  orgId      String
+  name       String
+  promptId   String?
+  promptSlug String  @default("")
+  datasetId  String?
+  model      String
+  status     String  @default("QUEUED") // QUEUED | RUNNING | COMPLETED | FAILED | CANCELLED
+  samples    Int     @default(0)
+  passed     Int     @default(0)
+  metrics    Json    @default("{}")
+
+  prompt Prompt? @relation(fields: [promptId], references: [id], onDelete: SetNull)
+}
+
+model ModelEntry {
+  id               String   @id @default(cuid())
+  orgId            String?
+  modelId          String   @unique // canonical model identifier (e.g. "claude-sonnet-5")
+  displayName      String
+  provider         String
+  description      String   @default("")
+  contextWindow    Int      @default(0)
+  maxOutput        Int      @default(0)
+  inputPricePer1M  Decimal  @default(0) @db.Decimal(10, 4)
+  outputPricePer1M Decimal  @default(0) @db.Decimal(10, 4)
+  capabilities     String[] @default([]) // vision | function_call | streaming | json_mode | reasoning
+  status           String   @default("ACTIVE") // ACTIVE | DEPRECATED | INACTIVE
+  metadata         Json     @default("{}")
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 5: CEREBROARCHIVE (KNOWLEDGE REPOSITORY)
+// -----------------------------------------------------------------------------
+
+model ArchiveDocument {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId         String    @db.Uuid
+  title            String
+  description      String?   @db.Text
+  documentType     String
+  currentVersionId String?   @db.Uuid
+  ownerId          String?   @db.Uuid
+  visibility       String    @default("PRIVATE")
+  status           String    @default("ACTIVE")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  versions ArchiveDocumentVersion[]
+  tags     ArchiveDocumentTag[]
+  acls     ArchiveDocumentAcl[]
+
+  @@index([tenantId])
+}
+
+model ArchiveDocumentVersion {
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  documentId       String          @db.Uuid
+  document         ArchiveDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  versionNumber    Int             @default(1)
+  storageKey       String
+  originalFilename String
+  mimeType         String
+  byteSize         BigInt
+  checksumSha256   String
+  processingStatus String          @default("CREATED")
+  language         String          @default("en")
+  pageCount        Int             @default(0)
+  wordCount        Int             @default(0)
+  createdBy        String?         @db.Uuid
+  createdAt        DateTime        @default(now())
+  processedAt      DateTime?
+
+  chunks ArchiveDocumentChunk[]
+  runs   ArchiveProcessingRun[]
+
+  @@unique([documentId, versionNumber])
+}
+
+model ArchiveDocumentChunk {
+  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId        String                 @db.Uuid
+  documentId      String                 @db.Uuid
+  versionId       String                 @db.Uuid
+  version         ArchiveDocumentVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  chunkIndex      Int
+  text            String                 @db.Text
+  tokenCount      Int                    @default(0)
+  pageStart       Int?
+  pageEnd         Int?
+  sectionPath     Json?
+  contentHash     String
+  embeddingStatus String                 @default("PENDING")
+  createdAt       DateTime               @default(now())
+
+  entities ArchiveChunkEntity[]
+
+  @@index([versionId])
+  @@index([contentHash])
+}
+
+model ArchiveEntity {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId      String   @db.Uuid
+  canonicalName String
+  entityType    String
+  description   String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  chunks ArchiveChunkEntity[]
+
+  @@unique([tenantId, canonicalName, entityType])
+}
+
+model ArchiveChunkEntity {
+  chunkId    String               @db.Uuid
+  entityId   String               @db.Uuid
+  chunk      ArchiveDocumentChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+  entity     ArchiveEntity        @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  confidence Float                @default(1.0)
+  source     String               @default("EXTRACTED")
+
+  @@id([chunkId, entityId])
+}
+
+model ArchiveTag {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String   @db.Uuid
+  name      String
+  slug      String
+  type      String   @default("AUTO")
+  createdAt DateTime @default(now())
+
+  documents ArchiveDocumentTag[]
+
+  @@unique([tenantId, slug])
+}
+
+model ArchiveDocumentTag {
+  documentId String          @db.Uuid
+  tagId      String          @db.Uuid
+  document   ArchiveDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  tag        ArchiveTag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  confidence Float           @default(1.0)
+  source     String          @default("AUTO")
+  approvedBy String?         @db.Uuid
+
+  @@id([documentId, tagId])
+}
+
+model ArchiveDocumentAcl {
+  documentId    String          @db.Uuid
+  document      ArchiveDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  principalType String
+  principalId   String
+  permission    String
+  createdAt     DateTime        @default(now())
+
+  @@id([documentId, principalType, principalId])
+}
+
+model ArchiveProcessingRun {
+  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  versionId       String                 @db.Uuid
+  version         ArchiveDocumentVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  pipelineVersion String
+  status          String                 @default("QUEUED")
+  currentStage    String                 @default("CREATED")
+  startedAt       DateTime               @default(now())
+  completedAt     DateTime?
+  errorCode       String?
+  errorMessage    String?                @db.Text
+  retryCount      Int                    @default(0)
+  traceId         String?
+
+  events ArchiveProcessingEvent[]
+}
+
+model ArchiveProcessingEvent {
+  id        String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  runId     String               @db.Uuid
+  run       ArchiveProcessingRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  stage     String
+  status    String
+  details   Json?
+  createdAt DateTime             @default(now())
+}
+
+model ArchiveSearchQuery {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String   @db.Uuid
+  userId      String?  @db.Uuid
+  queryHash   String
+  mode        String   @default("HYBRID")
+  filters     Json?
+  resultCount Int      @default(0)
+  durationMs  Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+}

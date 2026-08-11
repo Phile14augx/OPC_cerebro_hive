@@ -1,0 +1,9 @@
+{
+  "extends": "../../packages/domain/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "node16",
+    "moduleResolution": "node16"
+  },
+  "include": ["src/**/*", "index.ts"]
+}

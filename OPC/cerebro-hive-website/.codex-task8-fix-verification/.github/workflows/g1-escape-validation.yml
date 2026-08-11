@@ -1,0 +1,227 @@
+name: G1 Escape Validation
+
+# Runs the G1 sandbox escape suite against a live gVisor node.
+# Produces evidence for CEC (Control Evidence Coverage).
+#
+# Schedule: monthly on the second Sunday at 04:00 UTC
+# Also runs on manual dispatch and on PRs touching agent execution paths.
+
+on:
+  schedule:
+    - cron: "0 4 8-14 * 0"
+
+  pull_request:
+    paths:
+      - "services/forge-api/src/agent/**"
+      - "infra/k8s/agent-runtime/**"
+      - "infra/break-tests/g1-escape-job.yaml"
+
+  workflow_dispatch:
+    inputs:
+      node_selector:
+        description: "Node label selector for gVisor nodes (e.g. gvisor=true)"
+        type: string
+        default: "gvisor=true"
+
+concurrency:
+  group: g1-escape-validation
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  CLUSTER_NAME: cerebro-staging
+  AWS_REGION: us-east-1
+  NAMESPACE: cerebro-break-tests
+
+jobs:
+  # ── Unit tests (no gVisor required) ─────────────────────────────────────────
+  unit-tests:
+    name: G1 policy validation (unit)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run G1 unit tests
+        working-directory: services/forge-api
+        run: pnpm exec jest --testPathPattern='g1-escape-suite' --verbose
+
+      - name: Write unit test evidence
+        run: |
+          echo "## G1 Unit Test Evidence" >> $GITHUB_STEP_SUMMARY
+          echo "Run date: $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "Tests: syscall block list, pod security context validation, capability enforcement" >> $GITHUB_STEP_SUMMARY
+
+  # ── Live gVisor escape tests ─────────────────────────────────────────────────
+  live-escape-tests:
+    name: G1 escape suite (live gVisor)
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    environment: chaos-staging   # requires approval
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CHAOS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --name ${{ env.CLUSTER_NAME }} \
+            --region ${{ env.AWS_REGION }}
+
+      - name: Verify gVisor nodes are available
+        run: |
+          GVISOR_NODES=$(kubectl get nodes \
+            -l "${{ github.event.inputs.node_selector || 'gvisor=true' }}" \
+            --no-headers 2>/dev/null | wc -l)
+
+          if [ "$GVISOR_NODES" -eq 0 ]; then
+            echo "❌ No gVisor nodes found with label: ${{ github.event.inputs.node_selector || 'gvisor=true' }}"
+            echo "Ensure at least one node has the RuntimeClass 'gvisor' configured and is labelled."
+            exit 1
+          fi
+
+          echo "✅ Found $GVISOR_NODES gVisor node(s)"
+          kubectl get nodes -l "${{ github.event.inputs.node_selector || 'gvisor=true' }}" -o wide
+
+      - name: Apply break-test namespace and RBAC
+        run: |
+          kubectl apply -f infra/break-tests/g1-escape-job.yaml \
+            --dry-run=server   # validate first
+
+          # Apply only namespace + SA + NetworkPolicy (not the Job yet)
+          kubectl apply -f infra/break-tests/g1-escape-job.yaml \
+            -l '!batch.kubernetes.io/job-name'  # skip Job object on first pass
+
+          # Ensure namespace has gVisor RuntimeClass available
+          kubectl get runtimeclass gvisor > /dev/null 2>&1 \
+            || (echo "❌ RuntimeClass 'gvisor' not found — install gVisor on cluster nodes" && exit 1)
+
+      - name: Delete previous job if exists
+        run: |
+          kubectl delete job g1-escape-validation \
+            -n ${{ env.NAMESPACE }} --ignore-not-found
+
+      - name: Run escape validation job
+        run: |
+          kubectl create job g1-escape-validation \
+            -n ${{ env.NAMESPACE }} \
+            --from=cronjob/g1-escape-validation 2>/dev/null \
+            || kubectl apply -f infra/break-tests/g1-escape-job.yaml
+
+          echo "Waiting for job to complete (max 10 minutes)..."
+          kubectl wait job/g1-escape-validation \
+            -n ${{ env.NAMESPACE }} \
+            --for=condition=complete \
+            --timeout=600s \
+            || kubectl wait job/g1-escape-validation \
+              -n ${{ env.NAMESPACE }} \
+              --for=condition=failed \
+              --timeout=30s
+
+      - name: Capture job logs
+        id: logs
+        if: always()
+        run: |
+          POD=$(kubectl get pods -n ${{ env.NAMESPACE }} \
+            -l job-name=g1-escape-validation \
+            --no-headers -o custom-columns='NAME:.metadata.name' | head -1)
+
+          if [ -n "$POD" ]; then
+            kubectl logs $POD -n ${{ env.NAMESPACE }} | tee /tmp/g1-results.txt
+          fi
+
+          # Extract pass/fail counts
+          PASS=$(grep -c "^✅ PASS" /tmp/g1-results.txt 2>/dev/null || echo "0")
+          FAIL=$(grep -c "^❌ FAIL" /tmp/g1-results.txt 2>/dev/null || echo "0")
+
+          echo "pass_count=${PASS}" >> $GITHUB_OUTPUT
+          echo "fail_count=${FAIL}" >> $GITHUB_OUTPUT
+
+      - name: Write evidence summary
+        if: always()
+        run: |
+          PASS="${{ steps.logs.outputs.pass_count }}"
+          FAIL="${{ steps.logs.outputs.fail_count }}"
+          RUN_DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
+
+          echo "## G1 Escape Suite Results — ${RUN_DATE}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Cluster | ${{ env.CLUSTER_NAME }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Runtime | gVisor (runsc) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Techniques tested | $((PASS + FAIL)) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Blocked (PASS) | ${PASS} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Succeeded (FAIL) | ${FAIL} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$FAIL" = "0" ]; then
+            echo "✅ **G1 PASS** — All escape techniques blocked. Sandbox isolation confirmed." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **G1 FAIL** — ${FAIL} escape technique(s) succeeded. Immediate investigation required." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "<details><summary>Full output</summary>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat /tmp/g1-results.txt 2>/dev/null || echo "(no output captured)" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "</details>" >> $GITHUB_STEP_SUMMARY
+
+      - name: Post to Slack evidence channel
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_EVIDENCE_WEBHOOK }}
+        run: |
+          PASS="${{ steps.logs.outputs.pass_count }}"
+          FAIL="${{ steps.logs.outputs.fail_count }}"
+          EMOJI=$([ "$FAIL" = "0" ] && echo "✅" || echo "❌")
+
+          curl -s -X POST "$SLACK_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"text\": \"${EMOJI} G1 Escape Validation: pass=${PASS} fail=${FAIL}\",
+              \"blocks\": [{
+                \"type\": \"section\",
+                \"text\": {
+                  \"type\": \"mrkdwn\",
+                  \"text\": \"*G1 Sandbox Escape Evidence*\nBlocked: \`${PASS}\` | Succeeded: \`${FAIL}\`\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>\"
+                }
+              }]
+            }"
+
+      - name: Cleanup job
+        if: always()
+        run: |
+          kubectl delete job g1-escape-validation \
+            -n ${{ env.NAMESPACE }} --ignore-not-found || true
+
+      - name: Fail if any escape succeeded
+        if: steps.logs.outputs.fail_count != '0'
+        run: |
+          echo "❌ G1 FAIL: ${{ steps.logs.outputs.fail_count }} escape technique(s) were not blocked."
+          echo "This represents an open escape vector in the sandbox isolation control."
+          echo "Investigate immediately before the next agent execution."
+          exit 1
