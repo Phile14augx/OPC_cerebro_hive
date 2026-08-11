@@ -13,7 +13,7 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-grpc';
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-import { Resource } from '@opentelemetry/resources';
+import { resourceFromAttributes } from '@opentelemetry/resources';
 import {
   SEMRESATTRS_SERVICE_NAME,
   SEMRESATTRS_SERVICE_VERSION,
@@ -50,7 +50,7 @@ export function initTelemetry(config: TelemetryConfig): NodeSDK {
   } = config;
 
   // Resource attributes
-  const resource = new Resource({
+  const resource = resourceFromAttributes({
     [SEMRESATTRS_SERVICE_NAME]: serviceName,
     [SEMRESATTRS_SERVICE_VERSION]: serviceVersion,
     'deployment.environment': environment,
