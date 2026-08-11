@@ -19,7 +19,7 @@ async function main() {
     
     if (agents.data.length > 0) {
       const agentDetails = await agentClient.getAgent(agents.data[0].id);
-      console.log(`Fetched details for agent: ${agentDetails?.metadata.name}`);
+      console.log(`Fetched details for agent: ${agentDetails?.name}`);
     }
 
     console.log('\n[2] Testing WorkflowClient (Fetching Real Data from PostgreSQL)...');

@@ -512,6 +512,9 @@ importers:
       '@ai-sdk/openai':
         specifier: ^4.0.16
         version: 4.0.22(zod@3.25.76)
+      '@cerebro/agent-registry-contracts':
+        specifier: workspace:*
+        version: link:../../packages/agent-registry-contracts
       '@cerebro/api-client':
         specifier: workspace:^
         version: link:../../packages/api-client
@@ -1979,7 +1982,14 @@ importers:
         version: 3.2.4(@types/debug@4.1.13)(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(terser@5.49.0)(tsx@4.23.9)(yaml@2.9.0)
 
   packages/sdk:
+    dependencies:
+      '@cerebro/agent-registry-contracts':
+        specifier: workspace:*
+        version: link:../agent-registry-contracts
     devDependencies:
+      '@types/node':
+        specifier: ^20.19.43
+        version: 20.19.43
       typescript:
         specifier: ^5.4.5
         version: 5.9.3

@@ -1,11 +1,17 @@
 export class SDKError extends Error {
+  public readonly code: string;
+  public readonly details: Record<string, unknown>;
+
   constructor(
     public status: number,
     public problem: any,
     message?: string
   ) {
-    super(message || problem.detail || 'SDK Error');
+    const apiError = problem?.error && typeof problem.error === 'object' ? problem.error : problem;
+    super(message || apiError?.message || problem?.detail || 'SDK Error');
     this.name = 'SDKError';
+    this.code = apiError?.code ?? 'SDK_ERROR';
+    this.details = apiError?.details ?? {};
   }
 }
 
