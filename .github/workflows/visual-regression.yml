@@ -5,6 +5,13 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: Generate reviewed Linux screenshot baselines
+        required: false
+        default: false
+        type: boolean
 
 defaults:
   run:
@@ -31,8 +38,19 @@ jobs:
       working-directory: OPC/cerebro-hive-website
       run: pnpm --filter @cerebro/studio exec playwright install --with-deps
     - name: Run Playwright tests
+      if: ${{ !inputs.update_snapshots }}
       working-directory: OPC/cerebro-hive-website
       run: pnpm --filter @cerebro/studio run test:e2e
+    - name: Generate Playwright baselines
+      if: ${{ inputs.update_snapshots }}
+      working-directory: OPC/cerebro-hive-website
+      run: pnpm --filter @cerebro/studio run test:e2e -- --update-snapshots
+    - uses: actions/upload-artifact@v7
+      if: ${{ inputs.update_snapshots && !cancelled() }}
+      with:
+        name: playwright-snapshots
+        path: OPC/cerebro-hive-website/apps/studio/tests/visual/**/*-snapshots/
+        retention-days: 7
     - uses: actions/upload-artifact@v7
       if: ${{ !cancelled() }}
       with:
