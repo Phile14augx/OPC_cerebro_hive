@@ -1149,6 +1149,9 @@ importers:
 
   packages/db:
     dependencies:
+      '@cerebro/agent-registry-contracts':
+        specifier: workspace:*
+        version: link:../agent-registry-contracts
       '@cerebro/runtime-contracts':
         specifier: workspace:*
         version: link:../runtime-contracts

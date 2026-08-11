@@ -9,6 +9,26 @@ datasource db {
   extensions = [pgvector(map: "vector"), pgcrypto]
 }
 
+enum AgentLifecycleStatus {
+  DRAFT
+  SANDBOX
+  CERTIFIED
+  PRODUCTION
+  SUSPENDED
+}
+
+enum AgentDraftValidationStatus {
+  UNVALIDATED
+  VALID
+  INVALID
+}
+
+enum AgentVersionPublicationSource {
+  USER
+  MIGRATION
+  SYSTEM
+}
+
 // Digital Twin Studio: immutable definition versions and tenant-scoped runtime objects.
 model DigitalTwin {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -93,6 +113,8 @@ model Workspace {
   isDefault Boolean @default(false)
 
   agents    Agent[]
+  agentDrafts AgentDraft[]
+  agentVersions AgentVersion[]
   workflows Workflow[]
   projects  Project[]
   apiKeys   APIKey[]
@@ -113,6 +135,12 @@ model User {
   tenantMembers TenantMember[]
   sessions      Session[]
   auditLogs     AuditLog[]
+  ownedAgents Agent[] @relation("AgentOwner")
+  createdAgents Agent[] @relation("AgentCreator")
+  statusChangedAgents Agent[] @relation("AgentStatusActor")
+  createdAgentDrafts AgentDraft[] @relation("AgentDraftCreator")
+  updatedAgentDrafts AgentDraft[] @relation("AgentDraftEditor")
+  publishedAgentVersions AgentVersion[] @relation("AgentVersionPublisher")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -232,7 +260,19 @@ model Agent {
   avatarUrl   String?
   isActive    Boolean @default(true)
 
-  versions      AgentVersion[]
+  lifecycleStatus AgentLifecycleStatus?
+  activeVersionId String? @unique @db.Uuid
+  activeVersion AgentVersion? @relation("ActiveAgentVersion", fields: [activeVersionId], references: [id], onDelete: SetNull)
+  ownerId String? @db.Uuid
+  owner User? @relation("AgentOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  createdBy String? @db.Uuid
+  creator User? @relation("AgentCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  statusChangedAt DateTime?
+  statusChangedBy String? @db.Uuid
+  statusActor User? @relation("AgentStatusActor", fields: [statusChangedBy], references: [id], onDelete: SetNull)
+
+  versions      AgentVersion[] @relation("AgentVersions")
+  draft         AgentDraft?
   executions    AgentExecution[]
   conversations AgentConversation[]
 
@@ -240,13 +280,49 @@ model Agent {
   updatedAt DateTime @updatedAt
 
   @@index([workspaceId])
+  @@unique([workspaceId, id])
+  @@index([workspaceId, lifecycleStatus])
+}
+
+model AgentDraft {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agentId     String @unique @db.Uuid
+  agent       Agent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  workspaceId String @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  baseVersionId String? @db.Uuid
+  baseVersion AgentVersion? @relation("AgentDraftBaseVersion", fields: [baseVersionId], references: [id], onDelete: SetNull)
+  definition Json
+  revision Int @default(1)
+  validationStatus AgentDraftValidationStatus @default(UNVALIDATED)
+  validationErrors Json?
+  createdBy String? @db.Uuid
+  creator User? @relation("AgentDraftCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  updatedBy String? @db.Uuid
+  editor User? @relation("AgentDraftEditor", fields: [updatedBy], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workspaceId, agentId])
 }
 
 model AgentVersion {
   id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   agentId String @db.Uuid
-  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agent   Agent  @relation("AgentVersions", fields: [agentId], references: [id], onDelete: Cascade)
   version Int
+
+  workspaceId String? @db.Uuid
+  workspace Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  definition Json?
+  definitionSchemaVersion Int?
+  definitionHash String?
+  publishedBy String? @db.Uuid
+  publisher User? @relation("AgentVersionPublisher", fields: [publishedBy], references: [id], onDelete: SetNull)
+  publishedAt DateTime?
+  publicationSource AgentVersionPublicationSource?
+  sourceDraftId String? @db.Uuid
+  sourceDraftRevision Int?
 
   modelId String  @db.Uuid
   model   AIModel @relation(fields: [modelId], references: [id], onDelete: Restrict)
@@ -257,10 +333,16 @@ model AgentVersion {
   capabilities AgentCapability[]
   tools        AgentTool[]
   prompts      PromptTemplate[]
+  activeFor    Agent[] @relation("ActiveAgentVersion")
+  baseForDrafts AgentDraft[] @relation("AgentDraftBaseVersion")
 
   createdAt DateTime @default(now())
 
   @@unique([agentId, version])
+  @@unique([agentId, id])
+  @@index([workspaceId, agentId, version])
+  @@index([workspaceId, publishedAt])
+  @@index([agentId, definitionHash])
 }
 
 model AgentCapability {
