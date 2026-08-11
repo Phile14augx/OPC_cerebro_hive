@@ -262,7 +262,7 @@ model Agent {
 
   lifecycleStatus AgentLifecycleStatus?
   activeVersionId String? @unique @db.Uuid
-  activeVersion AgentVersion? @relation("ActiveAgentVersion", fields: [activeVersionId], references: [id], onDelete: SetNull)
+  activeVersion AgentVersion? @relation("ActiveAgentVersion", fields: [id, activeVersionId], references: [agentId, id], onDelete: NoAction)
   ownerId String? @db.Uuid
   owner User? @relation("AgentOwner", fields: [ownerId], references: [id], onDelete: SetNull)
   createdBy String? @db.Uuid
@@ -300,6 +300,7 @@ model AgentDraft {
   creator User? @relation("AgentDraftCreator", fields: [createdBy], references: [id], onDelete: SetNull)
   updatedBy String? @db.Uuid
   editor User? @relation("AgentDraftEditor", fields: [updatedBy], references: [id], onDelete: SetNull)
+  publishedVersions AgentVersion[] @relation("PublishedFromDraft")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -322,6 +323,7 @@ model AgentVersion {
   publishedAt DateTime?
   publicationSource AgentVersionPublicationSource?
   sourceDraftId String? @db.Uuid
+  sourceDraft AgentDraft? @relation("PublishedFromDraft", fields: [sourceDraftId], references: [id], onDelete: SetNull)
   sourceDraftRevision Int?
 
   modelId String  @db.Uuid
