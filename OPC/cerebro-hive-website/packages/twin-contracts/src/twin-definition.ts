@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
-const EntityTypeSchema = z.object({ key: z.string().regex(/^[a-z][a-z0-9-]*$/), name: z.string().min(1) });
-const RelationshipTypeSchema = z.object({
+export const EntityTypeSchema = z.object({ key: z.string().regex(/^[a-z][a-z0-9-]*$/), name: z.string().min(1), category: z.enum(['PHYSICAL', 'BUSINESS', 'PROCESS', 'PEOPLE', 'ENVIRONMENT']).optional(), attributes: z.array(z.object({ key: z.string().min(1), type: z.enum(['string', 'number', 'boolean', 'datetime']), unit: z.string().optional() })).default([]) });
+export const RelationshipTypeSchema = z.object({
   key: z.string().regex(/^[a-z][a-z0-9-]*$/),
   from: z.string().regex(/^[a-z][a-z0-9-]*$/),
   to: z.string().regex(/^[a-z][a-z0-9-]*$/),
+  cardinality: z.enum(['ONE_TO_ONE', 'ONE_TO_MANY', 'MANY_TO_MANY']).default('ONE_TO_MANY'),
 });
 
 export const TwinDefinitionSchema = z.object({
