@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { generateIndustryModel } from '../modules/industry/deterministic-industry-provider';
 import { IndustryModelProposalSchema } from '../../../packages/twin-contracts/src/industry-model';
+import { applyVersionProposal, createVersionProposal } from '../modules/twin-definition/version-proposal-service';
 
 const airport = IndustryModelProposalSchema.parse(generateIndustryModel({ domain: 'Airport', description: 'International airport with terminals, gates, runways, aircraft, passengers, baggage, staff, vehicles, flights and weather.' }));
 const bank = IndustryModelProposalSchema.parse(generateIndustryModel({ domain: 'Commercial Bank', description: 'Retail and commercial bank with customers, accounts, branches, loans, transactions, employees and risk controls.' }));
@@ -10,5 +11,11 @@ assert.ok(airport.definition.entityTypes.some(item => item.key === 'runway'));
 assert.ok(bank.definition.entityTypes.some(item => item.key === 'account'));
 assert.equal(airport.provenance.classification, 'INFERRED');
 assert.equal(bank.status, 'PREVIEW');
+
+const pending = createVersionProposal({ tenantId: 'demo-tenant', workspaceId: 'demo-workspace' }, 'factory-alpha', airport);
+assert.equal(pending.status, 'PREVIEW');
+assert.throws(() => applyVersionProposal({ tenantId: 'demo-tenant', workspaceId: 'demo-workspace' }, pending.id, false), /APPROVAL_REQUIRED/);
+const applied = applyVersionProposal({ tenantId: 'demo-tenant', workspaceId: 'demo-workspace' }, pending.id, true);
+assert.equal(applied.status, 'APPLIED');
 
 console.log('Industry framework verification passed: distinct, valid, preview-only domain models.');
