@@ -1,0 +1,1 @@
+{"extends":"../../tsconfig.nextjs.json","compilerOptions":{"baseUrl":".","paths":{"@cerebro/twin-contracts":["../../packages/twin-contracts/src/index.ts"]},"plugins":[{"name":"next"}]},"include":["next-env.d.ts","**/*.ts","**/*.tsx",".next/types/**/*.ts"]}

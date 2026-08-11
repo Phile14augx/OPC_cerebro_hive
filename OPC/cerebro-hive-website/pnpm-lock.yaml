@@ -709,6 +709,28 @@ importers:
         specifier: ^5
         version: 5.9.3
 
+  apps/twin-studio:
+    dependencies:
+      '@cerebro/twin-contracts':
+        specifier: workspace:*
+        version: link:../../packages/twin-contracts
+      next:
+        specifier: '>=15.3.4'
+        version: 16.2.12(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.1.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.4
+        version: 19.2.4(react@19.2.4)
+    devDependencies:
+      tsx:
+        specifier: ^4.23.0
+        version: 4.23.9
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
   packages/agent-sdk:
     dependencies:
       '@cerebro/contracts':
@@ -1114,6 +1136,9 @@ importers:
       '@cerebro/runtime-core':
         specifier: workspace:*
         version: link:../runtime-core
+      '@cerebro/twin-contracts':
+        specifier: workspace:*
+        version: link:../twin-contracts
       '@prisma/adapter-pg':
         specifier: ^7.9.0
         version: 7.9.1
@@ -2086,6 +2111,32 @@ importers:
       vitest:
         specifier: 3.2.4
         version: 3.2.4(@types/debug@4.1.13)(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(terser@5.49.0)(tsx@4.23.9)(yaml@2.9.0)
+
+  packages/twin-contracts:
+    dependencies:
+      zod:
+        specifier: 3.24.4
+        version: 3.24.4
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vite:
+        specifier: '>=6.0.0'
+        version: 8.1.5(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(tsx@4.23.9)(yaml@2.9.0)
+      vitest:
+        specifier: 3.2.4
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(terser@5.49.0)(tsx@4.23.9)(yaml@2.9.0)
+
+  packages/twin-domain:
+    dependencies:
+      '@cerebro/twin-contracts':
+        specifier: workspace:*
+        version: link:../twin-contracts
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
 
   packages/ui:
     dependencies:
@@ -13139,6 +13190,9 @@ packages:
     engines: {node: '>=18.0.0'}
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
+
+  zod@3.24.4:
+    resolution: {integrity: sha512-OdqJE9UDRPwWsrHjLN2F8bPxvwJBK22EHLWtanu0LSYr5YqzsaaW3RMgmjwr8Rypg5k+meEJdSPXJZXE/yqOMg==}
 
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
@@ -26735,6 +26789,8 @@ snapshots:
   zod-validation-error@4.0.2(zod@3.25.76):
     dependencies:
       zod: 3.25.76
+
+  zod@3.24.4: {}
 
   zod@3.25.76: {}
 
