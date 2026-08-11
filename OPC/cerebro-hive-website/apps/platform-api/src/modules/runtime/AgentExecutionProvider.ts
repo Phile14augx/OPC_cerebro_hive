@@ -61,7 +61,28 @@ export class AgentExecutionProvider implements ExecutionProviderPort {
       timestamp: new Date(),
     };
 
-    const version = await this.agentRepository.getLatestVersion(agentId, { context: requestContext });
+    const legacyFallbackEnabled = process.env.AGENT_REGISTRY_LEGACY_VERSION_FALLBACK !== 'false';
+    const resolved = await this.agentRepository.getActiveVersion(agentId, {
+      context: requestContext,
+      allowLegacyFallback: legacyFallbackEnabled,
+    });
+    if (!resolved) {
+      return { outcome: 'failed', reason: `Agent ${agentId} was not found in this workspace.` };
+    }
+    const lifecycle = resolved.agent.lifecycleStatus;
+    const legacyLifecycleAllowed = lifecycle === null && legacyFallbackEnabled;
+    if (lifecycle !== 'PRODUCTION' && !legacyLifecycleAllowed) {
+      return {
+        outcome: 'failed',
+        reason: `Agent ${agentId} is not executable while lifecycle is ${lifecycle ?? 'UNCLASSIFIED'}.`,
+      };
+    }
+    if (resolved.fallbackUsed) {
+      // Temporary and intentionally observable: remove only after backfill
+      // verification proves production reads no longer depend on it.
+      console.warn('agent_registry_legacy_version_fallback', { agentId, workspaceId: execution.workspaceId });
+    }
+    const version = resolved.version;
     if (!version) {
       return {
         outcome: 'failed',
