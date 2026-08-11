@@ -1,4 +1,5 @@
-import { PrismaClient } from '@cerebro/db';
+import { Prisma, PrismaClient } from '../index';
+import { createInitialAgentDraft, hashAgentDefinition, type AgentDefinitionV1 } from '@cerebro/agent-registry-contracts';
 
 const prisma = new PrismaClient();
 
@@ -67,7 +68,10 @@ async function main() {
       workspaceId: workspace.id,
       name: 'Customer Support Bot',
       description: 'Handles frontline customer queries and billing issues.',
-      isActive: true
+      isActive: true,
+      lifecycleStatus: 'DRAFT',
+      ownerId: user.id,
+      createdBy: user.id,
     }
   });
 
@@ -76,7 +80,10 @@ async function main() {
       workspaceId: workspace.id,
       name: 'Code Reviewer',
       description: 'Analyzes pull requests for security flaws.',
-      isActive: true
+      isActive: true,
+      lifecycleStatus: 'DRAFT',
+      ownerId: user.id,
+      createdBy: user.id,
     }
   });
 
@@ -98,13 +105,50 @@ async function main() {
   });
 
   // Add agent versions
+  const supportDefinition: AgentDefinitionV1 = {
+    schemaVersion: 1,
+    purpose: 'Resolve customer support and billing requests',
+    businessFunction: 'Customer Support',
+    responsibilities: ['Answer approved customer questions'],
+    expectedOutputs: ['A clear and accurate support response'],
+    systemInstructions: 'You are a helpful customer support bot.',
+    modelConfig: { providerRef: 'provider:openai', modelRef: 'model:GPT-4o', temperature: 0.2, maxTokens: 4096 },
+    capabilities: [], allowedActions: [], prohibitedActions: [], escalationRules: [],
+    securityLevel: 'INTERNAL', toolPermissions: [], knowledgeSources: [],
+  };
+  const publishedAt = new Date();
   const av1 = await prisma.agentVersion.create({
     data: {
       agentId: agent1.id,
+      workspaceId: workspace.id,
       version: 1,
       modelId: model.id,
       instructions: 'You are a helpful customer support bot.',
+      definition: supportDefinition as unknown as Prisma.InputJsonValue,
+      definitionSchemaVersion: 1,
+      definitionHash: hashAgentDefinition(supportDefinition),
+      publishedBy: user.id,
+      publishedAt,
+      publicationSource: 'USER',
     }
+  });
+  await prisma.agent.update({
+    where: { id: agent1.id },
+    data: { activeVersionId: av1.id, lifecycleStatus: 'PRODUCTION', statusChangedAt: publishedAt, statusChangedBy: user.id },
+  });
+  await prisma.agentDraft.create({
+    data: {
+      agentId: agent1.id, workspaceId: workspace.id, baseVersionId: av1.id,
+      definition: supportDefinition as unknown as Prisma.InputJsonValue, revision: 1, validationStatus: 'VALID',
+      createdBy: user.id, updatedBy: user.id,
+    },
+  });
+  await prisma.agentDraft.create({
+    data: {
+      agentId: agent2.id, workspaceId: workspace.id,
+      definition: createInitialAgentDraft() as unknown as Prisma.InputJsonValue, revision: 1, validationStatus: 'UNVALIDATED',
+      createdBy: user.id, updatedBy: user.id,
+    },
   });
 
   // 5. Workflows
@@ -169,17 +213,17 @@ async function main() {
   await prisma.agentExecution.create({
     data: {
       agentId: agent1.id,
+      agentVersionId: av1.id,
       status: 'SUCCESS',
       startedAt: new Date(Date.now() - 50000),
       completedAt: new Date(Date.now() - 10000),
-      metrics: {
-        traceId: 'tr-abc-124',
-        durationMs: 4200,
-        tokens: { prompt: 1500, completion: 300, total: 1800 },
-        costUsd: 0.015,
-        model: 'claude-3-5-sonnet',
-        provider: 'anthropic'
-      }
+      traceId: 'tr-abc-124',
+      durationMs: 4200,
+      inputTokens: 1500,
+      outputTokens: 300,
+      costUsd: 0.015,
+      model: 'GPT-4o',
+      provider: 'OpenAI',
     }
   });
 

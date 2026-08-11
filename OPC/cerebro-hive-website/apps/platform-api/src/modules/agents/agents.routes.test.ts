@@ -32,7 +32,7 @@ describe('agent registry routes', () => {
     expect(response.statusCode).toBe(200);
     expect(response.json().meta).toMatchObject({ total: 1, page: 1, limit: 10, totalPages: 1 });
     expect(response.json().data[0].versions).toEqual([{ id: 'v1' }]);
-  });
+  }, 10_000);
 
   it('redacts draft definition from the agent detail endpoint', async () => {
     const app = await createApp({

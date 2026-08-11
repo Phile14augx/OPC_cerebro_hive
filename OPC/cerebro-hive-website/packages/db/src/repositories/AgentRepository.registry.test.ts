@@ -70,4 +70,23 @@ describe('AgentRepository registry behavior', () => {
     expect(draft.revision).toBe(4);
     expect(draft.updatedAt).toEqual(new Date('2026-08-11T00:00:00Z'));
   });
+
+  it('never uses legacy fallback for an explicitly non-production lifecycle', async () => {
+    let versionLookup = false;
+    const prisma = {
+      agent: {
+        findFirst: async () => ({ id: 'agent-1', workspaceId: 'workspace-1', lifecycleStatus: 'DRAFT', activeVersion: null }),
+      },
+      agentVersion: {
+        findFirst: async () => { versionLookup = true; return { id: 'legacy-version' }; },
+      },
+    } as unknown as PrismaClient;
+    const repository = new AgentRepository(prisma);
+
+    const resolved = await repository.getActiveVersion('agent-1', { context, allowLegacyFallback: true });
+
+    expect(resolved?.version).toBeNull();
+    expect(resolved?.fallbackUsed).toBe(false);
+    expect(versionLookup).toBe(false);
+  });
 });

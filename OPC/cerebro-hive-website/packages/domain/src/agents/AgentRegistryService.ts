@@ -20,7 +20,7 @@ export class AgentRegistryService {
       const agent = await this.repository.getRegistryAgent(agentId, { context });
       if (!agent) return Result.fail(normalizeAgentRegistryError({ code: 'AGENT_NOT_FOUND' }));
       const draft = agent.draft ? (() => {
-        const { definition: _definition, ...metadata } = agent.draft;
+        const { definition: _definition, validationErrors: _errors, ...metadata } = agent.draft;
         return metadata;
       })() : null;
       return Result.ok({ ...agent, draft });

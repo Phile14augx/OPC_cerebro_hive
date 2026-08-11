@@ -106,7 +106,8 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
           },
         });
       }
-      if (resolved.agent.lifecycleStatus !== 'PRODUCTION' && !resolved.fallbackUsed) {
+      const isUnclassifiedLegacyFallback = resolved.agent.lifecycleStatus === null && resolved.fallbackUsed;
+      if (resolved.agent.lifecycleStatus !== 'PRODUCTION' && !isUnclassifiedLegacyFallback) {
         return reply.code(409).send({
           success: false,
           error: {

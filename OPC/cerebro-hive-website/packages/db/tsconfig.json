@@ -10,8 +10,11 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist"
     ,"baseUrl": "."
-    ,"paths": {"@cerebro/twin-contracts": ["../twin-contracts/src/index.ts"]}
+    ,"paths": {
+      "@cerebro/twin-contracts": ["../twin-contracts/src/index.ts"],
+      "@cerebro/agent-registry-contracts": ["../agent-registry-contracts/src/index.ts"]
+    }
   },
-  "include": ["index.ts", "src/**/*"],
+  "include": ["index.ts", "src/**/*", "prisma/seed.ts"],
   "exclude": ["node_modules", "dist"]
 }

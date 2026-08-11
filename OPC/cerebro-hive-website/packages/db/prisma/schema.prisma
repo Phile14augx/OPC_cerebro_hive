@@ -260,7 +260,7 @@ model Agent {
   avatarUrl   String?
   isActive    Boolean @default(true)
 
-  lifecycleStatus AgentLifecycleStatus?
+  lifecycleStatus AgentLifecycleStatus @default(DRAFT)
   activeVersionId String? @unique @db.Uuid
   activeVersion AgentVersion? @relation("ActiveAgentVersion", fields: [id, activeVersionId], references: [agentId, id], onDelete: NoAction)
   ownerId String? @db.Uuid

@@ -1,6 +1,8 @@
 -- Apply only after the backfill manifest and verification queries are clean.
 
-ALTER TABLE "Agent" ALTER COLUMN "lifecycleStatus" SET NOT NULL;
+ALTER TABLE "Agent"
+  ALTER COLUMN "lifecycleStatus" SET DEFAULT 'DRAFT',
+  ALTER COLUMN "lifecycleStatus" SET NOT NULL;
 
 ALTER TABLE "AgentVersion"
   ALTER COLUMN "workspaceId" SET NOT NULL,

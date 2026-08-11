@@ -24,13 +24,14 @@ const admin = {
 describe('Agent Registry services', () => {
   it('redacts unpublished definition content from registry detail reads', async () => {
     const service = new AgentRegistryService({
-      getRegistryAgent: async () => ({ id: 'agent-1', draft: { id: 'draft-1', revision: 1, definition } }),
+      getRegistryAgent: async () => ({ id: 'agent-1', draft: { id: 'draft-1', revision: 1, definition, validationErrors: [{ path: 'purpose', message: 'sensitive' }] } }),
     } as any);
 
     const result = await service.get('agent-1', { ...admin, permissions: ['agent.read'] } as any);
-    const data = result.data as { draft: { definition?: unknown; revision: number } };
+    const data = result.data as { draft: { definition?: unknown; validationErrors?: unknown; revision: number } };
 
     expect(data.draft.definition).toBeUndefined();
+    expect(data.draft.validationErrors).toBeUndefined();
     expect(data.draft.revision).toBe(1);
   });
   it('allows the system-admin wildcard capability', () => {

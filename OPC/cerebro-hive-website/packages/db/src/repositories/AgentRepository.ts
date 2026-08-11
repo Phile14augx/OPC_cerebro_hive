@@ -82,7 +82,6 @@ export class AgentRepository extends BaseRepository {
             baseVersionId: true,
             revision: true,
             validationStatus: true,
-            validationErrors: true,
             updatedBy: true,
             updatedAt: true,
           },
@@ -401,7 +400,7 @@ export class AgentRepository extends BaseRepository {
     const agent = await db.agent.findFirst({ where: { id: agentId, workspaceId }, include: { activeVersion: true } });
     if (!agent) return null;
     if (agent.activeVersion) return { agent, version: agent.activeVersion, fallbackUsed: false };
-    if (!options.allowLegacyFallback) return { agent, version: null, fallbackUsed: false };
+    if (!options.allowLegacyFallback || agent.lifecycleStatus !== null) return { agent, version: null, fallbackUsed: false };
     const version = await db.agentVersion.findFirst({ where: { agentId }, orderBy: { version: 'desc' } });
     return { agent, version, fallbackUsed: Boolean(version) };
   }
