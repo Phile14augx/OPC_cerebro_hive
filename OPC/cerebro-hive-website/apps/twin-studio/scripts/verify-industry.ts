@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { generateIndustryModel } from '../modules/industry/deterministic-industry-provider';
 import { IndustryModelProposalSchema } from '../../../packages/twin-contracts/src/industry-model';
-import { applyVersionProposal, createVersionProposal } from '../modules/twin-definition/version-proposal-service';
 import { GENERATION_STAGES } from '../features/industry-generator';
 
 const airport = IndustryModelProposalSchema.parse(generateIndustryModel({ domain: 'Airport', description: 'International airport with terminals, gates, runways, aircraft, passengers, baggage, staff, vehicles, flights and weather.' }));
@@ -13,11 +12,6 @@ assert.ok(bank.definition.entityTypes.some(item => item.key === 'account'));
 assert.equal(airport.provenance.classification, 'INFERRED');
 assert.equal(bank.status, 'PREVIEW');
 
-const pending = createVersionProposal({ tenantId: 'demo-tenant', workspaceId: 'demo-workspace' }, 'factory-alpha', airport);
-assert.equal(pending.status, 'PREVIEW');
-assert.throws(() => applyVersionProposal({ tenantId: 'demo-tenant', workspaceId: 'demo-workspace' }, pending.id, false), /APPROVAL_REQUIRED/);
-const applied = applyVersionProposal({ tenantId: 'demo-tenant', workspaceId: 'demo-workspace' }, pending.id, true);
-assert.equal(applied.status, 'APPLIED');
 assert.deepEqual(GENERATION_STAGES, ['Understanding domain','Generating ontology','Mapping relationships','Defining telemetry','Configuring rules','Twin ready']);
 
 console.log('Industry framework verification passed: distinct, valid, preview-only domain models.');

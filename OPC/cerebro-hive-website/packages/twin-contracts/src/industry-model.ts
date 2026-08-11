@@ -11,3 +11,21 @@ export const IndustryModelProposalSchema = z.object({
 });
 export type IndustryBrief = z.input<typeof IndustryBriefSchema>;
 export type IndustryModelProposal = z.infer<typeof IndustryModelProposalSchema>;
+
+export const CreateVersionProposalCommandSchema = z.object({
+  action: z.literal('CREATE_PREVIEW'),
+  model: IndustryModelProposalSchema,
+});
+
+export const ApplyVersionProposalCommandSchema = z.object({
+  action: z.literal('APPLY'),
+  proposalId: z.string().min(1),
+  approved: z.literal(true),
+});
+
+export const VersionProposalCommandSchema = z.discriminatedUnion('action', [
+  CreateVersionProposalCommandSchema,
+  ApplyVersionProposalCommandSchema,
+]);
+
+export type VersionProposalCommand = z.infer<typeof VersionProposalCommandSchema>;

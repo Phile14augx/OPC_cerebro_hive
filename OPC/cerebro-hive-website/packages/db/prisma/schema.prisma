@@ -11,39 +11,60 @@ datasource db {
 
 // Digital Twin Studio: immutable definition versions and tenant-scoped runtime objects.
 model DigitalTwin {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId    String   @db.Uuid
-  workspaceId String   @db.Uuid
-  name        String
-  status      String   @default("DRAFT")
-  activeVersionId String? @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  versions    TwinVersion[]
-  entities    TwinEntity[]
+  id               String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId         String                @db.Uuid
+  workspaceId      String                @db.Uuid
+  name             String
+  status           String                @default("DRAFT")
+  activeVersionId  String?               @db.Uuid
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  versions         TwinVersion[]
+  versionProposals TwinVersionProposal[]
+  entities         TwinEntity[]
+
   @@index([tenantId, workspaceId])
 }
 
 model TwinVersion {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  twinId      String   @db.Uuid
-  twin        DigitalTwin @relation(fields: [twinId], references: [id], onDelete: Cascade)
-  versionNumber Int
-  status      String   @default("DRAFT")
-  definition  Json
-  createdAt   DateTime @default(now())
+  id               String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  twinId           String               @db.Uuid
+  twin             DigitalTwin          @relation(fields: [twinId], references: [id], onDelete: Cascade)
+  versionNumber    Int
+  status           String               @default("DRAFT")
+  definition       Json
+  sourceProposalId String?              @unique @db.Uuid
+  sourceProposal   TwinVersionProposal? @relation("AppliedProposalVersion", fields: [sourceProposalId], references: [id], onDelete: Restrict)
+  createdAt        DateTime             @default(now())
+
   @@unique([twinId, versionNumber])
 }
 
+model TwinVersionProposal {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  twinId         String       @db.Uuid
+  twin           DigitalTwin  @relation(fields: [twinId], references: [id], onDelete: Cascade)
+  tenantId       String       @db.Uuid
+  workspaceId    String       @db.Uuid
+  model          Json
+  status         String       @default("PREVIEW")
+  createdAt      DateTime     @default(now())
+  appliedAt      DateTime?
+  appliedVersion TwinVersion? @relation("AppliedProposalVersion")
+
+  @@index([tenantId, workspaceId, twinId, status])
+}
+
 model TwinEntity {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  twinId      String   @db.Uuid
-  twin        DigitalTwin @relation(fields: [twinId], references: [id], onDelete: Cascade)
-  versionId   String   @db.Uuid
-  key         String
-  typeKey     String
-  attributes  Json     @default("{}")
-  createdAt   DateTime @default(now())
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  twinId     String      @db.Uuid
+  twin       DigitalTwin @relation(fields: [twinId], references: [id], onDelete: Cascade)
+  versionId  String      @db.Uuid
+  key        String
+  typeKey    String
+  attributes Json        @default("{}")
+  createdAt  DateTime    @default(now())
+
   @@unique([twinId, key])
   @@index([twinId, versionId])
 }
@@ -59,6 +80,7 @@ model TwinEntityState {
   observedAt  DateTime
   effectiveAt DateTime
   ingestedAt  DateTime @default(now())
+
   @@index([tenantId, workspaceId, twinId, entityId, observedAt(sort: Desc)])
 }
 

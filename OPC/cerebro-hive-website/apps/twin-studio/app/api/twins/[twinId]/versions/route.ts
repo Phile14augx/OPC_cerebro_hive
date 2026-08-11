@@ -1,5 +1,25 @@
-import { NextRequest,NextResponse } from 'next/server';
-import { requestScope } from '../../../../../lib/request-scope';
-import { applyVersionProposal,createVersionProposal,listAppliedVersions } from '../../../../../modules/twin-definition/version-proposal-service';
-export async function GET(request:NextRequest,{params}:{params:Promise<{twinId:string}>}){const {twinId}=await params;try{return NextResponse.json({data:listAppliedVersions(requestScope(request),twinId)});}catch(error){return NextResponse.json({error:{code:'NOT_FOUND',message:error instanceof Error?error.message:'Not found'}},{status:404});}}
-export async function POST(request:NextRequest,{params}:{params:Promise<{twinId:string}>}){const {twinId}=await params;const body=await request.json();try{if(body.action==='APPLY')return NextResponse.json({data:applyVersionProposal(requestScope(request),body.proposalId,body.approved===true)});return NextResponse.json({data:createVersionProposal(requestScope(request),twinId,body.model)},{status:201});}catch(error){const message=error instanceof Error?error.message:'Invalid request';return NextResponse.json({error:{code:message,message}},{status:message==='APPROVAL_REQUIRED'?409:400});}}
+import { NextRequest } from "next/server";
+import {
+  authenticatedRequestContext,
+  versionProposalService,
+} from "../../../../../lib/twin-runtime";
+import { createVersionRouteController } from "../../../../../modules/twin-definition/version-route-controller";
+
+const controller = createVersionRouteController({
+  resolveScope: (request, access) => authenticatedRequestContext.resolve(request, access),
+  service: versionProposalService,
+});
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ twinId: string }> },
+) {
+  return controller.GET(request, (await params).twinId);
+}
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ twinId: string }> },
+) {
+  return controller.POST(request, (await params).twinId);
+}
