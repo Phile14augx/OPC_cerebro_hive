@@ -709,6 +709,25 @@ importers:
         specifier: ^5
         version: 5.9.3
 
+  apps/twin-studio:
+    dependencies:
+      '@cerebro/twin-contracts':
+        specifier: workspace:*
+        version: link:../../packages/twin-contracts
+      next:
+        specifier: '>=15.3.4'
+        version: 16.2.12(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.0)(@types/node@26.1.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.4
+        version: 19.2.4(react@19.2.4)
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
   packages/agent-sdk:
     dependencies:
       '@cerebro/contracts':
@@ -2099,6 +2118,16 @@ importers:
       vitest:
         specifier: 3.2.4
         version: 3.2.4(@types/debug@4.1.13)(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(jsdom@26.1.0)(terser@5.49.0)(tsx@4.23.9)(yaml@2.9.0)
+
+  packages/twin-domain:
+    dependencies:
+      '@cerebro/twin-contracts':
+        specifier: workspace:*
+        version: link:../twin-contracts
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
 
   packages/ui:
     dependencies:
