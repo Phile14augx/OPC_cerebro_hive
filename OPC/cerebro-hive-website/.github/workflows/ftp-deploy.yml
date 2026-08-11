@@ -1,0 +1,71 @@
+name: Deploy to cPanel / Hostinger via FTP
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    # FTP transfers should complete within minutes; do not let a stalled connection
+    # block every later production deployment for the default six-hour job limit.
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: ./OPC/cerebro-hive-website
+
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v7
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 9.15.9
+
+    - name: Use Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version: '20'
+        cache: 'pnpm'
+        cache-dependency-path: ./OPC/cerebro-hive-website/pnpm-lock.yaml
+
+    - name: 🔨 Install Dependencies
+      # --no-frozen-lockfile: see ssh-deploy.yml — ~100 workspace packages
+      # under independent active development means frozen-lockfile blocks
+      # this deploy on drift unrelated to the studio app.
+      run: pnpm install --no-frozen-lockfile
+
+    - name: Generate Prisma client
+      run: pnpm --filter @cerebro/db run generate
+
+    - name: 🏗️ Build Project
+      run: pnpm run build --filter @cerebro/studio
+      env:
+        IS_FTP_DEPLOY: "true"
+
+    - name: 📦 Prepare Standalone Directory
+      run: |
+        cp -R apps/studio/public apps/studio/.next/standalone/apps/studio/public
+        cp -R apps/studio/.next/static apps/studio/.next/standalone/apps/studio/.next/static
+
+    - name: 📂 Sync files to Hostinger
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./OPC/cerebro-hive-website/apps/studio/.next/standalone/
+        server-dir: /public_html/
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/*.segments/**
