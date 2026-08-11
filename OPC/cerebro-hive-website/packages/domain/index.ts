@@ -33,6 +33,11 @@ export * from './src/validators/WorkflowValidator';
 export * from './src/services/AgentApplicationService';
 export * from './src/services/WorkflowApplicationService';
 export * from './src/context/AgentExecutionContext';
+export * from './src/agents/AgentRegistryErrors';
+export * from './src/agents/AgentRegistryService';
+export * from './src/agents/AgentDraftService';
+export * from './src/agents/AgentPublicationService';
+export * from './src/agents/AgentLifecycleService';
 
 // Execution (Phase 9a — canonical Execution aggregate)
 export * from './src/execution/ExecutionId';

@@ -7,6 +7,36 @@
 
 export type OrgRole = "OWNER" | "ADMIN" | "DEVELOPER" | "ANALYST" | "VIEWER";
 
+export type AgentRegistryPermission =
+  | "agent.read"
+  | "agent.create"
+  | "agent.draft.edit"
+  | "agent.version.publish"
+  | "agent.lifecycle.certify"
+  | "agent.lifecycle.promote_production"
+  | "agent.lifecycle.suspend";
+
+const AGENT_REGISTRY_PERMISSION_MAP: Record<OrgRole, ReadonlySet<AgentRegistryPermission>> = {
+  VIEWER: new Set(["agent.read"]),
+  ANALYST: new Set(["agent.read"]),
+  DEVELOPER: new Set(["agent.read", "agent.create", "agent.draft.edit"]),
+  ADMIN: new Set([
+    "agent.read", "agent.create", "agent.draft.edit", "agent.version.publish", "agent.lifecycle.certify",
+  ]),
+  OWNER: new Set([
+    "agent.read", "agent.create", "agent.draft.edit", "agent.version.publish", "agent.lifecycle.certify",
+    "agent.lifecycle.promote_production", "agent.lifecycle.suspend",
+  ]),
+};
+
+export function getAgentRegistryPermissions(role: OrgRole): AgentRegistryPermission[] {
+  return Array.from(AGENT_REGISTRY_PERMISSION_MAP[role] ?? []);
+}
+
+export function hasAgentRegistryPermission(role: OrgRole, permission: AgentRegistryPermission): boolean {
+  return AGENT_REGISTRY_PERMISSION_MAP[role]?.has(permission) ?? false;
+}
+
 // ── Permissions ───────────────────────────────────────────────────────────────
 
 export type RBACPermission =
