@@ -14,6 +14,7 @@ const definition: AgentDefinitionV1 = {
 };
 
 test('create, edit, publish, inspect and govern an agent', async ({ page }) => {
+  test.setTimeout(90_000);
   let revision = 1;
   let lifecycleStatus: AgentLifecycleStatus = 'DRAFT';
   let activeVersion: AgentVersionDto | null = null;
@@ -45,9 +46,23 @@ test('create, edit, publish, inspect and govern an agent', async ({ page }) => {
     return route.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ success: false }) });
   });
 
-  await page.goto('/app/agents', { waitUntil: 'domcontentloaded' });
-  await page.getByRole('button', { name: 'Create agent' }).click();
-  await page.getByLabel('Name').fill('Finance Analyst');
+  try {
+    await page.goto('/app/agents', { waitUntil: 'domcontentloaded' });
+  } catch (error) {
+    if (!String(error).includes('ERR_ABORTED')) throw error;
+    await page.goto('/app/agents', { waitUntil: 'domcontentloaded' });
+  }
+  const createAgentButton = page.getByRole('button', { name: 'Create agent' });
+  const nameInput = page.getByLabel('Name');
+  await createAgentButton.click();
+  try {
+    await expect(nameInput).toBeVisible({ timeout: 3_000 });
+  } catch {
+    // A cold Next dev compile can paint SSR before React has hydrated.
+    await createAgentButton.click();
+    await expect(nameInput).toBeVisible();
+  }
+  await nameInput.fill('Finance Analyst');
   await page.getByLabel('Description').fill('Governed financial analysis');
   await page.getByRole('button', { name: 'Create draft' }).click();
   await expect(page.getByRole('heading', { name: 'Finance Analyst' })).toBeVisible();

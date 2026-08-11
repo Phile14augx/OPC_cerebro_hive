@@ -66,7 +66,9 @@ async function main() {
     const providerName = definition.modelConfig.providerRef.split(':', 2)[1];
     const modelName = definition.modelConfig.modelRef.split(':', 2)[1];
     const model = await prisma.aIModel.findFirst({
-      where: { name: { equals: modelName, mode: 'insensitive' }, provider: { name: { equals: providerName, mode: 'insensitive' } } },
+      where: providerName === 'legacy'
+        ? { id: modelName }
+        : { name: { equals: modelName, mode: 'insensitive' }, provider: { name: { equals: providerName, mode: 'insensitive' } } },
       select: { id: true },
     });
     if (!model) throw Object.assign(new Error('Configured model reference was not found'), { code: 'AGENT_MODEL_NOT_FOUND' });

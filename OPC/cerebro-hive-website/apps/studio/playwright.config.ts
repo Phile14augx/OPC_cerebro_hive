@@ -27,8 +27,9 @@ export default defineConfig({
     { name: 'Mobile Safari', use: { ...devices['iPhone 12'] } },
   ],
   webServer: {
-    command: 'npm run dev',
+    command: 'node scripts/playwright-server.mjs',
     port: 3401,
-    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+    reuseExistingServer: false,
   },
 });

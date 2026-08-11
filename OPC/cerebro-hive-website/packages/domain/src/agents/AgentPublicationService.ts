@@ -32,7 +32,7 @@ export class AgentPublicationService {
       const agent = prepared.agent;
       if (!agent.draft) return Result.fail(new AgentRegistryError('AGENT_NOT_FOUND', 'Agent draft not found'));
       if (prepared.replay) {
-        return Result.ok({ ...prepared.replay, lifecycle: prepared.replay.agent.lifecycleStatus });
+        return Result.ok({ version: prepared.replay.version });
       }
       if (agent.draft.revision !== command.expectedDraftRevision) {
         return Result.fail(new AgentRegistryError('AGENT_DRAFT_REVISION_CONFLICT', 'The agent draft changed before publication', { currentRevision: agent.draft.revision }));
@@ -67,7 +67,7 @@ export class AgentPublicationService {
         idempotencyFingerprint,
         auditMetadata: { idempotencyRef: idempotencyKeyHash.slice(0, 12) },
       }, { context });
-      return Result.ok({ ...published, lifecycle: nextLifecycleStatus });
+      return Result.ok({ version: published.version });
     } catch (error) { return Result.fail(normalizeAgentRegistryError(error)); }
   }
 }

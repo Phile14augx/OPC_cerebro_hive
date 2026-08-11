@@ -21,6 +21,31 @@ async function createApp(overrides: Record<string, any> = {}) {
 }
 
 describe('agent registry routes', () => {
+  it('preserves paginated list metadata and legacy versions projection', async () => {
+    const app = await createApp({
+      registryService: {
+        list: async () => ({ isSuccess: true, data: [{ id: 'a1', name: 'Alpha', activeVersion: { id: 'v1' } }] }),
+      },
+    });
+    const response = await app.inject({ method: 'GET', url: '/?page=1&limit=10&search=alp' });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().meta).toMatchObject({ total: 1, page: 1, limit: 10, totalPages: 1 });
+    expect(response.json().data[0].versions).toEqual([{ id: 'v1' }]);
+  });
+
+  it('redacts draft definition from the agent detail endpoint', async () => {
+    const app = await createApp({
+      registryService: {
+        get: async () => ({ isSuccess: true, data: { id: 'a1', draft: { revision: 2 } } }),
+      },
+    });
+    const response = await app.inject({ method: 'GET', url: '/a1' });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().data.draft.definition).toBeUndefined();
+  });
+
   it('returns only draft metadata supplied for a read-only user', async () => {
     const app = await createApp();
     const response = await app.inject({ method: 'GET', url: '/a1/draft' });

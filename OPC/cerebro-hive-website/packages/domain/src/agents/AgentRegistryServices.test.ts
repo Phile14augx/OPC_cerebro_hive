@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { AgentLifecycleService } from './AgentLifecycleService';
 import { AgentPublicationService } from './AgentPublicationService';
+import { AgentRegistryService } from './AgentRegistryService';
 import { requireAgentCapability } from './AgentRegistryErrors';
 
 const definition = {
@@ -21,6 +22,17 @@ const admin = {
 };
 
 describe('Agent Registry services', () => {
+  it('redacts unpublished definition content from registry detail reads', async () => {
+    const service = new AgentRegistryService({
+      getRegistryAgent: async () => ({ id: 'agent-1', draft: { id: 'draft-1', revision: 1, definition } }),
+    } as any);
+
+    const result = await service.get('agent-1', { ...admin, permissions: ['agent.read'] } as any);
+    const data = result.data as { draft: { definition?: unknown; revision: number } };
+
+    expect(data.draft.definition).toBeUndefined();
+    expect(data.draft.revision).toBe(1);
+  });
   it('allows the system-admin wildcard capability', () => {
     expect(requireAgentCapability({ tenantId: 't', workspaceId: 'w', permissions: ['*'] }, 'agent.version.publish')).toBeNull();
   });
@@ -76,7 +88,7 @@ describe('Agent Registry services', () => {
     const result = await service.publish('agent-1', { expectedDraftRevision: 1, idempotencyKey: 'publish-1' }, admin as any);
 
     expect(result.isSuccess).toBe(true);
-    expect(result.data.replayed).toBe(true);
+    expect(result.data.version.id).toBe('v1');
     expect(resolved).toBe(false);
   });
 

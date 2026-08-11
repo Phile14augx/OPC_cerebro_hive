@@ -1,14 +1,6 @@
 import type { AgentDefinitionV1, AgentDraftDocumentV1, DefinitionValidationError } from '@cerebro/agent-registry-contracts';
-import { Agent, AgentVersion, Prisma } from '../generated/client';
+import { AgentVersion, Prisma } from '../generated/client';
 import { BaseRepository, IRepositoryOptions, PrismaTransactionClient } from './BaseRepository';
-
-export interface CreateAgentInput {
-  name: string;
-  description?: string;
-  avatarUrl?: string;
-  modelId: string;
-  instructions: string;
-}
 
 export class AgentRegistryRepositoryError extends Error {
   constructor(
@@ -44,7 +36,7 @@ export interface PublishAgentDraftPersistenceInput {
 
 export class AgentRepository extends BaseRepository {
   async createRegistryAgent(
-    input: { name: string; description?: string; ownerId?: string | null; definition: AgentDraftDocumentV1 },
+    input: { name: string; description?: string; avatarUrl?: string; ownerId?: string | null; definition: AgentDraftDocumentV1 },
     options: IRepositoryOptions,
   ) {
     const db = this.getClient(options);
@@ -56,6 +48,7 @@ export class AgentRepository extends BaseRepository {
         workspaceId,
         name: input.name,
         description: input.description,
+        avatarUrl: input.avatarUrl,
         lifecycleStatus: 'DRAFT',
         ownerId: input.ownerId ?? actorId,
         createdBy: actorId,
@@ -411,60 +404,6 @@ export class AgentRepository extends BaseRepository {
     if (!options.allowLegacyFallback) return { agent, version: null, fallbackUsed: false };
     const version = await db.agentVersion.findFirst({ where: { agentId }, orderBy: { version: 'desc' } });
     return { agent, version, fallbackUsed: Boolean(version) };
-  }
-
-  async createAgent(input: CreateAgentInput, options: IRepositoryOptions): Promise<{ agent: Agent; initialVersion: AgentVersion }> {
-    const db = this.getClient(options);
-    const { workspaceId } = this.workspaceFilter(options.context);
-    
-    const agent = await db.agent.create({
-      data: {
-        workspaceId,
-        name: input.name,
-        description: input.description,
-        avatarUrl: input.avatarUrl,
-        versions: {
-          create: {
-            version: 1,
-            modelId: input.modelId,
-            instructions: input.instructions,
-          }
-        }
-      },
-      include: {
-        versions: true
-      }
-    });
-
-    return { agent, initialVersion: agent.versions[0] };
-  }
-
-  async publishVersion(agentId: string, input: { modelId: string; instructions: string; config?: any }, options: IRepositoryOptions): Promise<AgentVersion> {
-    const db = this.getClient(options);
-    const { workspaceId } = this.workspaceFilter(options.context);
-
-    // Validate agent ownership
-    const agent = await db.agent.findFirst({
-      where: { id: agentId, workspaceId }
-    });
-    if (!agent) throw new Error('Agent not found or unauthorized');
-
-    // Get max version
-    const latest = await db.agentVersion.findFirst({
-      where: { agentId },
-      orderBy: { version: 'desc' }
-    });
-    const nextVersion = (latest?.version ?? 0) + 1;
-
-    return db.agentVersion.create({
-      data: {
-        agentId,
-        version: nextVersion,
-        modelId: input.modelId,
-        instructions: input.instructions,
-        config: input.config ? (input.config as Prisma.InputJsonValue) : Prisma.JsonNull,
-      }
-    });
   }
 
   async getLatestVersion(agentId: string, options: IRepositoryOptions): Promise<AgentVersion | null> {

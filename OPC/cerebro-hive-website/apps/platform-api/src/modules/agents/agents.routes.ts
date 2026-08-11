@@ -15,6 +15,7 @@ import {
   PublishDraftBody,
   UpdateDraftBody,
 } from './agents.schemas';
+import { PaginationQuery } from '../common/pagination';
 
 export interface AgentsRouteOptions {
   registryService: AgentRegistryService;
@@ -53,15 +54,35 @@ function sendResult(reply: FastifyReply, request: FastifyRequest, result: Result
 }
 
 export default async function agentRoutes(fastify: FastifyInstance, services: AgentsRouteOptions) {
-  fastify.get('/', async (request, reply) => sendResult(reply, request, await services.registryService.list(actor(request))));
+  fastify.get('/', { schema: { querystring: PaginationQuery } }, async (request, reply) => {
+    const result = await services.registryService.list(actor(request));
+    if (result.isFailure) return sendResult(reply, request, result);
+    const { page = 1, limit = 20, sort, search } = request.query as { page?: number; limit?: number; sort?: string; search?: string };
+    const allowedSort = new Set(['name', 'createdAt', 'updatedAt', 'lifecycleStatus']);
+    const sortKey = sort?.replace(/^-/, '');
+    const direction = sort?.startsWith('-') ? -1 : 1;
+    let records = [...(result.data as any[])];
+    if (search) records = records.filter(value => value.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+    if (sortKey && allowedSort.has(sortKey)) records.sort((left, right) => String(left[sortKey]).localeCompare(String(right[sortKey])) * direction);
+    const total = records.length;
+    const start = (page - 1) * limit;
+    const data = records.slice(start, start + limit).map(value => ({ ...value, versions: value.activeVersion ? [value.activeVersion] : [] }));
+    return reply.send({ success: true, data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } });
+  });
 
-  fastify.post('/', { schema: { body: CreateAgentBody } }, async (request, reply) => (
-    sendResult(reply, request, await services.registryService.create(request.body as { name: string; description?: string }, actor(request)), 201)
-  ));
+  fastify.post('/', { schema: { body: CreateAgentBody } }, async (request, reply) => {
+    const result = await services.registryService.create(request.body as { name: string; description?: string; avatarUrl?: string; modelId?: string; instructions?: string }, actor(request));
+    if (result.isFailure) return sendResult(reply, request, result);
+    const value = result.data as any;
+    return reply.code(201).send({ success: true, data: { ...value, versions: value.activeVersion ? [value.activeVersion] : [] } });
+  });
 
   fastify.get('/:id', { schema: { params: AgentIdParams } }, async (request, reply) => {
     const { id } = request.params as { id: string };
-    return sendResult(reply, request, await services.registryService.get(id, actor(request)));
+    const result = await services.registryService.get(id, actor(request));
+    if (result.isFailure) return sendResult(reply, request, result);
+    const value = result.data as any;
+    return reply.send({ success: true, data: { ...value, versions: value.activeVersion ? [value.activeVersion] : [] } });
   });
 
   fastify.get('/:id/draft', { schema: { params: AgentIdParams } }, async (request, reply) => {

@@ -17,6 +17,9 @@ export const CreateAgentBody = {
   properties: {
     name: { type: 'string', minLength: 1, maxLength: 200 },
     description: { type: 'string', maxLength: 5000 },
+    avatarUrl: { type: 'string', maxLength: 2048 },
+    modelId: { type: 'string', minLength: 1 },
+    instructions: { type: 'string', minLength: 1 },
   },
 } as const;
 

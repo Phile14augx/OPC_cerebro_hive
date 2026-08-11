@@ -305,6 +305,7 @@ model AgentDraft {
   updatedAt DateTime @updatedAt
 
   @@index([workspaceId, agentId])
+  @@unique([agentId, id])
 }
 
 model AgentVersion {
@@ -313,15 +314,15 @@ model AgentVersion {
   agent   Agent  @relation("AgentVersions", fields: [agentId], references: [id], onDelete: Cascade)
   version Int
 
-  workspaceId String? @db.Uuid
-  workspace Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  definition Json?
-  definitionSchemaVersion Int?
-  definitionHash String?
+  workspaceId String @db.Uuid
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  definition Json
+  definitionSchemaVersion Int
+  definitionHash String
   publishedBy String? @db.Uuid
   publisher User? @relation("AgentVersionPublisher", fields: [publishedBy], references: [id], onDelete: SetNull)
-  publishedAt DateTime?
-  publicationSource AgentVersionPublicationSource?
+  publishedAt DateTime
+  publicationSource AgentVersionPublicationSource
   sourceDraftId String? @db.Uuid
   sourceDraft AgentDraft? @relation("PublishedFromDraft", fields: [sourceDraftId], references: [id], onDelete: SetNull)
   sourceDraftRevision Int?
@@ -342,6 +343,7 @@ model AgentVersion {
 
   @@unique([agentId, version])
   @@unique([agentId, id])
+  @@unique([workspaceId, id])
   @@index([workspaceId, agentId, version])
   @@index([workspaceId, publishedAt])
   @@index([agentId, definitionHash])

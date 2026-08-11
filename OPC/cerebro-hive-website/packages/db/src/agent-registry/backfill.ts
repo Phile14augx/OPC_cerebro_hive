@@ -10,6 +10,10 @@ export interface LegacyVersionBackfillRecord {
   config?: unknown;
   definition?: unknown;
   definitionHash?: string | null;
+  workspaceId?: string | null;
+  definitionSchemaVersion?: number | null;
+  publishedAt?: Date | null;
+  publicationSource?: string | null;
   createdAt?: Date;
 }
 
@@ -31,6 +35,7 @@ export interface AgentBackfillPlan {
   lifecycleStatus: AgentLifecycleStatus;
   reviewRequired: boolean;
   selectedVersion: LegacyVersionBackfillRecord | null;
+  versions: LegacyVersionBackfillRecord[];
   name: string;
   description: string | null;
 }
@@ -72,10 +77,13 @@ export async function runBackfill(
         lifecycleStatus: classification.lifecycle,
         reviewRequired: classification.reviewRequired,
         selectedVersion,
+        versions: agent.versions,
         name: agent.name,
         description: agent.description,
       };
-      const needsChange = agent.activeVersionId !== plan.activeVersionId || agent.lifecycleStatus !== plan.lifecycleStatus;
+      const needsChange = agent.activeVersionId !== plan.activeVersionId
+        || agent.lifecycleStatus !== plan.lifecycleStatus
+        || agent.versions.some(version => !version.workspaceId || !version.definition || !version.definitionSchemaVersion || !version.definitionHash || !version.publishedAt || !version.publicationSource);
       const changed = options.mode === 'apply' ? await store.applyAgent(plan) : needsChange;
       if (changed) manifest.changed += 1; else manifest.unchanged += 1;
       if (plan.reviewRequired) manifest.reviewRequired.push(agent.id);
@@ -88,8 +96,7 @@ export async function runBackfill(
   return manifest;
 }
 
-function legacyDefinition(plan: AgentBackfillPlan): AgentDefinitionV1 {
-  const version = plan.selectedVersion;
+function legacyDefinition(plan: AgentBackfillPlan, version: LegacyVersionBackfillRecord | null): AgentDefinitionV1 {
   return {
     schemaVersion: 1,
     purpose: plan.description?.trim() || `Operate as ${plan.name}`,
@@ -118,7 +125,7 @@ export class PrismaAgentRegistryBackfillStore implements AgentRegistryBackfillSt
       take: limit,
       select: {
         id: true, workspaceId: true, name: true, description: true, isActive: true, activeVersionId: true, lifecycleStatus: true,
-        versions: { orderBy: { version: 'desc' }, select: { id: true, version: true, modelId: true, instructions: true, config: true, definition: true, definitionHash: true, createdAt: true } },
+        versions: { orderBy: { version: 'desc' }, select: { id: true, version: true, modelId: true, instructions: true, config: true, workspaceId: true, definition: true, definitionSchemaVersion: true, definitionHash: true, publishedAt: true, publicationSource: true, createdAt: true } },
       },
     }) as Promise<LegacyAgentBackfillRecord[]>;
   }
@@ -126,20 +133,21 @@ export class PrismaAgentRegistryBackfillStore implements AgentRegistryBackfillSt
   async applyAgent(plan: AgentBackfillPlan): Promise<boolean> {
     return this.prisma.$transaction(async tx => {
       const current = await tx.agent.findUniqueOrThrow({ where: { id: plan.agentId }, select: { activeVersionId: true, lifecycleStatus: true } });
+      const versionsNeedChange = plan.versions.some(version => !version.workspaceId || !version.definition || !version.definitionSchemaVersion || !version.definitionHash || !version.publishedAt || !version.publicationSource);
       const definition = plan.selectedVersion
-        ? ((plan.selectedVersion.definition as AgentDefinitionV1 | undefined) ?? legacyDefinition(plan))
+        ? ((plan.selectedVersion.definition as AgentDefinitionV1 | undefined) ?? legacyDefinition(plan, plan.selectedVersion))
         : createInitialAgentDraft();
 
-      if (plan.selectedVersion) {
-        const snapshot = definition as AgentDefinitionV1;
+      for (const legacyVersion of plan.versions) {
+        const snapshot = (legacyVersion.definition as AgentDefinitionV1 | undefined) ?? legacyDefinition(plan, legacyVersion);
         await tx.agentVersion.update({
-          where: { id: plan.selectedVersion.id },
+          where: { id: legacyVersion.id },
           data: {
             workspaceId: plan.workspaceId,
             definition: snapshot as Prisma.InputJsonValue,
             definitionSchemaVersion: 1,
-            definitionHash: plan.selectedVersion.definitionHash ?? hashAgentDefinition(snapshot),
-            publishedAt: plan.selectedVersion.createdAt ?? new Date(),
+            definitionHash: legacyVersion.definitionHash ?? hashAgentDefinition(snapshot),
+            publishedAt: legacyVersion.publishedAt ?? legacyVersion.createdAt ?? new Date(),
             publicationSource: 'MIGRATION',
           },
         });
@@ -157,7 +165,7 @@ export class PrismaAgentRegistryBackfillStore implements AgentRegistryBackfillSt
         },
         update: {},
       });
-      return current.activeVersionId !== plan.activeVersionId || current.lifecycleStatus !== plan.lifecycleStatus;
+      return current.activeVersionId !== plan.activeVersionId || current.lifecycleStatus !== plan.lifecycleStatus || versionsNeedChange;
     });
   }
 }

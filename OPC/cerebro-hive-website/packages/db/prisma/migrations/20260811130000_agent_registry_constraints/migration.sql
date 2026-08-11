@@ -13,6 +13,25 @@ ALTER TABLE "AgentVersion"
 ALTER TABLE "AgentDraft"
   ADD CONSTRAINT "AgentDraft_revision_positive" CHECK ("revision" > 0);
 
+CREATE UNIQUE INDEX "AgentDraft_agentId_id_key" ON "AgentDraft"("agentId", "id");
+CREATE UNIQUE INDEX "AgentVersion_workspaceId_id_key" ON "AgentVersion"("workspaceId", "id");
+
+ALTER TABLE "AgentDraft"
+  ADD CONSTRAINT "AgentDraft_workspace_agent_fkey"
+  FOREIGN KEY ("workspaceId", "agentId") REFERENCES "Agent"("workspaceId", "id")
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT "AgentDraft_baseVersion_same_agent_fkey"
+  FOREIGN KEY ("agentId", "baseVersionId") REFERENCES "AgentVersion"("agentId", "id")
+  ON DELETE NO ACTION ON UPDATE CASCADE;
+
+ALTER TABLE "AgentVersion"
+  ADD CONSTRAINT "AgentVersion_workspace_agent_fkey"
+  FOREIGN KEY ("workspaceId", "agentId") REFERENCES "Agent"("workspaceId", "id")
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT "AgentVersion_sourceDraft_same_agent_fkey"
+  FOREIGN KEY ("agentId", "sourceDraftId") REFERENCES "AgentDraft"("agentId", "id")
+  ON DELETE NO ACTION ON UPDATE CASCADE;
+
 -- The active pointer must reference a version belonging to the same Agent.
 ALTER TABLE "Agent" DROP CONSTRAINT "Agent_activeVersionId_fkey";
 ALTER TABLE "Agent"

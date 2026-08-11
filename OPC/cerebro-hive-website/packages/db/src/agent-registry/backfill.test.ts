@@ -9,9 +9,18 @@ function storeFor(agents: LegacyAgentBackfillRecord[]): AgentRegistryBackfillSto
     },
     async applyAgent(plan) {
       const agent = this.agents.find(value => value.id === plan.agentId)!;
-      if (agent.activeVersionId === plan.activeVersionId && agent.lifecycleStatus === plan.lifecycleStatus) return false;
+      const governed = agent.versions.every(version => version.workspaceId && version.definition && version.definitionSchemaVersion && version.definitionHash && version.publishedAt && version.publicationSource);
+      if (agent.activeVersionId === plan.activeVersionId && agent.lifecycleStatus === plan.lifecycleStatus && governed) return false;
       agent.activeVersionId = plan.activeVersionId;
       agent.lifecycleStatus = plan.lifecycleStatus;
+      for (const version of agent.versions) {
+        version.workspaceId = agent.workspaceId;
+        version.definition = { schemaVersion: 1 };
+        version.definitionSchemaVersion = 1;
+        version.definitionHash = `hash-${version.id}`;
+        version.publishedAt = new Date();
+        version.publicationSource = 'MIGRATION';
+      }
       return true;
     },
   };
@@ -32,6 +41,7 @@ describe('agent registry legacy backfill', () => {
     expect(first.reviewRequired).toEqual(['a3']);
     expect(second.changed).toBe(0);
     expect(store.agents.map(agent => agent.activeVersionId)).toEqual(['v2', null, 'v3']);
+    expect(store.agents[0].versions.every(version => version.workspaceId === 'w1' && version.definitionHash)).toBe(true);
   });
 
   it('does not mutate in dry-run mode', async () => {

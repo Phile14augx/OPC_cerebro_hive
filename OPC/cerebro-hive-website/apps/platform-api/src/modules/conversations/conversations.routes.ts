@@ -106,7 +106,7 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
           },
         });
       }
-      if (resolved.agent.lifecycleStatus && resolved.agent.lifecycleStatus !== 'PRODUCTION') {
+      if (resolved.agent.lifecycleStatus !== 'PRODUCTION' && !resolved.fallbackUsed) {
         return reply.code(409).send({
           success: false,
           error: {

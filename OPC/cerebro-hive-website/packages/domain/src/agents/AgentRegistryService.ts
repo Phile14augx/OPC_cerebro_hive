@@ -18,16 +18,25 @@ export class AgentRegistryService {
     if (denied) return Result.fail(denied);
     try {
       const agent = await this.repository.getRegistryAgent(agentId, { context });
-      return agent ? Result.ok(agent) : Result.fail(normalizeAgentRegistryError({ code: 'AGENT_NOT_FOUND' }));
+      if (!agent) return Result.fail(normalizeAgentRegistryError({ code: 'AGENT_NOT_FOUND' }));
+      const draft = agent.draft ? (() => {
+        const { definition: _definition, ...metadata } = agent.draft;
+        return metadata;
+      })() : null;
+      return Result.ok({ ...agent, draft });
     } catch (error) { return Result.fail(normalizeAgentRegistryError(error)); }
   }
 
-  async create(input: { name: string; description?: string }, context: AgentRegistryActorContext): Promise<Result<unknown>> {
+  async create(input: { name: string; description?: string; avatarUrl?: string; modelId?: string; instructions?: string }, context: AgentRegistryActorContext): Promise<Result<unknown>> {
     const denied = requireAgentCapability(context, 'agent.create');
     if (denied) return Result.fail(denied);
     try {
+      const definition = createInitialAgentDraft();
+      if (input.instructions) definition.systemInstructions = input.instructions;
+      if (input.modelId) definition.modelConfig = { ...definition.modelConfig, providerRef: 'provider:legacy', modelRef: `model:${input.modelId}` };
       return Result.ok(await this.repository.createRegistryAgent({
-        ...input, ownerId: context.userId ?? null, definition: createInitialAgentDraft(),
+        name: input.name, description: input.description, avatarUrl: input.avatarUrl,
+        ownerId: context.userId ?? null, definition,
       }, { context }));
     } catch (error) { return Result.fail(normalizeAgentRegistryError(error)); }
   }
