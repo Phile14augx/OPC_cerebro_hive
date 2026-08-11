@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { factoryTwin } from '../modules/demo-factory/factory-definition';
 import { simulateFactoryTick } from '../modules/demo-factory/factory-simulator';
+import { IndustryGenerator } from './industry-generator';
 
 const tabs = ['Overview', 'Live state', 'Graph', 'Events', 'Scenarios', 'Ask twin'];
 
@@ -10,6 +11,7 @@ export function CommandCenter() {
   const [tick, setTick] = useState(0);
   const [tab, setTab] = useState('Overview');
   const [scenario, setScenario] = useState(false);
+  const [showGenerator, setShowGenerator] = useState(false);
   const data = useMemo(() => simulateFactoryTick(tick, new Date()), [tick]);
   const risk = data.alert ? 82 : Math.round(18 + tick * 11);
   return <main className="shell">
@@ -17,6 +19,8 @@ export function CommandCenter() {
     <section className="workspace">
       <header className="top"><div><p className="eyebrow">Digital twin / Smart factory</p><h1>{factoryTwin.name}</h1></div><div className="topMeta"><span className="sim">SIMULATED</span><span><b>{data.alert ? 'DEGRADED' : 'LIVE'}</b><small>operational state</small></span><span><b>{100-risk}%</b><small>health score</small></span></div></header>
       <div className="tabs" role="tablist">{tabs.map(t=><button key={t} aria-selected={tab===t} onClick={()=>setTab(t)}>{t}</button>)}</div>
+      <div className="studioAction"><button onClick={()=>setShowGenerator(true)}>Create industry twin</button></div>
+      {showGenerator&&<IndustryGenerator twinId={factoryTwin.id} onClose={()=>setShowGenerator(false)}/>} 
       <section className="hero">
         <div className="signal"><span>VIBRATION TRACE</span>{[1,2,3,4,5,6,7,8].map((n)=><i key={n} style={{height:`${12+n*(tick+2)}px`}}/>)}<strong>{data.vibration.toFixed(1)}<small> mm/s</small></strong></div>
         <div className="brief"><p className="eyebrow">Observed system state</p><h2>{data.alert ? 'Motor‑07 is moving outside its normal envelope.' : 'Factory Alpha is operating within its expected envelope.'}</h2><p>{data.alert ? 'Vibration and temperature are rising together on Production Line A. The evidence matches an early bearing-failure pattern.' : 'Advance the deterministic simulator to observe live telemetry, rules, alerts, and scenario analysis.'}</p><div className="actions"><button className="primary" onClick={()=>setTick(v=>Math.min(v+1,8))}>Advance simulation</button><button onClick={()=>setScenario(true)}>Simulate Motor‑07 failure</button></div></div>
