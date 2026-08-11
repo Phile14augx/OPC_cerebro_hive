@@ -20,7 +20,7 @@ export function CommandCenter() {
       <header className="top"><div><p className="eyebrow">Digital twin / Smart factory</p><h1>{factoryTwin.name}</h1></div><div className="topMeta"><span className="sim">SIMULATED</span><span><b>{data.alert ? 'DEGRADED' : 'LIVE'}</b><small>operational state</small></span><span><b>{100-risk}%</b><small>health score</small></span></div></header>
       <div className="tabs" role="tablist">{tabs.map(t=><button key={t} aria-selected={tab===t} onClick={()=>setTab(t)}>{t}</button>)}</div>
       <div className="studioAction"><button onClick={()=>setShowGenerator(true)}>Create industry twin</button></div>
-      {showGenerator&&<IndustryGenerator twinId={factoryTwin.id} onClose={()=>setShowGenerator(false)}/>} 
+      {showGenerator&&<IndustryGenerator twinId={factoryTwin.id} onClose={()=>setShowGenerator(false)}/>}
       <section className="hero">
         <div className="signal"><span>VIBRATION TRACE</span>{[1,2,3,4,5,6,7,8].map((n)=><i key={n} style={{height:`${12+n*(tick+2)}px`}}/>)}<strong>{data.vibration.toFixed(1)}<small> mm/s</small></strong></div>
         <div className="brief"><p className="eyebrow">Observed system state</p><h2>{data.alert ? 'Motor‑07 is moving outside its normal envelope.' : 'Factory Alpha is operating within its expected envelope.'}</h2><p>{data.alert ? 'Vibration and temperature are rising together on Production Line A. The evidence matches an early bearing-failure pattern.' : 'Advance the deterministic simulator to observe live telemetry, rules, alerts, and scenario analysis.'}</p><div className="actions"><button className="primary" onClick={()=>setTick(v=>Math.min(v+1,8))}>Advance simulation</button><button onClick={()=>setScenario(true)}>Simulate Motor‑07 failure</button></div></div>
