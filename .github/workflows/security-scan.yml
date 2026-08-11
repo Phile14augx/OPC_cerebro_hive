@@ -89,7 +89,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
-          sarif_file: semgrep.sarif
+          sarif_file: OPC/cerebro-hive-website/semgrep.sarif
           category: semgrep
 
       - name: Upload Semgrep report
@@ -97,7 +97,7 @@ jobs:
         if: always()
         with:
           name: semgrep-sarif
-          path: semgrep.sarif
+          path: OPC/cerebro-hive-website/semgrep.sarif
           retention-days: 30
 
   # ────────────────────────────────────────────────────────────
@@ -126,12 +126,15 @@ jobs:
         run: pnpm audit --audit-level=high --json > npm-audit.json || true
 
       - name: OSV-Scanner — full dependency graph
-        uses: google/osv-scanner-action@v1
-        with:
-          scan-args: |-
-            --lockfile=pnpm-lock.yaml
-            --format=json
-            --output=osv-results.json
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" \
+            ghcr.io/google/osv-scanner:v2 \
+            scan source \
+            --lockfile=/src/pnpm-lock.yaml \
+            --format=json \
+            --output=/src/osv-results.json \
+            || true
         continue-on-error: true
 
       - name: Upload audit results
@@ -318,6 +321,7 @@ jobs:
     if: always()
     steps:
       - name: Evaluate security gate
+        working-directory: .
         run: |
           echo "secret-scan: ${{ needs.secret-scan.result }}"
           echo "sast:        ${{ needs.sast.result }}"

@@ -316,4 +316,4 @@ bash scripts/prisma-setup.sh setup
 - [Prisma Documentation](https://www.prisma.io/docs/)
 - [PostgreSQL pgvector](https://github.com/pgvector/pgvector)
 - [Prisma Studio](https://www.prisma.io/studio)
-- [Database URL Format](https://www.prisma.io/docs/reference/database-reference/connection-urls/postgresql)
+- [PostgreSQL database connector](https://www.prisma.io/docs/orm/overview/databases/postgresql)

@@ -109,7 +109,7 @@ Client commitments, legal agreements, and applicable regulation govern data hand
 
 Knowledge is a company asset. Store work in the shared, version-controlled documentation system using clear titles, owners, status, dates, and links to related work. Capture decisions as ADRs and material proposals as RFCs. Keep confidential client material segregated from reusable internal assets and remove sensitive details before creating a reusable artifact.
 
-Each engagement should leave behind: a client handover set, architecture and runbooks, outcome evidence, and an internal lessons-learned record. The master [Documentation Index](../README.md) and [Enterprise Playbook](../../CEREBRO_HIVE_PLAYBOOK.md) provide the broader reference library.
+Each engagement should leave behind: a client handover set, architecture and runbooks, outcome evidence, and an internal lessons-learned record. The master [Documentation Index](../README.md) provides the broader reference library.
 
 ## 10. People and ways of working
 

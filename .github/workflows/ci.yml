@@ -363,7 +363,9 @@ jobs:
         run: pnpm --filter @cerebro/ai-gateway run build
 
       - name: Build ${{ matrix.app.name }}
-        run: pnpm --filter "${{ matrix.app.filter }}" run build
+        # Include transitive workspace dependencies so packages whose public
+        # entrypoints live in dist/ are built before the selected application.
+        run: pnpm --filter "${{ matrix.app.filter }}..." run build
         env:
           NODE_ENV: production
           NEXT_TELEMETRY_DISABLED: "1"

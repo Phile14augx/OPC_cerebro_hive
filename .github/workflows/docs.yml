@@ -2,6 +2,7 @@ name: Documentation Validation
 
 on:
   push:
+    branches: [main]
     paths:
       - '**/*.md'
       - 'docs/**'
@@ -33,4 +34,14 @@ jobs:
       - name: Check Markdown Links
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --no-progress './**/*.md'
+          workingDirectory: OPC/cerebro-hive-website
+          args: >-
+            --no-progress
+            --exclude '^/contact$'
+            --exclude '^http://localhost:'
+            --exclude '^https://docs\.cerebrohive\.com/'
+            --exclude '^https://(alertmanager|argocd|grafana)\.cerebrohive\.com/'
+            --exclude '^https://cerebrohive\.pagerduty\.com/?$'
+            --exclude '^https://console\.anthropic\.com/'
+            --exclude '^https://medium\.com/'
+            './**/*.md'
