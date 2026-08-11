@@ -1,0 +1,118 @@
+# Stage 5 — AI-Specific Chaos: Provider 5xx errors + slow streaming
+#
+# Provider 5xx failures and slow streaming are distinct failure modes
+# with different impact profiles.
+#
+# 5xx failures: immediate — the provider refused or crashed before
+# sending any tokens. The client receives a clear error.
+#
+# Slow streaming: insidious — the provider accepts the request, sends
+# a few tokens, then stalls. The client may wait indefinitely if
+# read timeouts are not set on the SSE stream. This is the most common
+# source of "hanging" inference requests in production.
+#
+# Hypotheses:
+#   A. 5xx injection: InstrumentedAIProvider emits llm_errors_total
+#      with error_type="provider_error". If retry is configured, it
+#      retries on a different model/provider. Latency histogram shows
+#      spike at the retry boundary.
+#
+#   B. Slow streaming: read timeout fires, SSE connection is torn down,
+#      and the request is marked failed (not hung). probe_duration_seconds
+#      for the inference probe exceeds 5s, triggering CerebroProbeSlowResponse.
+
+---
+# Experiment A: Provider 5xx errors (Anthropic)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: HTTPChaos
+metadata:
+  name: provider-5xx-anthropic
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage5-ai
+    fault: provider-5xx
+    provider: anthropic
+    blast-radius: high
+spec:
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "ai-gateway"
+  target: Request
+  port: 443
+  path: "/v1/messages"
+  method: POST
+  response:
+    statusCode: 529   # Anthropic's "overloaded" code (not standard)
+    headers:
+      Content-Type: "application/json"
+      X-Chaos-Injected: "true"
+    body: |
+      {
+        "type": "error",
+        "error": {
+          "type": "overloaded_error",
+          "message": "Overloaded. [chaos-injected]"
+        }
+      }
+  duration: "3m"
+
+---
+# Experiment B: Slow streaming (latency after connection established)
+# Injects a 15-second delay before the first byte of the streaming response.
+# Tests whether the client-side read timeout fires correctly.
+apiVersion: chaos-mesh.org/v1alpha1
+kind: HTTPChaos
+metadata:
+  name: slow-streaming-anthropic
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage5-ai
+    fault: slow-streaming
+    provider: anthropic
+    blast-radius: medium
+spec:
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "ai-gateway"
+  target: Response     # intercept the response from the provider
+  port: 443
+  path: "/v1/messages"
+  method: POST
+  delay: "15s"         # 15 second delay before response bytes are forwarded
+  duration: "5m"
+
+---
+# Experiment C: Partial streaming abort (mid-stream disconnect)
+# Provider sends 10 tokens then aborts. Tests whether:
+#   - The partial response is handled gracefully (not surfaced as a full response)
+#   - The client retries from scratch (not from the partial position)
+#   - llm_tokens_total counts only committed (complete) responses
+apiVersion: chaos-mesh.org/v1alpha1
+kind: HTTPChaos
+metadata:
+  name: mid-stream-abort
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage5-ai
+    fault: mid-stream-abort
+    provider: anthropic
+    blast-radius: medium
+spec:
+  mode: all
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "ai-gateway"
+  target: Response
+  port: 443
+  path: "/v1/messages"
+  method: POST
+  abort: true          # abruptly close the response connection
+  duration: "2m"

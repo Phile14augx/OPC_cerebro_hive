@@ -1,0 +1,13 @@
+# Local secret-scanning gate, run before a commit ever leaves the machine —
+# catches an accidentally-pasted API key/token before it's pushed, rather than
+# relying solely on the CI gitleaks job (.github/workflows/security-scan.yml)
+# to catch it after the fact.
+#
+# Setup (one-time, per clone):
+#   pip install pre-commit --break-system-packages
+#   pre-commit install
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks

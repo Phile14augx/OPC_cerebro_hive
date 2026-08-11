@@ -1,0 +1,39 @@
+{{/*
+ServiceMonitors for Prometheus Operator — one per service.
+Requires kube-prometheus-stack or prometheus-operator to be installed.
+*/}}
+
+{{- $services := dict
+  "studio"       .Values.studio
+  "forge"        .Values.forge
+  "platform-api" .Values.platform_api
+  "forge-api"    .Values.forge_api
+  "ai-gateway"   .Values.ai_gateway
+-}}
+
+{{- range $svcName, $cfg := $services }}
+{{- if and $cfg $cfg.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $svcName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cerebro-hive.serviceLabels" (dict "root" $ "svc" $svcName) | nindent 4 }}
+    # Label that kube-prometheus-stack discovers by default
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      {{- include "cerebro-hive.serviceSelectorLabels" (dict "root" $ "svc" $svcName) | nindent 6 }}
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 15s
+      scrapeTimeout: 10s
+  namespaceSelector:
+    matchNames:
+      - {{ $.Release.Namespace }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,22 @@
+{
+  "name": "@cerebro/domain",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "lint": "eslint \"**/*.ts*\"",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@cerebro/db": "workspace:*",
+    "@cerebro/domain-model": "workspace:*",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

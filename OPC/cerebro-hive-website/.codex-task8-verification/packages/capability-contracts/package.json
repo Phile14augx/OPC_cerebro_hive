@@ -1,0 +1,16 @@
+{
+  "name": "@cerebro/capability-contracts",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@cerebro/db": "workspace:*",
+    "@cerebro/domain": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "typescript": "^5.0.0"
+  }
+}

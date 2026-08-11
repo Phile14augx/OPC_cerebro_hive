@@ -1,0 +1,113 @@
+---
+# ──────────────────────────────────────────────────────────────────────────────
+# OpenFeature flagd — Feature Flag Daemon
+# Serves feature flags via gRPC + HTTP to all platform services
+# ──────────────────────────────────────────────────────────────────────────────
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flagd-config
+  namespace: cerebro-hive
+data:
+  flags.json: |
+    # Content managed via infra/flagd/flags.json — synced by CI
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flagd
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: flagd
+    app.kubernetes.io/component: feature-flags
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: flagd
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: flagd
+        app.kubernetes.io/component: feature-flags
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: flagd
+          image: ghcr.io/open-feature/flagd:latest
+          args:
+            - start
+            - --uri
+            - file:/etc/flagd/flags.json
+            - --metrics-exporter
+            - otel
+            - --otel-collector-uri
+            - $(OTEL_ENDPOINT)
+          ports:
+            - name: grpc
+              containerPort: 8013
+              protocol: TCP
+            - name: http
+              containerPort: 8014
+              protocol: TCP
+            - name: metrics
+              containerPort: 8016
+              protocol: TCP
+          env:
+            - name: OTEL_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: cerebro-hive-config
+                  key: OTEL_ENDPOINT
+          volumeMounts:
+            - name: flags
+              mountPath: /etc/flagd
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8014
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: flags
+          configMap:
+            name: flagd-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flagd
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: flagd
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: flagd
+  ports:
+    - name: grpc
+      port: 8013
+      targetPort: 8013
+      protocol: TCP
+    - name: http
+      port: 8014
+      targetPort: 8014
+      protocol: TCP

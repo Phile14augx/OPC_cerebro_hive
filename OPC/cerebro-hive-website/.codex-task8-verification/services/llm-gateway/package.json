@@ -1,0 +1,10 @@
+{
+  "name": "@cerebro/llm-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@cerebro/events": "workspace:*",
+    "@cerebro/prompt-sdk": "workspace:*"
+  }
+}

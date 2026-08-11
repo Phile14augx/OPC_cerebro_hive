@@ -1,0 +1,93 @@
+---
+# ──────────────────────────────────────────────────────────────────────────────
+# ArgoCD AppProject — CerebroHive
+# Scopes which repos, clusters, and namespaces ArgoCD can touch.
+# ──────────────────────────────────────────────────────────────────────────────
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cerebro-hive
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  description: "CerebroHive Platform — all environments"
+
+  sourceRepos:
+    - "https://github.com/cerebro-hive/cerebro-hive-website"
+    - "https://charts.bitnami.com/bitnami"
+    - "https://argoproj.github.io/argo-helm"
+    - "https://nats-io.github.io/k8s/helm/charts/"
+    - "https://charts.jetstack.io"
+
+  destinations:
+    - namespace: cerebro-hive
+      server: https://kubernetes.default.svc
+    - namespace: cerebro-hive-dev
+      server: https://kubernetes.default.svc
+    - namespace: cerebro-hive-staging
+      server: https://kubernetes.default.svc
+    - namespace: cerebro-hive-monitoring
+      server: https://kubernetes.default.svc
+    - namespace: argocd
+      server: https://kubernetes.default.svc
+
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: "cert-manager.io"
+      kind: ClusterIssuer
+    - group: "rbac.authorization.k8s.io"
+      kind: ClusterRole
+    - group: "rbac.authorization.k8s.io"
+      kind: ClusterRoleBinding
+
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  roles:
+    - name: developer
+      description: Read-only access for developers
+      policies:
+        - p, proj:cerebro-hive:developer, applications, get, cerebro-hive/*, allow
+        - p, proj:cerebro-hive:developer, applications, sync, cerebro-hive/*-dev, allow
+      groups:
+        - cerebro-hive:engineers
+
+    - name: deployer
+      description: Can sync dev and staging
+      policies:
+        - p, proj:cerebro-hive:deployer, applications, *, cerebro-hive/*-dev, allow
+        - p, proj:cerebro-hive:deployer, applications, *, cerebro-hive/*-staging, allow
+        - p, proj:cerebro-hive:deployer, applications, get, cerebro-hive/*, allow
+      groups:
+        - cerebro-hive:platform-engineers
+
+    - name: release-manager
+      description: Can promote production releases
+      policies:
+        - p, proj:cerebro-hive:release-manager, applications, *, cerebro-hive/*, allow
+      groups:
+        - cerebro-hive:release-managers
+
+  syncWindows:
+    # Block production syncs during business hours (manual only)
+    - kind: deny
+      schedule: "0 9 * * 1-5"    # Mon–Fri 9am
+      duration: 8h
+      applications:
+        - "cerebro-hive-production"
+      namespaces:
+        - cerebro-hive
+      manualSync: true            # Allow manual override
+
+    # Allow automated syncs to dev/staging anytime
+    - kind: allow
+      schedule: "* * * * *"
+      duration: 24h
+      applications:
+        - "cerebro-hive-dev"
+        - "cerebro-hive-staging"
+      manualSync: true

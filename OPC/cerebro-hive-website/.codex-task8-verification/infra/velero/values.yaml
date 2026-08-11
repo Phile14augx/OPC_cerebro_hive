@@ -1,0 +1,112 @@
+# Velero — Kubernetes backup and disaster recovery
+
+image:
+  repository: velero/velero
+  tag:        v1.14.0
+  pullPolicy: IfNotPresent
+
+initContainers:
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.10.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name:      plugins
+
+credentials:
+  useSecret: false  # Use IRSA instead
+
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/cerebro-hive-velero-irsa
+
+configuration:
+  backupStorageLocation:
+    - name:     default
+      provider: aws
+      bucket:   cerebro-hive-velero-backups
+      prefix:   velero
+      config:
+        region:            us-east-1
+        s3ForcePathStyle:  "false"
+        s3Url:             ""
+        serverSideEncryption: AES256
+      default: true
+  volumeSnapshotLocation:
+    - name:     default
+      provider: aws
+      config:
+        region: us-east-1
+
+snapshotsEnabled: true
+deployNodeAgent: true  # Required for file-system-level backups
+
+nodeAgent:
+  podVolumePath: /var/lib/kubelet/pods
+  privileged:    false
+  tolerations:
+    - operator: Exists
+  resources:
+    requests: { cpu: 200m, memory: 256Mi }
+    limits:   { cpu: 1,    memory: 512Mi }
+
+resources:
+  requests: { cpu: 500m, memory: 512Mi }
+  limits:   { cpu: 2,    memory: 1Gi }
+
+metrics:
+  enabled: true
+  scrapeInterval: 30s
+  serviceMonitor:
+    enabled:         true
+    additionalLabels:
+      release: kube-prometheus-stack
+
+schedules:
+  # Full cluster backup — daily at 2am UTC
+  daily-full:
+    disabled:   false
+    schedule:   "0 2 * * *"
+    useOwnerReferencesInBackup: false
+    template:
+      ttl:               720h  # 30 days
+      includedNamespaces:
+        - cerebro-prod
+        - cerebro-staging
+        - monitoring
+        - nats
+        - temporal
+      includeClusterResources: true
+      storageLocation:   default
+      volumeSnapshotLocations:
+        - default
+      labelSelector:
+        matchExpressions:
+          - { key: "backup/include", operator: In, values: ["true"] }
+
+  # Database volumes — every 6 hours
+  rds-snapshots:
+    disabled:  false
+    schedule:  "0 */6 * * *"
+    template:
+      ttl: 168h  # 7 days
+      includedNamespaces:
+        - cerebro-prod
+      labelSelector:
+        matchLabels:
+          tier: database
+      storageLocation: default
+
+  # Critical namespaces — hourly
+  critical-hourly:
+    disabled:  false
+    schedule:  "0 * * * *"
+    template:
+      ttl: 48h  # 2 days
+      includedNamespaces:
+        - cerebro-prod
+      includedResources:
+        - secrets
+        - configmaps
+        - persistentvolumeclaims
+      storageLocation: default

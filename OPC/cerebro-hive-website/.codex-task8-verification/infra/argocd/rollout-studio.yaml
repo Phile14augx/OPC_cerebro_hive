@@ -1,0 +1,150 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Argo Rollouts — Canary Strategy for cerebro-hive-studio
+# Canary: 5% → 25% → 50% → 100% with analysis and pause gates.
+# Replaces the standard Deployment in production.
+# ──────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: studio
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: studio
+    app.kubernetes.io/part-of: cerebro-hive
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: studio
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: studio
+        app.kubernetes.io/part-of: cerebro-hive
+    spec:
+      serviceAccountName: cerebro-hive
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+        - name: studio
+          image: ghcr.io/cerebrohive/cerebro-hive/studio:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: cerebro-hive-secrets
+          resources:
+            requests: { cpu: "200m", memory: "256Mi" }
+            limits:   { cpu: "1000m", memory: "1Gi" }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          livenessProbe:
+            httpGet: { path: /api/health, port: http }
+            initialDelaySeconds: 30
+          readinessProbe:
+            httpGet: { path: /api/health, port: http }
+            initialDelaySeconds: 10
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+
+  strategy:
+    canary:
+      # Traffic split via nginx ingress
+      canaryService: studio-canary
+      stableService: studio
+      trafficRouting:
+        nginx:
+          stableIngress: studio
+          annotationPrefix: nginx.ingress.kubernetes.io
+          additionalIngressAnnotations:
+            canary-by-header: X-Canary
+
+      steps:
+        # Step 1: 5% canary
+        - setWeight: 5
+        - pause: { duration: 5m }
+
+        # Step 2: Analysis — check error rate at 5%
+        - analysis:
+            templates:
+              - templateName: error-rate-check
+            args:
+              - name: service-name
+                value: studio
+
+        # Step 3: 25% canary
+        - setWeight: 25
+        - pause: { duration: 10m }
+
+        # Step 4: Analysis — check latency at 25%
+        - analysis:
+            templates:
+              - templateName: latency-check
+            args:
+              - name: service-name
+                value: studio
+
+        # Step 5: 50% canary — manual gate for high-stakes changes
+        - setWeight: 50
+        - pause: {}     # Manual promotion required
+
+        # Step 6: 100% — full rollout
+        - setWeight: 100
+
+      # Rollback on analysis failure
+      autoPromotionEnabled: false
+---
+# AnalysisTemplate — error rate check
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: error-rate-check
+  namespace: cerebro-hive
+spec:
+  args:
+    - name: service-name
+  metrics:
+    - name: error-rate
+      interval: 30s
+      count: 5
+      successCondition: result[0] < 0.05
+      failureLimit: 2
+      provider:
+        prometheus:
+          address: http://prometheus-operated.monitoring.svc.cluster.local:9090
+          query: |
+            sum(rate(http_requests_total{job="{{ args.service-name }}",status=~"5.."}[5m]))
+            / sum(rate(http_requests_total{job="{{ args.service-name }}"}[5m]))
+---
+# AnalysisTemplate — P99 latency check
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: latency-check
+  namespace: cerebro-hive
+spec:
+  args:
+    - name: service-name
+  metrics:
+    - name: p99-latency
+      interval: 30s
+      count: 5
+      successCondition: result[0] < 1.0
+      failureLimit: 2
+      provider:
+        prometheus:
+          address: http://prometheus-operated.monitoring.svc.cluster.local:9090
+          query: |
+            histogram_quantile(0.99,
+              sum(rate(http_request_duration_seconds_bucket{job="{{ args.service-name }}"}[5m])) by (le)
+            )

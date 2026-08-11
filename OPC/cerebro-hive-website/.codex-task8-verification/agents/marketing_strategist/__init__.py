@@ -1,0 +1,3 @@
+from .skills import MARKETING_STRATEGIST_SKILLS
+
+__all__ = ["MARKETING_STRATEGIST_SKILLS"]

@@ -1,0 +1,36 @@
+# Chaos Game Day: PostgreSQL Primary Kill
+#
+# Scenario: Kill the PostgreSQL primary node and verify:
+#   1. Promotion of standby completes within 60s (RTO gate)
+#   2. Alertmanager fires PostgreSQLPrimaryDown within 2 min
+#   3. forge-api reconnects automatically (connection pool drain + retry)
+#   4. No data is lost (RPO = 0 for committed transactions)
+#   5. SLO degrades and recovers within the error budget
+#   6. Evidence is recorded to the control register
+#
+# Maps to: CHAOS-1, DR-1, SLO-1
+# Run with: .github/workflows/chaos-game-day.yml
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: game-day-postgres-primary-kill
+  namespace: cerebro-chaos
+  labels:
+    cerebro.io/game-day: "true"
+    cerebro.io/scenario: postgres-primary-kill
+    cerebro.io/maps-to: "CHAOS-1,DR-1,SLO-1"
+spec:
+  action: pod-kill
+  mode: one
+  duration: "0s"        # Kill is instant; recovery is measured from kill time
+
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      app.kubernetes.io/name: postgresql
+      role: primary      # Only kill the primary, not standbys
+
+  # Safety: require staging namespace label
+  # (Chaos Mesh namespace selectors prevent this running in prod)

@@ -1,0 +1,21 @@
+{
+  "name": "@cerebro/hiveshield-policy",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@cerebro/policy-core": "workspace:*",
+    "@cerebro/identity-core": "workspace:*",
+    "@cerebro/domain-model": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4",
+    "@types/node": "^20.0.0"
+  }
+}

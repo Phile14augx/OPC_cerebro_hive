@@ -1,0 +1,39 @@
+# CerebroHive
+
+> CerebroHive architects enterprise AI systems — AI strategy, platform engineering, AI agents, RAG, knowledge engineering, and AI governance — for organizations across 16+ industries including finance, healthcare, manufacturing, retail, government, insurance, and energy.
+
+## Company
+
+- [About](https://cerebro-hive.com/about): Company overview and mission.
+- [Careers](https://cerebro-hive.com/careers): Open roles at CerebroHive.
+- [Company](https://cerebro-hive.com/company): Corporate information.
+- [Contact](https://cerebro-hive.com/contact): Get in touch about an enterprise engagement or platform demo.
+
+## Services
+
+- [Services overview](https://cerebro-hive.com/services): Full enterprise AI services catalog, priced per engagement.
+- [AI Strategy](https://cerebro-hive.com/services/strategy): Roadmaps, readiness assessments, and AI governance framework design.
+- [AI Engineering](https://cerebro-hive.com/services/engineering): Enterprise RAG, knowledge graphs, custom agents, and platform deployment.
+- [AI Operations](https://cerebro-hive.com/services/operations): Ongoing operations, monitoring, and optimization for AI systems in production.
+- [Security & Governance](https://cerebro-hive.com/services/security): Security architecture and compliance support for enterprise AI programs.
+- [Industry Solutions](https://cerebro-hive.com/services/industry): Vertical-specific AI programs.
+
+## Platform
+
+- [Platform overview](https://cerebro-hive.com/platform): 51 integrated capabilities spanning data, models, agents, governance, and operations.
+- [Industries](https://cerebro-hive.com/industries): AI programs for finance, healthcare, manufacturing, retail, government, insurance, energy, construction, real estate, logistics, education, telecom, technology, media, and professional services.
+- [Solutions](https://cerebro-hive.com/solutions): Packaged solutions covering enterprise AI, AI agents, RAG, document AI, knowledge management, hyperautomation, decision intelligence, predictive analytics, customer experience, ERP modernization, cloud modernization, and AI governance.
+
+## Learning
+
+- [Academy](https://cerebro-hive.com/academy): Courses, learning paths, and corporate AI training programs.
+
+## Legal
+
+- [Privacy](https://cerebro-hive.com/legal/privacy)
+- [Terms](https://cerebro-hive.com/legal/terms)
+- [Security](https://cerebro-hive.com/legal/security)
+
+## Machine-readable resources
+
+- [Sitemap](https://cerebro-hive.com/sitemap.xml)

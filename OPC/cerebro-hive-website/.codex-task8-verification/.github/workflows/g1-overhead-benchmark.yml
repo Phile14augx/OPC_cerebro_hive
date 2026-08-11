@@ -1,0 +1,267 @@
+name: G1 Overhead Benchmark
+
+# Measures gVisor vs runc performance overhead.
+# Produces evidence that sandbox isolation is within acceptable cost.
+# Acceptable threshold: < 3× overhead on syscall-heavy workloads,
+# < 1.5× on CPU-bound workloads (tokenization, string processing).
+#
+# Schedule: quarterly + on manual dispatch + on gVisor version bumps.
+
+on:
+  schedule:
+    - cron: "0 5 1 */3 *"   # first day of every third month
+
+  workflow_dispatch:
+    inputs:
+      overhead_threshold:
+        description: "Maximum acceptable overhead multiplier (default: 3.0)"
+        type: string
+        default: "3.0"
+
+  push:
+    paths:
+      - "infra/break-tests/g1-overhead-benchmark.yaml"
+
+concurrency:
+  group: g1-overhead-benchmark
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  CLUSTER_NAME: cerebro-staging
+  AWS_REGION: us-east-1
+  NAMESPACE: cerebro-break-tests
+  OVERHEAD_THRESHOLD: ${{ github.event.inputs.overhead_threshold || '3.0' }}
+
+jobs:
+  benchmark:
+    name: gVisor vs runc overhead
+    runs-on: ubuntu-latest
+    environment: chaos-staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CHAOS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --name ${{ env.CLUSTER_NAME }} \
+            --region ${{ env.AWS_REGION }}
+
+      - name: Verify gVisor nodes available
+        run: |
+          kubectl get nodes -l gvisor=true --no-headers | grep -q . \
+            || (echo "No gVisor nodes found" && exit 1)
+          kubectl get runtimeclass gvisor > /dev/null 2>&1 \
+            || (echo "RuntimeClass 'gvisor' not found" && exit 1)
+
+      - name: Clean up previous benchmark jobs
+        run: |
+          kubectl delete job g1-benchmark-runc g1-benchmark-gvisor \
+            -n ${{ env.NAMESPACE }} --ignore-not-found
+
+      - name: Run runc benchmark (baseline)
+        run: |
+          kubectl apply -f infra/break-tests/g1-overhead-benchmark.yaml \
+            -l runtime=runc
+
+          kubectl wait job/g1-benchmark-runc \
+            -n ${{ env.NAMESPACE }} \
+            --for=condition=complete \
+            --timeout=600s
+
+      - name: Capture runc results
+        id: runc
+        run: |
+          POD=$(kubectl get pods -n ${{ env.NAMESPACE }} \
+            -l job-name=g1-benchmark-runc \
+            --no-headers -o custom-columns='NAME:.metadata.name')
+
+          kubectl logs $POD -n ${{ env.NAMESPACE }} | tee /tmp/runc-results.txt
+
+      - name: Run gVisor benchmark (measured)
+        run: |
+          kubectl apply -f infra/break-tests/g1-overhead-benchmark.yaml \
+            -l runtime=gvisor
+
+          kubectl wait job/g1-benchmark-gvisor \
+            -n ${{ env.NAMESPACE }} \
+            --for=condition=complete \
+            --timeout=900s   # gVisor may be slower — allow extra time
+
+      - name: Capture gVisor results
+        id: gvisor
+        run: |
+          POD=$(kubectl get pods -n ${{ env.NAMESPACE }} \
+            -l job-name=g1-benchmark-gvisor \
+            --no-headers -o custom-columns='NAME:.metadata.name')
+
+          kubectl logs $POD -n ${{ env.NAMESPACE }} | tee /tmp/gvisor-results.txt
+
+      - name: Compute overhead ratios
+        id: overhead
+        run: |
+          python3 - <<'EOF'
+          import re, sys, os
+
+          def parse_time(t):
+              """Convert 'm:s.ms' or 's.ms' bash time format to seconds."""
+              if not t:
+                  return None
+              t = t.strip()
+              if 'm' in t:
+                  parts = t.split('m')
+                  return float(parts[0]) * 60 + float(parts[1].rstrip('s'))
+              return float(t.rstrip('s'))
+
+          def extract_metrics(filename):
+              metrics = {}
+              try:
+                  with open(filename) as f:
+                      for line in f:
+                          # Format: B1|syscall_throughput|runtime=runc|1M_getpid_time=0m1.234s
+                          m = re.match(r'(B\d)\|(\w+)\|runtime=(\w+)\|(\w+)=(\S+)', line)
+                          if m:
+                              bench_id, bench_name, runtime, metric_name, value = m.groups()
+                              key = f"{bench_id}_{metric_name}"
+                              metrics[key] = parse_time(value) or float(value.rstrip('s'))
+              except FileNotFoundError:
+                  pass
+              return metrics
+
+          runc = extract_metrics('/tmp/runc-results.txt')
+          gvisor = extract_metrics('/tmp/gvisor-results.txt')
+
+          threshold = float(os.environ.get('OVERHEAD_THRESHOLD', '3.0'))
+
+          print("## G1 Overhead Benchmark Results")
+          print("")
+          print(f"Overhead threshold: {threshold}×")
+          print("")
+          print("| Benchmark | runc (s) | gVisor (s) | Overhead | Status |")
+          print("|-----------|----------|------------|---------|--------|")
+
+          failures = []
+          all_results = []
+
+          for key in sorted(set(list(runc.keys()) + list(gvisor.keys()))):
+              r = runc.get(key)
+              g = gvisor.get(key)
+              if r and g and r > 0:
+                  ratio = g / r
+                  status = "✅" if ratio <= threshold else "❌"
+                  if ratio > threshold:
+                      failures.append(f"{key}: {ratio:.2f}× (threshold: {threshold}×)")
+                  print(f"| {key} | {r:.3f} | {g:.3f} | {ratio:.2f}× | {status} |")
+                  all_results.append((key, r, g, ratio))
+              elif r:
+                  print(f"| {key} | {r:.3f} | N/A | N/A | ⏭️ |")
+              elif g:
+                  print(f"| {key} | N/A | {g:.3f} | N/A | ⏭️ |")
+
+          print("")
+          if failures:
+              print(f"❌ FAIL: {len(failures)} benchmark(s) exceeded {threshold}× threshold:")
+              for f in failures:
+                  print(f"  - {f}")
+              # Write failure flag
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+                  out.write("threshold_exceeded=true\n")
+                  out.write(f"failure_count={len(failures)}\n")
+          else:
+              print(f"✅ PASS: All benchmarks within {threshold}× overhead threshold")
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+                  out.write("threshold_exceeded=false\n")
+                  out.write("failure_count=0\n")
+
+          EOF
+
+          # Append to job summary
+          python3 - >> $GITHUB_STEP_SUMMARY <<'EOF'
+          import re, sys, os
+
+          def parse_time(t):
+              if not t: return None
+              t = t.strip()
+              if 'm' in t:
+                  parts = t.split('m')
+                  return float(parts[0]) * 60 + float(parts[1].rstrip('s'))
+              return float(t.rstrip('s'))
+
+          def extract_metrics(filename):
+              metrics = {}
+              try:
+                  with open(filename) as f:
+                      for line in f:
+                          m = re.match(r'(B\d)\|(\w+)\|runtime=(\w+)\|(\w+)=(\S+)', line)
+                          if m:
+                              bench_id, bench_name, runtime, metric_name, value = m.groups()
+                              key = f"{bench_id}_{metric_name}"
+                              metrics[key] = parse_time(value) or float(value.rstrip('s'))
+              except FileNotFoundError:
+                  pass
+              return metrics
+
+          runc = extract_metrics('/tmp/runc-results.txt')
+          gvisor = extract_metrics('/tmp/gvisor-results.txt')
+          threshold = float(os.environ.get('OVERHEAD_THRESHOLD', '3.0'))
+
+          print(f"## G1 Overhead Benchmark — {os.popen('date -u').read().strip()}")
+          print("")
+          print(f"Threshold: {threshold}×")
+          print("")
+          print("| Benchmark | runc (s) | gVisor (s) | Overhead | Pass |")
+          print("|-----------|----------|------------|---------|------|")
+
+          for key in sorted(set(list(runc.keys()) + list(gvisor.keys()))):
+              r = runc.get(key)
+              g = gvisor.get(key)
+              if r and g and r > 0:
+                  ratio = g / r
+                  status = "✅" if ratio <= threshold else "❌"
+                  print(f"| {key} | {r:.3f} | {g:.3f} | {ratio:.2f}× | {status} |")
+          EOF
+
+      - name: Post to evidence channel
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_EVIDENCE_WEBHOOK }}
+        run: |
+          EXCEEDED="${{ steps.overhead.outputs.threshold_exceeded }}"
+          EMOJI=$([ "$EXCEEDED" != "true" ] && echo "✅" || echo "❌")
+
+          curl -s -X POST "$SLACK_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"text\": \"${EMOJI} G1 Overhead Benchmark: threshold_exceeded=${EXCEEDED}\",
+              \"blocks\": [{
+                \"type\": \"section\",
+                \"text\": {
+                  \"type\": \"mrkdwn\",
+                  \"text\": \"*G1 Overhead Evidence*\nThreshold: \`${{ env.OVERHEAD_THRESHOLD }}×\` | Exceeded: \`${EXCEEDED}\`\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View results>\"
+                }
+              }]
+            }"
+
+      - name: Cleanup
+        if: always()
+        run: |
+          kubectl delete job g1-benchmark-runc g1-benchmark-gvisor \
+            -n ${{ env.NAMESPACE }} --ignore-not-found || true
+
+      - name: Fail if threshold exceeded
+        if: steps.overhead.outputs.threshold_exceeded == 'true'
+        run: |
+          echo "❌ gVisor overhead exceeded ${{ env.OVERHEAD_THRESHOLD }}× threshold"
+          echo "${{ steps.overhead.outputs.failure_count }} benchmark(s) failed"
+          echo "Review gVisor configuration or adjust node sizing."
+          exit 1

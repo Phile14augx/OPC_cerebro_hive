@@ -1,0 +1,89 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Development Environment Overrides
+# ──────────────────────────────────────────────────────────────────────────────
+
+global:
+  environment: dev
+  domain: cerebrohive.com
+  appUrl: "https://dev.app.cerebrohive.com"
+  apiUrl: "https://dev.api.cerebrohive.com"
+
+studio:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+  hpa:
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    host: dev.app.cerebrohive.com
+
+forge:
+  replicaCount: 1
+  hpa:
+    minReplicas: 1
+    maxReplicas: 2
+  ingress:
+    host: dev.forge.cerebrohive.com
+
+platform_api:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  hpa:
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    host: dev.api.cerebrohive.com
+
+forge_api:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  hpa:
+    minReplicas: 1
+    maxReplicas: 2
+
+ai_gateway:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 384Mi
+  hpa:
+    minReplicas: 1
+    maxReplicas: 3
+  config:
+    rateLimitRPM: 60
+    enableCaching: false
+
+# Enable local dependencies in dev
+postgresql:
+  enabled: true
+
+redis:
+  enabled: true
+
+nats:
+  enabled: true
+
+rollouts:
+  enabled: false  # Use standard Deployments in dev

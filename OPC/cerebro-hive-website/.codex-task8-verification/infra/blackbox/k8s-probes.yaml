@@ -1,0 +1,366 @@
+# CerebroHive — Synthetic Monitoring Probes
+# Uses prometheus-operator Probe CRD (preferred) + ServiceMonitor fallback.
+# Requires: prometheus-community/prometheus-blackbox-exporter deployed in
+#           namespace "monitoring" with Service name "blackbox-exporter".
+#
+# Secret "blackbox-probe-auth" must exist in the monitoring namespace:
+#   kubectl create secret generic blackbox-probe-auth \
+#     --from-literal=api-key=<YOUR_PROBE_API_KEY> \
+#     --from-literal=workspace-id=<YOUR_PROBE_WORKSPACE_ID> \
+#     -n monitoring
+
+---
+# ── Probe: Platform API Health ──────────────────────────────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: platform-api-health
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: synthetic-monitoring
+    cerebro/probe-tier: p1
+spec:
+  jobName: cerebro-synthetic
+  interval: 30s
+  module: https_2xx
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://api.cerebrohive.com/health
+        - https://api.cerebrohive.com/ready
+      relabelingConfigs:
+        - sourceLabels: [__address__]
+          targetLabel: target
+        - targetLabel: probe_type
+          replacement: liveness
+        - targetLabel: service
+          replacement: platform-api
+  metricRelabelings:
+    - sourceLabels: [__name__]
+      regex: probe_(success|duration_seconds|http_status_code|ssl_earliest_cert_expiry)
+      action: keep
+
+---
+# ── Probe: Studio Web App ────────────────────────────────────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: studio-web-app
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: synthetic-monitoring
+    cerebro/probe-tier: p1
+spec:
+  jobName: cerebro-synthetic
+  interval: 30s
+  module: https_2xx
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://studio.cerebrohive.com
+        - https://studio.cerebrohive.com/app
+      relabelingConfigs:
+        - sourceLabels: [__address__]
+          targetLabel: target
+        - targetLabel: probe_type
+          replacement: page_load
+        - targetLabel: service
+          replacement: studio
+
+---
+# ── Probe: ForgeAPI Health ───────────────────────────────────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: forge-api-health
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: synthetic-monitoring
+    cerebro/probe-tier: p1
+spec:
+  jobName: cerebro-synthetic
+  interval: 30s
+  module: https_2xx
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://api.cerebrohive.com/forge/health
+      relabelingConfigs:
+        - sourceLabels: [__address__]
+          targetLabel: target
+        - targetLabel: probe_type
+          replacement: liveness
+        - targetLabel: service
+          replacement: forge-api
+
+---
+# ── Probe: AI Inference Gateway ──────────────────────────────────────────────────
+# Uses http_post_inference module — sends a minimal chat completion request
+# and validates the response body contains "content", "choices", or "text".
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: ai-inference-gateway
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: synthetic-monitoring
+    cerebro/probe-tier: p0
+spec:
+  jobName: cerebro-synthetic
+  interval: 60s
+  module: http_post_inference
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://api.cerebrohive.com/api/ai/generate
+      relabelingConfigs:
+        - sourceLabels: [__address__]
+          targetLabel: target
+        - targetLabel: probe_type
+          replacement: e2e_inference
+        - targetLabel: service
+          replacement: ai-gateway
+        - targetLabel: sla_tier
+          replacement: p0
+
+---
+# ── Probe: Agent Execution Endpoint ─────────────────────────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: agent-execution-endpoint
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: synthetic-monitoring
+    cerebro/probe-tier: p1
+spec:
+  jobName: cerebro-synthetic
+  interval: 120s
+  module: http_post_agent
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://api.cerebrohive.com/api/agents/runs
+      relabelingConfigs:
+        - sourceLabels: [__address__]
+          targetLabel: target
+        - targetLabel: probe_type
+          replacement: e2e_agent_run
+        - targetLabel: service
+          replacement: agent-service
+
+---
+# ── Probe: Vector Search Endpoint ───────────────────────────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: vector-search-endpoint
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: synthetic-monitoring
+    cerebro/probe-tier: p1
+spec:
+  jobName: cerebro-synthetic
+  interval: 60s
+  module: http_post_vector_search
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://api.cerebrohive.com/api/knowledge/search
+      relabelingConfigs:
+        - sourceLabels: [__address__]
+          targetLabel: target
+        - targetLabel: probe_type
+          replacement: e2e_vector_search
+        - targetLabel: service
+          replacement: knowledge-service
+
+---
+# ── Probe: Webhook Endpoint ──────────────────────────────────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: webhook-endpoint
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: synthetic-monitoring
+    cerebro/probe-tier: p2
+spec:
+  jobName: cerebro-synthetic
+  interval: 60s
+  module: https_2xx
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://api.cerebrohive.com/webhooks/health
+      relabelingConfigs:
+        - sourceLabels: [__address__]
+          targetLabel: target
+        - targetLabel: probe_type
+          replacement: liveness
+        - targetLabel: service
+          replacement: webhook-service
+
+---
+# ── Probe: Auth / Login Flow ─────────────────────────────────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: auth-login-flow
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: synthetic-monitoring
+    cerebro/probe-tier: p0
+spec:
+  jobName: cerebro-synthetic
+  interval: 30s
+  module: https_2xx
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - https://auth.cerebrohive.com/health
+        - https://auth.cerebrohive.com/.well-known/openid-configuration
+      relabelingConfigs:
+        - sourceLabels: [__address__]
+          targetLabel: target
+        - targetLabel: probe_type
+          replacement: auth_discovery
+        - targetLabel: service
+          replacement: auth
+        - targetLabel: sla_tier
+          replacement: p0
+
+---
+# ── Probe: TLS Certificate Expiry (all public endpoints) ────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: tls-cert-expiry
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: synthetic-monitoring
+    cerebro/probe-tier: p1
+spec:
+  jobName: cerebro-synthetic-tls
+  interval: 3600s   # every hour — certs don't change that fast
+  module: tls_cert_expiry
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - api.cerebrohive.com:443
+        - studio.cerebrohive.com:443
+        - auth.cerebrohive.com:443
+      relabelingConfigs:
+        - sourceLabels: [__address__]
+          targetLabel: target
+        - targetLabel: probe_type
+          replacement: tls_expiry
+  metricRelabelings:
+    - sourceLabels: [__name__]
+      regex: probe_(ssl_earliest_cert_expiry|success|duration_seconds)
+      action: keep
+
+---
+# ── Alerting Rules for Synthetic Probes ─────────────────────────────────────────
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cerebro-synthetic-alerts
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/component: synthetic-monitoring
+    prometheus: kube-prometheus
+    role: alert-rules
+spec:
+  groups:
+    - name: cerebro.synthetic.probes
+      interval: 30s
+      rules:
+        # P0: Probe has been down for 1 minute
+        - alert: CerebroProbeDown
+          expr: |
+            probe_success{job="cerebro-synthetic", sla_tier="p0"} == 0
+          for: 1m
+          labels:
+            severity: critical
+            team: platform
+            runbook: "https://wiki.cerebrohive.com/runbooks/probe-down"
+          annotations:
+            summary: "P0 probe failing: {{ $labels.target }}"
+            description: >
+              Synthetic probe for {{ $labels.service }} ({{ $labels.target }})
+              has been failing for >1 minute. probe_type={{ $labels.probe_type }}.
+
+        # P1: Non-critical probe down
+        - alert: CerebroProbeDownP1
+          expr: |
+            probe_success{job="cerebro-synthetic", sla_tier!="p0"} == 0
+          for: 5m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "Probe failing: {{ $labels.target }}"
+            description: >
+              Synthetic probe for {{ $labels.service }} ({{ $labels.target }})
+              has been failing for >5 minutes.
+
+        # Slow: p95 probe duration > SLA
+        - alert: CerebroProbeSlowResponse
+          expr: |
+            probe_duration_seconds{job="cerebro-synthetic", probe_type="e2e_inference"} > 5
+          for: 5m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "Inference probe slow: {{ $labels.target }}"
+            description: >
+              AI inference probe is taking {{ $value | humanizeDuration }} to respond
+              (threshold: 5s).
+
+        # TLS cert expiring within 14 days
+        - alert: CerebroCertExpiringSoon
+          expr: |
+            (probe_ssl_earliest_cert_expiry{job="cerebro-synthetic-tls"} - time()) / 86400 < 14
+          for: 1h
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "TLS cert expiring: {{ $labels.target }}"
+            description: >
+              TLS certificate for {{ $labels.target }} expires in
+              {{ $value | humanizeDuration }}. Renew immediately.
+
+        # TLS cert expiring within 7 days
+        - alert: CerebroCertExpiringCritical
+          expr: |
+            (probe_ssl_earliest_cert_expiry{job="cerebro-synthetic-tls"} - time()) / 86400 < 7
+          for: 1h
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "TLS cert CRITICAL: {{ $labels.target }}"
+            description: >
+              TLS certificate for {{ $labels.target }} expires in
+              {{ $value | humanizeDuration }}. IMMEDIATE action required.

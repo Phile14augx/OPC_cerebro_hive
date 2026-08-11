@@ -1,0 +1,95 @@
+[package]
+name = "cerebro-gateway"
+version = "0.1.0"
+edition = "2021"
+authors = ["CerebroHive Engineering <engineering@cerebro-hive.com>"]
+description = "CerebroHive API Gateway — JWT auth, rate limiting, request routing"
+
+[[bin]]
+name = "gateway"
+path = "src/main.rs"
+
+[dependencies]
+# Web framework
+axum = { version = "0.7", features = ["macros", "ws"] }
+axum-extra = { version = "0.9", features = ["typed-header"] }
+tower = { version = "0.4", features = ["full"] }
+tower-http = { version = "0.5", features = ["cors", "trace", "request-id", "compression-gzip"] }
+hyper = { version = "1", features = ["full"] }
+hyper-util = { version = "0.1", features = ["full"] }
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+tokio-util = "0.7"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4", "serde"] }
+
+# JWT auth (RS256)
+jsonwebtoken = "9"
+rsa = { version = "0.9", features = ["pem"] }
+
+# Database
+sqlx = { version = "0.7", features = ["postgres", "runtime-tokio-rustls", "uuid", "chrono", "json"] }
+
+# Redis (rate limiting + sessions)
+redis = { version = "0.24", features = ["tokio-comp", "connection-manager"] }
+bb8-redis = "0.15"
+
+# HTTP client (proxy to downstream services)
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+
+# gRPC (calls to C++ ML service)
+tonic = "0.11"
+prost = "0.12"
+
+# Rate limiting
+governor = "0.6"
+nonzero_ext = "0.3"
+
+# Crypto / hashing
+argon2 = "0.5"
+rand = "0.8"
+hex = "0.4"
+
+# Config & env
+config = "0.13"
+dotenvy = "0.15"
+
+# Observability
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+tracing-opentelemetry = "0.22"
+opentelemetry = "0.21"
+opentelemetry-otlp = { version = "0.14", features = ["tonic"] }
+metrics = "0.22"
+metrics-exporter-prometheus = "0.13"
+
+# Error handling
+anyhow = "1"
+thiserror = "1"
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Misc
+bytes = "1"
+futures = "0.3"
+pin-project-lite = "0.2"
+once_cell = "1"
+regex = "1"
+url = "2"
+
+[dev-dependencies]
+tokio-test = "0.4"
+axum-test = "14"
+mockall = "0.12"
+proptest = "1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

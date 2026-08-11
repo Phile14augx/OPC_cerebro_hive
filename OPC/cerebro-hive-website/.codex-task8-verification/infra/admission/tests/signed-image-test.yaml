@@ -1,0 +1,50 @@
+# Kyverno policy test vectors for require-signed-images
+# Run with: kyverno test infra/admission/tests/
+
+apiVersion: cli.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: signed-image-tests
+policies:
+  - ../kyverno-signed-images.yaml
+resources:
+  - resources.yaml
+results:
+  # Test 1: Signed image in cerebro-prod → should PASS (admit)
+  - policy: require-signed-images
+    rule: check-image-signature
+    resource: signed-pod-prod
+    namespace: cerebro-prod
+    result: pass
+
+  # Test 2: Unsigned third-party image in cerebro-prod → should FAIL (reject)
+  - policy: require-signed-images
+    rule: check-image-signature
+    resource: unsigned-pod-prod
+    namespace: cerebro-prod
+    result: fail
+
+  # Test 3: Unsigned image in kube-system → should PASS (excluded namespace)
+  - policy: require-signed-images
+    rule: check-image-signature
+    resource: system-pod
+    namespace: kube-system
+    result: pass
+
+  # Test 4: Pod with bypass label in cerebro-prod → should PASS (emergency bypass)
+  - policy: require-signed-images
+    rule: check-image-signature
+    resource: exempt-pod-prod
+    namespace: cerebro-prod
+    result: pass
+
+  # Test 5: Signed image in cerebro-staging → should PASS
+  - policy: require-signed-images
+    rule: check-image-signature
+    resource: signed-pod-staging
+    namespace: cerebro-staging
+    result: pass
+
+---
+# resources.yaml (embedded for simplicity — normally a separate file)
+# These are mock Pod specs used for policy testing (no real cluster required)

@@ -1,0 +1,83 @@
+{
+  "$schema": "../schema/descriptor-v1.json",
+  "domain": "supply-chain",
+  "controls": [
+    {
+      "id": "SC-1",
+      "name": "Image Signing and SBOM Attestation",
+      "description": "Every container image is signed via Cosign keyless OIDC and has an attached SPDX + CycloneDX SBOM attestation. Admission policy (Kyverno) enforces signature presence in cerebro-prod/staging.",
+      "lifecycle": "Implemented",
+      "cec_weight": 3,
+      "dependsOn": ["RBAC-1"],
+      "runner": {
+        "type": "workflow-check",
+        "workflow": ".github/workflows/supply-chain.yml",
+        "contentChecks": [
+          { "pattern": "ghcr\\.io/[^\\s\"]+", "minMatches": 1, "description": "At least one image reference in workflow" },
+          { "pattern": "cosign", "minMatches": 1, "description": "Cosign signing step present" }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "workflow-content",
+        "description": "Remove cosign step from supply-chain.yml → content check must find 0 cosign references",
+        "expectedFailurePattern": "cosign.*not found|signing step missing"
+      },
+      "automation": ".github/workflows/supply-chain.yml",
+      "adrs": ["ADR-016"],
+      "slo_link": null
+    },
+    {
+      "id": "SC-2",
+      "name": "SLSA Level 3 Provenance",
+      "description": "SLSA Level 3 provenance generated for all images via slsa-github-generator. Provenance proves the artifact was built by this specific workflow run on this specific commit.",
+      "lifecycle": "Designed",
+      "cec_weight": 2,
+      "dependsOn": ["SC-1"],
+      "runner": {
+        "type": "workflow-check",
+        "workflow": ".github/workflows/supply-chain.yml",
+        "contentChecks": [
+          { "pattern": "slsa-framework/slsa-github-generator", "minMatches": 1, "description": "SLSA generator referenced" }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "workflow-content",
+        "description": "Remove slsa-github-generator from supply-chain.yml → check must fail",
+        "expectedFailurePattern": "slsa.*not found"
+      },
+      "automation": ".github/workflows/supply-chain.yml",
+      "adrs": ["ADR-016"],
+      "slo_link": null
+    },
+    {
+      "id": "SC-3",
+      "name": "Vulnerability Scanning (Trivy + Gitleaks)",
+      "description": "Every image is scanned with Trivy before push; SARIF uploaded to GitHub Security. Gitleaks runs on every PR/push. Build fails on CRITICAL/HIGH findings.",
+      "lifecycle": "Proven",
+      "cec_weight": 2,
+      "dependsOn": [],
+      "runner": {
+        "type": "workflow-check",
+        "workflow": ".github/workflows/docker-build.yml",
+        "contentChecks": [
+          { "pattern": "trivy", "minMatches": 1, "description": "Trivy scan step present" },
+          { "pattern": "sbom", "minMatches": 1, "description": "SBOM generation step present" }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "workflow-content",
+        "description": "Remove trivy step from docker-build.yml → content check must fail",
+        "expectedFailurePattern": "trivy.*not found"
+      },
+      "automation": ".github/workflows/docker-build.yml",
+      "adrs": [],
+      "slo_link": null
+    }
+  ]
+}

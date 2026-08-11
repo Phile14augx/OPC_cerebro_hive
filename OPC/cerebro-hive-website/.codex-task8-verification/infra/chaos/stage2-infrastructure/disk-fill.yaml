@@ -1,0 +1,66 @@
+# Stage 2 — Infrastructure Chaos: Ephemeral disk fill
+#
+# Hypothesis: filling /tmp or the emptyDir mount on a pod causes log
+# write failures and potentially corrupts the WAL for local state.
+# Validates that the application fails fast (not silently) and that
+# Kubernetes evicts the pod cleanly before the node's ephemeral storage
+# limit is breached.
+#
+# Kubernetes ephemeral storage eviction threshold is typically 85% of
+# node disk. This experiment targets a pod's emptyDir, not the node disk,
+# to stay within the blast radius boundary.
+#
+# Expected outcome:
+#   - Pod logs disk write errors
+#   - Pod is evicted if emptyDir limit is set (configure in pod spec)
+#   - Kubernetes reschedules pod on same or different node
+#   - No persistent data loss (emptyDir is ephemeral by design)
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: IOChaos
+metadata:
+  name: disk-fill-worker
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage2-infrastructure
+    resource: disk
+    blast-radius: low
+spec:
+  action: mixed         # read + write errors
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "worker"
+  volumePath: /tmp
+  percent: 100          # apply fault to 100% of I/O operations
+  errno: 28             # ENOSPC — "No space left on device"
+  delay: "0ms"
+  duration: "3m"
+  containerNames:
+    - worker
+
+---
+# Disk latency injection (simulates slow NFS/EBS degradation)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: IOChaos
+metadata:
+  name: disk-latency-forge-api
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage2-infrastructure-latency
+    resource: disk
+    blast-radius: low
+spec:
+  action: latency
+  mode: one
+  selector:
+    namespaces:
+      - cerebro-staging
+    labelSelectors:
+      "app.kubernetes.io/name": "forge-api"
+  volumePath: /var/log
+  delay: "500ms"        # 500ms write latency — simulates degraded EBS
+  percent: 50           # affect 50% of I/O operations
+  duration: "5m"

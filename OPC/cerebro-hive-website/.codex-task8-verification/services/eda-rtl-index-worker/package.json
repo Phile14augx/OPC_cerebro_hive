@@ -1,0 +1,25 @@
+{
+  "name": "@cerebro/eda-rtl-index-worker",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "cerebroEda": {
+    "layer": "service",
+    "adr": [
+      "0015"
+    ]
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0",
+    "@types/node": "^22.0.0"
+  },
+  "dependencies": {
+    "@cerebro/eda-domain": "workspace:*",
+    "@cerebro/eda-findings": "workspace:*"
+  }
+}

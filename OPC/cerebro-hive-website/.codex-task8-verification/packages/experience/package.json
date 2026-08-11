@@ -1,0 +1,25 @@
+{
+  "name": "@cerebro/experience",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "zustand": "^4.5.0",
+    "@cerebro/ui": "workspace:*",
+    "@cerebro/data-core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "vitest": "^3.2.4",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0"
+  }
+}

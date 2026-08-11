@@ -1,0 +1,529 @@
+# CerebroHive Falco Rules
+#
+# Custom detection rules for the CerebroHive AI Software Factory platform.
+# Loaded alongside Falco's built-in ruleset via Helm values:
+#   --set-file customRules."cerebro-rules\.yaml"=infra/falco/falco-rules.yaml
+#
+# Each rule maps to one or more G1 escape test cases and one or more
+# detection assertions in g1-escape-suite.spec.ts.
+#
+# Rule naming convention: CEREBRO_<CATEGORY>_<SPECIFIC_THREAT>
+# Priority levels used:
+#   CRITICAL — active exploit in progress (page immediately)
+#   ERROR    — high-confidence attack indicator (alert to #sre-incidents)
+#   WARNING  — suspicious but possibly benign (alert to #sre-alerts)
+#   INFO     — audit / forensics only (log only)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Macros
+# ─────────────────────────────────────────────────────────────────────────────
+
+- macro: cerebro_agent_container
+  condition: >
+    container.image.repository startswith "ghcr.io" and
+    container.image.repository contains "cerebro-hive" and
+    (k8s.ns.name = "cerebro-prod" or k8s.ns.name = "cerebro-staging")
+
+- macro: cerebro_forge_api
+  condition: >
+    container.image.repository contains "forge-api" and
+    k8s.ns.name in (cerebro-prod, cerebro-staging)
+
+- macro: cerebro_ai_gateway
+  condition: >
+    container.image.repository contains "ai-gateway" and
+    k8s.ns.name in (cerebro-prod, cerebro-staging)
+
+- macro: cerebro_worker
+  condition: >
+    container.image.repository contains "worker" and
+    k8s.ns.name in (cerebro-prod, cerebro-staging)
+
+# Processes that are legitimately spawned in our containers
+- macro: cerebro_allowed_processes
+  condition: >
+    proc.name in (node, npm, npx, ts-node, dumb-init, tini,
+                  sh, bash, wget, curl, openssl, python3, python)
+
+# Whitelisted write paths inside agent containers
+- macro: cerebro_agent_allowed_write
+  condition: >
+    fd.name startswith /tmp/ or
+    fd.name startswith /var/log/cerebro/ or
+    fd.name startswith /app/logs/ or
+    fd.name = /dev/null or
+    fd.name = /dev/stdout or
+    fd.name = /dev/stderr
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Lists
+# ─────────────────────────────────────────────────────────────────────────────
+
+- list: cerebro_sensitive_files
+  items:
+    - /etc/shadow
+    - /etc/gshadow
+    - /etc/passwd
+    - /etc/sudoers
+    - /root/.ssh
+    - /proc/kcore
+    - /proc/kmem
+    - /dev/mem
+    - /dev/kmem
+    - /sys/kernel/debug
+    - /sys/firmware
+    - /sys/kernel/vmcoreinfo
+
+- list: cerebro_reverse_shell_programs
+  items:
+    - nc
+    - ncat
+    - netcat
+    - nmap
+    - socat
+    - telnet
+    - stunnel
+    - cryptcat
+    - rlwrap
+
+- list: cerebro_shell_programs
+  items:
+    - sh
+    - bash
+    - dash
+    - zsh
+    - ksh
+    - fish
+    - tcsh
+    - csh
+    - rbash
+
+- list: cerebro_ptrace_programs
+  items:
+    - strace
+    - ltrace
+    - gdb
+    - lldb
+    - perf
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 1: Unexpected Shell Spawned in Agent Container
+# Maps to: G1.11 (shell spawn), escape suite test "unexpected-shell"
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_SHELL_UNEXPECTED
+  desc: >
+    A shell process was spawned inside a CerebroHive container. Agent containers
+    should never have interactive shells — this indicates either an escape attempt
+    or unauthorized interactive access.
+  condition: >
+    spawned_process and
+    cerebro_agent_container and
+    proc.name in (cerebro_shell_programs) and
+    not proc.pname in (dumb-init, tini, sh, bash) and
+    not proc.cmdline contains "healthcheck"
+  output: >
+    Unexpected shell spawned in CerebroHive container
+    (user=%user.name user_uid=%user.uid
+     container=%container.name image=%container.image.repository
+     shell=%proc.name parent=%proc.pname cmdline=%proc.cmdline
+     ns=%k8s.ns.name pod=%k8s.pod.name
+     evt=%evt.type)
+  priority: ERROR
+  tags: [cerebro, escape, shell, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 2: Unexpected ptrace / Debugger Attach
+# Maps to: G1.7 (ptrace syscall), escape suite test "ptrace-attach"
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_PTRACE_ATTACH
+  desc: >
+    A ptrace-based debugger was attached inside a CerebroHive container.
+    ptrace is blocked by gVisor and should never be called by legitimate workloads.
+    This is a direct indicator of a sandbox escape attempt.
+  condition: >
+    evt.type = ptrace and
+    evt.dir = > and
+    cerebro_agent_container and
+    not proc.name in (cerebro_allowed_processes)
+  output: >
+    ptrace attach detected in CerebroHive container
+    (user=%user.name uid=%user.uid
+     container=%container.name image=%container.image.repository
+     tracer=%proc.name tracee_pid=%evt.rawres
+     ns=%k8s.ns.name pod=%k8s.pod.name)
+  priority: CRITICAL
+  tags: [cerebro, escape, ptrace, G1]
+
+- rule: CEREBRO_DEBUGGER_PROCESS
+  desc: >
+    A known debugging tool (strace, gdb, perf, ltrace) was executed inside
+    a CerebroHive container.
+  condition: >
+    spawned_process and
+    cerebro_agent_container and
+    proc.name in (cerebro_ptrace_programs)
+  output: >
+    Debugging tool executed in CerebroHive container
+    (user=%user.name container=%container.name
+     debugger=%proc.name parent=%proc.pname cmdline=%proc.cmdline
+     ns=%k8s.ns.name pod=%k8s.pod.name)
+  priority: ERROR
+  tags: [cerebro, escape, ptrace, debugger, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 3: Unexpected Mount / Filesystem Namespace Operation
+# Maps to: G1.9 (bind mount), escape suite test "bind-mount"
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_MOUNT_UNEXPECTED
+  desc: >
+    A mount(2) syscall was issued inside a CerebroHive container. Mounting
+    filesystems is not part of any legitimate agent workload and indicates
+    an attempt to access host filesystems or escape the container.
+  condition: >
+    evt.type = mount and
+    evt.dir = > and
+    cerebro_agent_container
+  output: >
+    Unexpected mount syscall in CerebroHive container
+    (user=%user.name uid=%user.uid
+     container=%container.name image=%container.image.repository
+     mount_dir=%evt.arg.dir mount_type=%evt.arg.type flags=%evt.arg.flags
+     ns=%k8s.ns.name pod=%k8s.pod.name)
+  priority: CRITICAL
+  tags: [cerebro, escape, mount, G1]
+
+- rule: CEREBRO_CHROOT_UNEXPECTED
+  desc: >
+    A chroot(2) syscall was detected. Combined with privilege escalation,
+    this is the classic chroot escape technique.
+  condition: >
+    evt.type = chroot and
+    cerebro_agent_container
+  output: >
+    chroot(2) detected in CerebroHive container
+    (user=%user.name container=%container.name
+     ns=%k8s.ns.name pod=%k8s.pod.name)
+  priority: CRITICAL
+  tags: [cerebro, escape, chroot, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 4: Raw Socket Creation
+# Maps to: G1.2 (raw socket), escape suite test "raw-socket"
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_RAW_SOCKET
+  desc: >
+    A raw or packet socket was created inside a CerebroHive container.
+    Raw sockets are used for network sniffing, ARP spoofing, and crafting
+    custom packets — none of which are legitimate agent operations.
+  condition: >
+    evt.type = socket and
+    evt.dir = > and
+    cerebro_agent_container and
+    (evt.arg.domain = AF_PACKET or
+     (evt.arg.domain = AF_INET and evt.arg.type = SOCK_RAW) or
+     (evt.arg.domain = AF_INET6 and evt.arg.type = SOCK_RAW))
+  output: >
+    Raw socket created in CerebroHive container
+    (user=%user.name uid=%user.uid
+     container=%container.name image=%container.image.repository
+     domain=%evt.arg.domain sock_type=%evt.arg.type
+     ns=%k8s.ns.name pod=%k8s.pod.name proc=%proc.name)
+  priority: ERROR
+  tags: [cerebro, escape, raw-socket, network, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 5: Privilege Escalation
+# Maps to: G1.6 (capabilities), G1.10 (user namespace root mapping)
+# escape suite tests "priv-esc", "user-ns-root"
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_PRIV_ESC_SETUID
+  desc: >
+    A process inside a CerebroHive container attempted to gain elevated
+    privileges via setuid(0) or setgid(0). All agent containers run as uid 65534
+    (nobody) — this indicates privilege escalation.
+  condition: >
+    evt.type in (setuid, setgid) and
+    evt.dir = > and
+    cerebro_agent_container and
+    evt.rawres = 0 and
+    user.uid != 0 and
+    evt.arg.uid = 0
+  output: >
+    Privilege escalation via setuid(0) in CerebroHive container
+    (user=%user.name user_uid=%user.uid
+     container=%container.name image=%container.image.repository
+     ns=%k8s.ns.name pod=%k8s.pod.name proc=%proc.name)
+  priority: CRITICAL
+  tags: [cerebro, escape, privesc, G1]
+
+- rule: CEREBRO_PRIV_ESC_CAPABILITIES
+  desc: >
+    A process inside a CerebroHive container attempted to acquire new capabilities
+    via capset(2). Containers run with all capabilities dropped.
+  condition: >
+    evt.type = capset and
+    evt.dir = > and
+    cerebro_agent_container
+  output: >
+    capset(2) detected in CerebroHive container
+    (user=%user.name container=%container.name
+     ns=%k8s.ns.name pod=%k8s.pod.name proc=%proc.name)
+  priority: ERROR
+  tags: [cerebro, escape, capabilities, G1]
+
+- rule: CEREBRO_USER_NS_CREATION
+  desc: >
+    A new user namespace was created inside a CerebroHive container. User
+    namespace creation combined with UID mapping is the primary Linux
+    container escape technique (CVE-2022-0185 class).
+  condition: >
+    evt.type = unshare and
+    evt.dir = > and
+    cerebro_agent_container and
+    evt.arg.clone_flags contains CLONE_NEWUSER
+  output: >
+    User namespace creation detected in CerebroHive container
+    (user=%user.name uid=%user.uid
+     container=%container.name image=%container.image.repository
+     clone_flags=%evt.arg.clone_flags
+     ns=%k8s.ns.name pod=%k8s.pod.name)
+  priority: CRITICAL
+  tags: [cerebro, escape, user-ns, privesc, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 6: Container Escape Attempt — IMDS / Metadata API Access
+# Maps to: G1.1 (IMDS access), escape suite test "imds-access"
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_IMDS_ACCESS
+  desc: >
+    A process inside a CerebroHive container attempted to reach the AWS EC2
+    Instance Metadata Service (169.254.169.254). Agent workloads have no
+    legitimate use for IMDS — this indicates credential theft.
+  condition: >
+    (evt.type = connect or evt.type = sendto) and
+    evt.dir = > and
+    cerebro_agent_container and
+    fd.rip = "169.254.169.254"
+  output: >
+    IMDS access attempt from CerebroHive container
+    (user=%user.name container=%container.name
+     remote_ip=%fd.rip remote_port=%fd.rport
+     ns=%k8s.ns.name pod=%k8s.pod.name proc=%proc.name cmdline=%proc.cmdline)
+  priority: CRITICAL
+  tags: [cerebro, escape, imds, cloud-metadata, G1]
+
+- rule: CEREBRO_K8S_API_ACCESS
+  desc: >
+    A process inside a CerebroHive agent container made a TCP connection to
+    the Kubernetes API server. Agents should have no ServiceAccount credentials
+    and no reason to call the K8s API.
+  condition: >
+    evt.type = connect and
+    evt.dir = > and
+    cerebro_agent_container and
+    (fd.rport = 6443 or fd.rport = 443) and
+    fd.rip != "127.0.0.1"
+  output: >
+    Kubernetes API access from CerebroHive agent container
+    (user=%user.name container=%container.name
+     remote=%fd.rip:%fd.rport
+     ns=%k8s.ns.name pod=%k8s.pod.name proc=%proc.name)
+  priority: ERROR
+  tags: [cerebro, escape, k8s-api, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 7: Sensitive File Access
+# Maps to: G1.3 (/dev/mem), G1.4 (/proc/kcore), escape suite tests
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_SENSITIVE_FILE_READ
+  desc: >
+    A process inside a CerebroHive container read a sensitive system file.
+    Legitimate agent workloads do not need access to /proc/kcore, /dev/mem,
+    /etc/shadow, or similar files.
+  condition: >
+    open_read and
+    cerebro_agent_container and
+    fd.name in (cerebro_sensitive_files)
+  output: >
+    Sensitive file read in CerebroHive container
+    (user=%user.name uid=%user.uid
+     container=%container.name image=%container.image.repository
+     file=%fd.name proc=%proc.name cmdline=%proc.cmdline
+     ns=%k8s.ns.name pod=%k8s.pod.name)
+  priority: CRITICAL
+  tags: [cerebro, escape, sensitive-file, G1]
+
+- rule: CEREBRO_SENSITIVE_FILE_WRITE
+  desc: >
+    A process inside a CerebroHive container wrote to a sensitive system path.
+    This includes /etc/passwd modification (shadow password attacks) and
+    /proc/sys writes (kernel parameter tampering).
+  condition: >
+    open_write and
+    cerebro_agent_container and
+    (fd.name startswith /etc/ or
+     fd.name startswith /proc/sys/ or
+     fd.name startswith /sys/ or
+     not cerebro_agent_allowed_write)
+  output: >
+    Sensitive file write in CerebroHive container
+    (user=%user.name container=%container.name
+     file=%fd.name proc=%proc.name
+     ns=%k8s.ns.name pod=%k8s.pod.name)
+  priority: ERROR
+  tags: [cerebro, escape, sensitive-file-write, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 8: Reverse Shell
+# Maps to: G1.11 (reverse shell), escape suite test "reverse-shell"
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_REVERSE_SHELL_TOOL
+  desc: >
+    A known reverse shell tool (nc, socat, ncat) was executed inside a
+    CerebroHive container. This is an unambiguous indicator of compromise.
+  condition: >
+    spawned_process and
+    cerebro_agent_container and
+    proc.name in (cerebro_reverse_shell_programs)
+  output: >
+    Reverse shell tool executed in CerebroHive container
+    (user=%user.name container=%container.name
+     tool=%proc.name parent=%proc.pname cmdline=%proc.cmdline
+     ns=%k8s.ns.name pod=%k8s.pod.name)
+  priority: CRITICAL
+  tags: [cerebro, escape, reverse-shell, G1]
+
+- rule: CEREBRO_REVERSE_SHELL_STDOUT_REDIRECT
+  desc: >
+    A shell was spawned with stdin/stdout/stderr redirected to a network
+    socket. This is the canonical "bash -i >& /dev/tcp/..." reverse shell.
+  condition: >
+    spawned_process and
+    cerebro_agent_container and
+    proc.name in (cerebro_shell_programs) and
+    proc.stdin.type = pipe and
+    proc.stdout.type = pipe and
+    proc.exe startswith /dev/tcp
+  output: >
+    Reverse shell via stdout redirect in CerebroHive container
+    (user=%user.name container=%container.name
+     shell=%proc.name cmdline=%proc.cmdline
+     ns=%k8s.ns.name pod=%k8s.pod.name)
+  priority: CRITICAL
+  tags: [cerebro, escape, reverse-shell, bash-tcp, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 9: Kernel Module Loading
+# Maps to: G1 blocked syscalls (init_module, finit_module)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_KERNEL_MODULE_LOAD
+  desc: >
+    A process attempted to load a kernel module inside a CerebroHive container.
+    Kernel module loading (init_module, finit_module) is blocked by gVisor
+    and the seccomp profile. Detection here means a bypass was attempted.
+  condition: >
+    evt.type in (init_module, finit_module) and
+    cerebro_agent_container
+  output: >
+    Kernel module load attempt in CerebroHive container
+    (user=%user.name container=%container.name
+     ns=%k8s.ns.name pod=%k8s.pod.name proc=%proc.name)
+  priority: CRITICAL
+  tags: [cerebro, escape, kernel-module, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 10: Unexpected Outbound Connection (Data Exfiltration)
+# Maps to: network egress control assertions
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_UNEXPECTED_OUTBOUND
+  desc: >
+    An outbound network connection was established to an unexpected external
+    host from a CerebroHive container. All outbound connections from agents
+    should be to known AI provider endpoints only.
+  condition: >
+    outbound and
+    cerebro_agent_container and
+    not fd.rip in (allowed_outbound_destination_ipaddrs) and
+    not fd.rport in (53, 443, 80) and
+    not fd.rip startswith "10." and
+    not fd.rip startswith "172.16." and
+    not fd.rip startswith "192.168."
+  output: >
+    Unexpected outbound connection from CerebroHive container
+    (user=%user.name container=%container.name
+     remote=%fd.rip:%fd.rport proto=%fd.l4proto
+     ns=%k8s.ns.name pod=%k8s.pod.name proc=%proc.name)
+  priority: WARNING
+  tags: [cerebro, network, exfil, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 11: Suspicious Process Injection (memfd_create, execveat)
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_MEMFD_EXEC
+  desc: >
+    memfd_create was called inside a CerebroHive container. This is the primary
+    technique for fileless malware execution — code is loaded into an anonymous
+    memory region and executed without touching disk.
+  condition: >
+    evt.type = memfd_create and
+    cerebro_agent_container
+  output: >
+    memfd_create (fileless exec) detected in CerebroHive container
+    (user=%user.name container=%container.name
+     fd_name=%evt.arg.name flags=%evt.arg.flags
+     ns=%k8s.ns.name pod=%k8s.pod.name proc=%proc.name)
+  priority: CRITICAL
+  tags: [cerebro, escape, fileless, memfd, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 12: sysrq Trigger (kernel panic / host disruption)
+# Maps to: G1 escape job test "sysrq-trigger"
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_SYSRQ_TRIGGER
+  desc: >
+    A write to /proc/sysrq-trigger was detected. sysrq can reboot the host,
+    trigger an OOM kill, remount filesystems read-only, or crash the kernel.
+    This is always malicious from a container context.
+  condition: >
+    open_write and
+    fd.name = /proc/sysrq-trigger and
+    cerebro_agent_container
+  output: >
+    sysrq-trigger write detected from CerebroHive container
+    (user=%user.name container=%container.name
+     ns=%k8s.ns.name pod=%k8s.pod.name proc=%proc.name cmdline=%proc.cmdline)
+  priority: CRITICAL
+  tags: [cerebro, escape, sysrq, host-disruption, G1]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Rule 13: Perf Event (hardware perf counter side-channel)
+# Maps to: G1 blocked syscall perf_event_open
+# ─────────────────────────────────────────────────────────────────────────────
+
+- rule: CEREBRO_PERF_EVENT_OPEN
+  desc: >
+    perf_event_open(2) was called inside a CerebroHive container. This syscall
+    provides access to hardware performance counters which can be used for
+    side-channel attacks (Spectre variants, timing attacks on other tenants).
+    It is blocked by gVisor and our seccomp profile.
+  condition: >
+    evt.type = perf_event_open and
+    cerebro_agent_container
+  output: >
+    perf_event_open detected in CerebroHive container
+    (user=%user.name container=%container.name
+     ns=%k8s.ns.name pod=%k8s.pod.name proc=%proc.name)
+  priority: ERROR
+  tags: [cerebro, escape, perf, side-channel, G1]

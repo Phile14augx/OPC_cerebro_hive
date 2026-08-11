@@ -1,0 +1,180 @@
+{
+  "$schema": "../schema/descriptor-v1.json",
+  "domain": "reliability",
+  "controls": [
+    {
+      "id": "SLO-1",
+      "name": "API Availability SLO (≥99.95%)",
+      "description": "k6 load test validates error rate < 0.05% at 10/100/1000 VU tiers. P95 < 250ms, P99 < 750ms.",
+      "lifecycle": "Implemented",
+      "cec_weight": 3,
+      "dependsOn": [],
+      "runner": {
+        "type": "workflow-check",
+        "workflow": ".github/workflows/slo-load-test.yml",
+        "fileChecks": [
+          { "file": "infra/k6/slo-load-test.js", "required": true }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "threshold-mutation",
+        "description": "Set error rate threshold to 0% in k6 script → k6 inspect must catch the invalid threshold or a live run must fail",
+        "expectedFailurePattern": "threshold.*invalid|error_rate.*exceeded"
+      },
+      "automation": ".github/workflows/slo-load-test.yml",
+      "adrs": ["ADR-017"],
+      "slo_link": "API Availability 99.95%"
+    },
+    {
+      "id": "SLO-2",
+      "name": "AI Job Completion SLO (≥99%)",
+      "description": "k6 scenarioAgentWorkflow validates end-to-end agent runs succeed ≥99% of the time under load.",
+      "lifecycle": "Implemented",
+      "cec_weight": 2,
+      "dependsOn": ["SLO-1"],
+      "runner": {
+        "type": "workflow-check",
+        "workflow": ".github/workflows/slo-load-test.yml",
+        "fileChecks": [
+          { "file": "infra/k6/slo-load-test.js", "required": true }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "threshold-mutation",
+        "description": "Remove AI job completion threshold → live run must fail or static check must detect missing threshold",
+        "expectedFailurePattern": "threshold.*missing|ai.*completion.*threshold"
+      },
+      "automation": ".github/workflows/slo-load-test.yml",
+      "adrs": ["ADR-017"],
+      "slo_link": "AI Job Completion 99%"
+    },
+    {
+      "id": "SLO-3",
+      "name": "SLO Burn Rate Alerting",
+      "description": "Multi-window burn rate model (1h/6h/24h/3d). Chaos Mesh injects 600ms latency; workflow asserts CerebroSLOErrorBudgetCritical fires within 5 min.",
+      "lifecycle": "Implemented",
+      "cec_weight": 2,
+      "dependsOn": ["SLO-1"],
+      "runner": {
+        "type": "workflow-check",
+        "workflow": ".github/workflows/slo-burn-validation.yml",
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "workflow-removal",
+        "description": "Delete slo-burn-validation.yml → runner must report ARCHITECTURE_FAILURE",
+        "expectedFailurePattern": "workflow not found"
+      },
+      "automation": ".github/workflows/slo-burn-validation.yml",
+      "adrs": ["ADR-017"],
+      "slo_link": "SLO Burn Rate"
+    },
+    {
+      "id": "DR-1",
+      "name": "PostgreSQL Restore Verification",
+      "description": "Nightly restore from S3 basebackup into disposable namespace. Smoke tests: table count, row counts, write test, index health, checksum. RTO ≤ 30 min.",
+      "lifecycle": "Implemented",
+      "cec_weight": 3,
+      "dependsOn": [],
+      "runner": {
+        "type": "multi-file-check",
+        "files": [
+          { "file": "infra/restore-verification/restore-verify-job.yaml", "required": true },
+          { "file": ".github/workflows/restore-verification.yml", "required": true }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "file-removal",
+        "description": "Delete restore-verify-job.yaml → multi-file-check must fail on required file",
+        "expectedFailurePattern": "required file not found"
+      },
+      "automation": ".github/workflows/restore-verification.yml",
+      "adrs": ["ADR-018"],
+      "slo_link": null
+    },
+    {
+      "id": "DR-2",
+      "name": "MinIO Restore Verification",
+      "description": "Nightly restore from S3 replica. Smoke tests: bucket presence, object counts, CRUD round-trip. RTO ≤ 15 min.",
+      "lifecycle": "Implemented",
+      "cec_weight": 2,
+      "dependsOn": ["DR-1"],
+      "runner": {
+        "type": "multi-file-check",
+        "files": [
+          { "file": "infra/restore-verification/restore-verify-job.yaml", "required": true },
+          { "file": ".github/workflows/restore-verification.yml", "required": true }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "file-removal",
+        "description": "Delete restore-verify-job.yaml → check must fail",
+        "expectedFailurePattern": "required file not found"
+      },
+      "automation": ".github/workflows/restore-verification.yml",
+      "adrs": ["ADR-018"],
+      "slo_link": null
+    },
+    {
+      "id": "DR-3",
+      "name": "NATS JetStream Restore Verification",
+      "description": "Nightly restore from snapshot. Smoke tests: JetStream status, stream presence, pub/sub round-trip, persist+replay. RTO ≤ 20 min.",
+      "lifecycle": "Implemented",
+      "cec_weight": 2,
+      "dependsOn": ["DR-1"],
+      "runner": {
+        "type": "multi-file-check",
+        "files": [
+          { "file": "infra/restore-verification/restore-verify-job.yaml", "required": true },
+          { "file": ".github/workflows/restore-verification.yml", "required": true }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "file-removal",
+        "description": "Delete restore-verify-job.yaml → check must fail",
+        "expectedFailurePattern": "required file not found"
+      },
+      "automation": ".github/workflows/restore-verification.yml",
+      "adrs": ["ADR-018"],
+      "slo_link": null
+    },
+    {
+      "id": "CHAOS-1",
+      "name": "Workload Fault Injection",
+      "description": "Stage 1-5 Chaos Mesh experiments: pod kills, node stress, disk fill, network latency/partition/DNS failure, AI provider faults. Weekly schedule.",
+      "lifecycle": "Implemented",
+      "cec_weight": 2,
+      "dependsOn": ["SLO-1", "SLO-2"],
+      "runner": {
+        "type": "multi-file-check",
+        "files": [
+          { "file": ".github/workflows/chaos-game-day.yml", "required": true }
+        ],
+        "globChecks": [
+          { "glob": "infra/chaos/game-days/*.yaml", "minCount": 3, "description": "At least 3 game-day scenarios defined" }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "file-removal",
+        "description": "Delete chaos-game-day.yml → required file check must fail",
+        "expectedFailurePattern": "required file not found"
+      },
+      "automation": ".github/workflows/chaos-game-day.yml",
+      "adrs": ["ADR-019"],
+      "slo_link": null
+    }
+  ]
+}

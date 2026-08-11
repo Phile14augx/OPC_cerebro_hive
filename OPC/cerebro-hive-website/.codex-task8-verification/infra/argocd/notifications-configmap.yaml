@@ -1,0 +1,149 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# ArgoCD Notifications — Slack + PagerDuty templates
+# Apply with: kubectl apply -f notifications-configmap.yaml -n argocd
+# Requires: argocd-notifications-controller + argocd-notifications-secret
+# ──────────────────────────────────────────────────────────────────────────────
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+  namespace: argocd
+data:
+  # ── Services (notification channels) ───────────────────────────────────────
+  service.slack: |
+    token: $slack-token
+
+  service.pagerduty: |
+    serviceKeys:
+      production: $pagerduty-production-key
+
+  # ── Templates ───────────────────────────────────────────────────────────────
+  template.app-deployed: |
+    slack:
+      attachments: |
+        [{
+          "color": "#18be52",
+          "title": "✅ Deployed: {{.app.metadata.name}}",
+          "title_link": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
+          "fields": [
+            { "title": "Environment", "value": "{{.app.metadata.labels.env}}", "short": true },
+            { "title": "Revision",    "value": "{{.app.status.sync.revision | truncate 7 \"\"}}", "short": true },
+            { "title": "Health",      "value": "{{.app.status.health.status}}", "short": true },
+            { "title": "Sync",        "value": "{{.app.status.sync.status}}", "short": true }
+          ],
+          "footer": "ArgoCD | {{.app.metadata.namespace}}"
+        }]
+
+  template.app-sync-failed: |
+    slack:
+      attachments: |
+        [{
+          "color": "#E96D76",
+          "title": "❌ Sync Failed: {{.app.metadata.name}}",
+          "title_link": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
+          "text": "{{range .app.status.conditions}}{{.message}}\n{{end}}",
+          "fields": [
+            { "title": "Environment", "value": "{{.app.metadata.labels.env}}", "short": true },
+            { "title": "Revision",    "value": "{{.app.status.sync.revision | truncate 7 \"\"}}", "short": true }
+          ]
+        }]
+    pagerduty:
+      summary: "ArgoCD sync failed: {{.app.metadata.name}}"
+      severity: warning
+
+  template.app-health-degraded: |
+    slack:
+      attachments: |
+        [{
+          "color": "#f4c030",
+          "title": "⚠️ Degraded: {{.app.metadata.name}}",
+          "title_link": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
+          "text": "Application health is {{.app.status.health.status}}\n{{.app.status.health.message}}",
+          "fields": [
+            { "title": "Environment", "value": "{{.app.metadata.labels.env}}", "short": true }
+          ]
+        }]
+
+  template.app-health-critical: |
+    slack:
+      attachments: |
+        [{
+          "color": "#E96D76",
+          "title": "🚨 CRITICAL: {{.app.metadata.name}} is {{.app.status.health.status}}",
+          "title_link": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
+          "text": "{{.app.status.health.message}}"
+        }]
+    pagerduty:
+      summary: "CRITICAL: {{.app.metadata.name}} health {{.app.status.health.status}}"
+      severity: critical
+
+  template.canary-progressed: |
+    slack:
+      attachments: |
+        [{
+          "color": "#439FE0",
+          "title": "🐤 Canary Step: {{.app.metadata.name}}",
+          "title_link": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
+          "text": "Canary rollout progressed for {{.app.metadata.name}}",
+          "fields": [
+            { "title": "Environment", "value": "{{.app.metadata.labels.env}}", "short": true },
+            { "title": "Revision",    "value": "{{.app.status.sync.revision | truncate 7 \"\"}}", "short": true }
+          ]
+        }]
+
+  # ── Triggers (when to send) ──────────────────────────────────────────────────
+  trigger.on-deployed: |
+    - description: Application is synced and healthy
+      oncePer: app.status.sync.revision
+      send:
+        - app-deployed
+      when: app.status.operationState.phase in ['Succeeded'] and app.status.health.status == 'Healthy'
+
+  trigger.on-sync-failed: |
+    - description: Application syncing has failed
+      send:
+        - app-sync-failed
+      when: app.status.operationState.phase in ['Error', 'Failed']
+
+  trigger.on-health-degraded: |
+    - description: Application has degraded
+      send:
+        - app-health-degraded
+      when: app.status.health.status == 'Degraded'
+
+  trigger.on-health-critical: |
+    - description: Application is down or missing
+      send:
+        - app-health-critical
+      when: app.status.health.status in ['Unknown', 'Missing']
+
+  # ── Default subscriptions per app ────────────────────────────────────────────
+  # Applied via annotations on Application resources:
+  #   notifications.argoproj.io/subscribe.on-deployed.slack: cerebro-deployments
+  #   notifications.argoproj.io/subscribe.on-sync-failed.slack: cerebro-alerts
+  #   notifications.argoproj.io/subscribe.on-health-critical.pagerduty: production
+
+  defaultTriggers: |
+    - on-deployed
+    - on-sync-failed
+    - on-health-degraded
+
+---
+# Secret template — values must be populated before applying
+# kubectl create secret generic argocd-notifications-secret \
+#   --from-literal=slack-token=<BOT_TOKEN> \
+#   --from-literal=pagerduty-production-key=<ROUTING_KEY> \
+#   -n argocd
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-notifications-secret
+  namespace: argocd
+  annotations:
+    # Populated by External Secrets Operator in production
+    external-secrets.io/managed: "true"
+type: Opaque
+stringData:
+  slack-token: "REPLACE_WITH_SLACK_BOT_TOKEN"
+  pagerduty-production-key: "REPLACE_WITH_PAGERDUTY_KEY"

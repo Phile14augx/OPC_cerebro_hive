@@ -1,0 +1,150 @@
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@cerebro/db';
+import { FORGE_TEST_SCHEMA } from '@cerebro/ai';
+import { projectGraph } from '@cerebro/workflow';
+import { AgentOrchestratorService } from '../agent/agent-orchestrator.service';
+
+export interface TestSuite {
+  name: string;
+  framework: string;
+  type: 'unit' | 'integration' | 'e2e' | 'performance' | 'security';
+  testCount: number;
+  passingCount: number;
+  failingCount: number;
+  coverage?: number;
+  status: 'pending' | 'running' | 'passed' | 'failed';
+  artifacts: string[];
+}
+
+export interface TestingResult {
+  suites: TestSuite[];
+  overallCoverage: number;
+  securityFindings: Array<{ severity: string; title: string; location: string }>;
+  totalTests: number;
+  passingTests: number;
+}
+
+/** Shape returned by the AI for structured test generation */
+interface AITestResult {
+  suites: Array<{
+    name: string;
+    framework: string;
+    type: 'unit' | 'integration' | 'e2e' | 'performance' | 'security';
+    testCount: number;
+    passingCount: number;
+    failingCount: number;
+    coverage: number | null;
+    status: 'pending' | 'running' | 'passed' | 'failed';
+    artifacts: string[];
+  }>;
+  overallCoverage: number;
+  securityFindings: Array<{ severity: string; title: string; location: string }>;
+  totalTests: number;
+  passingTests: number;
+}
+
+@Injectable()
+export class TestingService {
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly orchestrator: AgentOrchestratorService,
+  ) {}
+
+  async generateTests(projectId: string): Promise<TestingResult> {
+    const ctx = projectGraph.getOrThrow(projectId);
+
+    const modules   = ctx.plan?.modules.map(m => m.name).join(', ') ?? 'application';
+    const services  = ctx.architecture?.services.map(s => s.name).join(', ') ?? 'API';
+    const pattern   = ctx.architecture?.pattern ?? 'monolith';
+    const frontends = ctx.architecture?.techStack.frontend.join(', ') ?? 'React';
+    const backends  = ctx.architecture?.techStack.backend.join(', ') ?? 'Node.js';
+
+    const userPrompt = `Design a complete test strategy and generate test suites for this project.
+
+Project: ${ctx.prompt}
+Architecture: ${pattern}
+Services: ${services}
+Frontend: ${frontends} | Backend: ${backends}
+Modules: ${modules}
+
+Generate exactly 5 test suites:
+1. Unit Tests (Vitest) — test every service method; aim for ≥90% coverage of business logic
+2. Integration Tests (Supertest) — test all REST/GraphQL endpoints with real DB (transactions rolled back)
+3. E2E Tests (Playwright) — cover all critical user flows end-to-end
+4. Performance Tests (k6) — load, spike, stress scenarios targeting P99 < 500ms
+5. Security Scan (OWASP ZAP + Semgrep) — automated DAST + SAST
+
+For each suite, determine realistic testCount based on the project complexity, then split into passingCount/failingCount.
+Set artifacts to the file paths that would be generated (e.g. "tests/unit/auth.service.test.ts").
+overallCoverage is a weighted average across unit + integration coverage.
+securityFindings should list the top 2–4 OWASP risks discovered with their severity and endpoint/file location.
+totalTests = sum of all testCounts; passingTests = sum of all passingCounts.`;
+
+    projectGraph.advancePhase(projectId, 'testing');
+    projectGraph.setAgentStatus(projectId, 'qa', 'running');
+
+    const result = await this.orchestrator.runAgent<AITestResult>({
+      projectId,
+      agentType: 'qa',
+      phase: 'testing',
+      userPrompt,
+      schema: FORGE_TEST_SCHEMA,
+      schemaDescription: 'TestingResult — 5 test suites with real counts, coverage, and security findings',
+    });
+
+    const aiResult = result.output;
+
+    // Derive artifact file paths from project context for DB persistence
+    const allArtifacts = aiResult.suites.flatMap(s => s.artifacts);
+    const moduleSlug = (ctx.plan?.modules[0]?.name ?? 'app').toLowerCase().replace(/\s+/g, '-');
+
+    // Fill in any missing artifact paths from the AI output
+    const defaultArtifacts = [
+      `tests/unit/${moduleSlug}.service.test.ts`,
+      'tests/integration/api.integration.test.ts',
+      'tests/e2e/auth.e2e.test.ts',
+      'tests/performance/load.k6.js',
+      'tests/security/zap.config.yaml',
+    ];
+
+    const artifactsToSave = allArtifacts.length > 0 ? allArtifacts : defaultArtifacts;
+
+    const p = this.prisma as any;
+    await p.$transaction([
+      p.project.update({
+        where: { id: projectId },
+        data: { forgePhase: 'testing' },
+      }),
+      ...artifactsToSave.slice(0, 10).map(filePath =>
+        p.generatedArtifact.upsert({
+          where: { projectId_filePath: { projectId, filePath } },
+          create: {
+            projectId,
+            filePath,
+            type: 'test',
+            language: filePath.endsWith('.ts') ? 'typescript' : filePath.endsWith('.js') ? 'javascript' : 'yaml',
+            content: `// Generated by CerebroForge™ QA Agent\n// ${filePath}\n`,
+            lineCount: 60,
+            agentType: 'qa',
+            status: 'done',
+          },
+          update: { status: 'done' },
+        }),
+      ),
+    ]);
+
+    projectGraph.setAgentStatus(projectId, 'qa', 'completed');
+
+    return {
+      suites: aiResult.suites.map((s, i) => ({
+        ...s,
+        coverage: s.coverage ?? undefined,
+        artifacts: s.artifacts.length > 0 ? s.artifacts : [defaultArtifacts[i] ?? `tests/suite-${i}.test.ts`],
+      })),
+      overallCoverage: aiResult.overallCoverage,
+      securityFindings: aiResult.securityFindings,
+      totalTests:    aiResult.totalTests,
+      passingTests:  aiResult.passingTests,
+    };
+  }
+}

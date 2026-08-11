@@ -1,0 +1,11 @@
+{
+  "name": "@cerebro/widgets-llmops",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@cerebro/prompt-sdk": "workspace:*",
+    "@cerebro/plugins": "workspace:*",
+    "@cerebro/ui": "workspace:*"
+  }
+}

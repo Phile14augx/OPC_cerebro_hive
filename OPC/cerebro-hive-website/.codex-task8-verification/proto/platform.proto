@@ -1,0 +1,253 @@
+syntax = "proto3";
+package cerebro.platform.v1;
+
+option java_package = "com.cerebro.proto.platform";
+option java_multiple_files = true;
+
+// ─── Platform Service (product catalog, services, industries, solutions) ─────
+
+service PlatformService {
+  // Products
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);
+  rpc GetProduct(GetProductRequest) returns (Product);
+  rpc CreateProduct(CreateProductRequest) returns (Product);
+  rpc UpdateProduct(UpdateProductRequest) returns (Product);
+  rpc DeleteProduct(DeleteProductRequest) returns (DeleteResponse);
+
+  // Services
+  rpc ListServices(ListServicesRequest) returns (ListServicesResponse);
+  rpc GetService(GetServiceRequest) returns (ServiceItem);
+
+  // Industries
+  rpc ListIndustries(ListIndustriesRequest) returns (ListIndustriesResponse);
+  rpc GetIndustry(GetIndustryRequest) returns (Industry);
+
+  // Solutions
+  rpc ListSolutions(ListSolutionsRequest) returns (ListSolutionsResponse);
+  rpc GetSolution(GetSolutionRequest) returns (Solution);
+
+  // Search
+  rpc Search(SearchRequest) returns (SearchResponse);
+}
+
+// ─── Products ─────────────────────────────────────────────────────────────────
+
+enum ProductTier {
+  TIER_UNSPECIFIED = 0;
+  TIER_0_FOUNDATION = 1;
+  TIER_1_INFRASTRUCTURE = 2;
+  TIER_2_DATA_INTELLIGENCE = 3;
+  TIER_3_AI_RUNTIME = 4;
+  TIER_4_CEREBRO_APPS = 5;
+  TIER_5_ECOSYSTEM = 6;
+}
+
+message Product {
+  string id = 1;
+  string slug = 2;
+  string name = 3;
+  string tagline = 4;
+  string description = 5;
+  ProductTier tier = 6;
+  string tier_label = 7;
+  repeated string features = 8;
+  repeated string integrations = 9;
+  repeated string use_cases = 10;
+  string sla = 11;
+  bool active = 12;
+  int64 created_at = 13;
+  int64 updated_at = 14;
+}
+
+message ListProductsRequest {
+  optional ProductTier tier = 1;
+  optional bool active = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ListProductsResponse {
+  repeated Product products = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message GetProductRequest {
+  oneof identifier {
+    string id = 1;
+    string slug = 2;
+  }
+}
+
+message CreateProductRequest {
+  string slug = 1;
+  string name = 2;
+  string tagline = 3;
+  string description = 4;
+  ProductTier tier = 5;
+  repeated string features = 6;
+  repeated string integrations = 7;
+  repeated string use_cases = 8;
+  string sla = 9;
+}
+
+message UpdateProductRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string tagline = 3;
+  optional string description = 4;
+  repeated string features = 5;
+  repeated string integrations = 6;
+  optional string sla = 7;
+  optional bool active = 8;
+}
+
+message DeleteProductRequest {
+  string id = 1;
+}
+
+message DeleteResponse {
+  bool success = 1;
+}
+
+// ─── Services ────────────────────────────────────────────────────────────────
+
+enum ServicePractice {
+  PRACTICE_UNSPECIFIED = 0;
+  PRACTICE_STRATEGY = 1;
+  PRACTICE_ENGINEERING = 2;
+  PRACTICE_OPERATIONS = 3;
+  PRACTICE_SECURITY = 4;
+  PRACTICE_INDUSTRY = 5;
+}
+
+message ServiceItem {
+  string id = 1;
+  string code = 2;
+  string slug = 3;
+  string name = 4;
+  string tagline = 5;
+  string description = 6;
+  ServicePractice practice = 7;
+  string timeline = 8;
+  string investment = 9;
+  repeated string deliverables = 10;
+  repeated string outcomes = 11;
+  bool active = 12;
+}
+
+message ListServicesRequest {
+  optional ServicePractice practice = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListServicesResponse {
+  repeated ServiceItem services = 1;
+  int32 total = 2;
+}
+
+message GetServiceRequest {
+  oneof identifier {
+    string id = 1;
+    string code = 2;
+    string slug = 3;
+  }
+}
+
+// ─── Industries ──────────────────────────────────────────────────────────────
+
+message Industry {
+  string id = 1;
+  string slug = 2;
+  string name = 3;
+  string tagline = 4;
+  string overview = 5;
+  repeated string compliance_frameworks = 6;
+  repeated UseCase use_cases = 7;
+  repeated string metrics = 8;
+  bool active = 9;
+}
+
+message UseCase {
+  string name = 1;
+  string description = 2;
+  repeated string products = 3;
+  string roi = 4;
+}
+
+message ListIndustriesRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message ListIndustriesResponse {
+  repeated Industry industries = 1;
+  int32 total = 2;
+}
+
+message GetIndustryRequest {
+  oneof identifier {
+    string id = 1;
+    string slug = 2;
+  }
+}
+
+// ─── Solutions ───────────────────────────────────────────────────────────────
+
+message Solution {
+  string id = 1;
+  string slug = 2;
+  string name = 3;
+  string category = 4;
+  string tagline = 5;
+  string description = 6;
+  repeated string deliverables = 7;
+  string timeline = 8;
+  string investment = 9;
+  repeated string outcomes = 10;
+  repeated string products = 11;
+  repeated string services = 12;
+  string methodology = 13;
+}
+
+message ListSolutionsRequest {
+  optional string category = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListSolutionsResponse {
+  repeated Solution solutions = 1;
+  int32 total = 2;
+}
+
+message GetSolutionRequest {
+  oneof identifier {
+    string id = 1;
+    string slug = 2;
+  }
+}
+
+// ─── Search ──────────────────────────────────────────────────────────────────
+
+message SearchRequest {
+  string query = 1;
+  repeated string types = 2; // "product", "service", "industry", "solution"
+  int32 limit = 3;
+}
+
+message SearchResult {
+  string id = 1;
+  string type = 2;
+  string slug = 3;
+  string name = 4;
+  string excerpt = 5;
+  float score = 6;
+}
+
+message SearchResponse {
+  repeated SearchResult results = 1;
+  int32 total = 2;
+}

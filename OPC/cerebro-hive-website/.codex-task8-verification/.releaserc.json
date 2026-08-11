@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json.schemastore.org/semantic-release.json",
+  "branches": [
+    "main",
+    { "name": "develop", "prerelease": "beta" },
+    { "name": "release/*", "prerelease": "rc" }
+  ],
+  "plugins": [
+    ["@semantic-release/commit-analyzer", {
+      "preset": "conventionalcommits",
+      "releaseRules": [
+        { "type": "feat",  "release": "minor" },
+        { "type": "fix",   "release": "patch" },
+        { "type": "perf",  "release": "patch" },
+        { "type": "revert","release": "patch" },
+        { "type": "docs",  "release": false },
+        { "type": "style", "release": false },
+        { "type": "chore", "release": false },
+        { "type": "refactor", "release": "patch" },
+        { "breaking": true, "release": "major" }
+      ]
+    }],
+    ["@semantic-release/release-notes-generator", {
+      "preset": "conventionalcommits",
+      "presetConfig": {
+        "types": [
+          { "type": "feat",     "section": "🚀 Features" },
+          { "type": "fix",      "section": "🐛 Bug Fixes" },
+          { "type": "perf",     "section": "⚡ Performance" },
+          { "type": "refactor", "section": "♻️ Code Refactoring" },
+          { "type": "docs",     "section": "📚 Documentation", "hidden": true },
+          { "type": "chore",    "hidden": true }
+        ]
+      }
+    }],
+    ["@semantic-release/changelog", {
+      "changelogFile": "CHANGELOG.md",
+      "changelogTitle": "# CerebroHive Changelog\n\nAll notable changes to the CerebroHive platform are documented here."
+    }],
+    ["@semantic-release/exec", {
+      "prepareCmd": "node scripts/update-version.js ${nextRelease.version}",
+      "publishCmd": "echo 'Version: ${nextRelease.version}' >> $GITHUB_STEP_SUMMARY"
+    }],
+    ["@semantic-release/git", {
+      "assets": ["CHANGELOG.md", "package.json", "apps/*/package.json"],
+      "message": "chore(release): v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+    }],
+    ["@semantic-release/github", {
+      "assets": [],
+      "addReleases": "bottom",
+      "successComment": "🎉 This PR is included in CerebroHive v${nextRelease.version}.\n\n[Release Notes](${releases[0].url})",
+      "failComment": "❌ Release failed. See [CI logs](${builds[0].url}) for details."
+    }]
+  ]
+}

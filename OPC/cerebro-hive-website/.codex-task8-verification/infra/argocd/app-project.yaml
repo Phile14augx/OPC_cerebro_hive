@@ -1,0 +1,77 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# ArgoCD AppProject — CerebroHive
+# Defines RBAC boundaries for all CerebroHive applications.
+# Apply: kubectl apply -f infra/argocd/app-project.yaml -n argocd
+# ──────────────────────────────────────────────────────────────────────────────
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cerebro-hive
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: cerebro-hive
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: "CerebroHive AI platform — all environments"
+
+  # Source repositories allowed for this project
+  sourceRepos:
+    - "https://github.com/cerebrohive/cerebro-hive-website"
+    - "https://charts.bitnami.com/bitnami"
+    - "https://prometheus-community.github.io/helm-charts"
+    - "https://grafana.github.io/helm-charts"
+
+  # Destination clusters and namespaces
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: cerebro-hive
+    - server: https://kubernetes.default.svc
+      namespace: monitoring
+    - server: https://kubernetes.default.svc
+      namespace: cert-manager
+    - server: https://kubernetes.default.svc
+      namespace: ingress-nginx
+
+  # Cluster-scoped resources allowed
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: "rbac.authorization.k8s.io"
+      kind: ClusterRole
+    - group: "rbac.authorization.k8s.io"
+      kind: ClusterRoleBinding
+    - group: "apiextensions.k8s.io"
+      kind: CustomResourceDefinition
+
+  # Namespace-scoped resources
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  # Sync windows — restrict production deploys to business hours
+  syncWindows:
+    - kind: allow
+      schedule: "0 9-17 * * 1-5"    # Mon-Fri 09:00-17:00 UTC
+      duration: 8h
+      applications: ["cerebro-hive-production"]
+      manualSync: true
+    - kind: allow
+      schedule: "* * * * *"          # Always allow staging
+      duration: 24h
+      applications: ["cerebro-hive-staging"]
+
+  # Roles
+  roles:
+    - name: deploy-bot
+      description: "CI/CD deploy bot (release-train workflow)"
+      policies:
+        - "p, proj:cerebro-hive:deploy-bot, applications, sync, cerebro-hive/*, allow"
+        - "p, proj:cerebro-hive:deploy-bot, applications, get,  cerebro-hive/*, allow"
+      jwtTokens:
+        - iat: 0
+
+    - name: readonly
+      description: "Read-only access for team members"
+      policies:
+        - "p, proj:cerebro-hive:readonly, applications, get, cerebro-hive/*, allow"

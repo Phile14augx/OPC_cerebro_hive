@@ -1,0 +1,45 @@
+# .agents/dispatch-policy.yml
+#
+# Governance rules evaluated before every automated merge.
+# Violations marked with (error) abort the dispatch and trigger rollback.
+# Violations marked with (warning) are logged but do not block.
+#
+# Reload automatically on each dispatch run — no restart required.
+
+# ── Cost governance ──────────────────────────────────────────────────────────
+# Abort if estimated total API cost for a single dispatch exceeds this (USD).
+# Based on combined Claude + Gemini token usage.
+max_cost_usd: 5.00
+
+# ── Runtime governance ───────────────────────────────────────────────────────
+# Abort if total wall-clock time (including CI wait) exceeds this (milliseconds).
+# 45 minutes = 2 700 000 ms
+max_runtime_ms: 2700000
+
+# ── Quality gates ─────────────────────────────────────────────────────────────
+# Abort if the "test" validation stage was skipped or failed.
+require_tests: true
+
+# Abort if the PR has no approvals (only meaningful with REQUIRE_APPROVAL mode
+# or the GitHub Environment approval gate in auto-dispatch.yml).
+require_review: false
+
+# ── File governance ───────────────────────────────────────────────────────────
+# Abort if any of these files were modified (safety net for lock files, etc.)
+forbid_files:
+  - package-lock.json
+  - yarn.lock
+  - .env
+  - .env.production
+  - prisma/schema.prisma
+
+# Abort if any single agent modified more than this many files.
+# Prevents run-away edits outside the agent's assignment.
+max_files_per_agent: 15
+
+# ── Token governance ─────────────────────────────────────────────────────────
+# Warn if total token count is suspiciously low (possible empty/failed agent response).
+min_tokens: 500
+
+# Abort if total token count exceeds budget (protects against runaway prompts).
+max_tokens: 500000

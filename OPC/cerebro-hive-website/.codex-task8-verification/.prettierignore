@@ -1,0 +1,14 @@
+node_modules
+.next
+dist
+build
+coverage
+*.tsbuildinfo
+pnpm-lock.yaml
+.turbo
+target
+infra/helm/cerebro-hive/templates
+infra/terraform/.terraform
+*.tfstate
+*.tfstate.backup
+src/generated

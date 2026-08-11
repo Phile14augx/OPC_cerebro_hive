@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cerebrohive.com/assurance/evidence-v2",
+  "title": "CerebroHive Evidence Schema v2",
+  "description": "Immutable contract for every assurance evidence entry. Schema version is locked — future evolution happens through new schema versions, never by mutating this file. Historical evidence validated against the schema version present at time of recording remains valid forever.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "controlId",
+    "status",
+    "failureClass",
+    "runnerVersion",
+    "descriptorHash",
+    "timestamp",
+    "startedAt",
+    "completedAt",
+    "durationMs",
+    "environment",
+    "gitSha",
+    "gitShaShort",
+    "branch",
+    "runId",
+    "runNumber",
+    "workflow",
+    "actor",
+    "breakTestProven",
+    "artifacts",
+    "previousHash",
+    "currentHash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 2,
+      "description": "Schema version. Increment when adding required fields; old evidence retains its original schemaVersion and remains valid."
+    },
+    "controlId": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9-]*[0-9]$",
+      "examples": ["G1", "SC-1", "DET-1", "RBAC-1", "SLF-1"],
+      "description": "Unique control identifier matching the descriptor."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PROVEN", "PASS", "FAIL", "SKIP", "WARN", "BLOCKED", "INCONCLUSIVE"],
+      "description": "PROVEN = both control and break test passed. PASS = control passed, break test not applicable. BLOCKED = dependency failed. INCONCLUSIVE = ran but evidence too weak to confirm."
+    },
+    "failureClass": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "ARCHITECTURE_FAILURE",
+        "ENVIRONMENT_FAILURE",
+        "INFRASTRUCTURE_FAILURE",
+        "CONFIGURATION_FAILURE",
+        "RUNNER_FAILURE",
+        "DEPENDENCY_FAILURE",
+        "TIMEOUT",
+        "BLOCKED"
+      ],
+      "description": "Typed failure classification. Null when status is PROVEN or PASS. Enables actionable routing: ARCHITECTURE_FAILURE reopens the relevant ADR; ENVIRONMENT_FAILURE triggers an ops alert; BLOCKED shows the dependency chain."
+    },
+    "runnerVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semver of tools/assurance/runner.mjs that produced this evidence. Enables replay: given the same runner version + commit + descriptor, results must be identical."
+    },
+    "descriptorHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of the control descriptor JSON at time of execution. If the descriptor changes between runs, the hash mismatch is visible in the evidence chain."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp of evidence recording (alias for completedAt, kept for v1 compatibility)."
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when control execution began."
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when control execution finished (including break test)."
+    },
+    "durationMs": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Wall-clock duration in milliseconds from startedAt to completedAt."
+    },
+    "environment": {
+      "type": "string",
+      "enum": ["ci", "staging", "production", "local"],
+      "description": "Execution environment. Evidence from 'ci' is authoritative for CEC computation; 'local' evidence is informational only."
+    },
+    "gitSha": {
+      "type": "string",
+      "description": "Full 40-character git SHA of the commit under test."
+    },
+    "gitShaShort": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7}$",
+      "description": "7-character short SHA."
+    },
+    "branch": {
+      "type": "string",
+      "description": "Git branch name at time of execution."
+    },
+    "runId": {
+      "type": "string",
+      "description": "GitHub Actions run ID, or 'local-{timestamp}' for local runs."
+    },
+    "runNumber": {
+      "type": "integer",
+      "description": "GitHub Actions run number. 0 for local runs."
+    },
+    "runUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "Direct link to the GitHub Actions run. Null for local runs."
+    },
+    "workflow": {
+      "type": "string",
+      "description": "GitHub Actions workflow name, or 'manual' for local runs."
+    },
+    "actor": {
+      "type": "string",
+      "description": "GitHub username who triggered the run, or 'unknown' for local runs."
+    },
+    "details": {
+      "type": ["string", "null"],
+      "description": "Human-readable description of what was observed. Rendered on the dashboard and in PR comments."
+    },
+    "breakTestProven": {
+      "type": "boolean",
+      "description": "True when a deliberate break of the control was injected and confirmed to produce a FAIL before the control was restored. Satisfies the requirement that 'correct by inspection' is insufficient — the control must demonstrably fail when violated."
+    },
+    "breakTestDetails": {
+      "type": ["string", "null"],
+      "description": "Description of the break test performed, e.g. 'Injected const x: string = 42 → tsc exited 1 → error removed → tsc exited 0'."
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["sarif", "sbom", "junit", "json", "html", "log", "archive", "other"]
+          },
+          "url": { "type": ["string", "null"], "format": "uri" },
+          "sizeBytes": { "type": ["integer", "null"] },
+          "sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" }
+        }
+      },
+      "description": "Artifacts produced by or referenced by this control execution. Every evidence entry should have at least one artifact that can be retrieved and independently verified."
+    },
+    "evidenceKind": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "static-analysis",
+        "analytical-model",
+        "unit-test",
+        "local-benchmark",
+        "integration-test",
+        "system-measurement",
+        "production-telemetry"
+      ],
+      "description": "Evidence quality classification from tools/harness/evidence.mjs. A PASS backed by static-analysis is weaker than one backed by production-telemetry."
+    },
+    "confidence": {
+      "type": ["string", "null"],
+      "enum": [null, "low", "medium", "high", "highest"],
+      "description": "Derived from evidenceKind per the CONFIDENCE map in evidence.mjs."
+    },
+    "previousHash": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$|^null$",
+      "description": "SHA-256 of the previous evidence entry for this control in the same environment. Null for the first entry. Forms a hash chain: tampering with any historical entry breaks the chain."
+    },
+    "currentHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of this evidence entry (computed over all fields except currentHash and signature). Stored here for convenience — verifiers recompute it and compare."
+    },
+    "signature": {
+      "type": ["string", "null"],
+      "description": "Optional HMAC-SHA256 signature using ASSURANCE_SIGNING_KEY. Null when signing is not configured. When present, verifying the signature proves the entry was written by a runner that held the key."
+    }
+  }
+}

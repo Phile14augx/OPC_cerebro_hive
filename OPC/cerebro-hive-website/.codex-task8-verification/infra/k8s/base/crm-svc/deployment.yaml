@@ -1,0 +1,156 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-svc
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: crm-svc
+    app.kubernetes.io/component: crm-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: crm-svc
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: crm-svc
+        app.kubernetes.io/component: crm-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8083"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      serviceAccountName: crm-svc
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: crm-svc
+          image: cerebrohive/crm-svc:latest
+          ports:
+            - containerPort: 8083
+              name: http
+              protocol: TCP
+          env:
+            - name: DATABASE_URL
+              value: jdbc:postgresql://$(POSTGRES_HOST):5432/$(POSTGRES_DB)
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: postgres-host
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: postgres-db
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: postgres-user
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: postgres-password
+            - name: KEYCLOAK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: keycloak-url
+            - name: KEYCLOAK_REALM
+              value: cerebro
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: redis-url
+            - name: NATS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-secrets
+                  key: nats-url
+            - name: ML_SVC_ADDR
+              value: static://ml-svc:50051
+            - name: JAVA_OPTS
+              value: "-XX:+UseZGC -XX:MaxRAMPercentage=75"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8083
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8083
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 800m
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+      terminationGracePeriodSeconds: 60
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-svc
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: crm-svc
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: crm-svc
+  ports:
+    - name: http
+      port: 8083
+      targetPort: http
+      protocol: TCP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: crm-svc
+  namespace: cerebro-hive
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: crm-svc
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80

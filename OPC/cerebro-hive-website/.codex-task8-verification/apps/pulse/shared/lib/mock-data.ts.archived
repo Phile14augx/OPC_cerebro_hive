@@ -1,0 +1,326 @@
+/* ── HivePulse Mock Data ─────────────────────────────────────────────────── */
+/* Production: replace with real API calls from HiveAnalytics + HiveForecast */
+
+import type {
+  EnterpriseHealthScore, PillarScore, StrategicAlert, Briefing, Scenario, KPIMetric
+} from './types';
+
+/* ── Health Score ─────────────────────────────────────────────────────────── */
+export const MOCK_HEALTH_SCORE: EnterpriseHealthScore = {
+  score: 78,
+  status: 'healthy',
+  primaryDrivers: [
+    'Pipeline velocity up 18% this week',
+    'Agent task completion rate at 97.2%',
+    'LLM gateway latency within SLA',
+  ],
+  calculatedAt: new Date().toISOString(),
+  delta: 4,
+  deltaDirection: 'up',
+};
+
+/* ── Pillars ──────────────────────────────────────────────────────────────── */
+export const MOCK_PILLARS: PillarScore[] = [
+  {
+    id: 'revenue',
+    label: 'Revenue & Pipeline',
+    score: 82,
+    status: 'healthy',
+    trend: 'up',
+    delta: 6,
+    kpis: [
+      { id: 'arr', label: 'ARR', value: 14.2, unit: 'M', formatted: '$14.2M', trend: 'up', delta: 12, deltaFormatted: '+12%', status: 'healthy', target: 20, targetFormatted: '$20M' },
+      { id: 'pipeline', label: 'Qualified Pipeline', value: 38.5, unit: 'M', formatted: '$38.5M', trend: 'up', delta: 18, deltaFormatted: '+18%', status: 'healthy' },
+      { id: 'win_rate', label: 'Win Rate', value: 31, unit: '%', formatted: '31%', trend: 'up', delta: 3, deltaFormatted: '+3pp', status: 'healthy', target: 35, targetFormatted: '35%' },
+      { id: 'ndr', label: 'Net Dollar Retention', value: 118, unit: '%', formatted: '118%', trend: 'up', delta: 5, deltaFormatted: '+5pp', status: 'healthy' },
+    ],
+  },
+  {
+    id: 'operations',
+    label: 'Platform Operations',
+    score: 91,
+    status: 'healthy',
+    trend: 'flat',
+    delta: 1,
+    kpis: [
+      { id: 'uptime', label: 'Platform Uptime', value: 99.94, unit: '%', formatted: '99.94%', trend: 'flat', delta: 0, deltaFormatted: '0pp', status: 'healthy', target: 99.9, targetFormatted: '99.9%' },
+      { id: 'p95_latency', label: 'P95 Latency', value: 218, unit: 'ms', formatted: '218ms', trend: 'down', delta: -12, deltaFormatted: '-12ms', status: 'healthy', target: 300, targetFormatted: '300ms' },
+      { id: 'agent_success', label: 'Agent Task Success', value: 97.2, unit: '%', formatted: '97.2%', trend: 'up', delta: 1.4, deltaFormatted: '+1.4pp', status: 'healthy' },
+      { id: 'cost_per_task', label: 'Cost / 1K Tasks', value: 0.42, unit: '$', formatted: '$0.42', trend: 'down', delta: -8, deltaFormatted: '-8%', status: 'healthy' },
+    ],
+  },
+  {
+    id: 'people',
+    label: 'People & Culture',
+    score: 71,
+    status: 'healthy',
+    trend: 'up',
+    delta: 3,
+    kpis: [
+      { id: 'headcount', label: 'Headcount', value: 47, unit: '', formatted: '47 FTE', trend: 'up', delta: 8, deltaFormatted: '+8 (30d)', status: 'healthy' },
+      { id: 'open_roles', label: 'Open Roles', value: 14, unit: '', formatted: '14', trend: 'flat', delta: 0, deltaFormatted: '0', status: 'healthy' },
+      { id: 'attrition', label: 'Attrition (TTM)', value: 4.2, unit: '%', formatted: '4.2%', trend: 'down', delta: -1.1, deltaFormatted: '-1.1pp', status: 'healthy', target: 5, targetFormatted: '<5%' },
+      { id: 'engagement', label: 'Engagement Score', value: 72, unit: '/100', formatted: '72/100', trend: 'up', delta: 4, deltaFormatted: '+4', status: 'healthy' },
+    ],
+  },
+  {
+    id: 'risk',
+    label: 'Risk & Compliance',
+    score: 64,
+    status: 'degraded',
+    trend: 'down',
+    delta: -5,
+    kpis: [
+      { id: 'open_risks', label: 'Open P0 Risks', value: 3, unit: '', formatted: '3', trend: 'up', delta: 2, deltaFormatted: '+2 (7d)', status: 'critical' },
+      { id: 'compliance', label: 'SOC2 Controls Met', value: 87, unit: '%', formatted: '87%', trend: 'flat', delta: 0, deltaFormatted: '0pp', status: 'degraded', target: 100, targetFormatted: '100%' },
+      { id: 'security_score', label: 'Security Score', value: 74, unit: '/100', formatted: '74/100', trend: 'down', delta: -3, deltaFormatted: '-3', status: 'degraded' },
+      { id: 'pat_age', label: 'Oldest Active PAT', value: 4, unit: 'd', formatted: '4 days', trend: 'up', delta: 4, deltaFormatted: '+4d', status: 'critical' },
+    ],
+  },
+  {
+    id: 'market',
+    label: 'Market & Brand',
+    score: 69,
+    status: 'healthy',
+    trend: 'up',
+    delta: 7,
+    kpis: [
+      { id: 'web_traffic', label: 'Monthly Website Visits', value: 42800, unit: '', formatted: '42.8K', trend: 'up', delta: 22, deltaFormatted: '+22%', status: 'healthy' },
+      { id: 'mql', label: 'MQLs (30d)', value: 186, unit: '', formatted: '186', trend: 'up', delta: 31, deltaFormatted: '+31%', status: 'healthy' },
+      { id: 'cac', label: 'Blended CAC', value: 4200, unit: '$', formatted: '$4.2K', trend: 'down', delta: -15, deltaFormatted: '-15%', status: 'healthy' },
+      { id: 'nps', label: 'NPS', value: 58, unit: '', formatted: '58', trend: 'up', delta: 6, deltaFormatted: '+6', status: 'healthy', target: 60, targetFormatted: '60' },
+    ],
+  },
+];
+
+/* ── Strategic Alerts ─────────────────────────────────────────────────────── */
+export const MOCK_ALERTS: StrategicAlert[] = [
+  {
+    id: 'alert-001',
+    title: 'GitHub PAT unrotated — 4 days past policy',
+    summary: 'A GitHub Personal Access Token in .env has not been rotated. CerebroHive security policy requires rotation every 72 hours. This token has access to the monorepo and CI pipeline.',
+    severity: 'critical',
+    category: 'security',
+    isNew: true,
+    raisedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+    source: 'HiveShield / Gemini',
+    actions: [
+      'Rotate the PAT immediately via github.com → Settings → Developer settings',
+      'Update the .env file and any CI secrets that reference this token',
+      'Confirm the old token has been revoked, not just replaced',
+    ],
+    pillar: 'risk',
+    acknowledged: false,
+  },
+  {
+    id: 'alert-002',
+    title: '30 Prisma models missing SQL migrations',
+    summary: 'The Prisma schema defines 30 models that have no corresponding migration file. Queries against these models will fail at runtime. M10.1 execution features depend on AgentExecution* tables that do not exist in the database.',
+    severity: 'critical',
+    category: 'operations',
+    isNew: true,
+    raisedAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+    source: 'HiveOps / Claude',
+    actions: [
+      'Run: pnpm prisma migrate dev --name add-missing-models-aug-06 from packages/database/',
+      'Review generated SQL for destructive operations before applying',
+      'Regenerate the Prisma client after migration succeeds',
+    ],
+    pillar: 'operations',
+    acknowledged: false,
+  },
+  {
+    id: 'alert-003',
+    title: 'M10.1 worktree validated but not merged',
+    summary: 'The feat/enterprise-agent-runtime branch has been validated (6 bugs fixed, all TypeScript checks clean) and is ready to merge. It has been in this state for 18 hours. Delay blocks M10.2 implementation.',
+    severity: 'high',
+    category: 'operations',
+    isNew: false,
+    raisedAt: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString(),
+    source: 'HivePlanner / Claude',
+    actions: [
+      'Follow agents/M10.1-COMMIT-HANDOFF.md to commit and push the branch',
+      'Open a PR and tag for review',
+      'After merge, unblock M10.2 by updating agents state.json',
+    ],
+    pillar: 'operations',
+    acknowledged: false,
+  },
+  {
+    id: 'alert-004',
+    title: 'TypeScript coverage at 19% — release gate is blind',
+    summary: 'Only 24 of 129 packages define a typecheck script. Turbo silently skips the other 105, including platform-api, runtime-core, auth, and all capabilities. A green CI check provides no type safety guarantee.',
+    severity: 'high',
+    category: 'risk',
+    isNew: false,
+    raisedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    source: 'Audit System / Claude',
+    actions: [
+      'Add typecheck:site and lint:site root scripts (see AUDIT-REPORT-2026-08-02.md)',
+      'Add a typecheck script to the 105 packages that lack one',
+      'Re-baseline after coverage is fixed — expect a large batch of latent errors',
+    ],
+    pillar: 'risk',
+    acknowledged: true,
+  },
+  {
+    id: 'alert-005',
+    title: 'Pipeline conversion rate below 3-month trend',
+    summary: 'Week-over-week qualified-to-close conversion dropped to 18%, down from the 3-month average of 24%. HiveSales agent analysis attributes this to slower enterprise decision cycles in APAC accounts.',
+    severity: 'medium',
+    category: 'revenue',
+    isNew: false,
+    raisedAt: new Date(Date.now() - 30 * 60 * 60 * 1000).toISOString(),
+    source: 'HiveSales / Claude',
+    actions: [
+      'Activate the APAC executive champion playbook for the 3 stuck deals',
+      'Schedule a HivePulse demo for APAC CTO contacts to accelerate technical validation',
+      'Add economic justification one-pagers to the 3 stalled deals by EOW',
+    ],
+    pillar: 'revenue',
+    acknowledged: false,
+  },
+];
+
+/* ── Briefings ─────────────────────────────────────────────────────────────── */
+export const MOCK_BRIEFINGS: Briefing[] = [
+  {
+    id: 'brief-daily-001',
+    title: 'Daily Executive Brief — 7 August 2026',
+    type: 'daily',
+    period: '7 Aug 2026',
+    generatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    isLatest: true,
+    readTime: 3,
+    executiveSummary:
+      'CerebroHive AEOS is operating at 78/100 enterprise health. Platform operations remain strong (91/100) with 99.94% uptime and P95 latency at 218ms. Revenue pipeline grew 18% this week to $38.5M qualified. Two critical risks require immediate action today: the unrotated GitHub PAT and 30 missing Prisma migrations that will cause M10.1 runtime failures. The M10.1 worktree is validated and ready to land — that single commit unblocks the entire agent execution roadmap. APAC pipeline conversion needs attention; the executive champion plays should be activated today.',
+    highlights: [
+      { label: 'ARR', value: '$14.2M (+12%)', sentiment: 'positive' },
+      { label: 'Agent task success', value: '97.2%', sentiment: 'positive' },
+      { label: 'Open P0 risks', value: '3 (↑2 this week)', sentiment: 'negative' },
+      { label: 'P95 latency', value: '218ms (SLA: 300ms)', sentiment: 'positive' },
+      { label: 'APAC conversion', value: '18% (avg: 24%)', sentiment: 'negative' },
+    ],
+    risks: [
+      {
+        title: 'GitHub PAT rotation overdue',
+        likelihood: 'high',
+        impact: 'high',
+        mitigation: 'Rotate immediately via GitHub settings. Update .env and CI secrets within the hour.',
+      },
+      {
+        title: 'M10.1 runtime failure in production',
+        likelihood: 'high',
+        impact: 'high',
+        mitigation: 'Run Prisma migration before any M10.1 deployment. 30 tables are missing.',
+      },
+      {
+        title: 'TypeScript type errors accumulating unseen',
+        likelihood: 'medium',
+        impact: 'medium',
+        mitigation: 'Add typecheck coverage to 105 packages. Schedule a 2-hour engineering session this week.',
+      },
+    ],
+    recommendations: [
+      'Rotate the GitHub PAT now — 4 days past policy is an active security exposure.',
+      'Run the Prisma migration and land M10.1 today — this unblocks the entire Month 2 agent execution plan.',
+      'Brief the APAC sales team on the executive champion playbook for the 3 stalled deals.',
+      'Assign the TypeScript coverage gap as a P1 engineering task for this sprint.',
+    ],
+    kpiSnapshot: [
+      { id: 'arr', label: 'ARR', value: 14.2, unit: 'M', formatted: '$14.2M', trend: 'up', delta: 12, deltaFormatted: '+12%', status: 'healthy' },
+      { id: 'uptime', label: 'Uptime', value: 99.94, unit: '%', formatted: '99.94%', trend: 'flat', delta: 0, deltaFormatted: '0pp', status: 'healthy' },
+      { id: 'agent_success', label: 'Agent Tasks', value: 97.2, unit: '%', formatted: '97.2%', trend: 'up', delta: 1.4, deltaFormatted: '+1.4pp', status: 'healthy' },
+      { id: 'mql', label: 'MQLs (30d)', value: 186, unit: '', formatted: '186', trend: 'up', delta: 31, deltaFormatted: '+31%', status: 'healthy' },
+    ],
+  },
+  {
+    id: 'brief-weekly-001',
+    title: 'Weekly Board Brief — Week of 4 August 2026',
+    type: 'weekly',
+    period: 'W32 2026',
+    generatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    isLatest: false,
+    readTime: 6,
+    executiveSummary:
+      'Week 32 was a strong execution week: 11 new enterprise trials engaged, M10.1 agent runtime built and validated, and web traffic grew 22% driven by the SEO-optimised content launch. The two critical risks (PAT rotation, Prisma migrations) emerged in the final 48 hours and carry into Week 33. Pipeline is healthy at $38.5M qualified. Revenue on track for $20M ARR target by Month 6.',
+    highlights: [
+      { label: 'New enterprise trials', value: '11', sentiment: 'positive' },
+      { label: 'M10.1 runtime', value: 'Built & validated', sentiment: 'positive' },
+      { label: 'Web traffic', value: '+22% WoW', sentiment: 'positive' },
+      { label: 'Security incidents', value: '0 (PAT risk open)', sentiment: 'neutral' },
+    ],
+    risks: [
+      {
+        title: 'PAT rotation policy breach',
+        likelihood: 'high',
+        impact: 'high',
+        mitigation: 'Addressed in Week 33 Day 1 actions.',
+      },
+    ],
+    recommendations: [
+      'Merge M10.1 as the first action of Week 33 — everything downstream depends on it.',
+      'Schedule a board-level risk review for the 3 open P0 risks.',
+      'Expand the APAC sales motion with localised case studies.',
+    ],
+    kpiSnapshot: [],
+  },
+];
+
+/* ── Scenarios ─────────────────────────────────────────────────────────────── */
+export const MOCK_SCENARIOS: Scenario[] = [
+  {
+    id: 'sc-001',
+    title: 'Lose top 3 enterprise clients',
+    description: 'What happens to enterprise health and ARR if the 3 largest clients (representing $4.2M ARR combined) churn simultaneously?',
+    assumption: 'All 3 top clients churn within 30 days. No replacement pipeline activated.',
+    healthImpact: -24,
+    pillarImpacts: [
+      { pillarId: 'revenue', label: 'Revenue & Pipeline', delta: -38 },
+      { pillarId: 'people', label: 'People & Culture', delta: -12 },
+      { pillarId: 'market', label: 'Market & Brand', delta: -8 },
+      { pillarId: 'operations', label: 'Platform Operations', delta: -2 },
+      { pillarId: 'risk', label: 'Risk & Compliance', delta: -6 },
+    ],
+    revenueImpact: -4.2,
+    probability: 0.04,
+    timeHorizon: '30d',
+    generatedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'sc-002',
+    title: 'Close top 5 pipeline deals this quarter',
+    description: 'If the 5 highest-value deals in the pipeline close before end of Q3, what is the compounding effect on the enterprise health score?',
+    assumption: '5 deals totalling $8.4M ACV close. HiveOps scales infra automatically. No new headcount required in Q3.',
+    healthImpact: +18,
+    pillarImpacts: [
+      { pillarId: 'revenue', label: 'Revenue & Pipeline', delta: +32 },
+      { pillarId: 'operations', label: 'Platform Operations', delta: +6 },
+      { pillarId: 'market', label: 'Market & Brand', delta: +11 },
+      { pillarId: 'people', label: 'People & Culture', delta: +4 },
+      { pillarId: 'risk', label: 'Risk & Compliance', delta: +1 },
+    ],
+    revenueImpact: +8.4,
+    probability: 0.22,
+    timeHorizon: '90d',
+    generatedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'sc-003',
+    title: 'Critical security breach via unrotated PAT',
+    description: 'The unrotated GitHub PAT is exploited, resulting in a monorepo compromise and 48-hour production outage.',
+    assumption: 'PAT compromised tonight. Full monorepo read/write access obtained. CI pipeline used to deploy malicious code. 48h to full recovery.',
+    healthImpact: -51,
+    pillarImpacts: [
+      { pillarId: 'risk', label: 'Risk & Compliance', delta: -62 },
+      { pillarId: 'operations', label: 'Platform Operations', delta: -55 },
+      { pillarId: 'revenue', label: 'Revenue & Pipeline', delta: -28 },
+      { pillarId: 'market', label: 'Market & Brand', delta: -40 },
+      { pillarId: 'people', label: 'People & Culture', delta: -10 },
+    ],
+    revenueImpact: -2.1,
+    probability: 0.08,
+    timeHorizon: '30d',
+    generatedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+  },
+];

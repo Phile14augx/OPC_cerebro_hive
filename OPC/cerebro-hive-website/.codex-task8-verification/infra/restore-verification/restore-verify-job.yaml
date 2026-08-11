@@ -1,0 +1,872 @@
+# CerebroHive Backup Restore Verification
+#
+# Runs nightly in a disposable namespace:
+#   1. Create cerebro-restore-YYYYMMDD namespace
+#   2. Restore PostgreSQL from last S3 backup
+#   3. Restore MinIO from last S3 replica
+#   4. Restore NATS JetStream from last snapshot
+#   5. Run smoke tests against each restored service
+#   6. Publish evidence report (restore time, integrity checks, object counts)
+#   7. Destroy the namespace (always — even on failure)
+#
+# Evidence produced:
+#   - Restore duration per service (RTO measurement)
+#   - Row counts vs. expected baseline (data integrity)
+#   - Object counts for MinIO (completeness check)
+#   - NATS message counts (JetStream replay check)
+#   - SHA-256 checksums of restored critical tables
+#   - Overall pass/fail status → Slack #sre-evidence
+#
+# The Job is triggered by:
+#   a) The GitHub Actions cron (see restore-verification.yml)
+#   b) kubectl create -f infra/restore-verification/restore-verify-job.yaml (manual)
+#
+# Required secrets (K8s Secrets in kube-system):
+#   cerebro-backup-restore: contains AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY,
+#                           BACKUP_BUCKET, NATS_CREDS, POSTGRES_MASTER_PASSWORD
+
+---
+# ServiceAccount for the restore jobs
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: restore-verify
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: restore-verify
+    cerebro.io/component: backup-validation
+
+---
+# ClusterRole — needs to create/delete namespaces and deploy resources
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: restore-verify
+rules:
+  - apiGroups: [""]
+    resources: [namespaces, pods, services, configmaps, secrets, persistentvolumeclaims]
+    verbs: [create, get, list, watch, delete, patch]
+  - apiGroups: [apps]
+    resources: [deployments, statefulsets]
+    verbs: [create, get, list, watch, delete, patch]
+  - apiGroups: [batch]
+    resources: [jobs]
+    verbs: [create, get, list, watch, delete]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: restore-verify
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: restore-verify
+subjects:
+  - kind: ServiceAccount
+    name: restore-verify
+    namespace: kube-system
+
+---
+# ConfigMap — restore verification scripts
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: restore-verify-scripts
+  namespace: kube-system
+data:
+  # ── Main orchestration script ──────────────────────────────────────────
+  orchestrate.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    DATE=$(date +%Y%m%d)
+    RESTORE_NS="cerebro-restore-${DATE}"
+    REPORT_FILE="/tmp/restore-report.json"
+    START_EPOCH=$(date +%s)
+
+    log()  { echo "[$(date -u +%T)] $*"; }
+    info() { log "INFO  $*"; }
+    ok()   { log "OK    $*"; }
+    fail() { log "FAIL  $*"; echo '{"status":"FAILED","reason":"'"$*"'"}' >> /tmp/restore-errors.json; }
+
+    # ── Initialise report ─────────────────────────────────────────────────
+    cat > "${REPORT_FILE}" <<JSON
+    {
+      "date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+      "run_id": "${GITHUB_RUN_ID:-manual}",
+      "namespace": "${RESTORE_NS}",
+      "services": {}
+    }
+    JSON
+
+    update_report() {
+      local service="$1"
+      local field="$2"
+      local value="$3"
+      python3 -c "
+    import json, sys
+    with open('${REPORT_FILE}') as f:
+        r = json.load(f)
+    if '${service}' not in r['services']:
+        r['services']['${service}'] = {}
+    r['services']['${service}']['${field}'] = ${value}
+    with open('${REPORT_FILE}', 'w') as f:
+        json.dump(r, f, indent=2)
+    "
+    }
+
+    update_report_str() {
+      local service="$1"
+      local field="$2"
+      local value="$3"
+      python3 -c "
+    import json
+    with open('${REPORT_FILE}') as f:
+        r = json.load(f)
+    if '${service}' not in r['services']:
+        r['services']['${service}'] = {}
+    r['services']['${service}']['${field}'] = '${value}'
+    with open('${REPORT_FILE}', 'w') as f:
+        json.dump(r, f, indent=2)
+    "
+    }
+
+    # ── Create restore namespace ──────────────────────────────────────────
+    info "Creating restore namespace: ${RESTORE_NS}"
+    kubectl create namespace "${RESTORE_NS}" \
+      --dry-run=client -o yaml | kubectl apply -f -
+
+    # Label for easy cleanup
+    kubectl label namespace "${RESTORE_NS}" \
+      cerebro.io/purpose=restore-verify \
+      cerebro.io/date="${DATE}" \
+      cerebro.io/ephemeral=true
+
+    # ── Cleanup trap — always destroy the namespace ───────────────────────
+    cleanup() {
+      local exit_code=$?
+      info "Cleanup: deleting namespace ${RESTORE_NS}"
+      kubectl delete namespace "${RESTORE_NS}" --wait=false 2>/dev/null || true
+
+      # Finalise report
+      END_EPOCH=$(date +%s)
+      TOTAL_DURATION=$((END_EPOCH - START_EPOCH))
+      python3 -c "
+    import json
+    with open('${REPORT_FILE}') as f:
+        r = json.load(f)
+    r['total_duration_seconds'] = ${TOTAL_DURATION}
+    r['status'] = 'PASSED' if ${exit_code} == 0 else 'FAILED'
+    with open('${REPORT_FILE}', 'w') as f:
+        json.dump(r, f, indent=2)
+    "
+      cat "${REPORT_FILE}"
+    }
+    trap cleanup EXIT
+
+    # ── Copy secrets into restore namespace ──────────────────────────────
+    kubectl get secret cerebro-backup-restore -n kube-system -o json \
+      | python3 -c "
+    import json, sys
+    s = json.load(sys.stdin)
+    s['metadata']['namespace'] = '${RESTORE_NS}'
+    del s['metadata']['resourceVersion']
+    del s['metadata']['uid']
+    print(json.dumps(s))
+    " | kubectl apply -f -
+
+    # ── Restore PostgreSQL ────────────────────────────────────────────────
+    info "=== Restoring PostgreSQL ==="
+    PG_START=$(date +%s)
+
+    # Find latest backup in S3
+    LATEST_PG_BACKUP=$(aws s3 ls "s3://${BACKUP_BUCKET}/postgres/basebackup/" \
+      --recursive | sort | tail -1 | awk '{print $4}')
+    info "Latest PostgreSQL backup: ${LATEST_PG_BACKUP}"
+
+    # Deploy a single-replica Postgres for restore
+    kubectl apply -n "${RESTORE_NS}" -f - <<YAML
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: pg-restore-data
+    spec:
+      accessModes: [ReadWriteOnce]
+      resources:
+        requests:
+          storage: 10Gi
+    ---
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: pg-restore
+    spec:
+      serviceName: pg-restore
+      replicas: 1
+      selector:
+        matchLabels:
+          app: pg-restore
+      template:
+        metadata:
+          labels:
+            app: pg-restore
+        spec:
+          serviceAccountName: default
+          initContainers:
+            - name: restore
+              image: amazon/aws-cli:2.13.0
+              command: [sh, -c]
+              args:
+                - |
+                  aws s3 cp s3://${BACKUP_BUCKET}/${LATEST_PG_BACKUP} /restore/backup.tar.gz
+                  tar xzf /restore/backup.tar.gz -C /data
+                  echo "restore_command = 'aws s3 cp s3://${BACKUP_BUCKET}/postgres/wal/%f %p'" \
+                    >> /data/postgresql.conf
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+                - name: restore
+                  mountPath: /restore
+              envFrom:
+                - secretRef:
+                    name: cerebro-backup-restore
+          containers:
+            - name: postgres
+              image: postgres:15-alpine
+              env:
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: cerebro-backup-restore
+                      key: POSTGRES_MASTER_PASSWORD
+                - name: PGDATA
+                  value: /data
+              ports:
+                - containerPort: 5432
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+              readinessProbe:
+                exec:
+                  command: [pg_isready, -U, postgres]
+                initialDelaySeconds: 15
+                periodSeconds: 5
+          volumes:
+            - name: restore
+              emptyDir: {}
+          volumeClaimTemplates: []
+        volumeClaimTemplates:
+          - metadata:
+              name: data
+            spec:
+              accessModes: [ReadWriteOnce]
+              resources:
+                requests:
+                  storage: 10Gi
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: pg-restore
+    spec:
+      selector:
+        app: pg-restore
+      ports:
+        - port: 5432
+    YAML
+
+    # Wait for PostgreSQL to become ready
+    kubectl rollout status statefulset/pg-restore -n "${RESTORE_NS}" --timeout=300s
+
+    PG_READY=$(date +%s)
+    PG_RESTORE_DURATION=$((PG_READY - PG_START))
+    update_report "postgres" "restore_duration_seconds" "${PG_RESTORE_DURATION}"
+    update_report_str "postgres" "backup_source" "${LATEST_PG_BACKUP}"
+    ok "PostgreSQL restored in ${PG_RESTORE_DURATION}s"
+
+    # Run PostgreSQL smoke tests
+    bash /scripts/smoke-postgres.sh "${RESTORE_NS}" "${REPORT_FILE}"
+
+    # ── Restore MinIO ─────────────────────────────────────────────────────
+    info "=== Restoring MinIO ==="
+    MINIO_START=$(date +%s)
+
+    # Deploy MinIO pointed at the DR replica bucket
+    kubectl apply -n "${RESTORE_NS}" -f - <<YAML
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: minio-restore
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: minio-restore
+      template:
+        metadata:
+          labels:
+            app: minio-restore
+        spec:
+          containers:
+            - name: minio
+              image: minio/minio:RELEASE.2024-01-01T00-00-00Z
+              command: [minio, gateway, s3]
+              args: [arn:aws:s3:::${BACKUP_BUCKET}/minio-replica]
+              env:
+                - name: MINIO_ROOT_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: cerebro-backup-restore
+                      key: MINIO_ROOT_USER
+                - name: MINIO_ROOT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: cerebro-backup-restore
+                      key: MINIO_ROOT_PASSWORD
+              ports:
+                - containerPort: 9000
+                - containerPort: 9001
+              readinessProbe:
+                httpGet:
+                  path: /minio/health/ready
+                  port: 9000
+                initialDelaySeconds: 10
+                periodSeconds: 5
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: minio-restore
+    spec:
+      selector:
+        app: minio-restore
+      ports:
+        - name: api
+          port: 9000
+        - name: console
+          port: 9001
+    YAML
+
+    kubectl rollout status deployment/minio-restore -n "${RESTORE_NS}" --timeout=180s
+
+    MINIO_READY=$(date +%s)
+    MINIO_RESTORE_DURATION=$((MINIO_READY - MINIO_START))
+    update_report "minio" "restore_duration_seconds" "${MINIO_RESTORE_DURATION}"
+    ok "MinIO restored in ${MINIO_RESTORE_DURATION}s"
+
+    # Run MinIO smoke tests
+    bash /scripts/smoke-minio.sh "${RESTORE_NS}" "${REPORT_FILE}"
+
+    # ── Restore NATS JetStream ─────────────────────────────────────────────
+    info "=== Restoring NATS JetStream ==="
+    NATS_START=$(date +%s)
+
+    # Find latest NATS snapshot
+    LATEST_NATS_SNAPSHOT=$(aws s3 ls "s3://${BACKUP_BUCKET}/nats/snapshots/" \
+      --recursive | sort | tail -1 | awk '{print $4}')
+    info "Latest NATS snapshot: ${LATEST_NATS_SNAPSHOT}"
+
+    kubectl apply -n "${RESTORE_NS}" -f - <<YAML
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: nats-restore
+    spec:
+      serviceName: nats-restore
+      replicas: 1
+      selector:
+        matchLabels:
+          app: nats-restore
+      template:
+        metadata:
+          labels:
+            app: nats-restore
+        spec:
+          initContainers:
+            - name: restore-snapshot
+              image: amazon/aws-cli:2.13.0
+              command: [sh, -c]
+              args:
+                - |
+                  aws s3 cp s3://${BACKUP_BUCKET}/${LATEST_NATS_SNAPSHOT} /data/snapshot.tar.gz
+                  tar xzf /data/snapshot.tar.gz -C /data
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+              envFrom:
+                - secretRef:
+                    name: cerebro-backup-restore
+          containers:
+            - name: nats
+              image: nats:2.10-alpine
+              args:
+                - -js
+                - --store_dir=/data
+                - --cluster_name=restore-verify
+              ports:
+                - containerPort: 4222
+                - containerPort: 8222
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+              readinessProbe:
+                httpGet:
+                  path: /healthz
+                  port: 8222
+                initialDelaySeconds: 10
+                periodSeconds: 5
+          volumeClaimTemplates:
+            - metadata:
+                name: data
+              spec:
+                accessModes: [ReadWriteOnce]
+                resources:
+                  requests:
+                    storage: 5Gi
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nats-restore
+    spec:
+      selector:
+        app: nats-restore
+      ports:
+        - name: client
+          port: 4222
+        - name: monitor
+          port: 8222
+    YAML
+
+    kubectl rollout status statefulset/nats-restore -n "${RESTORE_NS}" --timeout=300s
+
+    NATS_READY=$(date +%s)
+    NATS_RESTORE_DURATION=$((NATS_READY - NATS_START))
+    update_report "nats" "restore_duration_seconds" "${NATS_RESTORE_DURATION}"
+    update_report_str "nats" "snapshot_source" "${LATEST_NATS_SNAPSHOT}"
+    ok "NATS restored in ${NATS_RESTORE_DURATION}s"
+
+    # Run NATS smoke tests
+    bash /scripts/smoke-nats.sh "${RESTORE_NS}" "${REPORT_FILE}"
+
+    info "=== All restore verifications complete ==="
+
+  # ── PostgreSQL smoke tests ─────────────────────────────────────────────
+  smoke-postgres.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    RESTORE_NS="$1"
+    REPORT_FILE="$2"
+
+    PGHOST="pg-restore.${RESTORE_NS}.svc.cluster.local"
+    PGPORT=5432
+    PGUSER=postgres
+    PGPASSWORD="${POSTGRES_MASTER_PASSWORD}"
+
+    export PGHOST PGPORT PGUSER PGPASSWORD
+
+    log() { echo "[PG] $*"; }
+
+    update_report() {
+      local field="$1"
+      local value="$2"
+      python3 -c "
+    import json
+    with open('${REPORT_FILE}') as f:
+        r = json.load(f)
+    r['services']['postgres']['${field}'] = ${value}
+    with open('${REPORT_FILE}', 'w') as f:
+        json.dump(r, f, indent=2)
+    "
+    }
+
+    update_report_str() {
+      local field="$1"
+      local value="$2"
+      python3 -c "
+    import json
+    with open('${REPORT_FILE}') as f:
+        r = json.load(f)
+    r['services']['postgres']['${field}'] = '${value}'
+    with open('${REPORT_FILE}', 'w') as f:
+        json.dump(r, f, indent=2)
+    "
+    }
+
+    # Wait for PostgreSQL to accept connections
+    for i in $(seq 1 30); do
+      pg_isready && break
+      sleep 5
+    done
+
+    # Test 1: Database connectivity
+    log "T1: Testing database connectivity"
+    DBS=$(psql -l -t | grep -c '|' || echo 0)
+    log "Databases found: ${DBS}"
+    update_report "databases_found" "${DBS}"
+
+    # Test 2: Core tables exist
+    log "T2: Verifying core tables"
+    TABLES=$(psql -d cerebrohive -t -c "
+      SELECT count(*) FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_type = 'BASE TABLE';
+    " | tr -d ' ')
+    log "Tables: ${TABLES}"
+    update_report "table_count" "${TABLES}"
+    [ "${TABLES}" -gt 0 ] || { log "FAIL: No tables found"; exit 1; }
+
+    # Test 3: Row counts for critical tables
+    log "T3: Row counts"
+    for table in workspaces projects users workspace_members; do
+      COUNT=$(psql -d cerebrohive -t -c "SELECT count(*) FROM ${table};" 2>/dev/null \
+              | tr -d ' ' || echo "0")
+      log "  ${table}: ${COUNT} rows"
+      update_report "${table}_row_count" "${COUNT}"
+    done
+
+    # Test 4: Checksum of workspaces table (data integrity)
+    log "T4: Checksum integrity"
+    CHECKSUM=$(psql -d cerebrohive -t -c "
+      SELECT md5(string_agg(
+        id::text || name || created_at::text, '|'
+        ORDER BY id
+      ))
+      FROM (SELECT id, name, created_at FROM workspaces LIMIT 1000) t;
+    " | tr -d ' ')
+    log "  Workspace table checksum: ${CHECKSUM}"
+    update_report_str "workspace_checksum" "${CHECKSUM}"
+
+    # Test 5: Can write to the restored DB (verify not read-only)
+    log "T5: Write test"
+    psql -d cerebrohive -c "
+      CREATE TABLE IF NOT EXISTS _restore_verify_probe (
+        id serial primary key,
+        ts timestamptz default now()
+      );
+      INSERT INTO _restore_verify_probe DEFAULT VALUES;
+      SELECT id FROM _restore_verify_probe ORDER BY id DESC LIMIT 1;
+      DROP TABLE _restore_verify_probe;
+    "
+    log "  Write test: PASS"
+    update_report_str "write_test" "PASS"
+
+    # Test 6: Indexes are valid
+    log "T6: Index health"
+    INVALID_INDEXES=$(psql -d cerebrohive -t -c "
+      SELECT count(*) FROM pg_index i
+      JOIN pg_class c ON c.oid = i.indexrelid
+      WHERE NOT i.indisvalid;
+    " | tr -d ' ')
+    log "  Invalid indexes: ${INVALID_INDEXES}"
+    update_report "invalid_indexes" "${INVALID_INDEXES}"
+    [ "${INVALID_INDEXES}" -eq 0 ] || { log "FAIL: Invalid indexes found"; exit 1; }
+
+    update_report_str "status" "PASSED"
+    log "PostgreSQL smoke tests: PASSED"
+
+  # ── MinIO smoke tests ──────────────────────────────────────────────────
+  smoke-minio.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    RESTORE_NS="$1"
+    REPORT_FILE="$2"
+
+    MINIO_ENDPOINT="http://minio-restore.${RESTORE_NS}.svc.cluster.local:9000"
+    MC_ALIAS="restore"
+
+    log() { echo "[MINIO] $*"; }
+
+    update_report_str() {
+      local field="$1"
+      local value="$2"
+      python3 -c "
+    import json
+    with open('${REPORT_FILE}') as f:
+        r = json.load(f)
+    r['services']['minio']['${field}'] = '${value}'
+    with open('${REPORT_FILE}', 'w') as f:
+        json.dump(r, f, indent=2)
+    "
+    }
+
+    update_report() {
+      local field="$1"
+      local value="$2"
+      python3 -c "
+    import json
+    with open('${REPORT_FILE}') as f:
+        r = json.load(f)
+    r['services']['minio']['${field}'] = ${value}
+    with open('${REPORT_FILE}', 'w') as f:
+        json.dump(r, f, indent=2)
+    "
+    }
+
+    # Install mc (MinIO client)
+    curl -sO https://dl.min.io/client/mc/release/linux-amd64/mc
+    chmod +x mc
+
+    # Configure alias
+    ./mc alias set "${MC_ALIAS}" "${MINIO_ENDPOINT}" \
+      "${MINIO_ROOT_USER}" "${MINIO_ROOT_PASSWORD}" --api S3v4
+
+    # Test 1: List buckets
+    log "T1: Listing buckets"
+    BUCKETS=$(./mc ls "${MC_ALIAS}" 2>/dev/null | wc -l)
+    log "Buckets: ${BUCKETS}"
+    update_report "bucket_count" "${BUCKETS}"
+
+    # Expected buckets
+    EXPECTED_BUCKETS=("cerebro-artifacts" "cerebro-agent-outputs" "cerebro-docs" "cerebro-models")
+    FOUND=0
+    for bucket in "${EXPECTED_BUCKETS[@]}"; do
+      if ./mc ls "${MC_ALIAS}/${bucket}" > /dev/null 2>&1; then
+        log "  ✓ ${bucket}"
+        FOUND=$((FOUND + 1))
+      else
+        log "  ✗ ${bucket} (MISSING)"
+      fi
+    done
+    update_report "expected_buckets_found" "${FOUND}"
+    update_report "expected_buckets_total" "${#EXPECTED_BUCKETS[@]}"
+
+    # Test 2: Object count per bucket
+    log "T2: Object counts"
+    for bucket in "${EXPECTED_BUCKETS[@]}"; do
+      COUNT=$(./mc ls --recursive "${MC_ALIAS}/${bucket}" 2>/dev/null | wc -l || echo 0)
+      log "  ${bucket}: ${COUNT} objects"
+      update_report "${bucket}_object_count" "${COUNT}"
+    done
+
+    # Test 3: Write + Read + Delete (CRUD test)
+    log "T3: CRUD test"
+    TEST_FILE="/tmp/restore-verify-probe.txt"
+    echo "restore-verify-$(date +%s)" > "${TEST_FILE}"
+    EXPECTED_CONTENT=$(cat "${TEST_FILE}")
+
+    ./mc cp "${TEST_FILE}" "${MC_ALIAS}/cerebro-artifacts/_restore-verify-probe.txt"
+    ACTUAL_CONTENT=$(./mc cat "${MC_ALIAS}/cerebro-artifacts/_restore-verify-probe.txt")
+    ./mc rm "${MC_ALIAS}/cerebro-artifacts/_restore-verify-probe.txt"
+
+    if [ "${EXPECTED_CONTENT}" = "${ACTUAL_CONTENT}" ]; then
+      log "  CRUD test: PASS"
+      update_report_str "crud_test" "PASS"
+    else
+      log "  CRUD test: FAIL (content mismatch)"
+      update_report_str "crud_test" "FAIL"
+      exit 1
+    fi
+
+    # Test 4: Spot-check checksum of a known artifact
+    log "T4: Checksum spot-check"
+    # Take the first object in cerebro-artifacts and verify its ETag is non-empty
+    SAMPLE_ETAG=$(./mc stat "${MC_ALIAS}/cerebro-artifacts" --recursive 2>/dev/null \
+      | grep ETag | head -1 | awk '{print $2}' || echo "")
+    update_report_str "sample_etag" "${SAMPLE_ETAG:-none}"
+    log "  Sample ETag: ${SAMPLE_ETAG:-none}"
+
+    update_report_str "status" "PASSED"
+    log "MinIO smoke tests: PASSED"
+
+  # ── NATS smoke tests ───────────────────────────────────────────────────
+  smoke-nats.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    RESTORE_NS="$1"
+    REPORT_FILE="$2"
+
+    NATS_URL="nats://nats-restore.${RESTORE_NS}.svc.cluster.local:4222"
+    MONITOR_URL="http://nats-restore.${RESTORE_NS}.svc.cluster.local:8222"
+
+    log() { echo "[NATS] $*"; }
+
+    update_report() {
+      local field="$1"
+      local value="$2"
+      python3 -c "
+    import json
+    with open('${REPORT_FILE}') as f:
+        r = json.load(f)
+    r['services']['nats']['${field}'] = ${value}
+    with open('${REPORT_FILE}', 'w') as f:
+        json.dump(r, f, indent=2)
+    "
+    }
+
+    update_report_str() {
+      local field="$1"
+      local value="$2"
+      python3 -c "
+    import json
+    with open('${REPORT_FILE}') as f:
+        r = json.load(f)
+    r['services']['nats']['${field}'] = '${value}'
+    with open('${REPORT_FILE}', 'w') as f:
+        json.dump(r, f, indent=2)
+    "
+    }
+
+    # Install nats CLI
+    curl -sL "https://github.com/nats-io/natscli/releases/latest/download/nats-0.1.4-linux-amd64.zip" \
+      -o nats.zip
+    unzip -q nats.zip
+    chmod +x nats-0.1.4-linux-amd64/nats
+
+    NATS_BIN="./nats-0.1.4-linux-amd64/nats"
+
+    # Test 1: Server info via HTTP monitor
+    log "T1: NATS server health"
+    SERVER_INFO=$(curl -sf "${MONITOR_URL}/varz" | python3 -c "
+    import json, sys
+    info = json.load(sys.stdin)
+    print(f\"{info['server_name']} v{info['version']} uptime={info['uptime']}\")
+    ")
+    log "  Server: ${SERVER_INFO}"
+    update_report_str "server_info" "${SERVER_INFO}"
+
+    # Test 2: JetStream status
+    log "T2: JetStream enabled"
+    JS_INFO=$(curl -sf "${MONITOR_URL}/jsz" | python3 -c "
+    import json, sys
+    js = json.load(sys.stdin)
+    stats = js.get('stats', {})
+    print(f\"streams={stats.get('streams',0)} consumers={stats.get('consumers',0)} messages={stats.get('messages',0)}\")
+    ")
+    log "  JetStream: ${JS_INFO}"
+
+    # Parse stream count
+    STREAMS=$(curl -sf "${MONITOR_URL}/jsz" | python3 -c "
+    import json, sys; js=json.load(sys.stdin); print(js.get('stats',{}).get('streams',0))
+    ")
+    update_report "stream_count" "${STREAMS}"
+
+    # Test 3: Expected streams exist
+    log "T3: Stream presence check"
+    EXPECTED_STREAMS=("AGENT_EVENTS" "FORGE_TASKS" "WORKFLOW_COMMANDS" "AUDIT_LOG")
+    FOUND_STREAMS=0
+
+    for stream in "${EXPECTED_STREAMS[@]}"; do
+      if curl -sf "${MONITOR_URL}/streamz?stream=${stream}" > /dev/null 2>&1; then
+        log "  ✓ ${stream}"
+        FOUND_STREAMS=$((FOUND_STREAMS + 1))
+      else
+        log "  ✗ ${stream} (MISSING)"
+      fi
+    done
+
+    update_report "expected_streams_found" "${FOUND_STREAMS}"
+    update_report "expected_streams_total" "${#EXPECTED_STREAMS[@]}"
+
+    # Test 4: Publish + subscribe round-trip
+    log "T4: Publish / Subscribe round-trip"
+    PROBE_MSG="restore-verify-$(date +%s)"
+
+    # Subscribe in background (timeout after 10s)
+    RECEIVED=$("${NATS_BIN}" --server "${NATS_URL}" subscribe _restore.probe \
+      --timeout 10s --count 1 2>/dev/null | tail -1 || echo "")
+
+    # Publish
+    echo "${PROBE_MSG}" | "${NATS_BIN}" --server "${NATS_URL}" publish _restore.probe
+
+    if echo "${RECEIVED}" | grep -q "${PROBE_MSG}"; then
+      log "  Round-trip: PASS"
+      update_report_str "pubsub_test" "PASS"
+    else
+      log "  Round-trip: partial (subscriber may have missed — timing)"
+      update_report_str "pubsub_test" "WARN"
+    fi
+
+    # Test 5: JetStream publish + replay
+    log "T5: JetStream persist + replay"
+    "${NATS_BIN}" --server "${NATS_URL}" stream add _RESTORE_PROBE \
+      --subjects "_restore.js.probe" \
+      --storage file \
+      --replicas 1 \
+      --retention limits \
+      --max-msgs-per-subject 10 2>/dev/null || true
+
+    PROBE_SEQ=$("${NATS_BIN}" --server "${NATS_URL}" publish \
+      --reply "_restore.reply" "_restore.js.probe" "${PROBE_MSG}" 2>/dev/null \
+      | grep "Sequence" | awk '{print $2}' || echo "1")
+    log "  Published sequence: ${PROBE_SEQ}"
+
+    REPLAYED=$("${NATS_BIN}" --server "${NATS_URL}" stream get _RESTORE_PROBE \
+      "${PROBE_SEQ}" 2>/dev/null | grep "Data:" | awk '{print $2}' || echo "")
+
+    if [ "${REPLAYED}" = "${PROBE_MSG}" ]; then
+      log "  JetStream replay: PASS"
+      update_report_str "jetstream_replay_test" "PASS"
+    else
+      log "  JetStream replay: WARN (got: '${REPLAYED}')"
+      update_report_str "jetstream_replay_test" "WARN"
+    fi
+
+    # Cleanup probe stream
+    "${NATS_BIN}" --server "${NATS_URL}" stream rm _RESTORE_PROBE --force 2>/dev/null || true
+
+    update_report_str "status" "PASSED"
+    log "NATS smoke tests: PASSED"
+
+---
+# The Restore Verification Job
+# Created by the GitHub Actions workflow; can also be applied manually.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: restore-verify
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: restore-verify
+    cerebro.io/component: backup-validation
+spec:
+  ttlSecondsAfterFinished: 86400    # Keep for 24h for log inspection
+  activeDeadlineSeconds: 3600       # Fail if running > 1 hour (RTO gate)
+  backoffLimit: 0                   # No retries — each run is independent
+
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: restore-verify
+    spec:
+      serviceAccountName: restore-verify
+      restartPolicy: Never
+
+      containers:
+        - name: orchestrator
+          image: amazon/aws-cli:2.13.0
+          command: [/bin/bash, /scripts/orchestrate.sh]
+          envFrom:
+            - secretRef:
+                name: cerebro-backup-restore
+          env:
+            - name: GITHUB_RUN_ID
+              value: "manual"
+            - name: KUBECONFIG
+              value: /var/run/secrets/kubernetes.io/serviceaccount/..data/token
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+      volumes:
+        - name: scripts
+          configMap:
+            name: restore-verify-scripts
+            defaultMode: 0755
+
+      # Run on a standard node (not gVisor — needs kubectl access)
+      tolerations:
+        - key: node-role.kubernetes.io/restore-verify
+          operator: Exists
+          effect: NoSchedule

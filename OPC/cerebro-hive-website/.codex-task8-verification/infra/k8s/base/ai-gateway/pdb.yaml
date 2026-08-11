@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ai-gateway
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: ai-gateway
+    app.kubernetes.io/component: ai-gateway
+spec:
+  # Always keep at least 1 pod — streaming sessions need a target
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ai-gateway
+      app.kubernetes.io/component: ai-gateway

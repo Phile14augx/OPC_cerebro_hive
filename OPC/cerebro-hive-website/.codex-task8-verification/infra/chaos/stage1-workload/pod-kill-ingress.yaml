@@ -1,0 +1,60 @@
+# Stage 1 — Workload Chaos: Ingress controller pod kill
+#
+# Hypothesis: killing one ingress-nginx controller pod causes <10s of failed
+# external requests while a replacement is scheduled. All synthetic probes
+# detect the outage and alert fires within 1 minute.
+#
+# Steady state:
+#   - probe_success{service="platform-api"} == 1
+#   - probe_success{service="studio"} == 1
+#   - no ALERTS firing for any cerebro-* service
+#
+# Expected outcome:
+#   - External traffic to that node's ingress fails immediately
+#   - AWS NLB health checks remove the node within ~10s
+#   - probe_success drops to 0 briefly (detects the gap)
+#   - CerebroProbeDown alert fires within 1 minute
+#   - Recovery after NLB failover + pod reschedule (~30s total)
+#
+# This experiment validates: NLB failover, ingress HA config, probe sensitivity
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: ingress-controller-pod-kill
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage1-workload
+    service: ingress
+    blast-radius: high    # all external traffic routes through ingress
+spec:
+  action: pod-kill
+  mode: one
+  selector:
+    namespaces:
+      - ingress-nginx
+    labelSelectors:
+      "app.kubernetes.io/name": "ingress-nginx"
+  gracePeriod: 0
+  duration: "2m"
+
+---
+# Pod-failure variant (pause container — does not restart, simulates hung process)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: ingress-controller-pod-failure
+  namespace: cerebro-chaos
+  labels:
+    experiment: stage1-workload-failure
+    service: ingress
+    blast-radius: high
+spec:
+  action: pod-failure
+  mode: one
+  selector:
+    namespaces:
+      - ingress-nginx
+    labelSelectors:
+      "app.kubernetes.io/name": "ingress-nginx"
+  duration: "2m"   # pod remains in failed state for 2 min, then Chaos Mesh reverts

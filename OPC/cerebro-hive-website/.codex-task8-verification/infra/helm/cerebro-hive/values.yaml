@@ -1,0 +1,426 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive Helm Chart — Default Values (production)
+# ──────────────────────────────────────────────────────────────────────────────
+
+global:
+  imageRegistry: ghcr.io
+  imageOrg: cerebrohive
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+  environment: production
+  domain: cerebrohive.com
+  tls:
+    enabled: true
+    certManager: true
+    issuer: letsencrypt-prod
+
+  # Shared labels applied to all resources
+  commonLabels:
+    app.kubernetes.io/part-of: cerebro-hive
+    app.kubernetes.io/managed-by: Helm
+
+  # Resource policy (override per-service)
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Services
+# ──────────────────────────────────────────────────────────────────────────────
+
+studio:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/studio
+    tag: ""          # set at deploy time
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 3000
+  env:
+    NODE_ENV: production
+    NEXT_TELEMETRY_DISABLED: "1"
+    PORT: "3000"
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  ingress:
+    enabled: true
+    host: app.cerebrohive.com
+    path: /
+  probes:
+    liveness:  { path: /api/health, initialDelaySeconds: 30 }
+    readiness: { path: /api/health, initialDelaySeconds: 10 }
+
+forge:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/forge
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 3001
+  resources:
+    requests: { cpu: "200m", memory: "256Mi" }
+    limits:   { cpu: "1000m", memory: "1Gi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 70
+  ingress:
+    enabled: true
+    host: forge.cerebrohive.com
+    path: /
+  probes:
+    liveness:  { path: /api/health, initialDelaySeconds: 30 }
+    readiness: { path: /api/health, initialDelaySeconds: 10 }
+
+platformApi:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/platform-api
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 4000
+  resources:
+    requests: { cpu: "200m", memory: "256Mi" }
+    limits:   { cpu: "500m", memory: "512Mi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 75
+  ingress:
+    enabled: true
+    host: api.cerebrohive.com
+    path: /
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 20 }
+    readiness: { path: /health, initialDelaySeconds: 10 }
+
+forgeApi:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/forge-api
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 4005
+  resources:
+    requests: { cpu: "200m", memory: "256Mi" }
+    limits:   { cpu: "1000m", memory: "512Mi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 75
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 20 }
+    readiness: { path: /health, initialDelaySeconds: 10 }
+
+aiGateway:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/ai-gateway
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 3
+  port: 8080
+  resources:
+    requests: { cpu: "200m", memory: "256Mi" }
+    limits:   { cpu: "2000m", memory: "1Gi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 20
+    targetCPUUtilizationPercentage: 60
+  ingress:
+    enabled: true
+    host: gateway.cerebrohive.com
+    path: /
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 15 }
+    readiness: { path: /health/ready, initialDelaySeconds: 5 }
+
+swarmApi:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/swarm-api
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8910
+  resources:
+    requests: { cpu: "100m", memory: "64Mi" }
+    limits:   { cpu: "500m", memory: "256Mi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 10 }
+    readiness: { path: /health, initialDelaySeconds: 5 }
+
+swarmRuntime:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/swarm-runtime
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 3
+  port: 8911
+  resources:
+    requests: { cpu: "200m", memory: "128Mi" }
+    limits:   { cpu: "1000m", memory: "512Mi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 30
+    targetCPUUtilizationPercentage: 65
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 10 }
+    readiness: { path: /health, initialDelaySeconds: 5 }
+
+agentRunner:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/agent-runner
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 3
+  port: 8960
+  resources:
+    requests: { cpu: "200m", memory: "256Mi" }
+    limits:   { cpu: "2000m", memory: "2Gi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 50
+    targetCPUUtilizationPercentage: 60
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 20 }
+    readiness: { path: /health, initialDelaySeconds: 10 }
+
+plannerService:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/planner-service
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8920
+  resources:
+    requests: { cpu: "200m", memory: "512Mi" }
+    limits:   { cpu: "2000m", memory: "4Gi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 65
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 30 }
+    readiness: { path: /health, initialDelaySeconds: 15 }
+
+memoryService:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/memory-service
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8930
+  resources:
+    requests: { cpu: "100m", memory: "128Mi" }
+    limits:   { cpu: "500m", memory: "512Mi" }
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 10 }
+    readiness: { path: /health, initialDelaySeconds: 5 }
+
+toolGateway:
+  enabled: true
+  image:
+    repository: ghcr.io/cerebrohive/cerebro-hive/tool-gateway
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8940
+  resources:
+    requests: { cpu: "100m", memory: "64Mi" }
+    limits:   { cpu: "500m", memory: "256Mi" }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+  ingress:
+    enabled: false
+  probes:
+    liveness:  { path: /health, initialDelaySeconds: 10 }
+    readiness: { path: /health, initialDelaySeconds: 5 }
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Infrastructure dependencies
+# ──────────────────────────────────────────────────────────────────────────────
+
+postgresql:
+  enabled: false    # Use managed RDS in production
+  auth:
+    postgresPassword: ""
+    database: cerebrohive
+  primary:
+    persistence:
+      size: 100Gi
+
+redis:
+  enabled: false    # Use managed ElastiCache in production
+  auth:
+    enabled: true
+    password: ""
+  master:
+    persistence:
+      size: 10Gi
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Shared secrets (mounted from K8s Secret)
+# ──────────────────────────────────────────────────────────────────────────────
+
+secrets:
+  # Name of the pre-existing K8s Secret containing all credentials
+  # Create with: kubectl create secret generic cerebro-hive-secrets --from-env-file=.env
+  existingSecret: "cerebro-hive-secrets"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Network policy
+# ──────────────────────────────────────────────────────────────────────────────
+
+networkPolicy:
+  enabled: true
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Pod Disruption Budgets
+# ──────────────────────────────────────────────────────────────────────────────
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ServiceAccount
+# ──────────────────────────────────────────────────────────────────────────────
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: "cerebro-hive"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Observability — Prometheus + Grafana
+# ──────────────────────────────────────────────────────────────────────────────
+
+prometheus:
+  enabled: true
+  # kube-prometheus-stack is the recommended operator-based install
+  # Set to false to use a standalone Prometheus instead
+  useOperator: true
+  retention: "15d"
+  storageSize: "50Gi"
+  # ServiceMonitor selectors — auto-discovers all CerebroHive services
+  serviceMonitorSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: cerebro-hive
+  resources:
+    requests: { cpu: "200m", memory: "512Mi" }
+    limits:   { cpu: "1000m", memory: "2Gi" }
+  ingress:
+    enabled: false   # Internal only — access via kubectl port-forward or Grafana
+
+grafana:
+  enabled: true
+  adminPassword: ""   # Set via secret: cerebro-hive-secrets key grafana-admin-password
+  existingSecret: "cerebro-hive-secrets"
+  adminPasswordKey: "grafana-admin-password"
+  replicas: 1
+  persistence:
+    enabled: true
+    size: "10Gi"
+  resources:
+    requests: { cpu: "100m", memory: "256Mi" }
+    limits:   { cpu: "500m", memory: "512Mi" }
+  ingress:
+    enabled: true
+    host: grafana.cerebrohive.com
+    path: /
+  # Pre-provisioned datasources
+  datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-operated:9090
+      isDefault: true
+    - name: Loki
+      type: loki
+      url: http://loki:3100
+  # Pre-provisioned dashboard folders
+  dashboards:
+    cerebro-hive:
+      swarm-overview:    { url: "https://grafana.com/api/dashboards/12345/revisions/1/download" }
+      k8s-cluster:       { gnetId: 15661, revision: 1, datasource: Prometheus }
+      node-exporter:     { gnetId: 1860,  revision: 37, datasource: Prometheus }
+      nextjs-metrics:    { gnetId: 13659, revision: 1, datasource: Prometheus }
+
+alertmanager:
+  enabled: true
+  config:
+    global:
+      resolve_timeout: 5m
+    receivers:
+      - name: "null"
+      - name: slack-alerts
+        slack_configs:
+          - channel: "#cerebro-alerts"
+            send_resolved: true
+            title: '{{ .GroupLabels.alertname }}'
+            text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    route:
+      group_by: ["alertname", "cluster", "service"]
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: slack-alerts
+      routes:
+        - match: { severity: critical }
+          receiver: slack-alerts
+          repeat_interval: 1h

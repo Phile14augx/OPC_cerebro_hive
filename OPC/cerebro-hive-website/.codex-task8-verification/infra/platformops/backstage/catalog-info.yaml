@@ -1,0 +1,278 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# PlatformOps — Backstage IDP Catalog
+# Defines all CerebroHive components, APIs, systems, and teams.
+# Register via: https://backstage.cerebrohive.com/catalog/import
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ── System definition ─────────────────────────────────────────────────────────
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cerebro-hive
+  title: CerebroHive Enterprise AI Platform
+  description: >
+    CerebroHive is an enterprise AI platform providing workflow orchestration,
+    multi-provider LLM routing, knowledge management, and AI agent coordination.
+  tags: [ai-platform, enterprise, production]
+  links:
+    - url: https://cerebrohive.com
+      title: Product Site
+    - url: https://grafana.cerebrohive.com
+      title: Observability Dashboards
+    - url: https://argocd.cerebrohive.com
+      title: ArgoCD
+spec:
+  owner: platform-team
+  domain: ai-platform
+
+---
+# ── Components ────────────────────────────────────────────────────────────────
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cerebro-studio
+  title: CerebroHive Studio
+  description: "Main end-user UI — Next.js 15 App Router"
+  tags: [frontend, nextjs, typescript]
+  annotations:
+    github.com/project-slug: cerebrohive/cerebro-hive
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/kubernetes-label-selector: "app.kubernetes.io/name=studio"
+    grafana/dashboard-selector: "cerebro-hive-platform"
+    prometheus.io/alert: "StudioAvailabilitySLO"
+  links:
+    - url: https://app.cerebrohive.com
+      title: Production URL
+    - url: https://staging.cerebrohive.com
+      title: Staging URL
+spec:
+  type: website
+  lifecycle: production
+  owner: frontend-team
+  system: cerebro-hive
+  dependsOn:
+    - component:platform-api
+    - resource:cerebro-hive-db
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cerebro-forge
+  title: CerebroHive Forge
+  description: "Workflow builder UI — drag-and-drop AI workflow editor"
+  tags: [frontend, nextjs, workflow]
+  annotations:
+    github.com/project-slug: cerebrohive/cerebro-hive
+    backstage.io/kubernetes-label-selector: "app.kubernetes.io/name=forge"
+spec:
+  type: website
+  lifecycle: production
+  owner: frontend-team
+  system: cerebro-hive
+  dependsOn:
+    - component:platform-api
+    - component:forge-api
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: platform-api
+  title: Platform API
+  description: "Core REST API — authentication, organizations, billing, user management"
+  tags: [backend, nodejs, typescript, rest]
+  annotations:
+    github.com/project-slug: cerebrohive/cerebro-hive
+    backstage.io/kubernetes-label-selector: "app.kubernetes.io/name=platform-api"
+    backstage.io/techdocs-ref: dir:apps/platform-api
+    sentry.io/project-slug: platform-api
+  links:
+    - url: https://api.cerebrohive.com/docs
+      title: OpenAPI Docs
+spec:
+  type: service
+  lifecycle: production
+  owner: backend-team
+  system: cerebro-hive
+  providesApis:
+    - platform-rest-api
+  dependsOn:
+    - resource:cerebro-hive-db
+    - resource:cerebro-hive-redis
+    - component:ai-gateway
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: forge-api
+  title: Forge API
+  description: "AI workflow orchestration engine — NestJS, Temporal, NATS"
+  tags: [backend, nestjs, ai, orchestration]
+  annotations:
+    github.com/project-slug: cerebrohive/cerebro-hive
+    backstage.io/kubernetes-label-selector: "app.kubernetes.io/name=forge-api"
+spec:
+  type: service
+  lifecycle: production
+  owner: ai-team
+  system: cerebro-hive
+  dependsOn:
+    - component:ai-gateway
+    - component:platform-api
+    - resource:cerebro-hive-db
+    - resource:nats-jetstream
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ai-gateway
+  title: AI Gateway
+  description: "Multi-provider LLM router with circuit breaker, rate limiting, caching, and cost tracking"
+  tags: [backend, llm, gateway, ai]
+  annotations:
+    github.com/project-slug: cerebrohive/cerebro-hive
+    backstage.io/kubernetes-label-selector: "app.kubernetes.io/name=ai-gateway"
+    grafana/dashboard-selector: "cerebro-ai-costs"
+spec:
+  type: service
+  lifecycle: production
+  owner: ai-team
+  system: cerebro-hive
+  providesApis:
+    - ai-gateway-api
+  dependsOn:
+    - resource:cerebro-hive-redis
+
+---
+# ── APIs ──────────────────────────────────────────────────────────────────────
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: platform-rest-api
+  title: Platform REST API
+  description: "OpenAPI 3.1 specification for the CerebroHive Platform API"
+spec:
+  type: openapi
+  lifecycle: production
+  owner: backend-team
+  system: cerebro-hive
+  definition:
+    $text: https://api.cerebrohive.com/openapi.json
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ai-gateway-api
+  title: AI Gateway API
+  description: "OpenAI-compatible chat completion API with multi-provider routing"
+spec:
+  type: openapi
+  lifecycle: production
+  owner: ai-team
+  system: cerebro-hive
+  definition:
+    $text: https://ai.cerebrohive.com/openapi.json
+
+---
+# ── Resources ─────────────────────────────────────────────────────────────────
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: cerebro-hive-db
+  title: CerebroHive PostgreSQL Database
+  description: "PostgreSQL 16 + pgvector on Amazon RDS Multi-AZ"
+  tags: [database, postgresql, aws-rds]
+spec:
+  type: database
+  lifecycle: production
+  owner: platform-team
+  system: cerebro-hive
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: cerebro-hive-redis
+  title: CerebroHive Redis Cache
+  description: "ElastiCache Redis 7 — session cache, AI response cache, rate limiting"
+  tags: [cache, redis, aws]
+spec:
+  type: database
+  lifecycle: production
+  owner: platform-team
+  system: cerebro-hive
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: nats-jetstream
+  title: NATS JetStream
+  description: "Message streaming for workflow events and agent coordination"
+  tags: [messaging, nats]
+spec:
+  type: messaging
+  lifecycle: production
+  owner: platform-team
+  system: cerebro-hive
+
+---
+# ── Groups ────────────────────────────────────────────────────────────────────
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-team
+  title: Platform Team
+  description: "Owns infrastructure, observability, and core platform services"
+spec:
+  type: team
+  profile:
+    email: platform@cerebrohive.com
+    slack: "#platform-engineering"
+  members: []
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: ai-team
+  title: AI Team
+  description: "Owns AI gateway, agent framework, and LLMOps"
+spec:
+  type: team
+  profile:
+    email: ai@cerebrohive.com
+    slack: "#ai-engineering"
+  members: []
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: frontend-team
+  title: Frontend Team
+  description: "Owns Studio and Forge UIs"
+spec:
+  type: team
+  profile:
+    email: frontend@cerebrohive.com
+    slack: "#frontend"
+  members: []
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: backend-team
+  title: Backend Team
+  description: "Owns Platform API and data layer"
+spec:
+  type: team
+  profile:
+    email: backend@cerebrohive.com
+    slack: "#backend"
+  members: []

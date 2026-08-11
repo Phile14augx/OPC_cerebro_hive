@@ -1,0 +1,155 @@
+# Blackbox Exporter Configuration — CerebroHive Synthetic Monitoring
+# Probes defined here are referenced by ServiceMonitor / ProbeList resources.
+# Deploy via: prometheus-community/prometheus-blackbox-exporter Helm chart.
+#
+# Probe targets (defined in k8s-probes.yaml):
+#   - platform API health
+#   - studio web app
+#   - forge-api health
+#   - AI gateway inference endpoint
+#   - authentication flow
+#   - vector search endpoint
+#   - webhook endpoint
+
+modules:
+
+  # ── HTTP 200 check (basic liveness) ─────────────────────────────────────────
+  http_2xx:
+    prober: http
+    timeout: 10s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200, 201, 204]
+      method: GET
+      follow_redirects: true
+      fail_if_ssl: false
+      fail_if_not_ssl: false
+      tls_config:
+        insecure_skip_verify: false
+      preferred_ip_protocol: "ip4"
+
+  # ── HTTPS-only check ─────────────────────────────────────────────────────────
+  https_2xx:
+    prober: http
+    timeout: 10s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200, 201, 204]
+      method: GET
+      follow_redirects: true
+      fail_if_not_ssl: true
+      tls_config:
+        insecure_skip_verify: false
+      preferred_ip_protocol: "ip4"
+
+  # ── TLS certificate expiry check ─────────────────────────────────────────────
+  tls_cert_expiry:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      tls: true
+      tls_config:
+        insecure_skip_verify: false
+
+  # ── POST with JSON body (API / inference endpoint) ───────────────────────────
+  http_post_inference:
+    prober: http
+    timeout: 30s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer ${PROBE_API_KEY}"
+      body: |
+        {
+          "model": "claude-haiku-4-5-20251001",
+          "messages": [{"role": "user", "content": "ping"}],
+          "max_tokens": 8
+        }
+      fail_if_body_not_matches_regexp:
+        - "content|choices|text"
+      preferred_ip_protocol: "ip4"
+
+  # ── POST with JSON body (agent execution probe) ──────────────────────────────
+  http_post_agent:
+    prober: http
+    timeout: 60s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200, 201, 202]
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer ${PROBE_API_KEY}"
+      body: |
+        {
+          "name": "__synthetic_probe__",
+          "description": "Synthetic monitoring probe — ignore",
+          "workspace_id": "${PROBE_WORKSPACE_ID}"
+        }
+      preferred_ip_protocol: "ip4"
+
+  # ── GET with auth (authenticated endpoint) ───────────────────────────────────
+  http_get_authenticated:
+    prober: http
+    timeout: 15s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        Authorization: "Bearer ${PROBE_API_KEY}"
+      follow_redirects: true
+      fail_if_not_ssl: false
+      preferred_ip_protocol: "ip4"
+
+  # ── Vector search probe ──────────────────────────────────────────────────────
+  http_post_vector_search:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer ${PROBE_API_KEY}"
+      body: |
+        {
+          "query": "synthetic monitoring probe",
+          "collection": "knowledge",
+          "limit": 1
+        }
+      fail_if_body_not_matches_regexp:
+        - "results|hits|matches"
+      preferred_ip_protocol: "ip4"
+
+  # ── DNS resolution check ──────────────────────────────────────────────────────
+  dns_cerebro:
+    prober: dns
+    timeout: 5s
+    dns:
+      transport_protocol: "udp"
+      preferred_ip_protocol: "ip4"
+      query_name: "api.cerebrohive.com"
+      query_type: "A"
+      validate_answer_rrs:
+        fail_if_none_matches:
+          - ".*"
+
+  # ── TCP port check ────────────────────────────────────────────────────────────
+  tcp_connect:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: "ip4"
+
+  # ── ICMP ping ────────────────────────────────────────────────────────────────
+  icmp:
+    prober: icmp
+    timeout: 5s
+    icmp:
+      preferred_ip_protocol: "ip4"
+      payload_size: 0

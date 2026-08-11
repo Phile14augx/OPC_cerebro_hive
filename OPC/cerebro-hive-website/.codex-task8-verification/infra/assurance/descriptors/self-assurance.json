@@ -1,0 +1,122 @@
+{
+  "$schema": "../schema/descriptor-v1.json",
+  "domain": "self-assurance",
+  "description": "Controls that verify the assurance platform itself. A platform that cannot prove its own integrity cannot credibly prove anything else.",
+  "controls": [
+    {
+      "id": "SLF-1",
+      "name": "Descriptor Schema Validation",
+      "description": "Every control descriptor in infra/assurance/descriptors/ must validate against descriptor-v1.json. A descriptor with a typo, missing required field, or invalid lifecycle value must be caught before it silently produces invalid evidence.",
+      "lifecycle": "Proven",
+      "cec_weight": 2,
+      "dependsOn": [],
+      "runner": {
+        "type": "node-script",
+        "script": "tools/assurance/runner.mjs",
+        "args": ["--self-test", "descriptor-validation"],
+        "minimumEvidenceKind": "unit-test",
+        "timeout_ms": 10000
+      },
+      "breakTest": {
+        "type": "descriptor-mutation",
+        "description": "Inject an invalid lifecycle value ('Imaginary') into one descriptor → validation must fail",
+        "expectedFailurePattern": "invalid lifecycle|schema validation failed"
+      },
+      "automation": ".github/workflows/assurance-pr.yml",
+      "adrs": [],
+      "slo_link": null
+    },
+    {
+      "id": "SLF-2",
+      "name": "Evidence Schema Validation",
+      "description": "Every evidence entry produced by register-evidence.sh or runner.mjs must validate against evidence-v2.json. A schema violation in a production evidence entry is a tamper indicator.",
+      "lifecycle": "Proven",
+      "cec_weight": 2,
+      "dependsOn": ["SLF-1"],
+      "runner": {
+        "type": "node-script",
+        "script": "tools/assurance/runner.mjs",
+        "args": ["--self-test", "evidence-schema-validation"],
+        "minimumEvidenceKind": "unit-test",
+        "timeout_ms": 10000
+      },
+      "breakTest": {
+        "type": "schema-mutation",
+        "description": "Inject a missing required field into a synthetic evidence entry → schema validator must reject it",
+        "expectedFailurePattern": "required property|schema validation failed"
+      },
+      "automation": ".github/workflows/assurance-pr.yml",
+      "adrs": [],
+      "slo_link": null
+    },
+    {
+      "id": "SLF-3",
+      "name": "Runner Determinism",
+      "description": "Running the gate runner twice against the same commit and descriptor set must produce identical currentHash values for all PROVEN controls. Non-deterministic evidence cannot be used as audit proof.",
+      "lifecycle": "Implemented",
+      "cec_weight": 2,
+      "dependsOn": ["SLF-1", "SLF-2"],
+      "runner": {
+        "type": "node-script",
+        "script": "tools/assurance/runner.mjs",
+        "args": ["--self-test", "determinism"],
+        "minimumEvidenceKind": "unit-test",
+        "timeout_ms": 30000
+      },
+      "breakTest": {
+        "type": "timestamp-injection",
+        "description": "Inject a random salt into the hash input → two runs must produce different hashes, proving the determinism check is real",
+        "expectedFailurePattern": "hashes differ|non-deterministic"
+      },
+      "automation": ".github/workflows/assurance-pr.yml",
+      "adrs": [],
+      "slo_link": null
+    },
+    {
+      "id": "SLF-4",
+      "name": "Hash Chain Integrity",
+      "description": "Verify that every evidence entry's previousHash matches the currentHash of its predecessor. A broken chain is a tamper indicator. This control runs on the full evidence history, not just the latest entry.",
+      "lifecycle": "Implemented",
+      "cec_weight": 3,
+      "dependsOn": ["SLF-2"],
+      "runner": {
+        "type": "node-script",
+        "script": "tools/assurance/runner.mjs",
+        "args": ["--self-test", "hash-chain-integrity"],
+        "minimumEvidenceKind": "unit-test",
+        "timeout_ms": 10000
+      },
+      "breakTest": {
+        "type": "hash-mutation",
+        "description": "Modify the currentHash of a historical entry → chain verification must report BROKEN_CHAIN at the tampered entry",
+        "expectedFailurePattern": "BROKEN_CHAIN|chain integrity violation"
+      },
+      "automation": ".github/workflows/assurance-pr.yml",
+      "adrs": [],
+      "slo_link": null
+    },
+    {
+      "id": "SLF-5",
+      "name": "CEC Computation Determinism",
+      "description": "The CEC score computed from a fixed evidence set must be identical on every run. The score is deterministic arithmetic — any variance indicates a bug in the computation or non-deterministic evidence loading.",
+      "lifecycle": "Implemented",
+      "cec_weight": 1,
+      "dependsOn": ["SLF-3", "SLF-4"],
+      "runner": {
+        "type": "node-script",
+        "script": "tools/assurance/runner.mjs",
+        "args": ["--self-test", "cec-determinism"],
+        "minimumEvidenceKind": "unit-test",
+        "timeout_ms": 10000
+      },
+      "breakTest": {
+        "type": "weight-mutation",
+        "description": "Change one control's cec_weight mid-computation → recomputed score must differ, proving the determinism check catches the change",
+        "expectedFailurePattern": "CEC variance|non-deterministic score"
+      },
+      "automation": ".github/workflows/assurance-pr.yml",
+      "adrs": [],
+      "slo_link": null
+    }
+  ]
+}

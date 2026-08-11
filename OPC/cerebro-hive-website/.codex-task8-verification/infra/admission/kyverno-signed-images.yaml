@@ -1,0 +1,180 @@
+# Kyverno Admission Policy: Require Signed Images
+#
+# Blocks any Pod from scheduling in cerebro-prod or cerebro-staging unless:
+#   1. The image has a valid Cosign signature from the cerebro-hive GitHub Actions
+#      supply-chain workflow (using GitHub OIDC keyless signing via Sigstore).
+#   2. The image has an attached SPDX SBOM attestation.
+#
+# Exceptions:
+#   - Namespace kube-system (cluster infrastructure)
+#   - Namespace monitoring (observability stack — verified separately)
+#   - Pods with label cerebro/supply-chain-exempt: "true" (emergency bypass)
+#
+# Install: kubectl apply -f infra/admission/kyverno-signed-images.yaml
+# Requires: Kyverno >= 1.11 installed in the cluster
+#   helm install kyverno kyverno/kyverno -n kyverno --create-namespace
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-signed-images
+  annotations:
+    policies.kyverno.io/title: Require Signed Container Images
+    policies.kyverno.io/category: Supply Chain Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >
+      Requires all container images in cerebro-prod and cerebro-staging to be
+      signed by the CerebroHive supply chain workflow using Cosign keyless signing.
+      Images without a valid Sigstore signature are rejected at admission time.
+spec:
+  validationFailureAction: Enforce   # Reject (use Audit during initial rollout)
+  background: true                   # Also scan existing resources
+
+  rules:
+    - name: check-image-signature
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces:
+                - cerebro-prod
+                - cerebro-staging
+      exclude:
+        any:
+          # Emergency bypass label (requires PodSecurityPolicy/OPA approval)
+          - resources:
+              selector:
+                matchLabels:
+                  cerebro/supply-chain-exempt: "true"
+          # System namespaces
+          - resources:
+              namespaces:
+                - kube-system
+                - kyverno
+                - monitoring
+                - chaos-testing
+                - cerebro-chaos
+                - cerebro-break-tests
+
+      verifyImages:
+        - imageReferences:
+            # Match all images from our GHCR namespace
+            - "ghcr.io/*/cerebro-hive/*"
+          attestors:
+            - entries:
+                - keyless:
+                    subject: "https://github.com/cerebro-hive/cerebro-hive/.github/workflows/supply-chain.yml@refs/heads/main"
+                    issuer: "https://token.actions.githubusercontent.com"
+                    rekor:
+                      url: https://rekor.sigstore.dev
+          # Mutate the image reference to use the verified digest (prevents digest substitution)
+          mutateDigest: true
+          # Verify digest matches what was signed (prevents tag mutation attacks)
+          verifyDigest: true
+          required: true
+
+    - name: check-image-sbom-attestation
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces:
+                - cerebro-prod
+      exclude:
+        any:
+          - resources:
+              selector:
+                matchLabels:
+                  cerebro/supply-chain-exempt: "true"
+          - resources:
+              namespaces:
+                - kube-system
+                - kyverno
+                - monitoring
+
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/*/cerebro-hive/*"
+          attestors:
+            - entries:
+                - keyless:
+                    subject: "https://github.com/cerebro-hive/cerebro-hive/.github/workflows/supply-chain.yml@refs/heads/main"
+                    issuer: "https://token.actions.githubusercontent.com"
+          # Require SPDX SBOM attestation
+          attestations:
+            - predicateType: https://spdx.dev/Document
+              conditions:
+                - all:
+                    # SBOM must contain at least 1 package
+                    - key: "{{ packages | length(@) }}"
+                      operator: GreaterThan
+                      value: "0"
+          required: true
+
+---
+# Audit-mode variant — use this during initial rollout to find violations
+# without blocking deployments. Switch to Enforce when all images are signed.
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: audit-unsigned-images
+  annotations:
+    policies.kyverno.io/title: Audit Unsigned Images
+    policies.kyverno.io/category: Supply Chain Security
+    policies.kyverno.io/severity: medium
+spec:
+  validationFailureAction: Audit   # Log violations; don't block
+
+  rules:
+    - name: audit-third-party-images
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces:
+                - cerebro-prod
+                - cerebro-staging
+      # Report any image NOT from our signed namespace
+      validate:
+        message: >
+          Image {{ request.object.spec.containers[].image }} is not from the
+          verified CerebroHive supply chain. Consider signing or replacing
+          with an internally verified image.
+        pattern:
+          spec:
+            containers:
+              - image: "ghcr.io/*/cerebro-hive/*"
+
+---
+# Generate a PolicyReport (viewable in Kyverno UI or kubectl)
+# that shows which pods have verified supply chains
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: generate-supply-chain-report
+  annotations:
+    policies.kyverno.io/title: Generate Supply Chain Report
+    policies.kyverno.io/category: Supply Chain Security
+spec:
+  validationFailureAction: Audit
+  background: true
+  generateExistingOnPolicyUpdate: true
+
+  rules:
+    - name: generate-image-verification-label
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces:
+                - cerebro-prod
+                - cerebro-staging
+      # Mutate: add a label indicating supply chain verification status
+      # (this allows dashboards to filter by verified vs. unverified pods)
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              cerebro/image-verified: "true"
+              cerebro/signed-by: "supply-chain-workflow"

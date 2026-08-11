@@ -1,0 +1,211 @@
+---
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — PrometheusRule
+# Alerting rules for all platform services + AI-specific metrics
+# ──────────────────────────────────────────────────────────────────────────────
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cerebro-hive-alerts
+  namespace: cerebro-hive-monitoring
+  labels:
+    app.kubernetes.io/part-of: cerebro-hive
+    release: kube-prometheus-stack
+spec:
+  groups:
+
+    # ── Service Health ───────────────────────────────────────
+    - name: cerebro-hive.service-health
+      interval: 30s
+      rules:
+        - alert: ServiceDown
+          expr: |
+            up{namespace="cerebro-hive"} == 0
+          for: 1m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "Service {{ $labels.service }} is down"
+            description: "{{ $labels.service }} in namespace {{ $labels.namespace }} has been down for 1 minute."
+            runbook: "https://docs.cerebrohive.com/runbooks/service-down"
+
+        - alert: HighErrorRate
+          expr: |
+            sum(rate(http_requests_total{
+              namespace="cerebro-hive",
+              status=~"5.."
+            }[5m])) by (service) /
+            sum(rate(http_requests_total{
+              namespace="cerebro-hive"
+            }[5m])) by (service) > 0.05
+          for: 2m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "High error rate on {{ $labels.service }}"
+            description: "{{ $labels.service }} has > 5% error rate for 2 minutes."
+
+        - alert: CriticalErrorRate
+          expr: |
+            sum(rate(http_requests_total{
+              namespace="cerebro-hive",
+              status=~"5.."
+            }[5m])) by (service) /
+            sum(rate(http_requests_total{
+              namespace="cerebro-hive"
+            }[5m])) by (service) > 0.20
+          for: 1m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "CRITICAL error rate on {{ $labels.service }}"
+            description: "{{ $labels.service }} has > 20% error rate. Possible incident."
+
+        - alert: HighP99Latency
+          expr: |
+            histogram_quantile(0.99,
+              sum(rate(http_request_duration_seconds_bucket{
+                namespace="cerebro-hive"
+              }[5m])) by (service, le)
+            ) > 3
+          for: 3m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "High P99 latency on {{ $labels.service }}"
+            description: "{{ $labels.service }} P99 latency > 3s for 3 minutes."
+
+    # ── AI Gateway ───────────────────────────────────────────
+    - name: cerebro-hive.ai-gateway
+      interval: 30s
+      rules:
+        - alert: AIGatewayHighTokenCost
+          expr: |
+            sum(increase(ai_gateway_cost_usd_total{
+              namespace="cerebro-hive"
+            }[1h])) > 50
+          labels:
+            severity: warning
+            team: ai-platform
+          annotations:
+            summary: "AI Gateway spending > $50/hour"
+            description: "Current AI token spend is {{ $value | printf \"$%.2f\" }}/hour. Review high-cost workloads."
+            runbook: "https://docs.cerebrohive.com/runbooks/high-ai-cost"
+
+        - alert: AIProviderFailover
+          expr: |
+            sum(rate(ai_gateway_provider_errors_total{
+              namespace="cerebro-hive",
+              provider="anthropic"
+            }[5m])) > 0.5
+          for: 2m
+          labels:
+            severity: warning
+            team: ai-platform
+          annotations:
+            summary: "Anthropic API errors — considering failover"
+            description: "High error rate from Anthropic. AI Gateway may switch to backup provider."
+
+        - alert: AIGatewayAllProvidersDown
+          expr: |
+            sum(ai_gateway_provider_healthy{namespace="cerebro-hive"}) == 0
+          for: 1m
+          labels:
+            severity: critical
+            team: ai-platform
+          annotations:
+            summary: "ALL AI providers are down"
+            description: "No healthy AI providers in the gateway. AI features unavailable."
+
+        - alert: LLMCacheHitRateLow
+          expr: |
+            sum(rate(ai_gateway_cache_hits_total{namespace="cerebro-hive"}[10m])) /
+            sum(rate(ai_gateway_requests_total{namespace="cerebro-hive"}[10m])) < 0.1
+          for: 10m
+          labels:
+            severity: info
+            team: ai-platform
+          annotations:
+            summary: "LLM cache hit rate < 10%"
+            description: "Low cache utilization. Review prompt caching strategy to reduce costs."
+
+    # ── Kubernetes Resources ──────────────────────────────────
+    - name: cerebro-hive.kubernetes
+      interval: 60s
+      rules:
+        - alert: PodCrashLooping
+          expr: |
+            rate(kube_pod_container_status_restarts_total{
+              namespace="cerebro-hive"
+            }[15m]) * 60 * 15 > 5
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "Pod {{ $labels.pod }} is crash-looping"
+            description: "{{ $labels.pod }} has restarted > 5 times in 15 minutes."
+
+        - alert: PodMemoryPressure
+          expr: |
+            container_memory_working_set_bytes{
+              namespace="cerebro-hive",
+              container!=""
+            } /
+            kube_pod_container_resource_limits{
+              namespace="cerebro-hive",
+              resource="memory"
+            } > 0.90
+          for: 5m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "Pod {{ $labels.pod }} memory > 90% of limit"
+            description: "{{ $labels.container }} in {{ $labels.pod }} is approaching memory limit."
+
+        - alert: HPAMaxedOut
+          expr: |
+            kube_horizontalpodautoscaler_status_current_replicas{
+              namespace="cerebro-hive"
+            } ==
+            kube_horizontalpodautoscaler_spec_max_replicas{
+              namespace="cerebro-hive"
+            }
+          for: 10m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "HPA {{ $labels.horizontalpodautoscaler }} at max replicas"
+            description: "{{ $labels.horizontalpodautoscaler }} has been at max replicas for 10 minutes. Increase maxReplicas or optimize."
+
+    # ── Database ─────────────────────────────────────────────
+    - name: cerebro-hive.database
+      interval: 60s
+      rules:
+        - alert: PostgresHighConnectionCount
+          expr: |
+            pg_stat_database_numbackends{datname="cerebrohive_db"} > 80
+          for: 5m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "PostgreSQL connection count high"
+            description: "{{ $value }} active connections. Max is 100. Consider PgBouncer tuning."
+
+        - alert: PostgresHighQueryLatency
+          expr: |
+            rate(pg_stat_statements_mean_exec_time_seconds[5m]) > 1
+          for: 5m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "Slow PostgreSQL queries detected"
+            description: "Average query time > 1s. Check pg_stat_statements."

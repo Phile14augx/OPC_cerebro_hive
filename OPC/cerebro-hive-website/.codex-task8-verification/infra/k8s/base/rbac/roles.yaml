@@ -1,0 +1,73 @@
+---
+# Read-only role for services that only need to read ConfigMaps/Secrets
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cerebro-hive-reader
+  namespace: cerebro-hive
+rules:
+  - apiGroups: [""]
+    resources: [configmaps, secrets]
+    verbs: [get, list, watch]
+
+---
+# Role for services that manage their own state (Jobs, leader election)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cerebro-hive-worker
+  namespace: cerebro-hive
+rules:
+  - apiGroups: [""]
+    resources: [configmaps]
+    verbs: [get, list, watch, create, update, patch]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: [leases]
+    verbs: [get, list, watch, create, update, patch, delete]
+
+---
+# Bind reader role to all service accounts
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cerebro-hive-reader-binding
+  namespace: cerebro-hive
+subjects:
+  - kind: ServiceAccount
+    name: studio
+    namespace: cerebro-hive
+  - kind: ServiceAccount
+    name: forge
+    namespace: cerebro-hive
+  - kind: ServiceAccount
+    name: platform-api
+    namespace: cerebro-hive
+  - kind: ServiceAccount
+    name: forge-api
+    namespace: cerebro-hive
+  - kind: ServiceAccount
+    name: ai-gateway
+    namespace: cerebro-hive
+roleRef:
+  kind: Role
+  name: cerebro-hive-reader
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Bind worker role to platform-api and forge-api (they manage async jobs)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cerebro-hive-worker-binding
+  namespace: cerebro-hive
+subjects:
+  - kind: ServiceAccount
+    name: platform-api
+    namespace: cerebro-hive
+  - kind: ServiceAccount
+    name: forge-api
+    namespace: cerebro-hive
+roleRef:
+  kind: Role
+  name: cerebro-hive-worker
+  apiGroup: rbac.authorization.k8s.io

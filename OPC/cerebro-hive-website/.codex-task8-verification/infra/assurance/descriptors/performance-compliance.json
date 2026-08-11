@@ -1,0 +1,52 @@
+{
+  "$schema": "../schema/descriptor-v1.json",
+  "domain": "performance-and-compliance",
+  "controls": [
+    {
+      "id": "PRF-1",
+      "name": "G1 Overhead Benchmark (gVisor vs runc)",
+      "description": "Quarterly benchmark: 5 tests (syscall, I/O, fork, memory, CPU). gVisor overhead must be < 3× runc for all tests.",
+      "lifecycle": "Implemented",
+      "cec_weight": 1,
+      "dependsOn": ["G1"],
+      "runner": {
+        "type": "workflow-check",
+        "workflow": ".github/workflows/g1-overhead-benchmark.yml",
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "workflow-removal",
+        "description": "Delete g1-overhead-benchmark.yml → runner must report ARCHITECTURE_FAILURE",
+        "expectedFailurePattern": "workflow not found"
+      },
+      "automation": ".github/workflows/g1-overhead-benchmark.yml",
+      "adrs": ["ADR-010"],
+      "slo_link": null
+    },
+    {
+      "id": "PRR-1",
+      "name": "Production Readiness Review",
+      "description": "11 subsystems evaluated against 7 questions each (restore, rotate, upgrade, backup, recover, observe, audit). Score: ≥70%.",
+      "lifecycle": "Executed",
+      "cec_weight": 1,
+      "dependsOn": ["DR-1", "DR-2", "DR-3"],
+      "runner": {
+        "type": "file-check",
+        "checks": [
+          { "file": "docs/production-readiness-review.md", "required": true }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "file-removal",
+        "description": "Delete production-readiness-review.md → required file check must fail",
+        "expectedFailurePattern": "required file not found"
+      },
+      "automation": "docs/production-readiness-review.md",
+      "adrs": [],
+      "slo_link": null
+    }
+  ]
+}

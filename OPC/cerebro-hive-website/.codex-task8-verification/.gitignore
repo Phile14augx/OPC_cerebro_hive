@@ -1,0 +1,135 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# pnpm's local content-addressable package store/cache — never committed,
+# same category of gap as node_modules/ below.
+.pnpm-store/
+
+# python (agentos and any other python-tooled subdirectories)
+# .venv contains symlinks git can't index on Windows ("Function not
+# implemented") which hard-fails `git add -A` for the entire repo.
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# dependencies
+# (unanchored — this is a pnpm workspace monorepo; every package under
+# apps/*, services/*, packages/* gets its own node_modules/, plus pnpm nests
+# more node_modules/ dirs inside dependencies for peer-conflict resolution.
+# An anchored `/node_modules` only matches the repo root and misses all of
+# those, which would otherwise pull gigabytes of dependency code into the
+# first commit.)
+node_modules/
+.pnp/
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+# (unanchored for the same reason as node_modules/ above — coverage output
+# is generated per-package, not just at the repo root.)
+coverage/
+
+# next.js
+.next/
+out/
+
+# turborepo
+.turbo/
+
+# generated prisma clients (packages that output outside node_modules/.prisma)
+**/src/generated/
+
+# production
+# `dist/` was missing entirely — every package's `tsc`/`nest build` output
+# (packages/db/dist, packages/workflow/dist, services/*/dist, etc.) was
+# neither tracked nor ignored, which would have swept all of it into the
+# first commit as regenerable build artifacts.
+dist/
+build/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# JVM crash dumps (found at repo root — not source content)
+hs_err_pid*.log
+replay_pid*.log
+
+# env files — never commit real values
+.env*
+
+# ...but the template MUST be committed, otherwise a new contributor has no way
+# to know which variables the app needs. `.env*` above would otherwise swallow it.
+!.env.example
+!.env.*.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+*storybook.log
+storybook-static
+tools/arch/gate-a/results/
+
+# scratch, throwaway and one-shot scripts
+# These accumulated at the repo root and were quarantined during the 2026-08-02
+# audit. Keep them out of the tree — if a script is worth keeping, move it into
+# scripts/ or tools/ with a name that says what it does.
+scratch_*.js
+scratch_*.ts
+_shot*.js
+__shot_*.js
+_tmp_*
+scaffold_*.ps1
+.audit-quarantine/
+# More of the same, found loose at repo root during this session's initial
+# commit (same pattern, didn't match the globs above).
+/scratch/
+/fix.js
+/fix.py
+/fix_workflows.py
+/replace_prisma.py
+
+# build / tool output that must never be committed
+build_output.log
+ts-errors.log
+diff.txt
+*.tsbuildinfo
+out.zip
+pnpm-lock.yaml.*
+
+# feature-workflow automation: audit log and per-feature worktrees are
+# machine/session-local, never part of any feature's own diff or history.
+.agents/logs/
+.agents/worktrees/
+.claude/worktrees/
+
+# credential-adjacent files
+si_keys.txt
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.*.json
+.verify/
+
+# ── Corporate legal documents — NEVER commit ─────────────────────────────────
+# AoA, MoA, DIR-2, INC-9, NOC, Share certificates and any other statutory docs.
+# Store in a password-protected archive or a restricted private repository instead.
+legal-docs/
+
+# ── Local worktree checkouts (machine-local, created by Invoke-CerebroWorktreeDispatch) ──
+.worktrees/

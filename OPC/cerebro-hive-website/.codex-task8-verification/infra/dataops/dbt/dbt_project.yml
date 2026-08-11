@@ -1,0 +1,79 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# DataOps — dbt Project for CerebroHive Platform Analytics
+# Transforms raw platform events into analytics-ready models.
+# Run: dbt run --profiles-dir infra/dataops/dbt
+# ──────────────────────────────────────────────────────────────────────────────
+
+name: cerebro_hive_analytics
+version: "1.0.0"
+config-version: 2
+
+profile: cerebro_hive
+
+model-paths:       ["models"]
+analysis-paths:    ["analyses"]
+test-paths:        ["tests"]
+seed-paths:        ["seeds"]
+macro-paths:       ["macros"]
+snapshot-paths:    ["snapshots"]
+
+target-path:       "target"
+clean-targets:     ["target", "dbt_packages"]
+
+vars:
+  # Lookback windows for incremental models
+  default_lookback_days: 7
+  ai_cost_currency: USD
+
+models:
+  cerebro_hive_analytics:
+    # ── Staging layer: raw source → typed/renamed ─────────────────────────────
+    staging:
+      +schema: staging
+      +materialized: view
+      +tags: ["staging"]
+
+    # ── Intermediate layer: joins and business logic ───────────────────────────
+    intermediate:
+      +schema: intermediate
+      +materialized: ephemeral
+      +tags: ["intermediate"]
+
+    # ── Mart layer: business-facing analytics tables ───────────────────────────
+    marts:
+      +schema: analytics
+      +materialized: table
+      +tags: ["mart"]
+
+      ai_usage:
+        +tags: ["ai", "cost"]
+      platform:
+        +tags: ["platform", "operational"]
+      compliance:
+        +tags: ["compliance", "audit"]
+        +materialized: incremental
+        +unique_key: event_id
+
+# ── Source freshness checks ────────────────────────────────────────────────────
+sources:
+  - name: raw_platform
+    database: cerebrohive
+    schema: public
+    tables:
+      - name: ai_usage_records
+        freshness:
+          warn_after:  { count: 1,  period: hour }
+          error_after: { count: 6,  period: hour }
+        loaded_at_field: created_at
+
+      - name: workflow_executions
+        freshness:
+          warn_after:  { count: 2,  period: hour }
+          error_after: { count: 12, period: hour }
+        loaded_at_field: started_at
+
+      - name: audit_events
+        freshness:
+          warn_after:  { count: 1,  period: hour }
+          error_after: { count: 4,  period: hour }
+        loaded_at_field: created_at

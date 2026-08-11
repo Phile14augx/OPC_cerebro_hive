@@ -1,0 +1,15 @@
+{
+  "button": {
+    "primary": {
+      "bg": {
+        "value": "{color.accent.primary.value}"
+      },
+      "text": {
+        "value": "{color.white.value}"
+      },
+      "hoverBg": {
+        "value": "{color.emerald.600.value}"
+      }
+    }
+  }
+}

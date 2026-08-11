@@ -1,0 +1,30 @@
+apiVersion: v2
+name: cerebro-hive
+description: CerebroHive — AI-native enterprise platform (all services)
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+keywords:
+  - ai
+  - agents
+  - platform
+  - cerebro-hive
+
+home: https://cerebrohive.com
+sources:
+  - https://github.com/cerebrohive/cerebro-hive-website
+
+maintainers:
+  - name: CerebroHive Platform Team
+    email: platform@cerebrohive.com
+
+dependencies:
+  - name: postgresql
+    version: "15.x.x"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled
+  - name: redis
+    version: "19.x.x"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled

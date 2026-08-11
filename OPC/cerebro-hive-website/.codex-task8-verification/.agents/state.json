@@ -1,0 +1,27 @@
+{
+  "traceId": "test-trace-001",
+  "milestoneId": "M10.1",
+  "state": "AGENTS_RUNNING",
+  "updatedAt": "2026-08-05T09:03:03.407Z",
+  "data": {
+    "branch": "feat/test"
+  },
+  "history": [
+    {
+      "from": "PENDING",
+      "to": "WORKTREE_CREATED",
+      "ts": "2026-08-05T09:03:03.387Z",
+      "branch": "feat/test"
+    },
+    {
+      "from": "WORKTREE_CREATED",
+      "to": "LOCKED",
+      "ts": "2026-08-05T09:03:03.396Z"
+    },
+    {
+      "from": "LOCKED",
+      "to": "AGENTS_RUNNING",
+      "ts": "2026-08-05T09:03:03.404Z"
+    }
+  ]
+}

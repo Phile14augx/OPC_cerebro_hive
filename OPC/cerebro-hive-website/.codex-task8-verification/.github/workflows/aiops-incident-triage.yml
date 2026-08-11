@@ -1,0 +1,220 @@
+name: AIOps — Incident Triage
+
+on:
+  # Triggered by Alertmanager webhook via GitHub repository dispatch
+  repository_dispatch:
+    types: [incident-alert]
+  # Manual trigger for post-mortems
+  workflow_dispatch:
+    inputs:
+      alert_name:
+        description: "Alert name from Prometheus"
+        required: true
+      severity:
+        description: "Severity (critical|warning)"
+        required: true
+        default: "warning"
+      service:
+        description: "Affected service"
+        required: true
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  triage:
+    name: AI-Powered Incident Triage
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Extract alert context
+        id: alert
+        run: |
+          # Support both dispatch types
+          ALERT_NAME="${{ github.event.client_payload.alert_name || inputs.alert_name }}"
+          SEVERITY="${{ github.event.client_payload.severity || inputs.severity }}"
+          SERVICE="${{ github.event.client_payload.service || inputs.service }}"
+          LABELS="${{ toJson(github.event.client_payload.labels) }}"
+          ANNOTATIONS="${{ toJson(github.event.client_payload.annotations) }}"
+          FIRED_AT="${{ github.event.client_payload.fired_at || '' }}"
+
+          echo "alert_name=${ALERT_NAME}"    >> $GITHUB_OUTPUT
+          echo "severity=${SEVERITY}"        >> $GITHUB_OUTPUT
+          echo "service=${SERVICE}"          >> $GITHUB_OUTPUT
+          echo "fired_at=${FIRED_AT}"        >> $GITHUB_OUTPUT
+
+      - name: Gather metrics snapshot
+        id: metrics
+        env:
+          PROMETHEUS_URL: ${{ secrets.PROMETHEUS_URL }}
+        run: |
+          SERVICE="${{ steps.alert.outputs.service }}"
+          NOW=$(date -u +%s)
+          WINDOW="5m"
+
+          # Error rate
+          ERR_RATE=$(curl -sf "${PROMETHEUS_URL}/api/v1/query" \
+            --data-urlencode "query=sum(rate(http_server_requests_total{service=\"${SERVICE}\",status_code=~\"5..\"}[${WINDOW}])) / sum(rate(http_server_requests_total{service=\"${SERVICE}\"}[${WINDOW}]))" \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); v=d['data']['result']; print(f\"{float(v[0]['value'][1])*100:.2f}%\" if v else 'N/A')" 2>/dev/null || echo "N/A")
+
+          # P99 latency
+          P99=$(curl -sf "${PROMETHEUS_URL}/api/v1/query" \
+            --data-urlencode "query=histogram_quantile(0.99, sum by(le) (rate(http_server_request_duration_ms_bucket{service=\"${SERVICE}\"}[${WINDOW}])))" \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); v=d['data']['result']; print(f\"{float(v[0]['value'][1]):.0f}ms\" if v else 'N/A')" 2>/dev/null || echo "N/A")
+
+          # Pod restarts
+          RESTARTS=$(curl -sf "${PROMETHEUS_URL}/api/v1/query" \
+            --data-urlencode "query=sum(kube_pod_container_status_restarts_total{namespace=\"cerebro-hive\",pod=~\"${SERVICE}-.*\"})" \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); v=d['data']['result']; print(int(float(v[0]['value'][1])) if v else 0)" 2>/dev/null || echo "0")
+
+          # AI cost rate (if ai-gateway alert)
+          AI_COST="N/A"
+          if [[ "${SERVICE}" == "ai-gateway" ]]; then
+            AI_COST=$(curl -sf "${PROMETHEUS_URL}/api/v1/query" \
+              --data-urlencode "query=sum(rate(ai_cost_usd_total[${WINDOW}])) * 3600" \
+              | python3 -c "import json,sys; d=json.load(sys.stdin); v=d['data']['result']; print(f\"\${float(v[0]['value'][1]):.2f}/hr\" if v else 'N/A')" 2>/dev/null || echo "N/A")
+          fi
+
+          # Encode as multiline output
+          {
+            echo "snapshot<<EOF"
+            echo "Service:      ${SERVICE}"
+            echo "Error Rate:   ${ERR_RATE}"
+            echo "P99 Latency:  ${P99}"
+            echo "Pod Restarts: ${RESTARTS}"
+            echo "AI Cost:      ${AI_COST}"
+            echo "Window:       ${WINDOW}"
+            echo "Captured:     $(date -u)"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: AI triage analysis
+        id: analysis
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          ALERT="${{ steps.alert.outputs.alert_name }}"
+          SERVICE="${{ steps.alert.outputs.service }}"
+          SEVERITY="${{ steps.alert.outputs.severity }}"
+          METRICS="${{ steps.metrics.outputs.snapshot }}"
+
+          PROMPT="You are an expert SRE for CerebroHive, an enterprise AI platform.
+
+          An incident has been triggered. Analyse it and provide a structured triage response.
+
+          ## Alert Details
+          - Alert: ${ALERT}
+          - Service: ${SERVICE}
+          - Severity: ${SEVERITY}
+          - Fired at: ${{ steps.alert.outputs.fired_at }}
+
+          ## Current Metrics (last 5 minutes)
+          ${METRICS}
+
+          ## CerebroHive Architecture Context
+          - studio (Next.js UI, port 3000) → platform-api (REST, port 4000)
+          - forge (workflow builder, port 3001) → forge-api (NestJS AI orchestration, port 4005) → ai-gateway (LLM router, port 4010)
+          - ai-gateway routes to: Anthropic (Claude Sonnet 4.6, priority 1), OpenAI (GPT-4o, priority 2)
+          - PostgreSQL 16 + pgvector, Redis 7, NATS JetStream
+          - Argo Rollouts canary in production (5%→25%→50%→100%)
+
+          Provide your triage as JSON with this exact schema:
+          {
+            \"severity_assessment\": \"P1|P2|P3\",
+            \"likely_root_cause\": \"<concise root cause hypothesis>\",
+            \"confidence\": \"high|medium|low\",
+            \"blast_radius\": \"<which users/workflows affected>\",
+            \"immediate_actions\": [\"<action 1>\", \"<action 2>\"],
+            \"runbook_steps\": [\"<step 1>\", \"<step 2>\", \"<step 3>\"],
+            \"escalation\": \"<who to page and when>\",
+            \"related_runbook\": \"<URL if applicable>\",
+            \"prevention\": \"<1-2 sentences on preventing recurrence>\"
+          }"
+
+          RESPONSE=$(curl -sf https://api.anthropic.com/v1/messages \
+            -H "x-api-key: ${ANTHROPIC_API_KEY}" \
+            -H "anthropic-version: 2023-06-01" \
+            -H "content-type: application/json" \
+            -d "{
+              \"model\": \"claude-haiku-4-5-20251001\",
+              \"max_tokens\": 1024,
+              \"messages\": [{\"role\": \"user\", \"content\": $(echo "$PROMPT" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))')}]
+            }")
+
+          ANALYSIS=$(echo "$RESPONSE" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['content'][0]['text'])" 2>/dev/null || echo '{"error": "triage failed"}')
+
+          {
+            echo "analysis<<EOF"
+            echo "$ANALYSIS"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Create incident issue
+        uses: actions/github-script@v7
+        env:
+          ANALYSIS: ${{ steps.analysis.outputs.analysis }}
+          METRICS: ${{ steps.metrics.outputs.snapshot }}
+        with:
+          script: |
+            const alert     = '${{ steps.alert.outputs.alert_name }}';
+            const service   = '${{ steps.alert.outputs.service }}';
+            const severity  = '${{ steps.alert.outputs.severity }}';
+            const metrics   = process.env.METRICS;
+            const rawAnalysis = process.env.ANALYSIS;
+
+            let analysis;
+            try { analysis = JSON.parse(rawAnalysis); } catch { analysis = { error: rawAnalysis }; }
+
+            const severityEmoji = { P1: '🔴', P2: '🟠', P3: '🟡' };
+            const p = analysis.severity_assessment || 'P2';
+            const emoji = severityEmoji[p] || '⚪';
+
+            const body = `## ${emoji} Incident: ${alert}
+
+            | Field | Value |
+            |-------|-------|
+            | **Service** | \`${service}\` |
+            | **Alert Severity** | \`${severity}\` |
+            | **AI Assessed Priority** | \`${p}\` |
+            | **Confidence** | \`${analysis.confidence || 'N/A'}\` |
+            | **Blast Radius** | ${analysis.blast_radius || 'N/A'} |
+
+            ## 📊 Metrics at Trigger
+            \`\`\`
+            ${metrics}
+            \`\`\`
+
+            ## 🔍 Root Cause Hypothesis
+            ${analysis.likely_root_cause || 'Analysis unavailable'}
+
+            ## ⚡ Immediate Actions
+            ${(analysis.immediate_actions || []).map(a => `- [ ] ${a}`).join('\n') || 'See runbook'}
+
+            ## 📋 Runbook Steps
+            ${(analysis.runbook_steps || []).map((s, i) => `${i+1}. ${s}`).join('\n') || 'See runbook'}
+
+            ## 📢 Escalation
+            ${analysis.escalation || 'Follow standard escalation path'}
+
+            ## 🛡️ Prevention
+            ${analysis.prevention || 'Conduct blameless postmortem after resolution'}
+
+            ---
+            *Triaged by CerebroHive AIOps at ${new Date().toISOString()}*
+            *Runbook: ${analysis.related_runbook || 'https://runbooks.cerebrohive.com'}*`;
+
+            const labels = ['incident', `severity:${severity}`, `service:${service}`];
+            if (p === 'P1') labels.push('priority:critical');
+
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[${p}] ${emoji} Incident: ${alert} — ${service}`,
+              body,
+              labels,
+            });
+
+            core.summary.addRaw(`## Incident Issue Created\n[#${issue.number}](${issue.html_url})`);
+            core.summary.write();

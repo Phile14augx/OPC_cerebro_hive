@@ -1,0 +1,2 @@
+from .skills import CAMPAIGN_MANAGER_SKILLS
+__all__ = ["CAMPAIGN_MANAGER_SKILLS"]

@@ -1,0 +1,64 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# AIOps — Alert Correlation Rules
+# Groups related alerts into single incidents to reduce noise.
+# Applied by Alertmanager inhibit_rules + custom correlation engine.
+# ──────────────────────────────────────────────────────────────────────────────
+
+correlationRules:
+
+  # When ai-gateway is down, suppress downstream workflow failures
+  - name: ai-gateway-cascade
+    description: "AI Gateway outage causes forge-api workflow failures — suppress child alerts"
+    parent:
+      alertname: "AIGatewayDown"
+    suppresses:
+      - alertname: "ForgeWorkflowFailureRate"
+      - alertname: "LLMResponseTimeHigh"
+      - alertname: "AITokenBudgetExceeded"
+    window: 10m
+
+  # Database slow → API latency → suppress latency alerts (DB is root cause)
+  - name: db-slowdown-cascade
+    description: "DB slowdown causes API latency increase"
+    parent:
+      alertname: "PostgreSQLSlowQueries"
+    suppresses:
+      - alertname: "PlatformAPILatencyHigh"
+      - alertname: "StudioLatencySLO"
+    window: 10m
+
+  # Node pressure → pod restarts
+  - name: node-pressure-cascade
+    description: "Node memory pressure causes pod restarts"
+    parent:
+      alertname: "KubeNodeMemoryPressure"
+    suppresses:
+      - alertname: "KubePodCrashLooping"
+      - alertname: "KubePodNotReady"
+    window: 5m
+
+  # Deployment → transient errors (expected during rolling update)
+  - name: deployment-transient
+    description: "Suppress transient errors during active deployment"
+    parent:
+      alertname: "ArgoDeploymentInProgress"
+    suppresses:
+      - alertname: "HTTPErrorRateHigh"
+      - alertname: "PodRestartHigh"
+    window: 15m
+
+# Prometheus Alertmanager inhibit rules (applied directly)
+inhibitRules:
+  # Suppress warning when critical fires for same service
+  - source_matchers:
+      - severity="critical"
+    target_matchers:
+      - severity="warning"
+    equal: ["service", "namespace"]
+
+  # Suppress SLO burn alerts when service is completely down
+  - source_matchers:
+      - alertname="CerebroServiceDown"
+    target_matchers:
+      - alertname=~".*SLO.*"
+    equal: ["service"]

@@ -1,0 +1,108 @@
+# Thanos — Long-term Prometheus metrics storage
+# Provides: deduplication, compaction, downsampling, global query layer
+
+image:
+  registry:   quay.io
+  repository: thanos/thanos
+  tag:        v0.36.1
+
+existingObjstoreSecret: thanos-objstore-secret
+
+query:
+  enabled: true
+  replicaCount: 2
+  replicaLabel: prometheus_replica
+  stores:
+    - dnssrvnoa+_grpc._tcp.thanos-storegateway.monitoring.svc.cluster.local
+    - dnssrvnoa+_grpc._tcp.thanos-ruler.monitoring.svc.cluster.local
+  resources:
+    requests: { cpu: 200m, memory: 256Mi }
+    limits:   { cpu: 1,    memory: 1Gi }
+  grpc:
+    enabled: true
+  http:
+    enabled: true
+  queryFrontend:
+    enabled: true
+    replicaCount: 2
+    config: |
+      type: IN-MEMORY
+      config:
+        max_size: 512MB
+        validity: 6h
+
+queryFrontend:
+  enabled: true
+  replicaCount: 2
+  ingress:
+    enabled:   true
+    className: nginx
+    hostname:  thanos.cerebro-hive.io
+    tls:
+      - secretName: thanos-tls
+        hosts:
+          - thanos.cerebro-hive.io
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/auth-type: basic
+      nginx.ingress.kubernetes.io/auth-secret: thanos-basic-auth
+
+storegateway:
+  enabled: true
+  replicaCount: 2
+  persistence:
+    enabled:      true
+    storageClass: gp3
+    size:         50Gi
+  sharding:
+    enabled:    true
+    hashring:
+      tenantMatcherType: exact
+      shards:            2
+  resources:
+    requests: { cpu: 500m, memory: 1Gi }
+    limits:   { cpu: 2,    memory: 4Gi }
+
+compactor:
+  enabled: true
+  replicaCount: 1  # Only one compactor at a time
+  persistence:
+    enabled:      true
+    storageClass: gp3
+    size:         100Gi
+  retentionResolutionRaw: 15d
+  retentionResolution5m:  90d
+  retentionResolution1h:  365d
+  resources:
+    requests: { cpu: 1,    memory: 2Gi }
+    limits:   { cpu: 4,    memory: 8Gi }
+
+ruler:
+  enabled: true
+  replicaCount: 2
+  alertmanagers:
+    - http://alertmanager.monitoring.svc.cluster.local:9093
+  config: |
+    groups:
+      - name: cerebro-slo-rules
+        interval: 1m
+        rules:
+          - record: cerebro:slo:availability_99_9
+            expr: |
+              avg_over_time(
+                (1 - rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]))[1h:1m]
+              )
+  resources:
+    requests: { cpu: 200m, memory: 256Mi }
+    limits:   { cpu: 1,    memory: 512Mi }
+
+receive:
+  enabled: false  # Use Prometheus sidecar instead
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled:   true
+    namespace: monitoring
+    labels:
+      release: kube-prometheus-stack

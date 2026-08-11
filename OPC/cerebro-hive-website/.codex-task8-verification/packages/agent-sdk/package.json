@@ -1,0 +1,18 @@
+{
+  "name": "@cerebro/agent-sdk",
+  "version": "0.1.0",
+  "description": "CerebroHive Agent SDK providing the framework-agnostic agent abstractions.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@cerebro/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CerebroHive Design Tokens ────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --color-bg-primary:       #09090b;
+  --color-bg-secondary:     #0d0d10;
+  --color-bg-tertiary:      #111115;
+
+  /* Surfaces */
+  --color-surface-default:  #141418;
+  --color-surface-raised:   #1c1c22;
+  --color-surface-subtle:   #1a1a1f;
+  --color-surface-overlay:  rgba(20,20,24,0.95);
+
+  /* Borders */
+  --color-border-default:   rgba(255,255,255,0.08);
+  --color-border-subtle:    rgba(255,255,255,0.05);
+  --color-border-strong:    rgba(255,255,255,0.15);
+  --color-border-focus:     #6b5ce7;
+
+  /* Text */
+  --color-text-primary:     #f4f4f5;
+  --color-text-secondary:   #a1a1aa;
+  --color-text-muted:       #71717a;
+  --color-text-disabled:    #3f3f46;
+
+  /* Semantic colours */
+  --color-text-success:     #22c55e;
+  --color-text-warning:     #f59e0b;
+  --color-text-danger:      #ef4444;
+  --color-text-info:        #3b82f6;
+
+  /* Brand */
+  --color-brand-primary:    #6b5ce7;
+  --color-brand-secondary:  #8b7cf8;
+  --color-brand-glow:       rgba(107,92,231,0.25);
+  --color-brand-subtle:     rgba(107,92,231,0.12);
+
+  /* HivePulse accent — gold/amber for executive contexts */
+  --color-pulse-gold:       #f59e0b;
+  --color-pulse-gold-glow:  rgba(245,158,11,0.20);
+  --color-pulse-gold-subtle:rgba(245,158,11,0.10);
+
+  /* Shadows */
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:   0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,0.6);
+  --shadow-glow: 0 0 24px var(--color-brand-glow);
+
+  /* Radii */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-feature-settings: 'cv02','cv03','cv04','cv11';
+}
+
+/* ── Base resets ──────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar styling ───────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-default); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-border-strong); }
+
+/* ── Utility — health score ring ─────────────────────────────────────────── */
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0   var(--color-pulse-gold-glow); }
+  70%  { box-shadow: 0 0 0 12px transparent; }
+  100% { box-shadow: 0 0 0 0   transparent; }
+}
+
+.health-ring-pulse { animation: pulse-ring 2.5s ease-out infinite; }
+
+/* ── Utility — alert flash ───────────────────────────────────────────────── */
+@keyframes alert-flash {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+.alert-flash { animation: alert-flash 1.6s ease-in-out infinite; }
+
+/* ── Utility — gradient text ─────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-brand-secondary), var(--color-pulse-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

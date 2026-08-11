@@ -1,0 +1,52 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cerebro-hive-dev
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: cerebro-deployments
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: cerebro-alerts
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cerebro-hive
+
+  source:
+    repoURL: https://github.com/cerebro-hive/cerebro-hive-website
+    targetRevision: develop
+    path: infra/helm/cerebro-hive
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-dev.yaml
+      parameters:
+        - name: global.imageTag
+          value: latest
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cerebro-hive-dev
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 2m
+
+  revisionHistoryLimit: 5
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas  # HPA manages replicas

@@ -1,0 +1,115 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: cerebro-hive-dev
+
+resources:
+  - ../../base
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Dev environment overrides
+# Lower resource limits, single replicas, relaxed security to speed up iteration
+# ──────────────────────────────────────────────────────────────────────────────
+
+namePrefix: dev-
+
+commonLabels:
+  environment: dev
+
+commonAnnotations:
+  environment: dev
+
+patches:
+  # Scale down to 1 replica in dev (save cost)
+  - patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+    target:
+      kind: Deployment
+
+  # Relax pod security for dev
+  - patch: |-
+      - op: remove
+        path: /metadata/labels/pod-security.kubernetes.io~1enforce
+    target:
+      kind: Namespace
+      name: cerebro-hive-dev
+
+  # Reduce resource limits for dev
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+    target:
+      kind: Deployment
+      name: studio
+
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+    target:
+      kind: Deployment
+      name: forge-api
+
+  # Override ingress host for dev
+  - patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: dev.app.cerebrohive.com
+      - op: replace
+        path: /spec/rules/1/host
+        value: dev.forge.cerebrohive.com
+      - op: replace
+        path: /spec/rules/2/host
+        value: dev.api.cerebrohive.com
+    target:
+      kind: Ingress
+      name: cerebro-hive-ingress
+
+  # HPA: min 1 replica in dev
+  - patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 1
+      - op: replace
+        path: /spec/maxReplicas
+        value: 3
+    target:
+      kind: HorizontalPodAutoscaler
+
+configMapGenerator:
+  - name: cerebro-hive-config
+    literals:
+      - APP_URL=https://dev.app.cerebrohive.com
+      - NEXT_PUBLIC_API_URL=https://dev.api.cerebrohive.com
+      - NEXT_PUBLIC_AI_GATEWAY_URL=https://dev.api.cerebrohive.com/ai
+      - OTEL_ENDPOINT=http://otel-collector:4317
+      - NATS_URL=nats://nats:4222
+      - AZURE_OPENAI_ENDPOINT=""
+      - AI_GATEWAY_RATE_LIMIT_RPM=60
+
+images:
+  - name: ghcr.io/cerebro-hive/cerebro-hive/studio
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/forge
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/platform-api
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/forge-api
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/ai-gateway
+    newTag: latest

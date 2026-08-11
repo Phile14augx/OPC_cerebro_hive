@@ -1,0 +1,261 @@
+{
+  "realm": "cerebro-hive",
+  "enabled": true,
+  "displayName": "CerebroHive Platform",
+  "displayNameHtml": "<b>CerebroHive</b>",
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "registrationEmailAsUsername": false,
+  "rememberMe": true,
+  "verifyEmail": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "maxFailureWaitSeconds": 900,
+  "minimumQuickLoginWaitSeconds": 60,
+  "waitIncrementSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "maxDeltaTimeSeconds": 43200,
+  "failureFactor": 10,
+  "accessTokenLifespan": 300,
+  "accessTokenLifespanForImplicitFlow": 900,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "offlineSessionIdleTimeout": 2592000,
+  "offlineSessionMaxLifespanEnabled": false,
+  "defaultSignatureAlgorithm": "RS256",
+  "revokeRefreshToken": true,
+  "refreshTokenMaxReuse": 0,
+  "passwordPolicy": "length(12) and upperCase(1) and lowerCase(1) and digits(1) and specialChars(1) and notUsername(undefined) and notEmail(undefined) and passwordHistory(5)",
+  "roles": {
+    "realm": [
+      {
+        "name": "system-admin",
+        "description": "Global system administrator — full platform access",
+        "composite": false
+      },
+      {
+        "name": "user",
+        "description": "Standard platform user",
+        "composite": false
+      },
+      {
+        "name": "support",
+        "description": "Support staff — read-only org access",
+        "composite": false
+      }
+    ],
+    "client": {
+      "cerebro-platform": [
+        { "name": "admin",     "description": "Org admin" },
+        { "name": "developer", "description": "Org developer" },
+        { "name": "analyst",   "description": "Org analyst" },
+        { "name": "viewer",    "description": "Org viewer" }
+      ]
+    }
+  },
+  "groups": [
+    {
+      "name": "platform-admins",
+      "realmRoles": ["system-admin", "user"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "cerebro-platform",
+      "name": "CerebroHive Platform API",
+      "description": "Main platform client",
+      "rootUrl": "${CEREBRO_PLATFORM_URL}",
+      "adminUrl": "${CEREBRO_PLATFORM_URL}",
+      "baseUrl": "/",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "${CEREBRO_PLATFORM_URL}/*",
+        "http://localhost:3000/*",
+        "http://localhost:3001/*"
+      ],
+      "webOrigins": [
+        "${CEREBRO_PLATFORM_URL}",
+        "http://localhost:3000",
+        "http://localhost:3001"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "publicClient": false,
+      "frontchannelLogout": true,
+      "protocol": "openid-connect",
+      "attributes": {
+        "access.token.lifespan": "300",
+        "client.secret.creation.time": "1700000000",
+        "use.refresh.tokens": "true",
+        "tls-client-certificate-bound-access-tokens": "false",
+        "token.response.type.bearer.lower-case": "false",
+        "display.on.consent.screen": "false",
+        "pkce.code.challenge.method": "S256",
+        "backchannel.logout.session.required": "true",
+        "backchannel.logout.revoke.offline.tokens": "false"
+      },
+      "fullScopeAllowed": true,
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email",
+        "openid"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ],
+      "protocolMappers": [
+        {
+          "name": "org-id-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-user-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "orgId",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "org_id",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "org-role-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-user-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "orgRole",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "org_role",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "audience-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "cerebro-platform",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "cerebro-forge",
+      "name": "CerebroHive Forge Builder",
+      "description": "Workflow builder SPA client",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "${CEREBRO_FORGE_URL}/*",
+        "http://localhost:3001/*"
+      ],
+      "webOrigins": [
+        "${CEREBRO_FORGE_URL}",
+        "http://localhost:3001"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    }
+  ],
+  "identityProviders": [],
+  "identityProviderMappers": [],
+  "components": {
+    "org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy": [
+      {
+        "name": "Allowed Protocol Mapper Types",
+        "providerId": "allowed-protocol-mappers",
+        "subType": "anonymous",
+        "config": {
+          "allowed-protocol-mapper-types": [
+            "oidc-full-name-mapper",
+            "oidc-sha256-pairwise-sub-mapper",
+            "oidc-address-mapper",
+            "saml-user-attribute-mapper",
+            "saml-role-list-mapper",
+            "saml-user-property-mapper",
+            "oidc-usermodel-property-mapper",
+            "oidc-usermodel-attribute-mapper"
+          ]
+        }
+      }
+    ],
+    "org.keycloak.keys.KeyProvider": [
+      {
+        "name": "rsa-generated",
+        "providerId": "rsa-generated",
+        "config": {
+          "priority": ["100"],
+          "keySize":  ["4096"]
+        }
+      },
+      {
+        "name": "hmac-generated",
+        "providerId": "hmac-generated",
+        "config": {
+          "priority":   ["100"],
+          "secretSize": ["64"],
+          "algorithm":  ["HS256"]
+        }
+      }
+    ]
+  },
+  "eventsEnabled": true,
+  "eventsExpiration": 604800,
+  "eventsListeners": ["jboss-logging"],
+  "enabledEventTypes": [
+    "SEND_VERIFY_EMAIL",
+    "SEND_RESET_PASSWORD",
+    "VERIFY_EMAIL",
+    "REMOVE_TOTP",
+    "REVOKE_GRANT",
+    "UPDATE_TOTP",
+    "LOGIN_ERROR",
+    "CLIENT_LOGIN",
+    "RESET_PASSWORD_ERROR",
+    "IMPERSONATE_ERROR",
+    "CODE_TO_TOKEN_ERROR",
+    "CUSTOM_REQUIRED_ACTION",
+    "RESTART_AUTHENTICATION",
+    "IMPERSONATE",
+    "UPDATE_PROFILE",
+    "LOGIN",
+    "UPDATE_PASSWORD_ERROR",
+    "CLIENT_INITIATED_ACCOUNT_LINKING",
+    "TOKEN_EXCHANGE",
+    "LOGOUT",
+    "REGISTER",
+    "DELETE_ACCOUNT_ERROR",
+    "CLIENT_REGISTER",
+    "IDENTITY_PROVIDER_LINK_ACCOUNT",
+    "UPDATE_PASSWORD",
+    "DELETE_ACCOUNT"
+  ],
+  "adminEventsEnabled": true,
+  "adminEventsDetailsEnabled": true
+}

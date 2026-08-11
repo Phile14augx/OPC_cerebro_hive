@@ -1,0 +1,35 @@
+{
+  "extends": "./.eslintrc.base.json",
+  "rules": {
+    "no-restricted-imports": ["error", {
+      "paths": [
+        {
+          "name": "@temporalio/client",
+          "message": "ADR 0009: import @cerebro/eda-workflow. Only packages/eda-workflow may import @temporalio/*."
+        },
+        {
+          "name": "@temporalio/workflow",
+          "message": "ADR 0009: import @cerebro/eda-workflow. Only packages/eda-workflow may import @temporalio/*."
+        },
+        {
+          "name": "pg",
+          "message": "ADR 0010: use TenantScopedTransaction from @cerebro/eda-tenancy so RLS is engaged."
+        }
+      ]
+    }],
+    "no-restricted-syntax": ["error",
+      {
+        "selector": "CallExpression[callee.name='require']",
+        "message": "Use ES module imports instead of require()"
+      },
+      {
+        "selector": "TSTypeAliasDeclaration[id.name=/Id$/] > TSStringKeyword",
+        "message": "ADR 0011: identifiers must be branded types from @cerebro/eda-domain, not raw string aliases."
+      },
+      {
+        "selector": "TSInterfaceDeclaration[id.name=/Repository$/] TSPropertySignature[key.name='orgId']",
+        "message": "ADR 0010: repositories take a VerifiedTenantContext, not a loose orgId field."
+      }
+    ]
+  }
+}

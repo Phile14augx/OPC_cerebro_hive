@@ -1,0 +1,152 @@
+{
+  "$schema": "../schema/descriptor-v1.json",
+  "domain": "security",
+  "controls": [
+    {
+      "id": "G1",
+      "name": "Agent Sandbox Isolation",
+      "description": "Agent code runs in gVisor (runsc). Blocked syscalls, capabilities dropped, readOnlyRootFilesystem, non-root UID. All 10 escape techniques are blocked AND detected by Falco/Tetragon.",
+      "lifecycle": "Implemented",
+      "cec_weight": 3,
+      "dependsOn": [],
+      "runner": {
+        "type": "vitest",
+        "spec": "services/forge-api/src/break-tests/g1-escape-suite.spec.ts",
+        "workDir": "services/forge-api",
+        "minimumEvidenceKind": "unit-test",
+        "timeout_ms": 120000
+      },
+      "breakTest": {
+        "type": "spec-mutation",
+        "description": "Comment out one escape-blocking assertion → suite must fail",
+        "expectedFailurePattern": "AssertionError|expected.*not.*to.*be"
+      },
+      "automation": ".github/workflows/runtime-detection-validation.yml",
+      "adrs": ["ADR-010", "ADR-011"],
+      "slo_link": null
+    },
+    {
+      "id": "G2",
+      "name": "Concurrency Safety",
+      "description": "Project store operations are safe under concurrent access. No lost updates, no phantom reads, no torn writes across 10 concurrent goroutines.",
+      "lifecycle": "Implemented",
+      "cec_weight": 2,
+      "dependsOn": [],
+      "runner": {
+        "type": "go-test",
+        "pattern": "./...",
+        "workDir": "services/forge-api",
+        "flags": ["-race", "-count=3", "-timeout=120s"],
+        "minimumEvidenceKind": "integration-test",
+        "timeout_ms": 180000
+      },
+      "breakTest": {
+        "type": "race-injection",
+        "description": "Remove mutex around store write → go test -race must report DATA RACE",
+        "expectedFailurePattern": "DATA RACE"
+      },
+      "automation": ".github/workflows/ci.yml",
+      "adrs": ["ADR-012"],
+      "slo_link": null
+    },
+    {
+      "id": "DET-1",
+      "name": "Runtime Threat Detection (Falco)",
+      "description": "13 Falco rules covering all 8 attack categories. 10/10 break test techniques produce detectable Falco events within 30s.",
+      "lifecycle": "Implemented",
+      "cec_weight": 3,
+      "dependsOn": ["G1"],
+      "runner": {
+        "type": "file-check",
+        "checks": [
+          { "file": "infra/falco/falco-rules.yaml", "required": true },
+          { "pattern": "^- rule:", "minCount": 13 },
+          { "pattern": "priority: CRITICAL", "minCount": 5 },
+          { "pattern": "^- rule: CEREBRO_", "minCount": 13 }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "rule-deletion",
+        "description": "Delete one CEREBRO_ rule → rule count check must fail",
+        "expectedFailurePattern": "below minimums"
+      },
+      "automation": ".github/workflows/runtime-detection-validation.yml",
+      "adrs": ["ADR-013"],
+      "slo_link": null
+    },
+    {
+      "id": "DET-2",
+      "name": "eBPF Enforcement (Tetragon)",
+      "description": "9 Tetragon TracingPolicies. 6 high-risk techniques trigger SIGKILL before the syscall completes.",
+      "lifecycle": "Implemented",
+      "cec_weight": 3,
+      "dependsOn": ["G1"],
+      "runner": {
+        "type": "file-check",
+        "checks": [
+          { "file": "infra/tetragon/tracing-policies.yaml", "required": true },
+          { "pattern": "^kind: TracingPolicy", "minCount": 9 },
+          { "pattern": "action: Sigkill", "minCount": 6 }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "policy-deletion",
+        "description": "Delete one TracingPolicy entry → policy count check must fail",
+        "expectedFailurePattern": "below minimums"
+      },
+      "automation": ".github/workflows/runtime-detection-validation.yml",
+      "adrs": ["ADR-013"],
+      "slo_link": null
+    },
+    {
+      "id": "RBAC-1",
+      "name": "Admission Policy (Kyverno)",
+      "description": "ClusterPolicy require-signed-images enforces Cosign signature + SBOM attestation in cerebro-prod/staging. Tested with 5 Kyverno CLI test vectors.",
+      "lifecycle": "Implemented",
+      "cec_weight": 2,
+      "dependsOn": [],
+      "runner": {
+        "type": "file-check",
+        "checks": [
+          { "globPattern": "infra/**/*.yaml", "contentPattern": "ClusterPolicy", "minMatchingFiles": 1 }
+        ],
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "policy-removal",
+        "description": "Remove ClusterPolicy kind from manifest → check must find 0 matching files",
+        "expectedFailurePattern": "No Kyverno ClusterPolicy"
+      },
+      "automation": ".github/workflows/supply-chain.yml",
+      "adrs": ["ADR-014"],
+      "slo_link": null
+    },
+    {
+      "id": "API-1",
+      "name": "OpenAPI Drift Detection",
+      "description": "NestJS OpenAPI spec is generated on every PR touching forge-api/src. Drift from committed spec fails the PR. Every non-health path requires bearerAuth.",
+      "lifecycle": "Implemented",
+      "cec_weight": 1,
+      "dependsOn": [],
+      "runner": {
+        "type": "workflow-check",
+        "workflow": ".github/workflows/openapi-drift.yml",
+        "minimumEvidenceKind": "static-analysis",
+        "timeout_ms": 5000
+      },
+      "breakTest": {
+        "type": "workflow-removal",
+        "description": "Delete openapi-drift.yml → workflow-check must report ARCHITECTURE_FAILURE",
+        "expectedFailurePattern": "workflow not found"
+      },
+      "automation": ".github/workflows/openapi-drift.yml",
+      "adrs": ["ADR-015"],
+      "slo_link": null
+    }
+  ]
+}

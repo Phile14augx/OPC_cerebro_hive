@@ -1,0 +1,122 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CerebroHive — Production Environment Overrides
+# Rewritten to match the schema deployments.yaml's macro actually reads
+# (camelCase keys, `.replicas`/`.autoscaling` field names) — see
+# audit/INFRA-RECONCILIATION-PLAN.md. The previous version of this file used
+# snake_case keys and a `.replicaCount` field that only the broken/dead Set 1
+# templates (service.yaml/deployment.yaml/rollout.yaml) ever read, so none of
+# these numbers were reaching anything. They're carried over here under the
+# correct keys, preserving the original intent rather than the original values
+# file's exact shape.
+#
+# One thing that does NOT carry over cleanly: the original file had a
+# per-service `pdb.minAvailable` for each of studio/platform_api/forge_api
+# (2, 2, 1). deployments.yaml's PDB block is chart-global
+# (`podDisruptionBudget.minAvailable`), not per-service — Set 2 has no
+# per-service PDB mechanism today. Using the highest of the originally-intended
+# values (2) as the global setting below is a reasonable approximation, not a
+# precise translation; extending the PDB block to be per-service is a
+# reasonable follow-up if the difference between services matters in practice.
+# ──────────────────────────────────────────────────────────────────────────────
+
+global:
+  environment: production
+  domain: cerebrohive.com
+  appUrl: "https://app.cerebrohive.com"
+  apiUrl: "https://api.cerebrohive.com"
+
+studio:
+  replicas: 3
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  autoscaling:
+    minReplicas: 3
+    maxReplicas: 10
+  ingress:
+    host: app.cerebrohive.com
+
+forge:
+  replicas: 2
+  autoscaling:
+    minReplicas: 2
+    maxReplicas: 8
+  ingress:
+    host: forge.cerebrohive.com
+
+platformApi:
+  replicas: 3
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 1Gi
+  autoscaling:
+    minReplicas: 3
+    maxReplicas: 12
+  ingress:
+    host: api.cerebrohive.com
+
+forgeApi:
+  replicas: 2
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 4000m
+      memory: 2Gi
+  autoscaling:
+    minReplicas: 2
+    maxReplicas: 8
+
+aiGateway:
+  replicas: 3
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 1.5Gi
+  autoscaling:
+    minReplicas: 3
+    maxReplicas: 20
+  config:
+    rateLimitRPM: 1000
+    enableCaching: true
+    cacheTTL: 600
+
+# Production uses managed cloud services — no in-cluster databases
+postgresql:
+  enabled: false
+
+redis:
+  enabled: false
+
+nats:
+  enabled: false
+
+# Highest of the originally-intended per-service values (studio: 2,
+# platformApi: 2, forgeApi: 1) — see the note at the top of this file.
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2
+
+# Rollouts/canary strategy is NOT re-enabled here. rollout.yaml is part of
+# the broken Set 1 templates (calls undefined helpers — see
+# audit/INFRA-RECONCILIATION-PLAN.md) and deployments.yaml's macro has no
+# canary/Rollout support at all today. Re-enabling `rollouts.enabled: true`
+# would just turn this chart's only working Deployment path off for no
+# working replacement. If canary deploys for studio/ai-gateway are still
+# wanted, that needs building into the macro first — tracked as the "Rollout
+# strategy" open product question in the reconciliation plan, not something
+# to flip back on silently here.
+rollouts:
+  enabled: false

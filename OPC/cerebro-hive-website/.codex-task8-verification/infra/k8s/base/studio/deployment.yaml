@@ -1,0 +1,181 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: studio
+  namespace: cerebro-hive
+  labels:
+    app.kubernetes.io/name: studio
+    app.kubernetes.io/component: studio
+    app.kubernetes.io/version: "0.0.0"
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    # Rollout annotation — used by Argo Rollouts in production overlay
+    argocd.argoproj.io/managed-by: argocd
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: studio
+      app.kubernetes.io/component: studio
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0      # Zero downtime
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: studio
+        app.kubernetes.io/component: studio
+        app.kubernetes.io/version: "0.0.0"
+      annotations:
+        # Force pod restart when ConfigMap changes
+        checksum/config: ""
+        # Prometheus scrape
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+        prometheus.io/path: "/api/metrics"
+        # Istio traffic management
+        sidecar.istio.io/proxyCPU: "50m"
+        sidecar.istio.io/proxyMemory: "64Mi"
+    spec:
+      serviceAccountName: studio
+      automountServiceAccountToken: false
+
+      # Spread pods across nodes and AZs
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: studio
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: studio
+
+      # Security context for the pod
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+
+      # Grace period for in-flight requests (Next.js SSR)
+      terminationGracePeriodSeconds: 60
+
+      containers:
+        - name: studio
+          image: ghcr.io/cerebro-hive/cerebro-hive/studio:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+
+          # Security context for the container
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1001
+            capabilities:
+              drop: [ALL]
+
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: NEXT_TELEMETRY_DISABLED
+              value: "1"
+            - name: PORT
+              value: "3000"
+            # Runtime config from ConfigMap
+            - name: NEXT_PUBLIC_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cerebro-hive-config
+                  key: NEXT_PUBLIC_API_URL
+            - name: NEXT_PUBLIC_AI_GATEWAY_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cerebro-hive-config
+                  key: NEXT_PUBLIC_AI_GATEWAY_URL
+            # Secrets from Kubernetes Secret (sourced from AWS Secrets Manager)
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cerebro-hive-secrets
+                  key: NEXTAUTH_SECRET
+            - name: NEXTAUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cerebro-hive-config
+                  key: APP_URL
+            # OTel
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: cerebro-hive-config
+                  key: OTEL_ENDPOINT
+            - name: OTEL_SERVICE_NAME
+              value: studio
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            failureThreshold: 3
+
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            failureThreshold: 12
+            periodSeconds: 10
+
+          # Writable temp dirs (read-only root FS)
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: next-cache
+              mountPath: /app/apps/studio/.next/cache
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 5"]
+
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: next-cache
+          emptyDir:
+            medium: Memory
+            sizeLimit: 128Mi
+
+      imagePullSecrets:
+        - name: ghcr-credentials

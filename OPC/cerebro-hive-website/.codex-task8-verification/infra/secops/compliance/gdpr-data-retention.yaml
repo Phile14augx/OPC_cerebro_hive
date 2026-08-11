@@ -1,0 +1,183 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# ComplianceOps — GDPR Data Retention & Privacy Policies
+# Defines retention schedules, PII classification, and deletion workflows.
+# Enforced by: Prefect scheduled flows + PostgreSQL TTL policies + S3 lifecycle
+# ──────────────────────────────────────────────────────────────────────────────
+
+apiVersion: cerebro.ai/v1
+kind: DataRetentionPolicy
+metadata:
+  name: cerebro-hive-gdpr-retention
+  version: "1.0.0"
+  effectiveDate: "2026-01-01"
+  owner: dpo@cerebrohive.com
+  legalBasis: GDPR Article 5(1)(e)
+
+# ── Data classification ────────────────────────────────────────────────────────
+dataClasses:
+
+  - name: user-identifiers
+    description: "User IDs, email addresses, usernames"
+    sensitivity: HIGH
+    containsPII: true
+    containsSensitiveData: false
+    retentionDays: 1825        # 5 years (contractual + legal)
+    legalBasis: CONTRACT
+    deletionMethod: hard-delete
+    tables: [users, user_profiles, user_sessions]
+
+  - name: ai-conversation-logs
+    description: "LLM prompts, completions, and workflow execution logs"
+    sensitivity: HIGH
+    containsPII: true           # may contain PII in user-provided content
+    containsSensitiveData: true
+    retentionDays: 90
+    legalBasis: LEGITIMATE_INTEREST
+    deletionMethod: anonymize   # replace PII fields with [REDACTED]
+    tables: [conversation_turns, workflow_executions, agent_runs]
+    anonymizationFields: [user_input, model_output, context]
+
+  - name: audit-logs
+    description: "Authentication events, admin actions, API access logs"
+    sensitivity: MEDIUM
+    containsPII: true           # contains user IDs and IP addresses
+    retentionDays: 730          # 2 years (GDPR audit requirement)
+    legalBasis: LEGAL_OBLIGATION
+    deletionMethod: hard-delete
+    tables: [audit_events, auth_events]
+    stores: [loki]
+
+  - name: platform-metrics
+    description: "Aggregated performance and usage metrics (no PII)"
+    sensitivity: LOW
+    containsPII: false
+    retentionDays: 395          # 13 months for year-over-year comparison
+    legalBasis: LEGITIMATE_INTEREST
+    deletionMethod: hard-delete
+    stores: [prometheus, grafana]
+
+  - name: error-logs
+    description: "Application error logs — may contain stack traces with user context"
+    sensitivity: MEDIUM
+    containsPII: true
+    retentionDays: 90
+    legalBasis: LEGITIMATE_INTEREST
+    deletionMethod: anonymize
+    stores: [loki]
+    anonymizationFields: [request_body, user_id, email]
+
+  - name: ai-cost-records
+    description: "Token usage and cost allocation records"
+    sensitivity: LOW
+    containsPII: false
+    retentionDays: 2555         # 7 years (financial record-keeping)
+    legalBasis: LEGAL_OBLIGATION
+    deletionMethod: hard-delete
+    tables: [ai_usage_records, billing_events]
+
+  - name: vector-embeddings
+    description: "pgvector embeddings of user-provided documents"
+    sensitivity: HIGH
+    containsPII: true           # embeddings may encode PII
+    retentionDays: 365
+    legalBasis: CONTRACT
+    deletionMethod: hard-delete
+    tables: [knowledge_chunks, knowledge_documents]
+    note: "Delete on user request or account deletion — Right to Erasure"
+
+  - name: model-training-data
+    description: "Data used to fine-tune or evaluate models"
+    sensitivity: HIGH
+    containsPII: true
+    retentionDays: 365
+    legalBasis: CONSENT
+    deletionMethod: hard-delete
+    stores: [s3/cerebro-hive-mlflow-artifacts/datasets/]
+    note: "Requires explicit consent; delete from training pipeline on withdrawal"
+
+# ── Right to Erasure (GDPR Article 17) ────────────────────────────────────────
+erasureWorkflow:
+  triggerEvents:
+    - account_deletion
+    - explicit_erasure_request
+    - consent_withdrawal
+  sla: "30 days"  # GDPR requires 30 days maximum
+  steps:
+    - name: identify-all-user-data
+      description: "Query all tables and stores for user's data"
+      automated: true
+
+    - name: soft-delete-user-account
+      description: "Mark account deleted, revoke all active sessions"
+      automated: true
+
+    - name: anonymize-conversation-logs
+      description: "Replace user_id and PII fields in conversation logs with [REDACTED_USER_{hash}]"
+      automated: true
+      tables: [conversation_turns, workflow_executions, agent_runs]
+
+    - name: delete-vector-embeddings
+      description: "Hard delete from knowledge_chunks/documents for this user"
+      automated: true
+
+    - name: delete-training-data
+      description: "Remove user's data from training datasets and re-train or retract if needed"
+      automated: false
+      sla: "90 days"
+      owner: ml-team@cerebrohive.com
+
+    - name: purge-from-backups
+      description: "Schedule backup purge after backup TTL expires (max 35 days)"
+      automated: false
+      sla: "35 days"
+
+    - name: confirm-deletion
+      description: "Send erasure completion certificate to user"
+      automated: true
+
+# ── S3 lifecycle policies (Terraform-managed) ─────────────────────────────────
+s3LifecyclePolicies:
+  - bucket: cerebro-hive-logs
+    rules:
+      - name: audit-logs-glacier
+        filter: prefix/audit-logs/
+        transitions:
+          - days: 90
+            storageClass: GLACIER
+        expiration:
+          days: 730
+
+      - name: app-logs-expiry
+        filter: prefix/app-logs/
+        expiration:
+          days: 90
+
+  - bucket: cerebro-hive-mlflow-artifacts
+    rules:
+      - name: training-data-expiry
+        filter: prefix/datasets/
+        expiration:
+          days: 365
+      - name: model-artifacts-glacier
+        filter: prefix/models/
+        transitions:
+          - days: 180
+            storageClass: GLACIER
+        expiration:
+          days: 1825
+
+# ── Scheduled enforcement jobs ────────────────────────────────────────────────
+scheduledJobs:
+  - name: purge-expired-conversations
+    cron: "0 2 * * *"           # 2 AM UTC daily
+    script: "scripts/compliance/purge-expired-data.py"
+    dryRunBeforeProd: true
+
+  - name: anonymize-old-logs
+    cron: "0 3 * * 0"           # 3 AM UTC weekly
+    script: "scripts/compliance/anonymize-logs.py"
+
+  - name: gdpr-compliance-report
+    cron: "0 9 1 * *"           # 9 AM UTC monthly
+    script: "scripts/compliance/generate-gdpr-report.py"
+    output: s3://cerebro-hive-compliance-reports/gdpr/

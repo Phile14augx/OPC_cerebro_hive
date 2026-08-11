@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CerebroHive — Assurance Dashboard</title>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --bg-card: #111827;
+      --bg-elevated: #1a2235;
+      --border: #1e2d45;
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --teal: #14b8a6;
+      --teal-dim: #0d9488;
+      --amber: #f59e0b;
+      --amber-dim: #d97706;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────────────────── */
+    .header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--teal), var(--amber));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #0a0f1e;
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .header-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+    }
+
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+    }
+
+    .header-refresh {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--teal);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: var(--mono);
+      transition: all 0.15s;
+    }
+    .header-refresh:hover { background: var(--teal); color: #0a0f1e; }
+
+    .main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px 32px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .gap-24 { margin-top: 24px; }
+    .gap-32 { margin-top: 32px; }
+
+    /* ── Cards ──────────────────────────────────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .card-value {
+      font-size: 36px;
+      font-weight: 800;
+      font-family: var(--mono);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .card-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .color-green  { color: var(--green); }
+    .color-red    { color: var(--red); }
+    .color-yellow { color: var(--yellow); }
+    .color-teal   { color: var(--teal); }
+    .color-amber  { color: var(--amber); }
+    .color-blue   { color: var(--blue); }
+    .color-muted  { color: var(--text-muted); }
+
+    /* ── CEC Gauge ──────────────────────────────────────────────────────── */
+    .cec-card {
+      grid-column: span 2;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .cec-gauge-wrap {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      flex-shrink: 0;
+    }
+
+    .cec-gauge-svg {
+      width: 140px;
+      height: 140px;
+      transform: rotate(-90deg);
+    }
+
+    .cec-gauge-track {
+      fill: none;
+      stroke: var(--bg-elevated);
+      stroke-width: 14;
+    }
+
+    .cec-gauge-fill {
+      fill: none;
+      stroke-width: 14;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s ease;
+    }
+
+    .cec-gauge-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .cec-pct {
+      font-size: 28px;
+      font-weight: 800;
+      font-family: var(--mono);
+      line-height: 1;
+    }
+
+    .cec-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .cec-details { flex: 1; }
+    .cec-details-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .cec-stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cec-stat-row:last-child { border-bottom: none; }
+    .cec-stat-label { color: var(--text-muted); font-size: 13px; }
+    .cec-stat-value { font-family: var(--mono); font-weight: 600; font-size: 13px; }
+
+    /* ── Progress bar ───────────────────────────────────────────────────── */
+    .progress-bar {
+      height: 6px;
+      background: var(--bg-elevated);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.8s ease;
+    }
+
+    /* ── Domain coverage ────────────────────────────────────────────────── */
+    .domain-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .domain-item:last-child { border-bottom: none; }
+
+    .domain-name {
+      width: 120px;
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: capitalize;
+      flex-shrink: 0;
+    }
+
+    .domain-bar-wrap { flex: 1; }
+
+    .domain-pct {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      width: 40px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .domain-count {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      width: 50px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ── Control table ──────────────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      background: var(--bg-elevated);
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg-elevated); }
+
+    tbody td {
+      padding: 10px 14px;
+      vertical-align: middle;
+    }
+
+    .mono { font-family: var(--mono); font-size: 12px; }
+
+    /* ── Status badge ───────────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--mono);
+      letter-spacing: 0.05em;
+    }
+
+    .badge-pass    { background: rgba(34,197,94,0.15);  color: var(--green); }
+    .badge-fail    { background: rgba(239,68,68,0.15);  color: var(--red); }
+    .badge-warn    { background: rgba(234,179,8,0.15);  color: var(--yellow); }
+    .badge-unknown { background: rgba(100,116,139,0.15); color: var(--text-muted); }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .badge-pass .badge-dot    { background: var(--green); }
+    .badge-fail .badge-dot    { background: var(--red); }
+    .badge-warn .badge-dot    { background: var(--yellow); }
+    .badge-unknown .badge-dot { background: var(--text-muted); }
+
+    /* ── Domain pill ────────────────────────────────────────────────────── */
+    .domain-pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .pill-security     { background: rgba(239,68,68,0.12);  color: #fca5a5; }
+    .pill-supply-chain { background: rgba(168,85,247,0.12); color: #d8b4fe; }
+    .pill-reliability  { background: rgba(59,130,246,0.12); color: #93c5fd; }
+    .pill-performance  { background: rgba(245,158,11,0.12); color: #fcd34d; }
+    .pill-compliance   { background: rgba(20,184,166,0.12); color: #5eead4; }
+
+    /* ── CEC history chart ──────────────────────────────────────────────── */
+    .history-chart {
+      width: 100%;
+      height: 140px;
+      overflow: visible;
+    }
+
+    /* ── Filters ────────────────────────────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #0a0f1e;
+      font-weight: 600;
+    }
+
+    .filter-input {
+      flex: 1;
+      max-width: 260px;
+      padding: 5px 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 12px;
+      font-family: var(--font);
+      outline: none;
+    }
+    .filter-input:focus { border-color: var(--teal); }
+
+    /* ── Blind spots ────────────────────────────────────────────────────── */
+    .blind-spot {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .blind-spot-icon { font-size: 18px; flex-shrink: 0; }
+    .blind-spot-content { flex: 1; }
+    .blind-spot-title { font-size: 13px; font-weight: 600; color: var(--red); }
+    .blind-spot-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── Evidence feed ──────────────────────────────────────────────────── */
+    .feed-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .feed-item:last-child { border-bottom: none; }
+    .feed-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .feed-dot-pass { background: var(--green); }
+    .feed-dot-fail { background: var(--red); }
+    .feed-dot-unknown { background: var(--text-muted); }
+    .feed-content { flex: 1; min-width: 0; }
+    .feed-title { font-size: 13px; font-weight: 500; }
+    .feed-meta { font-size: 11px; color: var(--text-muted); font-family: var(--mono); margin-top: 2px; }
+
+    /* ── Loading / error states ─────────────────────────────────────────── */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 64px;
+      color: var(--text-muted);
+      flex-direction: column;
+      gap: 16px;
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: 1fr; }
+      .cec-card { grid-column: span 1; flex-direction: column; }
+      .main { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────────────── -->
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">CH</div>
+    <div>
+      <div class="header-title">CerebroHive Assurance Dashboard</div>
+      <div class="header-subtitle" id="header-subtitle">Loading...</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <span id="header-sha">SHA: —</span>
+    <span id="header-env">ENV: staging</span>
+    <span id="header-updated">Updated: —</span>
+    <button class="header-refresh" onclick="loadData()">↻ Refresh</button>
+  </div>
+</header>
+
+<!-- ── Main ────────────────────────────────────────────────────────────────── -->
+<main class="main" id="main">
+  <div class="loading" id="loading-state">
+    <div class="spinner"></div>
+    <span>Loading control register...</span>
+  </div>
+  <div id="dashboard" style="display:none">
+
+    <!-- ── Row 1: Headline metrics ─────────────────────────────────────── -->
+    <div class="section-title">Control Evidence Coverage</div>
+    <div class="grid-4">
+
+      <!-- CEC Gauge -->
+      <div class="card cec-card">
+        <div class="cec-gauge-wrap">
+          <svg class="cec-gauge-svg" viewBox="0 0 120 120">
+            <circle class="cec-gauge-track" cx="60" cy="60" r="50" />
+            <circle class="cec-gauge-fill" id="gauge-fill"
+              cx="60" cy="60" r="50"
+              stroke-dasharray="314"
+              stroke-dashoffset="314" />
+          </svg>
+          <div class="cec-gauge-label">
+            <div class="cec-pct" id="gauge-pct">—</div>
+            <div class="cec-label">CEC</div>
+          </div>
+        </div>
+        <div class="cec-details">
+          <div class="cec-details-title">Assurance Score</div>
+          <div class="cec-stat-row">
+            <span class="cec-stat-label">Target</span>
+            <span class="cec-stat-value" id="cec-target">—</span>
+          </div>
+          <div class="cec-stat-row">
+            <span class="cec-stat-label">Status</span>
+            <span class="cec-stat-value" id="cec-status">—</span>
+          </div>
+          <div class="cec-stat-row">
+            <span class="cec-stat-label">Last updated</span>
+            <span class="cec-stat-value mono" id="cec-updated">—</span>
+          </div>
+          <div class="cec-stat-row">
+            <span class="cec-stat-label">Git SHA</span>
+            <span class="cec-stat-value mono" id="cec-sha">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls passing -->
+      <div class="card">
+        <div class="card-title">Controls Passing</div>
+        <div class="card-value color-green" id="stat-passing">—</div>
+        <div class="card-sub">of <span id="stat-total">—</span> total controls</div>
+        <div class="progress-bar" style="margin-top:12px">
+          <div class="progress-fill" id="stat-pass-bar" style="background:var(--green);width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Controls failing -->
+      <div class="card">
+        <div class="card-title">Controls Failing</div>
+        <div class="card-value" id="stat-failing" style="color:var(--red)">—</div>
+        <div class="card-sub">require attention</div>
+        <div class="progress-bar" style="margin-top:12px">
+          <div class="progress-fill" id="stat-fail-bar" style="background:var(--red);width:0%"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Row 1b: Trend intelligence ──────────────────────────────────── -->
+    <div class="card gap-24" id="trend-card" style="display:none">
+      <div class="card-title">Assurance Trend — <span id="trend-date">—</span></div>
+      <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+        <div style="flex-shrink:0">
+          <div style="font-size:36px;font-weight:800;font-family:var(--mono)" id="trend-delta">—</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">vs. last run</div>
+        </div>
+        <div style="flex:1;min-width:200px" id="trend-reasons"></div>
+      </div>
+    </div>
+
+    <!-- ── Row 2: Domain coverage + CEC history ─────────────────────────── -->
+    <div class="grid-2 gap-24">
+
+      <!-- Domain coverage -->
+      <div class="card">
+        <div class="card-title">Coverage by Domain</div>
+        <div id="domain-list"></div>
+      </div>
+
+      <!-- CEC history -->
+      <div class="card">
+        <div class="card-title">CEC Score — 90-day Trend</div>
+        <svg class="history-chart" id="history-svg" viewBox="0 0 600 140" preserveAspectRatio="none">
+          <text x="300" y="80" text-anchor="middle" fill="#64748b" font-size="14">
+            Loading history...
+          </text>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- ── Row 3: Control table ──────────────────────────────────────────── -->
+    <div class="gap-24">
+      <div class="card-title" style="margin-bottom:12px">All Controls</div>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="setFilter('PASS', this)">Passing</button>
+        <button class="filter-btn" onclick="setFilter('FAIL', this)">Failing</button>
+        <button class="filter-btn" onclick="setFilter('UNKNOWN', this)">Unknown</button>
+        <button class="filter-btn" onclick="setFilter('security', this)">Security</button>
+        <button class="filter-btn" onclick="setFilter('reliability', this)">Reliability</button>
+        <button class="filter-btn" onclick="setFilter('supply-chain', this)">Supply Chain</button>
+        <button class="filter-btn" onclick="setFilter('performance', this)">Performance</button>
+        <button class="filter-btn" onclick="setFilter('compliance', this)">Compliance</button>
+        <input class="filter-input" type="text" placeholder="Search controls..." oninput="searchControls(this.value)" />
+      </div>
+      <div class="table-wrap">
+        <table id="controls-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Domain</th>
+              <th>Status</th>
+              <th>Target</th>
+              <th>Last Run</th>
+              <th>Git SHA</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="controls-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Row 4: Blind spots + Evidence feed ───────────────────────────── -->
+    <div class="grid-2 gap-32">
+
+      <!-- Blind spots -->
+      <div>
+        <div class="section-title">Open Blind Spots</div>
+        <div id="blind-spots-list"></div>
+      </div>
+
+      <!-- Recent evidence feed -->
+      <div>
+        <div class="section-title">Recent Evidence</div>
+        <div id="evidence-feed"></div>
+      </div>
+
+    </div>
+
+  </div><!-- /#dashboard -->
+</main>
+
+<script>
+// ── Data loading ──────────────────────────────────────────────────────────────
+
+let allControls = [];
+let currentFilter = 'all';
+let currentSearch = '';
+
+async function loadData() {
+  try {
+    // Try loading from the evidence-chain branch artifact
+    // Falls back to a local file for development
+    const sources = [
+      './control-register.json',
+      'https://raw.githubusercontent.com/cerebro-hive/cerebro-hive/evidence-chain/evidence/control-register.json',
+    ];
+
+    let register = null;
+    for (const src of sources) {
+      try {
+        const res = await fetch(src);
+        if (res.ok) {
+          register = await res.json();
+          break;
+        }
+      } catch (_) {}
+    }
+
+    if (!register) {
+      // Use mock data so the dashboard renders even without a live register
+      register = getMockRegister();
+    }
+
+    // Load CEC history
+    let history = [];
+    try {
+      const histRes = await fetch('./cec-history.jsonl').catch(() =>
+        fetch('https://raw.githubusercontent.com/cerebro-hive/cerebro-hive/evidence-chain/evidence/cec-history.jsonl')
+      );
+      if (histRes && histRes.ok) {
+        const text = await histRes.text();
+        history = text.split('\n').filter(Boolean).map(l => JSON.parse(l));
+      }
+    } catch (_) {}
+
+    renderDashboard(register, history);
+  } catch (err) {
+    document.getElementById('loading-state').innerHTML =
+      `<div style="color:var(--red)">Failed to load register: ${err.message}</div>`;
+  }
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+
+function renderDashboard(register, history) {
+  allControls = register.controls || [];
+
+  // Header
+  const updatedDate = register.generated_at ? register.generated_at.slice(0, 10) : '—';
+  document.getElementById('header-subtitle').textContent =
+    `${register.total_controls} controls · CEC ${register.cec_score_pct}%`;
+  document.getElementById('header-sha').textContent = `SHA: ${register.git_sha || '—'}`;
+  document.getElementById('header-updated').textContent = `Updated: ${updatedDate}`;
+
+  // CEC gauge
+  const pct = register.cec_score_pct || 0;
+  const circumference = 314;
+  const offset = circumference - (pct / 100) * circumference;
+  const gaugeColor = pct >= 90 ? 'var(--green)' : pct >= 70 ? 'var(--yellow)' : 'var(--red)';
+
+  document.getElementById('gauge-fill').style.strokeDashoffset = offset;
+  document.getElementById('gauge-fill').style.stroke = gaugeColor;
+  document.getElementById('gauge-pct').textContent = `${pct}%`;
+  document.getElementById('gauge-pct').style.color = gaugeColor;
+  document.getElementById('cec-target').textContent = `${register.cec_target_pct || 90}%`;
+  document.getElementById('cec-status').innerHTML =
+    register.cec_status === 'PASS'
+      ? '<span class="color-green">✅ PASS</span>'
+      : '<span class="color-red">❌ FAIL</span>';
+  document.getElementById('cec-updated').textContent = updatedDate;
+  document.getElementById('cec-sha').textContent = register.git_sha || '—';
+
+  // Stats
+  const passing = register.passing_controls || 0;
+  const failing = register.failing_controls || 0;
+  const total = register.total_controls || 1;
+
+  document.getElementById('stat-passing').textContent = passing;
+  document.getElementById('stat-failing').textContent = failing;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-pass-bar').style.width = `${(passing / total) * 100}%`;
+  document.getElementById('stat-fail-bar').style.width = `${(failing / total) * 100}%`;
+
+  // Domain coverage
+  const domainList = document.getElementById('domain-list');
+  const domains = register.by_domain || {};
+  domainList.innerHTML = Object.entries(domains).map(([domain, stats]) => {
+    const pctD = stats.total ? Math.round(stats.passing / stats.total * 100) : 0;
+    const barColor = pctD >= 80 ? 'var(--green)' : pctD >= 50 ? 'var(--yellow)' : 'var(--red)';
+    return `
+      <div class="domain-item">
+        <div class="domain-name">${domain}</div>
+        <div class="domain-bar-wrap">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${pctD}%;background:${barColor}"></div>
+          </div>
+        </div>
+        <div class="domain-pct">${pctD}%</div>
+        <div class="domain-count">${stats.passing}/${stats.total}</div>
+      </div>`;
+  }).join('');
+
+  // CEC history chart
+  renderHistoryChart(history);
+
+  // Controls table
+  renderControlsTable();
+
+  // Blind spots
+  renderBlindSpots();
+
+  // Evidence feed
+  renderEvidenceFeed();
+
+  // Show dashboard
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+}
+
+function renderHistoryChart(history) {
+  const svg = document.getElementById('history-svg');
+  if (!history.length) {
+    svg.innerHTML = `<text x="300" y="80" text-anchor="middle" fill="#64748b" font-size="14">No history available yet</text>`;
+    return;
+  }
+
+  const W = 600, H = 140, PAD = 30;
+  const vals = history.map(h => parseFloat(h.cec_pct) || 0);
+  const minV = Math.max(0, Math.min(...vals) - 5);
+  const maxV = Math.min(100, Math.max(...vals) + 5);
+  const n = vals.length;
+
+  const x = (i) => PAD + (i / Math.max(n - 1, 1)) * (W - 2 * PAD);
+  const y = (v) => PAD + (1 - (v - minV) / (maxV - minV)) * (H - 2 * PAD);
+
+  // Area fill
+  const pts = vals.map((v, i) => `${x(i)},${y(v)}`).join(' ');
+  const areaPath = `M ${x(0)},${y(vals[0])} ` +
+    vals.map((v, i) => `L ${x(i)},${y(v)}`).join(' ') +
+    ` L ${x(n-1)},${H} L ${x(0)},${H} Z`;
+
+  // Target line (90%)
+  const targetY = y(90);
+
+  // Date labels (first, middle, last)
+  const labelIdx = [0, Math.floor(n / 2), n - 1];
+  const labels = labelIdx.map(i => {
+    const d = history[i]?.date || '';
+    return `<text x="${x(i)}" y="${H - 4}" text-anchor="middle" fill="#475569" font-size="10">${d.slice(0, 10)}</text>`;
+  }).join('');
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="area-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <!-- Grid -->
+    <line x1="${PAD}" y1="${y(100)}" x2="${W-PAD}" y2="${y(100)}" stroke="#1e2d45" stroke-width="1"/>
+    <line x1="${PAD}" y1="${y(75)}"  x2="${W-PAD}" y2="${y(75)}"  stroke="#1e2d45" stroke-width="1"/>
+    <line x1="${PAD}" y1="${y(50)}"  x2="${W-PAD}" y2="${y(50)}"  stroke="#1e2d45" stroke-width="1"/>
+    <text x="${PAD - 6}" y="${y(100) + 4}" text-anchor="end" fill="#475569" font-size="10">100%</text>
+    <text x="${PAD - 6}" y="${y(75) + 4}"  text-anchor="end" fill="#475569" font-size="10">75%</text>
+    <text x="${PAD - 6}" y="${y(50) + 4}"  text-anchor="end" fill="#475569" font-size="10">50%</text>
+    <!-- Target line -->
+    <line x1="${PAD}" y1="${targetY}" x2="${W-PAD}" y2="${targetY}"
+      stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3" opacity="0.7"/>
+    <text x="${W - PAD + 4}" y="${targetY + 4}" fill="#f59e0b" font-size="10">target</text>
+    <!-- Area -->
+    <path d="${areaPath}" fill="url(#area-grad)"/>
+    <!-- Line -->
+    <polyline points="${pts}" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linejoin="round"/>
+    <!-- Dots -->
+    ${vals.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="#14b8a6"/>`).join('')}
+    <!-- Latest value -->
+    <text x="${x(n-1)}" y="${y(vals[n-1]) - 8}" text-anchor="middle" fill="#14b8a6" font-size="11" font-weight="600">${vals[n-1]}%</text>
+    <!-- Date labels -->
+    ${labels}
+  `;
+}
+
+function renderControlsTable() {
+  const tbody = document.getElementById('controls-tbody');
+  const filtered = filterControls();
+
+  tbody.innerHTML = filtered.map(c => {
+    const status = c.last_status || 'UNKNOWN';
+    const badgeClass = { PASS:'badge-pass', FAIL:'badge-fail', WARN:'badge-warn' }[status] || 'badge-unknown';
+    const domainClass = {
+      'security': 'pill-security',
+      'supply-chain': 'pill-supply-chain',
+      'reliability': 'pill-reliability',
+      'performance': 'pill-performance',
+      'compliance': 'pill-compliance',
+    }[c.domain] || '';
+
+    const lastRun = c.last_run ? c.last_run.slice(0, 10) : '—';
+    const sha = c.last_sha || '—';
+    const details = (c.last_details || '').slice(0, 60) + ((c.last_details || '').length > 60 ? '…' : '');
+
+    const runUrl = c.last_run_url || c.last_artifact || '#';
+    const shaLink = runUrl !== '#'
+      ? `<a href="${runUrl}" target="_blank" style="color:var(--teal);text-decoration:none">${sha}</a>`
+      : sha;
+
+    return `
+      <tr data-status="${status}" data-domain="${c.domain}" data-name="${c.name.toLowerCase()} ${c.id.toLowerCase()}" onclick="showLineage('${c.id}')" style="cursor:pointer" title="Click — view evidence lineage">
+        <td class="mono">${c.id}</td>
+        <td style="font-weight:500;max-width:200px">${c.name}</td>
+        <td><span class="domain-pill ${domainClass}">${c.domain}</span></td>
+        <td><span class="badge ${badgeClass}"><span class="badge-dot"></span>${status}</span></td>
+        <td class="mono" style="color:var(--text-muted)">${c.target}</td>
+        <td class="mono" style="color:var(--text-muted)">${lastRun}</td>
+        <td class="mono">${shaLink}</td>
+        <td style="color:var(--text-muted);font-size:12px;max-width:200px">${details || '—'}</td>
+      </tr>`;
+  }).join('');
+
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:32px">No controls match the current filter</td></tr>`;
+  }
+}
+
+function renderBlindSpots() {
+  const container = document.getElementById('blind-spots-list');
+  const blindSpots = allControls
+    .filter(c => c.last_status === 'FAIL' || !c.last_status || c.last_status === 'UNKNOWN')
+    .map(c => ({
+      id: c.id,
+      name: c.name,
+      domain: c.domain,
+      status: c.last_status || 'UNKNOWN',
+      lastRun: c.last_run ? c.last_run.slice(0, 10) : 'never',
+    }));
+
+  if (!blindSpots.length) {
+    container.innerHTML = `<div style="color:var(--green);padding:12px">✅ No blind spots — all controls passing</div>`;
+    return;
+  }
+
+  container.innerHTML = blindSpots.slice(0, 8).map(b => `
+    <div class="blind-spot">
+      <div class="blind-spot-icon">${b.status === 'FAIL' ? '❌' : '❓'}</div>
+      <div class="blind-spot-content">
+        <div class="blind-spot-title">${b.id} — ${b.name}</div>
+        <div class="blind-spot-desc">Domain: ${b.domain} · Status: ${b.status} · Last run: ${b.lastRun}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderEvidenceFeed() {
+  const container = document.getElementById('evidence-feed');
+  const sorted = [...allControls]
+    .filter(c => c.last_run)
+    .sort((a, b) => new Date(b.last_run) - new Date(a.last_run))
+    .slice(0, 12);
+
+  container.innerHTML = sorted.map(c => {
+    const status = c.last_status || 'UNKNOWN';
+    const dotClass = { PASS: 'feed-dot-pass', FAIL: 'feed-dot-fail' }[status] || 'feed-dot-unknown';
+    const runUrl = c.last_run_url || c.last_artifact || '#';
+    const ts = c.last_run ? c.last_run.replace('T', ' ').slice(0, 16) + ' UTC' : '—';
+
+    return `
+      <div class="feed-item">
+        <div class="feed-dot ${dotClass}"></div>
+        <div class="feed-content">
+          <div class="feed-title">
+            <span class="mono" style="color:var(--teal)">${c.id}</span>
+            ${runUrl !== '#' ? `<a href="${runUrl}" target="_blank" style="color:var(--text);text-decoration:none"> — ${c.name}</a>` : ` — ${c.name}`}
+          </div>
+          <div class="feed-meta">${status} · ${ts} · sha:${c.last_sha || '—'}</div>
+        </div>
+      </div>`;
+  }).join('') || `<div style="color:var(--text-muted);padding:12px">No evidence recorded yet</div>`;
+}
+
+// ── Filter / search ───────────────────────────────────────────────────────────
+
+function filterControls() {
+  return allControls.filter(c => {
+    const status = c.last_status || 'UNKNOWN';
+    const matchesFilter =
+      currentFilter === 'all' ||
+      currentFilter === status ||
+      currentFilter === c.domain;
+
+    const matchesSearch = !currentSearch ||
+      c.name.toLowerCase().includes(currentSearch) ||
+      c.id.toLowerCase().includes(currentSearch) ||
+      c.domain.toLowerCase().includes(currentSearch);
+
+    return matchesFilter && matchesSearch;
+  });
+}
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderControlsTable();
+}
+
+function searchControls(value) {
+  currentSearch = value.toLowerCase();
+  renderControlsTable();
+}
+
+// ── Mock data (renders dashboard without a live register) ─────────────────────
+
+function getMockRegister() {
+  return {
+    schema_version: '1.0',
+    generated_at: new Date().toISOString(),
+    git_sha: 'abc1234',
+    cec_score_pct: 72.5,
+    cec_target_pct: 90,
+    cec_status: 'FAIL',
+    total_controls: 18,
+    passing_controls: 11,
+    failing_controls: 2,
+    unknown_controls: 5,
+    by_domain: {
+      security:      { total: 5, passing: 4, controls: ['G1','G2','DET-1','DET-2','RBAC-1'] },
+      'supply-chain':{ total: 3, passing: 2, controls: ['SC-1','SC-2','SC-3'] },
+      reliability:   { total: 7, passing: 4, controls: ['SLO-1','SLO-2','SLO-3','DR-1','DR-2','DR-3','CHAOS-1'] },
+      performance:   { total: 1, passing: 1, controls: ['PRF-1'] },
+      compliance:    { total: 2, passing: 0, controls: ['API-1','PRR-1'] },
+    },
+    controls: [
+      { id:'G1',      name:'Agent Sandbox Isolation',      domain:'security',      last_status:'PASS', target:'Continuous', last_run:'2026-08-03T02:00:00Z', last_sha:'abc1234', last_details:'10/10 escape techniques blocked and detected', last_run_url:'#' },
+      { id:'G2',      name:'Concurrency Safety',           domain:'security',      last_status:'PASS', target:'Continuous', last_run:'2026-08-03T01:00:00Z', last_sha:'abc1234', last_details:'All G2 concurrency tests passed', last_run_url:'#' },
+      { id:'SC-1',    name:'Image Signing + SBOM',         domain:'supply-chain',  last_status:'PASS', target:'Continuous', last_run:'2026-08-02T20:00:00Z', last_sha:'abc1234', last_details:'forge-api studio worker ai-gateway signed', last_run_url:'#' },
+      { id:'SC-2',    name:'SLSA Level 3 Provenance',      domain:'supply-chain',  last_status:'PASS', target:'Continuous', last_run:'2026-08-02T20:00:00Z', last_sha:'abc1234', last_details:'SLSA provenance generated for all images', last_run_url:'#' },
+      { id:'SC-3',    name:'Vulnerability Scanning',       domain:'supply-chain',  last_status:'FAIL', target:'Continuous', last_run:'2026-08-02T20:00:00Z', last_sha:'abc1234', last_details:'1 HIGH CVE in worker image — fix pending', last_run_url:'#' },
+      { id:'DET-1',   name:'Runtime Threat Detection',     domain:'security',      last_status:'PASS', target:'Continuous', last_run:'2026-08-01T04:00:00Z', last_sha:'abc1234', last_details:'10/10 rules defined, 9/10 detected live', last_run_url:'#' },
+      { id:'DET-2',   name:'eBPF Enforcement (Tetragon)',  domain:'security',      last_status:'PASS', target:'Continuous', last_run:'2026-08-01T04:00:00Z', last_sha:'abc1234', last_details:'9 TracingPolicies applied, 6 with SIGKILL', last_run_url:'#' },
+      { id:'RBAC-1',  name:'Admission Policy (Kyverno)',   domain:'security',      last_status:'PASS', target:'Continuous', last_run:'2026-08-02T20:00:00Z', last_sha:'abc1234', last_details:'5/5 test vectors pass', last_run_url:'#' },
+      { id:'API-1',   name:'OpenAPI Drift Detection',      domain:'compliance',    last_status:null,   target:'Continuous', last_run:null, last_sha:null },
+      { id:'SLO-1',   name:'API Availability SLO',         domain:'reliability',   last_status:'PASS', target:'Continuous', last_run:'2026-08-03T03:00:00Z', last_sha:'abc1234', last_details:'Tier 10: P95=82ms, error_rate=0.0001', last_run_url:'#' },
+      { id:'SLO-2',   name:'AI Job Completion SLO',        domain:'reliability',   last_status:'PASS', target:'Continuous', last_run:'2026-08-03T03:00:00Z', last_sha:'abc1234', last_details:'Tier 10: AI success rate = 99.3%', last_run_url:'#' },
+      { id:'SLO-3',   name:'SLO Burn Rate Alerting',       domain:'reliability',   last_status:null,   target:'Continuous', last_run:null, last_sha:null },
+      { id:'DR-1',    name:'PostgreSQL Restore Verification',domain:'reliability',  last_status:'PASS', target:'Continuous', last_run:'2026-08-03T02:30:00Z', last_sha:'abc1234', last_details:'Restore: 840s, 12 tables, indexes valid', last_run_url:'#' },
+      { id:'DR-2',    name:'MinIO Restore Verification',   domain:'reliability',   last_status:'PASS', target:'Continuous', last_run:'2026-08-03T02:30:00Z', last_sha:'abc1234', last_details:'Restore: 240s, 3 buckets, CRUD passed', last_run_url:'#' },
+      { id:'DR-3',    name:'NATS JetStream Restore',       domain:'reliability',   last_status:'FAIL', target:'Continuous', last_run:'2026-08-03T02:30:00Z', last_sha:'abc1234', last_details:'Stream WORKFLOW_COMMANDS missing from snapshot', last_run_url:'#' },
+      { id:'CHAOS-1', name:'Workload Fault Injection',     domain:'reliability',   last_status:null,   target:'Continuous', last_run:null, last_sha:null },
+      { id:'PRF-1',   name:'G1 Overhead Benchmark',        domain:'performance',   last_status:'PASS', target:'Continuous', last_run:'2026-07-01T05:00:00Z', last_sha:'abc1234', last_details:'Max overhead: 2.1× (target: ≤3×)', last_run_url:'#' },
+      { id:'PRR-1',   name:'Production Readiness Review',  domain:'compliance',    last_status:null,   target:'Automated',  last_run:null, last_sha:null },
+    ],
+  };
+}
+
+// ── P15: Trend intelligence ───────────────────────────────────────────────────
+
+async function loadTrend() {
+  try {
+    const sources = [
+      './cec-trend.json',
+      'https://raw.githubusercontent.com/cerebro-hive/cerebro-hive/evidence-chain/evidence/cec-trend.json',
+    ];
+    let trend = null;
+    for (const src of sources) {
+      try {
+        const res = await fetch(src);
+        if (res.ok) { trend = await res.json(); break; }
+      } catch (_) {}
+    }
+    if (!trend) return;
+
+    renderTrend(trend);
+  } catch (_) {}
+}
+
+function renderTrend(trend) {
+  const card = document.getElementById('trend-card');
+  if (!card) return;
+
+  const delta   = trend.delta_pct || 0;
+  const sign    = delta > 0 ? '+' : '';
+  const color   = delta > 0 ? 'var(--green)' : delta < 0 ? 'var(--red)' : 'var(--text-muted)';
+  const icon    = delta > 0 ? '📈' : delta < 0 ? '📉' : '➡️';
+  const date    = (trend.generated_at || '').slice(0, 10);
+
+  document.getElementById('trend-date').textContent = date;
+  const deltaEl = document.getElementById('trend-delta');
+  deltaEl.textContent = `${icon} ${sign}${delta}%`;
+  deltaEl.style.color = color;
+
+  const reasons = trend.explanation || [];
+  const regressions = trend.regressions || [];
+  const improvements = trend.improvements || [];
+
+  const html = reasons.map(r => {
+    const isRegression = r.includes('regression');
+    const dotColor = isRegression ? 'var(--red)' : 'var(--green)';
+    return `<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
+      <span style="color:${dotColor};font-size:14px;margin-top:1px">•</span>
+      <span style="font-size:13px;color:${isRegression ? 'var(--red)' : 'var(--text)'}">${r}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('trend-reasons').innerHTML = html || '<div style="color:var(--text-muted);font-size:13px">No status changes since last run</div>';
+
+  // Show regression badge on affected control rows in the table
+  if (regressions.length) {
+    regressions.forEach(id => {
+      const rows = document.querySelectorAll(`#controls-tbody tr`);
+      rows.forEach(row => {
+        if (row.dataset.name && row.dataset.name.includes(id.toLowerCase())) {
+          row.style.background = 'rgba(239,68,68,0.05)';
+          row.style.borderLeft = '3px solid var(--red)';
+        }
+      });
+    });
+  }
+
+  card.style.display = 'block';
+}
+
+// ── P14: Evidence lineage modal ───────────────────────────────────────────────
+
+function showLineage(controlId) {
+  const c = allControls.find(x => x.id === controlId);
+  if (!c) return;
+
+  const prov = c.provenance || {};
+  const runUrl = c.last_run_url || c.last_artifact || '#';
+  const artUrl = c.last_artifact || '#';
+
+  // Build lineage chain HTML
+  const chain = [
+    { label: 'Control Descriptor', value: controlId, detail: c.name, color: 'var(--teal)' },
+    { label: 'Runner', value: `register-evidence.sh v${prov.runner_version || '?'}`, detail: prov.runner_sha ? prov.runner_sha.slice(0,12) + '...' : '—', color: 'var(--blue)' },
+    { label: 'Workflow Run', value: c.workflow || '—', detail: runUrl !== '#' ? `<a href="${runUrl}" target="_blank" style="color:var(--teal)">Run #${c.run_number || '?'}</a>` : '—', color: 'var(--purple)' },
+    { label: 'Evidence Entry', value: prov.descriptor_hash ? prov.descriptor_hash.slice(0,16) + '...' : '—', detail: `artifact SHA: ${(c.artifact_sha256 || '—').slice(0,16)}${c.artifact_sha256 ? '...' : ''}`, color: 'var(--amber)' },
+    { label: 'CEC Contribution', value: `Weight: ${c.cec_weight || '?'}`, detail: `Status: ${c.last_status || 'UNKNOWN'}`, color: c.last_status === 'PASS' ? 'var(--green)' : 'var(--red)' },
+  ];
+
+  const chainHtml = chain.map((node, i) => `
+    <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:8px">
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div style="width:12px;height:12px;border-radius:50%;background:${node.color};flex-shrink:0;margin-top:3px"></div>
+        ${i < chain.length - 1 ? `<div style="width:2px;flex:1;min-height:24px;background:var(--border);margin-top:4px"></div>` : ''}
+      </div>
+      <div style="flex:1;padding-bottom:${i < chain.length - 1 ? '0' : '0'}px">
+        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">${node.label}</div>
+        <div style="font-size:13px;font-weight:600;font-family:var(--mono);color:${node.color}">${node.value}</div>
+        <div style="font-size:12px;color:var(--text-muted)">${node.detail}</div>
+      </div>
+    </div>`).join('');
+
+  const modal = document.getElementById('lineage-modal');
+  document.getElementById('lineage-title').textContent = `${controlId} — Evidence Lineage`;
+  document.getElementById('lineage-chain').innerHTML = chainHtml;
+  document.getElementById('lineage-why').innerHTML = buildWhyProven(c, prov);
+  modal.style.display = 'flex';
+}
+
+function buildWhyProven(c, prov) {
+  const status = c.last_status || 'UNKNOWN';
+  const icon = { PASS:'✅', FAIL:'❌', WARN:'⚠️', UNKNOWN:'❓' }[status] || '❓';
+  const sha = c.last_sha || '—';
+  const ts  = (c.last_run || '—').slice(0, 19).replace('T',' ') + ' UTC';
+  const desc_hash = prov.descriptor_hash ? prov.descriptor_hash.slice(0,16) + '...' : '—';
+  const env_fp = prov.environment_fingerprint ? prov.environment_fingerprint.slice(0,16) + '...' : '—';
+  const art_sha = c.artifact_sha256 ? c.artifact_sha256.slice(0,16) + '...' : '—';
+  const run_url = c.last_run_url || '#';
+
+  return `
+    <div style="font-size:13px;line-height:1.8">
+      <strong>${icon} Why is this ${status}?</strong><br><br>
+      Control <code style="color:var(--teal)">${c.id}</code> was last executed on <code>${ts}</code>
+      by workflow <em>${c.workflow || 'unknown'}</em> at git commit <code>${sha}</code>.<br><br>
+      The execution produced an evidence artifact ${art_sha !== '—' ? `with SHA-256 <code>${art_sha}</code>` : '(no artifact hash)'},
+      which was hashed into descriptor <code>${desc_hash}</code>
+      and environment fingerprint <code>${env_fp}</code>.<br><br>
+      ${status === 'PASS' ? `The control passed all checks and contributes weight <strong>${c.cec_weight || '?'}</strong> to the CEC score.` :
+        status === 'FAIL' ? `The control <strong>failed</strong>: <em>${c.last_details || 'no details recorded'}</em>` :
+        `This control has not yet been exercised in a recorded run.`}
+      ${run_url !== '#' ? `<br><br><a href="${run_url}" target="_blank" style="color:var(--teal)">→ View full CI run</a>` : ''}
+    </div>`;
+}
+
+function closeLineage() {
+  document.getElementById('lineage-modal').style.display = 'none';
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+loadData();
+loadTrend();
+</script>
+
+<!-- ── P14 Lineage Modal ─────────────────────────────────────────────────────── -->
+<div id="lineage-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center;padding:24px" onclick="if(event.target===this)closeLineage()">
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;max-width:600px;width:100%;max-height:85vh;overflow-y:auto;padding:28px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-size:16px;font-weight:700" id="lineage-title">Evidence Lineage</div>
+      <button onclick="closeLineage()" style="background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;padding:4px">✕</button>
+    </div>
+    <div style="margin-bottom:20px">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px">Evidence Chain</div>
+      <div id="lineage-chain"></div>
+    </div>
+    <div style="padding:16px;background:var(--bg-elevated);border-radius:8px;border:1px solid var(--border)">
+      <div id="lineage-why"></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

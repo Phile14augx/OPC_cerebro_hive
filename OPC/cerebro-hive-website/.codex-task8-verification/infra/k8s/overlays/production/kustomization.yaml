@@ -1,0 +1,155 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: cerebro-hive
+
+resources:
+  - ../../base
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Production — full resource allocation, manual canary promotion,
+# strict security, PDB enforced
+# ──────────────────────────────────────────────────────────────────────────────
+
+commonLabels:
+  environment: production
+
+patches:
+  # Production replicas
+  - patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 3
+    target:
+      kind: Deployment
+      name: studio
+
+  - patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 3
+    target:
+      kind: Deployment
+      name: platform-api
+
+  - patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 3
+    target:
+      kind: Deployment
+      name: ai-gateway
+
+  - patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 2
+    target:
+      kind: Deployment
+      name: forge-api
+
+  # Production HPA: higher ceilings
+  - patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 3
+      - op: replace
+        path: /spec/maxReplicas
+        value: 10
+    target:
+      kind: HorizontalPodAutoscaler
+      name: studio
+
+  - patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 2
+      - op: replace
+        path: /spec/maxReplicas
+        value: 20
+    target:
+      kind: HorizontalPodAutoscaler
+      name: ai-gateway
+
+  # Production: manual canary promotion (no auto-promote)
+  - patch: |-
+      - op: replace
+        path: /spec/strategy/canary/autoPromotionEnabled
+        value: false
+    target:
+      kind: Rollout
+
+  # Production resources — studio
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+    target:
+      kind: Deployment
+      name: studio
+
+  # Production resources — ai-gateway
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 2000m
+            memory: 1.5Gi
+    target:
+      kind: Deployment
+      name: ai-gateway
+
+  # Production resources — forge-api
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 4000m
+            memory: 2Gi
+    target:
+      kind: Deployment
+      name: forge-api
+
+  # Enforce PDB: always keep 2 pods in production
+  - patch: |-
+      - op: replace
+        path: /spec/minAvailable
+        value: 2
+    target:
+      kind: PodDisruptionBudget
+
+configMapGenerator:
+  - name: cerebro-hive-config
+    literals:
+      - APP_URL=https://app.cerebrohive.com
+      - NEXT_PUBLIC_API_URL=https://api.cerebrohive.com
+      - NEXT_PUBLIC_AI_GATEWAY_URL=https://api.cerebrohive.com/ai
+      - OTEL_ENDPOINT=http://otel-collector.cerebro-hive-monitoring.svc.cluster.local:4317
+      - NATS_URL=nats://nats.cerebro-hive.svc.cluster.local:4222
+      - AI_GATEWAY_RATE_LIMIT_RPM=1000
+
+images:
+  - name: ghcr.io/cerebro-hive/cerebro-hive/studio
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/forge
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/platform-api
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/forge-api
+    newTag: latest
+  - name: ghcr.io/cerebro-hive/cerebro-hive/ai-gateway
+    newTag: latest

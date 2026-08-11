@@ -1,0 +1,343 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# MLOps — Argo Workflows: Model Training Pipeline
+# Full pipeline: data validation → preprocessing → training → evaluation →
+#                registration → drift detection → deployment gate
+# Apply: kubectl apply -f infra/mlops/argo-workflows/training-pipeline.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: model-training-pipeline
+  namespace: mlops
+  labels:
+    app.kubernetes.io/component: mlops
+    app.kubernetes.io/name: training-pipeline
+spec:
+  entrypoint: full-pipeline
+  serviceAccountName: argo-workflows-mlops
+  podGC:
+    strategy: OnWorkflowCompletion
+
+  # Global parallelism limit
+  parallelism: 4
+
+  arguments:
+    parameters:
+      - name: model-name
+        value: "cerebro-embedding-v1"
+      - name: experiment-name
+        value: "cerebro-hive-models"
+      - name: data-path
+        value: "s3://cerebro-hive-mlflow-artifacts/datasets/latest"
+      - name: epochs
+        value: "10"
+      - name: batch-size
+        value: "32"
+      - name: learning-rate
+        value: "0.0001"
+
+  templates:
+    # ── Master DAG ─────────────────────────────────────────────────────────────
+    - name: full-pipeline
+      dag:
+        tasks:
+          - name: validate-data
+            template: data-validation
+            arguments:
+              parameters:
+                - name: data-path
+                  value: "{{workflow.parameters.data-path}}"
+
+          - name: preprocess
+            template: data-preprocessing
+            dependencies: [validate-data]
+            arguments:
+              parameters:
+                - name: data-path
+                  value: "{{workflow.parameters.data-path}}"
+                - name: output-path
+                  value: "s3://cerebro-hive-mlflow-artifacts/preprocessed/{{workflow.uid}}"
+
+          - name: train-model
+            template: model-training
+            dependencies: [preprocess]
+            arguments:
+              parameters:
+                - name: data-path
+                  value: "s3://cerebro-hive-mlflow-artifacts/preprocessed/{{workflow.uid}}"
+                - name: model-name
+                  value: "{{workflow.parameters.model-name}}"
+                - name: epochs
+                  value: "{{workflow.parameters.epochs}}"
+                - name: batch-size
+                  value: "{{workflow.parameters.batch-size}}"
+                - name: learning-rate
+                  value: "{{workflow.parameters.learning-rate}}"
+
+          - name: evaluate-model
+            template: model-evaluation
+            dependencies: [train-model]
+            arguments:
+              parameters:
+                - name: run-id
+                  value: "{{tasks.train-model.outputs.parameters.run-id}}"
+                - name: model-name
+                  value: "{{workflow.parameters.model-name}}"
+
+          - name: check-quality-gate
+            template: quality-gate
+            dependencies: [evaluate-model]
+            arguments:
+              parameters:
+                - name: run-id
+                  value: "{{tasks.train-model.outputs.parameters.run-id}}"
+                - name: accuracy-threshold
+                  value: "0.85"
+                - name: latency-threshold-ms
+                  value: "100"
+
+          - name: register-model
+            template: model-registration
+            dependencies: [check-quality-gate]
+            when: "{{tasks.check-quality-gate.outputs.parameters.gate-passed}} == true"
+            arguments:
+              parameters:
+                - name: run-id
+                  value: "{{tasks.train-model.outputs.parameters.run-id}}"
+                - name: model-name
+                  value: "{{workflow.parameters.model-name}}"
+
+          - name: generate-model-card
+            template: model-card-generation
+            dependencies: [register-model]
+            arguments:
+              parameters:
+                - name: run-id
+                  value: "{{tasks.train-model.outputs.parameters.run-id}}"
+                - name: model-name
+                  value: "{{workflow.parameters.model-name}}"
+
+          - name: run-drift-detection
+            template: drift-detection
+            dependencies: [register-model]
+            arguments:
+              parameters:
+                - name: model-name
+                  value: "{{workflow.parameters.model-name}}"
+                - name: run-id
+                  value: "{{tasks.train-model.outputs.parameters.run-id}}"
+
+    # ── Step: Data Validation ─────────────────────────────────────────────────
+    - name: data-validation
+      inputs:
+        parameters:
+          - name: data-path
+      container:
+        image: ghcr.io/cerebrohive/mlops-tools:latest
+        command: [python, -m, cerebro.mlops.validate_data]
+        args:
+          - --data-path={{inputs.parameters.data-path}}
+          - --min-rows=1000
+          - --required-columns=input,output,metadata
+          - --max-null-pct=0.05
+        resources:
+          requests: { cpu: 500m, memory: 1Gi }
+          limits:   { cpu: 2000m, memory: 4Gi }
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          readOnlyRootFilesystem: true
+
+    # ── Step: Data Preprocessing ──────────────────────────────────────────────
+    - name: data-preprocessing
+      inputs:
+        parameters:
+          - name: data-path
+          - name: output-path
+      container:
+        image: ghcr.io/cerebrohive/mlops-tools:latest
+        command: [python, -m, cerebro.mlops.preprocess]
+        args:
+          - --input={{inputs.parameters.data-path}}
+          - --output={{inputs.parameters.output-path}}
+          - --tokenizer=cl100k_base
+          - --max-length=2048
+        resources:
+          requests: { cpu: 1000m, memory: 2Gi }
+          limits:   { cpu: 4000m, memory: 8Gi }
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          readOnlyRootFilesystem: true
+
+    # ── Step: Model Training ──────────────────────────────────────────────────
+    - name: model-training
+      inputs:
+        parameters:
+          - name: data-path
+          - name: model-name
+          - name: epochs
+          - name: batch-size
+          - name: learning-rate
+      outputs:
+        parameters:
+          - name: run-id
+            valueFrom:
+              path: /tmp/run_id.txt
+      container:
+        image: ghcr.io/cerebrohive/mlops-trainer:latest
+        command: [python, -m, cerebro.mlops.train]
+        args:
+          - --data-path={{inputs.parameters.data-path}}
+          - --model-name={{inputs.parameters.model-name}}
+          - --epochs={{inputs.parameters.epochs}}
+          - --batch-size={{inputs.parameters.batch-size}}
+          - --lr={{inputs.parameters.learning-rate}}
+          - --mlflow-tracking-uri=http://mlflow.mlops.svc.cluster.local:5000
+          - --experiment={{workflow.parameters.experiment-name}}
+          - --run-id-output=/tmp/run_id.txt
+        env:
+          - name: MLFLOW_TRACKING_URI
+            value: http://mlflow.mlops.svc.cluster.local:5000
+          - name: AWS_DEFAULT_REGION
+            value: us-east-1
+        resources:
+          requests: { cpu: 4000m, memory: 8Gi, "nvidia.com/gpu": "1" }
+          limits:   { cpu: 8000m, memory: 16Gi, "nvidia.com/gpu": "1" }
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          readOnlyRootFilesystem: true
+        volumeMounts:
+          - name: scratch
+            mountPath: /tmp
+      volumes:
+        - name: scratch
+          emptyDir: {}
+
+    # ── Step: Model Evaluation ────────────────────────────────────────────────
+    - name: model-evaluation
+      inputs:
+        parameters:
+          - name: run-id
+          - name: model-name
+      container:
+        image: ghcr.io/cerebrohive/mlops-tools:latest
+        command: [python, -m, cerebro.mlops.evaluate]
+        args:
+          - --run-id={{inputs.parameters.run-id}}
+          - --model-name={{inputs.parameters.model-name}}
+          - --mlflow-uri=http://mlflow.mlops.svc.cluster.local:5000
+          - --test-data=s3://cerebro-hive-mlflow-artifacts/datasets/test-set
+        resources:
+          requests: { cpu: 2000m, memory: 4Gi }
+          limits:   { cpu: 4000m, memory: 8Gi }
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          readOnlyRootFilesystem: true
+
+    # ── Step: Quality Gate ────────────────────────────────────────────────────
+    - name: quality-gate
+      inputs:
+        parameters:
+          - name: run-id
+          - name: accuracy-threshold
+          - name: latency-threshold-ms
+      outputs:
+        parameters:
+          - name: gate-passed
+            valueFrom:
+              path: /tmp/gate_result.txt
+      script:
+        image: ghcr.io/cerebrohive/mlops-tools:latest
+        command: [python]
+        source: |
+          import mlflow, sys, json
+          client = mlflow.MlflowClient("http://mlflow.mlops.svc.cluster.local:5000")
+          run = client.get_run("{{inputs.parameters.run-id}}")
+          metrics = run.data.metrics
+          accuracy = metrics.get("accuracy", 0)
+          latency  = metrics.get("p99_latency_ms", 9999)
+          threshold_acc = float("{{inputs.parameters.accuracy-threshold}}")
+          threshold_lat = float("{{inputs.parameters.latency-threshold-ms}}")
+          passed = accuracy >= threshold_acc and latency <= threshold_lat
+          print(f"accuracy={accuracy:.4f} threshold={threshold_acc} latency={latency:.0f}ms threshold={threshold_lat}ms passed={passed}")
+          with open("/tmp/gate_result.txt", "w") as f:
+              f.write("true" if passed else "false")
+          sys.exit(0 if passed else 1)
+        resources:
+          requests: { cpu: 200m, memory: 256Mi }
+          limits:   { cpu: 500m, memory: 512Mi }
+
+    # ── Step: Model Registration ──────────────────────────────────────────────
+    - name: model-registration
+      inputs:
+        parameters:
+          - name: run-id
+          - name: model-name
+      script:
+        image: ghcr.io/cerebrohive/mlops-tools:latest
+        command: [python]
+        source: |
+          import mlflow
+          client = mlflow.MlflowClient("http://mlflow.mlops.svc.cluster.local:5000")
+          result = mlflow.register_model(
+              f"runs:/{{inputs.parameters.run-id}}/model",
+              "{{inputs.parameters.model-name}}"
+          )
+          client.transition_model_version_stage(
+              name="{{inputs.parameters.model-name}}",
+              version=result.version,
+              stage="Staging",
+              archive_existing_versions=False,
+          )
+          print(f"Registered model version {result.version} → Staging")
+        resources:
+          requests: { cpu: 100m, memory: 128Mi }
+          limits:   { cpu: 500m, memory: 256Mi }
+
+    # ── Step: Model Card Generation ───────────────────────────────────────────
+    - name: model-card-generation
+      inputs:
+        parameters:
+          - name: run-id
+          - name: model-name
+      container:
+        image: ghcr.io/cerebrohive/mlops-tools:latest
+        command: [python, -m, cerebro.mlops.generate_model_card]
+        args:
+          - --run-id={{inputs.parameters.run-id}}
+          - --model-name={{inputs.parameters.model-name}}
+          - --output=s3://cerebro-hive-mlflow-artifacts/model-cards/{{inputs.parameters.model-name}}/{{workflow.uid}}.md
+        resources:
+          requests: { cpu: 100m, memory: 128Mi }
+          limits:   { cpu: 500m, memory: 256Mi }
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          readOnlyRootFilesystem: true
+
+    # ── Step: Drift Detection ─────────────────────────────────────────────────
+    - name: drift-detection
+      inputs:
+        parameters:
+          - name: model-name
+          - name: run-id
+      container:
+        image: ghcr.io/cerebrohive/mlops-tools:latest
+        command: [python, -m, cerebro.mlops.detect_drift]
+        args:
+          - --model-name={{inputs.parameters.model-name}}
+          - --run-id={{inputs.parameters.run-id}}
+          - --baseline=s3://cerebro-hive-mlflow-artifacts/baselines/{{inputs.parameters.model-name}}
+          - --drift-threshold=0.15
+          - --alert-webhook=${SLACK_WEBHOOK_URL}
+        resources:
+          requests: { cpu: 500m, memory: 1Gi }
+          limits:   { cpu: 2000m, memory: 4Gi }
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          readOnlyRootFilesystem: true
