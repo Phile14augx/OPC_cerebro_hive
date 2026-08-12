@@ -142,4 +142,4 @@ This document continues the same governance-first, evidence-before-implementatio
 
 Where those three established governance around specifications, implementation scope, and architectural boundaries respectively, this document establishes CI/CD governance: the verified state of what actually protects `main` today, and a complete reconciliation plan to be executed as one change before any ruleset or branch-protection modification is made.
 
-This audit's findings are tracked in [`docs/ROADMAP.md`](../ROADMAP.md) Section 4 (Outstanding Work) — the ruleset reconciliation itself, and the `required_deployments: [github-pages]` finding from Section 4.1, are both listed there as evidence-complete but not yet implemented.
+This audit's findings are tracked in [`docs/ROADMAP.md`](../../ROADMAP.md) Section 4 (Outstanding Work) — the ruleset reconciliation itself, and the `required_deployments: [github-pages]` finding from Section 4.1, are both listed there as evidence-complete but not yet implemented.

@@ -1263,15 +1263,15 @@ All decisions identified in the Phase 0 review are recorded as ADRs in `docs/arc
 
 | # | Decision | Resolution | ADR | Gates |
 |---|---|---|---|---|
-| D4 | Workflow substrate | Temporal for durable execution, CerebroFlow for authoring | [0009](adr/0009-eda-workflow-substrate.md) | Phase 2 |
-| D7 | Multi-tenancy | Shared DB + forced RLS; physical isolation in storage/vector/compute | [0010](adr/0010-eda-multi-tenancy-and-isolation.md) | Phase 2, 6 |
-| D9 | Artifact & result identity | Four identity types; versioned semantic-key signatures | [0011](adr/0011-eda-canonical-artifact-identity.md) | Phase 1 |
-| D1 | Graph store | Postgres + recursive CTE, with measured migration triggers | [0012](adr/0012-eda-knowledge-graph-store.md) | Phase 4 |
-| D2 | Runner isolation | gVisor default, Kata for Enterprise, runc only for signed first-party | [0013](adr/0013-eda-runner-isolation.md) | Phase 1 |
-| D3 | Parser runtime | WASM via Wasmtime; quarantined container escape hatch | [0014](adr/0014-eda-parser-runtime.md) | Phase 1, 7 |
-| D5 | RTL frontend | Slang for elaboration, Verible for lint/CST — both | [0015](adr/0015-eda-rtl-frontend.md) | Phase 1 |
-| D6 | Coverage merge | Vendor-native merge in a hierarchical tree + normalised projection | [0016](adr/0016-eda-coverage-model.md) | Phase 3 |
-| D8 | Waveform strategy | Handoff + bounded strips + signal extraction; no web viewer | [0017](adr/0017-eda-waveform-strategy.md) | Phase 3 |
+| D4 | Workflow substrate | Temporal for durable execution, CerebroFlow for authoring | [0009](../decisions/eios-eda/0009-eda-workflow-substrate.md) | Phase 2 |
+| D7 | Multi-tenancy | Shared DB + forced RLS; physical isolation in storage/vector/compute | [0010](../decisions/eios-eda/0010-eda-multi-tenancy-and-isolation.md) | Phase 2, 6 |
+| D9 | Artifact & result identity | Four identity types; versioned semantic-key signatures | [0011](../decisions/eios-eda/0011-eda-canonical-artifact-identity.md) | Phase 1 |
+| D1 | Graph store | Postgres + recursive CTE, with measured migration triggers | [0012](../decisions/eios-eda/0012-eda-knowledge-graph-store.md) | Phase 4 |
+| D2 | Runner isolation | gVisor default, Kata for Enterprise, runc only for signed first-party | [0013](../decisions/eios-eda/0013-eda-runner-isolation.md) | Phase 1 |
+| D3 | Parser runtime | WASM via Wasmtime; quarantined container escape hatch | [0014](../decisions/eios-eda/0014-eda-parser-runtime.md) | Phase 1, 7 |
+| D5 | RTL frontend | Slang for elaboration, Verible for lint/CST — both | [0015](../decisions/eios-eda/0015-eda-rtl-frontend.md) | Phase 1 |
+| D6 | Coverage merge | Vendor-native merge in a hierarchical tree + normalised projection | [0016](../decisions/eios-eda/0016-eda-coverage-model.md) | Phase 3 |
+| D8 | Waveform strategy | Handoff + bounded strips + signal extraction; no web viewer | [0017](../decisions/eios-eda/0017-eda-waveform-strategy.md) | Phase 3 |
 
 D9 was added during ADR review: the Blueprint treats stable result signatures as a cornerstone (§13.4, §26) but had left the algorithm unspecified, which is not survivable given that every fact ever ingested is stamped with it.
 

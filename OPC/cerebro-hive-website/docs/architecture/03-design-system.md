@@ -1,5 +1,7 @@
 # Design System
 
+> Supplementary notes: [design-tokens.md](./design-tokens.md), [design-components.md](./design-components.md), [design-motion.md](./design-motion.md).
+
 ## Packages
 - packages/ui: base, primitives, compositions, patterns, templates, utilities, providers, experimental.
 - packages/icons: Wrapped icon system.
