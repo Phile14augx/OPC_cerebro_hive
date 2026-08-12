@@ -1,3 +1,8 @@
+> Status: Archived
+> Superseded by: [../historical/baseline-manifest-2026-07-30.md](../historical/baseline-manifest-2026-07-30.md)
+> Archived: 2026-08-11
+> Reason: The 2026-07-30 manifest explicitly supersedes this checkpoint (see its own text). Kept verbatim as the historical record of the prior freeze point.
+
 # Architecture Baseline Manifest — 2026-07-29
 
 This manifest fixes the exact content of both stable baselines at the point they were declared complete, so any future drift (accidental edit, silent rewrite) is independently detectable via hash comparison rather than assumed. Recompute with `sha256sum <path>` (or `Get-FileHash -Algorithm SHA256 <path>` in PowerShell) and diff against this file to verify the baseline hasn't moved.
