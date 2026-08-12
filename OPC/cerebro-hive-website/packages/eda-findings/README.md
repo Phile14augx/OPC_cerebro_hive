@@ -1,7 +1,7 @@
 # @cerebro/eda-findings
 
 **Layer:** `capability`
-**Governing ADRs:** [0011](../../docs/architecture/adr/)
+**Governing ADRs:** [0011](../../docs/architecture/decisions/eios-eda/)
 
 FindingRepository and canonical signature computation. Sole implementation of signature hashing.
 

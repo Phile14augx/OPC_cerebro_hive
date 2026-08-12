@@ -1,7 +1,7 @@
 # @cerebro/eda-parsers
 
 **Layer:** `capability`
-**Governing ADRs:** [0014](../../docs/architecture/adr/0014-eda-parser-runtime.md) (parser runtime), [0011](../../docs/architecture/adr/0011-eda-canonical-artifact-identity.md) (semantic keys)
+**Governing ADRs:** [0014](../../docs/architecture/decisions/eios-eda/0014-eda-parser-runtime.md) (parser runtime), [0011](../../docs/architecture/decisions/eios-eda/0011-eda-canonical-artifact-identity.md) (semantic keys)
 
 First-party report parsers. Each converts tool output into canonical domain facts
 with canonicalised semantic keys; the host computes signatures (ADR 0011), never

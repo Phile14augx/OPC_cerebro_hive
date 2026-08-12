@@ -1,7 +1,7 @@
 # @cerebro/eda-temporal-worker
 
 **Layer:** `service`
-**Governing ADRs:** [0009](../../docs/architecture/adr/)
+**Governing ADRs:** [0009](../../docs/architecture/decisions/eios-eda/)
 
 Hosts Temporal workflows and activities.
 

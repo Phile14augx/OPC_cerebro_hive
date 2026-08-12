@@ -1,7 +1,7 @@
 # @cerebro/eda-execution
 
 **Layer:** `platform`
-**Governing ADRs:** [0013](../../docs/architecture/adr/)
+**Governing ADRs:** [0013](../../docs/architecture/decisions/eios-eda/)
 
 ExecutionProvider contract and sandbox policy types.
 

@@ -1,7 +1,7 @@
 # @cerebro/eda-security
 
 **Layer:** `platform`
-**Governing ADRs:** [0013](../../docs/architecture/adr/),[0010](../../docs/architecture/adr/)
+**Governing ADRs:** [0013](../../docs/architecture/decisions/eios-eda/),[0010](../../docs/architecture/decisions/eios-eda/)
 
 Capability grants, sandbox policy generation, export-class enforcement.
 

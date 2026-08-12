@@ -1,6 +1,6 @@
 # Commercial Strategy Index
 
-**Canonical Source:** `../COMMERCIAL_STRATEGY.md`
+**Canonical Source:** [`architecture/commercial-strategy.md`](./architecture/commercial-strategy.md)
 
 Summary of commercial editions and pricing philosophy.
 
@@ -16,4 +16,4 @@ Summary of commercial editions and pricing philosophy.
 | Government/Defense | Federal, DoD | Enterprise Edition, IL5/IL6 modules only | Air-gapped |
 | OEM / Embedded | ISVs | HiveAPI, HiveForge, CerebroFlow (headless) | Embedded SDK |
 
-See `../COMMERCIAL_STRATEGY.md` for full pricing model, packaging details, and revenue strategy.
+See [`architecture/commercial-strategy.md`](./architecture/commercial-strategy.md) for full pricing model, packaging details, and revenue strategy.

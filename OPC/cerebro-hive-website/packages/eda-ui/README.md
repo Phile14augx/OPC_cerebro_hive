@@ -1,7 +1,7 @@
 # @cerebro/eda-ui
 
 **Layer:** `edge`
-**Governing ADRs:** [0017](../../docs/architecture/adr/)
+**Governing ADRs:** [0017](../../docs/architecture/decisions/eios-eda/)
 
 Domain UI components. No server imports.
 

@@ -1,7 +1,7 @@
 # @cerebro/eda-domain
 
 **Layer:** `domain`
-**Governing ADRs:** [0011](../../docs/architecture/adr/),[0010](../../docs/architecture/adr/)
+**Governing ADRs:** [0011](../../docs/architecture/decisions/eios-eda/),[0010](../../docs/architecture/decisions/eios-eda/)
 
 Identity value objects, tenant context, shared domain primitives. No I/O, no dependencies.
 

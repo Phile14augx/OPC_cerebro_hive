@@ -1,7 +1,7 @@
 # @cerebro/eda-events
 
 **Layer:** `platform`
-**Governing ADRs:** [0001](../../docs/architecture/adr/),[0009](../../docs/architecture/adr/)
+**Governing ADRs:** [0001](../../docs/architecture/decisions/eios-eda/),[0009](../../docs/architecture/decisions/eios-eda/)
 
 Event envelope, domain event catalogue, outbox contract.
 

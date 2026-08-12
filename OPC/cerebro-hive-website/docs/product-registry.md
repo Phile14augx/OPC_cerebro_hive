@@ -1,15 +1,15 @@
 # Product Registry Index
 
-**Canonical Source:** `../PRODUCT_REGISTRY.md`
+**Canonical Source:** [`architecture/product-registry.md`](./architecture/product-registry.md)
 
 This index maps all 50 products to their specification files and docs pages.
 
 ## AI Productivity Suite (8 products)
 | Product | Spec File | Lifecycle |
 |---|---|---|
-| CerebroStudio™ | `../PRODUCT_SPECIFICATIONS/cerebrostudio_spec.md` | GA |
-| CerebroAgent™ | `../PRODUCT_SPECIFICATIONS/cerebroagent_spec.md` | Beta |
-| CerebroFlow™ | `../PRODUCT_SPECIFICATIONS/cerebroflow_spec.md` | GA |
+| CerebroStudio™ | `./specifications/products/cerebrostudio_spec.md` | GA |
+| CerebroAgent™ | `./specifications/products/cerebroagent_spec.md` | Beta |
+| CerebroFlow™ | `./specifications/products/cerebroflow_spec.md` | GA |
 | CerebroSearch™ | `products/ai-productivity/cerebrosearch.md` | Beta |
 | CerebroArchive™ | `products/ai-productivity/cerebroarchive.md` | Beta |
 | CerebroInsight™ | `products/ai-productivity/cerebroinsight.md` | Beta |
@@ -33,25 +33,25 @@ This index maps all 50 products to their specification files and docs pages.
 ## Data & Intelligence (7 products)
 | Product | Spec File | Lifecycle |
 |---|---|---|
-| HiveData™ | `../PRODUCT_SPECIFICATIONS/hivedata_spec.md` | Beta |
+| HiveData™ | `./specifications/products/hivedata_spec.md` | Beta |
 | HiveLake™ | `products/data-intelligence/hivelake.md` | Beta |
 | HiveAnalytics™ | `products/data-intelligence/hiveanalytics.md` | MVP |
 | HiveKnowledge™ | `products/data-intelligence/hiveknowledge.md` | MVP |
 | HiveSemantic™ | `products/data-intelligence/hivesemantic.md` | MVP |
-| HiveVector™ | `../PRODUCT_SPECIFICATIONS/hivevector_spec.md` | GA |
+| HiveVector™ | `./specifications/products/hivevector_spec.md` | GA |
 | HiveObservatory™ | `products/data-intelligence/hiveobservatory.md` | Beta |
 
 ## Infrastructure Platform (10 products)
 | Product | Spec File | Lifecycle |
 |---|---|---|
-| HiveForge™ | `../PRODUCT_SPECIFICATIONS/hiveforge_spec.md` | Beta |
-| HiveOps™ | `../PRODUCT_SPECIFICATIONS/hiveops_spec.md` | Beta |
+| HiveForge™ | `./specifications/products/hiveforge_spec.md` | Beta |
+| HiveOps™ | `./specifications/products/hiveops_spec.md` | Beta |
 | HiveAPI™ | `products/platform/hiveapi.md` | GA |
-| HiveIdentity™ | `../PRODUCT_SPECIFICATIONS/hiveidentity_spec.md` | GA |
-| HiveShield™ | `../PRODUCT_SPECIFICATIONS/hiveshield_spec.md` | Beta |
-| HiveStorage™ | `../PRODUCT_SPECIFICATIONS/hivestorage_spec.md` | GA |
-| HiveCompute™ | `../PRODUCT_SPECIFICATIONS/hivecompute_spec.md` | GA |
-| HiveNetwork™ | `../PRODUCT_SPECIFICATIONS/hivenetwork_spec.md` | GA |
+| HiveIdentity™ | `./specifications/products/hiveidentity_spec.md` | GA |
+| HiveShield™ | `./specifications/products/hiveshield_spec.md` | Beta |
+| HiveStorage™ | `./specifications/products/hivestorage_spec.md` | GA |
+| HiveCompute™ | `./specifications/products/hivecompute_spec.md` | GA |
+| HiveNetwork™ | `./specifications/products/hivenetwork_spec.md` | GA |
 | HiveConsole™ | `products/platform/hiveconsole.md` | Beta |
 | HiveGateway™ | `products/platform/hivegateway.md` | GA |
 
@@ -63,7 +63,7 @@ This index maps all 50 products to their specification files and docs pages.
 | HiveAutomation™ | `products/runtime/hiveautomation.md` | MVP |
 | HivePlanner™ | `products/runtime/hiveplanner.md` | MVP |
 | HiveReasoner™ | `products/runtime/hivereasoner.md` | MVP |
-| HiveMemory™ | `../PRODUCT_SPECIFICATIONS/hivememory_spec.md` | Beta |
+| HiveMemory™ | `./specifications/products/hivememory_spec.md` | Beta |
 | HiveEvaluation™ | `products/runtime/hiveevaluation.md` | Beta |
 
 ## Ecosystem & Commerce (8 products)

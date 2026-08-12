@@ -1,7 +1,7 @@
 # @cerebro/eda-artifacts
 
 **Layer:** `capability`
-**Governing ADRs:** [0011](../../docs/architecture/adr/)
+**Governing ADRs:** [0011](../../docs/architecture/decisions/eios-eda/)
 
 ArtifactRepository, blob registry, lineage.
 

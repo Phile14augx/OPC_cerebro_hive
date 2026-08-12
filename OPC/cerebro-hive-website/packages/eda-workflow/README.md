@@ -1,7 +1,7 @@
 # @cerebro/eda-workflow
 
 **Layer:** `platform`
-**Governing ADRs:** [0009](../../docs/architecture/adr/)
+**Governing ADRs:** [0009](../../docs/architecture/decisions/eios-eda/)
 
 Temporal facade. THE ONLY package permitted to import @temporalio/*.
 

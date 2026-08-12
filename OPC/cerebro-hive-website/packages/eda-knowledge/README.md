@@ -1,7 +1,7 @@
 # @cerebro/eda-knowledge
 
 **Layer:** `capability`
-**Governing ADRs:** [0012](../../docs/architecture/adr/)
+**Governing ADRs:** [0012](../../docs/architecture/decisions/eios-eda/)
 
 GraphReader/GraphWriter contracts. Sole owner of graph SQL.
 

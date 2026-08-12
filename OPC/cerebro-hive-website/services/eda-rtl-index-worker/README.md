@@ -1,7 +1,7 @@
 # @cerebro/eda-rtl-index-worker
 
 **Layer:** `service`
-**Governing ADRs:** [0015](../../docs/architecture/adr/)
+**Governing ADRs:** [0015](../../docs/architecture/decisions/eios-eda/)
 
 Slang/Verible structural indexing (Node shim around the C++ worker).
 

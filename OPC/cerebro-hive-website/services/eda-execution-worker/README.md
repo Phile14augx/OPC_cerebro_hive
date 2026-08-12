@@ -1,7 +1,7 @@
 # @cerebro/eda-execution-worker
 
 **Layer:** `service`
-**Governing ADRs:** [0013](../../docs/architecture/adr/)
+**Governing ADRs:** [0013](../../docs/architecture/decisions/eios-eda/)
 
 Dispatches jobs to compute backends inside sandboxes.
 

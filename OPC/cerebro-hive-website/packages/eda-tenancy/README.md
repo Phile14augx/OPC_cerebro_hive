@@ -1,7 +1,7 @@
 # @cerebro/eda-tenancy
 
 **Layer:** `platform`
-**Governing ADRs:** [0010](../../docs/architecture/adr/)
+**Governing ADRs:** [0010](../../docs/architecture/decisions/eios-eda/)
 
 TenantContext propagation and the tenant-scoped repository base. No query may execute without it.
 

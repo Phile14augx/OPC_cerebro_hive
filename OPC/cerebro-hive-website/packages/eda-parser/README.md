@@ -1,7 +1,7 @@
 # @cerebro/eda-parser
 
 **Layer:** `platform`
-**Governing ADRs:** [0014](../../docs/architecture/adr/)
+**Governing ADRs:** [0014](../../docs/architecture/decisions/eios-eda/)
 
 ParserProvider host interface and WASM runtime contract.
 

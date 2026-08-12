@@ -1,7 +1,7 @@
 # @cerebro/eda-coverage
 
 **Layer:** `capability`
-**Governing ADRs:** [0016](../../docs/architecture/adr/)
+**Governing ADRs:** [0016](../../docs/architecture/decisions/eios-eda/)
 
 CoverageProvider contract and hierarchical merge planning.
 

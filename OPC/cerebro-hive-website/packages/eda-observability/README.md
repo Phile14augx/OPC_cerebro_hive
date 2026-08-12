@@ -1,7 +1,7 @@
 # @cerebro/eda-observability
 
 **Layer:** `platform`
-**Governing ADRs:** [0003](../../docs/architecture/adr/)
+**Governing ADRs:** [0003](../../docs/architecture/decisions/eios-eda/)
 
 OpenTelemetry facade. Only package importing @opentelemetry/*.
 

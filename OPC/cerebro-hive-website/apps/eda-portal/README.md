@@ -1,7 +1,7 @@
 # @cerebro/eda-portal
 
 **Layer:** `app`
-**Governing ADRs:** [0017](../../docs/architecture/adr/)
+**Governing ADRs:** [0017](../../docs/architecture/decisions/eios-eda/)
 
 CerebroEDA web portal (Next.js). Presentation only.
 

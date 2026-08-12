@@ -1,7 +1,7 @@
 # @cerebro/eda-parser-worker
 
 **Layer:** `service`
-**Governing ADRs:** [0014](../../docs/architecture/adr/)
+**Governing ADRs:** [0014](../../docs/architecture/decisions/eios-eda/)
 
 Runs WASM parsers over tool output and emits facts.
 

@@ -1,7 +1,7 @@
 # @cerebro/eda-api
 
 **Layer:** `app`
-**Governing ADRs:** [0009](../../docs/architecture/adr/),[0010](../../docs/architecture/adr/)
+**Governing ADRs:** [0009](../../docs/architecture/decisions/eios-eda/),[0010](../../docs/architecture/decisions/eios-eda/)
 
 GraphQL federation gateway for CerebroEDA.
 

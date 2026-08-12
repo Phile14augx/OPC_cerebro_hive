@@ -1,7 +1,7 @@
 # @cerebro/eda-storage
 
 **Layer:** `platform`
-**Governing ADRs:** [0011](../../docs/architecture/adr/)
+**Governing ADRs:** [0011](../../docs/architecture/decisions/eios-eda/)
 
 StorageProvider contract and content-addressed blob keys.
 
