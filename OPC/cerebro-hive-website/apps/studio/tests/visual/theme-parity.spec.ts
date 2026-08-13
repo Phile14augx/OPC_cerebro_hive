@@ -15,7 +15,7 @@ test.describe('Theme Motion Parity & Visual Regression', () => {
       localStorage.setItem('theme', 'light');
     });
 
-    const hero = page.locator('main section').first();
+    const hero = page.locator('section').first();
     await expect(hero).toBeVisible();
 
     // Verify visual snapshot
@@ -37,7 +37,7 @@ test.describe('Theme Motion Parity & Visual Regression', () => {
       localStorage.setItem('theme', 'dark');
     });
 
-    const hero = page.locator('main section').first();
+    const hero = page.locator('section').first();
     await expect(hero).toBeVisible();
 
     // Verify visual snapshot
