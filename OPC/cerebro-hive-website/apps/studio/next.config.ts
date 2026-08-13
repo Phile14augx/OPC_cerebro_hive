@@ -1,18 +1,18 @@
-import type { NextConfig } from "next";
 import bundleAnalyzer from "@next/bundle-analyzer";
+import type { NextConfig } from "next";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-const isGithubPages = process.env.GITHUB_ACTIONS === "true" && process.env.IS_FTP_DEPLOY !== "true";
+const isGithubPages = process.env.DEPLOY_TARGET === "github-pages";
 const repo = "OPC_cerebro_hive";
 const basePath = isGithubPages ? `/${repo}` : "";
 
 const nextConfig: NextConfig = {
   output: isGithubPages ? "export" : "standalone",
   poweredByHeader: false,
-  transpilePackages: ['@cerebro/ai', '@cerebro/workflow', '@cerebro/db', '@cerebro/sdk'],
+  transpilePackages: ["@cerebro/ai", "@cerebro/workflow", "@cerebro/db", "@cerebro/sdk"],
   images: {
     unoptimized: true,
   },
@@ -26,8 +26,8 @@ const nextConfig: NextConfig = {
     async redirects() {
       return [
         {
-          source: '/solutions/:path*',
-          destination: '/archive/solutions/:path*',
+          source: "/solutions/:path*",
+          destination: "/archive/solutions/:path*",
           permanent: true,
         },
       ];
@@ -35,4 +35,6 @@ const nextConfig: NextConfig = {
   }),
 };
 
-export default withBundleAnalyzer(nextConfig as Parameters<typeof withBundleAnalyzer>[0]) as unknown as NextConfig;
+export default withBundleAnalyzer(
+  nextConfig as Parameters<typeof withBundleAnalyzer>[0],
+) as unknown as NextConfig;

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 UI-SPEC approved
-last_updated: "2026-08-10T04:21:50.840Z"
-last_activity: 2026-08-10 -- Phase 1 planning complete
+stopped_at: Completed 01-06-PLAN.md
+last_updated: "2026-08-10T22:43:09.433Z"
+last_activity: 2026-08-10
 progress:
   total_phases: 8
   completed_phases: 0
   total_plans: 7
-  completed_plans: 0
+  completed_plans: 6
   percent: 0
 ---
 
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-08-09)
 
 ## Current Position
 
-Phase: 1 of 8 (Schema & Navigation Foundation)
-Plan: 0 of TBD in current phase
+Phase: 1 (Schema & Navigation Foundation) — EXECUTING
+Plan: 7 of 7
 Status: Ready to execute
-Last activity: 2026-08-10 -- Phase 1 planning complete
+Last activity: 2026-08-10
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
@@ -52,6 +52,10 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01 P01 | 65min | 2 tasks | 8 files |
+| Phase 01 P02 | 45min | 3 tasks | 9 files |
+| Phase 01 P03 | 66min | 3 tasks | 5 files |
+| Phase 01 P06 | 20min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -63,6 +67,15 @@ Recent decisions affecting current work:
 - [Roadmap]: Phases sequenced in strict dependency order (Schema/Nav → Core Workspace → AI Studio/Workflows → Knowledge Hub → Governance → Talent OS → Explore → Cleanup/Verification), matching research/SUMMARY.md's proposed structure
 - [Roadmap]: Knowledge Hub kept as its own phase (not folded into Core AI) — it's the only net-new backend service and carries the highest pitfall density
 - [Roadmap]: Talent OS schema is net-new (no existing Candidate/Assessment/HiringPipeline/Question models) — budgeted as schema design + wiring, not wiring alone
+- [Phase 01-01]: AI Agents/AI Workflows classified planned despite calling fetch() — SDK client targets a hardcoded Mocked-URL, no verified running backend (unlike forge-api)
+- [Phase 01-01]: forge/backend and forge/monitoring demoted from existing page.tsx to planned — render fabricated StatCard/setTimeout fake actions (D-15); removal deferred to FORGE-02 plan
+- [Phase 01-01]: Fixed Sidebar.tsx pinnedFavorites stale href (/app/automation/workflows -> /app/automation/builder) as Rule 1 bug fix required by PINNED_ORPHAN acceptance gate
+- [Phase 01-02]: Forge Overview's two project-create call sites share one createError/retryKind state pair instead of two separate error states, avoiding a self-referencing useCallback closure while still letting Try again re-invoke the exact handler that failed
+- [Phase 01-02]: AI Planner's No project selected empty state placed inline in the page's existing header description paragraph rather than a new banner component, since Planner had no pre-existing context/status Card unlike Requirements Studio
+- [Phase 01-03]: Policy extended to follow the Organization pattern (plain String orgId, no @db.Uuid) per D-16, not Tenant/Workspace
+- [Phase 01-03]: apps/studio and apps/studio/platform bullmq pins (^5.80.9) deliberately left unbumped - different queue consumers, out of SCHM-02 scope
+- [Phase 01-03]: Talent OS and Explore schema design deferred to Phase 6/7 per D-11; this plan only confirms and documents absence
+- [Phase 01-06]: hiveops/security/page.tsx's single /api/ pattern match confirmed a false positive (hardcoded mock finding string, not a real backend call) - converted like its six siblings, no 01-NAV-STATUS.md reclassification needed
 
 ### Pending Todos
 
@@ -93,6 +106,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-09T21:09:23.735Z
-Stopped at: Phase 1 UI-SPEC approved
-Resume file: .planning/phases/01-schema-navigation-foundation/01-UI-SPEC.md
+Last session: 2026-08-10T22:43:09.340Z
+Stopped at: Completed 01-06-PLAN.md
+Resume file: None

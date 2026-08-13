@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   Layers3, Sparkles, ChevronRight, Server, Network,
-  CheckCircle2, Loader2, Code2, ArrowRight,
+  CheckCircle2, Loader2, Code2, ArrowRight, AlertTriangle,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Card } from "../../components/ui/Card";
@@ -59,6 +59,7 @@ function ArchitectureStudioPageInner() {
         <p className="text-text-secondary mt-1">
           AI designs your complete system architecture — microservices, clean architecture, DDD, event-driven patterns and more.
           {project && <span className="text-cyan-400 ml-1">— {project.name}</span>}
+          {!projectId && <span className="text-text-muted ml-1">— No project selected</span>}
         </p>
       </div>
 
@@ -74,8 +75,12 @@ function ArchitectureStudioPageInner() {
       </div>
 
       {error && (
-        <Card className="p-4 border-red-500/20 bg-red-500/5">
-          <p className="text-sm text-red-400">{error}</p>
+        <Card className="p-4 border-red-500/20 bg-red-500/5 flex items-start gap-3">
+          <AlertTriangle size={16} className="text-red-400 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm text-red-400">{error}</p>
+            <Button variant="ghost" size="sm" className="mt-2" onClick={handleDesign}>Try again</Button>
+          </div>
         </Card>
       )}
 

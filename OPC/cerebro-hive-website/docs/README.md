@@ -97,4 +97,4 @@ Pre-built agent blueprints for specific business functions, deployable in 6-10 w
 - **General:** hello@cerebro-hive.com
 - **Enterprise Sales:** enterprise@cerebro-hive.com
 - **Partnerships:** partners@cerebro-hive.com
-- **Book a consultation:** [/contact](/contact)
+- **Book a consultation:** [Contact page](../app/contact/page.tsx)

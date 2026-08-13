@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-      
+
       - uses: pnpm/action-setup@v4
         with:
           version: 9
@@ -37,20 +37,22 @@ jobs:
           node-version: "20"
           cache: pnpm
           cache-dependency-path: OPC/cerebro-hive-website/pnpm-lock.yaml
-          
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
         with:
           static_site_generator: next
-          
+
       - name: Install dependencies
         working-directory: OPC/cerebro-hive-website
         run: pnpm install --frozen-lockfile
-        
+
       - name: Build with Next.js
         working-directory: OPC/cerebro-hive-website
         run: npx --no-install next build
-        
+        env:
+          STATIC_EXPORT: "true"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:

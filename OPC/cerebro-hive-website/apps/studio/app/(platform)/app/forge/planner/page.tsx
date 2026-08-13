@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import {
   Brain, Sparkles, Play, ChevronRight, FolderKanban,
   FileText, Network, GitMerge, Calendar, Users, Target,
-  CheckCircle2, Clock, ArrowRight, Loader2, Plus,
+  CheckCircle2, Clock, ArrowRight, Loader2, Plus, AlertTriangle,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Card } from "../../components/ui/Card";
@@ -63,8 +63,22 @@ function AIPlannerPageInner() {
           <Badge className="bg-violet-500/10 text-violet-400 border border-violet-500/20 text-xs">AI Planner</Badge>
         </div>
         <h1 className="text-3xl font-space font-bold text-text-primary">AI Planner</h1>
-        <p className="text-text-secondary mt-1">Describe your software idea. Cerebro produces a complete project plan.</p>
+        <p className="text-text-secondary mt-1">
+          Describe your software idea. Cerebro produces a complete project plan.
+          {project?.name && <span className="text-violet-400 ml-1">— {project.name}</span>}
+          {!projectId && <span className="text-text-muted ml-1">— No project selected</span>}
+        </p>
       </div>
+
+      {error && (
+        <Card className="p-4 border-red-500/20 bg-red-500/5 flex items-start gap-3">
+          <AlertTriangle size={16} className="text-red-400 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm text-red-400">{error}</p>
+            <Button variant="ghost" size="sm" className="mt-2" onClick={handlePlan}>Try again</Button>
+          </div>
+        </Card>
+      )}
 
       {/* Input */}
       <Card className="p-0 overflow-hidden border-violet-500/20">

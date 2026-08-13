@@ -7,7 +7,7 @@ import {
   FileCode2, Layers3, TestTube2, Truck, GitBranch,
   Globe, Smartphone, Monitor, MessageCircle, ServerCog, Database,
   Webhook, PenTool, ScanSearch, BookOpen, ArrowUpRight,
-  FolderKanban, Users, Loader2,
+  FolderKanban, Users, Loader2, AlertTriangle,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -59,7 +59,9 @@ export default function ForgeDashboard() {
   const router = useRouter();
   const [prompt, setPrompt] = useState("");
   const [creating, setCreating] = useState(false);
-  const { projects, loading } = useForgeProjects();
+  const { projects, loading, error, refresh } = useForgeProjects();
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [retryKind, setRetryKind] = useState<"build" | "new" | null>(null);
 
   // Most recently updated active project — used to inject projectId into studio links
   const contextProject = projects
@@ -75,9 +77,13 @@ export default function ForgeDashboard() {
   const handleBuild = useCallback(async () => {
     if (!prompt.trim()) return;
     setCreating(true);
+    setCreateError(null);
     try {
       const project = await forgeApi.projects.create({ name: prompt.slice(0, 80), prompt });
       router.push(`/app/forge/planner?projectId=${project.id}`);
+    } catch (e) {
+      setCreateError(e instanceof Error ? e.message : "Project creation failed");
+      setRetryKind("build");
     } finally {
       setCreating(false);
     }
@@ -85,13 +91,22 @@ export default function ForgeDashboard() {
 
   const handleNewProject = useCallback(async () => {
     setCreating(true);
+    setCreateError(null);
     try {
       const project = await forgeApi.projects.create({ name: "New Project" });
       router.push(`/app/forge/planner?projectId=${project.id}`);
+    } catch (e) {
+      setCreateError(e instanceof Error ? e.message : "Project creation failed");
+      setRetryKind("new");
     } finally {
       setCreating(false);
     }
   }, [router]);
+
+  const handleRetryCreate = useCallback(() => {
+    if (retryKind === "build") void handleBuild();
+    else if (retryKind === "new") void handleNewProject();
+  }, [retryKind, handleBuild, handleNewProject]);
 
   return (
     <div className="space-y-10">
@@ -161,6 +176,16 @@ export default function ForgeDashboard() {
         </div>
       </motion.div>
 
+      {createError && (
+        <Card className="p-4 border-red-500/20 bg-red-500/5 flex items-start gap-3">
+          <AlertTriangle size={16} className="text-red-400 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm text-red-400">{createError}</p>
+            <Button variant="ghost" size="sm" className="mt-2" onClick={handleRetryCreate}>Try again</Button>
+          </div>
+        </Card>
+      )}
+
       {/* Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Active Projects"   value={loading ? "—" : String(activeProjects.length)} change={`${projects.length} total`}    icon={FolderKanban} trend="up" />
@@ -179,6 +204,15 @@ export default function ForgeDashboard() {
               View All <ChevronRight size={12} />
             </Link>
           </div>
+          {error && (
+            <Card className="p-4 border-red-500/20 bg-red-500/5 flex items-start gap-3">
+              <AlertTriangle size={16} className="text-red-400 shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm text-red-400">{error}</p>
+                <Button variant="ghost" size="sm" className="mt-2" onClick={refresh}>Try again</Button>
+              </div>
+            </Card>
+          )}
           <div className="space-y-3">
             {loading ? (
               <Card className="p-8 flex items-center justify-center">

@@ -75,15 +75,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: extract-diff
     if: github.event.pull_request.draft == false
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
       - uses: actions/checkout@v7
 
       - name: Run Claude Code Review
-        uses: anthropics/anthropic-ai-action@v1
+        if: env.ANTHROPIC_API_KEY != ''
+        uses: anthropics/claude-code-action@v1
         id: claude
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          model: claude-sonnet-4-6
+          anthropic_api_key: ${{ env.ANTHROPIC_API_KEY }}
+          claude_args: "--model claude-sonnet-4-6"
           prompt: |
             You are a senior AI platform engineer reviewing a pull request for **CerebroHive** — an enterprise AI platform comprising:
             - **CerebroStudio** (@cerebro/studio) — Next.js 15 client

@@ -9,6 +9,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist"
+    ,"baseUrl": "."
+    ,"paths": {"@cerebro/twin-contracts": ["../twin-contracts/src/index.ts"]}
   },
   "include": ["index.ts", "src/**/*"],
   "exclude": ["node_modules", "dist"]

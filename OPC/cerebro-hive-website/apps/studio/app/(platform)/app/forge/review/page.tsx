@@ -73,14 +73,18 @@ function AICodeReviewPageInner() {
         <h1 className="text-3xl font-space font-bold text-text-primary">AI Code Review Agent</h1>
         <p className="text-text-secondary mt-1">
           Deep analysis across architecture, performance, accessibility, security, scalability, and SOLID principles.
+          {!projectId && <span className="text-text-muted ml-1">— No project selected</span>}
         </p>
       </div>
 
       {/* Error */}
       {error && (
-        <Card className="p-4 border-red-500/20 bg-red-500/5 flex items-center gap-3">
+        <Card className="p-4 border-red-500/20 bg-red-500/5 flex items-start gap-3">
           <AlertTriangle size={16} className="text-red-400 shrink-0" />
-          <p className="text-sm text-red-400">{error}</p>
+          <div className="flex-1">
+            <p className="text-sm text-red-400">{error}</p>
+            <Button variant="ghost" size="sm" className="mt-2" onClick={handleReview}>Try again</Button>
+          </div>
         </Card>
       )}
 

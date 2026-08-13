@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
-import { platformNavigation, forgeNavigation } from "../navigation";
+import { platformNavigation, forgeNavigation, aiNavigation, automationNavigation } from "../navigation";
 import {
   Building2, ChevronDown, ChevronRight, Pin, PanelLeftClose, PanelLeft, Star, Hammer, X
 } from "lucide-react";
@@ -19,23 +19,27 @@ export function Sidebar() {
 
   const isForgeActive = pathname.startsWith("/app/forge");
 
-  // Group items by their section to match the new 10/10 hierarchy
-  const sections = [
-    { title: "Workspace", items: platformNavigation.find(g => g.title === "Workspace")?.items || [] },
-    { title: "AI Platform", items: platformNavigation.find(g => g.title === "AI")?.items || [] },
-    { title: "Infrastructure", items: platformNavigation.find(g => g.title === "Infrastructure")?.items || [] },
-    { title: "Data & Security", items: [
-      ...(platformNavigation.find(g => g.title === "Data")?.items || []),
-      ...(platformNavigation.find(g => g.title === "Security")?.items || [])
-    ]},
-    { title: "Talent OS", items: platformNavigation.find(g => g.title === "Talent OS")?.items || [] },
-    { title: "Explore", items: platformNavigation.find(g => g.title === "Solutions")?.items || [] }
-  ];
+  // D-13: render every platformNavigation group generically (all 14 groups)
+  // instead of hand-picking a subset — CerebroForge is excluded here only
+  // because it already has its own dedicated amber collapsible block below,
+  // and rendering it twice would be the failure mode to avoid. A small
+  // display-label override map preserves the three pre-existing ad-hoc
+  // header labels without reintroducing per-group hand-picking.
+  const SECTION_LABEL_OVERRIDES: Record<string, string> = {
+    AI: "AI Platform",
+    Solutions: "Explore",
+  };
+
+  const sections = platformNavigation
+    .filter(g => g.title !== "CerebroForge")
+    .map(g => ({ title: SECTION_LABEL_OVERRIDES[g.title] ?? g.title, items: g.items }));
+
+  const workflowBuilderItem = automationNavigation.items.find(i => i.title === "Workflow Builder");
 
   const pinnedFavorites = [
-    { title: "AI Studio", href: "/app/ai/studio", icon: platformNavigation.find(g => g.title === "AI")?.items.find(i => i.title === "AI Studio")?.icon },
-    { title: "Workflows", href: "/app/automation/workflows", icon: platformNavigation.find(g => g.title === "Automation")?.items[0]?.icon },
-    { title: "Knowledge Hub", href: "/app/ai/knowledge", icon: platformNavigation.find(g => g.title === "AI")?.items.find(i => i.title === "Knowledge Hub")?.icon },
+    { title: "AI Studio", href: "/app/ai/studio", icon: aiNavigation.items.find(i => i.title === "AI Studio")?.icon },
+    { title: "Workflow Builder", href: "/app/automation/builder", icon: workflowBuilderItem?.icon },
+    { title: "Knowledge Hub", href: "/app/ai/knowledge", icon: aiNavigation.items.find(i => i.title === "Knowledge Hub")?.icon },
   ];
 
   return (

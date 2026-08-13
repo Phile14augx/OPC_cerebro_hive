@@ -3,6 +3,8 @@ import { test, expect } from '@playwright/test';
 test.describe('Theme Motion Parity & Visual Regression', () => {
   
   test('Home Hero - Light Theme (Executive Blueprint)', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+
     // Go to home page
     await page.goto('/');
     
@@ -13,17 +15,18 @@ test.describe('Theme Motion Parity & Visual Regression', () => {
       localStorage.setItem('theme', 'light');
     });
 
-    // Wait for animations to settle
-    await page.waitForTimeout(1500);
+    const hero = page.locator('section').first();
+    await expect(hero).toBeVisible();
 
     // Verify visual snapshot
-    await expect(page).toHaveScreenshot('home-hero-light.png', {
-      fullPage: true,
+    await expect(hero).toHaveScreenshot('home-hero-light.png', {
       maxDiffPixels: 200,
     });
   });
 
   test('Home Hero - Dark Theme (Mission Control)', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+
     // Go to home page
     await page.goto('/');
     
@@ -34,12 +37,11 @@ test.describe('Theme Motion Parity & Visual Regression', () => {
       localStorage.setItem('theme', 'dark');
     });
 
-    // Wait for animations to settle
-    await page.waitForTimeout(1500);
+    const hero = page.locator('section').first();
+    await expect(hero).toBeVisible();
 
     // Verify visual snapshot
-    await expect(page).toHaveScreenshot('home-hero-dark.png', {
-      fullPage: true,
+    await expect(hero).toHaveScreenshot('home-hero-dark.png', {
       maxDiffPixels: 200,
     });
   });

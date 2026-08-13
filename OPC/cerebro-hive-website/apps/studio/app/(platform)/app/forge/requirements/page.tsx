@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import {
   FileText, Sparkles, ChevronRight, Users, Shield,
   Database, Webhook, CheckCircle2, Loader2,
-  BookOpen, Target, Download,
+  BookOpen, Target, Download, AlertTriangle,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Card } from "../../components/ui/Card";
@@ -127,8 +127,12 @@ function RequirementsStudioPageInner() {
       </Card>
 
       {error && (
-        <Card className="p-4 border-red-500/20 bg-red-500/5">
-          <p className="text-sm text-red-400">{error}</p>
+        <Card className="p-4 border-red-500/20 bg-red-500/5 flex items-start gap-3">
+          <AlertTriangle size={16} className="text-red-400 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm text-red-400">{error}</p>
+            <Button variant="ghost" size="sm" className="mt-2" onClick={handleGenerate}>Try again</Button>
+          </div>
         </Card>
       )}
 
