@@ -2,8 +2,8 @@
   "name": "@cerebro/db",
   "version": "1.0.0",
   "private": true,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "index.ts",
+  "types": "index.ts",
   "scripts": {
     "build": "tsc && node -e \"require('fs').cpSync('src/generated/client','dist/src/generated/client',{recursive:true})\"",
     "generate": "prisma generate",
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@cerebro/twin-contracts": "workspace:*",
+    "@cerebro/twin-domain": "workspace:*",
     "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0",
     "@prisma/client-runtime-utils": "^7.9.0",
