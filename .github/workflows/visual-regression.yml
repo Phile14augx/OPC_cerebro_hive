@@ -44,7 +44,7 @@ jobs:
     - name: Generate Playwright baselines
       if: ${{ inputs.update_snapshots }}
       working-directory: OPC/cerebro-hive-website
-      run: pnpm --filter @cerebro/studio run test:e2e -- --update-snapshots
+      run: pnpm --filter @cerebro/studio run test:e2e --update-snapshots
     - uses: actions/upload-artifact@v7
       if: ${{ inputs.update_snapshots && !cancelled() }}
       with:
