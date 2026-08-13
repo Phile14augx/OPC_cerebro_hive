@@ -1,207 +1,263 @@
-# Claude Tasks — Noon Assignment 2026-08-08 12:00 IST
+# Claude Tasks — Midday Assignment 2026-08-10 12:00 IST
 
-**Audit session:** Noon | **Next check:** 3 AM tonight (2026-08-09)
-**Git commits reviewed:** 0 — git reports no commits on `main`; completion assessed via file modification timestamps
-**Tasks completed since last session (3 AM 2026-08-08):** None — CLAUDE-TASKS.md unchanged since 06:27 IST
-
----
-
-## ⚠️ CRITICAL ESCALATION — 6th Cycle (all P0s)
-
-C-P0-1, C-P0-2, and C-P0-3 have now been pending across **6 consecutive audit cycles** with **zero commits**. C-P0-4 (Vite baseline) completes its **1st cycle** unresolved. No code has been committed to this repository since before 2026-08-05.
-
-| Task | Slipped cycles |
-|------|---------------|
-| C-P0-1: De-scope M10.1 worktree, commit, open PR | **6** |
-| C-P0-2: Apply Prisma migration | **6** |
-| C-P0-3a/b/c: Execute triage plan | **5 / 3 / 3** |
-| C-P0-4: Fix Node/Vite/Vitest baseline | **1** |
-
-**Minimum viable progress for today:** C-P0-3 Phase A (no code, no secrets, long overdue). This single commit would clear 700+ files from the "uncommitted" pile, prove the commit pipeline works, and unblock cycle tracking. Do this first.
+**Audit session:** Noon | **Next check:** 3 AM 2026-08-11
+**Git commits reviewed:** 0 — git unreachable from audit sandbox; assessed via file modification timestamps
+**Tasks completed since 3 AM audit:** None detected — no file changes since CURRENT-SPRINT.md at 03:11 IST
 
 ---
 
-## ✅ Completed Today (inferred from commits/file timestamps)
-*None — 0 commits detected since 3 AM 2026-08-08. No file modifications in tracked directories since 06:28 IST.*
+## ✅ Completed (on disk, not yet committed — carried from Aug 9 afternoon session)
 
-## ⚠️ Slipped Tasks (carrying forward)
-
-| Task | Last assigned | Slipped cycles | Notes |
-|------|--------------|---------------|-------|
-| C-P0-1: De-scope M10.1 worktree | 2026-08-06 Noon | **6** | Mixed M10.1/M10.2 scope per CODEX-M10.1-REVIEW.md |
-| C-P0-2: Apply Prisma migration | 2026-08-06 Noon | **6** | No migration SQL exists; schema has AgentExecution* tables |
-| C-P0-3a: Commit audit/sprint files | 2026-08-06 Noon | **5** | No-code, lowest risk — should have been done first |
-| C-P0-3b: Commit architecture docs | 2026-08-07 3 AM | **3** | Depends on Phase A |
-| C-P0-3c: Commit root planning docs | 2026-08-07 3 AM | **3** | Depends on Phase A |
-| C-P0-4: Fix Node/Vite/Vitest baseline | 2026-08-08 3 AM | **1** | Blocks Codex product pipeline |
-| C-P1-1: Typecheck baseline | 2026-08-07 3 AM | 0 | Blocked on C-P0-1, C-P0-2 |
-| C-P1-2: M10.2 provider tool-calling | 2026-08-07 3 AM | 0 | Blocked on C-P0-1 (stash recovery) |
+- **M27 Governance Analytics** — all 6 tasks in `task.md` marked complete (Aug 9 17:42 IST):
+  - Scaffold Evidence Warehouse Dimensional Schema (Fact/Dim Tables)
+  - Implement NRT Projection Pipeline (ingest `EngineeringReviewPublished` events)
+  - Implement Projection Validation Suite
+  - Implement Trend Engine (aggregation, multi-score metrics, forecasting)
+  - Implement Analytics API & Studio Dashboards (RLS enabled)
+  - Implement Executive Report Generator (quarterly snapshot exporter)
+- **M26.1 Architecture Review batch** — ~30 audit files, Studio planning docs, platform security routes, agent-sdk/ai/ai-gateway changes (all on disk — not committed)
 
 ---
 
-## 🔴 P0 — Blockers (C-P0-1 through C-P0-4 can run in parallel)
+## ⚠️ Slipped Tasks (critical — must not slip another cycle)
 
-### C-P0-3 Phase A · Commit audit/sprint coordination files — START HERE
-**5 cycles — no code, no secrets, lowest risk of all tasks**
+| Task | Slipped cycles | Status |
+|------|---------------|--------|
+| C-P0-1: De-scope M10.1 worktree, commit, open PR | **6** | unstarted |
+| C-P0-2: Apply Prisma migration | **6** | unstarted |
+| C-P0-3a: Commit audit/sprint files (Phase A) | **5** | unstarted |
+| C-P0-3b: Commit architecture docs (Phase B) | **3** | unstarted |
+| C-P0-3c: Commit root planning docs (Phase C) | **3** | unstarted |
+| C-P0-0: Fix Vite/Node baseline regression | **1** | unstarted |
 
-Stage and commit only these files:
-```
-agents/CLAUDE-TASKS.md
-agents/GEMINI-TASKS.md
-agents/CODEX-TASKS.md
-agents/CODEX-CHANGESET-MANIFEST.md
-agents/CODEX-M10.1-REVIEW.md
-agents/CODEX-M10.2-TEST-PLAN.md
-agents/CODEX-PRISMA-MIGRATION-REVIEW.md
-agents/CURRENT-SPRINT.md
-agents/M10.1-COMMIT-HANDOFF.md
-agents/TRIAGE-REPORT-2026-08-06.md
-agents/CerebroHive_AEOS_6Month_MegaPlan.md
-CURRENT-SPRINT.md               ← confirm not a duplicate of agents/ version first
-PROGRESS.md
-AGENT-RUNTIME-BACKLOG.md
-AGENTS.md
-```
-
-**Before staging:** Verify `legal-docs/` is in `.gitignore`:
-```bash
-grep "legal-docs" .gitignore
-```
-
-**Commit:**
-```
-chore(agents): commit audit and sprint coordination files  [C-P0-3a]
-```
-
-**Success criteria:** All listed files committed; `git status` visibly smaller; `legal-docs/` not staged.
-**Complexity:** S | **Dependencies:** none — do this right now
+**⚠️ CRITICAL:** Six consecutive audit cycles with zero commits on the oldest P0s. Month 2–4
+deliverables are at serious risk. The git working tree has grown substantially — every new feature
+added without a commit makes the eventual triage harder.
 
 ---
 
-### C-P0-4 · Fix Node/Vite/Vitest baseline
-**1 cycle — blocks all product-slice test gating**
+## 🔴 P0 — Blockers (do first, no other work until resolved)
 
-**Symptom:** `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` from `vite@8.1.5` on Node `22.17.0`. Failing package: `@cerebro/capability-registry`.
+### C-P0-0 · Fix Vite/Node baseline regression (UNBLOCKS ALL CODEX PRODUCT WORK)
+The `corepack pnpm test` fails before any product code runs:
+```
+ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled
+from vite@8.1.5 on Node 22.17.0
+```
+This error has appeared in three consecutive Codex cycles. The stash `4d9c2aef` contains a partial
+Archive API fastify lockfile fix that was preserved before Vite regression blocked further progress.
 
-**Quick diagnosis:**
-```bash
-node --version
-cd packages/capability-registry
-cat package.json | grep -A 20 '"imports"'
-pnpm test 2>&1 | head -40
+**Investigation steps:**
+1. Check Node version: `node --version` — if 22.17.0, downgrade to 22.12.0 via `.nvmrc`
+2. Check `package.json engines.node` field; pin to `22.12.0` if missing
+3. Check 14 vite references in `pnpm-lock.yaml` — if `vite@8.1.5` is the culprit across all, downgrade to the last known-good Vite 7.x
+4. Run `corepack pnpm test` from clean `origin/main` checkout; confirm all Turbo tasks pass
+
+**Files:**
+```
+.nvmrc
+package.json                    ← engines.node field
+pnpm-lock.yaml                  ← vite version references (14 occurrences)
+packages/eda-sdk/               ← reported failing package
 ```
 
-**Fix A — subpath imports map:** Add a `"default"` fallback to the `#module-sync-enabled` entry in `packages/capability-registry/package.json#imports`.
-
-**Fix B — Vite resolve conditions** (if repo-wide):
-```ts
-// vitest.config.ts
-export default defineConfig({
-  resolve: {
-    conditions: ['module-sync', 'module', 'browser', 'node']
-  }
-})
-```
-
-**Fix C — pin Node version** (immediate unblock):
-Create `.nvmrc` with `22.12.0` and add `"engines": { "node": "22.12.0" }` to root `package.json`.
-
-**Commit:**
-```
-fix(baseline): resolve ERR_PACKAGE_IMPORT_NOT_DEFINED vite@8/node22  [C-P0-4]
-```
-
-**Success criteria:** `corepack pnpm test` completes all 26 Turbo tasks without the `ERR_PACKAGE_IMPORT_NOT_DEFINED` error.
-**Complexity:** M | **Dependencies:** none
+**Commit:** `fix(baseline): restore Node/Vite test baseline  [C-P0-0]`
+**Success criteria:** `corepack pnpm test` exits 0 from clean checkout
+**Complexity:** M | **Dependencies:** none — unblocks X-P1-3 and all Codex slices
 
 ---
 
-### C-P0-1 · De-scope M10.1 worktree, commit, open PR
-**6 cycles — CRITICAL**
+### C-P0-1 · De-scope M10.1 worktree, commit M10.1, open PR
+**⚠️ 6 cycles slipped — do this FIRST after C-P0-0**
 
-**Step 1 — Park M10.2 files** (stash or temp branch `feat/m10.2-parked`):
+The M10.1 worktree contains M10.2 provider files mixed in. Separate them:
+
+Park these M10.2 files via `git stash` or temp branch (READ DIFF FIRST — ai-gateway was modified again on Aug 9):
 ```
-packages/ai-gateway/src/types.ts
-packages/ai-gateway/src/gateway.ts
-packages/ai-gateway/src/providers/anthropic.provider.ts
-packages/ai-gateway/src/providers/openai.provider.ts
+packages/ai-gateway/src/types.ts                              ← modified Aug 9 — reconcile scope
+packages/ai-gateway/src/gateway.ts                            ← modified Aug 9
+packages/ai-gateway/src/providers/anthropic.provider.ts       ← modified Aug 9
+packages/ai-gateway/src/providers/openai.provider.ts          ← modified Aug 9
 apps/platform-api/src/modules/runtime/providers/ToolRuntimeProvider.ts
 ```
 
-**Step 2 — Commit only M10.1/M10.4 scope** (per `agents/M10.1-COMMIT-HANDOFF.md`):
-```
-packages/runtime/src/execution/
-packages/capabilities/agent-builder/src/AgentRuntimeService.ts
-apps/platform-api/src/modules/conversations/conversations.routes.ts
-apps/platform-api/src/bootstrap.ts
-```
+After scoping, commit with: `feat(ai-gateway): M10.1 — provider abstraction foundation  [C-P0-1]`
 
-Run focused typecheck first:
-```bash
-pnpm turbo typecheck --filter=@cerebro/runtime --filter=@cerebro/agent-builder-capability --filter=platform-api
-```
+Open PR against main. See `agents/CODEX-M10.1-REVIEW.md` and `agents/M10.1-COMMIT-HANDOFF.md` for full scope details.
 
-**Step 3 — Push branch and open PR** against `main` with `[C-P0-1]` in the title.
-
-**Success criteria:** PR open; M10.1/M10.4 scope only; focused typecheck passes.
-**Complexity:** M | **Dependencies:** none
+**Success criteria:** Clean PR exists with only M10.1 scope. M10.2 files stashed or on a separate branch.
+**Complexity:** M | **Dependencies:** none (but do C-P0-0 first)
 
 ---
 
-### C-P0-2 · Apply and verify the Prisma migration
-**6 cycles — CRITICAL**
+### C-P0-2 · Apply and verify Prisma migration
+**⚠️ 6 cycles slipped**
+
+The `AgentExecution*` schema tables added in the codebase have no corresponding migration SQL.
 
 ```bash
-cd packages/database
-pnpm prisma migrate dev --name add-agent-execution-models-aug-08
-```
-
-**STOP and escalate if you see `DROP TABLE`, `DROP COLUMN`, or destructive `ALTER COLUMN`.**
-
-Then verify:
-```bash
-pnpm prisma migrate status
+cd apps/platform-api
+pnpm prisma migrate dev --name add-agent-execution-models-aug-10
+# Review the generated SQL before committing
+cat prisma/migrations/*/migration.sql
+# Run generate
 pnpm prisma generate
 ```
 
-**Commit:**
-```
-feat(db): add AgentExecution* migration — aug-08  [C-P0-2]
-```
+Verify: `pnpm typecheck` passes in `apps/platform-api`. Then commit:
+`feat(prisma): add AgentExecution schema migration  [C-P0-2]`
 
-**Success criteria:** `pnpm prisma migrate status` shows no pending migrations; no destructive SQL.
+See `agents/CODEX-PRISMA-MIGRATION-REVIEW.md` for the blocking finding details.
+
+**Success criteria:** Migration SQL exists in `prisma/migrations/`, `pnpm prisma migrate deploy` succeeds, `pnpm typecheck` green in platform-api.
 **Complexity:** S | **Dependencies:** none
 
 ---
 
-## 🟠 P1 — Critical (after all P0s have at least one commit each)
+### C-P0-3a · Commit audit/sprint coordination changeset (Phase A — pure docs, lowest risk)
+**⚠️ 5 cycles slipped — COMMIT THESE TODAY, THEY HAVE NO CODE**
 
-### C-P1-1 · Establish runtime typecheck baseline
-**Files:** `apps/platform-api/`, `packages/runtime/`, `packages/runtime-core/`
+These are pure documentation/planning files. No typecheck needed. Secrets grep, then commit:
 
-Run `pnpm turbo typecheck` from repo root. Fix errors in `apps/platform-api` and `packages/runtime` first. Append a per-package error summary under a `## Typecheck Baseline` section in this file.
+```bash
+# Secrets grep before staging
+grep -rE "(sk-|ghp_|AKIA|password\s*=)" agents/ audit/ .planning/ 2>/dev/null | grep -v ".pyc"
 
-**Success criteria:** `apps/platform-api` and `packages/runtime` typecheck clean; all remaining errors quantified.
-**Complexity:** L | **Dependencies:** C-P0-1, C-P0-2
+# Stage and commit
+git add agents/TRIAGE-REPORT-2026-08-06.md
+git add agents/CODEX-CHANGESET-MANIFEST.md agents/CODEX-M10.1-REVIEW.md
+git add agents/CODEX-M10.2-TEST-PLAN.md agents/CODEX-PRISMA-MIGRATION-REVIEW.md
+git add agents/CerebroHive_AEOS_6Month_MegaPlan.md agents/M10.1-COMMIT-HANDOFF.md
+git add .planning/PROJECT.md .planning/REQUIREMENTS.md .planning/ROADMAP.md .planning/STATE.md
+git add .planning/research/
+git commit -m "docs(agents): audit coordination files, changeset manifest, Studio planning  [C-P0-3a]"
+```
+
+**Success criteria:** All listed files committed. `git status` no longer shows them as untracked.
+**Complexity:** S | **Dependencies:** none
 
 ---
 
-### C-P1-2 · Implement M10.2 provider tool-calling (foundation)
-**Files:** `packages/ai-gateway/src/types.ts`, `packages/ai-gateway/src/providers/anthropic.provider.ts`, `packages/ai-gateway/src/providers/openai.provider.ts`
+### C-P0-3b · Commit architecture docs (Phase B)
+**⚠️ 3 cycles slipped**
 
-Recover M10.2 files from stash/temp branch (created in C-P0-1). Implement tool-calling normalisation layer per `agents/CODEX-M10.2-TEST-PLAN.md`. Start with the Anthropic provider.
+```bash
+grep -rE "(sk-|ghp_|AKIA)" architecture/ docs/ 2>/dev/null
+git add architecture/ARCHITECTURE_INDEX.md
+git add docs/09-templates/26-one-pager-template.md docs/09-templates/27-pitch-deck-template.md
+git commit -m "docs(architecture): architecture index and doc templates  [C-P0-3b]"
+```
 
-**Commit:** include `[C-P1-2]` in message.
+**Complexity:** S | **Dependencies:** C-P0-3a (for safety; can be parallelized)
 
-**Success criteria:** Anthropic provider passes tool-call fixture from CODEX-M10.2-TEST-PLAN.md; no regression in existing provider tests.
-**Complexity:** M | **Dependencies:** C-P0-1 (M10.2 files recovered from stash)
+---
+
+### C-P0-3c · Commit root planning/governance docs (Phase C)
+**⚠️ 3 cycles slipped**
+
+```bash
+grep -rE "(sk-|ghp_|AKIA)" MASTER-PLAN-EVOLUTION-LOG.md CEREBROHIVE_CONSTITUTION.md CEREBROHIVE-6-MONTH-MASTER-PLAN.md 2>/dev/null
+git add MASTER-PLAN-EVOLUTION-LOG.md CEREBROHIVE_CONSTITUTION.md CEREBROHIVE-6-MONTH-MASTER-PLAN.md
+git add MASTER-PLAN-GAP-ASSESSMENT.md
+git commit -m "docs(governance): master plan evolution log, constitution, gap assessment  [C-P0-3c]"
+```
+
+**Complexity:** S | **Dependencies:** C-P0-3a
+
+---
+
+### C-P0-3d · Typecheck and commit new apps/platform/ features (Phase D — Aug 9 work)
+
+```bash
+cd apps/platform
+pnpm typecheck 2>&1 | head -50
+# Fix any type errors in:
+#   src/app/api/security/events/route.ts
+#   src/app/security/metrics/route.ts
+#   src/features/studio/backend-runtime/cache/
+#   src/features/studio/backend-runtime/governance/
+#   src/features/studio/backend-runtime/intelligence/
+#   middleware.ts
+#   next.config.ts
+# Once clean:
+git add apps/platform/CLAUDE.md apps/platform/AGENTS.md apps/platform/middleware.ts apps/platform/next.config.ts
+git add apps/platform/src/
+git add apps/platform/scripts/validate-security.ts
+git commit -m "feat(platform): Studio security routes, backend-runtime cache/governance/intelligence  [C-P0-3d]"
+```
+
+**Complexity:** M | **Dependencies:** C-P0-1 scope separation (ensure ai-gateway files in correct commit)
+
+---
+
+### C-P0-3e · Typecheck and commit agent-sdk / ai / ai-gateway / agent-ops updates (Phase E)
+
+```bash
+# Run typecheck across affected packages
+pnpm --filter "@cerebro/agent-sdk" typecheck
+pnpm --filter "@cerebro/ai" typecheck
+pnpm --filter "@cerebro/ai-gateway" typecheck
+pnpm --filter "@cerebro/agent-ops" typecheck
+
+# Fix errors, then commit (after C-P0-1 scope separation — ai-gateway files go in M10.1 or M10.2 PR):
+git add packages/agent-sdk/src/CerebroAgent.ts packages/agent-sdk/src/CerebroMemory.ts
+git add packages/agent-sdk/src/CerebroTool.ts packages/agent-sdk/src/index.ts
+git add packages/agent-sdk/dist/
+git add packages/ai/src/
+git add packages/agent-ops/src/memory-store.ts packages/agent-ops/src/agent-registry.ts
+git commit -m "feat(packages): agent-sdk, ai, agent-ops Aug 9 updates  [C-P0-3e]"
+```
+
+**Note:** `packages/ai-gateway/` files should go in C-P0-1 (M10.1 PR) or C-P1-2 (M10.2), not here.
+
+**Complexity:** M | **Dependencies:** C-P0-1
+
+---
+
+## 🟠 P1 — Critical (today)
+
+### C-P1-1 · Establish runtime typecheck baseline
+After C-P0-1 and C-P0-2 land:
+```bash
+pnpm typecheck 2>&1 | tee /tmp/typecheck-baseline.txt | tail -20
+# Document error count as the new baseline
+```
+**Complexity:** S | **Dependencies:** C-P0-1, C-P0-2
+
+### C-P1-2 · M10.2 provider tool-calling foundation
+After M10.2 files are separated from M10.1 scope (C-P0-1), implement the tool-calling contract:
+- `packages/ai-gateway/src/types.ts` — define `ToolCallRequest` / `ToolCallResponse` interfaces
+- `packages/ai-gateway/src/providers/anthropic.provider.ts` — implement tool-calling
+- `packages/ai-gateway/src/providers/openai.provider.ts` — implement tool-calling
+- Add tests per `agents/CODEX-M10.2-TEST-PLAN.md`
+
+**Complexity:** L | **Dependencies:** C-P0-1
+
+### C-P1-3 · Studio Phase 1 — Schema & Navigation Foundation
+Read `apps/platform/CLAUDE.md` and `.planning/ROADMAP.md` first. Phase 1 requirements:
+- Define Prisma schema extensions for Studio entities
+- Implement `apps/platform/src/app/(studio)/` navigation shell
+- Wire up sidebar nav with correct route segments per `.planning/REQUIREMENTS.md` Phase 1 items
+
+**Complexity:** L | **Dependencies:** C-P0-3d, C-P0-2
+
+---
+
+## 🟡 P2 — High (today if P1 done)
+
+### C-P2-1 · Land Archive API lockfile fix
+The Codex stash `4d9c2aef` contains a fastify lockfile fix for the Archive API. After C-P0-0:
+```bash
+git stash show 4d9c2aef
+git stash apply 4d9c2aef
+# Verify, then commit
+git commit -m "fix(archive-api): fastify lockfile fix  [C-P2-1]"
+```
+**Complexity:** S | **Dependencies:** C-P0-0
 
 ---
 
 ## How to use this file
-
-Open in VS Code. **C-P0-3 Phase A first** — it's no-code, takes minutes, and proves the commit pipeline works. Then run C-P0-4, C-P0-2, and C-P0-1 in parallel. Include the task ID (e.g. `[C-P0-3a]`) in every commit message so the night audit can detect completion automatically.
-
-**Priority order if you can only do one thing:** C-P0-3 Phase A. Then C-P0-4. Then C-P0-2. Then C-P0-1.
-
-*Written by CerebroHive Noon Audit — 2026-08-08 12:00 IST*
+Open this file in VS Code. Each task has exact file paths and what to do.
+When you commit, include the task ID in the commit message (e.g., `[C-P0-3a]`) so the
+night audit can automatically detect completion.
