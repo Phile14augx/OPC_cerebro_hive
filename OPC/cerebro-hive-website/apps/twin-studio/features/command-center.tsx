@@ -1,35 +1,784 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { factoryTwin } from '../modules/demo-factory/factory-definition';
-import { simulateFactoryTick } from '../modules/demo-factory/factory-simulator';
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { IndustryGenerator } from './industry-generator';
 
-const tabs = ['Overview', 'Live state', 'Graph', 'Events', 'Scenarios', 'Ask twin'];
+type JsonObject = Record<string, unknown>;
+type CurrentState = {
+  state: JsonObject;
+  provenance: JsonObject;
+  source: string;
+  classification: string;
+  observedAt: string;
+  effectiveAt: string;
+  ingestedAt: string;
+};
+type Entity = {
+  id: string;
+  key: string;
+  name: string;
+  typeKey: string;
+  attributes: JsonObject;
+  currentState: CurrentState | null;
+};
+type Version = {
+  id: string;
+  versionNumber: number;
+  status: string;
+  definition: JsonObject;
+  createdAt: string;
+};
+type Twin = {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+  metadata: JsonObject;
+  activeVersionId: string | null;
+  activeVersion: Version | null;
+  versions: Version[];
+  entities: Entity[];
+  updatedAt: string;
+};
+type Proposal = {
+  id: string;
+  status: string;
+  definition: JsonObject;
+  schemaValid: boolean;
+  policyValid: boolean;
+  createdAt: string;
+};
+type ScenarioRun = { id: string; status: string; result: JsonObject | null; completedAt: string };
+type Scenario = {
+  id: string;
+  name: string;
+  kind: string;
+  inputs: JsonObject;
+  runs: ScenarioRun[];
+};
+
+const API = '/app/api/twins';
+const tabs = ['Overview', 'Live state', 'History', 'Versions', 'Scenarios', 'Ask twin', 'Generate'] as const;
+type Tab = (typeof tabs)[number];
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(path, {
+    ...init,
+    headers: { 'content-type': 'application/json', ...init?.headers },
+  });
+  const payload = response.status === 204 ? undefined : await response.json();
+  if (!response.ok) {
+    throw new Error(payload?.error?.message ?? `Request failed with status ${response.status}`);
+  }
+  return payload?.data as T;
+}
+
+function JsonView({ value }: { value: unknown }) {
+  return <pre className="jsonView">{JSON.stringify(value, null, 2)}</pre>;
+}
 
 export function CommandCenter() {
+  const [twins, setTwins] = useState<Twin[]>([]);
+  const [selectedId, setSelectedId] = useState('');
+  const [tab, setTab] = useState<Tab>('Overview');
+  const [loading, setLoading] = useState(true);
+  const [working, setWorking] = useState('');
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
+  const [createOpen, setCreateOpen] = useState(false);
+  const [history, setHistory] = useState<CurrentState[]>([]);
+  const [historyEntityId, setHistoryEntityId] = useState('');
+  const [versions, setVersions] = useState<Version[]>([]);
+  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [approvedProposalId, setApprovedProposalId] = useState('');
+  const [scenarios, setScenarios] = useState<Scenario[]>([]);
+  const [askAnswer, setAskAnswer] = useState<JsonObject | null>(null);
   const [tick, setTick] = useState(0);
-  const [tab, setTab] = useState('Overview');
-  const [scenario, setScenario] = useState(false);
-  const data = useMemo(() => simulateFactoryTick(tick, new Date()), [tick]);
-  const risk = data.alert ? 82 : Math.round(18 + tick * 11);
-  return <main className="shell">
-    <aside className="rail"><div className="brand">CH<span>/TWIN</span></div><nav>{['Overview','Digital twins','Live operations','Knowledge graph','Events','Models','Simulations','Governance'].map((item, i)=><a className={i===1?'active':''} key={item} href="#">{item}</a>)}</nav><p className="railNote">MVP CONTROL PLANE<br/>LOCAL ADAPTERS</p></aside>
-    <section className="workspace">
-      <header className="top"><div><p className="eyebrow">Digital twin / Smart factory</p><h1>{factoryTwin.name}</h1></div><div className="topMeta"><span className="sim">SIMULATED</span><span><b>{data.alert ? 'DEGRADED' : 'LIVE'}</b><small>operational state</small></span><span><b>{100-risk}%</b><small>health score</small></span></div></header>
-      <div className="tabs" role="tablist">{tabs.map(t=><button key={t} aria-selected={tab===t} onClick={()=>setTab(t)}>{t}</button>)}</div>
-      <section className="hero">
-        <div className="signal"><span>VIBRATION TRACE</span>{[1,2,3,4,5,6,7,8].map((n)=><i key={n} style={{height:`${12+n*(tick+2)}px`}}/>)}<strong>{data.vibration.toFixed(1)}<small> mm/s</small></strong></div>
-        <div className="brief"><p className="eyebrow">Observed system state</p><h2>{data.alert ? 'Motor‑07 is moving outside its normal envelope.' : 'Factory Alpha is operating within its expected envelope.'}</h2><p>{data.alert ? 'Vibration and temperature are rising together on Production Line A. The evidence matches an early bearing-failure pattern.' : 'Advance the deterministic simulator to observe live telemetry, rules, alerts, and scenario analysis.'}</p><div className="actions"><button className="primary" onClick={()=>setTick(v=>Math.min(v+1,8))}>Advance simulation</button><button onClick={()=>setScenario(true)}>Simulate Motor‑07 failure</button></div></div>
+  const [query, setQuery] = useState('');
+  const [generated, setGenerated] = useState<{
+    title: string;
+    industry: string;
+    definition: JsonObject;
+  } | null>(null);
+
+  const selected = useMemo(
+    () => twins.find((twin) => twin.id === selectedId) ?? twins[0],
+    [selectedId, twins],
+  );
+  const visibleTwins = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return twins;
+    return twins.filter(
+      (twin) =>
+        twin.name.toLowerCase().includes(needle) || twin.type.toLowerCase().includes(needle),
+    );
+  }, [query, twins]);
+
+  const loadTwins = useCallback(async (preferredId?: string) => {
+    setError('');
+    const data = await request<Twin[]>(API, { cache: 'no-store' });
+    setTwins(data);
+    setSelectedId((current) => (preferredId ?? current) || data[0]?.id || '');
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    // Mount-time list fetch; React 19 flags any setState scheduled from an effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial twin list load
+    void loadTwins()
+      .catch((loadError) => {
+        if (!cancelled) setError(loadError instanceof Error ? loadError.message : 'Load failed.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [loadTwins]);
+
+  const selectedTwinId = selected?.id ?? '';
+  const [panelTwinId, setPanelTwinId] = useState(selectedTwinId);
+  if (panelTwinId !== selectedTwinId) {
+    setPanelTwinId(selectedTwinId);
+    setHistoryEntityId(selected?.entities[0]?.id ?? '');
+    setHistory([]);
+    setAskAnswer(null);
+    setTick(0);
+  }
+
+  useEffect(() => {
+    if (!createOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setCreateOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [createOpen]);
+
+  useEffect(() => {
+    if (!selected || tab !== 'History' || !historyEntityId) return;
+    request<CurrentState[]>(
+      `${API}/${selected.id}/state?entityId=${encodeURIComponent(historyEntityId)}`,
+      { cache: 'no-store' },
+    )
+      .then(setHistory)
+      .catch((loadError) =>
+        setError(loadError instanceof Error ? loadError.message : 'History load failed.'),
+      );
+  }, [historyEntityId, selected, tab]);
+
+  useEffect(() => {
+    if (!selected || tab !== 'Versions') return;
+    request<{ versions: Version[]; proposals: Proposal[] }>(
+      `${API}/${selected.id}/versions`,
+      { cache: 'no-store' },
+    )
+      .then((data) => {
+        setVersions(data.versions);
+        setProposals(data.proposals);
+      })
+      .catch((loadError) =>
+        setError(loadError instanceof Error ? loadError.message : 'Version load failed.'),
+      );
+  }, [selected, tab]);
+
+  useEffect(() => {
+    if (!selected || tab !== 'Scenarios') return;
+    request<Scenario[]>(`${API}/${selected.id}/scenarios`, { cache: 'no-store' })
+      .then(setScenarios)
+      .catch((loadError) =>
+        setError(loadError instanceof Error ? loadError.message : 'Scenario load failed.'),
+      );
+  }, [selected, tab]);
+
+  async function mutate(label: string, action: () => Promise<void>, success: string) {
+    setWorking(label);
+    setError('');
+    setNotice('');
+    try {
+      await action();
+      setNotice(success);
+    } catch (mutationError) {
+      setError(mutationError instanceof Error ? mutationError.message : 'Action failed.');
+    } finally {
+      setWorking('');
+    }
+  }
+
+  async function createTwin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const name = String(form.get('name') ?? '').trim();
+    const type = String(form.get('type') ?? 'GENERIC');
+    await mutate(
+      'create',
+      async () => {
+        const created = await request<Twin>(API, {
+          method: 'POST',
+          body: JSON.stringify({
+            name: name || generated?.title,
+            type,
+            metadata: generated ? { generatedIndustry: generated.industry } : {},
+            definition: generated?.definition,
+          }),
+        });
+        await loadTwins(created.id);
+        setCreateOpen(false);
+        setGenerated(null);
+      },
+      `${name} was created and persisted.`,
+    );
+  }
+
+  async function editTwin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!selected) return;
+    const name = String(new FormData(event.currentTarget).get('name') ?? '').trim();
+    await mutate(
+      'edit',
+      async () => {
+        await request(`${API}/${selected.id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ name }),
+        });
+        await loadTwins(selected.id);
+      },
+      'Twin details updated.',
+    );
+  }
+
+  async function archiveTwin() {
+    if (!selected || !window.confirm(`Archive ${selected.name}?`)) return;
+    await mutate(
+      'archive',
+      async () => {
+        await request(`${API}/${selected.id}`, { method: 'DELETE' });
+        await loadTwins();
+      },
+      'Twin archived.',
+    );
+  }
+
+  async function advanceSimulator() {
+    if (!selected) return;
+    const nextTick = Math.min(tick + 1, 8);
+    await mutate(
+      'simulator',
+      async () => {
+        await request(`${API}/${selected.id}/simulator`, {
+          method: 'POST',
+          body: JSON.stringify({ tick: nextTick }),
+        });
+        setTick(nextTick);
+        await loadTwins(selected.id);
+      },
+      'Simulated observation persisted to current state and history.',
+    );
+  }
+
+  async function createProposal() {
+    if (!selected?.activeVersion) return;
+    const now = new Date().toISOString();
+    await mutate(
+      'proposal',
+      async () => {
+        await request(`${API}/${selected.id}/versions`, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'PROPOSE',
+            definition: selected.activeVersion!.definition,
+            provenance: {
+              source: 'twin-studio-ui',
+              classification: 'MANUAL',
+              observedAt: now,
+              effectiveAt: now,
+              ingestedAt: now,
+              confidence: 1,
+              quality: 1,
+              evidenceIds: [selected.activeVersion!.id],
+            },
+          }),
+        });
+        const data = await request<{ versions: Version[]; proposals: Proposal[] }>(
+          `${API}/${selected.id}/versions`,
+        );
+        setVersions(data.versions);
+        setProposals(data.proposals);
+      },
+      'Validated proposal created for preview.',
+    );
+  }
+
+  async function rejectProposal(proposalId: string) {
+    if (!selected) return;
+    await mutate(
+      'reject',
+      async () => {
+        await request(`${API}/${selected.id}/versions`, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'REJECT', proposalId, reason: 'Rejected after preview.' }),
+        });
+        const data = await request<{ versions: Version[]; proposals: Proposal[] }>(
+          `${API}/${selected.id}/versions`,
+        );
+        setVersions(data.versions);
+        setProposals(data.proposals);
+      },
+      'Proposal rejected. Authoritative state was not changed.',
+    );
+  }
+
+  async function proposeGenerated() {
+    if (!selected || !generated) return;
+    const now = new Date().toISOString();
+    await mutate(
+      'proposal',
+      async () => {
+        await request(`${API}/${selected.id}/versions`, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'PROPOSE',
+            definition: generated.definition,
+            provenance: {
+              source: 'deterministic-industry-provider',
+              classification: 'INFERRED',
+              observedAt: now,
+              effectiveAt: now,
+              ingestedAt: now,
+              confidence: 0.86,
+              quality: 1,
+              evidenceIds: [`industry:${generated.industry}`],
+            },
+          }),
+        });
+        const data = await request<{ versions: Version[]; proposals: Proposal[] }>(
+          `${API}/${selected.id}/versions`,
+        );
+        setVersions(data.versions);
+        setProposals(data.proposals);
+        setTab('Versions');
+      },
+      'Generated definition stored as a preview-only proposal.',
+    );
+  }
+
+  async function applyProposal(proposalId: string) {
+    if (!selected || approvedProposalId !== proposalId) return;
+    await mutate(
+      'apply',
+      async () => {
+        await request(`${API}/${selected.id}/versions`, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'APPLY', proposalId, approved: true }),
+        });
+        setApprovedProposalId('');
+        await loadTwins(selected.id);
+        const data = await request<{ versions: Version[]; proposals: Proposal[] }>(
+          `${API}/${selected.id}/versions`,
+        );
+        setVersions(data.versions);
+        setProposals(data.proposals);
+      },
+      'Proposal approved and published atomically.',
+    );
+  }
+
+  async function createScenario() {
+    if (!selected) return;
+    const entity = selected.entities.find((item) => item.currentState) ?? selected.entities[0];
+    await mutate(
+      'scenario-create',
+      async () => {
+        await request(`${API}/${selected.id}/scenarios`, {
+          method: 'POST',
+          body: JSON.stringify(
+            entity
+              ? {
+                  name: `${entity.name} outage`,
+                  kind: 'ENTITY_OUTAGE',
+                  inputs: {
+                    entityId: entity.id,
+                    throughputChangePercent: -23,
+                    downtimeHours: 4.5,
+                  },
+                }
+              : {
+                  name: 'Capacity increase',
+                  kind: 'CAPACITY_CHANGE',
+                  inputs: { capacityChangePercent: 15, projectedUtilizationPercent: 88 },
+                },
+          ),
+        });
+        setScenarios(await request<Scenario[]>(`${API}/${selected.id}/scenarios`));
+      },
+      'Scenario configuration persisted.',
+    );
+  }
+
+  async function runScenario(scenarioId: string) {
+    if (!selected) return;
+    await mutate(
+      'scenario-run',
+      async () => {
+        await request(`${API}/${selected.id}/scenarios`, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'RUN', scenarioId }),
+        });
+        setScenarios(await request<Scenario[]>(`${API}/${selected.id}/scenarios`));
+      },
+      'Scenario completed against an isolated snapshot.',
+    );
+  }
+
+  async function askTwin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!selected) return;
+    const prompt = String(new FormData(event.currentTarget).get('prompt') ?? '').trim();
+    await mutate(
+      'ask',
+      async () => {
+        setAskAnswer(
+          await request<JsonObject>(`${API}/${selected.id}/ask`, {
+            method: 'POST',
+            body: JSON.stringify({ prompt }),
+          }),
+        );
+      },
+      'Answer generated from durable twin state.',
+    );
+  }
+
+  if (loading) {
+    return <main className="centerState" aria-busy="true">Loading Twin Studio…</main>;
+  }
+
+  return (
+    <main className="shell">
+      <aside className="rail">
+        <div className="brand">CH<span>/TWIN</span></div>
+        <button className="primary full" onClick={() => setCreateOpen(true)}>Create twin</button>
+        <label htmlFor="twin-search">Search twins</label>
+        <input
+          id="twin-search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Filter by name or type"
+        />
+        <nav aria-label="Digital twins">
+          {visibleTwins.length === 0 && <p className="muted">No twins match this filter.</p>}
+          {visibleTwins.map((twin) => (
+            <button
+              className={selected?.id === twin.id ? 'active' : ''}
+              key={twin.id}
+              onClick={() => setSelectedId(twin.id)}
+            >
+              <span>{twin.name}</span>
+              <small>{twin.type}</small>
+            </button>
+          ))}
+        </nav>
+        <p className="railNote">
+          PHASE 1 CONTROL PLANE<br />
+          POSTGRES AUTHORITATIVE
+        </p>
+      </aside>
+
+      <section className="workspace">
+        {error && <div className="banner error" role="alert">{error}</div>}
+        {notice && <div className="banner success" role="status">{notice}</div>}
+        {!selected ? (
+          <section className="emptyState">
+            <h1>No digital twins</h1>
+            <p>Create a twin to begin defining entities and recording state.</p>
+            <button className="primary" onClick={() => setCreateOpen(true)}>Create twin</button>
+          </section>
+        ) : (
+          <>
+            <header className="top">
+              <div>
+                <p className="eyebrow">Digital twin / {selected.type.toLowerCase()}</p>
+                <h1>{selected.name}</h1>
+              </div>
+              <div className="topMeta">
+                <span className="sim">DURABLE</span>
+                <span><b>{selected.status}</b><small>lifecycle</small></span>
+                <span><b>v{selected.activeVersion?.versionNumber ?? '—'}</b><small>active version</small></span>
+                <span><b>{selected.entities.length}</b><small>entities</small></span>
+              </div>
+            </header>
+
+            <div className="tabs" role="tablist" aria-label="Twin views">
+              {tabs.map((item) => (
+                <button
+                  key={item}
+                  role="tab"
+                  aria-selected={tab === item}
+                  onClick={() => setTab(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+
+            <section className="tabPanel" role="tabpanel">
+              {tab === 'Overview' && (
+                <>
+                  <section className="hero">
+                    <div>
+                      <p className="eyebrow">Authoritative state</p>
+                      <h2>{selected.entities.filter((entity) => entity.currentState).length} current projections</h2>
+                      <p>Every state update is appended to temporal history before the current projection changes.</p>
+                    </div>
+                    <div className="actions">
+                      <button
+                        className="primary"
+                        disabled={working === 'simulator' || tick >= 8}
+                        onClick={advanceSimulator}
+                      >
+                        {working === 'simulator' ? 'Persisting…' : 'Advance simulator'}
+                      </button>
+                      <button onClick={() => setTab('History')}>View history</button>
+                    </div>
+                  </section>
+                  {selected.entities.length === 0 && (
+                    <p className="muted">This twin has no entities in the active version.</p>
+                  )}
+                  <section className="cardGrid">
+                    {selected.entities.map((entity) => (
+                      <article key={entity.id}>
+                        <label>{entity.typeKey}</label>
+                        <h3>{entity.name}</h3>
+                        {entity.currentState ? (
+                          <>
+                            <JsonView value={entity.currentState.state} />
+                            <small>
+                              {entity.currentState.classification} · {entity.currentState.source} ·{' '}
+                              {new Date(entity.currentState.effectiveAt).toLocaleString()}
+                            </small>
+                          </>
+                        ) : (
+                          <p className="muted">No state recorded.</p>
+                        )}
+                      </article>
+                    ))}
+                  </section>
+                  <form className="inlineForm" onSubmit={editTwin}>
+                    <label htmlFor="edit-name">Twin name</label>
+                    <input id="edit-name" name="name" defaultValue={selected.name} required maxLength={160} />
+                    <button disabled={working === 'edit'}>Save name</button>
+                    <button className="dangerButton" type="button" onClick={archiveTwin}>Archive</button>
+                  </form>
+                </>
+              )}
+
+              {tab === 'Live state' && (
+                <section className="stack">
+                  <header><h2>Current state projection</h2><p>Latest business-effective state per entity.</p></header>
+                  {selected.entities.map((entity) => (
+                    <article className="dataRow" key={entity.id}>
+                      <div><strong>{entity.name}</strong><small>{entity.key}</small></div>
+                      {entity.currentState ? <JsonView value={entity.currentState.state} /> : <span>No state</span>}
+                    </article>
+                  ))}
+                </section>
+              )}
+
+              {tab === 'History' && (
+                <section className="stack">
+                  <header>
+                    <h2>Temporal state history</h2>
+                    <label htmlFor="history-entity">Entity</label>
+                    <select
+                      id="history-entity"
+                      value={historyEntityId}
+                      onChange={(event) => setHistoryEntityId(event.target.value)}
+                    >
+                      {selected.entities.map((entity) => (
+                        <option value={entity.id} key={entity.id}>{entity.name}</option>
+                      ))}
+                    </select>
+                  </header>
+                  {history.length === 0 ? <p className="muted">No observations recorded.</p> : (
+                    <div className="timeline">
+                      {history.map((item, index) => (
+                        <article key={`${item.ingestedAt}-${index}`}>
+                          <strong>{item.classification}</strong>
+                          <span>Observed {new Date(item.observedAt).toLocaleString()}</span>
+                          <span>Effective {new Date(item.effectiveAt).toLocaleString()}</span>
+                          <span>Ingested {new Date(item.ingestedAt).toLocaleString()}</span>
+                          <JsonView value={item.state} />
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              )}
+
+              {tab === 'Versions' && (
+                <section className="stack">
+                  <header className="sectionHead">
+                    <div><h2>Version lifecycle</h2><p>Generate → validate → preview → approve → persist.</p></div>
+                    <button disabled={working === 'proposal'} onClick={createProposal}>Create proposal</button>
+                  </header>
+                  <div className="split">
+                    <div>
+                      <h3>Published history</h3>
+                      {versions.length === 0 && <p className="muted">No published versions.</p>}
+                      {versions.map((version) => (
+                        <article className="dataRow" key={version.id}>
+                          <div><strong>Version {version.versionNumber}</strong><small>{version.status}</small></div>
+                          <time>{new Date(version.createdAt).toLocaleString()}</time>
+                        </article>
+                      ))}
+                    </div>
+                    <div>
+                      <h3>Proposals</h3>
+                      {proposals.length === 0 && <p className="muted">No proposals.</p>}
+                      {proposals.map((proposal) => (
+                        <article className="proposal" key={proposal.id}>
+                          <div className="sectionHead">
+                            <strong>{proposal.status}</strong>
+                            <span>Schema {proposal.schemaValid ? 'valid' : 'invalid'} · Policy {proposal.policyValid ? 'valid' : 'invalid'}</span>
+                          </div>
+                          <details><summary>Preview definition</summary><JsonView value={proposal.definition} /></details>
+                          {proposal.status === 'PREVIEW' && (
+                            <>
+                              <label className="check">
+                                <input
+                                  type="checkbox"
+                                  checked={approvedProposalId === proposal.id}
+                                  onChange={(event) => setApprovedProposalId(event.target.checked ? proposal.id : '')}
+                                />
+                                I reviewed this definition and approve publication.
+                              </label>
+                              <button
+                                className="primary"
+                                disabled={approvedProposalId !== proposal.id || working === 'apply'}
+                                onClick={() => applyProposal(proposal.id)}
+                              >
+                                Approve and publish
+                              </button>
+                              <button
+                                type="button"
+                                disabled={working === 'reject'}
+                                onClick={() => rejectProposal(proposal.id)}
+                              >
+                                Reject
+                              </button>
+                            </>
+                          )}
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {tab === 'Scenarios' && (
+                <section className="stack">
+                  <header className="sectionHead">
+                    <div><h2>Scenario runs</h2><p>Runs use isolated persisted snapshots and never mutate live state.</p></div>
+                    <button disabled={working === 'scenario-create'} onClick={createScenario}>Create scenario</button>
+                  </header>
+                  {scenarios.length === 0 && <p className="muted">No saved scenarios.</p>}
+                  {scenarios.map((scenario) => (
+                    <article className="proposal" key={scenario.id}>
+                      <div className="sectionHead">
+                        <div><strong>{scenario.name}</strong><small>{scenario.kind}</small></div>
+                        <button disabled={working === 'scenario-run'} onClick={() => runScenario(scenario.id)}>Run</button>
+                      </div>
+                      <JsonView value={scenario.inputs} />
+                      {scenario.runs.map((run) => (
+                        <div className="runResult" key={run.id}>
+                          <span>{run.status}</span>
+                          <JsonView value={run.result} />
+                        </div>
+                      ))}
+                    </article>
+                  ))}
+                </section>
+              )}
+
+              {tab === 'Ask twin' && (
+                <section className="askPanel">
+                  <h2>Ask your twin</h2>
+                  <p>Answers are grounded only in the current durable state projection and include evidence.</p>
+                  <form onSubmit={askTwin}>
+                    <label htmlFor="prompt">Question</label>
+                    <textarea id="prompt" name="prompt" required maxLength={2000} defaultValue="What is the current state?" />
+                    <button className="primary" disabled={working === 'ask'}>{working === 'ask' ? 'Reviewing state…' : 'Ask'}</button>
+                  </form>
+                  {askAnswer && <JsonView value={askAnswer} />}
+                </section>
+              )}
+
+              {tab === 'Generate' && (
+                <section className="stack">
+                  <IndustryGenerator
+                    disabled={Boolean(working)}
+                    onGenerated={(proposal) =>
+                      setGenerated({
+                        title: proposal.title,
+                        industry: proposal.industry,
+                        definition: proposal.definition,
+                      })
+                    }
+                  />
+                  {generated && selected && (
+                    <div className="actions">
+                      <button disabled={working === 'proposal'} onClick={proposeGenerated}>
+                        Propose for {selected.name}
+                      </button>
+                      <button onClick={() => setCreateOpen(true)}>Create new twin from preview</button>
+                    </div>
+                  )}
+                </section>
+              )}
+            </section>
+          </>
+        )}
       </section>
-      <section className="grid">
-        <article><label>Motor‑07 / Temperature</label><strong>{data.temperature.toFixed(1)}°C</strong><small>effective now · simulated</small></article>
-        <article><label>Failure risk</label><strong>{risk}%</strong><small>deterministic demo model</small></article>
-        <article><label>Production rate</label><strong>{scenario ? '71' : '94'}%</strong><small>{scenario ? 'scenario fork' : 'live state'}</small></article>
-        <article><label>Open alerts</label><strong>{data.alert ? '01' : '00'}</strong><small>rule evaluation complete</small></article>
-      </section>
-      <section className="lower"><article className="entity"><div className="sectionHead"><div><p className="eyebrow">Entity graph</p><h3>Production Line A</h3></div><span>2 connected entities</span></div><div className="graph"><div className="node line">LINE A</div><div className="edge"/><div className={`node motor ${data.alert?'danger':''}`}>MOTOR‑07<small>{data.alert?'ANOMALY':'NORMAL'}</small></div></div></article>
-      <article className="evidence"><p className="eyebrow">Ask your twin</p><h3>What is happening?</h3><p>{data.alert ? 'Motor‑07 has an increased bearing-failure risk. Vibration reached '+data.vibration.toFixed(1)+' mm/s while temperature rose to '+data.temperature.toFixed(1)+'°C.' : 'No active anomaly. Advance the simulation to generate a traceable event.'}</p><dl><div><dt>Source</dt><dd>factory-simulator</dd></div><div><dt>Classification</dt><dd>SIMULATED</dd></div><div><dt>Confidence</dt><dd>{data.alert?'82%':'—'}</dd></div><div><dt>Action</dt><dd>{data.alert?'Inspect within 72h':'Monitor'}</dd></div></dl></article></section>
-      {scenario && <section className="scenario"><button aria-label="Close scenario" onClick={()=>setScenario(false)}>×</button><p className="eyebrow">Scenario fork · No live mutation</p><h3>Motor‑07 failure impact</h3><div><strong>−23%</strong><span>Production throughput</span><strong>4.5 h</strong><span>Estimated downtime</span><strong>Inspect</strong><span>Recommended action</span></div></section>}
-    </section>
-  </main>;
+
+      {createOpen && (
+        <div className="modalBackdrop" role="presentation">
+          <section className="modal" role="dialog" aria-modal="true" aria-labelledby="create-title">
+            <button className="modalClose" aria-label="Close create twin dialog" onClick={() => setCreateOpen(false)}>×</button>
+            <p className="eyebrow">Durable creation</p>
+            <h2 id="create-title">Create digital twin</h2>
+            <form onSubmit={createTwin}>
+              <label htmlFor="create-name">Name</label>
+              <input
+                id="create-name"
+                name="name"
+                required
+                minLength={2}
+                maxLength={160}
+                autoFocus
+                defaultValue={generated?.title ?? ''}
+              />
+              <label htmlFor="create-type">Domain</label>
+              <select id="create-type" name="type" defaultValue="GENERIC">
+                <option value="GENERIC">Generic</option>
+                <option value="MANUFACTURING">Manufacturing</option>
+                <option value="HEALTHCARE">Healthcare</option>
+                <option value="AIRPORT">Airport</option>
+                <option value="BANKING">Banking</option>
+                <option value="SUPPLY_CHAIN">Supply chain</option>
+              </select>
+              {generated && (
+                <p className="muted">
+                  A generated {generated.industry} definition is ready and will be persisted only after
+                  you create the twin.
+                </p>
+              )}
+              <button className="primary" disabled={working === 'create'}>
+                {working === 'create' ? 'Creating…' : 'Create twin'}
+              </button>
+            </form>
+          </section>
+        </div>
+      )}
+    </main>
+  );
 }
