@@ -1,33 +1,29 @@
 import {
-  CapabilityDescriptor,
-  ExecutionContext,
-  ExecutionPlan,
-  Goal,
-  LLMMessage,
   LLMProvider,
+  LLMMessage,
   PlannerProvider,
+  ExecutionContext,
+  CapabilityDescriptor,
   RuntimeRegistry,
-} from "@cerebro/runtime-core";
+  Goal,
+  ExecutionPlan
+} from '@cerebro/runtime-core';
 
 export class MockLLMProvider implements LLMProvider {
   public async initialize(): Promise<void> {
-    console.log("[MockLLMProvider] Initialized.");
+    console.log('[MockLLMProvider] Initialized.');
   }
 
   public async dispose(): Promise<void> {
-    console.log("[MockLLMProvider] Disposed.");
+    console.log('[MockLLMProvider] Disposed.');
   }
 
-  public async invokeModel(
-    messages: LLMMessage[],
-    context: ExecutionContext,
-    onToken?: (token: string) => void,
-  ): Promise<string> {
+  public async invokeModel(messages: LLMMessage[], context: ExecutionContext, onToken?: (token: string) => void): Promise<string> {
     const text = "This is a mock LLM response based on the capability architecture.";
     if (onToken) {
-      const words = text.split(" ");
+      const words = text.split(' ');
       for (const word of words) {
-        onToken(word + " ");
+        onToken(word + ' ');
       }
     }
     return text;
@@ -37,24 +33,24 @@ export class MockLLMProvider implements LLMProvider {
 export class MockPlannerProvider implements PlannerProvider {
   public async createPlan(goal: Goal, context: ExecutionContext): Promise<ExecutionPlan> {
     return {
-      id: "mock-plan-1",
+      id: 'mock-plan-1',
       version: 1,
       goalId: goal.id,
       nodes: [
         {
-          id: "step-1",
-          type: "Action",
+          id: 'step-1',
+          type: 'Action',
           objective: `Understand ${goal.intent}`,
-          capabilityRequired: "LLMProvider",
-          status: "Pending",
-        },
+          capabilityRequired: 'LLMProvider',
+          status: 'Pending'
+        }
       ],
       edges: [],
       confidence: 0.95,
-      assumptions: ["Goal is clear"],
+      assumptions: ['Goal is clear'],
       risks: [],
       alternatives: [],
-      createdAt: new Date(),
+      createdAt: new Date()
     };
   }
 }
@@ -64,31 +60,31 @@ export function registerMockProviders() {
 
   const mockLLMDescriptor = new CapabilityDescriptor<LLMProvider>(
     {
-      name: "Mock-GPT4",
-      capability: "LLMProvider",
-      version: "1.0.0",
+      name: 'Mock-GPT4',
+      capability: 'LLMProvider',
+      version: '1.0.0',
       priority: 10,
-      supportedModels: ["gpt-4-mock"],
-      supportedFeatures: ["streaming"],
-      costClass: "Medium",
+      supportedModels: ['gpt-4-mock'],
+      supportedFeatures: ['streaming'],
+      costClass: 'Medium',
     },
-    () => new MockLLMProvider(),
+    () => new MockLLMProvider()
   );
 
   const mockPlannerDescriptor = new CapabilityDescriptor<PlannerProvider>(
     {
-      name: "Mock-ReAct-Planner",
-      capability: "PlannerProvider",
-      version: "1.0.0",
+      name: 'Mock-ReAct-Planner',
+      capability: 'PlannerProvider',
+      version: '1.0.0',
       priority: 10,
     },
-    () => new MockPlannerProvider(),
+    () => new MockPlannerProvider()
   );
 
   registry.register(mockLLMDescriptor);
   registry.register(mockPlannerDescriptor);
-
+  
   // Set health manually to healthy so they can be resolved
-  mockLLMDescriptor.setHealth("Healthy");
-  mockPlannerDescriptor.setHealth("Healthy");
+  mockLLMDescriptor.setHealth('Healthy');
+  mockPlannerDescriptor.setHealth('Healthy');
 }

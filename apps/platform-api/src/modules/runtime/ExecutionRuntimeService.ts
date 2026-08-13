@@ -5,7 +5,7 @@ import {
   ExecutionStatus,
   InMemoryExecutionRepository,
   NotFoundError,
-} from "@cerebro/domain";
+} from '@cerebro/domain';
 
 export interface StartAgentExecutionInput {
   readonly tenantId: string;
@@ -48,12 +48,12 @@ export interface StartAgentExecutionInput {
 export class ExecutionRuntimeService {
   constructor(
     private readonly orchestrator: ExecutionOrchestrator,
-    private readonly repository: InMemoryExecutionRepository,
+    private readonly repository: InMemoryExecutionRepository
   ) {}
 
   async startAgentExecution(input: StartAgentExecutionInput): Promise<Execution> {
     return this.orchestrator.run({
-      kind: "Agent",
+      kind: 'Agent',
       tenantId: input.tenantId,
       workspaceId: input.workspaceId,
       userId: input.userId,
@@ -72,10 +72,7 @@ export class ExecutionRuntimeService {
     return this.orchestrator.resume(execution);
   }
 
-  async cancelExecution(
-    executionId: string,
-    opts: { actor?: string; reason?: string } = {},
-  ): Promise<Execution> {
+  async cancelExecution(executionId: string, opts: { actor?: string; reason?: string } = {}): Promise<Execution> {
     const execution = await this.loadOrThrow(executionId);
     return this.orchestrator.requestCancellation(execution, opts);
   }
@@ -86,7 +83,7 @@ export class ExecutionRuntimeService {
 
   async listExecutions(
     tenantId: string,
-    opts: { status?: ExecutionStatus; limit?: number } = {},
+    opts: { status?: ExecutionStatus; limit?: number } = {}
   ): Promise<readonly Execution[]> {
     return this.repository.listByTenant(tenantId, opts);
   }
@@ -109,8 +106,8 @@ export class ExecutionRuntimeService {
 export class PauseNotSupportedError extends Error {
   constructor() {
     super(
-      "Pausing a running Execution is not supported by the current domain model — ExecutionTransitions.ts has no user-requested RUNNING -> WAITING edge. See TECHNICAL-DEBT.md for what a real implementation would require.",
+      "Pausing a running Execution is not supported by the current domain model — ExecutionTransitions.ts has no user-requested RUNNING -> WAITING edge. See TECHNICAL-DEBT.md for what a real implementation would require."
     );
-    this.name = "PauseNotSupportedError";
+    this.name = 'PauseNotSupportedError';
   }
 }

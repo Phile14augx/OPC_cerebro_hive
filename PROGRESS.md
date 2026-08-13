@@ -178,52 +178,69 @@ Full detail and remediation approach for each: `.planning/codebase/CONCERNS.md`.
 
 ---
 
-### 2026-08-08 (Night Audit — 03:00 IST)
+### 2026-08-10 (3 AM Night Audit)
 
 **Audit performed:**
-- Night audit ran at 03:00 IST. Git remains unreachable from audit sandbox (branch `main` has no commits); completion assessed via file modification timestamps.
-- 0 commits detected since noon 2026-08-07.
-- `agents/CLAUDE-TASKS.md` and `agents/GEMINI-TASKS.md` both unchanged since 00:52 IST — no confirmed agent execution since noon assignment.
-- `agents/CURRENT-SPRINT.md` was modified at 03:22 IST by Codex product delivery cycle (X-P1-3 attempt), adding blocker #9: `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` in `@cerebro/capability-registry` (vite@8.1.5 / Node 22.17.0). pnpm lockfile was previously repaired by Codex; Vite/Node ESM compat remains unresolved.
-- All Claude and Gemini P0 tasks escalated to **5th-cycle** slippage status (C-P0-3 execution: 4th cycle).
-- New task C-P0-4 introduced: fix Node/Vite/Vitest test baseline — assigned to Claude, blocks Codex's X-P1-3 and all future test-gated product slices.
-- Worktree `audit-local-dev-stabilization` exists under `.agents/worktrees/` with updated agent files (no new commits from it).
+- Night audit ran at 03:00 IST. Git remains unreachable from audit sandbox; completion assessed via file modification timestamps.
+- 0 commits detected to remote since last noon audit (2026-08-09).
+- All legacy P0 tasks escalated to 5th-cycle status (C-P0-1, C-P0-2, G-P0-1).
+- New Codex blocker confirmed: `ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled` from `vite@8.1.5` on Node 22.17.0 has blocked three consecutive Codex product cycles. Elevated as C-P0-0.
+- **Major new work detected on disk (Aug 9 17:41 IST) — not committed:**
+  - ~30 new audit files in `audit/` — M26.1 architecture review batch (context diagrams, bounded contexts, domain model, service boundaries, persistence model, extension framework), plus SEO audit, accessibility audit, ADRs, governance backlog, deployment discovery, auth/authz gap (34KB P0 security finding).
+  - `.planning/` GSD session files updated — Studio Dashboard Functional Program roadmap created, 42 requirements mapped across 8 phases. Phase 1 "Schema & Navigation Foundation" is ready to plan.
+  - `apps/platform/` new files: `CLAUDE.md`, `AGENTS.md`, `middleware.ts`, `next.config.ts`, security routes (`api/security/events/`, `security/metrics/`), and backend-runtime modules (cache, governance, intelligence).
+  - `packages/agent-sdk/src/` — `CerebroAgent.ts`, `CerebroMemory.ts`, `CerebroTool.ts` modified.
+  - `packages/ai/src/` — factory, providers, AIService, telemetry modified.
+  - `packages/ai-gateway/src/` — gateway, types, both providers, PromptAssemblyEngine, ModelRegistry, ModelRouter modified.
+  - `packages/agent-ops/src/` — memory-store, agent-registry modified.
+- Codex stash `4d9c2aef` confirmed: contains Archive API fastify lockfile fix, preserved after Vite regression hit.
+- `apps/eda-api/src/index.ts` and `apps/eda-portal/src/index.ts` also modified.
 
-**Shipped:**
-- `agents/CLAUDE-TASKS.md` — refreshed night assignment; C-P0-4 (Vite baseline fix) added as new P0; all slipped-cycle counts incremented
-- `agents/GEMINI-TASKS.md` — refreshed night assignment; all slipped-cycle counts incremented; priority order guidance added
-- `agents/CURRENT-SPRINT.md` — sprint board updated; X-P1-3 added with "blocked" status; Codex baseline failure history recorded
+**Shipped (on disk, not committed):**
+- All items listed above under "Major new work detected"
+- `agents/CLAUDE-TASKS.md` — refreshed night assignment, Vite baseline as C-P0-0, Studio Phase 1 as C-P1-3, new triage phases D/E for Aug 9 source changes
+- `agents/GEMINI-TASKS.md` — refreshed night assignment, M26.1 audit batch commit as G-P0-1b, auth/authz gap action plan as G-P1-3
+- `agents/CURRENT-SPRINT.md` — full sprint board updated with new tasks and work-shipped table
 - `PROGRESS.md` — this entry
 
-**Goals for 2026-08-08 (today):**
-- [ ] **C-P0-4 (NEW):** Fix `ERR_PACKAGE_IMPORT_NOT_DEFINED` in `@cerebro/capability-registry` / vite@8.1.5 / Node 22.17.0 — check `packages/capability-registry/package.json#imports`, vite/vitest config `resolve.conditions`, or pin Node 22.12.0
-- [ ] C-P0-3a: Commit audit/sprint coordination changeset — no code, no risk, 4 cycles overdue — **do this first**
-- [ ] C-P0-1: Park M10.2 files via stash; commit M10.1-only; open PR with `[C-P0-1]` in title
-- [ ] C-P0-2: Run `pnpm prisma migrate dev --name add-agent-execution-models-aug-08`; verify no destructive SQL; commit
-- [ ] G-P0-1 Pass 1: Commit `infra/README.md` + `MASTER-PLAN-*.md` + `CEREBROHIVE_CONSTITUTION.md` — content confirmed correct; 5 cycles overdue
-- [ ] G-P1-2a: Commit `docs/01` through `docs/07` content migration batch in parallel with G-P0-1
+**Goals for 2026-08-10 (today):**
+- [ ] C-P0-0: Investigate and fix Vite/Node baseline (`ERR_PACKAGE_IMPORT_NOT_DEFINED` from `vite@8.1.5` on Node 22.17.0) — **unblocks all Codex work**
+- [ ] C-P0-1: Park M10.2 files carefully (ai-gateway modified again — read diff first), commit M10.1 scope, open PR — **5 cycles overdue**
+- [ ] C-P0-2: Run Prisma migration, review SQL, commit — **5 cycles overdue**
+- [ ] C-P0-3a: Commit audit/sprint coordination changeset + new .planning/ files — **4 cycles overdue**
+- [ ] C-P0-3d: Typecheck and commit new `apps/platform/` security + backend-runtime modules
+- [ ] G-P0-1: Commit `infra/README.md`, `MASTER-PLAN-*.md`, `CEREBROHIVE_CONSTITUTION.md` — **5 cycles overdue; content already written**
+- [ ] G-P0-1b: Commit entire M26.1 audit batch (~30 files, pure docs, secrets grep first)
+- [ ] G-P1-3: Read `audit/P0-AUTH-AUTHZ-GAP.md` and produce `agents/AUTH-GAP-ACTION-PLAN.md`
+- [ ] C-P1-3: Begin Studio Phase 1 planning (read `apps/platform/CLAUDE.md` + `.planning/ROADMAP.md` first)
 
 ---
 
-### 2026-08-08 (Noon Audit — 12:00 IST)
+### 2026-08-10 (Noon Audit — 12:00 IST)
 
 **Audit performed:**
-- Noon audit ran at 12:00 IST. Git remains unreachable from audit sandbox (branch `main` has no commits); completion assessed via file modification timestamps.
-- 0 commits detected since 3 AM audit. `agents/CLAUDE-TASKS.md`, `agents/GEMINI-TASKS.md`, and `agents/CURRENT-SPRINT.md` all last modified at 06:27–06:28 IST (3 AM audit writes) — no agent activity confirmed since.
-- Targeted search of `agents/`, `packages/capability-registry/`, and `infra/` directories confirmed no files modified after the 3 AM audit output.
-- All P0 tasks escalated to **6th-cycle** slippage (C-P0-3 execution: 5th cycle; C-P0-4: 1st cycle complete).
-- No new blockers detected beyond what was recorded at 3 AM.
+- Noon audit ran at 12:00 IST. Git remains unreachable from audit sandbox; completion assessed via file modification timestamps.
+- 0 commits detected since 3 AM audit (agents/CURRENT-SPRINT.md last modified 03:11 IST; no newer files found in project).
+- All agent task files (CLAUDE-TASKS.md, GEMINI-TASKS.md, CURRENT-SPRINT.md) unchanged since 3 AM — no agent work confirmed since then.
+- **M27 Governance Analytics** — all 6 tasks in `task.md` confirmed marked complete (Aug 9 17:42 IST). Corresponding files verified on disk under `apps/platform-api/src/features/studio/analytics` and `apps/studio/`. Not yet committed.
+- All legacy P0 tasks escalated to 6th-cycle status (C-P0-1, C-P0-2, G-P0-1).
+- No new blockers detected beyond those in the 3 AM audit.
 
-**Shipped:**
-- `agents/CLAUDE-TASKS.md` — refreshed noon assignment; C-P0-3 Phase A re-emphasised as minimum viable first commit; all slipped-cycle counts incremented
-- `agents/GEMINI-TASKS.md` — refreshed noon assignment; G-P0-1 and G-P1-2a highlighted as zero-blocker parallel starts; all counts incremented
-- `agents/CURRENT-SPRINT.md` — sprint board updated with 6th-cycle counts and noon baseline failure history entry
+**Shipped (agents/ output files updated):**
+- `agents/CLAUDE-TASKS.md` — noon assignment, 6th-cycle escalation on oldest P0s, M27 completion noted
+- `agents/GEMINI-TASKS.md` — noon assignment, 6th-cycle escalation, M27 completion noted
+- `agents/CURRENT-SPRINT.md` — sprint board updated with current cycle counts and risk register
 - `PROGRESS.md` — this entry
 
-**Goals for 2026-08-08 afternoon/evening:**
-- [ ] C-P0-3a: Commit audit/sprint coordination changeset — **minimum viable action; no code, no risk, 5 cycles overdue**
-- [ ] C-P0-4: Fix `ERR_PACKAGE_IMPORT_NOT_DEFINED` in `@cerebro/capability-registry` / vite@8.1.5 — unblocks Codex pipeline
-- [ ] C-P0-2: Run Prisma migration, verify no destructive SQL, commit
-- [ ] C-P0-1: Park M10.2 files, commit M10.1-only scope, open PR
-- [ ] G-P0-1 Pass 1: Commit `infra/README.md` + `MASTER-PLAN-*.md` + `CEREBROHIVE_CONSTITUTION.md` — content confirmed correct multiple sessions ago
-- [ ] G-P1-2a: Commit `docs/01`–`docs/07` content migration batch in parallel with G-P0-1
+**Tasks completed since last audit:** None (0 commits)
+**Tasks newly assigned:** All carried forward from 3 AM; M27 completion added to "on disk" tracking
+
+**Goals for 2026-08-10 afternoon/evening:**
+- [ ] C-P0-0: Fix `ERR_PACKAGE_IMPORT_NOT_DEFINED` Vite/Node baseline — check Node version vs `.nvmrc`
+- [ ] C-P0-1: Separate M10.2 files from M10.1, commit M10.1 scope, open PR — **6 cycles overdue**
+- [ ] C-P0-2: Run `pnpm prisma migrate dev`, review SQL, commit — **6 cycles overdue**
+- [ ] C-P0-3a: Commit audit/sprint/planning docs (no code, lowest risk) — **5 cycles overdue**
+- [ ] G-P0-1: Commit `infra/README.md`, `MASTER-PLAN-*.md`, `CEREBROHIVE_CONSTITUTION.md` — **6 cycles overdue**
+- [ ] G-P0-1b: Commit entire M26.1 audit batch (~30 files, pure docs)
+- [ ] G-P1-3: Produce `agents/AUTH-GAP-ACTION-PLAN.md` from `audit/P0-AUTH-AUTHZ-GAP.md`
+- [ ] G-P1-1: Validate Python agent-runner imports and commit — 4 cycles overdue
