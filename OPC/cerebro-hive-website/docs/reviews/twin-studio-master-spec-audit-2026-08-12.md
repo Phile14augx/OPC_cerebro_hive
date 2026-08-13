@@ -103,3 +103,14 @@ In order of "closes the biggest gap with the least new surface area":
 4. **A second, unrelated demo twin** (e.g., one of PR #34's generated industries, taken through to a working Command Center) would be the cheapest way to prove §1–2's "genuinely industry-agnostic" claim empirically rather than by schema design alone.
 
 Everything past that (predictive models, event engine, knowledge graph, agents, optimization, 3D) is Phase 2+ per the existing design doc and shouldn't be started until the Phase 1 gaps above are closed, per the master prompt's own §74 sequencing.
+
+## Implementation addendum — 2026-08-13
+
+Historical findings above are preserved. Subsequent implementation on the Twin Studio hardening branch changed these Phase 1 items:
+
+- `twin-service.ts` in-memory `Map` was replaced by `TwinRepository` writing `DigitalTwin`, `TwinVersion`, `TwinEntity`, `TwinEntityState`, `TwinEntityCurrentState`, `TwinVersionProposal`, `TwinScenario`, and `TwinSimulationRun`.
+- Simulator and Ask Twin now persist and read durable state. Observation and ingestion timestamps remain distinct.
+- A second heterogeneous twin (hospital ICU) is seeded through the same pipeline as Factory Alpha.
+- Industry generation is preview-only until an explicit create or approved version apply.
+- Tenant/workspace scope is enforced in repository queries. Production auth uses sessions; local development still uses a documented dev scope.
+
