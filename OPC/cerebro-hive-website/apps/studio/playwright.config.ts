@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
-  testMatch: '**/visual/**/*.spec.ts',
+  testDir: '.',
+  testMatch: ['tests/visual/**/*.spec.ts', 'e2e/**/*.spec.ts'],
   timeout: 30 * 1000,
   expect: {
     timeout: 5000,
@@ -27,8 +27,9 @@ export default defineConfig({
     { name: 'Mobile Safari', use: { ...devices['iPhone 12'] } },
   ],
   webServer: {
-    command: 'npm run dev',
+    command: 'node scripts/playwright-server.mjs',
     port: 3401,
-    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+    reuseExistingServer: false,
   },
 });

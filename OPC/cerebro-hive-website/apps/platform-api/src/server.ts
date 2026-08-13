@@ -2,7 +2,18 @@ import { prisma } from '@cerebro/db';
 import { bootstrap } from './bootstrap';
 
 import { AgentRepository, AgentConversationRepository, IdempotencyRepository, OutboxRepository, AuditRepository, WorkspaceRepository, PrismaUnitOfWork } from '@cerebro/db';
-import { AgentApplicationService, UnitOfWork, OutboxPublisher, AuditLogger, PolicyEngine, AgentValidator } from '@cerebro/domain';
+import {
+  AgentApplicationService,
+  AgentDraftService,
+  AgentLifecycleService,
+  AgentPublicationService,
+  AgentRegistryService,
+  UnitOfWork,
+  OutboxPublisher,
+  AuditLogger,
+  PolicyEngine,
+  AgentValidator,
+} from '@cerebro/domain';
 import { AgentBuilderCapability, AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
 import { createGateway } from '@cerebro/ai-gateway';
 
@@ -49,6 +60,21 @@ async function main() {
     agentValidator,
     idempotencyRepo
   );
+  const agentRegistryService = new AgentRegistryService(agentRepo);
+  const agentDraftService = new AgentDraftService(agentRepo);
+  const agentPublicationService = new AgentPublicationService(agentRepo, async definition => {
+    const providerName = definition.modelConfig.providerRef.split(':', 2)[1];
+    const modelName = definition.modelConfig.modelRef.split(':', 2)[1];
+    const model = await prisma.aIModel.findFirst({
+      where: providerName === 'legacy'
+        ? { id: modelName }
+        : { name: { equals: modelName, mode: 'insensitive' }, provider: { name: { equals: providerName, mode: 'insensitive' } } },
+      select: { id: true },
+    });
+    if (!model) throw Object.assign(new Error('Configured model reference was not found'), { code: 'AGENT_MODEL_NOT_FOUND' });
+    return model.id;
+  });
+  const agentLifecycleService = new AgentLifecycleService(agentRepo);
 
   // 4. Capability Layer
   const agentBuilderCapability = new AgentBuilderCapability(agentAppService);
@@ -138,6 +164,10 @@ async function main() {
     executionKernel,
     executionStore,
     executionReplayService,
+    agentRegistryService,
+    agentDraftService,
+    agentPublicationService,
+    agentLifecycleService,
   });
 
   try {

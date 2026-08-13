@@ -1,0 +1,26 @@
+export const publishableDefinition = {
+  schemaVersion: 1 as const,
+  purpose: 'Analyze invoices without approving payments.',
+  businessFunction: 'Finance',
+  responsibilities: ['Review invoice accuracy'],
+  expectedOutputs: ['A grounded variance report'],
+  systemInstructions: 'Use only authorized finance data.\nEscalate payment requests.',
+  modelConfig: {
+    providerRef: 'provider:openai',
+    modelRef: 'model:gpt-5',
+    temperature: 0.2,
+    maxTokens: 4096,
+  },
+  capabilities: [{ capabilityRef: 'capability:invoice-analysis' }],
+  allowedActions: [{ actionRef: 'action:invoice.read', description: 'Read invoices' }],
+  prohibitedActions: [{ actionRef: 'action:payment.approve', description: 'Approve payments' }],
+  escalationRules: [{
+    ruleRef: 'rule:payment-request',
+    condition: 'A user asks to approve payment.',
+    action: 'HANDOFF' as const,
+    targetRef: 'human:finance-owner',
+  }],
+  securityLevel: 'CONFIDENTIAL' as const,
+  toolPermissions: [{ toolRef: 'tool:crm', operations: ['read'] }],
+  knowledgeSources: [{ knowledgeSourceRef: 'knowledge:finance-policy', access: 'READ' as const }],
+};

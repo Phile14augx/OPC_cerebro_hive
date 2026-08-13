@@ -1,0 +1,2 @@
+import { simulateFactoryTick } from '../demo-factory/factory-simulator';
+export function runMotorFailureScenario(tick: number) { const snapshot = structuredClone(simulateFactoryTick(tick)); return { runId: crypto.randomUUID(), classification: 'SIMULATED' as const, isolation: 'SNAPSHOT_FORK' as const, snapshot, result: { throughputChangePercent: -23, downtimeHours: 4.5, recommendedAction: 'Inspect Motor-07 bearings within 72 hours.' } }; }

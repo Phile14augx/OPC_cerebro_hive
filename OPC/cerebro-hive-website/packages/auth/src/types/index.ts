@@ -5,7 +5,14 @@ export type Permission =
   | 'studio.publish'
   | 'archive.upload'
   | 'ops.admin'
-  | 'platform.settings';
+  | 'platform.settings'
+  | 'agent.read'
+  | 'agent.create'
+  | 'agent.draft.edit'
+  | 'agent.version.publish'
+  | 'agent.lifecycle.certify'
+  | 'agent.lifecycle.promote_production'
+  | 'agent.lifecycle.suspend';
 
 export interface UserPreferences {
   theme: "light" | "dark";

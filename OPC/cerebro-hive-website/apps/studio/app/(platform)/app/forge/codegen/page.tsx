@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import {
   FileCode2, Sparkles, Play, ChevronRight, CheckCircle2,
   Loader2, Terminal, Clock, Package, Copy, Server, Globe, Smartphone, Monitor,
+  AlertTriangle,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Card } from "../../components/ui/Card";
@@ -46,6 +47,7 @@ function CodeGenerationPageInner() {
         <p className="text-text-secondary mt-1">
           Multi-framework production code generation orchestrated by specialized AI agents.
           {project && <span className="text-amber-400 ml-1">— {project.name}</span>}
+          {!projectId && <span className="text-text-muted ml-1">— No project selected</span>}
         </p>
       </div>
 
@@ -70,8 +72,12 @@ function CodeGenerationPageInner() {
 
       {/* Error */}
       {state.error && (
-        <Card className="p-4 border-red-500/20 bg-red-500/5">
-          <p className="text-sm text-red-400">{state.error}</p>
+        <Card className="p-4 border-red-500/20 bg-red-500/5 flex items-start gap-3">
+          <AlertTriangle size={16} className="text-red-400 shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm text-red-400">{state.error}</p>
+            <Button variant="ghost" size="sm" className="mt-2" onClick={handleStart}>Try again</Button>
+          </div>
         </Card>
       )}
 

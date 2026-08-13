@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@cerebro/agent-registry-contracts": "workspace:*",
     "@cerebro/db": "workspace:*",
     "@cerebro/domain-model": "workspace:*",
     "zod": "^4.4.3"

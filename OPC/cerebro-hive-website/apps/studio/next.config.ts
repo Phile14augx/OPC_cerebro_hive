@@ -12,6 +12,9 @@ const basePath = isGithubPages ? `/${repo}` : "";
 const nextConfig: NextConfig = {
   output: isGithubPages ? "export" : "standalone",
   poweredByHeader: false,
+  turbopack: {
+    root: process.cwd(),
+  },
   transpilePackages: ['@cerebro/ai', '@cerebro/workflow', '@cerebro/db', '@cerebro/sdk'],
   images: {
     unoptimized: true,

@@ -1,4 +1,5 @@
 export * from './src/clients/AgentClient';
+export * from './src/clients/BaseClient';
 export * from './src/clients/PromptClient';
 export * from './src/clients/WorkflowClient';
 export * from './src/realtime/RealtimeClient';

@@ -1,0 +1,1 @@
+export const factoryTwin = { id: 'factory-alpha', name: 'Factory Alpha', mode: 'SIMULATED' as const, entities: [{ id: 'motor-07', name: 'Motor-07', type: 'motor' }, { id: 'line-a', name: 'Production Line A', type: 'production-line' }] };

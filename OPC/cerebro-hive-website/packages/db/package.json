@@ -9,11 +9,14 @@
     "generate": "prisma generate",
     "push": "prisma db push",
     "migrate:dev": "prisma migrate dev",
+    "registry:backfill": "tsx src/agent-registry/run-backfill.ts",
     "studio": "prisma studio",
     "lint": "eslint \"**/*.ts*\"",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@cerebro/agent-registry-contracts": "workspace:*",
+    "@cerebro/twin-contracts": "workspace:*",
     "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0",
     "@prisma/client-runtime-utils": "^7.9.0",

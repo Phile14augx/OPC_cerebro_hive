@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -20,8 +21,10 @@ import {
 } from "lucide-react";
 import { CommandPalette } from "./ui/CommandPalette";
 import { HiveAssistant } from "./ui/HiveAssistant";
+import { Breadcrumbs } from "./ui/Breadcrumbs";
 import { cn } from "./ui/utils";
 import { useSidebar } from "./SidebarContext";
+import { findNavTrailByPath } from "../navigation/lookup";
 
 // ── Mock data (self-contained — no backend wiring yet) ──────────────────────────
 
@@ -225,7 +228,7 @@ function NotificationsMenu() {
 
             <div className="border-t border-border px-4 py-2.5">
               <Link
-                href="/app/support"
+                href="/app/support/help"
                 onClick={() => setOpen(false)}
                 className="text-xs text-text-secondary hover:text-primary-accent transition-colors"
               >
@@ -322,6 +325,7 @@ export function Topbar() {
   const [cmdOpen, setCmdOpen] = useState(false);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const { toggleMobile } = useSidebar();
+  const pathname = usePathname();
 
   // Global Ctrl+K handler
   useEffect(() => {
@@ -335,11 +339,21 @@ export function Topbar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // D-08: one registry lookup feeds both the breadcrumb strip and the page
+  // title below — never a second lookup, never a hardcoded title map.
+  const trail = findNavTrailByPath(pathname);
+
+  useEffect(() => {
+    const lastEntry = trail[trail.length - 1];
+    document.title = lastEntry ? `${lastEntry.label} · CerebroHive Studio` : "CerebroHive Studio";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
   return (
     <>
       <header className="h-16 border-b border-border bg-background flex items-center justify-between px-4 lg:px-8 z-30 sticky top-0">
-        {/* Mobile menu toggle + Organization Switcher (Left) */}
-        <div className="flex items-center gap-2 lg:gap-4">
+        {/* Mobile menu toggle + Organization Switcher + Breadcrumbs (Left) */}
+        <div className="flex items-center gap-2 lg:gap-4 min-w-0">
           <TrackedButton
             eventCategory="topbar"
             eventLabel="Open Navigation Menu"
@@ -350,6 +364,14 @@ export function Topbar() {
             <Menu size={20} />
           </TrackedButton>
           <WorkspaceMenu />
+          {trail.length > 0 && (
+            <>
+              <div className="hidden md:block w-px h-5 bg-border shrink-0" />
+              <div className="hidden md:block min-w-0 text-sm">
+                <Breadcrumbs items={trail} />
+              </div>
+            </>
+          )}
         </div>
 
         {/* Command Palette / Search (Center) */}

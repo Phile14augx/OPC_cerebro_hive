@@ -85,13 +85,18 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
         });
       }
 
-      // 2. Resolve agent and latest version
-      const version = await agentRepository.getLatestVersion(
+      // 2. Resolve the governed active version. The temporary legacy fallback
+      // is observable in the generic runtime bridge and can be disabled after
+      // the registry backfill; explicit lifecycle states are always enforced.
+      const resolved = await agentRepository.getActiveVersion(
         conversation.agentId,
-        { context: cerebroContext }
+        {
+          context: cerebroContext,
+          allowLegacyFallback: process.env.AGENT_REGISTRY_LEGACY_VERSION_FALLBACK !== 'false',
+        }
       );
 
-      if (!version) {
+      if (!resolved?.version) {
         return reply.code(404).send({
           success: false,
           error: {
@@ -101,6 +106,18 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
           },
         });
       }
+      const isUnclassifiedLegacyFallback = resolved.agent.lifecycleStatus === null && resolved.fallbackUsed;
+      if (resolved.agent.lifecycleStatus !== 'PRODUCTION' && !isUnclassifiedLegacyFallback) {
+        return reply.code(409).send({
+          success: false,
+          error: {
+            code: 'AGENT_NOT_EXECUTABLE',
+            message: `Agent lifecycle ${resolved.agent.lifecycleStatus} does not allow execution`,
+            requestId: cerebroContext.traceId,
+          },
+        });
+      }
+      const version = resolved.version;
 
       // 3. Build conversation history from persisted messages
       const conversationHistory = conversation.messages.map(m => ({

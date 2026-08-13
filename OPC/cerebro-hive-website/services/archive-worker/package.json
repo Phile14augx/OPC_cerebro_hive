@@ -6,13 +6,13 @@
     "dev": "tsx watch src/worker.ts",
     "build": "tsc",
     "start": "node dist/worker.js",
-    "lint": "eslint src/",
+    "lint": "eslint src/ --no-error-on-unmatched-pattern",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
     "@cerebro/archive-contracts": "workspace:*",
     "@sentry/node": "^8.0.0",
-    "bullmq": "^5.0.0",
+    "bullmq": "^6.0.8",
     "dotenv": "^16.4.5",
     "ioredis": "^5.0.0",
     "pino": "^9.0.0",

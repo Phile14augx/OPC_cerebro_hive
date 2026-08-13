@@ -1,4 +1,5 @@
 export * from './clients/AgentClient';
+export * from './clients/BaseClient';
 export * from './clients/EvaluationClient';
 export * from './clients/GatewayClient';
 export * from './clients/PromptClient';

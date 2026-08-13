@@ -10,8 +10,10 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@cerebro/agent-registry-contracts": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "^20.19.43",
     "typescript": "^5.4.5"
   }
 }

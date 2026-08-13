@@ -1,0 +1,41 @@
+name: Visual Regression Testing
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - uses: pnpm/action-setup@v4
+      with:
+        version: 9
+    - uses: actions/setup-node@v7
+      with:
+        node-version: 20
+        cache: pnpm
+        cache-dependency-path: OPC/cerebro-hive-website/pnpm-lock.yaml
+    - name: Install dependencies
+      working-directory: OPC/cerebro-hive-website
+      run: pnpm install --frozen-lockfile
+    - name: Install Playwright Browsers
+      working-directory: OPC/cerebro-hive-website
+      run: pnpm --filter @cerebro/studio exec playwright install --with-deps
+    - name: Run Playwright tests
+      working-directory: OPC/cerebro-hive-website
+      run: pnpm --filter @cerebro/studio run test:e2e
+    - uses: actions/upload-artifact@v7
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: OPC/cerebro-hive-website/apps/studio/playwright-report/
+        retention-days: 30

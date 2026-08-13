@@ -5,6 +5,7 @@ import {
   getRealmRoles,
   getClientRoles,
   getPermissions,
+  getAgentRegistryPermissions,
   type CerebroJWTPayload,
   type OrgRole,
 } from '@cerebro/auth/server';
@@ -68,7 +69,10 @@ export async function requireAuthHook(request: FastifyRequest, reply: FastifyRep
   const permissions = isAdmin
     ? ['*']
     : payload.org_role
-      ? getPermissions(payload.org_role as OrgRole)
+      ? [
+          ...getPermissions(payload.org_role as OrgRole),
+          ...getAgentRegistryPermissions(payload.org_role as OrgRole),
+        ]
       : [];
 
   // Overwrite the mock identity fields with verified values. workspaceId is

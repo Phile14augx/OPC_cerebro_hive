@@ -23,7 +23,14 @@ import { registerToolRuntimeProvider } from './modules/runtime/providers/ToolRun
 import type { AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
 import type { AgentRepository } from '@cerebro/db';
 import type { AIGateway } from '@cerebro/ai-gateway';
-import { ExecutionOrchestrator, InMemoryExecutionRepository } from '@cerebro/domain';
+import {
+  AgentDraftService,
+  AgentLifecycleService,
+  AgentPublicationService,
+  AgentRegistryService,
+  ExecutionOrchestrator,
+  InMemoryExecutionRepository,
+} from '@cerebro/domain';
 import { AgentExecutionProvider } from './modules/runtime/AgentExecutionProvider';
 import { ExecutionRuntimeService } from './modules/runtime/ExecutionRuntimeService';
 import { executionsRoutes } from './modules/executions/executions.routes';
@@ -43,6 +50,10 @@ export interface BootstrapDeps {
   executionKernel: ExecutionRuntimeKernel;
   executionStore: ExecutionStore;
   executionReplayService: ExecutionReplayService;
+  agentRegistryService: AgentRegistryService;
+  agentDraftService: AgentDraftService;
+  agentPublicationService: AgentPublicationService;
+  agentLifecycleService: AgentLifecycleService;
 }
 
 export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
@@ -125,7 +136,13 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
     // header with no check that it belongs to the authenticated tenant.
     protectedApi.addHook('preHandler', createRequireWorkspaceAccessHook(deps.workspaceRepository));
 
-    protectedApi.register(agentRoutes, { prefix: '/api/v1/agents', agentRepository: deps.agentRepository });
+    protectedApi.register(agentRoutes, {
+      prefix: '/api/v1/agents',
+      registryService: deps.agentRegistryService,
+      draftService: deps.agentDraftService,
+      publicationService: deps.agentPublicationService,
+      lifecycleService: deps.agentLifecycleService,
+    });
     protectedApi.register(workflowsRoutes, { prefix: '/api/v1/workflows' });
     protectedApi.register(telemetryRoutes, { prefix: '/api/v1/telemetry' });
     protectedApi.register(runtimeRoutes, { prefix: '/api/v1/runtime', executionRuntimeService });
