@@ -15,7 +15,7 @@ export default defineConfig({
   reporter: 'html',
   use: {
     actionTimeout: 0,
-    baseURL: 'http://localhost:3410',
+    baseURL: 'http://localhost:3405',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -28,7 +28,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run dev',
-    port: 3410,
+    port: 3405,
     reuseExistingServer: !process.env.CI,
   },
 });

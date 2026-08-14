@@ -19,7 +19,7 @@ Current-state projection is updated only after a historical `TwinEntityState` ro
 
 ## Ports
 
-Twin Studio exclusively binds `3401` at `/app`. HivePulse (`apps/studio`) binds `3410`.
+Twin Studio exclusively binds `3401` at `/app`. HivePulse (`apps/studio`) binds `3405`.
 
 ## Authentication
 
