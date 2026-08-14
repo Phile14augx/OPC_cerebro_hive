@@ -1,0 +1,41 @@
+video_id: wXorU2jr6v0
+title: "China's New AI Shocks The World: Hits Top 10 Globally Overnight"
+url: "https://www.youtube.com/watch?v=wXorU2jr6v0"
+publication_date: "2026-UNKNOWN"
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - Chinese AI models
+  - AI competition
+  - foundation model releases
+
+secondary_topics:
+  - AI geopolitics
+  - open-source models
+
+companies:
+  - Unknown Chinese AI lab
+
+models: []
+frameworks: []
+research_papers: []
+products: []
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: LOW
+relevance_notes: >
+  Covers a new Chinese AI model achieving global adoption. May be relevant to
+  LLM gateway open-source model options if a technically significant model is
+  described. Heavy sensationalism; likely MEDIUM at best after hype filtering.
+  Monitor for DeepSeek successor or Qwen variant.
+
+verification_status: UNVERIFIED
+knowledge_extraction_status: PENDING

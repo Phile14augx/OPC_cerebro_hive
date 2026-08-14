@@ -1,0 +1,41 @@
+video_id: UvpIrxolWGs
+title: "Google Maps is AI Now!"
+url: "https://www.youtube.com/watch?v=UvpIrxolWGs"
+publication_date: "2024-UNKNOWN"
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - Google Maps AI features
+  - consumer AI products
+
+secondary_topics:
+  - geospatial AI
+  - Google products
+
+companies:
+  - Google
+
+models: []
+frameworks: []
+research_papers: []
+products:
+  - Google Maps
+
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: NONE
+relevance_notes: >
+  Consumer product update for Google Maps. No technical content relevant to
+  Cerebro Nexarch agent, twin, or knowledge architecture. Skip.
+
+verification_status: UNVERIFIED
+knowledge_extraction_status: SKIPPED
+skip_reason: "Consumer product feature; no engineering relevance to Cerebro Nexarch"

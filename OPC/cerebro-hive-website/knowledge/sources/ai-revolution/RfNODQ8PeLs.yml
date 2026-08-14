@@ -1,0 +1,47 @@
+video_id: RfNODQ8PeLs
+title: "OpenAI New GPT 5.5 Is A New Kind Of Intelligence (Nothing Comes Close)"
+url: "https://www.youtube.com/watch?v=RfNODQ8PeLs"
+publication_date: "2026-UNKNOWN"
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - foundation model releases
+  - OpenAI GPT models
+  - model capabilities
+
+secondary_topics:
+  - benchmark performance
+  - model comparison
+  - LLM inference
+
+companies:
+  - OpenAI
+
+models:
+  - GPT-5.5
+
+frameworks: []
+research_papers: []
+products:
+  - ChatGPT
+  - OpenAI API
+
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: MEDIUM
+relevance_notes: >
+  Covers a new OpenAI model release. Relevant to LLM gateway model routing
+  decisions and router-service policy updates. Title uses sensationalist framing
+  ("Nothing Comes Close") which warrants hype-filter scrutiny. Pending Pass A
+  to verify actual benchmark claims against primary sources.
+
+verification_status: UNVERIFIED
+knowledge_extraction_status: PENDING

@@ -1,0 +1,39 @@
+video_id: 6dtuGyksOIM
+title: "AI ROBOTS Are Becoming TOO REAL! - Shocking AI & Robotics 2024 Updates #1"
+url: "https://www.youtube.com/watch?v=6dtuGyksOIM"
+publication_date: "2024-UNKNOWN"       # title says "2024 Updates"
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - robotics news
+  - physical AI
+  - humanoid robots
+
+secondary_topics:
+  - embodied AI
+  - AI hardware demos
+
+companies: []
+models: []
+frameworks: []
+research_papers: []
+products: []
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: LOW
+relevance_notes: >
+  General robotics news roundup from 2024. Low relevance to Cerebro Nexarch
+  current focus. Relevant only to future Digital Twin physical integration.
+  Monitor for Physical Intelligence (pi0), Figure, or Boston Dynamics references
+  that could inform agent-to-physical-system interface patterns.
+
+verification_status: UNVERIFIED
+knowledge_extraction_status: PENDING

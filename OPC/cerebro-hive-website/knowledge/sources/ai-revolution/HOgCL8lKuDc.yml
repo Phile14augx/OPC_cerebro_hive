@@ -1,0 +1,40 @@
+video_id: HOgCL8lKuDc
+title: "New AI Robot Is Starting to Feel Human (Artificial Humans Are Here)"
+url: "https://www.youtube.com/watch?v=HOgCL8lKuDc"
+publication_date: "2025-UNKNOWN"
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - humanoid robotics
+  - physical AI
+  - VLA models
+
+secondary_topics:
+  - embodied intelligence
+  - AI-human interaction
+  - robotic hardware
+
+companies: []
+models: []
+frameworks: []
+research_papers: []
+products: []
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: LOW
+relevance_notes: >
+  Humanoid robotics news. Low direct relevance to Cerebro Nexarch unless
+  covering Digital Twin physical integration. Relevant to Layer 10 (Digital
+  Twins) only if physical AI-to-digital-twin interface patterns are described.
+  Watch for VLA model references.
+
+verification_status: UNVERIFIED
+knowledge_extraction_status: PENDING

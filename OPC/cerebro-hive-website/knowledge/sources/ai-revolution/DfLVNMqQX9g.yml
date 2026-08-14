@@ -1,0 +1,43 @@
+video_id: DfLVNMqQX9g
+title: "The Shocking AI Reveals That Stunned CES 2025 (DAY 2)"
+url: "https://www.youtube.com/watch?v=DfLVNMqQX9g"
+publication_date: "2025-01-09"         # CES 2025 ran January 7-10 2025; Day 2 = Jan 9
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - CES 2025 AI reveals
+  - AI hardware
+  - AI product launches
+
+secondary_topics:
+  - NVIDIA announcements
+  - robotics demos
+  - consumer AI
+
+companies:
+  - NVIDIA
+  - Various CES exhibitors
+
+models: []
+frameworks: []
+research_papers: []
+products: []
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: MEDIUM
+relevance_notes: >
+  CES 2025 roundup. Potentially covers NVIDIA Blackwell GPU announcements,
+  robotics demonstrations, and AI infrastructure reveals relevant to HiveCompute
+  and Digital Twin hardware planning. Low technical depth expected — conference
+  news format.
+
+verification_status: UNVERIFIED
+knowledge_extraction_status: PENDING

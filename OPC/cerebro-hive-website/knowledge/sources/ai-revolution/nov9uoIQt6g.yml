@@ -1,0 +1,43 @@
+video_id: nov9uoIQt6g
+title: "Google's New AI Is The OpenClaw Killer"
+url: "https://www.youtube.com/watch?v=nov9uoIQt6g"
+publication_date: "2026-UNKNOWN"
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - Google AI
+  - foundation model competition
+
+secondary_topics:
+  - model capabilities benchmark
+  - Google DeepMind
+
+companies:
+  - Google
+  - Google DeepMind
+
+models:
+  - Gemini (unspecified)
+
+frameworks: []
+research_papers: []
+products: []
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: MEDIUM
+relevance_notes: >
+  Covers a Google model or AI product competing against OpenAI ("OpenClaw Killer"
+  likely refers to OpenAI's Sora or another product). Relevant to LLM gateway
+  model routing and competitive intelligence. Title is highly sensationalist;
+  hype filter applies. Pending Pass A to identify the actual technology.
+
+verification_status: UNVERIFIED
+knowledge_extraction_status: PENDING
