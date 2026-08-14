@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { ProvenanceSchema, TwinDefinitionSchema } from '../../../packages/twin-contracts/src/index';
 import { industryModelProvider } from '../modules/industry/deterministic-industry-provider';
-import { askTwin } from '../modules/intelligence/ask-twin-service';
+import { askTwinFromStates } from '../modules/intelligence/ask-twin-service';
 import { simulateFactoryTick } from '../modules/simulation/observation-simulator';
 import { runMotorFailureScenario } from '../modules/simulation/scenario-service';
 
@@ -27,11 +27,36 @@ assert.equal(scenario.isolation, 'SNAPSHOT_FORK');
 assert.equal(scenario.result['throughputChangePercent'], -23);
 assert.deepEqual(anomaly, before, 'scenario must not mutate live state');
 
-const answer = askTwin(4, 'Explain what is happening.');
-assert.equal(answer.provider, 'deterministic-local');
-assert.equal(answer.confidence, 0.82);
-assert.equal(answer.evidence.length, 2);
-assert.ok(answer.evidence.every((item) => item.classification === 'SIMULATED'));
+async function verifyAskTwin() {
+  const empty = await askTwinFromStates([], 'Explain what is happening.', async () => {
+    throw new Error('LLM must not be called for empty state');
+  }, {});
+  assert.equal(empty.provider, 'none');
+  assert.equal(empty.sourceKind, 'STORED_TWIN_STATE');
+
+  await assert.rejects(
+    () =>
+      askTwinFromStates(
+        [
+          {
+            entityId: 'motor-07',
+            entityName: 'Motor-07',
+            state: { vibration: anomaly.vibration },
+            provenance: (anomaly.alert?.provenance ?? {
+              source: 'verify',
+              classification: 'SIMULATED',
+            }) as Record<string, unknown>,
+          },
+        ],
+        'Explain what is happening.',
+        async () => {
+          throw new Error('LLM must not be called without keys');
+        },
+        {},
+      ),
+    /LLM_UNAVAILABLE/,
+  );
+}
 
 const airport = industryModelProvider.generate({ brief: 'Airport gate B12 aircraft turnaround' });
 const bank = industryModelProvider.generate({ brief: 'Commercial bank branch ATM cash vault' });
@@ -44,6 +69,13 @@ assert.notDeepEqual(
   bank.definition.entityTypes.map((type) => type.key),
 );
 
-console.log(
-  'Twin Studio verification passed: contracts, anomaly, scenario isolation, provenance, and industry generation.',
-);
+void verifyAskTwin()
+  .then(() => {
+    console.log(
+      'Twin Studio verification passed: contracts, anomaly, scenario isolation, provenance, industry generation, and Ask Twin LLM gating.',
+    );
+  })
+  .catch((error: unknown) => {
+    console.error(error);
+    process.exitCode = 1;
+  });

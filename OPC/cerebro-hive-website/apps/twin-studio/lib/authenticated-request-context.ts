@@ -1,19 +1,21 @@
 import { prisma } from '@cerebro/db/twin-studio';
 import type { NextRequest } from 'next/server';
+import {
+  localDevelopmentScope,
+  usesLocalDevelopmentAuth,
+  type AuthenticatedScope,
+} from './dev-auth-scope';
+
+export type { AuthenticatedScope } from './dev-auth-scope';
+export {
+  DEV_TENANT_ID,
+  DEV_USER_ID,
+  DEV_WORKSPACE_ID,
+  localDevelopmentScope,
+  usesLocalDevelopmentAuth,
+} from './dev-auth-scope';
 
 export type RequestAccess = 'READ' | 'WRITE';
-export type AuthenticatedScope = {
-  tenantId: string;
-  workspaceId: string;
-  userId: string;
-};
-
-export const DEV_TENANT_ID =
-  process.env['TWIN_STUDIO_DEV_TENANT_ID'] ?? '00000000-0000-4000-8000-000000000101';
-export const DEV_WORKSPACE_ID =
-  process.env['TWIN_STUDIO_DEV_WORKSPACE_ID'] ?? '00000000-0000-4000-8000-000000000102';
-export const DEV_USER_ID =
-  process.env['TWIN_STUDIO_DEV_USER_ID'] ?? '00000000-0000-4000-8000-000000000103';
 
 const WRITE_ROLES = new Set(['OWNER', 'ADMIN', 'DEVELOPER']);
 
@@ -27,12 +29,8 @@ export async function authenticatedRequestContext(
   request: NextRequest,
   access: RequestAccess,
 ): Promise<AuthenticatedScope> {
-  if (process.env['NODE_ENV'] !== 'production' && process.env['TWIN_STUDIO_DEV_AUTH'] !== 'disabled') {
-    return {
-      tenantId: DEV_TENANT_ID,
-      workspaceId: request.headers.get('x-workspace-id') ?? DEV_WORKSPACE_ID,
-      userId: DEV_USER_ID,
-    };
+  if (usesLocalDevelopmentAuth()) {
+    return localDevelopmentScope();
   }
 
   const token = bearerToken(request);

@@ -22,7 +22,7 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
         state: entity.currentState!.state as Record<string, unknown>,
         provenance: entity.currentState!.provenance as Record<string, unknown>,
       }));
-    return NextResponse.json({ data: askTwinFromStates(states, prompt) });
+    return NextResponse.json({ data: await askTwinFromStates(states, prompt) });
   } catch (error) {
     return apiError(error);
   }

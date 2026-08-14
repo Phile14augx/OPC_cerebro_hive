@@ -1,64 +1,168 @@
-import { simulateFactoryTick } from '../simulation/observation-simulator';
-
-type DurableState = {
+export type DurableState = {
   entityId: string;
   entityName: string;
   state: Record<string, unknown>;
   provenance: Record<string, unknown>;
 };
 
-export function askTwinFromStates(states: DurableState[], prompt: string) {
+export type AskTwinAnswer = {
+  answer: string;
+  recommendation: string;
+  evidence: DurableState[];
+  confidence: number;
+  provider: string;
+  model: string;
+  sourceKind: 'STORED_TWIN_STATE';
+  prompt: string;
+  generatedAt: Date;
+};
+
+type LlmCompletion = {
+  text: string;
+  provider: string;
+  model: string;
+};
+
+const SYSTEM_PROMPT = `You are Twin Studio's operator assistant.
+Use only the supplied durable twin evidence JSON. Do not invent telemetry, entities, or measurements.
+If the evidence does not contain the answer, say so explicitly.
+Respond with JSON only: {"answer": string, "recommendation": string, "confidence": number}.
+confidence must be between 0 and 1.`;
+
+export function resolveLlmConfig(
+  env: Record<string, string | undefined> = process.env,
+): { provider: 'anthropic' | 'openai'; model: string; apiKey: string } | undefined {
+  const preferred = env['AI_PROVIDER']?.trim().toLowerCase();
+  const anthropicKey = env['ANTHROPIC_API_KEY']?.trim();
+  const openaiKey = env['OPENAI_API_KEY']?.trim();
+  if (preferred === 'openai' && openaiKey) {
+    return { provider: 'openai', model: env['OPENAI_MODEL']?.trim() || 'gpt-4o-mini', apiKey: openaiKey };
+  }
+  if (preferred === 'anthropic' && anthropicKey) {
+    return {
+      provider: 'anthropic',
+      model: env['ANTHROPIC_MODEL']?.trim() || 'claude-sonnet-4-6',
+      apiKey: anthropicKey,
+    };
+  }
+  if (anthropicKey) {
+    return {
+      provider: 'anthropic',
+      model: env['ANTHROPIC_MODEL']?.trim() || 'claude-sonnet-4-6',
+      apiKey: anthropicKey,
+    };
+  }
+  if (openaiKey) {
+    return { provider: 'openai', model: env['OPENAI_MODEL']?.trim() || 'gpt-4o-mini', apiKey: openaiKey };
+  }
+  return undefined;
+}
+
+function parseModelJson(text: string): { answer: string; recommendation: string; confidence: number } {
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) {
+    return {
+      answer: text.trim() || 'The model returned an empty response.',
+      recommendation: 'Review the attached evidence before acting.',
+      confidence: 0.4,
+    };
+  }
+  const parsed = JSON.parse(match[0]) as Record<string, unknown>;
+  const confidence = typeof parsed['confidence'] === 'number' ? parsed['confidence'] : 0.5;
+  return {
+    answer: String(parsed['answer'] ?? text).trim(),
+    recommendation: String(parsed['recommendation'] ?? 'Review the attached evidence before acting.').trim(),
+    confidence: Math.min(1, Math.max(0, confidence)),
+  };
+}
+
+export async function completeWithConfiguredLlm(
+  userPrompt: string,
+  fetchImpl: typeof fetch = fetch,
+  env: Record<string, string | undefined> = process.env,
+): Promise<LlmCompletion> {
+  const config = resolveLlmConfig(env);
+  if (!config) throw new Error('LLM_UNAVAILABLE');
+
+  if (config.provider === 'anthropic') {
+    const response = await fetchImpl('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': config.apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: config.model,
+        max_tokens: 800,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userPrompt }],
+      }),
+    });
+    if (!response.ok) throw new Error('LLM_UNAVAILABLE');
+    const body = (await response.json()) as { content?: Array<{ text?: string }> };
+    const text = body.content?.map((part) => part.text ?? '').join('\n').trim() ?? '';
+    return { text, provider: 'anthropic', model: config.model };
+  }
+
+  const response = await fetchImpl('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${config.apiKey}`,
+    },
+    body: JSON.stringify({
+      model: config.model,
+      temperature: 0,
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: userPrompt },
+      ],
+    }),
+  });
+  if (!response.ok) throw new Error('LLM_UNAVAILABLE');
+  const body = (await response.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+  const text = body.choices?.[0]?.message?.content?.trim() ?? '';
+  return { text, provider: 'openai', model: config.model };
+}
+
+export async function askTwinFromStates(
+  states: DurableState[],
+  prompt: string,
+  fetchImpl: typeof fetch = fetch,
+  env: Record<string, string | undefined> = process.env,
+): Promise<AskTwinAnswer> {
   const generatedAt = new Date();
   if (states.length === 0) {
     return {
       answer: 'No operational state has been recorded for this twin yet.',
-      recommendation: 'Record or simulate state before asking operational questions.',
+      recommendation: 'Ingest a measured observation or persist simulated state before asking operational questions.',
       evidence: [],
-      provider: 'deterministic-local',
+      confidence: 1,
+      provider: 'none',
+      model: 'none',
       sourceKind: 'STORED_TWIN_STATE',
       prompt,
       generatedAt,
     };
   }
-  const alert = states.find((item) => {
-    const value = item.state['alert'];
-    return Boolean(value) && value !== null;
-  });
-  return {
-    answer: alert
-      ? `${alert.entityName} currently carries an alert in durable state. Review the evidence before taking action.`
-      : `The latest durable projection contains ${states.length} entity state record${states.length === 1 ? '' : 's'}. Review the evidence below before taking action.`,
-    recommendation: 'Use the current state and history panels to validate any operational decision.',
-    evidence: states,
-    confidence: 1,
-    provider: 'deterministic-local',
-    sourceKind: 'STORED_TWIN_STATE',
-    prompt,
-    generatedAt,
-  };
-}
 
-export function askTwin(tick: number, prompt: string) {
-  const state = simulateFactoryTick(tick);
-  const generatedAt = new Date();
-  if (!state.alert) {
-    return {
-      answer: 'No active anomaly. Motor-07 remains inside the configured operating envelope.',
-      recommendation: 'Continue monitoring.',
-      evidence: [],
-      provider: 'deterministic-local',
-      generatedAt,
-    };
-  }
+  const userPrompt = [
+    `Operator question: ${prompt}`,
+    'Durable twin evidence:',
+    JSON.stringify(states, null, 2),
+  ].join('\n\n');
+  const completion = await completeWithConfiguredLlm(userPrompt, fetchImpl, env);
+  const parsed = parseModelJson(completion.text);
   return {
-    answer: `Motor-07 vibration is ${state.vibration.toFixed(1)} mm/s and temperature is ${state.temperature.toFixed(1)}°C. Their joint rise matches the configured bearing-failure risk rule.`,
-    recommendation: 'Inspect Motor-07 bearings within 72 hours.',
-    evidence: [
-      { ...state.alert.provenance, metric: 'vibration', value: state.vibration, unit: 'mm/s' },
-      { ...state.alert.provenance, metric: 'temperature', value: state.temperature, unit: '°C' },
-    ],
-    confidence: 0.82,
-    provider: 'deterministic-local',
+    ...parsed,
+    evidence: states,
+    provider: completion.provider,
+    model: completion.model,
+    sourceKind: 'STORED_TWIN_STATE',
     prompt,
     generatedAt,
   };

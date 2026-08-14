@@ -12,6 +12,7 @@ const statusByCode: Record<string, number> = {
   PROPOSAL_ALREADY_APPLIED: 409,
   APPROVAL_REQUIRED: 409,
   POLICY_REJECTED: 422,
+  LLM_UNAVAILABLE: 503,
 };
 
 export function apiError(error: unknown) {

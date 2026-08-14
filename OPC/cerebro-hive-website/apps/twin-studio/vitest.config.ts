@@ -10,7 +10,7 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx', 'modules/**/*.test.ts'],
+    include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx', 'modules/**/*.test.ts', 'lib/**/*.test.ts'],
     environmentMatchGlobs: [['**/*.test.tsx', 'jsdom']],
     coverage: {
       reporter: ['text', 'json-summary'],
