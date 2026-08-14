@@ -631,6 +631,297 @@ resume the registered X-P1-3 worktree from fresh `origin/main`, write its
 test-first implementation plan from the approved spec, and deliver the FinOps
 contract through the full protected workflow.
 
+## X-P1-3 recovery - 2026-08-11 22:33 IST - BLOCKED BY UPSTREAM LOCKFILE
+
+**Environment evidence:** provisioned the official Node `v22.12.0` Windows
+archive outside the repository and verified SHA-256
+`2b8f2256382f97ad51e29ff71f702961af466c4616393f767455501e6aece9b8`
+against Node.js `SHASUMS256.txt`. That runtime supplied Corepack `0.29.4`,
+which resolved the repository-pinned pnpm `9.15.0` exactly.
+
+**Base evidence:** fetched current `origin/main`
+`e11dde91e63ff50bea8071c1e0f51d31347ef3e4`. The clean registered
+`feat/hivecloud-finops-summary` worktree is based on current main plus the
+existing design-only commit `b0540cd`; its only tracked branch change is
+`docs/superpowers/specs/2026-08-09-hivecloud-finops-summary-design.md`.
+No upstream FinOps report implementation was found.
+
+**Untouched baseline RED:** under Node `v22.12.0` and Corepack pnpm `9.15.0`,
+`corepack pnpm install --frozen-lockfile` exited 1 before tests with
+`ERR_PNPM_OUTDATED_LOCKFILE`. `services/archive-api/package.json` requires the
+Fastify 5-compatible plugin ranges introduced by `ded1880`, while the
+`services/archive-api` importer in `pnpm-lock.yaml` still records the prior
+Fastify 4-era ranges. CI uses the same frozen installation mode. The worktree
+remained clean, so this is a reproducible upstream dependency-metadata defect,
+not a Node/Vitest or FinOps-code failure.
+
+**Status / next action:** implementation was not reached. No product/test code,
+new commit, push, PR, merge, deployment, or production-readiness claim was
+created. Synchronize the Archive API lockfile importer from current main using
+pnpm `9.15.0`, land that prerequisite through its owner workflow, then rerun the
+untouched baseline under Node `22.12.0`. The prior
+`ERR_PACKAGE_IMPORT_NOT_DEFINED` condition was not reached and therefore did
+not reproduce in this run.
+
+---
+
+## X-P1-3 resume - 2026-08-11 22:52 IST - BLOCKED BEFORE TASK 6 REPRODUCTION
+
+**Requested scope:** resume the existing HiveCloud FinOps branch and repair Task 6 production-smoke dependency ownership without relying on root hoisting.
+
+**Phase A evidence:** the authoritative registered worktree is `feat/hivecloud-finops-summary` at `b0540cd75325680cee4ccd6b88cbc054f803153d`, one design-only commit ahead of current remote `origin/main` `e11dde91e63ff50bea8071c1e0f51d31347ef3e4`. The worktree is clean, `git diff --check` exits 0, Node is `v22.17.0`, and Corepack resolves pnpm `9.15.0`.
+
+**Fresh prerequisite RED:** `corepack pnpm install --frozen-lockfile` exits 1 with `ERR_PNPM_OUTDATED_LOCKFILE`. The `services/archive-api` lock importer still declares `@fastify/cors` 9, helmet 11, multipart 8, rate-limit 9, sensible 5, swagger 8, and swagger-ui 3, while the manifest requires 11.3, 13.1, 10.1, 11.2, 6.0, 9.8, and 6.1 respectively.
+
+**Task 6 boundary evidence:** neither current `origin/main` nor the FinOps branch contains `scripts/runtime-smoke.mjs`, `scripts/lib/runtime-smoke.mjs`, its tests, or a `runtime:smoke` package command. Those artifacts survive only in the unregistered/orphaned `audit/local-dev-stabilization` directory, where the canonical command is `node scripts/runtime-smoke.mjs`. Copying or reconstructing that subsystem onto X-P1-3 would be a separate recovery/port and would overlap prior audit ownership; it was not inferred from this dependency-only repair request.
+
+**Remote preconditions:** an escalated non-destructive fetch/remote check succeeded. GitHub HTTPS is reachable, `origin/main` is current at `e11dde91`, and `gh auth status` succeeds for `Phile14augx` with repository/workflow scopes.
+
+**Status / next action:** stopped before dependency, smoke, FinOps product, or test edits; no commit, push, PR, CI, merge, deployment, or production claim. Land the Archive importer reconciliation through its separate owner, and recover/land the Task 6 smoke subsystem on current main (or explicitly authorize that port) before resuming Phase B on this existing FinOps branch.
+
+---
+
+## Archive lockfile prerequisite retry - 2026-08-11 23:23 IST - BLOCKED BY SHARED-LOCK DRIFT
+
+**Selected scope and isolation:** Codex retried only the `services/archive-api`
+Fastify 5 lock importer prerequisite from current `origin/main`
+`e11dde91e63ff50bea8071c1e0f51d31347ef3e4` in the dedicated short-path
+worktree `fix/archive-api-lockfile-sync`. The active
+`fix/sphere-lockfile-recovery`, `fix/vite-node-baseline`, and
+`feat/hivecloud-finops-summary` worktrees were inspected read-only and left
+untouched.
+
+**Pinned-toolchain RED:** official Node `v22.12.0` (archive SHA-256
+`2b8f2256382f97ad51e29ff71f702961af466c4616393f767455501e6aece9b8`),
+Corepack `0.29.4`, and pnpm `9.15.0` reproduced
+`ERR_PNPM_OUTDATED_LOCKFILE` for the seven Archive Fastify plugin ranges.
+Commit `ded1880` confirms the manifest ranges are intentional Fastify 5
+compatibility fixes.
+
+**Broad-regeneration evidence:** pnpm's filtered, offline, lockfile-only
+generation exited 0 but proposed `222` insertions and `420` deletions across
+ten importers: `.`, `apps/forge`, `apps/platform`, `apps/platform-api`,
+`apps/pulse`, `apps/sphere`, `apps/studio`, `packages/ui`,
+`services/archive-api`, and `services/forge-api`. That broad output was rejected
+and the worktree lockfile restored.
+
+**Scoped-candidate evidence:** a clean `origin/main` export generated Archive's
+new importer and dependency graph with pnpm. A temporary candidate containing
+only the seven generated Archive importer changes plus their 15 new
+package/snapshot entries was `148` insertions and `15` deletions. It was never
+applied to the repository. A second clean-copy frozen check advanced past
+Archive and failed on the unrelated `services/forge-api` importer: its manifest
+adds `dotenv@^16.4.5` while the lock importer does not. Therefore an isolated
+Archive-only patch cannot satisfy the repository's required root frozen install.
+
+**Status / next action:** stopped before any repository lockfile, product, test,
+or FinOps edit; no commit, push, PR, CI, review, merge, deployment, or live
+health claim. The next prerequisite is an explicitly owned shared-lockfile
+reconciliation for all ten stale importers (coordinated with or released by the
+existing Sphere lockfile owner). After that lands, rerun the untouched FinOps
+baseline from preserved design commit `b0540cd` before implementing X-P1-3.
+
+---
+
+## Automation delivery cycle - 2026-08-12 00:11 IST - BLOCKED BY ACTIVE SHARED-LOCK OWNER
+
+### X-P1-3 - HiveCloud FinOps reporting vertical slice - NOT STARTED
+
+**Primary owner:** Codex (MegaPlan product 48, HiveCloud)
+
+**Selection and remote evidence:** X-P1-3 remains the highest-priority
+unfinished Codex product slice. An authenticated `git fetch --prune origin
+main` exited `0`; remote and cached `origin/main` remain
+`e11dde91e63ff50bea8071c1e0f51d31347ef3e4`, so the ten-importer shared
+lockfile reconciliation recorded at 23:23 IST has not landed.
+
+**Ownership evidence:** no duplicate worktree was created. The registered
+`feat/hivecloud-finops-summary` worktree remains at design-only commit
+`b0540cd` with two task-record edits. `fix/sphere-lockfile-recovery` is at
+`e11dde91` with a dirty `pnpm-lock.yaml` plus two task records, and
+`fix/vite-node-baseline` is one commit behind main with 39 dirty paths. These
+worktrees already own the FinOps product, shared-lock, and baseline scopes.
+The sprint board contains no other unfinished Codex product slice that is both
+unblocked and outside an active owner worktree.
+
+**Workflow evidence:** after clearing `GITHUB_TOKEN`, `gh auth status` verified
+the authenticated local keyring. Per `.agents/AGENTS.md`, all 18 failed GitHub
+Actions runs were deleted; a fresh failed-run query returned `0`.
+
+**Status / next unblocked slice:** stopped at the ownership and prerequisite
+gates before isolation, install, baseline tests, product code, commit, push,
+PR, review, merge, deployment, or live-health verification. The next unblocked
+slice is X-P1-3 after the existing Sphere/shared-lock owner lands one
+reconciliation for all ten stale importers and the baseline owner releases or
+lands its scope; then resume from a fresh `origin/main` lifecycle worktree and
+rerun the untouched pinned-toolchain baseline.
+
+---
+
+## Automation delivery cycle - 2026-08-13 15:40 IST - BLOCKED BY ACTIVE OWNERS AND ACCESS
+
+### X-P1-3 - HiveCloud FinOps reporting vertical slice - NOT RESUMED
+
+**Selection:** X-P1-3 remains the highest-priority unfinished Codex-owned
+product slice from MegaPlan product 48. Its registered
+`feat/hivecloud-finops-summary` worktree remains at design-only commit
+`b0540cd75325680cee4ccd6b88cbc054f803153d`, one commit ahead of cached
+`origin/main` `e11dde91e63ff50bea8071c1e0f51d31347ef3e4`, with only the existing task
+and sprint record edits. No alternative unfinished Codex product or
+production-readiness slice is both unblocked and outside an active owner
+worktree.
+
+**Fresh ownership evidence:** read-only `git ls-remote origin refs/heads/main`
+succeeds and reports remote main at `e11dde91e63ff50bea8071c1e0f51d31347ef3e4`.
+`fix/sphere-lockfile-recovery` remains registered at that commit with an
+uncommitted 642-line shared `pnpm-lock.yaml` reconciliation plus its task/sprint
+records. `fix/vite-node-baseline` remains one commit behind cached main with a
+broad 35-file diff plus `.npmrc`, its Redis regression test, and its baseline
+plan; it also modifies the shared lockfile. The separate dirty Twin Studio main
+checkout and all other registered owner worktrees were left untouched.
+
+**Access and workflow evidence:** the required `git fetch --prune origin main`
+exits `255` because `.git/FETCH_HEAD` cannot be opened for writing. After
+explicitly clearing `GITHUB_TOKEN`, `gh auth status` exits `1` because the
+active `Phile14augx` keyring token is invalid. The mandated failed-Actions
+cleanup attempt also exits `1`: the Actions API request to
+`api.github.com:443` is blocked by local socket permissions. Therefore PRs,
+required checks/reviews, merge eligibility, deployment workflow state, and the
+live health endpoint cannot be inspected or changed safely.
+
+**Status / next unblocked slice:** stopped at the mandatory ownership, fresh
+fetch, credential, and production-access gates. No worktree, install, test,
+product code, commit, push, PR, review, merge, deployment, or production-health
+claim was created. Restore `.git/FETCH_HEAD` write access and valid GitHub/API
+connectivity; have the existing shared-lock/Vite owners land and release their
+prerequisite scopes; then successfully fetch fresh main and rerun the untouched
+pinned-toolchain baseline before resuming this existing X-P1-3 worktree
+test-first.
+
+---
+
+## Automation delivery cycle - 2026-08-13 18:06 IST - BLOCKED BY ACTIVE OWNERS
+
+### X-P1-3 - HiveCloud FinOps reporting vertical slice - NOT RESUMED
+
+**Selection and fresh baseline:** X-P1-3 remains the highest-priority
+unfinished Codex-owned product slice from MegaPlan product 48. A fresh
+`git fetch --prune origin main` exits `0`; fetched `origin/main`, cached
+`origin/main`, and read-only remote main all resolve to
+`e11dde91e63ff50bea8071c1e0f51d31347ef3e4`. The registered FinOps worktree
+remains at design-only commit `b0540cd75325680cee4ccd6b88cbc054f803153d`,
+one commit ahead, with only its two existing task/sprint record edits.
+
+**Ownership and dependency evidence:** no competing worktree was created.
+`fix/sphere-lockfile-recovery` remains at current main with an uncommitted
+shared `pnpm-lock.yaml` plus its two task records. `fix/vite-node-baseline`
+remains one commit behind current main with 39 working-tree paths spanning the
+shared lockfile, lint, Sphere/Redis, Archive, Platform, and ContentOps scopes.
+X-P1-1 is still blocked because its upstream PR does not exist; X-P1-2 is still
+blocked because its migration SQL does not exist. No unfinished Codex board
+item is both unblocked and outside an active owner worktree.
+
+**GitHub workflow evidence:** with `GITHUB_TOKEN` explicitly cleared,
+`gh auth status` exits `0` for the `Phile14augx` keyring account with `repo` and
+`workflow` scopes. Per `.agents/AGENTS.md`, all 15 failed GitHub Actions runs
+encountered during inspection were deleted successfully; a fresh failure query
+exits `0` and returns zero runs.
+
+**Status / next unblocked slice:** stopped at the mandatory ownership and
+prerequisite gates. No install, baseline test, product code, commit, push, PR,
+review, merge, deployment, or production-health claim was created. The next
+unblocked slice is X-P1-3 after the existing shared-lock and Vite owners land
+and release their prerequisite scopes; then fetch/rebase the preserved FinOps
+worktree and rerun the untouched pinned-toolchain baseline before test-first
+implementation.
+
+---
+
+## Automation delivery cycle - 2026-08-14 00:05 IST - BLOCKED BY ACTIVE OWNERS
+
+### X-P1-3 - HiveCloud FinOps reporting vertical slice - NOT STARTED
+
+**Primary owner:** Codex (MegaPlan product 48, HiveCloud). **Selection:** X-P1-3
+remains the highest-priority unfinished Codex-owned product slice, but it is
+already active in the registered `feat/hivecloud-finops-summary` worktree. No
+unfinished Codex board item is both unblocked and outside an active owner
+worktree.
+
+**Fresh evidence:** `git fetch --prune origin main` exits `0`; cached and remote
+main both resolve to `0ec4d7e9ed415e5efd14f81220bc341faaacd94e`. The FinOps
+worktree remains at design commit `b0540cd75325680cee4ccd6b88cbc054f803153d`,
+one commit behind and one commit ahead of current main, with two existing
+task/sprint edits. `fix/sphere-lockfile-recovery` is one commit behind main with
+an uncommitted shared lockfile reconciliation and two task records;
+`fix/vite-node-baseline` is two commits behind main with 39 dirty paths,
+including shared lockfile and baseline work. No matching FinOps or prerequisite
+PR is open.
+
+**GitHub workflow evidence:** with `GITHUB_TOKEN` cleared, `gh auth status`
+exits `0` for `Phile14augx`; the failed-Actions query exits `0` and returns zero
+runs, so no cleanup was necessary.
+
+**Status / next unblocked slice:** stopped at the mandatory ownership and
+prerequisite gates before creating a worktree or running implementation gates.
+No install, tests, product code, commit, push, PR, review, merge, deployment, or
+production-health claim was created. The next unblocked slice is X-P1-3 after
+the existing FinOps owner and the shared-lock/Vite owners land or release their
+scopes; then start from fresh `origin/main` and rerun the untouched
+pinned-toolchain baseline before test-first implementation.
+
+---
+
+## Automation delivery cycle - 2026-08-14 00:32 IST - BLOCKED BY DEPENDENCY ACCESS
+
+### X-P1-2 - AgentExecution Prisma migration production-readiness review - NOT COMPLETED
+
+**Selection and scope evidence:** a fresh authenticated fetch moved
+`origin/main` from `e11dde91` to `0ec4d7e9ed415e5efd14f81220bc341faaacd94e`.
+Unlike the stale task result, current main contains
+`packages/db/prisma/migrations/20260809144150_agent_execution_contract/migration.sql`
+plus the `AgentExecution*` schema models and runtime repository. No active
+worktree has dirty paths under `packages/db/`, so X-P1-2 was selected as the
+highest-priority unfinished, unblocked Codex-owned production-readiness slice;
+X-P1-1 still has no matching upstream PR and X-P1-3 remains owned by the
+registered `feat/hivecloud-finops-summary` worktree at `b0540cd`.
+
+**Isolation and toolchain evidence:** the mandatory `feature:start` launcher
+stopped before Git changes because `.agents/logs/feature-workflow.log` is
+host-read-only (`EPERM`). Its permitted manual fallback created
+`docs/x-p1-2-prisma-migration-readiness` from current `origin/main`. The
+official Node `22.12.0` archive matched published SHA-256
+`2b8f2256382f97ad51e29ff71f702961af466c4616393f767455501e6aece9b8`,
+and Corepack resolved repository-pinned pnpm `9.15.0`. Moving the clean
+worktree to the shorter ignored `.worktrees/x` path fixed a reproducible
+Windows lifecycle failure: Prisma's 290-character working directory made
+Node's `spawn(cmd.exe)` return `ENOENT`; the 258-character path exits `0`.
+The frozen install then completed across all 142 workspace projects.
+
+**Blocking baseline evidence:** the first untouched non-interactive
+`pnpm test` stopped with `ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY`, whose
+own diagnostic requires `CI=true`. The CI-equivalent rerun exceeded the
+runner's 300-second RPC ceiling while spawning 25 concurrent nested
+`pnpm install` processes. That orphaned run was verified by PID and stopped;
+it had purged the root executable shims. A required frozen restore now exits
+`1`: registry downloads fail with `connect EACCES ... registry.npmjs.org:443`,
+and `node_modules/.bin/turbo.cmd` remains absent. No reliable green baseline
+exists.
+
+**GitHub workflow evidence:** after clearing `GITHUB_TOKEN`, keyring auth
+succeeded for `Phile14augx`. Per `.agents/AGENTS.md`, all 52 failed workflow
+runs discovered during inspection were deleted; a fresh failure query
+returned zero runs.
+
+**Status / next unblocked slice:** stopped before migration analysis, review
+artifact edits, tests for the selected scope, commit, push, PR, review, merge,
+deployment, or live-health verification. Restore registry access (or the
+missing pnpm store content), rerun the complete pinned frozen install and
+untouched CI baseline from the short worktree path, then resume X-P1-2. No
+deployment claim was made. Git removed the worktree registration and deleted
+the local branch at `0ec4d7e`; its residual ignored dependency directory could
+not be removed because the host policy rejected recursive deletion after Git
+returned `Result too large`.
+
 ---
 
 ## How to use this file

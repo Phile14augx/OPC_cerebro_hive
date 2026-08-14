@@ -1,263 +1,225 @@
-# Claude Tasks — Midday Assignment 2026-08-10 12:00 IST
+# Claude Tasks — Night Assignment 2026-08-14 03:00 IST
 
-**Audit session:** Noon | **Next check:** 3 AM 2026-08-11
-**Git commits reviewed:** 0 — git unreachable from audit sandbox; assessed via file modification timestamps
-**Tasks completed since 3 AM audit:** None detected — no file changes since CURRENT-SPRINT.md at 03:11 IST
-
----
-
-## ✅ Completed (on disk, not yet committed — carried from Aug 9 afternoon session)
-
-- **M27 Governance Analytics** — all 6 tasks in `task.md` marked complete (Aug 9 17:42 IST):
-  - Scaffold Evidence Warehouse Dimensional Schema (Fact/Dim Tables)
-  - Implement NRT Projection Pipeline (ingest `EngineeringReviewPublished` events)
-  - Implement Projection Validation Suite
-  - Implement Trend Engine (aggregation, multi-score metrics, forecasting)
-  - Implement Analytics API & Studio Dashboards (RLS enabled)
-  - Implement Executive Report Generator (quarterly snapshot exporter)
-- **M26.1 Architecture Review batch** — ~30 audit files, Studio planning docs, platform security routes, agent-sdk/ai/ai-gateway changes (all on disk — not committed)
+**Audit session:** Night (3 AM) | **Next check:** Noon 2026-08-14
+**Git commits reviewed:** 0 — git unreachable from audit sandbox; completion assessed via file modification timestamps, worktree inspection, and Codex automation reports in CURRENT-SPRINT.md
+**Tasks completed since last session (Noon Aug 13 ~20:44 IST):** None confirmed — no Claude-authored commits detected
 
 ---
 
-## ⚠️ Slipped Tasks (critical — must not slip another cycle)
+## ✅ New Activity Since Noon Aug 13 (on disk / via Codex automation)
+
+- **`origin/main` advanced to `0ec4d7e9`** — confirmed by Codex fetch at 00:32 IST Aug 14 (was `e11dde91`). New files now on origin/main include: `PRODUCT_SPECIFICATIONS/` (49 spec files), `RUNTIME-VALIDATION-CHECKLIST.md`, `AGENT-RUNTIME-BACKLOG.md`, `CEREBROHIVE-6-MONTH-MASTER-PLAN.md`, `MASTER-PLAN-GAP-ASSESSMENT.md`, `PRISMA_SETUP_GUIDE.md`, `IDEA.md`. These are confirmed via worktree inspection of `.worktrees/codex-twin-industry-framework/` (modified 19:20 IST Aug 13) and `.worktrees/x/`.
+- **Codex X-P1-2 attempt (00:32 IST Aug 14):** AgentExecution Prisma migration readiness review selected. Worktree `.worktrees/x` created from fresh `origin/main = 0ec4d7e9`. Blocked by `connect EACCES ... registry.npmjs.org:443` — frozen install could not complete. Worktree registration removed; residual files remain on disk. No product output.
+- **`.codex-task8-verification/`** directory created at 23:58 IST Aug 13 — appears to be a verification snapshot of `apps/studio` contents. Not a product commit.
+- **Multiple dormant worktrees** exist: `codex-twin-industry-framework` (Aug 13 19:20), `twin-persistence-hardening` (Aug 12 16:28), `codex-digital-twin-studio` (Aug 11 14:59), `agent-registry` (Aug 11 20:54), `nvdiag` (Aug 11 22:41). None produced commits to `origin/main` in this audit window.
+
+**Key signal:** `origin/main` has advanced (likely human or external Codex push). The local repo has not pulled. The planning docs (CEREBROHIVE-6-MONTH-MASTER-PLAN.md, MASTER-PLAN-GAP-ASSESSMENT.md) and PRODUCT_SPECIFICATIONS are now committed — this represents significant progress. However, the core P0 execution blockers (M10.1 PR, Prisma migration, lockfile, docs batch commits) remain unresolved.
+
+---
+
+## ⚠️ Slipped Tasks — ESCALATED
 
 | Task | Slipped cycles | Status |
 |------|---------------|--------|
-| C-P0-1: De-scope M10.1 worktree, commit, open PR | **6** | unstarted |
-| C-P0-2: Apply Prisma migration | **6** | unstarted |
-| C-P0-3a: Commit audit/sprint files (Phase A) | **5** | unstarted |
-| C-P0-3b: Commit architecture docs (Phase B) | **3** | unstarted |
-| C-P0-3c: Commit root planning docs (Phase C) | **3** | unstarted |
-| C-P0-0: Fix Vite/Node baseline regression | **1** | unstarted |
+| C-P0-1: De-scope M10.2, commit M10.1, open PR | **12** 🚨 | unstarted — CRITICAL BREACH |
+| C-P0-2: Apply Prisma migration | **12** 🚨 | unstarted — CRITICAL BREACH |
+| C-P0-3a: Commit audit/sprint files (Phase A) | **11** 🚨 | unstarted |
+| C-P0-3b: Commit architecture docs (Phase B) | **9** | unstarted |
+| C-P0-3c: Commit root planning/governance docs (Phase C) | **9** | may be partially done via origin/main advance — verify |
+| C-P0-3d: Typecheck and commit apps/platform/ features (Phase D) | **7** | unstarted |
+| C-P0-3e: Typecheck and commit agent-sdk/ai/ai-gateway/agent-ops (Phase E) | **7** | unstarted |
+| C-P0-0: Fix Vite/Node baseline regression | **7** | blocked — needs lockfile fix |
+| C-P0-4: Fix shared lockfile | **2** | stalled — Codex blocked by registry |
+| C-P1-3: Studio Phase 1 — Schema & Navigation | **4** | pending |
 
-**⚠️ CRITICAL:** Six consecutive audit cycles with zero commits on the oldest P0s. Month 2–4
-deliverables are at serious risk. The git working tree has grown substantially — every new feature
-added without a commit makes the eventual triage harder.
+**🚨 TWELVE CONSECUTIVE AUDIT CYCLES** on C-P0-1 and C-P0-2 without a single commit. These are past the formal escalation threshold. Month 2–4 delivery is at critical risk. `origin/main` advancing is a positive signal but does NOT clear these specific tasks.
+
+**⚠️ NEW BLOCKER:** `connect EACCES registry.npmjs.org:443` — npm registry access is blocked from the Codex sandbox. This prevented the frozen install in the X-P1-2 worktree and will block any future Codex task that requires `pnpm install`. Human owner must unblock network access or pre-populate the pnpm store.
 
 ---
 
 ## 🔴 P0 — Blockers (do first, no other work until resolved)
 
-### C-P0-0 · Fix Vite/Node baseline regression (UNBLOCKS ALL CODEX PRODUCT WORK)
-The `corepack pnpm test` fails before any product code runs:
-```
-ERR_PACKAGE_IMPORT_NOT_DEFINED: #module-sync-enabled
-from vite@8.1.5 on Node 22.17.0
-```
-This error has appeared in three consecutive Codex cycles. The stash `4d9c2aef` contains a partial
-Archive API fastify lockfile fix that was preserved before Vite regression blocked further progress.
-
-**Investigation steps:**
-1. Check Node version: `node --version` — if 22.17.0, downgrade to 22.12.0 via `.nvmrc`
-2. Check `package.json engines.node` field; pin to `22.12.0` if missing
-3. Check 14 vite references in `pnpm-lock.yaml` — if `vite@8.1.5` is the culprit across all, downgrade to the last known-good Vite 7.x
-4. Run `corepack pnpm test` from clean `origin/main` checkout; confirm all Turbo tasks pass
-
-**Files:**
-```
-.nvmrc
-package.json                    ← engines.node field
-pnpm-lock.yaml                  ← vite version references (14 occurrences)
-packages/eda-sdk/               ← reported failing package
-```
-
-**Commit:** `fix(baseline): restore Node/Vite test baseline  [C-P0-0]`
-**Success criteria:** `corepack pnpm test` exits 0 from clean checkout
-**Complexity:** M | **Dependencies:** none — unblocks X-P1-3 and all Codex slices
-
----
-
-### C-P0-1 · De-scope M10.1 worktree, commit M10.1, open PR
-**⚠️ 6 cycles slipped — do this FIRST after C-P0-0**
-
-The M10.1 worktree contains M10.2 provider files mixed in. Separate them:
-
-Park these M10.2 files via `git stash` or temp branch (READ DIFF FIRST — ai-gateway was modified again on Aug 9):
-```
-packages/ai-gateway/src/types.ts                              ← modified Aug 9 — reconcile scope
-packages/ai-gateway/src/gateway.ts                            ← modified Aug 9
-packages/ai-gateway/src/providers/anthropic.provider.ts       ← modified Aug 9
-packages/ai-gateway/src/providers/openai.provider.ts          ← modified Aug 9
-apps/platform-api/src/modules/runtime/providers/ToolRuntimeProvider.ts
-```
-
-After scoping, commit with: `feat(ai-gateway): M10.1 — provider abstraction foundation  [C-P0-1]`
-
-Open PR against main. See `agents/CODEX-M10.1-REVIEW.md` and `agents/M10.1-COMMIT-HANDOFF.md` for full scope details.
-
-**Success criteria:** Clean PR exists with only M10.1 scope. M10.2 files stashed or on a separate branch.
-**Complexity:** M | **Dependencies:** none (but do C-P0-0 first)
-
----
-
-### C-P0-2 · Apply and verify Prisma migration
-**⚠️ 6 cycles slipped**
-
-The `AgentExecution*` schema tables added in the codebase have no corresponding migration SQL.
+### C-P0-3a · Commit audit/sprint coordination files (Phase A) — 11 CYCLES
+**ZERO dependencies. ZERO compile steps. Pure documentation. Commit it NOW.**
 
 ```bash
-cd apps/platform-api
-pnpm prisma migrate dev --name add-agent-execution-models-aug-10
-# Review the generated SQL before committing
-cat prisma/migrations/*/migration.sql
-# Run generate
-pnpm prisma generate
-```
+grep -rE "(sk-|ghp_|AKIA|password\s*=)" agents/ .planning/ 2>/dev/null | grep -v ".pyc"
 
-Verify: `pnpm typecheck` passes in `apps/platform-api`. Then commit:
-`feat(prisma): add AgentExecution schema migration  [C-P0-2]`
-
-See `agents/CODEX-PRISMA-MIGRATION-REVIEW.md` for the blocking finding details.
-
-**Success criteria:** Migration SQL exists in `prisma/migrations/`, `pnpm prisma migrate deploy` succeeds, `pnpm typecheck` green in platform-api.
-**Complexity:** S | **Dependencies:** none
-
----
-
-### C-P0-3a · Commit audit/sprint coordination changeset (Phase A — pure docs, lowest risk)
-**⚠️ 5 cycles slipped — COMMIT THESE TODAY, THEY HAVE NO CODE**
-
-These are pure documentation/planning files. No typecheck needed. Secrets grep, then commit:
-
-```bash
-# Secrets grep before staging
-grep -rE "(sk-|ghp_|AKIA|password\s*=)" agents/ audit/ .planning/ 2>/dev/null | grep -v ".pyc"
-
-# Stage and commit
 git add agents/TRIAGE-REPORT-2026-08-06.md
 git add agents/CODEX-CHANGESET-MANIFEST.md agents/CODEX-M10.1-REVIEW.md
 git add agents/CODEX-M10.2-TEST-PLAN.md agents/CODEX-PRISMA-MIGRATION-REVIEW.md
 git add agents/CerebroHive_AEOS_6Month_MegaPlan.md agents/M10.1-COMMIT-HANDOFF.md
 git add .planning/PROJECT.md .planning/REQUIREMENTS.md .planning/ROADMAP.md .planning/STATE.md
 git add .planning/research/
+git add task.md
 git commit -m "docs(agents): audit coordination files, changeset manifest, Studio planning  [C-P0-3a]"
 ```
 
-**Success criteria:** All listed files committed. `git status` no longer shows them as untracked.
 **Complexity:** S | **Dependencies:** none
 
 ---
 
-### C-P0-3b · Commit architecture docs (Phase B)
-**⚠️ 3 cycles slipped**
+### C-P0-4 · Fix shared lockfile — 2 CYCLES (Codex blocked by registry)
+
+Codex's `fix/sphere-lockfile-recovery` worktree approach is stalled (registry EACCES). Run from local terminal where npm registry is accessible:
 
 ```bash
-grep -rE "(sk-|ghp_|AKIA)" architecture/ docs/ 2>/dev/null
-git add architecture/ARCHITECTURE_INDEX.md
-git add docs/09-templates/26-one-pager-template.md docs/09-templates/27-pitch-deck-template.md
-git commit -m "docs(architecture): architecture index and doc templates  [C-P0-3b]"
+# From main branch, local terminal (not Codex sandbox)
+pnpm install --no-frozen-lockfile
+git diff pnpm-lock.yaml | grep "^+" | grep "resolution:" | wc -l
+git add pnpm-lock.yaml
+git commit -m "fix(lockfile): sync 10 stale pnpm-lock importers (archive-api, forge-api)  [C-P0-4]"
+git push origin main
 ```
 
-**Complexity:** S | **Dependencies:** C-P0-3a (for safety; can be parallelized)
+**Complexity:** S | **Dependencies:** local terminal with npm registry access (not Codex)
 
 ---
 
-### C-P0-3c · Commit root planning/governance docs (Phase C)
-**⚠️ 3 cycles slipped**
+### C-P0-1 · De-scope M10.2, commit M10.1 scope, open PR — 12 CYCLES 🚨
 
 ```bash
-grep -rE "(sk-|ghp_|AKIA)" MASTER-PLAN-EVOLUTION-LOG.md CEREBROHIVE_CONSTITUTION.md CEREBROHIVE-6-MONTH-MASTER-PLAN.md 2>/dev/null
-git add MASTER-PLAN-EVOLUTION-LOG.md CEREBROHIVE_CONSTITUTION.md CEREBROHIVE-6-MONTH-MASTER-PLAN.md
-git add MASTER-PLAN-GAP-ASSESSMENT.md
-git commit -m "docs(governance): master plan evolution log, constitution, gap assessment  [C-P0-3c]"
+# Read the scope separation guide first
+cat agents/CODEX-M10.1-REVIEW.md
+
+# Separate M10.2-only files from M10.1 scope
+git diff --name-only | grep -E "(ai-gateway|providers)" > /tmp/m10.2-files.txt
+cat /tmp/m10.2-files.txt
+
+# Stage only M10.1 files
+git add packages/runtime/src/execution/
+git add packages/capabilities/agent-builder/src/AgentRuntimeService.ts
+git add apps/platform-api/src/modules/conversations/conversations.routes.ts
+git commit -m "feat(runtime): M10.1 agent execution lifecycle foundation  [C-P0-1]"
+git push origin HEAD -u
+gh pr create --title "feat(runtime): M10.1 agent execution lifecycle" --body "See agents/M10.1-COMMIT-HANDOFF.md"
 ```
 
-**Complexity:** S | **Dependencies:** C-P0-3a
+**Complexity:** M | **Dependencies:** local terminal with git push access
 
 ---
 
-### C-P0-3d · Typecheck and commit new apps/platform/ features (Phase D — Aug 9 work)
+### C-P0-2 · Apply and verify Prisma migration — 12 CYCLES 🚨
+
+`packages/db/prisma/migrations/20260809144150_agent_execution_contract/migration.sql` is confirmed on `origin/main = 0ec4d7e9`. Run the migration locally:
 
 ```bash
-cd apps/platform
-pnpm typecheck 2>&1 | head -50
-# Fix any type errors in:
-#   src/app/api/security/events/route.ts
-#   src/app/security/metrics/route.ts
-#   src/features/studio/backend-runtime/cache/
-#   src/features/studio/backend-runtime/governance/
-#   src/features/studio/backend-runtime/intelligence/
-#   middleware.ts
-#   next.config.ts
-# Once clean:
-git add apps/platform/CLAUDE.md apps/platform/AGENTS.md apps/platform/middleware.ts apps/platform/next.config.ts
-git add apps/platform/src/
-git add apps/platform/scripts/validate-security.ts
-git commit -m "feat(platform): Studio security routes, backend-runtime cache/governance/intelligence  [C-P0-3d]"
+cd apps/platform-api
+pnpm prisma migrate dev --name add-agent-execution-models-aug-14
+cat prisma/migrations/*/migration.sql | head -80
+pnpm prisma generate
+pnpm --filter @cerebro/platform-api typecheck 2>&1 | tail -10
+git add prisma/migrations/ prisma/schema.prisma
+git commit -m "feat(prisma): apply AgentExecution schema migration  [C-P0-2]"
+git push
 ```
 
-**Complexity:** M | **Dependencies:** C-P0-1 scope separation (ensure ai-gateway files in correct commit)
+**Complexity:** S | **Dependencies:** local terminal with Postgres running; parallelizable with C-P0-4
 
 ---
 
-### C-P0-3e · Typecheck and commit agent-sdk / ai / ai-gateway / agent-ops updates (Phase E)
+### C-P0-0 · Fix Vite/Node baseline regression — after C-P0-4
 
 ```bash
-# Run typecheck across affected packages
-pnpm --filter "@cerebro/agent-sdk" typecheck
-pnpm --filter "@cerebro/ai" typecheck
-pnpm --filter "@cerebro/ai-gateway" typecheck
-pnpm --filter "@cerebro/agent-ops" typecheck
+# After lockfile is committed (C-P0-4), in fix/vite-node-baseline worktree:
+pnpm install --frozen-lockfile
 
-# Fix errors, then commit (after C-P0-1 scope separation — ai-gateway files go in M10.1 or M10.2 PR):
-git add packages/agent-sdk/src/CerebroAgent.ts packages/agent-sdk/src/CerebroMemory.ts
-git add packages/agent-sdk/src/CerebroTool.ts packages/agent-sdk/src/index.ts
-git add packages/agent-sdk/dist/
-git add packages/ai/src/
-git add packages/agent-ops/src/memory-store.ts packages/agent-ops/src/agent-registry.ts
-git commit -m "feat(packages): agent-sdk, ai, agent-ops Aug 9 updates  [C-P0-3e]"
+# ESLint flat config stubs (17 workspaces)
+grep -rL "eslint.config" packages/*/package.json | head -5  # identify missing
+
+# Sphere lazy Redis
+grep -r "REDIS_URL" packages/ services/ --include="*.ts" | grep -v node_modules | head -10
+
+git add .
+git commit -m "fix(baseline): Vite 7 + ESLint flat config stubs + Sphere lazy Redis  [C-P0-0]"
+git push && gh pr create
 ```
 
-**Note:** `packages/ai-gateway/` files should go in C-P0-1 (M10.1 PR) or C-P1-2 (M10.2), not here.
-
-**Complexity:** M | **Dependencies:** C-P0-1
+**Complexity:** L | **Dependencies:** C-P0-4
 
 ---
 
-## 🟠 P1 — Critical (today)
+## 🟠 P1 — Critical (after P0s)
 
 ### C-P1-1 · Establish runtime typecheck baseline
-After C-P0-1 and C-P0-2 land:
+
 ```bash
-pnpm typecheck 2>&1 | tee /tmp/typecheck-baseline.txt | tail -20
-# Document error count as the new baseline
+pnpm typecheck 2>&1 | tee /tmp/typecheck-baseline-aug14.txt | tail -20
 ```
+
 **Complexity:** S | **Dependencies:** C-P0-1, C-P0-2
 
+---
+
 ### C-P1-2 · M10.2 provider tool-calling foundation
-After M10.2 files are separated from M10.1 scope (C-P0-1), implement the tool-calling contract:
-- `packages/ai-gateway/src/types.ts` — define `ToolCallRequest` / `ToolCallResponse` interfaces
+
+After M10.2 files separated from M10.1 (C-P0-1):
+- `packages/ai-gateway/src/types.ts` — define `ToolCallRequest`/`ToolCallResponse`
 - `packages/ai-gateway/src/providers/anthropic.provider.ts` — implement tool-calling
 - `packages/ai-gateway/src/providers/openai.provider.ts` — implement tool-calling
-- Add tests per `agents/CODEX-M10.2-TEST-PLAN.md`
+- Tests per `agents/CODEX-M10.2-TEST-PLAN.md`
 
 **Complexity:** L | **Dependencies:** C-P0-1
 
-### C-P1-3 · Studio Phase 1 — Schema & Navigation Foundation
-Read `apps/platform/CLAUDE.md` and `.planning/ROADMAP.md` first. Phase 1 requirements:
-- Define Prisma schema extensions for Studio entities
-- Implement `apps/platform/src/app/(studio)/` navigation shell
-- Wire up sidebar nav with correct route segments per `.planning/REQUIREMENTS.md` Phase 1 items
+---
+
+### C-P1-3 · Studio Phase 1 — Schema & Navigation Foundation — 4 CYCLES
+
+Read `apps/platform/CLAUDE.md` and `AGENT-RUNTIME-BACKLOG.md` (now on origin/main) before starting:
+- Prisma schema extensions for Studio entities
+- `apps/platform/src/app/(studio)/` navigation shell
+- Sidebar nav per `.planning/REQUIREMENTS.md` Phase 1
 
 **Complexity:** L | **Dependencies:** C-P0-3d, C-P0-2
 
 ---
 
-## 🟡 P2 — High (today if P1 done)
+## 🟡 P2 — High (if P1 done)
 
-### C-P2-1 · Land Archive API lockfile fix
-The Codex stash `4d9c2aef` contains a fastify lockfile fix for the Archive API. After C-P0-0:
+### C-P0-3b · Commit architecture docs (Phase B) — 9 cycles
 ```bash
-git stash show 4d9c2aef
-git stash apply 4d9c2aef
-# Verify, then commit
-git commit -m "fix(archive-api): fastify lockfile fix  [C-P2-1]"
+git add architecture/ARCHITECTURE_INDEX.md
+git add docs/09-templates/26-one-pager-template.md docs/09-templates/27-pitch-deck-template.md
+git commit -m "docs(architecture): architecture index and doc templates  [C-P0-3b]"
 ```
-**Complexity:** S | **Dependencies:** C-P0-0
+**Complexity:** S | **Dependencies:** C-P0-3a
+
+### C-P0-3c · Commit root planning/governance docs (Phase C) — 9 cycles
+**Note:** CEREBROHIVE-6-MONTH-MASTER-PLAN.md and MASTER-PLAN-GAP-ASSESSMENT.md may already be on `origin/main = 0ec4d7e9`. Pull first and verify before re-committing.
+```bash
+git pull origin main
+git status  # check what's still untracked
+git add MASTER-PLAN-EVOLUTION-LOG.md CEREBROHIVE_CONSTITUTION.md
+git commit -m "docs(governance): remaining governance docs  [C-P0-3c]"
+```
+**Complexity:** S | **Dependencies:** C-P0-3a; pull first
+
+### C-P0-3d · Typecheck and commit new apps/platform/ features (Phase D) — 7 cycles
+```bash
+cd apps/platform && pnpm typecheck 2>&1 | head -50
+git add apps/platform/CLAUDE.md apps/platform/AGENTS.md apps/platform/middleware.ts
+git add apps/platform/src/
+git commit -m "feat(platform): Studio security routes, backend-runtime  [C-P0-3d]"
+```
+**Complexity:** M | **Dependencies:** C-P0-1 scope separation
+
+### C-P0-3e · Typecheck and commit agent-sdk/ai/ai-gateway/agent-ops (Phase E) — 7 cycles
+```bash
+pnpm --filter "@cerebro/agent-sdk" typecheck && pnpm --filter "@cerebro/ai" typecheck
+git add packages/agent-sdk/src/ packages/ai/src/ packages/agent-ops/src/
+git commit -m "feat(packages): agent-sdk, ai, agent-ops updates  [C-P0-3e]"
+```
+**Complexity:** M | **Dependencies:** C-P0-1
 
 ---
 
 ## How to use this file
-Open this file in VS Code. Each task has exact file paths and what to do.
-When you commit, include the task ID in the commit message (e.g., `[C-P0-3a]`) so the
-night audit can automatically detect completion.
+Open in VS Code. Include the task ID (e.g., `[C-P0-3a]`) in every commit message.
+
+**Critical priority order:**
+1. `C-P0-3a` — pure docs, 11 cycles, zero blockers — **commit this in the next 60 minutes**
+2. `C-P0-4` — run from local terminal (not Codex — registry is blocked in Codex sandbox)
+3. `C-P0-1` and `C-P0-2` — 12 cycles each; git push confirmed working
+
+**New action required (human):** Unblock `registry.npmjs.org:443` in the Codex network sandbox, OR pre-populate the pnpm store from a local `pnpm store path` so Codex can run `--frozen-lockfile` without network access.

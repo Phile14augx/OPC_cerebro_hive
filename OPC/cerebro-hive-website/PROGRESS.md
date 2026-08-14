@@ -244,3 +244,194 @@ Full detail and remediation approach for each: `.planning/codebase/CONCERNS.md`.
 - [ ] G-P0-1b: Commit entire M26.1 audit batch (~30 files, pure docs)
 - [ ] G-P1-3: Produce `agents/AUTH-GAP-ACTION-PLAN.md` from `audit/P0-AUTH-AUTHZ-GAP.md`
 - [ ] G-P1-1: Validate Python agent-runner imports and commit — 4 cycles overdue
+
+---
+
+### 2026-08-12 (3 AM Night Audit)
+
+**Audit performed:**
+- Night audit ran at 03:00 IST. Git remains unreachable from audit sandbox; completion assessed via file modification timestamps and CURRENT-SPRINT.md Codex cycle entries.
+- 0 commits detected to remote since noon 2026-08-10 (2 full days, 2 missed audit checkpoints: Aug 11 3 AM + Aug 11 noon).
+- CLAUDE-TASKS.md and GEMINI-TASKS.md unchanged since noon Aug 10 — no agent work confirmed since then.
+- Codex ran **9 product delivery cycles** between noon Aug 10 and 00:11 IST Aug 12, all blocked before any commit/push/PR. Full cycle evidence preserved in `agents/CURRENT-SPRINT.md`.
+
+**New findings from Codex cycle evidence:**
+- **`.agents/worktrees` is read-only** — Codex cannot create linked worktrees. Phil must restore write access: `chmod -R u+w .agents/` (Linux/Mac) or `icacls .agents /grant "%USERNAME%:F" /T` (Windows).
+- **`.git/FETCH_HEAD` is read-only** — standard `git fetch` blocked. Fix: `chmod u+w .git/FETCH_HEAD` or delete the file.
+- **10 stale pnpm-lock importers** — `services/archive-api` (7 Fastify 5 specifiers), `services/forge-api` (dotenv), and ~8 others. A coordinated `pnpm install --no-frozen-lockfile` reconciliation is required before the Vite/Node baseline can land. New task C-P0-0a (renamed C-P0-4 in noon audit).
+- `fix/vite-node-baseline` worktree confirmed at `a856f482`, 39 dirty paths, no PR. Vite 7 baseline confirmed ready (0 Vite 8 entries, 13 Vite 7). Blocked by ESLint (17 missing flat configs) + Sphere lazy Redis.
+- `feat/hivecloud-finops-summary` worktree at design commit `b0540cd`, 1 ahead of main, awaiting prerequisite lockfile fix.
+- `origin/main` remains `e11dde91` — no upstream changes since last audit.
+
+**Shipped:**
+- `agents/CLAUDE-TASKS.md` — night assignment; subsequently superseded by concurrent noon audit (cycle counts advanced by 2 to 10 for oldest P0s; C-P0-4 added for lockfile reconciliation)
+- `agents/GEMINI-TASKS.md` — night assignment with 2-cycle slippage advance; G-P0-1 at 8 cycles, G-P1-1 at 6 cycles
+- `agents/CURRENT-SPRINT.md` — full sprint board, C-P0-SYS added as Phil-action blocker, Codex worktree state documented, risk register updated
+- `PROGRESS.md` — this entry
+
+**Goals for 2026-08-12 (today — CRITICAL):**
+- [ ] **Phil:** Restore `.agents/` and `.git/FETCH_HEAD` write access — this unblocks all Codex delivery
+- [ ] **Phil:** Authorize coordinated shared lockfile reconciliation (`pnpm install --no-frozen-lockfile` from main)
+- [ ] C-P0-3a: Commit audit/sprint coordination files — zero risk, zero code, 9 cycles overdue — **no excuse to slip again**
+- [ ] G-P0-1: Commit `infra/README.md`, `MASTER-PLAN-*.md`, `CEREBROHIVE_CONSTITUTION.md` — 8 cycles overdue — **just run git add + git commit**
+- [ ] C-P0-2: Run Prisma migration — independent of baseline; can ship today
+- [ ] G-P1-3: Produce `agents/AUTH-GAP-ACTION-PLAN.md` from `audit/P0-AUTH-AUTHZ-GAP.md` — 2 cycles and a 34KB security finding unread
+
+---
+
+### 2026-08-10 → 2026-08-12 (Missed audit entries — retroactive summary)
+
+**Note:** The 2026-08-10 night audit, 2026-08-11 noon audit, and 2026-08-11 night audit did not
+append to PROGRESS.md. This entry covers the gap. CURRENT-SPRINT.md and CODEX-TASKS.md were updated
+by those audits; see the Codex product-delivery cycle entries in CURRENT-SPRINT.md for full detail.
+
+**What happened during this period (Aug 10 evening → Aug 12 early morning):**
+- Multiple Codex delivery cycles ran (at least 14 between Aug 10 13:13 IST and Aug 12 00:11 IST)
+- **Zero commits landed** — all cycles blocked by: (1) `ERR_PNPM_OUTDATED_LOCKFILE` from 10 stale pnpm-lock.yaml importers; (2) ESLint baseline failures in 17 workspaces; (3) Sphere build requiring production REDIS_URL; (4) `.agents/worktrees/` and `.git/FETCH_HEAD` read-only in Codex sandbox
+- `feat/hivecloud-finops-summary` worktree created at design commit `b0540cd` — no product code yet
+- `fix/vite-node-baseline` worktree accumulated 39 changed paths but none committed
+- GitHub Actions hygiene maintained across cycles (failed runs deleted each cycle, total ~40+ runs cleared)
+- `origin/main` advanced one commit to `e11dde91` (details unknown — not a Claude/Gemini task commit)
+- New task identified: **C-P0-4** — fix 10 stale pnpm-lock.yaml importers (concrete prerequisite for C-P0-0)
+- Human-owner blocker surfaced: `.agents/worktrees/` and `.git/FETCH_HEAD` require local `chmod` to restore write access
+
+**Oldest P0 cycle counts (as of 2026-08-12 noon):** C-P0-1=10, C-P0-2=10, G-P0-1=10
+
+---
+
+### 2026-08-12 (Noon Audit — 12:00 IST)
+
+**Audit performed:**
+- Noon audit ran. Git remains unreachable from audit sandbox; completion assessed via file modification timestamps.
+- PROGRESS.md last updated 2026-08-10 12:11 IST; CURRENT-SPRINT.md updated 2026-08-12 01:28 IST (night audit ran).
+- 0 commits detected since 3 AM.
+- CLAUDE-TASKS.md and GEMINI-TASKS.md unchanged from 2026-08-10 noon — no agent work confirmed since then.
+- 10 consecutive audit cycles with zero commits on oldest P0s (C-P0-1, C-P0-2, G-P0-1).
+
+**New findings this audit:**
+- Root cause of all Codex blocking: 10 stale pnpm-lock.yaml importers (`ERR_PNPM_OUTDATED_LOCKFILE`). New task C-P0-4 created — fix via `pnpm install --no-frozen-lockfile` and verify diff.
+- `.agents/worktrees/` write-denied and `.git/FETCH_HEAD` read-only are human-owner issues (require local `chmod`). Codex cannot create linked worktrees or run `git fetch` until fixed.
+- `fix/vite-node-baseline` worktree confirmed ready (zero Vite 8, 13 Vite 7, Archive mismatches=0) pending lint/Sphere/lockfile gates.
+- `feat/hivecloud-finops-summary` at design-only commit `b0540cd` — product implementation not started.
+
+**Shipped (agents/ output files updated):**
+- `agents/CLAUDE-TASKS.md` — noon assignment, 10-cycle escalation, new C-P0-4 lockfile task, human-owner blocker called out
+- `agents/GEMINI-TASKS.md` — noon assignment, 10-cycle escalation on G-P0-1
+- `agents/CURRENT-SPRINT.md` — full sprint board with all cycle counts, worktree status, Codex delivery summary
+- `PROGRESS.md` — this entry (also backfills the missed Aug 10-12 entries)
+
+**Tasks completed since last entry (Aug 10 noon):** None (0 commits)
+**Tasks newly assigned:** C-P0-4 (shared lockfile reconciliation)
+
+**Goals for 2026-08-12 afternoon/evening:**
+- [ ] **HUMAN:** `chmod u+w .git/FETCH_HEAD && chmod -R u+w .agents/` — unblocks Codex completely
+- [ ] C-P0-4: `pnpm install --no-frozen-lockfile`, verify diff, commit — **unblocks C-P0-0**
+- [ ] C-P0-0: Land Vite/Node baseline (ESLint stubs + Sphere lazy Redis + pnpm baseline) — after C-P0-4
+- [ ] C-P0-1: Separate M10.2 files, commit M10.1 scope, open PR — **10 cycles overdue**
+- [ ] C-P0-2: Run Prisma migration, review SQL, commit — **10 cycles overdue**
+- [ ] C-P0-3a: Commit audit/sprint/planning docs (no code, zero risk) — **9 cycles overdue**
+- [ ] G-P0-1: Commit `infra/README.md`, `MASTER-PLAN-*.md`, `CEREBROHIVE_CONSTITUTION.md` — **10 cycles overdue; content already written**
+- [ ] G-P0-1b: Commit entire M26.1 audit batch (~30 files, pure docs)
+- [ ] G-P1-3: Produce `agents/AUTH-GAP-ACTION-PLAN.md` from `audit/P0-AUTH-AUTHZ-GAP.md`
+
+---
+
+### 2026-08-13 (Noon Audit — delayed run, ~20:44 IST)
+
+**Audit performed:**
+- Noon audit ran at ~20:44 IST. Git remains unreachable from audit sandbox; completion assessed via file modification timestamps and CURRENT-SPRINT.md Codex cycle entries.
+- No 3 AM Aug 13 audit entry found in PROGRESS.md — that scheduled run did not append here (CURRENT-SPRINT.md modified at 18:07 IST today, likely from Codex activity directly).
+- `agents/CLAUDE-TASKS.md` and `agents/GEMINI-TASKS.md` unchanged since Aug 12 18:00/18:01 IST — no agent work confirmed since Aug 12 noon.
+- **Zero commits to `origin/main`** — 11 consecutive audit cycles on C-P0-1, C-P0-2, G-P0-1.
+
+**New findings this audit (since Aug 12 noon):**
+- **GIT FETCH + GITHUB API RESTORED:** Codex 18:06 IST run confirmed `git fetch` succeeds, token auth works (repo + workflow scopes), 15 failed GitHub Actions runs deleted. Push and PR creation are now unblocked.
+- **`fix/sphere-lockfile-recovery` worktree (NEW):** Codex created this worktree with 642-line pnpm lockfile reconciliation. `pnpm-lock.yaml` modified at 15:45 IST today — C-P0-4 in progress, not committed.
+- **Codex 15:40 IST run:** attempted X-P1-3 FinOps; fetch still blocked, GitHub API blocked by local socket policy at that time. No product code created.
+- **Codex 18:06 IST run:** fetch/auth now working. All blockers reduced to pending Claude/Gemini execution.
+- **JVM crashes:** 4 `hs_err_pid*.log` + `replay_pid*.log` at repo root (13:03 IST) — IntelliJ/Java tooling crash, unrelated to project code.
+
+**Shipped:**
+- `agents/CLAUDE-TASKS.md` — noon assignment, 11-cycle escalation, git push confirmed working
+- `agents/GEMINI-TASKS.md` — noon assignment, 11-cycle escalation on G-P0-1
+- `agents/CURRENT-SPRINT.md` — full sprint board with new `fix/sphere-lockfile-recovery` worktree, both Codex resume entries
+- `PROGRESS.md` — this entry
+
+**Tasks completed since last entry (Aug 12 noon):** None (0 commits to main)
+**Key unlock:** git fetch and GitHub API access restored — no remaining systemic barrier to commits
+
+**Goals for 2026-08-13 tonight:**
+- [ ] C-P0-3a: Commit audit/sprint/planning docs — zero blockers, **10 cycles overdue**
+- [ ] G-P0-1: Commit `infra/README.md`, `MASTER-PLAN-*.md`, `CEREBROHIVE_CONSTITUTION.md` — zero blockers, **11 cycles overdue**
+- [ ] C-P0-4: Review `fix/sphere-lockfile-recovery` diff, commit and merge lockfile fix
+- [ ] C-P0-1: Separate M10.2 files, commit M10.1, open PR — git push now works
+- [ ] C-P0-2: Run Prisma migration, review SQL, commit
+- [ ] G-P0-1b: Commit M26.1 audit batch (~30 files, pure docs)
+- [ ] G-P1-3: Produce `agents/AUTH-GAP-ACTION-PLAN.md` from `audit/P0-AUTH-AUTHZ-GAP.md` — 5 cycles
+
+### 2026-08-13 (3 AM Night Audit)
+
+**Audit performed:**
+- Night audit ran at 03:00 IST. Git remains unreachable from audit sandbox; completion assessed via file timestamps.
+- 0 commits detected since Noon 2026-08-12 (last agent task files written Aug 12 18:00–18:01 IST).
+- CURRENT-SPRINT.md was written at Aug 13 18:07 IST by a prior audit run (noon audit for Aug 13 ran late).
+- New file detected: `hs_err_pid34344.log` and `replay_pid34344.log` at Aug 13 20:04 IST — JVM crash, not a productive commit.
+- All Claude and Gemini P0 tasks escalated: C-P0-1 and G-P0-1 now at 11 cycles (project record).
+- C-P0-4 (lockfile fix) slipped its first cycle (was NEW last audit).
+- HUMAN action (restore .git/FETCH_HEAD + .agents/worktrees/ write access) now at 4 cycles.
+
+**Shipped:**
+- `agents/CLAUDE-TASKS.md` — refreshed with all slippage counts +1, C-P0-4 first-slip noted
+- `agents/GEMINI-TASKS.md` — refreshed with all slippage counts +1, G-P0-1 at 11 cycles escalated
+- `agents/CURRENT-SPRINT.md` — full sprint board refreshed with new slippage counts and JVM crash noted
+- `PROGRESS.md` — this entry
+
+**Goals for 2026-08-13 (today — critical):**
+- [ ] HUMAN: Restore `.git/FETCH_HEAD` and `.agents/worktrees/` write access from a local terminal
+- [ ] C-P0-3a: Commit audit/sprint coordination files (10 cycles, pure docs, zero blockers) — **today, no excuses**
+- [ ] G-P0-1: Commit the documentation change-set (11 cycles, pure docs, zero blockers) — **today, no excuses**
+- [ ] C-P0-4: Run `pnpm install --no-frozen-lockfile`; verify diff; commit lockfile fix
+- [ ] C-P0-1: De-scope M10.2 files from M10.1 worktree and commit M10.1 (11 cycles)
+- [ ] C-P0-2: Apply Prisma migration for AgentExecution models (11 cycles)
+
+---
+
+### 2026-08-14 (Night Audit — 03:00 IST)
+
+**Audit performed:**
+- Night audit ran at 03:00 IST. Git remains unreachable from audit sandbox; completion assessed via file modification timestamps, worktree content inspection, and Codex automation reports (CURRENT-SPRINT.md, CODEX-TASKS.md).
+- 0 commits detected to local main since noon Aug 13 audit.
+- **`origin/main` advanced from `e11dde91` → `0ec4d7e9`** — confirmed via Codex fetch at 00:32 IST Aug 14. Author and exact commit messages unknown (git log inaccessible), but new files confirmed on origin/main via worktree inspection.
+- All Claude/Gemini P0 tasks remain unexecuted by agents — cycle counts incremented by 1.
+
+**New findings this audit:**
+
+- **`origin/main` advance (positive):** New files now on `origin/main = 0ec4d7e9` confirmed via `.worktrees/codex-twin-industry-framework/` and `.worktrees/x/`: `PRODUCT_SPECIFICATIONS/` (49 product spec files covering entire CerebroHive suite), `CEREBROHIVE-6-MONTH-MASTER-PLAN.md`, `MASTER-PLAN-GAP-ASSESSMENT.md`, `AGENT-RUNTIME-BACKLOG.md` (detailed M10.1–M10.7 phased plan), `RUNTIME-VALIDATION-CHECKLIST.md`, `MASTER-PLAN-EVOLUTION-LOG.md`, `PRISMA_SETUP_GUIDE.md`, `IDEA.md`, `AUDIT-REPORT-2026-08-02.md`. Local main is behind origin/main — `git pull` required before any new commits.
+- **NEW BLOCKER — `connect EACCES registry.npmjs.org:443`:** Codex sandbox cannot reach npm registry. Blocked the X-P1-2 worktree's frozen install restore. Will block ALL future Codex tasks requiring `pnpm install`. Human must unblock registry access or pre-populate the pnpm store from a local machine.
+- **Codex X-P1-2 attempt (00:32 IST):** Worktree `.worktrees/x` created from origin/main `0ec4d7e9`. Frozen install completed initially, but CI rerun exceeded 300s runner limit and orphaned shims. Registry EACCES blocked restore. No product output. Worktree deregistered; residual ignored files remain.
+- **`.codex-task8-verification/` created (23:58 IST Aug 13):** Snapshot of `apps/studio` directory structure — not a product commit.
+- **5 dormant worktrees:** `codex-twin-industry-framework` (Aug 13 19:20), `twin-persistence-hardening` (Aug 12 16:28), `codex-digital-twin-studio` (Aug 11), `agent-registry` (Aug 11), `nvdiag` (Aug 11). None produced commits in this window.
+- **JVM crash (Aug 13 20:04 IST):** `hs_err_pid34344.log` and `replay_pid34344.log` added at repo root — IntelliJ/Java tooling, unrelated to project code.
+- **C-P0-1 and G-P0-1 now at 12 cycles** — formal escalation threshold breached. Human review session recommended if no commit lands by noon Aug 14 audit.
+
+**Shipped (agents/ output files updated):**
+- `agents/CLAUDE-TASKS.md` — night assignment, 12-cycle escalation on C-P0-1/C-P0-2, new EACCES blocker noted, origin/main advance documented
+- `agents/GEMINI-TASKS.md` — night assignment, 12-cycle escalation on G-P0-1, new G-P2-3 PRODUCT_SPECIFICATIONS gap analysis task added
+- `agents/CURRENT-SPRINT.md` — full sprint board refreshed, new HUMAN registry blocker row, new files on origin/main table, updated risk register
+- `PROGRESS.md` — this entry
+
+**Tasks completed since last entry (noon Aug 13):** None confirmed by agent commits. `origin/main` advance suggests external commits exist — pull and verify.
+
+**Goals for 2026-08-14 (today — critical threshold):**
+- [ ] **HUMAN (NEW):** Unblock `registry.npmjs.org:443` in Codex sandbox OR run `pnpm store add` locally to pre-populate pnpm store — **blocks all Codex installs**
+- [ ] **HUMAN:** `chmod u+w .git/FETCH_HEAD && chmod -R u+w .agents/` — 5 cycles overdue
+- [ ] **HUMAN:** `git pull origin main` from local terminal — local main is behind `0ec4d7e9`
+- [ ] C-P0-3a: Commit audit/sprint/planning docs — **11 cycles, zero blockers, commit today**
+- [ ] G-P0-1: Pull first; commit remaining docs not yet on origin/main — **12 cycles, close this today**
+- [ ] C-P0-4: Run `pnpm install --no-frozen-lockfile` from local terminal (not Codex) — 2 cycles
+- [ ] C-P0-1: Separate M10.2 files, commit M10.1, open PR — **12 cycles, git push works**
+- [ ] C-P0-2: Apply Prisma migration locally — **12 cycles, Postgres must be running**
+- [ ] G-P1-3: Produce `agents/AUTH-GAP-ACTION-PLAN.md` from `audit/P0-AUTH-AUTHZ-GAP.md` — 6 cycles, P0 security
+
+**Oldest P0 cycle counts (as of 2026-08-14 03:00 IST):** C-P0-1=12, C-P0-2=12, G-P0-1=12 🚨
+
