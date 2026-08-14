@@ -1,13 +1,18 @@
-export * from './domain/ExecutionState';
-export * from './context/ExecutionContext';
-export * from './events/RuntimeEvent';
-export * from './plugins/CapabilityProvider';
-export * from './registry/CapabilityDescriptor';
-export * from './registry/RuntimeRegistry';
-export * from './checkpoint/ExecutionCheckpoint';
-export * from './planning/Goal';
-export * from './planning/ExecutionPlan';
-export * from './planning/PlanScore';
-export * from './planning/EvaluationPolicy';
-export * from './planning/PlanningSession';
-export * from './planning/PolicyResolver';
+/**
+ * @module runtime-core
+ * Public API surface for the Cerebro Nexarch Agentic OS runtime layer.
+ *
+ * Packages:
+ *   mission/    — Mission domain model and repository
+ *   task/       — Task domain model, state machine, and repository
+ *   execution/  — ExecutionRun model, reducers, and repository
+ */
+
+// Mission
+export * from "./mission/mission.js";
+
+// Task
+export * from "./task/task.js";
+
+// ExecutionRun
+export * from "./execution/execution.js";
