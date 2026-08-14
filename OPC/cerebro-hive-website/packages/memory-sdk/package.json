@@ -1,6 +1,33 @@
 {
-  "name": "@cerebro/memory-sdk",
+  "name": "@nexarch/memory-sdk",
   "version": "0.1.0",
+  "description": "Multi-tier memory management, semantic retrieval, and context assembly for the Cerebro Nexarch AOS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "build:watch": "tsc --project tsconfig.json --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+  },
+  "keywords": [
+    "memory",
+    "context",
+    "embedding",
+    "rag",
+    "nexarch",
+    "agentic",
+    "llm"
+  ],
+  "license": "UNLICENSED",
   "private": true,
-  "main": "src/index.ts"
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  }
 }

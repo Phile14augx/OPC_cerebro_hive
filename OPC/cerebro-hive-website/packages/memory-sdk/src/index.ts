@@ -1,2 +1,7 @@
+// ============================================================
+// memory-sdk/src/index.ts
+// ============================================================
 
-export * from './MemoryModels';
+export * from "./types";
+export * from "./memory-manager";
+export * from "./context-engine";
