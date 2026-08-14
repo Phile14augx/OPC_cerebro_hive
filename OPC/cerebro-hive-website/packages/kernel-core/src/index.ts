@@ -1,61 +1,97 @@
-import { ConfigManager } from '@cerebro/config-core';
-import { MemoryEventBus, EventBus } from '@cerebro/core-bus';
-import { Telemetry, MockTelemetryFacade } from '@cerebro/telemetry-core';
-import { RuntimeRegistry } from '@cerebro/runtime-core';
-import { CapabilityRegistry } from '@cerebro/capability-core';
+/**
+ * @module kernel-core
+ * Public API surface for the Cerebro Nexarch kernel-core package.
+ */
 
-export interface KernelOptions {
-  env?: Record<string, string>;
-}
+// Types — re-export everything so consumers only need one import path.
+export type {
+  AgentLifecycleState,
+  AgentRiskLevel,
+  AgentTrustLevel,
+  ResourceBudget,
+  ResourceUsage,
+  ModelPolicy,
+  AgentCapabilityGrant,
+  AgentDefinition,
+  AgentControlBlock,
+  AgentError,
+  StateTransition,
+  SchedulerTask,
+  SchedulerTaskStatus,
+  DelegationRecord,
+  DelegationResult,
+  WatchdogAlert,
+  WatchdogAlertSeverity,
+  WatchdogAlertType,
+  WatchdogAlertAction,
+  KernelEvents,
+} from "./types.js";
 
-export class CerebroKernel {
-  public config: ConfigManager;
-  public eventBus: EventBus;
-  public runtime: RuntimeRegistry;
-  public capabilities: CapabilityRegistry;
-  private state: 'booting' | 'running' | 'stopped' = 'stopped';
+// Lifecycle state machine
+export {
+  getValidTransitions,
+  isTerminal,
+  canReceiveWork,
+  validateTransition,
+  isValidTransition,
+  describeState,
+  getProgressiveTransitions,
+  isActivelyRunning,
+  requiresIntervention,
+  ALL_STATES,
+  InvalidStateTransitionError,
+} from "./lifecycle.js";
 
-  constructor(options?: KernelOptions) {
-    this.config = new ConfigManager();
-    this.eventBus = new MemoryEventBus();
-    this.runtime = new RuntimeRegistry();
-    this.capabilities = new CapabilityRegistry();
-  }
+// AgentKernel
+export {
+  AgentKernel,
+  KernelError,
+  AgentNotFoundError,
+  InstanceNotFoundError,
+  InstanceTerminalError,
+} from "./kernel.js";
 
-  async bootstrap(): Promise<void> {
-    if (this.state !== 'stopped') return;
-    this.state = 'booting';
-    
-    console.log('[Kernel] Bootstrapping Enterprise AI OS...');
-    
-    // Phase 1: Load Configuration
-    this.config.load();
-    console.log('[Kernel] Loaded Configuration');
+export type {
+  SpawnOptions,
+  ListInstancesFilter,
+  KernelConfig,
+} from "./kernel.js";
 
-    // Phase 2: Initialize Identity (Mocked for now)
-    console.log('[Kernel] Initialized Identity Root');
+// TaskScheduler
+export {
+  TaskScheduler,
+  SchedulerError,
+  TaskNotFoundError,
+  createSchedulerTask,
+} from "./scheduler.js";
 
-    // Phase 3: Connect Event Bus
-    // Bus is already instantiated as memory bus
-    console.log('[Kernel] Event Bus Connected');
+export type {
+  SchedulerQueueFilter,
+  SchedulerStats,
+} from "./scheduler.js";
 
-    // Phase 4: Start Telemetry
-    Telemetry.setInstance(new MockTelemetryFacade());
-    const bootSpan = Telemetry.startSpan('kernel.bootstrap');
-    console.log('[Kernel] Telemetry Started');
+// DelegationManager
+export {
+  DelegationManager,
+  MAX_DELEGATION_DEPTH,
+  DelegationError,
+  DelegationCycleError,
+  DelegationDepthError,
+  CapabilityConfinementError,
+  BudgetConfinementError,
+} from "./delegation.js";
 
-    // Phase 5: Load Capabilities
-    console.log('[Kernel] Discovered Capabilities');
+export type {
+  DelegateOptions,
+  CapabilityProvider,
+  BudgetProvider,
+} from "./delegation.js";
 
-    bootSpan.end();
-    this.state = 'running';
-    console.log('[Kernel] OS is running.');
-  }
+// AgentWatchdog
+export { AgentWatchdog } from "./watchdog.js";
 
-  async shutdown(): Promise<void> {
-    if (this.state !== 'running') return;
-    console.log('[Kernel] Shutting down OS...');
-    await this.runtime.stopAll();
-    this.state = 'stopped';
-  }
-}
+export type {
+  WatchdogConfig,
+  ACBProvider,
+  DepthProvider,
+} from "./watchdog.js";

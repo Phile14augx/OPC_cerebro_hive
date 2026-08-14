@@ -1,12 +1,28 @@
 {
   "name": "@cerebro/kernel-core",
-  "version": "1.0.0",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
-  "dependencies": {
-    "@cerebro/config-core": "workspace:*"
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cerebro Nexarch AOS — kernel control plane for agent lifecycle, scheduling, delegation, and watchdog.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf dist"
   },
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }
