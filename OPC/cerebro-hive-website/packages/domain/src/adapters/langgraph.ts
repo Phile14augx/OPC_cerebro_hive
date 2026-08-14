@@ -44,14 +44,11 @@ export class LangGraphAdapter implements FrameworkAdapter {
     const startTime = Date.now();
     
     try {
-      // Execute using LangGraph
-      // TODO: Implement actual LangGraph execution
-      // This will be filled in once we have working examples
-      
       const result: ExecutionResult = {
         agentId: params.agentId,
-        success: true,
-        output: { message: 'Execution completed' },
+        success: false,
+        output: null,
+        error: 'LangGraph execution is not wired. This adapter refuses to report success without a real graph run.',
         duration: Date.now() - startTime,
       };
       

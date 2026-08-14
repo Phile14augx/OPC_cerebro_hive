@@ -71,6 +71,9 @@ jobs:
       - name: Sitemap drift check
         run: pnpm sitemap:check
 
+      - name: Route health audit
+        run: node scripts/audit-route-health.mjs
+
       # Enforces monorepo conventions on every workspace package:
       # - tsconfig.json present → "typecheck" script required
       # - eslint config present → "lint" script required

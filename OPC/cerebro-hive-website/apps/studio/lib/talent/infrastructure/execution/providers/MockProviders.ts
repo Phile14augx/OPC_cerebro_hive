@@ -47,59 +47,10 @@ export class MockQueueProvider implements IQueueProvider {
 export class MockSandboxProvider implements ISandboxProvider {
   constructor(private streamingProvider: IStreamingProvider, private jobId: string) {}
 
-  async execute(language: string, code: string): Promise<ExecutionResult> {
-    if (language !== 'javascript') {
-      throw new Error(`Mock provider only supports javascript, got ${language}`);
-    }
-
-    const start = Date.now();
-    let stdout = '';
-    let stderr = '';
-    let exitCode = 0;
-
-    // Overwrite console.log to capture and stream stdout
-    const originalLog = console.log;
-    const originalError = console.error;
-
-    console.log = (...args) => {
-      const line = args.join(' ') + '\n';
-      stdout += line;
-      this.streamingProvider.broadcast(this.jobId, { type: 'stdout', data: line, timestamp: new Date().toISOString() });
-    };
-
-    console.error = (...args) => {
-      const line = args.join(' ') + '\n';
-      stderr += line;
-      this.streamingProvider.broadcast(this.jobId, { type: 'stderr', data: line, timestamp: new Date().toISOString() });
-    };
-
-    try {
-      // Simulate execution time
-      await new Promise(r => setTimeout(r, 800));
-      
-      // Execute the candidate's JS code in the current context
-      // Note: In Stage 3 mock, we expect the code to console.log output.
-      eval(code);
-      
-    } catch (e: any) {
-      exitCode = 1;
-      const errStr = e.toString() + '\n';
-      stderr += errStr;
-      this.streamingProvider.broadcast(this.jobId, { type: 'stderr', data: errStr, timestamp: new Date().toISOString() });
-    } finally {
-      console.log = originalLog;
-      console.error = originalError;
-    }
-
-    const timeMs = Date.now() - start;
-
-    return {
-      stdout,
-      stderr,
-      exitCode,
-      memoryUsedBytes: 1024 * 1024 * 12, // mock 12MB
-      timeMs
-    };
+  async execute(_language: string, _code: string): Promise<ExecutionResult> {
+    throw new Error(
+      "TALENT_SANDBOX_NOT_IMPLEMENTED: candidate code is not evaluated in-process. Docker isolation is not wired."
+    );
   }
 }
 

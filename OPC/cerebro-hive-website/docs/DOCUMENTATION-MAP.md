@@ -11,6 +11,9 @@ docs/
 ├── architecture/                PERMANENT — how the platform is built, today
 │   ├── README.md
 │   ├── taxonomy-index.md        Canonical entry point: 10-layer EIOS taxonomy
+│   ├── PLATFORM-ARCHITECTURE.md Control-plane vs generation/execution plane (Day 1)
+│   ├── EXECUTION-PLANE.md       Job states and worker honesty
+│   ├── PLUGIN-ARCHITECTURE.md   Capability plugin / adapter contracts
 │   ├── capability-model.md, product-registry.md, services-portfolio.md, commercial-strategy.md
 │   ├── decisions/                All ADR series (see decisions/README.md for the 6 sub-series)
 │   ├── assessments/              Point-in-time architecture assessments (not current-state docs)
@@ -28,9 +31,27 @@ docs/
 │   ├── coding-standards.md
 │   └── database.md
 │
+├── development/                 Local bootstrap for Studio, platform-api, forge-api
+│   └── LOCAL-DEVELOPMENT.md
+│
+├── technology/                  What the registry claims vs what actually runs
+│   └── TECHNOLOGY-MATRIX.md
+│
+├── studios/                     Per-studio honesty index
+│   └── README.md
+│
+├── audits/                      7-day production-sprint forensic audits (Day 1)
+│   ├── ROUTE-AUDIT.md
+│   ├── API-AUDIT.md
+│   ├── PERSISTENCE-AUDIT.md
+│   ├── FEATURE-MATRIX.md
+│   ├── FAKE-UI-AUDIT.md
+│   ├── SECURITY-NOTES.md
+│   └── IMPLEMENTATION-GAPS.md
+│
 ├── operations/                  PERMANENT — running the platform in production
 │   ├── disaster-recovery/
-│   └── runbooks/
+│   └── runbooks/                includes day1-local-bootstrap.md
 │
 ├── company-handbook/            PERMANENT — how CerebroHive the company operates
 │

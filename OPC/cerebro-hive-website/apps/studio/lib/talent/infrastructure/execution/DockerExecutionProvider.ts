@@ -52,16 +52,12 @@ export class DockerExecutionProvider implements IExecutionProvider {
     // Attach volumes, start container
   }
 
-  streamLogs(envId: string, onChunk: (chunk: string) => void): void {
-    console.log(`[Docker] Attaching stream listener to ${envId}`);
-    // container.logs({ follow: true, stdout: true, stderr: true })
-    setTimeout(() => onChunk("Compiler started..."), 100);
-    setTimeout(() => onChunk("Tests running..."), 500);
+  streamLogs(_envId: string, _onChunk: (chunk: string) => void): void {
+    throw new Error("DOCKER_EXECUTION_NOT_IMPLEMENTED: no container runtime is attached.");
   }
 
-  async collectResult(envId: string) {
-    console.log(`[Docker] Collecting final artifacts for ${envId}`);
-    return { exitCode: 0, durationMs: 1450, artifacts: [] };
+  async collectResult(_envId: string) {
+    throw new Error("DOCKER_EXECUTION_NOT_IMPLEMENTED: refusing to report a successful exit code without a real container.");
   }
 
   async cleanup(envId: string): Promise<void> {

@@ -48,12 +48,12 @@ public class DistributedCache {
   const [consoleOutput, setConsoleOutput] = useState("> System Ready. Awaiting execution...\n");
 
   const handleRun = () => {
-    setIsExecuting(true);
-    setConsoleOutput("> Compiling Java 21...\n> Running tests...\n");
-    setTimeout(() => {
-      setConsoleOutput(prev => prev + "> Test 1: get() on empty cache... [PASS]\n> Test 2: put() and get()... [PASS]\n> Test 3: Capacity eviction (LRU)... [FAIL] Expected -1, got 42\n\n> Exit code 1. 2/3 tests passed.");
-      setIsExecuting(false);
-    }, 2000);
+    setIsExecuting(false);
+    setConsoleOutput(
+      "> Execution unavailable.\n" +
+        "> Talent OS no longer has persisted assessment/execution tables, and this workspace does not run candidate code.\n" +
+        "> Error: TALENT_EXECUTION_NOT_IMPLEMENTED\n"
+    );
   };
 
   return (

@@ -13,21 +13,17 @@ export async function withAuthorization(
   handler: (req: NextRequest, userContext: any) => Promise<Response>
 ) {
   try {
-    // In production, we'd extract the session token from cookies/headers
-    // and resolve the user profile. For the prototype, we mock an authenticated Recruiter.
-    const mockUserContext = {
-      userId: 'mock-user-id',
-      roles: ['RECRUITER']
-    };
-
-    const isAuthorized = true; // Mocking authorization
-
-    if (!isAuthorized) {
-      return ApiUtils.unauthorized(`Insufficient permissions to perform ${action} on ${resource}`);
+    const authorization = req.headers.get('authorization');
+    if (!authorization) {
+      return ApiUtils.unauthorized(
+        `Talent OS APIs require a Bearer token. ${action} on ${resource} was rejected because authentication is not mocked.`
+      );
     }
 
-    // Call the actual route handler if authorized
-    return await handler(req, mockUserContext);
+    return ApiUtils.error(
+      'Talent OS is unavailable: assessment and execution tables were dropped from the platform schema. This API will not invent results.',
+      501
+    );
     
   } catch (error: any) {
     return ApiUtils.error("Internal Server Error during authorization", 500, error);

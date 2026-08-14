@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { WorkflowClient } from '@cerebro/sdk';
 
-const workflowClient = new WorkflowClient('http://localhost:3000'); // Mocked URL for now
+const workflowClient = new WorkflowClient(process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3406");
 
 export function useWorkflows() {
   return useQuery({

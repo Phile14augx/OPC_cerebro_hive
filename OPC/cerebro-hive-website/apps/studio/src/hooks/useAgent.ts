@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { AgentClient } from '@cerebro/sdk';
 
-const agentClient = new AgentClient('http://localhost:3000'); // Mocked URL for now
+const agentClient = new AgentClient(process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3406");
 
 export function useAgents() {
   return useQuery({

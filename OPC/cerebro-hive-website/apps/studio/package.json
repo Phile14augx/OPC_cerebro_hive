@@ -10,7 +10,8 @@
     "analyze": "cross-env ANALYZE=true next build --webpack",
     "test:e2e": "playwright test",
     "audit:enterprise": "tsx ../../scripts/audit/audit-interactions.ts && tsx ../../scripts/audit/audit-routes.ts && tsx ../../scripts/audit/audit-assets.ts && tsx ../../scripts/audit/audit-accessibility.ts && tsx ../../scripts/audit/audit-seo.ts && tsx ../../scripts/audit/audit-analytics.ts && tsx ../../scripts/audit/audit-design-system.ts && tsx ../../scripts/audit/generate-dashboard.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --config ../../vitest.studio.config.ts --passWithNoTests"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.16",

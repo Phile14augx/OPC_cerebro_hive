@@ -26,9 +26,9 @@ export default function DashboardHome() {
   ];
 
   const quickActions = [
-    { title: "Create Agent", icon: Bot, href: "/app/ai/agents/new" },
+    { title: "Create Agent", icon: Bot, href: "/app/agents" },
     { title: "Deploy Workflow", icon: Workflow, href: "/app/automation/builder" },
-    { title: "Knowledge Base", icon: BookOpen, href: "/app/ai/knowledge/new" },
+    { title: "Knowledge Base", icon: BookOpen, href: "/app/ai/knowledge" },
     { title: "Marketplace", icon: ShoppingCart, href: "/app/marketplace" },
   ];
 

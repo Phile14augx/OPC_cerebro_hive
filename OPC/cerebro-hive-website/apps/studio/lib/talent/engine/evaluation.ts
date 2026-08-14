@@ -32,16 +32,11 @@ export class EvaluationEngine {
     // In production, this maps widget states against expected test cases defined in the AssessmentSchema
     console.log("[EvaluationEngine] Running deterministic evaluation...");
     
-    // Mock result
-    const passed = 9;
-    const total = 10;
-    
-    return {
-      totalTests: total,
-      passedTests: passed,
-      scorePercentage: (passed / total) * 100,
-      artifacts: executionArtifacts
-    };
+  evaluateDeterministic(_session: CandidateSession, _executionArtifacts: ExecutionResult[]): DeterministicScore {
+    throw new Error(
+      "TALENT_EVALUATION_NOT_IMPLEMENTED: refusing to invent pass/fail counts. Wire real test artifacts before scoring."
+    );
+  }
   }
 }
 
@@ -59,22 +54,9 @@ export class AIReviewEngine {
     GlobalEventBus.publish("AI_REVIEW_REQUESTED", session.candidateId, session.assessmentId, { rubricId: rubric.id });
     console.log("[AIReviewEngine] Dispatching artifacts to LLM agents...");
 
-    // Mock LLM Network Call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Simulate multi-agent evaluation based on the Rubric
-    const criteriaScores: Record<string, number> = {};
-    rubric.criteria.forEach(c => {
-      // Mock scoring logic: random score between 75 and 98
-      criteriaScores[c.id] = Math.floor(Math.random() * (98 - 75 + 1) + 75);
-    });
-
-    return {
-      criteriaScores,
-      summary: "The candidate demonstrated excellent understanding of core concepts but missed some edge cases in error handling. The architecture is scalable but slightly over-engineered for the current requirements.",
-      strengths: ["Clean code structure", "O(1) time complexity achieved"],
-      weaknesses: ["Missing edge cases on TTL expiration", "Overuse of global state"]
-    };
+    throw new Error(
+      "TALENT_AI_REVIEW_NOT_IMPLEMENTED: refusing to invent rubric scores. Connect a real model review before returning qualitative results."
+    );
   }
 }
 

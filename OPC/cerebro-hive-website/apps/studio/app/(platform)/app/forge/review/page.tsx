@@ -45,7 +45,6 @@ function AICodeReviewPageInner() {
   const { project } = useForgeProject(projectId);
   const { running, error, runReview } = useForgeActions(projectId);
   const [result, setResult] = useState<ReviewResult | null>(null);
-  const [fixing, setFixing] = useState<number | null>(null);
 
   const handleReview = async () => {
     const res = await runReview();
@@ -125,8 +124,13 @@ function AICodeReviewPageInner() {
               {running ? "Scanning…" : hasRun ? "Re-scan Codebase" : "Scan Codebase"}
             </Button>
             {hasRun && autoFixable > 0 && (
-              <Button variant="secondary" className="gap-2">
-                <Sparkles size={14} /> Auto-fix {autoFixable} Issues
+              <Button
+                variant="secondary"
+                className="gap-2"
+                disabled
+                title="Auto-fix is not implemented. Review findings are advisory until a patch API exists."
+              >
+                <Sparkles size={14} /> Auto-fix unavailable
               </Button>
             )}
           </div>
@@ -215,10 +219,11 @@ function AICodeReviewPageInner() {
                             variant="ghost"
                             size="sm"
                             className="shrink-0 gap-1 text-xs h-8 text-yellow-400 hover:text-yellow-300"
-                            onClick={() => { setFixing(i); setTimeout(() => setFixing(null), 2000); }}
+                            disabled
+                            title="Auto-fix is not implemented. Review findings are advisory until a patch API exists."
                           >
-                            {fixing === i ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                            {fixing === i ? "Fixing…" : "Auto-fix"}
+                            <Sparkles size={12} />
+                            Auto-fix unavailable
                           </Button>
                         )}
                       </div>

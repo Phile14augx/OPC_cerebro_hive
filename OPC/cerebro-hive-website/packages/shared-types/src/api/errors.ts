@@ -44,7 +44,10 @@ export type ErrorCode =
   | "INTERNAL_ERROR"
   | "SERVICE_UNAVAILABLE"
   | "DATABASE_ERROR"
-  | "UPSTREAM_ERROR";
+  | "GENERATION_BUILD_FAILED"
+  | "CAPABILITY_NOT_IMPLEMENTED"
+  | "TALENT_SCHEMA_UNAVAILABLE"
+  | "ANALYZER_UNAVAILABLE";
 
 export interface ApiError {
   code:       ErrorCode;

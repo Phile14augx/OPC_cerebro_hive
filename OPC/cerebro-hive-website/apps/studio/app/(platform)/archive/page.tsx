@@ -18,35 +18,35 @@ export default function ArchiveOverviewPage() {
       description: "Manage, upload, and organize enterprise knowledge assets across workspaces.",
       icon: <FileText className="w-6 h-6 text-blue-500" />,
       href: "/archive/documents",
-      stats: "12,453 documents",
+      stats: "Available",
     },
     {
       title: "Semantic Search",
       description: "Hybrid keyword and vector search powered by Cerebro X and pgvector.",
       icon: <Search className="w-6 h-6 text-purple-500" />,
       href: "/archive/search",
-      stats: "99.8% precision",
+      stats: "Available",
     },
     {
       title: "Prompt Library",
       description: "Version-controlled, prompt templates for consistent AI generation.",
       icon: <Bot className="w-6 h-6 text-emerald-500" />,
       href: "/archive/prompts",
-      stats: "340 prompts",
+      stats: "Available",
     },
     {
       title: "Model Registry",
       description: "Manage connected foundational models, LLMs, and embedding providers.",
       icon: <FileDigit className="w-6 h-6 text-amber-500" />,
       href: "/archive/models",
-      stats: "8 active models",
+      stats: "Not yet available",
     },
     {
       title: "Datasets",
       description: "Curated JSONL datasets for evaluation, fine-tuning, and offline RAG.",
       icon: <Database className="w-6 h-6 text-rose-500" />,
       href: "/archive/datasets",
-      stats: "45 datasets",
+      stats: "Not yet available",
     },
   ];
 
@@ -100,20 +100,7 @@ export default function ArchiveOverviewPage() {
         </div>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        {[
-          { label: "Total Vectors Indexed", value: "3.4M", trend: "+12% this month" },
-          { label: "RAG Queries / Day", value: "84.2K", trend: "+5% this week" },
-          { label: "Storage Used", value: "1.2 TB", trend: "MinIO S3 Backend" }
-        ].map((stat, i) => (
-          <div key={i} className="bg-surface border border-border rounded-xl p-6 shadow-sm">
-            <h3 className="text-text-muted text-sm font-medium">{stat.label}</h3>
-            <p className="text-3xl font-bold text-text-primary mt-2 font-space">{stat.value}</p>
-            <p className="text-emerald-500 text-sm mt-2 font-medium">{stat.trend}</p>
-          </div>
-        ))}
-      </div>
+      {/* Module catalog — counts are omitted until live archive metrics exist */}
 
       <h2 className="text-xl font-bold text-text-primary mb-6 font-space">Platform Modules</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

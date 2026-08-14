@@ -1,62 +1,31 @@
-/**
- * Execution Engine Integration Tests
- * Validates Queue Placement, Sandbox Orchestration, Streaming, and Persistence
- */
+import { ExecutionService } from "../../lib/talent/infrastructure/execution/ExecutionService";
+import { MockSandboxProvider, MockStreamingProvider } from "../../lib/talent/infrastructure/execution/providers/MockProviders";
+import { DockerExecutionProvider } from "../../lib/talent/infrastructure/execution/DockerExecutionProvider";
+import { EvaluationEngine, AIReviewEngine } from "../../lib/talent/engine/evaluation";
 
-import { DomainEventBus } from '../../lib/talent/infrastructure/events/eventBus';
-import { ExecutionStatus } from '@cerebro/db';
-
-describe('Execution Engine Vertical Slice', () => {
-  let executionEventsFired: string[] = [];
-
-  beforeAll(() => {
-    const eventsToTrack = [
-      'ExecutionQueued',
-      'WorkerAllocated',
-      'SandboxCreated',
-      'ExecutionStarted',
-      'ExecutionCompleted',
-      'SandboxDestroyed',
-      'WorkerReleased'
-    ];
-
-    eventsToTrack.forEach(evt => {
-      DomainEventBus.subscribe(evt as any, () => executionEventsFired.push(evt));
-    });
+describe("Talent execution honesty", () => {
+  it("refuses to queue candidate code when execution tables are absent", async () => {
+    const service = new ExecutionService();
+    await expect(service.submitExecution()).rejects.toThrow("TALENT_EXECUTION_NOT_IMPLEMENTED");
   });
 
-  it('should successfully orchestrate a full execution lifecycle', async () => {
-    
-    // 1. Submit Execution Request
-    const mockRequestPayload = {
-      sessionId: 'session_abc123',
-      language: 'javascript',
-      code: 'console.log("Hello Stage 3!");'
-    };
+  it("does not eval candidate code in the mock sandbox", async () => {
+    const sandbox = new MockSandboxProvider(new MockStreamingProvider(), "job_test");
+    await expect(sandbox.execute("javascript", "throw new Error('should not run')")).rejects.toThrow(
+      "TALENT_SANDBOX_NOT_IMPLEMENTED"
+    );
+  });
 
-    const mockApiResponse = {
-      success: true,
-      data: {
-        id: 'job_456',
-        status: 'QUEUED' as ExecutionStatus
-      }
-    };
+  it("does not report a successful docker exit without a container", async () => {
+    const docker = new DockerExecutionProvider();
+    await expect(docker.collectResult("env-1")).rejects.toThrow("DOCKER_EXECUTION_NOT_IMPLEMENTED");
+  });
 
-    expect(mockApiResponse.success).toBe(true);
-    expect(mockApiResponse.data.status).toBe('QUEUED');
-
-    // 2. Validate Domain Events were fired during background processing
-    // In a real jest test, we would wait for async events.
-    // For this prototype slice, we know the MockQueueProvider processes in ~600ms.
-    await new Promise(r => setTimeout(r, 1500));
-
-    // Ensure the entire orchestration state machine transitioned correctly
-    expect(executionEventsFired).toContain('ExecutionQueued');
-    expect(executionEventsFired).toContain('WorkerAllocated');
-    expect(executionEventsFired).toContain('SandboxCreated');
-    expect(executionEventsFired).toContain('ExecutionStarted');
-    expect(executionEventsFired).toContain('ExecutionCompleted');
-    expect(executionEventsFired).toContain('SandboxDestroyed');
-    expect(executionEventsFired).toContain('WorkerReleased');
+  it("does not invent deterministic or qualitative scores", async () => {
+    const engine = new EvaluationEngine();
+    expect(() => engine.evaluateDeterministic({} as never, [])).toThrow("TALENT_EVALUATION_NOT_IMPLEMENTED");
+    await expect(new AIReviewEngine().performQualitativeReview({} as never, { criteria: [] } as never, {} as never)).rejects.toThrow(
+      "TALENT_AI_REVIEW_NOT_IMPLEMENTED"
+    );
   });
 });

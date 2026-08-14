@@ -5,7 +5,8 @@
 
 "use client";
 
-const BASE = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:4000";
+const RAW_BASE = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3406";
+const BASE = RAW_BASE.replace(/\/api\/v1\/?$/, "");
 
 // ── Auth token provider (injected at runtime) ─────────────────────────────────
 let _getToken: (() => Promise<string | null>) | null = null;
@@ -362,8 +363,8 @@ export interface NatsEvent {
 
 export const platformApi = {
   auth: {
-    me: () => get<Me>("/v1/auth/me"),
-    logout: (refreshToken: string) => post<{ success: boolean }>("/v1/auth/logout", { refresh_token: refreshToken }),
+    me: () => get<Me>("/api/v1/auth/me"),
+    logout: (refreshToken: string) => post<{ success: boolean }>("/api/v1/auth/logout", { refresh_token: refreshToken }),
   },
 
   workflows: {
@@ -374,26 +375,26 @@ export const platformApi = {
       if (params.status) q.set("status", params.status);
       if (params.search) q.set("search", params.search);
       if (params.tags)   q.set("tags",   params.tags);
-      return get<PaginatedResponse<Workflow>>(`/v1/workflows?${q}`);
+      return get<PaginatedResponse<Workflow>>(`/api/v1/workflows?${q}`);
     },
-    get:     (id: string)                      => get<Workflow>(`/v1/workflows/${id}`),
+    get:     (id: string)                      => get<Workflow>(`/api/v1/workflows/${id}`),
     create:  (body: { name: string; description?: string; definition?: unknown; tags?: string[] }) =>
-      post<Workflow>("/v1/workflows", body),
-    update:  (id: string, body: Partial<Workflow>) => patch<Workflow>(`/v1/workflows/${id}`, body),
-    publish: (id: string)                       => post<Workflow>(`/v1/workflows/${id}/publish`),
-    delete:  (id: string)                       => del<void>(`/v1/workflows/${id}`),
+      post<Workflow>("/api/v1/workflows", body),
+    update:  (id: string, body: Partial<Workflow>) => patch<Workflow>(`/api/v1/workflows/${id}`, body),
+    publish: (id: string)                       => post<Workflow>(`/api/v1/workflows/${id}/publish`),
+    delete:  (id: string)                       => del<void>(`/api/v1/workflows/${id}`),
     execute: (id: string, body: { input?: unknown; testMode?: boolean }) =>
-      post<WorkflowExecution>(`/v1/workflows/${id}/execute`, body),
+      post<WorkflowExecution>(`/api/v1/workflows/${id}/execute`, body),
     executions: (id: string, params: { page?: number; limit?: number; status?: string } = {}) => {
       const q = new URLSearchParams();
       if (params.page)   q.set("page",   String(params.page));
       if (params.limit)  q.set("limit",  String(params.limit));
       if (params.status) q.set("status", params.status);
-      return get<PaginatedResponse<WorkflowExecution>>(`/v1/workflows/${id}/executions?${q}`);
+      return get<PaginatedResponse<WorkflowExecution>>(`/api/v1/workflows/${id}/executions?${q}`);
     },
-    getExecution:    (execId: string) => get<WorkflowExecution>(`/v1/workflows/executions/${execId}`),
-    cancelExecution: (execId: string) => post<void>(`/v1/workflows/executions/${execId}/cancel`),
-    archive:         (id: string)     => post<Workflow>(`/v1/workflows/${id}/archive`),
+    getExecution:    (execId: string) => get<WorkflowExecution>(`/api/v1/workflows/executions/${execId}`),
+    cancelExecution: (execId: string) => post<void>(`/api/v1/workflows/executions/${execId}/cancel`),
+    archive:         (id: string)     => post<Workflow>(`/api/v1/workflows/${id}/archive`),
   },
 
   agents: {
@@ -402,19 +403,19 @@ export const platformApi = {
       if (params.page)   q.set("page",   String(params.page));
       if (params.limit)  q.set("limit",  String(params.limit));
       if (params.search) q.set("search", params.search);
-      return get<PaginatedResponse<Agent>>(`/v1/agents?${q}`);
+      return get<PaginatedResponse<Agent>>(`/api/v1/agents?${q}`);
     },
-    get:    (id: string)                        => get<Agent>(`/v1/agents/${id}`),
+    get:    (id: string)                        => get<Agent>(`/api/v1/agents/${id}`),
     create: (body: { name: string; slug?: string; description?: string; model?: string; instructions?: string; tools?: string[] }) =>
-      post<Agent>("/v1/agents", body),
-    update: (id: string, body: Partial<Agent>) => patch<Agent>(`/v1/agents/${id}`, body),
-    delete: (id: string)                        => del<void>(`/v1/agents/${id}`),
-    run:    (id: string, body: { input?: unknown }) => post<AgentRun>(`/v1/agents/${id}/run`, body),
+      post<Agent>("/api/v1/agents", body),
+    update: (id: string, body: Partial<Agent>) => patch<Agent>(`/api/v1/agents/${id}`, body),
+    delete: (id: string)                        => del<void>(`/api/v1/agents/${id}`),
+    run:    (id: string, body: { input?: unknown }) => post<AgentRun>(`/api/v1/agents/${id}/run`, body),
     runs:   (id: string, params: { page?: number; limit?: number } = {}) => {
       const q = new URLSearchParams();
       if (params.page)  q.set("page",  String(params.page));
       if (params.limit) q.set("limit", String(params.limit));
-      return get<PaginatedResponse<AgentRun>>(`/v1/agents/${id}/runs?${q}`);
+      return get<PaginatedResponse<AgentRun>>(`/api/v1/agents/${id}/runs?${q}`);
     },
   },
 
@@ -424,12 +425,12 @@ export const platformApi = {
         const q = new URLSearchParams();
         if (params.page)  q.set("page",  String(params.page));
         if (params.limit) q.set("limit", String(params.limit));
-        return get<PaginatedResponse<KnowledgeCollection>>(`/v1/knowledge/collections?${q}`);
+        return get<PaginatedResponse<KnowledgeCollection>>(`/api/v1/knowledge/collections?${q}`);
       },
-      get:    (id: string)                    => get<KnowledgeCollection>(`/v1/knowledge/collections/${id}`),
+      get:    (id: string)                    => get<KnowledgeCollection>(`/api/v1/knowledge/collections/${id}`),
       create: (body: { name: string; description?: string; embeddingModel?: string }) =>
-        post<KnowledgeCollection>("/v1/knowledge/collections", body),
-      delete: (id: string)                    => del<void>(`/v1/knowledge/collections/${id}`),
+        post<KnowledgeCollection>("/api/v1/knowledge/collections", body),
+      delete: (id: string)                    => del<void>(`/api/v1/knowledge/collections/${id}`),
     },
     documents: {
       list:   (collectionId: string, params: { page?: number; limit?: number; status?: string } = {}) => {
@@ -438,15 +439,15 @@ export const platformApi = {
         if (params.limit)  q.set("limit",  String(params.limit));
         if (params.status) q.set("status", params.status);
         return get<PaginatedResponse<KnowledgeDocument>>(
-          `/v1/knowledge/collections/${collectionId}/documents?${q}`
+          `/api/v1/knowledge/collections/${collectionId}/documents?${q}`
         );
       },
       create: (collectionId: string, body: { title?: string; name?: string; content?: string; sourceType?: string; sourceUrl?: string; mimeType?: string }) =>
-        post<KnowledgeDocument>(`/v1/knowledge/collections/${collectionId}/documents`, body),
+        post<KnowledgeDocument>(`/api/v1/knowledge/collections/${collectionId}/documents`, body),
       upload: (collectionId: string, body: { name: string; sourceType: string; sourceUrl?: string; mimeType?: string }) =>
-        post<KnowledgeDocument>(`/v1/knowledge/collections/${collectionId}/documents`, body),
+        post<KnowledgeDocument>(`/api/v1/knowledge/collections/${collectionId}/documents`, body),
       delete: (collectionId: string, docId: string) =>
-        del<void>(`/v1/knowledge/collections/${collectionId}/documents/${docId}`),
+        del<void>(`/api/v1/knowledge/collections/${collectionId}/documents/${docId}`),
     },
   },
 
@@ -457,24 +458,24 @@ export const platformApi = {
       if (params.to)       q.set("to",       params.to);
       if (params.modelId)  q.set("modelId",  params.modelId);
       if (params.provider) q.set("provider", params.provider);
-      return get<AIUsageSummary>(`/v1/ai/usage?${q}`);
+      return get<AIUsageSummary>(`/api/v1/ai/usage?${q}`);
     },
   },
 
   billing: {
-    subscription: () => get<unknown>("/v1/billing/subscription"),
-    budgets:      () => get<{ items: unknown[]; total: number }>("/v1/billing/budgets"),
+    subscription: () => get<unknown>("/api/v1/billing/subscription"),
+    budgets:      () => get<{ items: unknown[]; total: number }>("/api/v1/billing/budgets"),
   },
 
   admin: {
-    stats: () => get<AdminStats>("/v1/admin/stats"),
+    stats: () => get<AdminStats>("/api/v1/admin/stats"),
   },
 
   apiKeys: {
-    list: () => get<ApiKey[]>("/v1/api-keys"),
+    list: () => get<ApiKey[]>("/api/v1/api-keys"),
     create: (body: { name: string; permissions?: string[]; expiresIn?: string }) =>
-      post<{ raw: string } & ApiKey>("/v1/api-keys", body),
-    revoke: (id: string) => del<void>(`/v1/api-keys/${id}`),
+      post<{ raw: string } & ApiKey>("/api/v1/api-keys", body),
+    revoke: (id: string) => del<void>(`/api/v1/api-keys/${id}`),
   },
 
   prompts: {
@@ -486,32 +487,32 @@ export const platformApi = {
       if (params.category) q.set("category", params.category);
       if (params.search)   q.set("search",   params.search);
       if (params.tags)     q.set("tags",     params.tags);
-      return get<PaginatedResponse<Prompt>>(`/v1/prompts?${q}`);
+      return get<PaginatedResponse<Prompt>>(`/api/v1/prompts?${q}`);
     },
-    get:         (id: string) => get<Prompt>(`/v1/prompts/${id}`),
+    get:         (id: string) => get<Prompt>(`/api/v1/prompts/${id}`),
     create:      (body: { name: string; slug?: string; description?: string; category?: string; tags?: string[]; content: string; model: string; variables?: string[] }) =>
-      post<Prompt>("/v1/prompts", body),
+      post<Prompt>("/api/v1/prompts", body),
     update:      (id: string, body: Partial<Pick<Prompt, "name" | "description" | "category" | "tags" | "status">>) =>
-      patch<Prompt>(`/v1/prompts/${id}`, body),
-    publish:     (id: string) => post<Prompt>(`/v1/prompts/${id}/publish`),
-    deprecate:   (id: string) => post<Prompt>(`/v1/prompts/${id}/deprecate`),
-    delete:      (id: string) => del<void>(`/v1/prompts/${id}`),
+      patch<Prompt>(`/api/v1/prompts/${id}`, body),
+    publish:     (id: string) => post<Prompt>(`/api/v1/prompts/${id}/publish`),
+    deprecate:   (id: string) => post<Prompt>(`/api/v1/prompts/${id}/deprecate`),
+    delete:      (id: string) => del<void>(`/api/v1/prompts/${id}`),
     versions: {
-      list:     (promptId: string) => get<PaginatedResponse<PromptVersion>>(`/v1/prompts/${promptId}/versions`),
+      list:     (promptId: string) => get<PaginatedResponse<PromptVersion>>(`/api/v1/prompts/${promptId}/versions`),
       create:   (promptId: string, body: { content: string; model: string; variables?: string[]; description?: string; changelog?: string }) =>
-        post<PromptVersion>(`/v1/prompts/${promptId}/versions`, body),
+        post<PromptVersion>(`/api/v1/prompts/${promptId}/versions`, body),
       activate: (promptId: string, version: number) =>
-        post<{ promptId: string; activeVersion: number }>(`/v1/prompts/${promptId}/versions/${version}/activate`),
+        post<{ promptId: string; activeVersion: number }>(`/api/v1/prompts/${promptId}/versions/${version}/activate`),
     },
   },
 
   evaluations: {
     datasets: {
-      list:   () => get<PaginatedResponse<EvalDataset>>("/v1/evaluations/datasets"),
-      get:    (id: string) => get<EvalDataset>(`/v1/evaluations/datasets/${id}`),
+      list:   () => get<PaginatedResponse<EvalDataset>>("/api/v1/evaluations/datasets"),
+      get:    (id: string) => get<EvalDataset>(`/api/v1/evaluations/datasets/${id}`),
       create: (body: { name: string; description?: string; rowCount?: number; sourceType?: string }) =>
-        post<EvalDataset>("/v1/evaluations/datasets", body),
-      delete: (id: string) => del<void>(`/v1/evaluations/datasets/${id}`),
+        post<EvalDataset>("/api/v1/evaluations/datasets", body),
+      delete: (id: string) => del<void>(`/api/v1/evaluations/datasets/${id}`),
     },
     runs: {
       list: (params: { page?: number; limit?: number; status?: string; promptId?: string } = {}) => {
@@ -520,13 +521,13 @@ export const platformApi = {
         if (params.limit)    q.set("limit",    String(params.limit));
         if (params.status)   q.set("status",   params.status);
         if (params.promptId) q.set("promptId", params.promptId);
-        return get<PaginatedResponse<EvalRun>>(`/v1/evaluations/runs?${q}`);
+        return get<PaginatedResponse<EvalRun>>(`/api/v1/evaluations/runs?${q}`);
       },
-      get:    (id: string) => get<EvalRun>(`/v1/evaluations/runs/${id}`),
+      get:    (id: string) => get<EvalRun>(`/api/v1/evaluations/runs/${id}`),
       create: (body: { name: string; promptId?: string; promptSlug?: string; datasetId?: string; model: string }) =>
-        post<EvalRun>("/v1/evaluations/runs", body),
-      cancel: (id: string) => post<EvalRun>(`/v1/evaluations/runs/${id}/cancel`),
-      delete: (id: string) => del<void>(`/v1/evaluations/runs/${id}`),
+        post<EvalRun>("/api/v1/evaluations/runs", body),
+      cancel: (id: string) => post<EvalRun>(`/api/v1/evaluations/runs/${id}/cancel`),
+      delete: (id: string) => del<void>(`/api/v1/evaluations/runs/${id}`),
     },
   },
 
@@ -541,11 +542,11 @@ export const platformApi = {
       if (params.limit)       q.set("limit",       String(params.limit));
       if (params.start)       q.set("start",       params.start);
       if (params.end)         q.set("end",         params.end);
-      return get<TempoSearchResult>(`/v1/traces?${q}`);
+      return get<TempoSearchResult>(`/api/v1/traces?${q}`);
     },
-    get:     (traceId: string) => get<{ batches: unknown[] }>(`/v1/traces/${traceId}`),
-    tags:    ()                 => get<{ tagNames: string[] }>("/v1/traces/meta/tags"),
-    tagValues: (tagName: string) => get<{ tagValues: string[] }>(`/v1/traces/meta/tags/${tagName}/values`),
+    get:     (traceId: string) => get<{ batches: unknown[] }>(`/api/v1/traces/${traceId}`),
+    tags:    ()                 => get<{ tagNames: string[] }>("/api/v1/traces/meta/tags"),
+    tagValues: (tagName: string) => get<{ tagValues: string[] }>(`/api/v1/traces/meta/tags/${tagName}/values`),
   },
 
   models: {
@@ -554,9 +555,9 @@ export const platformApi = {
       if (params.provider)   q.set("provider",   params.provider);
       if (params.status)     q.set("status",     params.status);
       if (params.capability) q.set("capability", params.capability);
-      return get<PaginatedResponse<ModelEntry>>(`/v1/models?${q}`);
+      return get<PaginatedResponse<ModelEntry>>(`/api/v1/models?${q}`);
     },
-    get: (id: string) => get<ModelEntry>(`/v1/models/${id}`),
-    invalidateCache: () => post<{ invalidated: boolean }>("/v1/models/cache/invalidate", {}),
+    get: (id: string) => get<ModelEntry>(`/api/v1/models/${id}`),
+    invalidateCache: () => post<{ invalidated: boolean }>("/api/v1/models/cache/invalidate", {}),
   },
 };

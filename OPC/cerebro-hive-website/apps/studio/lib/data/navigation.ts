@@ -90,7 +90,7 @@ export const mainNavigation: NavEntry[] = [
         items: [
           { label: "CerebroLabs™", href: "/research" },
           { label: "Insights", href: "/insights" },
-          { label: "Documentation", href: "/docs" },
+          { label: "Documentation", href: "/developers" },
           { label: "Whitepapers", href: "/resources/whitepapers" },
           { label: "Case Studies", href: "/case-studies" },
         ]

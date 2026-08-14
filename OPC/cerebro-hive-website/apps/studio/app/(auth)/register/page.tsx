@@ -30,7 +30,7 @@ export default function RegisterPage() {
       setIsLoading(false);
     } else {
       // Direct to verify email step (Phase 9)
-      router.push('/dashboard');
+      router.push('/app');
     }
   }
 

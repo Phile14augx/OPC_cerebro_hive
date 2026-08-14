@@ -20,6 +20,9 @@ How the CerebroHive platform is built, and why. This is permanent documentation 
 | [commercial-strategy.md](./commercial-strategy.md) | Commercial editions and pricing philosophy |
 | [ai-safety-architecture.md](./ai-safety-architecture.md) | AI safety architecture |
 | [runtime-architecture.md](./runtime-architecture.md) | Runtime architecture |
+| [PLATFORM-ARCHITECTURE.md](./PLATFORM-ARCHITECTURE.md) | Control plane vs generation/execution plane (Day 1 current state) |
+| [EXECUTION-PLANE.md](./EXECUTION-PLANE.md) | Job states; what is wired vs refused |
+| [PLUGIN-ARCHITECTURE.md](./PLUGIN-ARCHITECTURE.md) | Capability plugin and adapter contracts |
 | [services/](./services/) | Per-service architecture notes (one file per backend service) |
 | [measurements/](./measurements/) | Empirical measurements backing architecture claims (gate reports, mutation testing) |
 

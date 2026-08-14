@@ -97,6 +97,8 @@ model Workspace {
   projects  Project[]
   apiKeys   APIKey[]
   auditLogs AuditLog[]
+  jobs      PlatformJob[]
+  architectureGraphs ArchitectureGraph[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -751,6 +753,9 @@ model Project {
   artifacts     GeneratedArtifact[]
   forgeSessions ForgeSession[]
   archDecisions ArchitectureDecision[]
+  specifications ProjectSpecificationRecord[]
+  architectureGraphs ArchitectureGraph[]
+  jobs PlatformJob[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1965,4 +1970,78 @@ model ArchiveSearchQuery {
   createdAt   DateTime @default(now())
 
   @@index([tenantId, createdAt])
+}
+
+// -----------------------------------------------------------------------------
+// DAY 1 CONTROL PLANE: jobs, architecture graphs, typed project specifications
+// -----------------------------------------------------------------------------
+
+model PlatformJob {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String    @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  projectId   String?   @db.Uuid
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  userId      String?   @db.Uuid
+  type        String
+  status      String    @default("QUEUED")
+  traceId     String?
+  errorCode   String?
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  metadata    Json?
+  logs        PlatformJobLog[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([workspaceId, createdAt])
+  @@index([status])
+}
+
+model PlatformJobLog {
+  id        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  jobId     String      @db.Uuid
+  job       PlatformJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  stream    String
+  message   String      @db.Text
+  createdAt DateTime    @default(now())
+
+  @@index([jobId, createdAt])
+}
+
+model ArchitectureGraph {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String    @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  projectId   String?   @db.Uuid
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  name        String
+  graph       Json
+  versions    ArchitectureGraphVersion[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([workspaceId])
+}
+
+model ArchitectureGraphVersion {
+  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  graphId            String            @db.Uuid
+  architectureGraph  ArchitectureGraph @relation(fields: [graphId], references: [id], onDelete: Cascade)
+  version            Int
+  snapshot           Json
+  createdAt          DateTime          @default(now())
+
+  @@unique([graphId, version])
+}
+
+model ProjectSpecificationRecord {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projectId   String   @db.Uuid
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  version     Int
+  specification Json
+  createdAt   DateTime @default(now())
+
+  @@unique([projectId, version])
 }
