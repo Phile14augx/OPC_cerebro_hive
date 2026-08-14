@@ -13,4 +13,22 @@ describe('TwinDefinitionSchema', () => {
       })
     ).toThrow(/production-line/);
   });
+
+  it('preserves valid entity instances and rejects unknown entity types', () => {
+    const definition = {
+      entityTypes: [{ key: 'motor', name: 'Motor' }],
+      relationshipTypes: [],
+      variables: [],
+      rules: [],
+      entities: [{ key: 'motor-07', name: 'Motor 07', typeKey: 'motor', attributes: {} }],
+    };
+
+    expect(TwinDefinitionSchema.parse(definition).entities).toEqual(definition.entities);
+    expect(() =>
+      TwinDefinitionSchema.parse({
+        ...definition,
+        entities: [{ ...definition.entities[0], typeKey: 'production-line' }],
+      })
+    ).toThrow(/production-line/);
+  });
 });

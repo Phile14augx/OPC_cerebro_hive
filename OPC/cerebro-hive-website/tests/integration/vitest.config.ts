@@ -1,6 +1,22 @@
 import { defineConfig } from "vitest/config";
+import { fileURLToPath } from "node:url";
+
+const setupFile = fileURLToPath(new URL("./setup.ts", import.meta.url));
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@cerebro/twin-contracts": fileURLToPath(
+        new URL("../../packages/twin-contracts/src/index.ts", import.meta.url),
+      ),
+      "@cerebro/twin-domain": fileURLToPath(
+        new URL("../../packages/twin-domain/src/index.ts", import.meta.url),
+      ),
+      "@cerebro/db/twin-studio": fileURLToPath(
+        new URL("../../packages/db/twin-studio.ts", import.meta.url),
+      ),
+    },
+  },
   test: {
     // Run each test file in isolation — important for DB fixture cleanup
     pool:           "forks",
@@ -29,7 +45,7 @@ export default defineConfig({
     },
 
     // Global setup file
-    setupFiles: ["./setup.ts"],
+    setupFiles: [setupFile],
 
     // Retry flaky network tests once
     retry: 1,
