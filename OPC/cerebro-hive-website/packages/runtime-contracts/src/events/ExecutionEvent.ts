@@ -6,6 +6,7 @@ export type ExecutionEventType =
   | 'ToolRequested'
   | 'ToolStarted'
   | 'ToolCompleted'
+  | 'StepCompleted'
   | 'ApprovalRequested'
   | 'ApprovalGranted'
   | 'ExecutionCompleted'

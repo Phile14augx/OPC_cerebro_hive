@@ -5,3 +5,5 @@ export * from './src/QueryBus';
 export * from './src/Event';
 export * from './src/EventBus';
 export * from './src/Middleware';
+export { MemoryEventBus } from './src/memory/MemoryEventBus';
+export type { EventBus, EventHandler } from './src/contracts/EventBus';

@@ -1,6 +1,6 @@
 import { RuntimeRegistry, CapabilityDescriptor } from '@cerebro/runtime-core';
 import type { LLMProvider, LLMMessage, LLMToolDefinition, LLMInvocationResult, ExecutionContext } from '@cerebro/runtime-core';
-import type { AIGateway, ChatMessage, ToolDefinition } from '@cerebro/ai-gateway';
+import type { AIGateway, ChatMessage, ToolCall, ToolDefinition } from '@cerebro/ai-gateway';
 
 /**
  * Real LLMProvider backed by the production AIGateway (circuit breaker,
@@ -69,7 +69,7 @@ export class AIGatewayLLMProvider implements LLMProvider {
 
     return {
       content: response.content,
-      toolCalls: response.toolCalls?.map(tc => ({
+      toolCalls: response.toolCalls?.map((tc: ToolCall) => ({
         id: tc.id,
         name: tc.name,
         arguments: tc.arguments,

@@ -8,7 +8,7 @@ import { randomUUID } from 'crypto';
 import type { AIProvider } from './providers/base.provider';
 import { AnthropicProvider } from './providers/anthropic.provider';
 import { OpenAIProvider } from './providers/openai.provider';
-import { CircuitBreaker } from './circuit-breaker';
+import { CircuitBreaker, type CircuitState } from './circuit-breaker';
 import { RateLimiter } from './rate-limiter';
 import { ResponseCache } from './cache';
 import {
@@ -190,9 +190,12 @@ export class AIGateway {
 
   // ─── Health / introspection ────────────────────────────────────────────────
 
-  getHealth() {
+  getHealth(): {
+    providers: Array<{ name: ProviderName; circuitState: CircuitState | 'UNKNOWN' }>;
+    cache: { size: number; enabled: boolean };
+  } {
     return {
-      providers: Array.from(this.providers.entries()).map(([name, p]) => ({
+      providers: Array.from(this.providers.entries()).map(([name]) => ({
         name,
         circuitState: this.breakers.get(name)?.currentState ?? 'UNKNOWN',
       })),

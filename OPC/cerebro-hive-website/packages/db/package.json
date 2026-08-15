@@ -5,13 +5,15 @@
   "main": "dist/db/index.js",
   "types": "dist/db/index.d.ts",
   "scripts": {
-    "build": "tsc && node -e \"require('fs').cpSync('src/generated/client','dist/db/src/generated/client',{recursive:true})\"",
+    "build": "prisma generate && tsc && node -e \"require('fs').cpSync('src/generated/client','dist/db/src/generated/client',{recursive:true})\"",
     "generate": "prisma generate",
+    "prisma:generate": "prisma generate",
+    "postinstall": "prisma generate",
     "push": "prisma db push",
     "migrate:dev": "prisma migrate dev",
     "studio": "prisma studio",
     "lint": "eslint \"**/*.ts*\"",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "prisma generate && tsc -p tsconfig.json --noEmit",
     "test": "tsx --test src/**/*.test.ts"
   },
   "dependencies": {
