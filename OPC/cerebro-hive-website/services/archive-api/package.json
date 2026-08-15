@@ -6,7 +6,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "lint": "eslint src/",
+    "lint": "node ../../scripts/eslint-eslintrc.cjs src",
     "test": "vitest run --passWithNoTests",
     "test:integration": "vitest run -c vitest.integration.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
