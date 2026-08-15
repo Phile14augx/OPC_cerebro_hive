@@ -8,7 +8,7 @@
     "start": "next start --port 3401",
     "lint": "eslint",
     "analyze": "cross-env ANALYZE=true next build --webpack",
-    "test": "pnpm --workspace-root exec vitest run --config apps/studio/platform/vitest.config.ts",
+    "test": "npm --prefix platform test",
     "test:e2e": "playwright test",
     "audit:enterprise": "tsx ../../scripts/audit/audit-interactions.ts && tsx ../../scripts/audit/audit-routes.ts && tsx ../../scripts/audit/audit-assets.ts && tsx ../../scripts/audit/audit-accessibility.ts && tsx ../../scripts/audit/audit-seo.ts && tsx ../../scripts/audit/audit-analytics.ts && tsx ../../scripts/audit/audit-design-system.ts && tsx ../../scripts/audit/generate-dashboard.ts",
     "typecheck": "tsc --noEmit"
