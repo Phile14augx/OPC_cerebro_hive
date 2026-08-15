@@ -66,11 +66,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Typecheck (Turborepo)
-        run: pnpm turbo typecheck --color
-
+      # Lint is materially faster than the full-workspace typecheck and should
+      # fail first while W0.2 backlog is being burned down. Both remain hard
+      # gates; this only changes diagnostic ordering.
       - name: Lint (Turborepo)
         run: pnpm turbo lint --color
+
+      - name: Typecheck (Turborepo)
+        run: pnpm turbo typecheck --color
 
       # Confirmed gap (2026-08-01): pnpm-workspace.yaml only declares
       # apps/*, packages/*, packages/capabilities/*, services/*. The
