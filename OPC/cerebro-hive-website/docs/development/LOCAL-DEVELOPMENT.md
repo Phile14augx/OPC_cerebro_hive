@@ -16,6 +16,7 @@ pnpm --filter @cerebro/platform-api dev
 Studio: http://localhost:3401/app  
 forge-api health: http://localhost:4005/health  
 platform-api: http://localhost:3406/health  
+Nexarch OS: http://localhost:3410 (`pnpm --filter @cerebro/nexarch-os dev`) — see [nexarch-os-bootstrap.md](../operations/runbooks/nexarch-os-bootstrap.md).  
 
 `KEYCLOAK_SERVER_URL` is required for JWT verification. `KEYCLOAK_URL` alone is not read by `@cerebro/auth`.
 

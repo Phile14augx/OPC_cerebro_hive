@@ -23,6 +23,7 @@ How the CerebroHive platform is built, and why. This is permanent documentation 
 | [PLATFORM-ARCHITECTURE.md](./PLATFORM-ARCHITECTURE.md) | Control plane vs generation/execution plane (Day 1 current state) |
 | [EXECUTION-PLANE.md](./EXECUTION-PLANE.md) | Job states; what is wired vs refused |
 | [PLUGIN-ARCHITECTURE.md](./PLUGIN-ARCHITECTURE.md) | Capability plugin and adapter contracts |
+| [../operations/runbooks/nexarch-os-bootstrap.md](../operations/runbooks/nexarch-os-bootstrap.md) | Nexarch OS operator deck (`apps/nexarch-os`, :3410) |
 | [services/](./services/) | Per-service architecture notes (one file per backend service) |
 | [measurements/](./measurements/) | Empirical measurements backing architecture claims (gate reports, mutation testing) |
 

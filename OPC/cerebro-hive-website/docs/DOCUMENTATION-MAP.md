@@ -51,7 +51,7 @@ docs/
 │
 ├── operations/                  PERMANENT — running the platform in production
 │   ├── disaster-recovery/
-│   └── runbooks/                includes day1-local-bootstrap.md
+│   └── runbooks/                includes day1-local-bootstrap.md, nexarch-os-bootstrap.md
 │
 ├── company-handbook/            PERMANENT — how CerebroHive the company operates
 │

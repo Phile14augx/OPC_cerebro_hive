@@ -188,6 +188,7 @@
           "llmops",
           "agent-ops",
           "knowledge-ops",
+          "nexarch-os",
           "k8s",
           "helm",
           "terraform",

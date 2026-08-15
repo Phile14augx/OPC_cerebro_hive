@@ -1,0 +1,39 @@
+{
+  "name": "@cerebro/nexarch-os",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cerebro Nexarch OS — personal operator command center and company of agents",
+  "scripts": {
+    "dev": "next dev --port 3410 --webpack",
+    "build": "next build --webpack",
+    "start": "next start --port 3410",
+    "lint": "eslint app components lib",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/db.test.ts tests/schemas.test.ts tests/seed.test.ts tests/runtime.test.ts tests/hierarchy.test.ts tests/connectors.test.ts tests/pulse.test.ts tests/brain.test.ts tests/nav.test.ts tests/hive.test.ts tests/live.test.ts",
+    "test:watch": "vitest",
+    "seed": "tsx scripts/seed.ts"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "lucide-react": "^1.27.0",
+    "next": "16.2.12",
+    "pg": "^8.22.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^20",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.12",
+    "tailwindcss": "^4",
+    "tsx": "^4.19.4",
+    "typescript": "^5",
+    "vitest": "3.2.4"
+  }
+}

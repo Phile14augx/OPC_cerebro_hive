@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --color-os-bg: #0a0a0a;
+  --color-os-surface: #111111;
+  --color-os-elevated: #161616;
+  --color-os-border: #1c1c1c;
+  --color-os-text: #f5f5f5;
+  --color-os-muted: #8a8a8a;
+  --color-os-dim: #5a5a5a;
+  --color-os-accent: #ffffff;
+  --color-os-ok: #2fd36f;
+  --color-os-warn: #ffb000;
+  --color-os-err: #ff2d3f;
+  --font-sans: "JetBrains Mono", ui-monospace, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+}
+
+html[data-theme="terminal"] {
+  --color-os-bg: #050807;
+  --color-os-surface: #0a0f0c;
+  --color-os-elevated: #0e1511;
+  --color-os-border: #18211b;
+  --color-os-text: #e4efe6;
+  --color-os-muted: #8fa295;
+  --color-os-dim: #54665b;
+  --color-os-accent: #3df08c;
+  --color-os-ok: #3df08c;
+  --color-os-warn: #ffc53d;
+  --color-os-err: #ff6259;
+}
+
+html,
+body {
+  background: var(--color-os-bg);
+  color: var(--color-os-text);
+  font-family: var(--font-sans);
+}
+
+body {
+  background-image: linear-gradient(var(--color-os-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-os-border) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+::selection {
+  background: var(--color-os-accent);
+  color: var(--color-os-bg);
+}
