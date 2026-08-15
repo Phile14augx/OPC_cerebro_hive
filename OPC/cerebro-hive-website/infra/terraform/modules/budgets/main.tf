@@ -75,8 +75,8 @@ resource "aws_budgets_budget" "eks" {
   time_unit    = "MONTHLY"
 
   cost_filters = {
-    Service      = "Amazon Elastic Kubernetes Service"
-    TagKeyValue  = "user:Environment$${var.environment}"
+    Service     = "Amazon Elastic Kubernetes Service"
+    TagKeyValue = "user:Environment$${var.environment}"
   }
 
   notification {
@@ -170,7 +170,7 @@ data "archive_file" "budget_notifier" {
   output_path = "/tmp/budget-notifier.zip"
 
   source {
-    content  = <<-PYTHON
+    content = <<-PYTHON
 import json, urllib.request, os
 
 def handler(event, context):
@@ -183,14 +183,14 @@ def handler(event, context):
         threshold = msg.get("notificationThreshold", "?")
 
         payload = {
-            "text": f":money_with_wings: *Budget Alert — CerebroHive ${os.environ['ENVIRONMENT']}*",
+            "text": f":money_with_wings: *Budget Alert — CerebroHive {os.environ['ENVIRONMENT']}*",
             "attachments": [{
                 "color": "#ff4444" if float(threshold) >= 100 else "#ffaa00",
                 "fields": [
                     {"title": "Budget", "value": budget_name, "short": True},
                     {"title": "Threshold", "value": f"{threshold}%", "short": True},
-                    {"title": "Budgeted", "value": f"${amount}", "short": True},
-                    {"title": "Actual", "value": f"${actual}", "short": True},
+                    {"title": "Budgeted", "value": f"$${amount}", "short": True},
+                    {"title": "Actual", "value": f"$${actual}", "short": True},
                 ]
             }]
         }
