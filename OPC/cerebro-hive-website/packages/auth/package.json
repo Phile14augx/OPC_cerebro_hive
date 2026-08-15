@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "eslint \"src/**/*.ts*\"",
+    "lint": "node ../../scripts/eslint-eslintrc.cjs src",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --experimental-strip-types --no-warnings --test src/rbac/permissions.test.ts"
   },
