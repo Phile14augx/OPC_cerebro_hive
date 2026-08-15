@@ -27,9 +27,7 @@ import { ExecutionOrchestrator, InMemoryExecutionRepository } from '@cerebro/dom
 import { AgentExecutionProvider } from './modules/runtime/AgentExecutionProvider';
 import { ExecutionRuntimeService } from './modules/runtime/ExecutionRuntimeService';
 import { executionsRoutes } from './modules/executions/executions.routes';
-import type { ExecutionRuntimeKernel } from '@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel';
-import type { ExecutionStore } from '@cerebro/runtime-core/src/execution/ExecutionStore';
-import type { ExecutionReplayService } from '@cerebro/runtime-core/src/execution/ExecutionReplayService';
+import type { ExecutionRuntimeKernel, ExecutionStore, ExecutionReplayService } from '@cerebro/runtime-core';
 
 export interface BootstrapDeps {
   agentRuntimeService: AgentRuntimeService;

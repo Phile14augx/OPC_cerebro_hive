@@ -1,0 +1,90 @@
+video_id: x2l7W9aTc5k
+title: "Anthropic's New Claude CONWAY Is Unlike Any AI Before"
+url: "https://www.youtube.com/watch?v=x2l7W9aTc5k"
+publication_date: "2026-04-07"          # estimated — Conway leaked April 3 2026
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - always-on AI agents
+  - persistent agent architecture
+  - Anthropic Conway
+  - event-driven agents
+  - background agent execution
+
+secondary_topics:
+  - agent lifecycle management
+  - webhook triggers
+  - agent extensions ecosystem
+  - .cnw.zip extension format
+  - agent platform design
+
+companies:
+  - Anthropic
+
+models:
+  - Claude (unspecified version)
+
+frameworks: []
+
+research_papers: []
+
+products:
+  - Conway
+  - Claude (Claude.ai)
+
+people: []
+
+hardware: []
+
+benchmarks: []
+
+datasets: []
+
+repositories: []
+
+potential_relevance: HIGH
+relevance_notes: >
+  Conway is Anthropic's always-on background agent platform. Directly competes
+  with CerebroAgent and defines the emerging standard for persistent enterprise
+  agent architecture. Highly relevant to packages/agent-sdk, services/swarm-runtime,
+  and services/llm-gateway.
+
+verification_status: UNVERIFIED
+knowledge_extraction_status: PASS_A
+
+# Pass A findings
+pass_a_notes: >
+  Conway confirmed as real Anthropic initiative from multiple independent sources
+  (MindStudio April 9 2026, Dataconomy April 3 2026, progressiverobot July 8 2026,
+  Anthropic testing reports). Key features confirmed: daemon-mode execution,
+  event-driven triggers, GitHub webhooks, push notifications, .cnw.zip extension
+  format, webhook activation via public URL, dedicated stateful instances,
+  Claude Code integration, Chrome browser integration, Connectors panel.
+  No official Anthropic documentation found — knowledge from code leak + testing
+  reports only. Evidence grade: C/D.
+
+primary_sources_found:
+  - url: "https://www.mindstudio.ai/blog/what-is-conway-agent-anthropic-always-on-background-ai"
+    title: "What Is the Conway Agent? Anthropic's Unreleased Always-On Background AI Revealed in the Code Leak"
+    date: "2026-04-09"
+    type: blog
+  - url: "https://dataconomy.com/2026/04/03/anthropic-tests-conway-platform-for-continuous-claude/"
+    title: "Anthropic Tests Conway as a Persistent Agent Platform for Claude"
+    date: "2026-04-03"
+    type: blog
+  - url: "https://www.progressiverobot.com/2026/07/08/conway-ai-agent-final-v8/"
+    title: "Conway AI agent: Anthropic's Always-On AI for Claude on iOS"
+    date: "2026-07-08"
+    type: blog
+  - url: "https://www.anthropic.com/engineering/managed-agents"
+    title: "Scaling Managed Agents: Decoupling the brain from the hands"
+    date: "2025-unknown"
+    type: docs
+
+knowledge_objects_created:
+  - KN-AGENT-000001
+  - KN-AGENT-000002

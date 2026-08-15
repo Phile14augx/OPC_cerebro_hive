@@ -1,0 +1,63 @@
+video_id: nov9uoIQt6g
+title: "Google's New AI Is The OpenClaw Killer"
+url: "https://www.youtube.com/watch?v=nov9uoIQt6g"
+publication_date: "2026-UNKNOWN"
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - Google AI
+  - foundation model competition
+
+secondary_topics:
+  - model capabilities benchmark
+  - Google DeepMind
+
+companies:
+  - Google
+  - Google DeepMind
+
+models:
+  - Gemini (unspecified)
+
+frameworks: []
+research_papers: []
+products: []
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: MEDIUM
+relevance_notes: >
+  Covers a Google model or AI product competing against OpenAI ("OpenClaw Killer"
+  likely refers to OpenAI's Sora or another product). Relevant to LLM gateway
+  model routing and competitive intelligence. Title is highly sensationalist;
+  hype filter applies. Pending Pass A to identify the actual technology.
+
+verification_status: UNVERIFIED            # video content inaccessible; title-only analysis
+
+pass_a_status: COMPLETE
+pass_a_date: "2026-08-14"
+pass_a_analyst: "claude-sonnet-4-6"
+pass_a_relevance: LOW                    # downgraded from MEDIUM — Gemini competitive coverage, not actionable for Cerebro routing
+pass_a_knowledge_gaps: >
+  Title refers to Google's AI as "the OpenClaw Killer" — likely covers Gemini 2.0 Flash or
+  Gemini Ultra update competing with OpenAI products. "OpenClaw" is a slang reference to
+  OpenAI products (ChatGPT / Sora / GPT-4o). No specific API pricing, benchmarks, or technical
+  architecture details discoverable from web search. Content appears to be competitive narrative
+  framing rather than technical deep-dive.
+pass_a_cerebro_relevance: >
+  Gemini models are Google's primary LLM family accessible via Vertex AI. Relevant to router-service
+  only if specific Gemini model benchmarks warrant routing policy addition. Without verified benchmark
+  data (blocked video), no routing rule update warranted. Google Gemini 2.0 Flash is a candidate
+  for CLASSIFICATION/low-cost tier routing in future KN update if primary sources confirm pricing.
+pass_a_hype_filter: >
+  Title is highly sensationalist. Cannot verify underlying claims without video access. Downgraded
+  to LOW; will remain SKIPPED until video transcript or primary-source coverage is available.
+knowledge_extraction_status: SKIPPED     # insufficient data from web search; YouTube blocked
+knowledge_objects_created: []

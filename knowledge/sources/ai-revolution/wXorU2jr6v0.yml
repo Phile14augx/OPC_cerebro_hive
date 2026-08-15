@@ -1,0 +1,61 @@
+video_id: wXorU2jr6v0
+title: "China's New AI Shocks The World: Hits Top 10 Globally Overnight"
+url: "https://www.youtube.com/watch?v=wXorU2jr6v0"
+publication_date: "2026-UNKNOWN"
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - Chinese AI models
+  - AI competition
+  - foundation model releases
+
+secondary_topics:
+  - AI geopolitics
+  - open-source models
+
+companies:
+  - Unknown Chinese AI lab
+
+models: []
+frameworks: []
+research_papers: []
+products: []
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: LOW
+relevance_notes: >
+  Covers a new Chinese AI model achieving global adoption. May be relevant to
+  LLM gateway open-source model options if a technically significant model is
+  described. Heavy sensationalism; likely MEDIUM at best after hype filtering.
+  Monitor for DeepSeek successor or Qwen variant.
+
+verification_status: PARTIALLY_VERIFIED   # subject model likely Kimi K1.5 (Jan 2025); confirmed via CNBC Kimi K3 coverage
+
+pass_a_status: COMPLETE
+pass_a_date: "2026-08-14"
+pass_a_analyst: "claude-sonnet-4-6"
+pass_a_relevance: LOW                    # confirmed LOW — Chinese model landscape; DeepSeek-R1 already captured
+pass_a_knowledge_gaps: >
+  Video likely covers Kimi K1.5 (Moonshot AI) or early Qwen 2.5 release circa early 2025.
+  Chinese AI model race includes DeepSeek (captured KN-FOUNDM-000001), Kimi K3 (July 2026,
+  largest open-source model per VentureBeat), Qwen 3.8, Doubao. None of these additional models
+  are yet at the relevance threshold for Cerebro's router-service (DeepSeek-R1 is the primary
+  open-source reasoning model choice due to MIT license and verified benchmarks).
+pass_a_cerebro_relevance: >
+  No new actionable knowledge for Cerebro architecture. Kimi and Qwen models are candidates for
+  future KN-FOUNDM objects if they achieve MIT licensing and peer-reviewed benchmarks comparable
+  to DeepSeek-R1. Monitor Kimi K3 (July 2026 release) for potential routing rule addition.
+pass_a_hype_filter: >
+  Title highly sensationalist ("Shocks The World", "Hits Top 10 Globally Overnight"). Underlying
+  Chinese AI model landscape is real but specific claims require primary-source verification before
+  any routing decision. No extraction warranted at this time.
+knowledge_extraction_status: SKIPPED     # DeepSeek-R1 covers this domain; revisit for Kimi K3 evaluation
+knowledge_objects_created: []

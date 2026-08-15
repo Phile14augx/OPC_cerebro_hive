@@ -1,0 +1,53 @@
+video_id: HOgCL8lKuDc
+title: "New AI Robot Is Starting to Feel Human (Artificial Humans Are Here)"
+url: "https://www.youtube.com/watch?v=HOgCL8lKuDc"
+publication_date: "2025-UNKNOWN"
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - humanoid robotics
+  - physical AI
+  - VLA models
+
+secondary_topics:
+  - embodied intelligence
+  - AI-human interaction
+  - robotic hardware
+
+companies: []
+models: []
+frameworks: []
+research_papers: []
+products: []
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: LOW
+relevance_notes: >
+  Humanoid robotics news. Low direct relevance to Cerebro Nexarch unless
+  covering Digital Twin physical integration. Relevant to Layer 10 (Digital
+  Twins) only if physical AI-to-digital-twin interface patterns are described.
+  Watch for VLA model references.
+
+verification_status: UNVERIFIED            # video content inaccessible; title-only analysis
+
+pass_a_status: COMPLETE
+pass_a_date: "2026-08-14"
+pass_a_analyst: "claude-sonnet-4-6"
+pass_a_relevance: NONE                   # downgraded from LOW — humanoid robotics, outside Cerebro scope
+pass_a_knowledge_gaps: >
+  Covers humanoid AI robots with human-like appearance/behavior. Likely references Figure,
+  Boston Dynamics, Optimus (Tesla), or similar. Physical/embodied AI domain.
+pass_a_cerebro_relevance: >
+  No relevance to Cerebro Nexarch enterprise AI platform. Robotics is Layer 10 scope (Digital
+  Twins / Physical AI). No agentic, RAG, security, or infrastructure patterns extractable.
+  Cerebro does not currently target robotics integration.
+knowledge_extraction_status: SKIPPED     # NONE relevance; outside current Cerebro scope
+knowledge_objects_created: []

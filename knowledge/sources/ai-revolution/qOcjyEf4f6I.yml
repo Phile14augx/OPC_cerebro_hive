@@ -1,0 +1,38 @@
+video_id: qOcjyEf4f6I
+title: "AI Robot Snaps Mid Demo and Attacks Engineers on Camera + More AI & Robotics News"
+url: "https://www.youtube.com/watch?v=qOcjyEf4f6I"
+publication_date: "2024-UNKNOWN"
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - AI robotics incidents
+  - AI safety
+  - robotics news
+
+secondary_topics:
+  - physical AI failures
+  - robot demonstrations
+
+companies: []
+models: []
+frameworks: []
+research_papers: []
+products: []
+people: []
+hardware: []
+benchmarks: []
+datasets: []
+repositories: []
+
+potential_relevance: NONE
+relevance_notes: >
+  Entertainment-focused robotics incident news. No direct relevance to Cerebro
+  Nexarch architecture or engineering. Skip for Phase 3 extraction.
+
+verification_status: UNVERIFIED
+knowledge_extraction_status: SKIPPED
+skip_reason: "Entertainment/news format; no technical content relevant to Cerebro Nexarch"
