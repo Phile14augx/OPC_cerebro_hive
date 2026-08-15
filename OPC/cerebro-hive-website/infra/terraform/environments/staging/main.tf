@@ -13,6 +13,7 @@ terraform {
     aws        = { source = "hashicorp/aws", version = "~> 5.0" }
     kubernetes = { source = "hashicorp/kubernetes", version = "~> 2.0" }
     helm       = { source = "hashicorp/helm", version = "~> 2.0" }
+    random     = { source = "hashicorp/random", version = "~> 3.0" }
   }
 
   backend "s3" {
@@ -96,6 +97,11 @@ resource "aws_elasticache_subnet_group" "staging" {
   subnet_ids = module.networking.private_subnet_ids
 }
 
+resource "random_password" "redis" {
+  length  = 32
+  special = false
+}
+
 resource "aws_elasticache_replication_group" "staging" {
   replication_group_id       = "cerebro-hive-staging"
   description                = "CerebroHive staging Redis"
@@ -106,11 +112,12 @@ resource "aws_elasticache_replication_group" "staging" {
   automatic_failover_enabled = false
 
   subnet_group_name  = aws_elasticache_subnet_group.staging.name
-  security_group_ids = [module.networking.redis_sg_id]
+  security_group_ids = [module.networking.elasticache_sg_id]
 
   at_rest_encryption_enabled = true
   transit_encryption_enabled = true
-  auth_token_enabled         = true
+  auth_token                 = random_password.redis.result
+  auth_token_update_strategy = "ROTATE"
 
   apply_immediately = true
 
