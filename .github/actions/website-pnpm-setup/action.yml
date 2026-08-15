@@ -1,0 +1,32 @@
+name: Website pnpm setup
+description: Install pnpm, Node 22, and OPC/cerebro-hive-website workspace deps (postinstall/prisma generate must run).
+
+inputs:
+  node-version:
+    description: Node version
+    required: false
+    default: "22"
+  pnpm-version:
+    description: pnpm version
+    required: false
+    default: "9"
+
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.pnpm-version }}
+        run_install: false
+        package_json_file: OPC/cerebro-hive-website/package.json
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+        cache-dependency-path: OPC/cerebro-hive-website/pnpm-lock.yaml
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: OPC/cerebro-hive-website
+      run: pnpm install --frozen-lockfile

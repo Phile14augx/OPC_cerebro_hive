@@ -84,6 +84,14 @@ Exemptions are machine-readable and explicit, never silent skips. Dummy scripts 
 
 **Exit:** validation cannot silently skip real source code. YAML/workflow validation and dependency integrity are in the merge gate.
 
+**GitHub-visible check (do not change branch protection in this wave):** nested `OPC/cerebro-hive-website/.github/workflows` is not loaded by GitHub. Canonical workflow is `.github/workflows/website-ci.yml`. Job to require later:
+
+```text
+Website CI / workspace-contracts
+```
+
+That job runs `pnpm repo:policy` (`scripts/audit-workspace-contracts.mjs`). Nested `ci.yml` is a pointer only.
+
 ---
 
 ## W0.3 — Durable kernel persistence

@@ -1,3 +1,7 @@
+# NOT GitHub-visible. GitHub Actions only loads `.github/workflows/*.yml` at
+# the repository root. Canonical W0.2 / website CI:
+#   .github/workflows/website-ci.yml
+# Keep this file for docs/local references. Do not treat it as a second CI system.
 name: CI
 
 on:
