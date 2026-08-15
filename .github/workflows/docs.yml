@@ -6,10 +6,12 @@ on:
     paths:
       - '**/*.md'
       - 'docs/**'
+      - '.github/workflows/docs.yml'
   pull_request:
     paths:
       - '**/*.md'
       - 'docs/**'
+      - '.github/workflows/docs.yml'
 
 permissions:
   contents: read
