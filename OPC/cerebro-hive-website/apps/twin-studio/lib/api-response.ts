@@ -15,15 +15,23 @@ const statusByCode: Record<string, number> = {
   LLM_UNAVAILABLE: 503,
 };
 
+function isInvalidJson(error: unknown) {
+  if (error instanceof SyntaxError) return true;
+  return error instanceof Error && /not valid JSON|Unexpected token|JSON\.parse/i.test(error.message);
+}
+
 export function apiError(error: unknown) {
   const traceId = crypto.randomUUID();
-  if (error instanceof ZodError) {
+  if (error instanceof ZodError || isInvalidJson(error)) {
     return NextResponse.json(
       {
         error: {
           code: 'VALIDATION_ERROR',
-          message: 'The request contains invalid fields.',
-          details: error.flatten(),
+          message:
+            error instanceof ZodError
+              ? 'The request contains invalid fields.'
+              : 'The request body is not valid JSON.',
+          ...(error instanceof ZodError ? { details: error.flatten() } : {}),
           traceId,
         },
       },

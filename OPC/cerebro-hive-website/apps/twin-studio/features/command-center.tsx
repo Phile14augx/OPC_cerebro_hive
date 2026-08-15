@@ -68,7 +68,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
   const payload = response.status === 204 ? undefined : await response.json();
   if (!response.ok) {
-    throw new Error(payload?.error?.message ?? `Request failed with status ${response.status}`);
+    const code = typeof payload?.error?.code === 'string' ? payload.error.code : '';
+    const message = payload?.error?.message ?? `Request failed with status ${response.status}`;
+    throw new Error(code ? `${code}: ${message}` : message);
   }
   return payload?.data as T;
 }
@@ -445,8 +447,8 @@ export function CommandCenter() {
         throw new Error('State must be a JSON object.');
       }
       state = parsed as JsonObject;
-    } catch (parseError) {
-      setError(parseError instanceof Error ? parseError.message : 'State must be valid JSON.');
+    } catch {
+      setError('VALIDATION_ERROR: State must be valid JSON.');
       return;
     }
     const observedAtRaw = String(form.get('observedAt') ?? '').trim();
