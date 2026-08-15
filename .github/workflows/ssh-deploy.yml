@@ -72,7 +72,7 @@ jobs:
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
     - name: Bootstrap VPS (first run)
-      uses: appleboy/ssh-action@v1.2.0
+      uses: appleboy/ssh-action@v1.2.5
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
@@ -95,7 +95,7 @@ jobs:
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/cerebro-hive/
 
     - name: Restart app with PM2
-      uses: appleboy/ssh-action@v1.2.0
+      uses: appleboy/ssh-action@v1.2.5
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
@@ -103,7 +103,7 @@ jobs:
         script: bash /var/www/cerebro-hive/scripts/vps-restart.sh
 
     - name: Configure Nginx and provision HTTPS
-      uses: appleboy/ssh-action@v1.2.0
+      uses: appleboy/ssh-action@v1.2.5
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
