@@ -37,6 +37,10 @@ export class ConfigManager {
     this.loader = loader || new EnvironmentConfigLoader();
   }
 
+  load(): Record<string, any> {
+    return this.loader.load();
+  }
+
   get(key: string, defaultValue?: string): string {
     try {
       return this.loader.get<string>(key);

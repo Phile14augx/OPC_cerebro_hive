@@ -3,10 +3,18 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "dependencies": {
-    "@cerebro/config-core": "workspace:*"
+    "@cerebro/capability-core": "workspace:*",
+    "@cerebro/config-core": "workspace:*",
+    "@cerebro/core-bus": "workspace:*",
+    "@cerebro/runtime-core": "workspace:*",
+    "@cerebro/telemetry-core": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "^20.0.0",
     "typescript": "^5.0.0"
   }
 }

@@ -18,7 +18,7 @@ export class CerebroKernel {
   constructor(options?: KernelOptions) {
     this.config = new ConfigManager();
     this.eventBus = new MemoryEventBus();
-    this.runtime = new RuntimeRegistry();
+    this.runtime = RuntimeRegistry.getInstance();
     this.capabilities = new CapabilityRegistry();
   }
 

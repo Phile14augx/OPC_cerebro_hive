@@ -1737,10 +1737,25 @@ importers:
 
   packages/kernel-core:
     dependencies:
+      '@cerebro/capability-core':
+        specifier: workspace:*
+        version: link:../capability-core
       '@cerebro/config-core':
         specifier: workspace:*
         version: link:../config-core
+      '@cerebro/core-bus':
+        specifier: workspace:*
+        version: link:../core-bus
+      '@cerebro/runtime-core':
+        specifier: workspace:*
+        version: link:../runtime-core
+      '@cerebro/telemetry-core':
+        specifier: workspace:*
+        version: link:../telemetry-core
     devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.43
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
@@ -1961,12 +1976,15 @@ importers:
         specifier: workspace:*
         version: link:../runtime-contracts
     devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.43
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
       vitest:
         specifier: 3.2.4
-        version: 3.2.4(@types/debug@4.1.13)(@types/node@26.1.2)(jiti@2.7.0)(jsdom@26.1.0)(lightningcss@1.33.0)(terser@5.49.0)(tsx@4.23.9)(yaml@2.9.0)
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.43)(jiti@2.7.0)(jsdom@26.1.0)(lightningcss@1.33.0)(terser@5.49.0)(tsx@4.23.9)(yaml@2.9.0)
 
   packages/sdk:
     devDependencies:

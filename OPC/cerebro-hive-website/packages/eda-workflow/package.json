@@ -11,7 +11,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "lint": "node ../../scripts/eslint-eslintrc.cjs src"
   },
   "devDependencies": {
     "typescript": "^5.6.0",

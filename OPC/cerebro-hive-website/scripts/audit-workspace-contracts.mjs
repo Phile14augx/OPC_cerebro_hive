@@ -9,6 +9,13 @@
  * is missing a required real script, or when any package uses a prohibited
  * no-op (`exit 0`, `true`, `echo no tests`).
  *
+ * WAVE-0 “as applicable” (do not invent dummy scripts):
+ *   typecheck — required when tsconfig.json exists
+ *   lint      — required when an ESLint config already exists
+ *   test      — required when test files exist (*.test.* / *.spec.*)
+ *   build     — required when the package is actually built (Next/Vite
+ *               app, or main/types/exports point at dist/)
+ *
  * Ignores .codex-task8-* and .worktrees.
  * Dummy scripts for all 141 packages are not the fix — exemptions are
  * explicit YAML with a reason; expiry null is allowed only for
@@ -308,12 +315,15 @@ function inspectPackage(pkgDir) {
     TEST_CONFIGS.some((f) => exists(pkgDir, f)) ||
     Boolean(readJson(path.join(pkgDir, "package.json"))?.jest);
   const tsFiles = relFiles.filter((f) => /\.(ts|tsx|mts|cts)$/.test(f) && !f.endsWith(".d.ts"));
+  const jsFiles = relFiles.filter((f) => /\.(js|jsx|mjs|cjs)$/.test(f));
   const testFiles = relFiles.filter((f) => /\.(test|spec)\.(ts|tsx|js|mjs|cjs)$/.test(f));
   const authored = relFiles.filter((f) => f !== "package.json" && f !== "README.md" && f !== "LICENSE");
   return {
     hasTsconfig,
     hasEslint,
     hasTestConfig,
+    tsFileCount: tsFiles.length,
+    jsFileCount: jsFiles.length,
     hasTypeScript: hasTsconfig || tsFiles.length > 0,
     hasTestFiles: testFiles.length > 0,
     authoredCount: authored.length,
@@ -342,21 +352,49 @@ function classifyPackage(rel, pkg, inspect, typeOverrides) {
   if (/(^@[^/]+\/)?docs(-|$)|documentation/i.test(name) || /^(docs|documentation)$/i.test(base)) {
     return "DOCS_PACKAGE";
   }
+  if (inspect.tsFileCount === 0 && inspect.jsFileCount === 0 && inspect.authoredCount <= 2) {
+    return "META_PACKAGE";
+  }
   if (!inspect.hasTypeScript && inspect.authoredCount <= 1 && !pkg?.scripts) {
     return "META_PACKAGE";
   }
   return "SOURCE_PACKAGE";
 }
 
-function requiredScripts(rel, type, inspect) {
+function isBuiltPackage(pkgDir, pkg) {
+  const buildMarkers = [
+    "next.config.js",
+    "next.config.mjs",
+    "next.config.ts",
+    "next.config.cjs",
+    "vite.config.ts",
+    "vite.config.js",
+    "vite.config.mjs",
+  ];
+  if (buildMarkers.some((f) => exists(pkgDir, f))) return true;
+  const main = String(pkg?.main ?? "");
+  const types = String(pkg?.types ?? "");
+  if (/^\.?\/?dist\//.test(main) || /^\.?\/?dist\//.test(types)) return true;
+  if (pkg?.exports) {
+    const dumped = JSON.stringify(pkg.exports);
+    if (dumped.includes("/dist/") || dumped.includes("\"./dist")) return true;
+  }
+  return false;
+}
+
+function requiredScripts(type, inspect, pkg, pkgDir) {
   const required = new Set();
   if (type !== "SOURCE_PACKAGE") return required;
-  if (inspect.hasTypeScript) {
-    required.add("typecheck");
-    required.add("test");
-  }
+  // Typecheck is applicable when tsconfig.json exists — not merely because
+  // a .ts file is present without a compiler project.
+  if (inspect.hasTsconfig) required.add("typecheck");
+  // Lint is applicable when an ESLint config already exists in the package.
   if (inspect.hasEslint) required.add("lint");
-  if (rel.startsWith("apps/")) required.add("build");
+  // Test is applicable when test files exist. A vitest/jest config with zero
+  // tests does not force a dummy "echo no tests" script (WAVE-0 as applicable).
+  if (inspect.hasTestFiles) required.add("test");
+  // Build is applicable when the package is actually built.
+  if (isBuiltPackage(pkgDir, pkg)) required.add("build");
   return required;
 }
 
@@ -430,7 +468,7 @@ function main() {
     const pkg = readJson(path.join(pkgDir, "package.json")) ?? {};
     const inspect = inspectPackage(pkgDir);
     const type = classifyPackage(rel, pkg, inspect, packageTypes);
-    const required = requiredScripts(rel, type, inspect);
+    const required = requiredScripts(type, inspect, pkg, pkgDir);
     const scripts = pkg.scripts ?? {};
     const exemption = byPackage.get(rel);
     const active = exemptionActive(exemption, type);
@@ -478,8 +516,21 @@ function main() {
   }
 
   if (failures.length > 0) {
+    const byKind = { typecheck: 0, lint: 0, test: 0, build: 0, noop: 0, other: 0 };
+    for (const f of failures) {
+      if (/no-op /.test(f)) byKind.noop += 1;
+      else if (/missing required typecheck/.test(f)) byKind.typecheck += 1;
+      else if (/missing required lint/.test(f)) byKind.lint += 1;
+      else if (/missing required test/.test(f)) byKind.test += 1;
+      else if (/missing required build/.test(f)) byKind.build += 1;
+      else byKind.other += 1;
+    }
     console.error(`FAIL  ${failures.length} workspace contract violation(s):\n`);
     for (const f of failures) console.error(`  - ${f}`);
+    console.error("");
+    console.error(
+      `By kind: no-op=${byKind.noop} missing-typecheck=${byKind.typecheck} missing-lint=${byKind.lint} missing-test=${byKind.test} missing-build=${byKind.build} other=${byKind.other}`
+    );
     console.error("");
     process.exit(1);
   }

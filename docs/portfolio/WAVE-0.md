@@ -54,6 +54,15 @@ META_PACKAGE
 
 A `SOURCE_PACKAGE` must have real `typecheck`, `lint`, `test`, and `build` as applicable. Missing required command = CI failure. No-op command = CI failure.
 
+As applicable (enforced by `scripts/audit-workspace-contracts.mjs`):
+
+- `typecheck` — required when `tsconfig.json` exists
+- `lint` — required when an ESLint config already exists in the package
+- `test` — required when test files exist (`*.test.*` / `*.spec.*`). A test-runner config with zero tests does not force a dummy script
+- `build` — required when the package is actually built (Next/Vite app, or `main` / `types` / `exports` point at `dist/`)
+
+Do not add dummy scripts (`exit 0`, `true`, `echo no tests`) to go green. Missing tests on a SOURCE package without test files is N/A, not a silent skip of existing tests.
+
 Prohibited:
 
 ```json

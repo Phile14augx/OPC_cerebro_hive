@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "CommonJS",
-    "jsx": "react-jsx",
+    "target": "es2022",
+    "module": "commonjs",
+    "lib": ["es2022"],
+    "types": ["node"],
     "declaration": true,
     "strict": true,
     "esModuleInterop": true,
@@ -10,6 +11,6 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/test.ts"]
 }

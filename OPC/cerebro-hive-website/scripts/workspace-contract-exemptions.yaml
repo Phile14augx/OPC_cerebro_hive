@@ -2,8 +2,19 @@
 #
 # SOURCE_PACKAGE gaps are CI failures, not silent skips.
 # expiry: null is allowed only for GENERATED_PACKAGE / fixture packages.
+#
+# Classification overrides (package_types) are for GENERATED / CONFIG / DOCS /
+# META packages. Do not reclassify real application/service/library source
+# just to go green.
+#
+# Applicable SOURCE scripts (see WAVE-0.md W0.2):
+#   typecheck — tsconfig.json exists
+#   lint      — ESLint config exists
+#   test      — test files exist
+#   build     — Next/Vite app or dist/ publish contract
 
 package_types:
+  services/archive-worker: META_PACKAGE
   packages/icons-ai: GENERATED_PACKAGE
   packages/icons-angular: GENERATED_PACKAGE
   packages/icons-cli: GENERATED_PACKAGE
