@@ -40,10 +40,11 @@ export class PolicyEngine {
           if (rule.effect === 'deny') {
             return { allowed: false, reason: `Denied by rule: ${rule.id}` };
           }
-          if (rule.effect === 'allow') {
-            allowed = true;
-            reason = `Allowed by rule: ${rule.id}`;
-          }
+
+          // The effect union is exhausted by the deny branch above, so a
+          // matching rule that reaches here is necessarily an allow rule.
+          allowed = true;
+          reason = `Allowed by rule: ${rule.id}`;
         }
       } catch (e) {
         // Log error in condition evaluation
