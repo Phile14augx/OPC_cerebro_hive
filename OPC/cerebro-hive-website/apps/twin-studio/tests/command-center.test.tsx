@@ -19,4 +19,17 @@ describe('command center', () => {
     expect(await screen.findByRole('heading', { name: 'No digital twins' })).toBeTruthy();
     expect(screen.getAllByRole('button', { name: 'Create twin' }).length).toBeGreaterThan(0);
   });
+
+  it('shows API error code and message in the banner', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 503,
+        json: async () => ({ error: { code: 'LLM_UNAVAILABLE', message: 'llm unavailable' } }),
+      }),
+    );
+    render(<CommandCenter />);
+    expect((await screen.findByRole('alert')).textContent).toContain('LLM_UNAVAILABLE: llm unavailable');
+  });
 });

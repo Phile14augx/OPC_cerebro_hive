@@ -68,4 +68,8 @@ pnpm --filter @cerebro/twin-studio lint
 pnpm --filter @cerebro/twin-studio verify
 pnpm --filter @cerebro/twin-contracts test
 pnpm test:integration   # requires TEST_DATABASE_URL
+pnpm --filter @cerebro/twin-studio test:acceptance
+# Playwright uses baseURL http://localhost:3401/app and will reuse a running
+# Twin Studio server. Acceptance tests mock LLM HTTP in unit coverage and do
+# not call OpenAI or Anthropic. Live Ask Twin grounding still needs a provider key.
 ```

@@ -20,7 +20,7 @@ describe('observation simulator', () => {
       tick: 6,
     });
     expect(observation.provenance.classification).toBe('SIMULATED');
-    expect(observation.state.occupancy).toBe(false);
+    expect(observation.state['occupancy']).toBe(false);
     expect(observation.state['turnover-minutes']).toBe(48);
     expect(observation.alert?.reason).toMatch(/turnover/i);
   });

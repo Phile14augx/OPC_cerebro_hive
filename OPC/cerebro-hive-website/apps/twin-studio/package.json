@@ -9,6 +9,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:acceptance": "vitest run --config vitest.acceptance.config.ts && node ./node_modules/@playwright/test/cli.js test",
+    "test:e2e": "node ./node_modules/@playwright/test/cli.js test",
     "verify": "tsx scripts/verify.ts"
   },
   "dependencies": {
@@ -23,6 +25,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
+    "@playwright/test": "1.62.0",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "jsdom": "26.1.0",

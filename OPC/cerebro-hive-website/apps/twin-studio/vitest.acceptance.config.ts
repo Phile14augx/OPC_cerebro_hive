@@ -10,11 +10,8 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx', 'modules/**/*.test.ts', 'lib/**/*.test.ts'],
-    exclude: ['tests/acceptance/**', 'e2e/**', 'node_modules/**'],
-    environmentMatchGlobs: [['**/*.test.tsx', 'jsdom']],
-    coverage: {
-      reporter: ['text', 'json-summary'],
-    },
+    include: ['tests/acceptance/**/*.test.ts'],
+    testTimeout: 60_000,
+    hookTimeout: 30_000,
   },
 });
