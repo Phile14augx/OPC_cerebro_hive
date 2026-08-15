@@ -6,6 +6,8 @@
 
 Do not increase the 50-product surface. Move the kernel toward its first L6 primitives, move Studio/Archive/Forge from L4 toward L5, and make CI incapable of lying about either.
 
+The 2026-08-15 Perceptronic Knowledge Graph contract is **architecturally frozen at L3**. Do not implement `KRN-015` / `KRN-KG-*` runtime, and do not extend that specification, during Wave 0. Wave-1 window opens after W0.3.
+
 ---
 
 ## W0.1 — Repository truth and scope isolation

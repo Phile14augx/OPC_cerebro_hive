@@ -10,6 +10,7 @@ This directory consolidates every ADR series found in the repository. They were 
 | [`eios-transition/`](./eios-transition/) | The transition from the earlier 5-tier architecture to the 10-layer EIOS architecture | `ADR-000` (template), `ADR-001` |
 | [`engineering-review/`](./engineering-review/) | Engineering Review subsystem decisions (advisory-only status, evidence model, contributor interface) | `ADR-001`–`ADR-007` |
 | [`hiveforge/`](./hiveforge/) | HiveForge platform decisions (provider abstraction, control plane, execution runtime, security) | `ADR-020`–`ADR-052` |
+| [`nexarch/`](./nexarch/) | Shared Nexarch kernel decisions (knowledge fabric, policy-aware graph, OS primitives) | `0001`– |
 
 ## Full registry
 
@@ -92,6 +93,7 @@ Every ADR in the repository, by namespace-qualified ID. This is the disambiguati
 | `hiveforge/ADR-050` | Execution Observability — Tracing, Metrics, Structured Logging Contracts (Phase 9g-5) |
 | `hiveforge/ADR-051` | End-to-End Verification Strategy (Phase 9g-6) |
 | `hiveforge/ADR-052` | Execution Runtime Live Integration — First Real Caller (Phase 10.1/10.2) |
+| `nexarch/0001` | Perceptronic Enterprise Knowledge Graph as Nexarch kernel |
 
 ## Adding a new ADR
 

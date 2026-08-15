@@ -1,6 +1,8 @@
 # Architecture
 
-How the CerebroHive platform is built, and why. This is permanent documentation — it describes the system as it exists now, not a plan for future work (those live under [`../plans/`](../plans/README.md)).
+How the CerebroHive platform is built, and why. This is permanent documentation — it describes the system as it exists now, not a plan for future work.
+
+**Work assignment** originates in [`../portfolio/MASTER-IMPLEMENTATION-LEDGER.md`](../portfolio/MASTER-IMPLEMENTATION-LEDGER.md). Historical plans under [`../plans/`](../plans/README.md) are superseded for assignment.
 
 ## Core documents
 
@@ -20,6 +22,7 @@ How the CerebroHive platform is built, and why. This is permanent documentation 
 | [commercial-strategy.md](./commercial-strategy.md) | Commercial editions and pricing philosophy |
 | [ai-safety-architecture.md](./ai-safety-architecture.md) | AI safety architecture |
 | [runtime-architecture.md](./runtime-architecture.md) | Runtime architecture |
+| [perceptronic-enterprise-knowledge-graph.md](./perceptronic-enterprise-knowledge-graph.md) | Nexarch kernel: one ontology for knowledge + org + agents + models + policy (`KRN-015`) |
 | [services/](./services/) | Per-service architecture notes (one file per backend service) |
 | [measurements/](./measurements/) | Empirical measurements backing architecture claims (gate reports, mutation testing) |
 

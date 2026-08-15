@@ -13,6 +13,8 @@
 
 Where HiveVector stores meaning as floating-point vectors, HiveKnowledge stores meaning as explicit, traversable relationships. Both are essential; they serve different retrieval modes.
 
+**Kernel substrate:** HiveKnowledge is the product façade over platform kernel `KRN-015` (Perceptronic Enterprise Knowledge Graph). It does not own a second ontology, a second policy plane, or a second identity model. Canonical architecture: [`docs/architecture/perceptronic-enterprise-knowledge-graph.md`](../../architecture/perceptronic-enterprise-knowledge-graph.md). ADR: `nexarch/0001`. Vector retrieval remains `KRN-016` / HiveVector. Policy-aware graph projection (`KRN-KG-010`) precedes any enterprise graph UI.
+
 ---
 
 ## 2. Core Capabilities

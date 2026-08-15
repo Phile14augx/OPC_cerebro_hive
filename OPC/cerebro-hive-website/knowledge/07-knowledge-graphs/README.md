@@ -1,9 +1,13 @@
 # Knowledge Graphs
 
-**Status:** EMPTY — Awaiting Phase 2 channel inventory and Phase 3 knowledge extraction.
+**Status:** ACTIVE — 1 research object + kernel architecture locked 2026-08-15.
 
-Knowledge objects in this category will follow the schema defined in `00-index/KNOWLEDGE-SCHEMA.md`.
+Knowledge objects in this category follow `00-index/KNOWLEDGE-SCHEMA.md`.
 
-Each file will be named: `KN-[CATEGORY]-[NNNNNN].md`
+| Artifact | Role |
+|---|---|
+| [KN-KG-000001.md](./KN-KG-000001.md) | GraphRAG (Microsoft) — research claim, independently verified |
+| [`docs/architecture/perceptronic-enterprise-knowledge-graph.md`](../../docs/architecture/perceptronic-enterprise-knowledge-graph.md) | Nexarch kernel architecture (`KRN-015`) — not a YouTube extract |
+| [`docs/architecture/decisions/nexarch/0001-perceptronic-enterprise-knowledge-graph.md`](../../docs/architecture/decisions/nexarch/0001-perceptronic-enterprise-knowledge-graph.md) | ADR: kernel not product 51; policy before visualization |
 
-Processing priority: see `00-index/MASTER-INDEX.md` §Phase Status.
+Repo mapping for implementation remains `packages/knowledge-graph-core` and `services/knowledge-api`.
