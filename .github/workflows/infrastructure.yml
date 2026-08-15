@@ -120,6 +120,8 @@ jobs:
     env:
       AWS_ROLE_ARN: ${{ secrets[matrix.role_secret] }}
     steps:
+      - uses: actions/checkout@v7
+
       - name: No Terraform changes for environment
         if: matrix.changed != 'true' && github.event_name != 'workflow_dispatch'
         run: echo "No Terraform changes detected for ${{ matrix.environment }}; plan not required."
@@ -129,9 +131,6 @@ jobs:
         run: |
           echo "::warning::${{ matrix.role_secret }} is not configured or not available to this event. Terraform validate passed; cloud-backed plan is skipped."
           echo "Configure the repository/environment OIDC role secret to enable terraform plan."
-
-      - uses: actions/checkout@v7
-        if: (matrix.changed == 'true' || github.event_name == 'workflow_dispatch') && env.AWS_ROLE_ARN != ''
 
       - name: Configure AWS OIDC credentials
         if: (matrix.changed == 'true' || github.event_name == 'workflow_dispatch') && env.AWS_ROLE_ARN != ''
