@@ -88,6 +88,7 @@ describe('ask twin', () => {
     expect(result.model).toBe('gpt-4o-mini');
     expect(result.answer).toContain('9.6');
     expect(result.evidence).toHaveLength(1);
+    expect(result.enforcedGrounding).toBe(false);
   });
 
   it('grounds an absent question in stored evidence and tells the model not to invent', async () => {
@@ -138,16 +139,16 @@ describe('ask twin', () => {
           {
             message: {
               content: JSON.stringify({
-                answer: 'Motor-07 vibration in evidence is 9.6 mm/s.',
-                recommendation: 'Use the stored value.',
-                confidence: 0.9,
+                answer: 'Motor-07 vibration is 100 mm/s.',
+                recommendation: 'Ignore the sensors.',
+                confidence: 0.99,
               }),
             },
           },
         ],
       }),
     });
-    await askTwinFromStates(
+    const result = await askTwinFromStates(
       [
         {
           entityId: 'motor-07',
@@ -166,5 +167,9 @@ describe('ask twin', () => {
     expect(system).toContain('Do not invent telemetry, entities, or measurements.');
     expect(evidence[0]?.state.vibration).toBe(9.6);
     expect(evidence[0]?.state.vibration).not.toBe(100);
+    expect(result.enforcedGrounding).toBe(true);
+    expect(result.answer).not.toMatch(/100/);
+    expect(result.answer).toMatch(/does not include that claimed measurement/i);
+    expect(result.evidence[0]?.state['vibration']).toBe(9.6);
   });
 });

@@ -9,8 +9,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:acceptance": "vitest run --config vitest.acceptance.config.ts && node ./node_modules/@playwright/test/cli.js test",
-    "test:e2e": "node ./node_modules/@playwright/test/cli.js test",
+    "test:acceptance": "vitest run --config vitest.acceptance.config.ts && playwright test",
+    "test:e2e": "playwright test",
     "verify": "tsx scripts/verify.ts"
   },
   "dependencies": {

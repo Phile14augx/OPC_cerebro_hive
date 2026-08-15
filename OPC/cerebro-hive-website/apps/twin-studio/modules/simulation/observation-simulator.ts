@@ -56,7 +56,7 @@ export function simulateEntityObservation(input: {
   at?: Date;
 }): SimulatedObservation {
   const at = input.at ?? new Date();
-  const state: Record<string, unknown> = { ...(input.current ?? {}) };
+  const state: Record<string, unknown> = {};
   for (const variable of input.variables) {
     const camel = variable.key.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase());
     const value = observationForVariable(variable.key, input.tick, input.current);

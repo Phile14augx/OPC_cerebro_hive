@@ -32,7 +32,7 @@ Production and `TWIN_STUDIO_DEV_AUTH=disabled` require a session token and `x-wo
 
 ## Ask Twin
 
-Ask Twin calls OpenAI or Anthropic with the stored twin projection as the only evidence. Missing API keys return `LLM_UNAVAILABLE` instead of a fabricated answer.
+Ask Twin calls OpenAI or Anthropic with the stored twin projection as the only evidence. Missing API keys return `LLM_UNAVAILABLE` instead of a fabricated answer. If a configured model still proposes a measurement that is not in stored state, Twin Studio rewrites the answer to an explicit evidence refusal and does not return the invented number.
 
 ## Version pipeline
 
@@ -69,7 +69,7 @@ pnpm --filter @cerebro/twin-studio verify
 pnpm --filter @cerebro/twin-contracts test
 pnpm test:integration   # requires TEST_DATABASE_URL
 pnpm --filter @cerebro/twin-studio test:acceptance
-# Playwright uses baseURL http://localhost:3401/app and will reuse a running
-# Twin Studio server. Acceptance tests mock LLM HTTP in unit coverage and do
-# not call OpenAI or Anthropic. Live Ask Twin grounding still needs a provider key.
+# Playwright uses baseURL http://localhost:3401 and /app paths. It reuses a running
+# Twin Studio server. Acceptance tests do not call OpenAI or Anthropic; Ask Twin
+# grounding is enforced against stored evidence even if a model invents values.
 ```

@@ -129,6 +129,10 @@ describe.skipIf(!live)('Twin Studio API acceptance', () => {
         (row) => row['classification'] === 'SIMULATED' && String(row['source']).includes('twin-observation-simulator'),
       ),
     ).toBe(true);
+    const latestSimulated = rows.find((row) => row['classification'] === 'SIMULATED');
+    expect(latestSimulated).toBeTruthy();
+    expect((latestSimulated!['state'] as Json)['sourceMarker']).toBeUndefined();
+    expect((latestSimulated!['state'] as Json)['vibration']).toBeTypeOf('number');
   });
 
   it('gate 8: a foreign-tenant twin is 404 TWIN_NOT_FOUND', async () => {

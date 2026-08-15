@@ -24,4 +24,18 @@ describe('observation simulator', () => {
     expect(observation.state['turnover-minutes']).toBe(48);
     expect(observation.alert?.reason).toMatch(/turnover/i);
   });
+
+  it('does not copy observed-only keys into simulated state', () => {
+    const observation = simulateEntityObservation({
+      entityKey: 'motor-07',
+      variables: [{ key: 'vibration', unit: 'mm/s' }],
+      current: { vibration: 3.1, sourceMarker: 'acceptance-line-sensor' },
+      tick: 2,
+    });
+    expect(observation.provenance.classification).toBe('SIMULATED');
+    expect(observation.provenance.source).toBe('twin-observation-simulator');
+    expect(observation.state['vibration']).toBe(5.6);
+    expect(observation.state['sourceMarker']).toBeUndefined();
+    expect(Object.keys(observation.state).sort()).toEqual(['alert', 'vibration']);
+  });
 });

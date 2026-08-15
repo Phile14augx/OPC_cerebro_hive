@@ -15,6 +15,7 @@ export type AskTwinAnswer = {
   sourceKind: 'STORED_TWIN_STATE';
   prompt: string;
   generatedAt: Date;
+  enforcedGrounding: boolean;
 };
 
 type LlmCompletion = {
@@ -56,6 +57,64 @@ export function resolveLlmConfig(
     return { provider: 'openai', model: env['OPENAI_MODEL']?.trim() || 'gpt-4o-mini', apiKey: openaiKey };
   }
   return undefined;
+}
+
+function looksLikeUuid(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
+
+function normalizeNumber(value: number) {
+  return String(Number(value));
+}
+
+function extractNumbers(text: string): string[] {
+  const numbers: string[] = [];
+  for (const match of text.matchAll(/\d+(?:\.\d+)?/g)) {
+    const value = Number(match[0]);
+    if (Number.isFinite(value)) numbers.push(normalizeNumber(value));
+  }
+  return numbers;
+}
+
+function walkNumbers(value: unknown, into: Set<string>) {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    into.add(normalizeNumber(value));
+    return;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) walkNumbers(item, into);
+    return;
+  }
+  if (value && typeof value === 'object') {
+    for (const item of Object.values(value as Record<string, unknown>)) walkNumbers(item, into);
+  }
+}
+
+export function evidenceNumbers(states: DurableState[]): Set<string> {
+  const numbers = new Set<string>();
+  for (const state of states) {
+    walkNumbers(state.state, numbers);
+    if (!looksLikeUuid(state.entityId)) {
+      for (const number of extractNumbers(state.entityId)) numbers.add(number);
+    }
+    for (const number of extractNumbers(state.entityName)) numbers.add(number);
+  }
+  return numbers;
+}
+
+export function enforceEvidenceGrounding(
+  answer: string,
+  states: DurableState[],
+): { answer: string; rewritten: boolean } {
+  const allowed = evidenceNumbers(states);
+  const claimed = extractNumbers(answer);
+  const invented = claimed.filter((number) => !allowed.has(number));
+  if (invented.length === 0) return { answer, rewritten: false };
+  return {
+    rewritten: true,
+    answer:
+      'Stored twin evidence does not include that claimed measurement. Use only the attached entity state.',
+  };
 }
 
 function parseModelJson(text: string): { answer: string; recommendation: string; confidence: number } {
@@ -147,6 +206,7 @@ export async function askTwinFromStates(
       sourceKind: 'STORED_TWIN_STATE',
       prompt,
       generatedAt,
+      enforcedGrounding: false,
     };
   }
 
@@ -157,13 +217,19 @@ export async function askTwinFromStates(
   ].join('\n\n');
   const completion = await completeWithConfiguredLlm(userPrompt, fetchImpl, env);
   const parsed = parseModelJson(completion.text);
+  const grounded = enforceEvidenceGrounding(parsed.answer, states);
   return {
-    ...parsed,
+    answer: grounded.answer,
+    recommendation: grounded.rewritten
+      ? 'Review the attached stored evidence before acting.'
+      : parsed.recommendation,
+    confidence: grounded.rewritten ? Math.min(parsed.confidence, 0.4) : parsed.confidence,
     evidence: states,
     provider: completion.provider,
     model: completion.model,
     sourceKind: 'STORED_TWIN_STATE',
     prompt,
     generatedAt,
+    enforcedGrounding: grounded.rewritten,
   };
 }
