@@ -48,7 +48,6 @@ jobs:
       - uses: ./.github/actions/website-pnpm-setup
         with:
           node-version: ${{ env.NODE_VERSION }}
-          pnpm-version: ${{ env.PNPM_VERSION }}
 
       # Source of truth: package.json "repo:policy" → scripts/repo-policy.mjs
       # → scripts/audit-workspace-contracts.mjs (no dummy --fix).
@@ -66,7 +65,6 @@ jobs:
       - uses: ./.github/actions/website-pnpm-setup
         with:
           node-version: ${{ env.NODE_VERSION }}
-          pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Typecheck (Turborepo)
         run: pnpm turbo typecheck --color
@@ -100,7 +98,6 @@ jobs:
       - uses: ./.github/actions/website-pnpm-setup
         with:
           node-version: ${{ env.NODE_VERSION }}
-          pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Run unit tests with coverage
         run: pnpm turbo test -- --coverage --reporter=verbose --reporter=junit --outputFile=test-results.xml
@@ -135,7 +132,6 @@ jobs:
       - uses: ./.github/actions/website-pnpm-setup
         with:
           node-version: ${{ env.NODE_VERSION }}
-          pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Build all packages and apps (Turborepo)
         run: pnpm turbo build --color
