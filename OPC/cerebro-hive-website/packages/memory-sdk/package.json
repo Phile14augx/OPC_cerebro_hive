@@ -1,5 +1,5 @@
 {
-  "name": "@nexarch/memory-sdk",
+  "name": "@cerebro/memory-sdk",
   "version": "0.1.0",
   "description": "Multi-tier memory management, semantic retrieval, and context assembly for the Cerebro Nexarch AOS",
   "main": "dist/index.js",
