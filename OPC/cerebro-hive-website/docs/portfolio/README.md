@@ -9,6 +9,7 @@ This folder is the operational constitution. Work assignment originates here. Ol
 
 | Artifact | Role |
 |---|---|
+| [BASELINE-v1.0.md](./BASELINE-v1.0.md) | Frozen five-number snapshot. Amend only with dated evidence, never by re-auditing the vision. |
 | [MASTER-IMPLEMENTATION-LEDGER.md](./MASTER-IMPLEMENTATION-LEDGER.md) | One row per product, service, kernel capability, and OS capability. Evidence level is the only completion field. |
 | [GOVERNANCE.md](./GOVERNANCE.md) | No-new-plans, Definition of Done, WIP limits, superseded plans. |
 | [WAVE-0.md](./WAVE-0.md) | Engineering stabilization release: W0.1 → W0.5, gates A–C, Verified Capability Throughput. |
@@ -32,7 +33,7 @@ The five numbers below are Baseline v1.0. Wave 0 of [WAVE-0.md](./WAVE-0.md) is 
 
 This period: **Verified = 0**. Started : Verified is not yet a useful ratio because Wave 0 has not closed a gate. Optimise for Verified, not Started.
 
----
+Canonical frozen copy: [BASELINE-v1.0.md](./BASELINE-v1.0.md).
 
 ---
 

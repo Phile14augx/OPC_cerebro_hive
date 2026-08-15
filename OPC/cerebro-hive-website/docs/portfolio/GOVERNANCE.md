@@ -176,7 +176,7 @@ A feature is not implemented if CI cannot prove it. Package classification, no-o
 | `docs/products.md` 5-product list | Flow/Agent/Learn/ERP/OS | **SUPERSEDE** as canonical catalogue. |
 | `docs/03-services/` 7-practice corpus | Parallel service taxonomy | **RECONCILE** into SA/EI/AO/SG/IS packs. Do not author a fourth taxonomy. |
 | `.planning/` GSD roadmaps | Studio dashboard 8-phase programme | **FOLD** into PROD-001 Wave 4. No new GSD project. |
-| Nexarch overnight programme | Command center + kernel packages | **FOLD** into OS-E-* and KRN-*. Commit via existing `nexarch-commit.sh`, then stop opening sibling kernels. |
+| Nexarch overnight programme | Command center + kernel packages | **FOLD** into OS-E-* and KRN-* after W0.3. **Do not run `nexarch-commit.sh`** — it is a mixed dump. Split per [W0.1-WORKTREE-ISOLATION.md](./W0.1-WORKTREE-ISOLATION.md). |
 
 Completed Studio Company OS and Twin Studio plans in `docs/plans/completed/` stay as shipped history. They do not authorise new adjacent programmes.
 

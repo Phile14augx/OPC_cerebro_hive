@@ -1,6 +1,8 @@
 # Capability Architecture Index
 
-**Canonical Source:** `../CAPABILITY_ARCHITECTURE.md`
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.**
+
+**Canonical Source:** [`architecture/capability-model.md`](./architecture/capability-model.md)
 
 Quick-reference for the five-tier platform architecture and dependency graph.
 
@@ -15,4 +17,4 @@ Quick-reference for the five-tier platform architecture and dependency graph.
 | 4 | Business Applications | All 18 Cerebro products |
 | 5 | Ecosystem & Commerce | HiveExchange, HiveMarketplace, HiveBilling, HiveLicense, HivePartner, HiveDeploy, HiveCloud, HiveGovern |
 
-See `../CAPABILITY_ARCHITECTURE.md` for full dependency graph, data flows, security architecture, and observability design.
+See [`architecture/capability-model.md`](./architecture/capability-model.md) for full dependency graph, data flows, security architecture, and observability design.

@@ -51,7 +51,7 @@ All ten have `docs/specifications/products/*_spec.md`. Studio Company OS added o
 | PROD-019 | HiveData | Beta | L2 | N | P | P | N | P | N | N | `packages/data-core` | platform data plane |
 | PROD-020 | HiveLake | Beta | L1 | N | N | N | N | N | N | N | spec | lakehouse |
 | PROD-021 | HiveAnalytics | MVP | L2 | P | P | N | N | P | N | N | platform analytics slices; M27 on disk | evidence store |
-| PROD-022 | HiveKnowledge | MVP | L3 | P | Y | P | P | P | N | N | `services/knowledge-api`, `packages/knowledge-graph-core` | tests + persistence |
+| PROD-022 | HiveKnowledge | MVP | L3 | P | Y | P | P | P | N | N | `services/knowledge-api`, `packages/knowledge-graph-core` | tests + persistence; kernel spec `KRN-015` |
 | PROD-023 | HiveSemantic | MVP | L2 | N | P | N | N | N | N | N | `packages/ontology-sdk` | graph integration |
 | PROD-024 | HiveVector | GA | L2 | N | P | P | N | P | N | N | pgvector in stack; no product verification | retrieval E2E |
 | PROD-025 | HiveObservatory | Beta | L2 | P | P | N | N | P | N | N | telemetry/observability packages; nexarch UI on JSON | real telemetry backend |
@@ -206,7 +206,7 @@ Do **not** generate 50 service codebases. Industrialise packs in parallel with k
 | KRN-012 | Event Bus | P0 | L3 | `event-bus`, `events`, `core-bus` | N | P | P | one bus |
 | KRN-013 | Scheduler | P0 | L2 | `kernel-core` scheduler (in-process) | N | N | N | durable scheduler |
 | KRN-014 | Memory | P0 | L3 | memory-sdk, memory-service | N | P | Y | InMemory → Postgres |
-| KRN-015 | Knowledge Graph | P0 | L3 | knowledge-api, knowledge-graph-core | N | P | Y | tests |
+| KRN-015 | Knowledge Graph (Perceptronic) | P0 | L3 | knowledge-api, knowledge-graph-core | N | P | Y | FROZEN L3 until Wave 1 after W0.3 |
 | KRN-016 | Vector / Retrieval | P0 | L2 | pgvector in Prisma stack | N | P | P | product E2E |
 | KRN-017 | Storage | P0 | L2 | archive/eda storage | P | P | P | governed blob API |
 | KRN-018 | Audit Log | P0 | L3 | governance-core AuditTrail, ECP AuditService | P | P | P | hash-chain in prod DB |
@@ -222,6 +222,25 @@ Do **not** generate 50 service codebases. Industrialise packs in parallel with k
 
 **Kernel complete (L6/L7): 0/27. L4+: 1/27. L3+: 14/27.**
 
+### C.1 `KRN-015` decomposition — Perceptronic Enterprise Knowledge Graph
+
+**FROZEN at L3 (2026-08-15).** Do not implement or further specify during Wave 0. Spec: [`../architecture/perceptronic-enterprise-knowledge-graph.md`](../architecture/perceptronic-enterprise-knowledge-graph.md). ADR: `nexarch/0001`. Product façade: `PROD-022` HiveKnowledge. Vector path consumes `KRN-016`. Projections are disposable/rebuildable from Postgres + provenance. Activation/reasoning run only on `KRN-KG-010` authorized projections. **Order:** `001→002→003→004→005→006→010→(007∥008)→009→011→012`. Wave 1 after W0.3.
+
+| ID | Capability | Pri | Evidence | Map | Blocker |
+|---|---|---|---:|---|---|
+| KRN-KG-001 | Graph Ontology | P0 | L2 | `Ontology.ts` six families; legacy CMDB kinds retained | Wave 1 runtime still after W0.3 |
+| KRN-KG-002 | Entity Resolution | P0 | L1 | — | after ontology |
+| KRN-KG-003 | Knowledge Ingestion | P0 | L2 | `GraphIngestionService` | durable pipeline |
+| KRN-KG-004 | Provenance & Claims | P0 | L2 | `Provenance.ts`; no Claim vs Fact split | epistemic states |
+| KRN-KG-005 | Temporal Graph | P0 | L2 | `SemanticEdge.validFrom/Until` | snapshot replay |
+| KRN-KG-006 | Hybrid Graph/Vector Retrieval | P0 | L1 | consumes `KRN-016` pgvector | rebuildable projection ports |
+| KRN-KG-010 | Policy-Aware Graph Projection | P0 | L1 | `KRN-003` + `KRN-004` not wired to graph | hard gate for 007–012 |
+| KRN-KG-007 | Perceptronic Activation Engine | P1 | L1 | — | blocked on KRN-KG-010 |
+| KRN-KG-008 | Graph Reasoning | P0 | L2 | `ReasoningEngine` | blocked on KRN-KG-010 |
+| KRN-KG-009 | Graph Visualization | P1 | L1 | — | blocked on 007+008 |
+| KRN-KG-011 | Agent Graph Interface | P0 | L1 | — | blocked on KRN-KG-009 |
+| KRN-KG-012 | Graph Audit & Explainability | P0 | L1 | `KRN-018` | blocked on KRN-KG-011 |
+
 ---
 
 ## D. Personal OS (12 primitives)
@@ -234,7 +253,7 @@ Personal OS is not a separate agent architecture. It is user-scoped profile of t
 | OS-P-002 | Personal Profile | L1 | not a dedicated model | specify on kernel identity |
 | OS-P-003 | Preferences | L2 | `packages/experience` PreferenceService | user-scoped persistence |
 | OS-P-004 | Personal Memory | L1 | HiveMemory is agent/org scoped | user partition |
-| OS-P-005 | Knowledge | L2 | shared knowledge-api | ACL by user |
+| OS-P-005 | Knowledge | L2 | shared knowledge-api; projection of `KRN-015` | ACL by user; no second graph |
 | OS-P-006 | Goals | L1 | nexarch missions are OS-level, not personal | profile |
 | OS-P-007 | Plans | L1 | planner is product/runtime | profile |
 | OS-P-008 | Tasks | L2 | Company OS tasks are organisational | user task graph |
@@ -272,7 +291,7 @@ Nexarch (`app/nexarch`, `packages/kernel-core`, `governance-core`, `runtime-core
 | OS-E-017 | AgentFleet | L2 | nexarch agents UI | runtime |
 | OS-E-018 | Workflow / BusinessProcess | L3 | workflow-api / Temporal | product wiring |
 | OS-E-019 | DigitalTwin | L3 | `apps/twin-studio` vertical slice | not the OS itself |
-| OS-E-020 | KnowledgeGraph | L3 | knowledge-api | tests |
+| OS-E-020 | KnowledgeGraph | L3 | knowledge-api; `KRN-015` perceptronic spec | tests; policy projection |
 | OS-E-021 | Integration | L2 | connectors scattered | SDK |
 | OS-E-022 | SLO | L1 | SLO workflows exist as YAML | not product SLOs |
 | OS-E-023 | Enterprise control plane | L2 | `services/enterprise-control-plane` no tests | HTTP proof |

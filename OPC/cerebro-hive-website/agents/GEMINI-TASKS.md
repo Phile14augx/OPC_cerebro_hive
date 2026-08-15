@@ -1,158 +1,250 @@
-# Gemini Tasks — Midday Assignment 2026-08-07 12:00 IST
+# Gemini Tasks — Midday Assignment 2026-08-15 12:00 IST
 
-**Audit session:** Noon | **Next check:** 3 AM tonight
-**Git commits reviewed:** 0 — git unreachable from audit sandbox; completion assessed via file modification timestamps
-**Tasks completed since last session (3 AM):** None confirmed — task files unchanged, no new artifacts detected
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.**
+
+**Audit session:** Noon | **Next check:** 3 AM tonight (2026-08-16)
+**Git commits reviewed:** 0 — git unreachable from audit sandbox; assessed via file timestamps and disk inspection
+**Tasks completed since last session (3 AM Aug 14):** None by commit. Significant new documentation and knowledge base files found on disk (uncommitted): `knowledge/` (16-dir AI KB), `WEEKLY-CTO-TECHNOLOGY-INTELLIGENCE.md`, `AI-REVOLUTION-KNOWLEDGE-BASE-BASELINE.md`, `CEREBRO-NEXARCH-AI-INTELLIGENCE-BRIEF.md`. All queued for commit in `nexarch-commit.sh` commit 7.
 
 ---
 
-## ⚠️ CRITICAL ESCALATION — 4th Cycle
+## 🆕 New Work Detected Since Last Audit
 
-G-P0-1 has been pending for **4 consecutive audit cycles** without a commit. `infra/README.md` was modified at 21:42 IST on Aug-06 (the modified content is confirmed on disk) but was never committed. G-P1-1 and G-P2-1 remain blocked behind it.
+| Artifact | Timestamp | Task |
+|---------|-----------|------|
+| `knowledge/` — 16-topic AI intelligence knowledge base | Aug 14–15 IST | G-P0-NEXARCH / nexarch commit 7 |
+| `WEEKLY-CTO-TECHNOLOGY-INTELLIGENCE.md` (22 KB) | Aug 15 04:59 IST | G-P2-3 output — DONE on disk |
+| `AI-REVOLUTION-KNOWLEDGE-BASE-BASELINE.md` (30 KB) | Aug 14 13:36 IST | G-P2-3 output — DONE on disk |
+| `CEREBRO-NEXARCH-AI-INTELLIGENCE-BRIEF.md` (6 KB) | Aug 14 13:36 IST | intel brief — DONE on disk |
+| `packages/governance-core/` — full policy/risk/approval stack | Aug 14 IST | new package — needs Gemini review |
+| `nexarch-commit.sh` commit 7 covers all docs above | Aug 15 00:55 IST | run from local terminal |
 
-| Task | Slipped cycles |
-|------|---------------|
-| G-P0-1: Commit documentation change-set | **4** |
-| G-P1-1: Validate Python agent-runner | 2 |
-| G-P2-1: Hermes tool-binding contract | 2 |
+---
 
-**Start G-P0-1 immediately. The infra/README.md content is already written — just validate and commit.**
+## ⚠️ Slipped Tasks — ESCALATED
+
+| Task | Slipped cycles | Status |
+|------|---------------|--------|
+| G-P0-1: Review and commit documentation change-set | **13** 🚨 | partially done on origin/main; remaining items on disk |
+| G-P1-1: Validate and commit Python agent-runner roles | **11** 🚨 | unstarted |
+| G-P2-1: Hermes pre-integration tool-binding contract | **11** 🚨 | blocked on G-P0-1 |
+| G-P1-3: Auth/authz gap action plan | **7** 🚨 | unstarted — P0-class security |
+| G-P1-2a: Commit docs/content-migration Batch A | **8** | unstarted |
+| G-P1-2b: Commit docs/content-migration Batch B | **8** | unstarted |
+| G-P0-1b: Commit M26.1 audit batch (~30 files) | **8** | unstarted |
+| G-P2-2: M26.1 roadmap sprint integration summary | **8** | unstarted |
+| G-P2-3: PRODUCT_SPECIFICATIONS gap analysis | **1** | partial — intel brief done; full gap analysis pending |
 
 ---
 
 ## 🔴 P0 — Blockers (do first)
 
-### G-P0-1 · Commit the documentation change-set — CRITICAL (4 cycles)
+### G-P0-NEXARCH · Support nexarch-commit.sh execution — docs & knowledge commits
 
-**Context:** `infra/README.md` is already modified with correct content (Terraform/CDK ownership boundary). The full set of documentation files listed below needs review and commit. If the full set can't be validated at once, **commit what is accurate today** in passes.
+The `nexarch-commit.sh` commit 7 covers all knowledge base and intelligence docs. Verify the files are correct before the commit runs, then confirm they land:
 
-**Files to commit:**
-```
-infra/README.md                                    ← already modified; verify Terraform/CDK claim is accurate
-MASTER-PLAN-EVOLUTION-LOG.md
-CEREBROHIVE_CONSTITUTION.md
-architecture/ARCHITECTURE_INDEX.md
-MASTER-PLAN-GAP-ASSESSMENT.md
-docs/09-templates/26-one-pager-template.md
-docs/09-templates/27-pitch-deck-template.md
-agents/hermes/INTEGRATION-NOTES.md
-```
-
-**Validation checklist before committing:**
-1. `infra/README.md` — `cerebro-review-stack` is correctly described as ephemeral CDK preview stack ✓ (confirmed in current file content). Commit this one first.
-2. `architecture/ARCHITECTURE_INDEX.md` — confirm all linked files exist in the repo.
-3. `agents/hermes/INTEGRATION-NOTES.md` — all endpoint references must be marked `[confirmed]`, `[missing]`, or `[TBD]`.
-4. Run secrets grep: `grep -rE "(sk-|ghp_|AKIA)" infra/ architecture/ docs/09-templates/ agents/hermes/`
-
-**Commit in two passes if needed:**
-- Pass 1 (commit today, no excuses): `infra/README.md`, `architecture/ARCHITECTURE_INDEX.md`, `MASTER-PLAN-*.md`, `CEREBROHIVE_CONSTITUTION.md`
-- Pass 2: Templates + Hermes integration notes
-
-Include `[G-P0-1]` in commit messages.
-
-**Success criteria:** All listed files committed (or a documented subset with reason for deferral); no guessed facts remain in committed files.
-**Complexity:** M | **Dependencies:** none
-
----
-
-## 🟠 P1 — Critical (start G-P1-1 and G-P1-2a in parallel with G-P0-1)
-
-### G-P1-1 · Validate and commit the Python agent-runner role expansion
-**Slipped 2 cycles**
-
-**Files (from `agents/TRIAGE-REPORT-2026-08-06.md`, changeset `feat/agent-runner-python`, ~34 files):**
-```
-services/agent-runner/src/agent_runner/config.py
-services/agent-runner/src/agent_runner/main.py
-services/agent-runner/src/agent_runner/registry.py
-services/agent-runner/src/agent_runner/base_agent.py
-services/agent-runner/src/agent_runner/orchestrator.py
-services/agent-runner/src/agent_runner/llm.py
-services/agent-runner/src/agent_runner/coding.py
-services/agent-runner/src/agent_runner/roles/        ← all role modules
-```
-
-**Validation steps:**
 ```bash
-cd services/agent-runner
-python -m pytest tests/ -x -q 2>&1 | head -50
-python -c "from agent_runner import registry; print(registry.list_agents())"
-python -c "from agent_runner import config; config.validate()"
-```
-If tests don't exist, confirm all role modules import cleanly. Check `registry.py` for consistency with the `agents/` role subdirectories.
+# Verify knowledge base integrity (no secrets, correct structure)
+grep -rE "(sk-|ghp_|AKIA|password\s*=)" knowledge/ CEREBRO-NEXARCH-AI-INTELLIGENCE-BRIEF.md AI-REVOLUTION-KNOWLEDGE-BASE-BASELINE.md WEEKLY-CTO-TECHNOLOGY-INTELLIGENCE.md 2>/dev/null
 
-Commit clean, validated code:
-```
-feat(agent-runner): Python role expansion — validated import and registry wiring  [G-P1-1]
+# Check file counts
+find knowledge/ -name "*.md" | wc -l
+
+# After nexarch-commit.sh runs, verify commit 7 landed
+git log --oneline -10 | grep "docs(agentic-os)"
 ```
 
-**Success criteria:** import checks pass; registry is consistent; coherent code committed; any gaps documented.
-**Complexity:** M | **Dependencies:** C-P0-3 Phase A (confirm no scope overlap)
+**Complexity:** S | **Dependencies:** nexarch-commit.sh must run (Claude's C-P0-NEXARCH)
 
 ---
 
-### G-P1-2 · Begin committing docs/content-migration in batches
-**~1,200 files in docs/ — start with Commit A**
+### G-P0-1 · Close out the documentation change-set — 13 CYCLES 🚨
 
-**Commit A (do today):**
-```
-docs/01-company-foundation/
-docs/02-brand-messaging/
-docs/03-products/
-docs/04-services/
-docs/05-industries/
-docs/06-gtm-playbook/
-docs/07-sales-playbook/
-```
+**After `git pull origin main` (post nexarch-commit.sh push), commit remaining items not yet on main:**
 
-**Pre-commit check:**
 ```bash
-grep -rE "(sk-|ghp_|AKIA)" docs/01-company-foundation docs/02-brand-messaging docs/03-products docs/04-services docs/05-industries docs/06-gtm-playbook docs/07-sales-playbook
-```
-Spot-check 3–5 files per subdirectory for correct markdown. Use the pre-written commit message from `agents/TRIAGE-REPORT-2026-08-06.md`.
+git pull origin main
+git log --oneline -- MASTER-PLAN-GAP-ASSESSMENT.md CEREBROHIVE-6-MONTH-MASTER-PLAN.md MASTER-PLAN-EVOLUTION-LOG.md CEREBROHIVE_CONSTITUTION.md
 
-**Commit B (only if time allows after G-P0-1 and G-P1-1):**
-```
-docs/08-delivery-operations/ and beyond
-docs/products/, docs/services/, docs/solutions/, docs/strategy/
+# Commit remaining untracked docs:
+grep -rE "(sk-|ghp_|AKIA)" infra/ agents/hermes/ 2>/dev/null
+git add infra/README.md
+git add MASTER-PLAN-EVOLUTION-LOG.md CEREBROHIVE_CONSTITUTION.md
+git add architecture/ARCHITECTURE_INDEX.md
+git add agents/hermes/INTEGRATION-NOTES.md
+git commit -m "docs: remaining G-P0-1 documentation — infra, constitution, arch-index  [G-P0-1]"
+git push
 ```
 
-Include `[G-P1-2a]` and `[G-P1-2b]` in commit messages.
-
-**Success criteria:** At minimum Commit A lands; no secrets in any committed file.
-**Complexity:** M | **Dependencies:** none (pure docs)
+**Complexity:** S | **Dependencies:** `git pull origin main` first
 
 ---
 
-## 🟡 P2 — High (after G-P0-1)
+### G-P0-1b · Commit M26.1 audit batch (~30 files, pure docs) — 8 CYCLES
 
-### G-P2-1 · Produce a pre-integration Hermes tool-binding contract
-**Slipped 2 cycles | Blocked on G-P0-1**
-
-**Files:**
+```bash
+grep -rE "(sk-|ghp_|AKIA|password\s*=)" audit/ 2>/dev/null
+git add audit/EXECUTIVE-AUDIT-SUMMARY.md
+git add audit/HIVEFORGE-SLICES-1-4-GOVERNANCE-BACKLOG.md
+git add audit/SLICE-5-EXECUTION-LIFECYCLE-REVIEW.md
+git add audit/ARCHITECTURAL-REVIEW-UNPLANNED-VERTICAL-SLICE.md
+git add audit/INFRA-RECONCILIATION-PLAN.md
+git add audit/DEPLOYMENT-ARCHITECTURE-DISCOVERY.md
+git add audit/CREDENTIAL-PROVIDER-COLLISION-REVIEW.md
+git add audit/P0-AUTH-AUTHZ-GAP.md
+git add audit/POLYGLOT-ARCHITECTURE-MAP.md
+git add audit/MILESTONE-25.5-PRODUCTION-READINESS.md
+git add audit/MILESTONE-25.4C-RUNTIME-INTEGRATION.md
+git add audit/SERVICES-PLATFORM-API-CLASSIFICATION.md
+git add audit/RESPONSIBILITY-MATRIX.md
+git add audit/RESILIENCE-AUDIT.md
+git add audit/PLATFORM-IDENTITY-PERSISTENCE-AUDIT.md
+git add audit/LIVE-ENDPOINT-INVESTIGATION.md
+git add audit/M26.1-BASELINE.md
+git add audit/M26.1-ARCHITECTURE-01-CONTEXT-DIAGRAM.md
+git add audit/M26.1-ARCHITECTURE-02-BOUNDED-CONTEXT.md
+git add audit/M26.1-ARCHITECTURE-03-DOMAIN-MODEL.md
+git add audit/M26.1-ARCHITECTURE-04-SERVICE-BOUNDARIES.md
+git add audit/M26.1-ARCHITECTURE-05-PERSISTENCE-MODEL.md
+git add audit/M26.1-ARCHITECTURE-06-EXTENSION-FRAMEWORK.md
+git add audit/M26.1-INDEX.md
+git add audit/M26.1-IMPLEMENTATION-ROADMAP.md
+git add audit/M26.1-ENGINEERING-REVIEW-ASSISTANT-BRIEF.md
+git add audit/seo-audit.csv audit/scores.json audit/orphan-candidates.md
+git add audit/scaffold-ranking.md audit/name-collisions.md audit/inventory-table.md
+git add audit/adr/
+git commit -m "docs(audit): M26.1 architecture audit batch — 30 files  [G-P0-1b]"
+git push
 ```
-agents/hermes/agent.yaml
-agents/hermes/skills.py
-agents/hermes/INTEGRATION-NOTES.md
-apps/platform-api/src/modules/agents/
+
+**Complexity:** S | **Dependencies:** G-P0-1 (pull first to avoid conflicts)
+
+---
+
+## 🟠 P1 — Critical (today)
+
+### G-P1-3 · Auth/authz gap action plan — 7 CYCLES (P0-class security finding)
+
+```
+Input: audit/P0-AUTH-AUTHZ-GAP.md (34 KB — read this first)
+Output: agents/AUTH-GAP-ACTION-PLAN.md
+Content required:
+  1. Summary of the P0 finding (2-3 sentences)
+  2. Immediate mitigations (no-code/config changes that can land in <1 day)
+  3. Structured 5-item backlog with: task, owner, file path, complexity, deadline
+  4. Acceptance criteria for closing this finding
 ```
 
-For each tool Hermes declares in `agent.yaml` and `skills.py`, trace to a platform-api route. Mark each:
-- `✅ confirmed` — route found at exact path
-- `❌ missing` — route does not exist (Claude must implement)
-- `⏳ external` — served by an external service
+```bash
+cat audit/P0-AUTH-AUTHZ-GAP.md | head -200
+# Write agents/AUTH-GAP-ACTION-PLAN.md based on findings
+git add agents/AUTH-GAP-ACTION-PLAN.md
+git commit -m "docs(security): auth/authz gap action plan from P0 audit finding  [G-P1-3]"
+git push
+```
 
-Update `agents/hermes/INTEGRATION-NOTES.md` with a binding table. No guessing — mark it missing if you can't find the route.
+**Complexity:** M | **Dependencies:** none — read from disk
 
-Commit with `[G-P2-1]`.
+---
 
-**Success criteria:** Every Hermes tool has a disposition; no endpoint assumed.
-**Complexity:** S | **Dependencies:** G-P0-1 (INTEGRATION-NOTES.md must be committed first)
+### G-P1-1 · Validate and commit Python agent-runner roles — 11 CYCLES 🚨
+
+```
+Files: agents/<role>/ directories (accessibility_specialist, ai_engineer, etc. — 49 role dirs)
+Action:
+  1. Validate each role dir has a consistent structure (README, config, main entry)
+  2. Fix any malformed role files
+  3. Commit the validated batch
+Success: git log shows G-P1-1 commit; pnpm tsc passes in any package that imports agent types
+```
+
+```bash
+# Check structure of agent role dirs
+ls agents/ | grep -v "^[A-Z]" | head -10
+cat agents/ai_engineer/README.md 2>/dev/null || ls agents/ai_engineer/
+
+# Validate all roles have required files
+for dir in agents/*/; do
+  if [ ! -f "$dir/README.md" ] && [ ! -f "$dir/config.yaml" ] && [ ! -f "$dir/agent.py" ]; then
+    echo "MISSING: $dir"
+  fi
+done
+
+git add agents/*/
+git commit -m "feat(agents): validate and commit 49 Python agent-runner role definitions  [G-P1-1]"
+git push
+```
+
+**Complexity:** M | **Dependencies:** G-P0-1
+
+---
+
+### G-P1-2a · Commit docs/content-migration Batch A (docs/01–07) — 8 CYCLES
+
+```bash
+ls docs/ 2>/dev/null | head -20
+git add docs/01-* docs/02-* docs/03-* docs/04-* docs/05-* docs/06-* docs/07-* 2>/dev/null
+git status --short | grep "^A" | wc -l
+git commit -m "docs: content-migration batch A — docs sections 01–07  [G-P1-2a]"
+git push
+```
+
+**Complexity:** S | **Dependencies:** G-P0-1
+
+---
+
+## 🟡 P2 — High (today if P1 done)
+
+### G-P2-3 · PRODUCT_SPECIFICATIONS gap analysis (partial — finish today)
+
+The intel brief (`CEREBRO-NEXARCH-AI-INTELLIGENCE-BRIEF.md`) and knowledge base are done. Now complete the gap analysis:
+
+```
+Input: PRODUCT_SPECIFICATIONS/ (49 spec files on origin/main)
+Input: MASTER-PLAN-GAP-ASSESSMENT.md
+Output: agents/PRODUCT-SPECS-GAP-ANALYSIS.md
+Content: For each of the 49 specs, mark as: ✅ implemented / 🔶 partial / ❌ missing
+  Then produce a prioritized list of the 10 most impactful missing implementations.
+```
+
+```bash
+ls .worktrees/codex-twin-industry-framework/PRODUCT_SPECIFICATIONS/ | wc -l
+cat MASTER-PLAN-GAP-ASSESSMENT.md | head -100
+
+# Write agents/PRODUCT-SPECS-GAP-ANALYSIS.md
+git add agents/PRODUCT-SPECS-GAP-ANALYSIS.md
+git commit -m "docs(analysis): PRODUCT_SPECIFICATIONS gap analysis — 49 specs audited  [G-P2-3]"
+```
+
+**Complexity:** L | **Dependencies:** none (files readable from disk/worktree)
+
+---
+
+### G-P2-1 · Hermes pre-integration tool-binding contract — 11 CYCLES
+
+```
+File: agents/hermes/INTEGRATION-NOTES.md (read first)
+File: .hermes/ directory
+Output: agents/HERMES-TOOL-CONTRACT.md
+Content: Formal tool-binding spec for how Hermes connects to HiveGateway — input/output schema, auth model, error codes.
+```
+
+**Complexity:** M | **Dependencies:** G-P0-1
+
+---
+
+### G-P2-2 · M26.1 roadmap sprint integration summary — 8 CYCLES
+
+```
+Input: AGENT-RUNTIME-BACKLOG.md (on origin/main — M10.1–M10.7 phased plan)
+Input: audit/M26.1-IMPLEMENTATION-ROADMAP.md
+Output: agents/M26.1-SPRINT-INTEGRATION.md
+Content: Map each M26.1 audit finding to the appropriate M10.x sprint; identify conflicts; produce a merged timeline.
+```
+
+**Complexity:** M | **Dependencies:** G-P0-1b (pull M26.1 audit files first)
 
 ---
 
 ## How to use this file in Antigravity
-
-Start G-P0-1 and G-P1-2a in parallel — both are pure documentation, no code execution needed. Run G-P1-1 after confirming a Python environment is available. Always include the task ID in commit messages. Never commit `.env` or any file containing secret values.
-
-*Written by CerebroHive Noon Audit — 2026-08-07 12:00 IST*
+Load this file into your Antigravity session. Work through tasks top to bottom — P0 first, no exceptions. When each task is complete, commit the result with the task ID in the commit message (e.g., `[G-P0-1]`) so the night audit can detect completion automatically.
