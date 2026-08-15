@@ -1,144 +1,207 @@
-# Claude Tasks — Midday Assignment 2026-08-07 12:00 IST
+# Claude Tasks — Midday Assignment 2026-08-15 12:00 IST
 
-**Audit session:** Noon | **Next check:** 3 AM tonight
-**Git commits reviewed:** 0 — git unreachable from audit sandbox; completion assessed via file modification timestamps
-**Tasks completed since last session (3 AM):** None confirmed — task files unchanged, no new artifacts detected
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.**
 
----
-
-## ⚠️ CRITICAL ESCALATION — 4th Cycle
-
-C-P0-1, C-P0-2, and C-P0-3 have now been pending across **4 consecutive audit cycles** (Noon Aug-06 → 3 AM Aug-07 → Noon Aug-07) with **zero commits**. This constitutes a delivery risk for the Month 2–4 plan. These tasks are unchanged from the 3 AM assignment. There is nothing new to plan — the work must simply be executed.
-
-| Task | Slipped cycles |
-|------|---------------|
-| C-P0-1: De-scope M10.1 worktree, commit, open PR | **4** |
-| C-P0-2: Apply Prisma migration | **4** |
-| C-P0-3a/b/c: Execute triage plan | **3** (analysis done) |
-
-**No P1 work until all three P0s have at least one commit.**
+**Audit session:** Noon | **Next check:** 3 AM tonight (2026-08-16)
+**Git commits reviewed:** 0 — git unreachable from audit sandbox; completion assessed via file timestamps and disk inspection
+**Tasks completed since last session (3 AM Aug 14):** None by commit. Significant new work found ON DISK (uncommitted): Nexarch Command Center built, agent-OS packages (kernel-core, memory-sdk, runtime-core, governance-core) created, knowledge base established, pnpm-lock.yaml updated.
 
 ---
 
-## 🔴 P0 — Blockers (do first, can run in parallel)
+## 🆕 Major New Work Detected Since Last Audit (uncommitted — needs commit)
 
-### C-P0-1 · De-scope M10.1 worktree then commit and push PR
-**Slipped 4 cycles — CRITICAL**
+| Artifact | Timestamp | Commit target |
+|---------|-----------|---------------|
+| `app/nexarch/` — Command Center UI (page.tsx, layout.tsx, 6 route dirs) | Aug 14 23:51 IST | nexarch-commit.sh commit 6 |
+| `lib/agent-os/` — seed.ts, store.ts, types.ts | Aug 14 23:41–51 IST | nexarch-commit.sh commit 5 |
+| `data/agent-os.json` (23 KB) | Aug 14 23:55 IST | nexarch-commit.sh commit 5 |
+| `packages/kernel-core/` — kernel, scheduler, watchdog, lifecycle, delegation | Aug 14 IST | nexarch-commit.sh commit 1 |
+| `packages/memory-sdk/` — context-engine, memory-manager | Aug 14 IST | nexarch-commit.sh commit 2 |
+| `packages/runtime-core/` — mission/, task/, execution.ts | Aug 14 IST | nexarch-commit.sh commit 3 |
+| `packages/governance-core/` — policy-engine, risk-engine, approval-service, budget-enforcer, audit-trail | Aug 14 IST | nexarch-commit.sh commit 4 |
+| `knowledge/` — AI intelligence knowledge base (16 topic dirs, ~30+ files) | Aug 14–15 IST | nexarch-commit.sh commit 7 |
+| `CEREBRO-NEXARCH-AI-INTELLIGENCE-BRIEF.md` | Aug 14 13:36 IST | nexarch-commit.sh commit 7 |
+| `AI-REVOLUTION-KNOWLEDGE-BASE-BASELINE.md` | Aug 14 13:36 IST | nexarch-commit.sh commit 7 |
+| `WEEKLY-CTO-TECHNOLOGY-INTELLIGENCE.md` | Aug 15 04:59 IST | nexarch-commit.sh commit 7 |
+| `nexarch-commit.sh` | Aug 15 00:55 IST | ready to run |
+| `pnpm-lock.yaml` updated | Aug 15 14:16 IST | nexarch-commit.sh commit 8 |
 
-**Context:** Codex's review (`agents/CODEX-M10.1-REVIEW.md`) found that the worktree mixes M10.1/M10.4 runtime files with M10.2 provider-tool files. The PR cannot be opened until scope is separated.
-
-**Step 1 — Park M10.2 files (do not delete):**
-```
-packages/ai-gateway/src/types.ts
-packages/ai-gateway/src/gateway.ts
-packages/ai-gateway/src/providers/anthropic.provider.ts
-packages/ai-gateway/src/providers/openai.provider.ts
-apps/platform-api/src/modules/runtime/providers/ToolRuntimeProvider.ts
-```
-Use `git stash` or a temporary branch to park these before committing M10.1.
-
-**Step 2 — Commit only M10.1/M10.4 scope** per `agents/M10.1-COMMIT-HANDOFF.md`:
-```
-packages/runtime/src/execution/
-packages/capabilities/agent-builder/src/AgentRuntimeService.ts
-apps/platform-api/src/modules/conversations/conversations.routes.ts
-apps/platform-api/src/bootstrap.ts
-```
-Run focused typecheck first:
-```bash
-pnpm turbo typecheck --filter=@cerebro/runtime --filter=@cerebro/agent-builder-capability --filter=platform-api
-```
-
-**Step 3 — Push branch and open PR** against `main`. Include `[C-P0-1]` in the PR title.
-
-**Success criteria:** PR open; contains only M10.1/M10.4 scope; focused typecheck passes.
-**Complexity:** M | **Dependencies:** none
+**The `nexarch-commit.sh` script is ready at repo root — run it from a local terminal to land 8 structured commits covering all of the above.**
 
 ---
 
-### C-P0-2 · Apply and verify the Prisma migration
-**Slipped 4 cycles — CRITICAL**
+## ⚠️ Slipped Tasks — ESCALATED
 
-**Files:** `packages/database/prisma/schema.prisma`, `packages/database/prisma/migrations/` (to be generated)
+| Task | Slipped cycles | Status |
+|------|---------------|--------|
+| C-P0-1: De-scope M10.2, commit M10.1, open PR | **13** 🚨 | unstarted — CRITICAL BREACH |
+| C-P0-2: Apply Prisma migration | **13** 🚨 | unstarted — CRITICAL BREACH |
+| C-P0-3a: Commit audit/sprint files (Phase A) | **12** 🚨 | unstarted — may be included in nexarch-commit.sh commit 8 |
+| C-P0-3b: Commit architecture docs (Phase B) | **10** | unstarted |
+| C-P0-3c: Commit root planning/governance docs (Phase C) | **10** | partially done via origin/main advance |
+| C-P0-3d: Typecheck and commit apps/platform/ features (Phase D) | **8** | unstarted |
+| C-P0-3e: Typecheck and commit agent-sdk/ai/ai-gateway/agent-ops (Phase E) | **8** | unstarted |
+| C-P0-0: Fix Vite/Node baseline regression | **8** | blocked — lockfile fix ready on disk, needs commit |
+| C-P0-4: Fix shared lockfile | **3** | pnpm-lock.yaml UPDATED on disk today — just needs committing (included in nexarch commit 8) |
 
-From the `packages/database` directory:
+---
+
+## 🔴 P0 — Blockers (do first, no other work until resolved)
+
+### C-P0-NEXARCH · Run nexarch-commit.sh — 8 commits of completed work (NEW — HIGHEST PRIORITY)
+
+All Nexarch Command Center work was built overnight. The commit script is ready. Run it NOW from a local terminal:
+
 ```bash
-pnpm prisma migrate dev --name add-agent-execution-models-aug-07
+# From repo root, local terminal (not Codex sandbox)
+cd "D:\{MY_PROJECTS}\{OPC_cerebro_hive}\OPC\cerebro-hive-website"
+bash nexarch-commit.sh
+git push origin main
 ```
-**Stop and escalate if you see any `DROP TABLE`, `DROP COLUMN`, or destructive `ALTER COLUMN`.** Then verify:
+
+This lands: kernel-core, memory-sdk, runtime-core, governance-core, agent-OS data layer, Nexarch UI, knowledge base, updated pnpm-lock.yaml, and sprint files.
+
+**Complexity:** S | **Dependencies:** local terminal with git push access | **Blocks:** C-P0-4 resolution, C-P0-3a resolution (both included in commit 8)
+
+---
+
+### C-P0-3a · Commit audit/sprint coordination files (Phase A) — 12 CYCLES
+
+**If nexarch-commit.sh commit 8 does NOT include these, run separately:**
+
 ```bash
-pnpm prisma migrate status
+grep -rE "(sk-|ghp_|AKIA|password\s*=)" agents/ .planning/ 2>/dev/null | grep -v ".pyc"
+
+git add agents/TRIAGE-REPORT-2026-08-06.md
+git add agents/CODEX-CHANGESET-MANIFEST.md agents/CODEX-M10.1-REVIEW.md
+git add agents/CODEX-M10.2-TEST-PLAN.md agents/CODEX-PRISMA-MIGRATION-REVIEW.md
+git add agents/CerebroHive_AEOS_6Month_MegaPlan.md agents/M10.1-COMMIT-HANDOFF.md
+git add .planning/PROJECT.md .planning/REQUIREMENTS.md .planning/ROADMAP.md .planning/STATE.md
+git add .planning/research/
+git add task.md
+git commit -m "docs(agents): audit coordination files, changeset manifest, Studio planning  [C-P0-3a]"
+```
+
+**Complexity:** S | **Dependencies:** none (pure docs, zero compile steps)
+
+---
+
+### C-P0-1 · De-scope M10.2, commit M10.1 scope, open PR — 13 CYCLES 🚨
+
+```bash
+# Read the scope separation guide first
+cat agents/CODEX-M10.1-REVIEW.md
+
+# Separate M10.2-only files from M10.1 scope
+git diff --name-only | grep -E "(ai-gateway|providers)" > /tmp/m10.2-files.txt
+cat /tmp/m10.2-files.txt
+
+# Stage only M10.1 files
+git add packages/runtime/src/execution/
+git add packages/capabilities/agent-builder/src/AgentRuntimeService.ts
+git add apps/platform-api/src/modules/conversations/conversations.routes.ts
+git commit -m "feat(runtime): M10.1 agent execution lifecycle foundation  [C-P0-1]"
+git push origin HEAD -u
+gh pr create --title "feat(runtime): M10.1 agent execution lifecycle" --body "See agents/M10.1-COMMIT-HANDOFF.md"
+```
+
+**Complexity:** M | **Dependencies:** local terminal with git push access
+
+---
+
+### C-P0-2 · Apply and verify Prisma migration — 13 CYCLES 🚨
+
+The migration SQL at `20260809144150_agent_execution_contract/migration.sql` exists on main. Apply it:
+
+```bash
+# Ensure local main is up to date first
+git pull origin main
+
+# Run migration (requires Postgres running locally)
+cd packages/db
+pnpm prisma migrate deploy
 pnpm prisma generate
+
+# Verify
+pnpm prisma migrate status
+
+git add packages/db/prisma/
+git commit -m "feat(db): apply AgentExecution contract migration  [C-P0-2]"
+git push
 ```
 
-Commit with message:
-```
-feat(db): add AgentExecution* migration — aug-07  [C-P0-2]
-```
-
-**Success criteria:** `pnpm prisma migrate status` shows no pending migrations; no destructive SQL.
-**Complexity:** S | **Dependencies:** none
+**Complexity:** M | **Dependencies:** Postgres running locally; `git pull` first
 
 ---
 
-### C-P0-3 · Execute the triage plan — commit the safe changesets
-**Analysis done (TRIAGE-REPORT-2026-08-06.md exists); execution pending 3 cycles**
-
-Work through changesets in safety order. Each phase can be committed independently.
-
-**Phase A — Audit/Sprint coordination (no code, no secrets — start here):**
-```
-agents/CLAUDE-TASKS.md, GEMINI-TASKS.md, CODEX-TASKS.md
-agents/CODEX-CHANGESET-MANIFEST.md, CODEX-M10.1-REVIEW.md
-agents/CODEX-M10.2-TEST-PLAN.md, CODEX-PRISMA-MIGRATION-REVIEW.md
-agents/CURRENT-SPRINT.md, M10.1-COMMIT-HANDOFF.md
-agents/TRIAGE-REPORT-2026-08-06.md
-agents/CerebroHive_AEOS_6Month_MegaPlan.md
-CURRENT-SPRINT.md (root — confirm not duplicate of agents/ version)
-PROGRESS.md, AGENT-RUNTIME-BACKLOG.md, AGENTS.md
-```
-Verify `.gitignore` has `legal-docs/` before staging anything. Use the pre-written commit message from the TRIAGE-REPORT.
-
-**Phase B — Architecture docs:**
-Commit `architecture/` paths under `docs/architecture-update`.
-
-**Phase C — Root planning docs:**
-Run `grep -r "sk-" --include="*.md"` to confirm no secrets, then commit:
-`CEREBROHIVE_CONSTITUTION.md`, `CEREBROHIVE-6-MONTH-MASTER-PLAN.md`, `MASTER-PLAN-*.md`
-
-Defer to Gemini: `docs/**`, `services/agent-runner/`, `infra/` (G-P0-1 / G-P1-1 territory).
-
-**Success criteria:** Audit, architecture, and root planning files committed; `git status` visibly smaller.
-**Complexity:** L | **Dependencies:** none (parallel with C-P0-1, C-P0-2)
-
----
-
-## 🟠 P1 — Critical (after all P0s have at least one commit each)
+## 🟠 P1 — Critical (today, after P0s)
 
 ### C-P1-1 · Establish runtime typecheck baseline
-**Files:** `apps/platform-api/`, `packages/runtime/`, `packages/runtime-core/`
 
-Run `pnpm turbo typecheck` from repo root. Fix errors in `apps/platform-api` and `packages/runtime` first. Append a per-package error summary under a `## Typecheck Baseline` section in this file.
+After M10.1 is committed:
 
-**Success criteria:** `apps/platform-api` and `packages/runtime` typecheck clean; all remaining errors quantified.
-**Complexity:** L | **Dependencies:** C-P0-1, C-P0-2
+```bash
+cd packages/runtime
+pnpm tsc --noEmit 2>&1 | tee /tmp/runtime-typecheck.txt
+wc -l /tmp/runtime-typecheck.txt
+# Fix any errors in packages/runtime/src/execution/
+git add packages/runtime/src/
+git commit -m "fix(runtime): resolve typecheck errors post-M10.1  [C-P1-1]"
+```
+
+**Complexity:** M | **Dependencies:** C-P0-1
 
 ---
 
-### C-P1-2 · Implement M10.2 provider tool-calling (foundation)
-**Files:** `packages/ai-gateway/src/types.ts`, `packages/ai-gateway/src/providers/anthropic.provider.ts`, `packages/ai-gateway/src/providers/openai.provider.ts`
+### C-P1-3 · Studio Phase 1 — Schema & Navigation Foundation — 4 CYCLES
 
-Recover M10.2 files from the stash/temp branch created in C-P0-1. Implement the tool-calling normalisation layer per `agents/CODEX-M10.2-TEST-PLAN.md`. Start with the Anthropic provider.
+```
+File: apps/platform/src/features/studio/backend-runtime/
+Action: Wire up Studio schema editor, route navigation skeleton, and sidebar layout.
+Success: `/studio` route renders schema panel + navigation tree; no console errors.
+```
 
-Commit with `[C-P1-2]` in the message.
+```bash
+cd apps/platform
+pnpm tsc --noEmit
+# Then implement schema panel component
+```
 
-**Success criteria:** Anthropic provider passes the tool-call fixture from CODEX-M10.2-TEST-PLAN.md; no regression in existing provider tests.
-**Complexity:** M | **Dependencies:** C-P0-1 (M10.2 files recovered from stash)
+**Complexity:** L | **Dependencies:** C-P0-3d, C-P0-2
+
+---
+
+## 🟡 P2 — High (today if P1 done)
+
+### C-P2-NEXARCH · Wire Nexarch API routes to real data
+
+Now that `app/nexarch/` and `lib/agent-os/` exist on disk:
+
+```
+File: app/api/ (created by nexarch-commit.sh)
+Action: Validate the API route handlers for agents, missions, governance. Connect to Prisma/DB layer from C-P0-2.
+Success: GET /api/agents returns seeded agent list; POST /api/missions creates a draft mission record.
+```
+
+**Complexity:** M | **Dependencies:** C-P0-NEXARCH (committed), C-P0-2 (Prisma done)
+
+---
+
+### C-P2-1 · Land Archive lockfile fix
+
+```bash
+# C-P0-4 lockfile is in nexarch commit 8 — verify it's committed
+git log --oneline -5 | grep lockfile
+# If not, run:
+pnpm install --no-frozen-lockfile
+git add pnpm-lock.yaml
+git commit -m "fix(lockfile): sync pnpm-lock.yaml for new @cerebro/* packages  [C-P0-4]"
+git push origin main
+```
+
+**Complexity:** S | **Dependencies:** C-P0-NEXARCH (run nexarch-commit.sh first)
 
 ---
 
 ## How to use this file
-
-Open in VS Code. Work P0s in parallel where possible — C-P0-1, C-P0-2, and Phase A of C-P0-3 can all start simultaneously. Include the task ID (e.g. `[C-P0-1]`) in every commit message so the night audit can automatically detect completion.
-
-*Written by CerebroHive Noon Audit — 2026-08-07 12:00 IST*
+Open this file in VS Code. Work tasks top to bottom — P0 first, no exceptions. Each task has the exact file path and what to do. When you commit, use a commit message that references the task ID in brackets (e.g., `[C-P0-1]`) so the night audit can automatically detect completion.

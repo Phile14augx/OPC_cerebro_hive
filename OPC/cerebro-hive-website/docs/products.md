@@ -1,5 +1,7 @@
 # Products — Overview
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.** This 5-product marketing list is not the canonical catalogue (that is the 50-product registry). Evidence maturity is the ledger, not GA/Beta labels here.
+
 > **5 products** in the CerebroHive proprietary software suite
 
 ## Product Status

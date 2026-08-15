@@ -1,6 +1,8 @@
 # Services Portfolio Index
 
-**Canonical Source:** `../SERVICES_PORTFOLIO.md`
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.**
+
+**Canonical Source:** [`architecture/services-portfolio.md`](./architecture/services-portfolio.md)
 
 ## 50 Services Across 5 Categories
 
@@ -34,4 +36,4 @@
 | Time & Materials | Flexible advisory | As needed |
 | Outcome-Based | Success fee tied to measurable outcome | Post-delivery |
 
-See `../SERVICES_PORTFOLIO.md` for full service specifications with deliverables, methodologies, and pricing.
+See [`architecture/services-portfolio.md`](./architecture/services-portfolio.md) for full service specifications with deliverables, methodologies, and pricing.
