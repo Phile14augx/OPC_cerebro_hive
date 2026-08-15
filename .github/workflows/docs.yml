@@ -6,10 +6,12 @@ on:
     paths:
       - '**/*.md'
       - 'docs/**'
+      - '.github/workflows/docs.yml'
   pull_request:
     paths:
       - '**/*.md'
       - 'docs/**'
+      - '.github/workflows/docs.yml'
 
 permissions:
   contents: read
@@ -24,13 +26,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
-        
+
       - name: Markdown Lint
         uses: DavidAnson/markdownlint-cli2-action@v16
         continue-on-error: true
         with:
           globs: "**/*.md"
-          
+
       - name: Check Markdown Links
         uses: lycheeverse/lychee-action@v2
         with:
