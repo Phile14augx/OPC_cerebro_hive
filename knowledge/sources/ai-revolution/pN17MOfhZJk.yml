@@ -1,0 +1,56 @@
+video_id: pN17MOfhZJk
+title: "DeepSeek Just CRUSHED Big Tech AGAIN With JANUS PRO - New SHOCKING AI Model!"
+url: "https://www.youtube.com/watch?v=pN17MOfhZJk"
+publication_date: "2025-01-28"         # Janus Pro released January 27-28 2025
+duration: "UNKNOWN"
+channel: "AI Revolution"
+channel_url: "https://www.youtube.com/@airevolutionx"
+processed_date: "2026-08-14"
+processed_by: "claude-sonnet-4-6 / phase-2-3-session"
+
+primary_topics:
+  - DeepSeek models
+  - multimodal AI
+  - open-source frontier models
+
+secondary_topics:
+  - image understanding
+  - multimodal generation
+  - Chinese AI labs
+
+companies:
+  - DeepSeek
+
+models:
+  - Janus Pro
+  - DeepSeek
+
+frameworks: []
+
+research_papers:
+  - "Janus-Pro: Unified Multimodal Understanding and Generation with Data and Model Scaling"
+
+products:
+  - Janus Pro
+
+people: []
+hardware: []
+
+benchmarks:
+  - GenEval
+  - DPG-Bench
+  - MMBench
+
+datasets: []
+repositories:
+  - "https://github.com/deepseek-ai/Janus"
+
+potential_relevance: MEDIUM
+relevance_notes: >
+  Covers DeepSeek Janus Pro - a multimodal model combining image understanding
+  and generation. Relevant to LLM gateway model selection and open-source model
+  strategy for HiveCompute self-hosted inference. Janus Pro open-weights release
+  is potentially adoptable for self-hosted multimodal capability.
+
+verification_status: UNVERIFIED
+knowledge_extraction_status: PENDING

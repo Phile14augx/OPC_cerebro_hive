@@ -11,16 +11,19 @@ import { CreateAgentCommand } from './modules/agents/agents.commands';
 import { CreateAgentCommandHandler } from './modules/agents/agents.handlers';
 
 import { PrismaExecutionStore } from '@cerebro/db';
-import { ExecutionManager } from '@cerebro/runtime-core/src/execution/ExecutionManager';
-import { ExecutionReplayService } from '@cerebro/runtime-core/src/execution/ExecutionReplayService';
-import { ExecutionIdempotencyGuard } from '@cerebro/runtime-core/src/execution/ExecutionIdempotency';
-import { ExecutionOutbox } from '@cerebro/runtime-core/src/execution/ExecutionOutbox';
-import { ReducerRegistry } from '@cerebro/runtime-core/src/registry/ReducerRegistry';
-import { ExecutionEventRegistry } from '@cerebro/runtime-core/src/registry/ExecutionEventRegistry';
-
-import { ExecutionCommandHandler } from '@cerebro/runtime-core/src/execution/commands/ExecutionCommandHandler';
-import { StartExecutionValidator, ResumeExecutionValidator, CancelExecutionValidator } from '@cerebro/runtime-core/src/execution/commands/ExecutionValidator';
-import { ExecutionRuntimeKernel } from '@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel';
+import {
+  ExecutionManager,
+  ExecutionReplayService,
+  ExecutionIdempotencyGuard,
+  type ExecutionOutbox,
+  ReducerRegistry,
+  ExecutionEventRegistry,
+  ExecutionCommandHandler,
+  StartExecutionValidator,
+  ResumeExecutionValidator,
+  CancelExecutionValidator,
+  ExecutionRuntimeKernel,
+} from '@cerebro/runtime-core';
 
 async function main() {
   // 1. Database (shared, adapter-wired singleton from @cerebro/db)

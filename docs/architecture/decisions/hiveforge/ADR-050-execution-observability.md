@@ -1,0 +1,46 @@
+# ADR-050: Execution Observability — Tracing, Metrics, Structured Logging Contracts (Phase 9g-5)
+
+**Status:** Proposed (Phase 9g-5 of `09-EXECUTION-LIFECYCLE-RUNTIME.md`; builds on `ADR-039` through `ADR-049`)
+
+## Context
+
+The original 9g-5 scope, as proposed, named a full production observability stack: structured logging, metrics, OpenTelemetry distributed tracing, health/readiness endpoints, dead-letter/outbox-lag/relay metrics, execution lifecycle dashboards, Prometheus exporters, Grafana dashboards, alerting thresholds, and audit logging. This sandbox has no live Prometheus server, no Grafana instance, no OpenTelemetry collector, and no log-shipping destination — the same category of constraint that scoped 9g-1 down to "adapters only, honestly unverified" (`ADR-046`) rather than a live-infrastructure integration. Building real exporter/dashboard/alerting code against backends that cannot be reached here would produce code indistinguishable, from the outside, from a load-bearing integration — but nothing in this sandbox could tell us if it actually works. Per explicit direction (matching the same reasoning that shaped 9g-1): 9g-5 is scoped to real, standalone, deterministically-testable observability *contracts* plus in-memory reference implementations, instrumenting the actual `ExecutionOrchestrator`/`ExecutionEventRelay` lifecycle points — with real OTel/Prometheus/log-shipper adapters, dashboards, and alerting explicitly deferred until a live backend exists to build and verify them against.
+
+## Decision
+
+**1. Three independent, minimal, OTel/Prometheus-shaped abstractions — `Tracer`/`Span` (`Tracer.ts`), `Meter` (`Meter.ts`), `Logger` (`Logger.ts`) — each with a real, standalone `InMemory*` reference implementation** (`InMemoryTracer`, `InMemoryMetricsCollector`, `InMemoryStructuredLogger`). Each interface's shape was chosen to be close enough to its real-world counterpart (`@opentelemetry/api`'s `Tracer`/`Span`, `prom-client`'s `Counter`/`Gauge`/`Histogram`, a conventional leveled-plus-structured-fields logger) that a real adapter could satisfy it later without changing any caller. None of the three import a real observability SDK — same reasoning `ExecutionProviderPort`/`ExecutionEventSink` stayed off `HiveProviderExecutor`/`OutboxPublisher`: the seam is defined here, a real binding is separate, later work.
+
+**2. `CorrelationContext` (`CorrelationContext.ts`) is the one shape (`executionId`, `tenantId`, `workspaceId`, `traceId`, `correlationId`, `parentExecutionId`) threaded through every log line, span, and (where relevant) metric label** — assembled once, via `correlationContextFrom(execution)`, rather than duplicated at each instrumentation call site.
+
+**3. `ExecutionTelemetry` (`ExecutionTelemetry.ts`) is the single seam `ExecutionOrchestrator` and `ExecutionEventRelay` call into, composing an injected `Tracer`/`Meter`/`Logger` into lifecycle-specific signals** (`recordTransition`, `recordProviderInvocation`, `recordEventPublished`, `recordRelayBatch`, `recordRetry`, `recordCancellation`, `recordFailure`, `startExecutionSpan`) rather than exposing the three primitives individually — this keeps the specific metric names and log-message shapes defined in exactly one place. Default: `NoOpExecutionTelemetry`, a real, explicit no-instrumentation implementation (not a silently-absent optional dependency) — adding 9g-5 changes no existing caller's behavior, matching every other optional `ExecutionOrchestrator` dependency's own default posture (`AllowAllExecutionAuthorizationPolicy`, `NoOpExecutionIdempotencyStore`, `NeverRetryPolicy`).
+
+**4. `ExecutionOrchestrator.transitionAndPersist()` now records, per transition: a span (`execution.transition`), a counter increment (`execution_transitions_total`, labeled `from`/`to`), and a structured log line — plus, when the target status is `FAILED` or `TIMED_OUT`, a `recordFailure()` call.** `invokeProviderAndFinalize()` records a histogram (`execution_provider_duration_ms`) and counter (`execution_provider_invocations_total`) for every provider call, including the `'error'` outcome when the provider itself throws. `retryIfEligible()` records the retry decision (attempted or declined) via `recordRetry()`. `requestCancellation()`/`acknowledgeCancellation()` record the `'requested'`/`'acknowledged'` phases via `recordCancellation()`. Every transition that reaches an `ExecutionEventSink` also triggers `recordEventPublished()`.
+
+**5. `ExecutionEventRelay` gained an optional `telemetry` option (default `NoOpExecutionTelemetry`, same posture), calling `recordRelayBatch()` once per `relayOnce()` call** with the processed/published/failed/permanently-failed counts — the outbox-lag/relay-health signal the original scope named, expressed as a gauge (`execution_outbox_batch_processed`) plus three counters (`execution_outbox_published_total`/`_failed_total`/`_dead_lettered_total`).
+
+**6. Explicitly NOT built in this phase: any real OpenTelemetry SDK wiring, `prom-client`/Prometheus exporter, Grafana dashboard, alerting-threshold configuration, health/readiness HTTP endpoint, or audit-logging destination.** All were named in the original 9g-5 proposal; all require either a live collector/scrape target to verify against (none exists here) or a live HTTP server/route wiring that is itself out of this standalone package's scope (same boundary `ExecutionScheduler.tick()`/`ExecutionEventRelay.relayOnce()` already drew for "who calls this repeatedly").
+
+## Consequences — Implemented / Verified / Deferred
+
+**Implemented:**
+- `Tracer`/`Span`, `Meter`, `Logger` contracts, each with a real `InMemory*` reference implementation.
+- `CorrelationContext` + `correlationContextFrom()`.
+- `ExecutionTelemetry` interface, `NoOpExecutionTelemetry` (default), `DefaultExecutionTelemetry` (real composition of the three primitives into Execution-specific signals).
+- `ExecutionOrchestrator` instrumented at every transition, every provider invocation, every retry decision, every cancellation request/acknowledgement, and every event publication.
+- `ExecutionEventRelay` instrumented per relay batch.
+
+**Verified (in this sandbox):**
+- Real `tsc --strict` typecheck — clean across the whole `execution/` package, including all new/modified files.
+- Real `vitest` run — **167/167 tests passing** across the whole `execution/` package (12 new, in `ExecutionObservability.test.ts`): span hierarchy/attributes/duration/exception recording on `InMemoryTracer`; counter/gauge/histogram recording and aggregation on `InMemoryMetricsCollector`; leveled structured-log recording on `InMemoryStructuredLogger`; `CorrelationContext` derivation; a full orchestrator run emitting the expected span/counter/log for every transition; a failed provider outcome recording a failure metric and error log; a retry decision recording a counter and log entry; cancellation request/acknowledgement recording their respective counters; event publication incrementing its counter when a sink is configured; an `ExecutionEventRelay.relayOnce()` batch recording its gauge/counters/log; and `NoOpExecutionTelemetry` (the default, unconfigured path) behaving as a true no-op with no change to existing orchestrator behavior.
+
+**Deferred (explicitly, not glossed over):**
+- Any real OpenTelemetry SDK integration (`@opentelemetry/api`/`@opentelemetry/sdk-trace-node`) or a real trace exporter (OTLP, Jaeger, Zipkin).
+- Any real Prometheus exporter (`prom-client`) or a real `/metrics` scrape endpoint.
+- Grafana dashboards, alerting-threshold configuration, or any alerting pipeline (PagerDuty, Opsgenie, etc.) — none of these can be authored meaningfully without a live metrics backend to point them at.
+- Health/readiness HTTP endpoints — these require a live HTTP server/route wiring, out of this standalone package's scope, same as every other "who calls this on a schedule/over HTTP" boundary drawn since 9g-2.
+- A real audit-logging destination or retention policy — `Logger`'s in-memory implementation only demonstrates the call shape; a durable, queryable audit trail is separate, future work.
+- Any claim that these signals, once wired to a real backend, would perform correctly under production load or cardinality — untested, since no real backend exists here to test against.
+
+## Implementation status — Complete for 9g-5's own (standalone) scope; no real OTel/Prometheus/Grafana/alerting/health-endpoint integration built
+
+New files: `packages/domain/src/execution/{Tracer.ts, Meter.ts, Logger.ts, CorrelationContext.ts, ExecutionTelemetry.ts}`, all exported from `packages/domain`'s root `index.ts`. Modified: `ExecutionOrchestrator.ts` (added optional `telemetry` constructor option, instrumented every transition/provider-invocation/retry/cancellation/event-publication call site), `ExecutionEventRelay.ts` (added optional `telemetry` constructor option, instrumented `relayOnce()`) — both changes additive and behavior-preserving, confirmed by every pre-existing test suite (9a through 9g-4) still passing unchanged alongside the 12 new tests. Scratch verification artifacts removed after the run. Not yet done, and not claimed as done: 9g-6 (End-to-End Verification) remains a future, separate sub-phase.

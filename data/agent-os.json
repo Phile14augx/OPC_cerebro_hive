@@ -1,0 +1,784 @@
+{
+  "schemaVersion": "1.0.0",
+  "agents": [
+    {
+      "id": "agent_orchestrator_01",
+      "name": "Nexarch Orchestrator",
+      "type": "orchestrator",
+      "description": "Master coordinator for multi-agent missions. Decomposes objectives into tasks and delegates to specialist agents.",
+      "model": {
+        "provider": "anthropic",
+        "modelId": "claude-opus-4-5",
+        "maxTokens": 200000,
+        "temperature": 0.2
+      },
+      "capabilities": [
+        "orchestration",
+        "planning",
+        "delegation",
+        "monitoring"
+      ],
+      "toolPermissions": [
+        "tool_web_search",
+        "tool_code_exec",
+        "tool_file_rw"
+      ],
+      "riskLevel": "medium",
+      "isDeprecated": false,
+      "instances": [],
+      "budget": {
+        "maxTokensPerRun": 100000,
+        "maxCostUsdPerRun": 2,
+        "maxExecutionTimeSeconds": 300,
+        "maxToolCallsPerRun": 50,
+        "alertThresholdPct": 80
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "agent_researcher_01",
+      "name": "Deep Research Agent",
+      "type": "specialist",
+      "description": "Autonomous web research with citation tracking, source credibility scoring and knowledge synthesis.",
+      "model": {
+        "provider": "anthropic",
+        "modelId": "claude-sonnet-4-5",
+        "maxTokens": 90000,
+        "temperature": 0.1
+      },
+      "capabilities": [
+        "web_search",
+        "summarization",
+        "citation_tracking",
+        "synthesis"
+      ],
+      "toolPermissions": [
+        "tool_web_search",
+        "tool_file_rw"
+      ],
+      "riskLevel": "low",
+      "isDeprecated": false,
+      "instances": [],
+      "budget": {
+        "maxTokensPerRun": 80000,
+        "maxCostUsdPerRun": 0.8,
+        "maxExecutionTimeSeconds": 180,
+        "maxToolCallsPerRun": 30,
+        "alertThresholdPct": 75
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "agent_coder_01",
+      "name": "Code Synthesis Agent",
+      "type": "specialist",
+      "description": "Full-stack code generation, review, refactoring and test synthesis across 40+ languages.",
+      "model": {
+        "provider": "anthropic",
+        "modelId": "claude-opus-4-5",
+        "maxTokens": 180000,
+        "temperature": 0
+      },
+      "capabilities": [
+        "code_generation",
+        "code_review",
+        "test_synthesis",
+        "refactoring"
+      ],
+      "toolPermissions": [
+        "tool_code_exec",
+        "tool_file_rw",
+        "tool_git"
+      ],
+      "riskLevel": "medium",
+      "isDeprecated": false,
+      "instances": [],
+      "budget": {
+        "maxTokensPerRun": 120000,
+        "maxCostUsdPerRun": 3,
+        "maxExecutionTimeSeconds": 600,
+        "maxToolCallsPerRun": 80,
+        "alertThresholdPct": 80
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "agent_analyst_01",
+      "name": "Data Analytics Agent",
+      "type": "analyst",
+      "description": "Structured data analysis, statistical modeling and business intelligence reporting.",
+      "model": {
+        "provider": "anthropic",
+        "modelId": "claude-sonnet-4-5",
+        "maxTokens": 100000,
+        "temperature": 0.1
+      },
+      "capabilities": [
+        "data_analysis",
+        "statistics",
+        "visualization",
+        "reporting"
+      ],
+      "toolPermissions": [
+        "tool_code_exec",
+        "tool_file_rw",
+        "tool_db_query"
+      ],
+      "riskLevel": "low",
+      "isDeprecated": false,
+      "instances": [],
+      "budget": {
+        "maxTokensPerRun": 60000,
+        "maxCostUsdPerRun": 0.6,
+        "maxExecutionTimeSeconds": 240,
+        "maxToolCallsPerRun": 40,
+        "alertThresholdPct": 70
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "agent_comms_01",
+      "name": "Communications Agent",
+      "type": "specialist",
+      "description": "Multi-channel content creation: emails, reports, decks, social, press releases.",
+      "model": {
+        "provider": "anthropic",
+        "modelId": "claude-sonnet-4-5",
+        "maxTokens": 60000,
+        "temperature": 0.7
+      },
+      "capabilities": [
+        "copywriting",
+        "editing",
+        "brand_voice",
+        "multi_format"
+      ],
+      "toolPermissions": [
+        "tool_file_rw",
+        "tool_web_search"
+      ],
+      "riskLevel": "low",
+      "isDeprecated": false,
+      "instances": [],
+      "budget": {
+        "maxTokensPerRun": 40000,
+        "maxCostUsdPerRun": 0.4,
+        "maxExecutionTimeSeconds": 120,
+        "maxToolCallsPerRun": 20,
+        "alertThresholdPct": 75
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "agent_security_01",
+      "name": "Security Auditor Agent",
+      "type": "specialist",
+      "description": "Automated security review: SAST, dependency scanning, OWASP, secrets detection.",
+      "model": {
+        "provider": "anthropic",
+        "modelId": "claude-opus-4-5",
+        "maxTokens": 150000,
+        "temperature": 0
+      },
+      "capabilities": [
+        "sast",
+        "dependency_audit",
+        "secrets_scan",
+        "owasp"
+      ],
+      "toolPermissions": [
+        "tool_code_exec",
+        "tool_file_rw",
+        "tool_git"
+      ],
+      "riskLevel": "high",
+      "isDeprecated": false,
+      "instances": [],
+      "budget": {
+        "maxTokensPerRun": 100000,
+        "maxCostUsdPerRun": 2.5,
+        "maxExecutionTimeSeconds": 480,
+        "maxToolCallsPerRun": 60,
+        "alertThresholdPct": 85
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "agent_monitor_01",
+      "name": "Platform Monitor Agent",
+      "type": "monitor",
+      "description": "Continuous health monitoring: latency, error rates, SLO tracking, alert dispatch.",
+      "model": {
+        "provider": "anthropic",
+        "modelId": "claude-haiku-4-5",
+        "maxTokens": 20000,
+        "temperature": 0
+      },
+      "capabilities": [
+        "monitoring",
+        "alerting",
+        "slo_tracking",
+        "anomaly_detection"
+      ],
+      "toolPermissions": [
+        "tool_db_query",
+        "tool_api_call"
+      ],
+      "riskLevel": "low",
+      "isDeprecated": false,
+      "instances": [],
+      "budget": {
+        "maxTokensPerRun": 10000,
+        "maxCostUsdPerRun": 0.05,
+        "maxExecutionTimeSeconds": 30,
+        "maxToolCallsPerRun": 10,
+        "alertThresholdPct": 90
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "agent_devops_01",
+      "name": "DevOps Automation Agent",
+      "type": "specialist",
+      "description": "CI/CD pipeline management, infrastructure provisioning, deployment orchestration.",
+      "model": {
+        "provider": "anthropic",
+        "modelId": "claude-sonnet-4-5",
+        "maxTokens": 80000,
+        "temperature": 0.1
+      },
+      "capabilities": [
+        "ci_cd",
+        "infrastructure_as_code",
+        "deployment",
+        "rollback"
+      ],
+      "toolPermissions": [
+        "tool_code_exec",
+        "tool_file_rw",
+        "tool_api_call",
+        "tool_git"
+      ],
+      "riskLevel": "critical",
+      "isDeprecated": false,
+      "instances": [],
+      "budget": {
+        "maxTokensPerRun": 50000,
+        "maxCostUsdPerRun": 1,
+        "maxExecutionTimeSeconds": 900,
+        "maxToolCallsPerRun": 100,
+        "alertThresholdPct": 80
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    }
+  ],
+  "tools": [
+    {
+      "id": "tool_web_search",
+      "name": "Web Search",
+      "type": "external",
+      "description": "Google/Bing federated search with result scoring",
+      "endpoint": "/api/tools/web-search",
+      "authType": "api_key",
+      "riskLevel": "low",
+      "isEnabled": true,
+      "callCount": 1847,
+      "lastUsed": "2026-08-14T18:25:44.286Z",
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "tool_code_exec",
+      "name": "Code Executor",
+      "type": "compute",
+      "description": "Sandboxed polyglot code execution (Python, JS, Go, Rust)",
+      "endpoint": "/api/tools/exec",
+      "authType": "internal",
+      "riskLevel": "high",
+      "isEnabled": true,
+      "callCount": 423,
+      "lastUsed": "2026-08-14T18:25:44.286Z",
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "tool_file_rw",
+      "name": "File System",
+      "type": "storage",
+      "description": "Scoped read/write access to workspace file system",
+      "endpoint": "/api/tools/files",
+      "authType": "internal",
+      "riskLevel": "medium",
+      "isEnabled": true,
+      "callCount": 3291,
+      "lastUsed": "2026-08-14T18:25:44.286Z",
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "tool_db_query",
+      "name": "Database Query",
+      "type": "data",
+      "description": "Read-only SQL query interface to platform analytics DB",
+      "endpoint": "/api/tools/db",
+      "authType": "service_account",
+      "riskLevel": "medium",
+      "isEnabled": true,
+      "callCount": 756,
+      "lastUsed": "2026-08-14T18:25:44.286Z",
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "tool_git",
+      "name": "Git Integration",
+      "type": "vcs",
+      "description": "Clone, branch, commit, PR operations via GitHub API",
+      "endpoint": "/api/tools/git",
+      "authType": "oauth",
+      "riskLevel": "high",
+      "isEnabled": true,
+      "callCount": 214,
+      "lastUsed": "2026-08-14T18:25:44.286Z",
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "tool_api_call",
+      "name": "HTTP Client",
+      "type": "external",
+      "description": "Allowlisted external HTTP/REST calls with response caching",
+      "endpoint": "/api/tools/http",
+      "authType": "api_key",
+      "riskLevel": "medium",
+      "isEnabled": true,
+      "callCount": 532,
+      "lastUsed": "2026-08-14T18:25:44.286Z",
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "tool_email",
+      "name": "Email Sender",
+      "type": "communication",
+      "description": "SMTP/SES email dispatch with template support",
+      "endpoint": "/api/tools/email",
+      "authType": "service_account",
+      "riskLevel": "high",
+      "isEnabled": false,
+      "callCount": 89,
+      "lastUsed": "2026-08-14T18:25:44.286Z",
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "tool_slack",
+      "name": "Slack Notifier",
+      "type": "communication",
+      "description": "Post messages and files to Slack channels/DMs",
+      "endpoint": "/api/tools/slack",
+      "authType": "oauth",
+      "riskLevel": "low",
+      "isEnabled": true,
+      "callCount": 1103,
+      "lastUsed": "2026-08-14T18:25:44.286Z",
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    }
+  ],
+  "missions": [
+    {
+      "id": "msn_competitive_intel_01",
+      "title": "Q4 Competitive Intelligence Report",
+      "objective": "Compile comprehensive competitive analysis across 5 competitors for Q4 board presentation",
+      "description": "Research pricing, feature roadmaps, GTM strategy, funding status and key hires across Acme Corp, Synaptix, NovaMind, CoreAI and Veridian Systems",
+      "status": "running",
+      "priority": "high",
+      "submittedBy": "ceo@example.com",
+      "assignedAgentIds": [
+        "agent_orchestrator_01",
+        "agent_researcher_01",
+        "agent_analyst_01",
+        "agent_comms_01"
+      ],
+      "tags": [
+        "competitive",
+        "q4",
+        "board"
+      ],
+      "costAccruedUsd": 4.27,
+      "events": [
+        {
+          "eventId": "evt_001",
+          "type": "created",
+          "description": "Mission created by CEO",
+          "createdAt": "2026-08-14T18:25:44.286Z"
+        },
+        {
+          "eventId": "evt_002",
+          "type": "started",
+          "description": "Orchestrator initialized task graph — 12 tasks scheduled",
+          "createdAt": "2026-08-14T18:25:44.286Z"
+        }
+      ],
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z",
+      "startedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "msn_revenue_q3_01",
+      "title": "Q3 Revenue Acceleration Initiative",
+      "objective": "Identify and implement 3 quick-win revenue levers targeting 00K incremental ARR in Q3",
+      "description": "Analyze churn cohorts, upsell opportunities, pricing elasticity and activation bottlenecks. Produce playbooks and automated outreach sequences.",
+      "status": "paused",
+      "priority": "critical",
+      "submittedBy": "cro@example.com",
+      "assignedAgentIds": [
+        "agent_orchestrator_01",
+        "agent_analyst_01",
+        "agent_comms_01"
+      ],
+      "tags": [
+        "revenue",
+        "q3",
+        "growth"
+      ],
+      "costAccruedUsd": 1.89,
+      "events": [
+        {
+          "eventId": "evt_003",
+          "type": "created",
+          "description": "Mission created by CRO",
+          "createdAt": "2026-08-14T18:25:44.286Z"
+        },
+        {
+          "eventId": "evt_004",
+          "type": "paused",
+          "description": "Paused pending data warehouse access approval",
+          "createdAt": "2026-08-14T18:25:44.286Z"
+        }
+      ],
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z",
+      "startedAt": "2026-08-14T18:25:44.286Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task_ci_001",
+      "missionId": "msn_competitive_intel_01",
+      "name": "Scrape competitor pricing pages",
+      "objective": "Extract current pricing tiers for all 5 competitors",
+      "status": "completed",
+      "priority": "high",
+      "assignedAgentId": "agent_researcher_01",
+      "dependsOn": [],
+      "toolsRequired": [
+        "tool_web_search"
+      ],
+      "output": {
+        "summary": "Pricing data collected for all 5 competitors"
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z",
+      "completedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "task_ci_002",
+      "missionId": "msn_competitive_intel_01",
+      "name": "Analyze feature matrices",
+      "objective": "Map features across competitors, identify gaps and advantages",
+      "status": "running",
+      "priority": "high",
+      "assignedAgentId": "agent_analyst_01",
+      "dependsOn": [
+        "task_ci_001"
+      ],
+      "toolsRequired": [
+        "tool_code_exec",
+        "tool_file_rw"
+      ],
+      "output": null,
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "task_ci_003",
+      "missionId": "msn_competitive_intel_01",
+      "name": "Research funding and headcount",
+      "objective": "Pull Crunchbase/LinkedIn data on recent funding rounds and key hires",
+      "status": "running",
+      "priority": "normal",
+      "assignedAgentId": "agent_researcher_01",
+      "dependsOn": [],
+      "toolsRequired": [
+        "tool_web_search",
+        "tool_api_call"
+      ],
+      "output": null,
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "task_ci_004",
+      "missionId": "msn_competitive_intel_01",
+      "name": "Draft executive summary",
+      "objective": "Produce 2-page exec summary with key findings and recommendations",
+      "status": "pending",
+      "priority": "high",
+      "assignedAgentId": "agent_comms_01",
+      "dependsOn": [
+        "task_ci_002",
+        "task_ci_003"
+      ],
+      "toolsRequired": [
+        "tool_file_rw"
+      ],
+      "output": null,
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "task_rev_001",
+      "missionId": "msn_revenue_q3_01",
+      "name": "Churn cohort analysis",
+      "objective": "Identify top 3 churn cohorts and root cause for each",
+      "status": "completed",
+      "priority": "critical",
+      "assignedAgentId": "agent_analyst_01",
+      "dependsOn": [],
+      "toolsRequired": [
+        "tool_db_query",
+        "tool_code_exec"
+      ],
+      "output": {
+        "summary": "Identified 3 churn cohorts: SMB < 5 seats (42%), Trial-to-paid conversion (28%), Annual renewal (18%)"
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z",
+      "completedAt": "2026-08-14T18:25:44.286Z"
+    }
+  ],
+  "executions": [],
+  "approvals": [
+    {
+      "id": "apr_001",
+      "agentId": "agent_devops_01",
+      "agentName": "DevOps Automation Agent",
+      "action": "Deploy hotfix to production (k8s rollout)",
+      "description": "Agent requests permission to execute kubectl rollout restart on cerebro-api deployment in prod namespace",
+      "riskLevel": "critical",
+      "status": "pending",
+      "details": {
+        "namespace": "prod",
+        "deployment": "cerebro-api",
+        "image": "cerebro/api:v2.4.1-hotfix",
+        "reason": "Memory leak in session handler causing OOM kills"
+      },
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "apr_002",
+      "agentId": "agent_comms_01",
+      "agentName": "Communications Agent",
+      "action": "Send mass email campaign to 4,200 trial users",
+      "description": "Agent requests approval to dispatch re-engagement email sequence to churned trial users",
+      "riskLevel": "high",
+      "status": "pending",
+      "details": {
+        "recipientCount": 4200,
+        "segmentId": "churned_trials_90d",
+        "template": "reengagement_v3",
+        "estimatedRevenue": "2,000 projected ARR"
+      },
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "apr_003",
+      "agentId": "agent_security_01",
+      "agentName": "Security Auditor Agent",
+      "action": "Rotate all API keys in production secrets manager",
+      "description": "Scheduled key rotation policy triggered — 12 API keys approaching 90-day expiry",
+      "riskLevel": "high",
+      "status": "approved",
+      "details": {
+        "keyCount": 12,
+        "services": [
+          "stripe",
+          "sendgrid",
+          "datadog",
+          "github",
+          "aws_iam",
+          "slack"
+        ],
+        "rotationWindow": "02:00-04:00 UTC"
+      },
+      "reviewedBy": "platform-admin",
+      "reviewedAt": "2026-08-14T18:25:44.286Z",
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    }
+  ],
+  "policies": [
+    {
+      "id": "pol_001",
+      "name": "High-Risk Action Gate",
+      "description": "Any action scored HIGH or CRITICAL risk requires human approval before execution",
+      "effect": "require_approval",
+      "riskThreshold": "high",
+      "appliesTo": [
+        "agent_devops_01",
+        "agent_security_01",
+        "agent_coder_01"
+      ],
+      "enabled": true,
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "pol_002",
+      "name": "External Communication Block",
+      "description": "Block all outbound emails and Slack messages without explicit approval",
+      "effect": "require_approval",
+      "appliesTo": [
+        "agent_comms_01"
+      ],
+      "enabled": true,
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "pol_003",
+      "name": "Budget Overage Deny",
+      "description": "Terminate any agent run that exceeds its USD cost budget",
+      "effect": "deny",
+      "appliesTo": [],
+      "enabled": true,
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "pol_004",
+      "name": "Web Search Rate Limit",
+      "description": "Cap web search tool calls at 100/hour per agent to prevent abuse",
+      "effect": "rate_limit",
+      "appliesTo": [
+        "agent_researcher_01",
+        "agent_orchestrator_01"
+      ],
+      "enabled": true,
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "pol_005",
+      "name": "Quarantine on Anomaly",
+      "description": "Auto-quarantine any agent exhibiting runaway loop behaviour (>500 tool calls/run)",
+      "effect": "quarantine",
+      "appliesTo": [],
+      "enabled": true,
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    }
+  ],
+  "budgets": [
+    {
+      "id": "bud_001",
+      "entityId": "agent_orchestrator_01",
+      "entityType": "agent",
+      "period": "daily",
+      "spent": 1.23,
+      "limit": 10,
+      "currency": "usd",
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "bud_002",
+      "entityId": "agent_researcher_01",
+      "entityType": "agent",
+      "period": "daily",
+      "spent": 0.71,
+      "limit": 5,
+      "currency": "usd",
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "bud_003",
+      "entityId": "msn_competitive_intel_01",
+      "entityType": "mission",
+      "period": "lifetime",
+      "spent": 4.27,
+      "limit": 25,
+      "currency": "usd",
+      "createdAt": "2026-08-14T18:25:44.286Z",
+      "updatedAt": "2026-08-14T18:25:44.286Z"
+    }
+  ],
+  "auditEvents": [
+    {
+      "id": "audit_001",
+      "entityType": "mission",
+      "entityId": "msn_competitive_intel_01",
+      "action": "mission.created",
+      "actorId": "ceo@example.com",
+      "metadata": {
+        "title": "Q4 Competitive Intelligence Report"
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "audit_002",
+      "entityType": "mission",
+      "entityId": "msn_competitive_intel_01",
+      "action": "mission.started",
+      "actorId": "agent_orchestrator_01",
+      "metadata": {
+        "tasksScheduled": 12
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "audit_003",
+      "entityType": "agent",
+      "entityId": "agent_devops_01",
+      "action": "agent.approval_requested",
+      "actorId": "agent_devops_01",
+      "metadata": {
+        "action": "kubectl rollout restart",
+        "riskLevel": "critical"
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "audit_004",
+      "entityType": "task",
+      "entityId": "task_ci_001",
+      "action": "task.completed",
+      "actorId": "agent_researcher_01",
+      "metadata": {
+        "duration": 47
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    },
+    {
+      "id": "audit_005",
+      "entityType": "approval",
+      "entityId": "apr_003",
+      "action": "approval.approved",
+      "actorId": "platform-admin",
+      "metadata": {
+        "comment": "Rotation approved in maintenance window"
+      },
+      "createdAt": "2026-08-14T18:25:44.286Z"
+    }
+  ],
+  "lastUpdated": "2026-08-14T18:25:44.286Z"
+}

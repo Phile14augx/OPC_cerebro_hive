@@ -1,7 +1,6 @@
 import { FastifyInstance } from 'fastify';
-import { ExecutionStore } from '@cerebro/runtime-core/src/execution/ExecutionStore';
-import { ExecutionRuntimeKernel } from '@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel';
-import { StartExecutionCommand, ResumeExecutionCommand, CancelExecutionCommand } from '@cerebro/runtime-contracts/src/commands/ExecutionCommand';
+import { ExecutionStore, ExecutionRuntimeKernel } from '@cerebro/runtime-core';
+import { StartExecutionCommand, ResumeExecutionCommand, CancelExecutionCommand } from '@cerebro/runtime-contracts';
 
 export interface ExecutionsRoutesDeps {
   executionKernel: ExecutionRuntimeKernel;

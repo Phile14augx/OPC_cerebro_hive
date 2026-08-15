@@ -7,9 +7,10 @@ This repository contains the CerebroHive EIOS platform codebase, previously know
 CerebroHive is built on a 10-Layer Enterprise Intelligence Operating System (EIOS) architecture. The vision drives the architecture, the architecture drives the implementation, and the implementation drives the products.
 
 **Start Here:**
-1. [EIOS Manifesto](file:///d:/%7BMY_PROJECTS%7D/%7BOPC_cerebro_hive%7D/OPC/cerebro-hive-website/architecture/manifesto/CEREBROHIVE_EIOS_MANIFESTO.md)
-2. [Architecture Taxonomy Index](file:///d:/%7BMY_PROJECTS%7D/%7BOPC_cerebro_hive%7D/OPC/cerebro-hive-website/architecture/ARCHITECTURE_INDEX.md)
-3. [EIOS Constitution](file:///d:/%7BMY_PROJECTS%7D/%7BOPC_cerebro_hive%7D/OPC/cerebro-hive-website/CEREBROHIVE_CONSTITUTION.md)
+1. [EIOS Manifesto](docs/architecture/manifesto.md)
+2. [Architecture Taxonomy Index](docs/architecture/taxonomy-index.md)
+3. [EIOS Constitution](CEREBROHIVE_CONSTITUTION.md)
+4. [Documentation Homepage](docs/README.md)
 
 ## Configuration
 

@@ -1,5 +1,7 @@
 # Engineering Standards
 
+> Summary. For the detailed naming, folder-structure, and coding conventions, see [`engineering/coding-standards.md`](../engineering/coding-standards.md).
+
 ## Frontend
 Next.js, React, TypeScript (strict), Tailwind CSS.
 ## State

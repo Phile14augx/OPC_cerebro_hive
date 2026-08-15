@@ -1,0 +1,140 @@
+Page,MetadataStatus,MetadataType
+/app/layout.tsx,Present,Static
+/app/page.tsx,Present,Static
+/app/about/page.tsx,Present,Static
+/app/academy/page.tsx,Present,Static
+/app/careers/page.tsx,Present,Static
+/app/company/page.tsx,Present,Static
+/app/contact/layout.tsx,Present,Static
+/app/contact/page.tsx,Missing Metadata,None
+/app/dashboard/layout.tsx,Present,Static
+/app/dashboard/page.tsx,Missing Metadata,None
+/app/industries/page.tsx,Present,Static
+/app/platform/layout.tsx,Present,Static
+/app/platform/page.tsx,Missing Metadata,None
+/app/services/layout.tsx,Present,Static
+/app/services/page.tsx,Missing Metadata,None
+/app/solutions/page.tsx,Present,Static
+/app/(platform)/archive/layout.tsx,Present,Static
+/app/academy/corporate-programs/page.tsx,Present,Static
+/app/academy/courses/page.tsx,Present,Static
+/app/academy/learning-paths/page.tsx,Present,Static
+/app/academy/referral/page.tsx,Present,Static
+/app/auth/callback/layout.tsx,Present,Static
+/app/auth/callback/page.tsx,Missing Metadata,None
+/app/industries/[slug]/page.tsx,Present,Dynamic
+/app/legal/[slug]/page.tsx,Present,Dynamic
+/app/platform/agent/layout.tsx,Present,Static
+/app/platform/agent/page.tsx,Missing Metadata,None
+/app/platform/agents/layout.tsx,Present,Static
+/app/platform/agents/page.tsx,Missing Metadata,None
+/app/platform/analytics/layout.tsx,Present,Static
+/app/platform/analytics/page.tsx,Missing Metadata,None
+/app/platform/api/layout.tsx,Present,Static
+/app/platform/api/page.tsx,Missing Metadata,None
+/app/platform/archive/layout.tsx,Present,Static
+/app/platform/archive/page.tsx,Missing Metadata,None
+/app/platform/assets/layout.tsx,Present,Static
+/app/platform/assets/page.tsx,Missing Metadata,None
+/app/platform/automation/layout.tsx,Present,Static
+/app/platform/automation/page.tsx,Missing Metadata,None
+/app/platform/billing/layout.tsx,Present,Static
+/app/platform/billing/page.tsx,Missing Metadata,None
+/app/platform/cloud/layout.tsx,Present,Static
+/app/platform/cloud/page.tsx,Missing Metadata,None
+/app/platform/compliance/layout.tsx,Present,Static
+/app/platform/compliance/page.tsx,Missing Metadata,None
+/app/platform/compute/layout.tsx,Present,Static
+/app/platform/compute/page.tsx,Missing Metadata,None
+/app/platform/console/layout.tsx,Present,Static
+/app/platform/console/page.tsx,Missing Metadata,None
+/app/platform/copilot/layout.tsx,Present,Static
+/app/platform/copilot/page.tsx,Missing Metadata,None
+/app/platform/crm/layout.tsx,Present,Static
+/app/platform/crm/page.tsx,Missing Metadata,None
+/app/platform/customer360/layout.tsx,Present,Static
+/app/platform/customer360/page.tsx,Missing Metadata,None
+/app/platform/data/layout.tsx,Present,Static
+/app/platform/data/page.tsx,Missing Metadata,None
+/app/platform/deploy/layout.tsx,Present,Static
+/app/platform/deploy/page.tsx,Missing Metadata,None
+/app/platform/erp/layout.tsx,Present,Static
+/app/platform/erp/page.tsx,Missing Metadata,None
+/app/platform/evaluation/layout.tsx,Present,Static
+/app/platform/evaluation/page.tsx,Missing Metadata,None
+/app/platform/finance/layout.tsx,Present,Static
+/app/platform/finance/page.tsx,Missing Metadata,None
+/app/platform/flow/layout.tsx,Present,Static
+/app/platform/flow/page.tsx,Missing Metadata,None
+/app/platform/forge/layout.tsx,Present,Static
+/app/platform/forge/page.tsx,Missing Metadata,None
+/app/platform/gateway/layout.tsx,Present,Static
+/app/platform/gateway/page.tsx,Missing Metadata,None
+/app/platform/govern/layout.tsx,Present,Static
+/app/platform/govern/page.tsx,Missing Metadata,None
+/app/platform/hr/layout.tsx,Present,Static
+/app/platform/hr/page.tsx,Missing Metadata,None
+/app/platform/identity/layout.tsx,Present,Static
+/app/platform/identity/page.tsx,Missing Metadata,None
+/app/platform/insight/layout.tsx,Present,Static
+/app/platform/insight/page.tsx,Missing Metadata,None
+/app/platform/knowledge/layout.tsx,Present,Static
+/app/platform/knowledge/page.tsx,Missing Metadata,None
+/app/platform/lake/layout.tsx,Present,Static
+/app/platform/lake/page.tsx,Missing Metadata,None
+/app/platform/learn/layout.tsx,Present,Static
+/app/platform/learn/page.tsx,Missing Metadata,None
+/app/platform/license/layout.tsx,Present,Static
+/app/platform/license/page.tsx,Missing Metadata,None
+/app/platform/marketplace/layout.tsx,Present,Static
+/app/platform/marketplace/page.tsx,Missing Metadata,None
+/app/platform/memory/layout.tsx,Present,Static
+/app/platform/memory/page.tsx,Missing Metadata,None
+/app/platform/models/layout.tsx,Present,Static
+/app/platform/models/page.tsx,Missing Metadata,None
+/app/platform/network/layout.tsx,Present,Static
+/app/platform/network/page.tsx,Missing Metadata,None
+/app/platform/observatory/layout.tsx,Present,Static
+/app/platform/observatory/page.tsx,Missing Metadata,None
+/app/platform/ops/layout.tsx,Present,Static
+/app/platform/ops/page.tsx,Missing Metadata,None
+/app/platform/partner/layout.tsx,Present,Static
+/app/platform/partner/page.tsx,Missing Metadata,None
+/app/platform/planner/layout.tsx,Present,Static
+/app/platform/planner/page.tsx,Missing Metadata,None
+/app/platform/procurement/layout.tsx,Present,Static
+/app/platform/procurement/page.tsx,Missing Metadata,None
+/app/platform/projects/layout.tsx,Present,Static
+/app/platform/projects/page.tsx,Missing Metadata,None
+/app/platform/pulse/layout.tsx,Present,Static
+/app/platform/pulse/page.tsx,Missing Metadata,None
+/app/platform/quality/layout.tsx,Present,Static
+/app/platform/quality/page.tsx,Missing Metadata,None
+/app/platform/reasoner/layout.tsx,Present,Static
+/app/platform/reasoner/page.tsx,Missing Metadata,None
+/app/platform/search/layout.tsx,Present,Static
+/app/platform/search/page.tsx,Missing Metadata,None
+/app/platform/semantic/layout.tsx,Present,Static
+/app/platform/semantic/page.tsx,Missing Metadata,None
+/app/platform/shield/layout.tsx,Present,Static
+/app/platform/shield/page.tsx,Missing Metadata,None
+/app/platform/storage/layout.tsx,Present,Static
+/app/platform/storage/page.tsx,Missing Metadata,None
+/app/platform/studio/layout.tsx,Present,Static
+/app/platform/studio/page.tsx,Missing Metadata,None
+/app/platform/vector/layout.tsx,Present,Static
+/app/platform/vector/page.tsx,Missing Metadata,None
+/app/platform/x/layout.tsx,Present,Static
+/app/platform/x/page.tsx,Missing Metadata,None
+/app/services/engineering/layout.tsx,Present,Static
+/app/services/engineering/page.tsx,Missing Metadata,None
+/app/services/industry/layout.tsx,Present,Static
+/app/services/industry/page.tsx,Missing Metadata,None
+/app/services/operations/layout.tsx,Present,Static
+/app/services/operations/page.tsx,Missing Metadata,None
+/app/services/security/layout.tsx,Present,Static
+/app/services/security/page.tsx,Missing Metadata,None
+/app/services/strategy/layout.tsx,Present,Static
+/app/services/strategy/page.tsx,Missing Metadata,None
+/app/solutions/[slug]/page.tsx,Present,Dynamic
+/app/(platform)/archive/documents/[id]/page.tsx,Present,Dynamic
