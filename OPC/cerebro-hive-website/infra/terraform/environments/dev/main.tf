@@ -36,7 +36,7 @@ module "networking" {
 
   environment        = "dev"
   vpc_cidr           = var.vpc_cidr
-  single_nat_gateway = true   # Single NAT GW — save cost in dev
+  single_nat_gateway = true # Single NAT GW — save cost in dev
 }
 
 module "kubernetes" {
@@ -48,7 +48,7 @@ module "kubernetes" {
   private_subnet_ids = module.networking.private_subnet_ids
   cluster_sg_id      = module.networking.eks_cluster_sg_id
 
-  public_api_endpoint    = true   # Dev: allow public API access
+  public_api_endpoint    = true # Dev: allow public API access
   public_api_cidrs       = ["0.0.0.0/0"]
   general_instance_types = ["t3.medium", "t3a.medium"]
   general_min_size       = 1
@@ -72,6 +72,16 @@ module "database" {
   deletion_protection   = false
 }
 
-output "cluster_name" { value = module.kubernetes.cluster_name }
-output "cluster_endpoint" { value = module.kubernetes.cluster_endpoint; sensitive = true }
-output "rds_endpoint" { value = module.database.endpoint; sensitive = true }
+output "cluster_name" {
+  value = module.kubernetes.cluster_name
+}
+
+output "cluster_endpoint" {
+  value     = module.kubernetes.cluster_endpoint
+  sensitive = true
+}
+
+output "rds_endpoint" {
+  value     = module.database.endpoint
+  sensitive = true
+}
