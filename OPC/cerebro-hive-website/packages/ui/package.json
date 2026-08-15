@@ -6,7 +6,7 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint \"src/**/*.ts*\"",
+    "lint": "node ../../scripts/eslint-eslintrc.cjs src",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
