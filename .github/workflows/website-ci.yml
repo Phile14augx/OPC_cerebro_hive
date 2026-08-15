@@ -99,27 +99,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Run unit tests with coverage
-        run: pnpm turbo test -- --coverage --reporter=verbose --reporter=junit --outputFile=test-results.xml
+      # W0.2 validates that package test scripts are real contracts. Execute
+      # those declared contracts directly; do not inject runner-specific
+      # coverage/reporting flags into heterogeneous workspace packages.
+      - name: Run declared workspace unit tests
+        run: pnpm turbo test --color
         env:
           CI: true
           VITEST_POOL: forks
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: unit-test-results
-          path: |
-            OPC/cerebro-hive-website/**/test-results.xml
-            OPC/cerebro-hive-website/**/coverage/**
-
-      - name: Publish test report
-        if: always()
-        uses: mikepenz/action-junit-report@v4
-        with:
-          report_paths: "OPC/cerebro-hive-website/**/test-results.xml"
-          check_name: Unit Test Results
 
   # ── Build (nested ci.yml Job 3) ───────────────────────────────────────────
   build:
