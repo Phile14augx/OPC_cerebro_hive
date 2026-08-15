@@ -31,6 +31,7 @@ model DigitalTwin {
   currentStates   TwinEntityCurrentState[]
   proposals       TwinVersionProposal[]
   scenarios       TwinScenario[]
+  events          TwinEvent[]
 
   @@index([tenantId, workspaceId])
   @@index([tenantId, workspaceId, status, updatedAt(sort: Desc)])
@@ -69,6 +70,7 @@ model TwinEntity {
   updatedAt    DateTime @updatedAt
   stateHistory TwinEntityState[]
   currentState TwinEntityCurrentState?
+  events       TwinEvent[]
 
   @@unique([twinId, key])
   @@index([twinId, versionId])
@@ -174,6 +176,31 @@ model TwinSimulationRun {
 
   @@index([tenantId, workspaceId, twinId, startedAt(sort: Desc)])
   @@index([scenarioId, startedAt(sort: Desc)])
+}
+
+model TwinEvent {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId       String    @db.Uuid
+  workspaceId    String    @db.Uuid
+  twinId         String    @db.Uuid
+  twin           DigitalTwin @relation(fields: [twinId], references: [id], onDelete: Cascade)
+  entityId       String    @db.Uuid
+  entity         TwinEntity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  versionId      String    @db.Uuid
+  ruleKey        String
+  kind           String    @default("RULE_FIRED")
+  status         String    @default("OPEN")
+  message        String
+  state          Json
+  provenance     Json
+  source         String
+  classification String
+  openedAt       DateTime
+  clearedAt      DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([tenantId, workspaceId, twinId, openedAt(sort: Desc)])
+  @@index([twinId, entityId, ruleKey, status])
 }
 
 // -----------------------------------------------------------------------------

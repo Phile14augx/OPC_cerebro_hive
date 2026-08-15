@@ -51,7 +51,7 @@ Factory Alpha (manufacturing motor/line) and Northstar Hospital ICU (bed/zone) a
 
 ## Phase 1 non-goals
 
-Knowledge graph, event engine, dedicated TSDB, industrial connectors, model registry, optimization, autonomous agents, 3D/spatial, marketplace, and multi-twin federation are intentionally deferred. UI controls either execute the Phase 1 pipeline or are labeled preview-only.
+Knowledge graph persistence, industrial connectors, dedicated TSDB, model registry, optimization, autonomous agents, 3D/spatial, marketplace, and multi-twin federation remain deferred. Phase 2 adds a safe in-process rule evaluator, persisted `TwinEvent` rows, and a relationship graph inferred from persisted entities. See `docs/architecture/twin-studio-phase-2.md`.
 
 ## Local commands
 

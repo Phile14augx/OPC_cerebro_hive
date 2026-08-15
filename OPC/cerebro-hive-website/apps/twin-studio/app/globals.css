@@ -141,6 +141,8 @@ textarea { min-height: 110px; resize: vertical; }
 .timeline { display: grid; gap: 12px; }
 .timeline article { border-left: 3px solid var(--copper); background: #0a1820; padding: 16px; display: grid; gap: 6px; }
 .timeline span { color: var(--muted); font-size: 12px; }
+.eventOpen { color: var(--danger); }
+.eventCleared { color: var(--muted); }
 .runResult { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
 .askPanel { max-width: 900px; }
 .generator, .previewCallout { display: grid; gap: 12px; }

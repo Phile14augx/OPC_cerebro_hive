@@ -64,4 +64,32 @@ test.describe('Twin Studio Command Center', () => {
     await page.getByRole('button', { name: 'Create twin' }).last().click();
     await expect(page.locator('.banner.error')).toContainText('VALIDATION_ERROR');
   });
+
+  test('phase 2: Graph and Events tabs use persisted relationships and rule evaluations', async ({ page }) => {
+    await page.goto('/app/');
+    await expect(page.getByRole('button', { name: /Factory Alpha/ })).toBeVisible();
+    await page.getByRole('button', { name: /Factory Alpha/ }).click();
+    await page.getByRole('tab', { name: 'Graph' }).click();
+    await expect(page.getByText('motor-07 → line-a')).toBeVisible();
+    await expect(page.getByText('installed-on via line')).toBeVisible();
+
+    await page.getByRole('tab', { name: 'Live state' }).click();
+    await page.locator('#ingest-entity').selectOption({ label: 'Motor-07' });
+    await page.locator('#ingest-source').fill('playwright-rule-sensor');
+    await page.locator('#ingest-state').fill('{"vibration":7.4,"temperature":82}');
+    await page.getByRole('button', { name: 'Ingest observed state' }).click();
+    await expect(page.getByRole('status')).toContainText(/OBSERVED/);
+    await page.getByRole('tab', { name: 'Events' }).click();
+    await expect(page.getByText(/OPEN · bearing-risk/)).toBeVisible();
+
+    await page.getByRole('tab', { name: 'Live state' }).click();
+    await page.locator('#ingest-entity').selectOption({ label: 'Motor-07' });
+    await page.locator('#ingest-source').fill('playwright-rule-sensor');
+    await page.locator('#ingest-state').fill('{"vibration":3.2,"temperature":60}');
+    await page.getByRole('button', { name: 'Ingest observed state' }).click();
+    await expect(page.getByRole('status')).toContainText(/OBSERVED/);
+    await page.getByRole('tab', { name: 'Events' }).click();
+    await expect(page.getByText(/CLEARED · bearing-risk/)).toBeVisible();
+    await expect(page.getByText(/OPEN · bearing-risk/)).toHaveCount(0);
+  });
 });

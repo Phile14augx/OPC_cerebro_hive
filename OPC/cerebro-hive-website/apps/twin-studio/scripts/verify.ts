@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { buildTwinGraph, evaluateTwinRule } from '../../../packages/twin-domain/src/index';
 import { ProvenanceSchema, TwinDefinitionSchema } from '../../../packages/twin-contracts/src/index';
 import { industryModelProvider } from '../modules/industry/deterministic-industry-provider';
 import { askTwinFromStates } from '../modules/intelligence/ask-twin-service';
@@ -91,10 +92,26 @@ assert.notDeepEqual(
   bank.definition.entityTypes.map((type) => type.key),
 );
 
+assert.equal(evaluateTwinRule({ key: 'bearing-risk', expression: 'vibration > 6.5 && temperature > 76' }, { vibration: 7.1, temperature: 80 }).fired, true);
+assert.equal(evaluateTwinRule({ key: 'bearing-risk', expression: 'vibration > 6.5 && temperature > 76' }, { vibration: 3, temperature: 80 }).fired, false);
+assert.equal(
+  evaluateTwinRule({ key: 'inject', expression: 'vibration > 1; process.exit(1)' }, { vibration: 9 }).fired,
+  false,
+);
+const factoryGraph = buildTwinGraph({
+  relationshipTypes: [{ key: 'installed-on', from: 'motor', to: 'production-line' }],
+  entities: [
+    { id: 'line', key: 'line-a', name: 'Line A', typeKey: 'production-line', attributes: {} },
+    { id: 'motor', key: 'motor-07', name: 'Motor-07', typeKey: 'motor', attributes: { line: 'line-a' } },
+  ],
+});
+assert.equal(factoryGraph.edges.length, 1);
+assert.equal(factoryGraph.edges[0]?.type, 'installed-on');
+
 void verifyAskTwin()
   .then(() => {
     console.log(
-      'Twin Studio verification passed: contracts, anomaly, scenario isolation, provenance, industry generation, Ask Twin LLM gating, and invented-measurement refusal.',
+      'Twin Studio verification passed: contracts, anomaly, scenario isolation, provenance, industry generation, Ask Twin LLM gating, invented-measurement refusal, rule evaluation, and relationship graph inference.',
     );
   })
   .catch((error: unknown) => {

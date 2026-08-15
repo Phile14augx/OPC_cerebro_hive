@@ -61,4 +61,24 @@ test.describe('Twin Studio Playwright API contracts', () => {
     expect(body.error?.code).toBe('VALIDATION_ERROR');
     expect(body.error?.message).toMatch(/valid JSON|invalid fields/i);
   });
+
+  test('phase 2: graph and events endpoints are tenant-scoped and persisted', async ({ request }) => {
+    const twins = await json(request, '/app/api/twins');
+    const factory = ((twins.body.data as Array<{ id: string; name: string }>) ?? []).find(
+      (twin) => twin.name === 'Factory Alpha',
+    );
+    expect(factory).toBeTruthy();
+    const graph = await json(request, `/app/api/twins/${factory!.id}/graph`);
+    expect(graph.status).toBe(200);
+    const edges = ((graph.body.data as { edges?: Array<{ type: string; fromKey: string; toKey: string }> })?.edges ?? []);
+    expect(edges.some((edge) => edge.type === 'installed-on' && edge.fromKey === 'motor-07' && edge.toKey === 'line-a')).toBe(
+      true,
+    );
+    const events = await json(request, `/app/api/twins/${factory!.id}/events`);
+    expect(events.status).toBe(200);
+    expect(Array.isArray(events.body.data)).toBe(true);
+    const missing = await json(request, `/app/api/twins/${FOREIGN_TWIN_ID}/events`);
+    expect(missing.status).toBe(404);
+    expect(missing.body.error?.code).toBe('TWIN_NOT_FOUND');
+  });
 });

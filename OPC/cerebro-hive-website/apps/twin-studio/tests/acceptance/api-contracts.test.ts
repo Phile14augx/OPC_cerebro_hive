@@ -206,4 +206,75 @@ describe.skipIf(!live)('Twin Studio API acceptance', () => {
     expect(replay.status).toBe(409);
     expect(replay.body.error?.code).toBe('PROPOSAL_NOT_FOUND_OR_ALREADY_APPLIED');
   });
+
+  it('phase 2: graph edges come from persisted attributes and rules persist OPEN then CLEARED events', async () => {
+    const graph = await json(`/twins/${factoryId}/graph`);
+    expect(graph.status).toBe(200);
+    const payload = graph.body.data as Json;
+    const nodes = (payload['nodes'] as Json[]) ?? [];
+    const edges = (payload['edges'] as Json[]) ?? [];
+    expect(nodes.some((node) => node['key'] === 'motor-07')).toBe(true);
+    expect(nodes.some((node) => node['key'] === 'line-a')).toBe(true);
+    expect(
+      edges.some(
+        (edge) =>
+          edge['type'] === 'installed-on' &&
+          edge['fromKey'] === 'motor-07' &&
+          edge['toKey'] === 'line-a' &&
+          edge['viaAttribute'] === 'line',
+      ),
+    ).toBe(true);
+
+    const now = new Date().toISOString();
+    const fired = await json(`/twins/${factoryId}/state`, {
+      method: 'POST',
+      body: JSON.stringify({
+        entityId: motorId,
+        state: { vibration: 7.2, temperature: 81 },
+        provenance: {
+          source: 'acceptance-rule-sensor',
+          classification: 'OBSERVED',
+          observedAt: now,
+          effectiveAt: now,
+          ingestedAt: now,
+          confidence: 1,
+          quality: 1,
+          evidenceIds: ['acceptance-rule-sensor'],
+        },
+      }),
+    });
+    expect(fired.status).toBe(201);
+    const openEvents = await json(`/twins/${factoryId}/events`);
+    expect(openEvents.status).toBe(200);
+    const opened = ((openEvents.body.data as Json[]) ?? []).filter(
+      (event) => event['ruleKey'] === 'bearing-risk' && event['status'] === 'OPEN',
+    );
+    expect(opened.length).toBe(1);
+    expect(opened[0]?.['source']).toBe('twin-rule-engine');
+    expect((opened[0]?.['state'] as Json)['vibration']).toBe(7.2);
+
+    const clearedAt = new Date().toISOString();
+    const cleared = await json(`/twins/${factoryId}/state`, {
+      method: 'POST',
+      body: JSON.stringify({
+        entityId: motorId,
+        state: { vibration: 3.1, temperature: 61 },
+        provenance: {
+          source: 'acceptance-rule-sensor',
+          classification: 'OBSERVED',
+          observedAt: clearedAt,
+          effectiveAt: clearedAt,
+          ingestedAt: clearedAt,
+          confidence: 1,
+          quality: 1,
+          evidenceIds: ['acceptance-rule-sensor'],
+        },
+      }),
+    });
+    expect(cleared.status).toBe(201);
+    const after = await json(`/twins/${factoryId}/events`);
+    const bearing = ((after.body.data as Json[]) ?? []).filter((event) => event['ruleKey'] === 'bearing-risk');
+    expect(bearing.some((event) => event['status'] === 'OPEN')).toBe(false);
+    expect(bearing.some((event) => event['status'] === 'CLEARED')).toBe(true);
+  });
 });

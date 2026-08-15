@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   handleAskPost,
+  handleEventsGet,
+  handleGraphGet,
   handleScenariosGet,
   handleScenariosPost,
   handleSimulatorPost,
@@ -31,6 +33,8 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
   const resource = action(slug);
   if (!resource) return handleTwinGet(request, twinId);
   if (resource === 'state') return handleStateGet(request, twinId);
+  if (resource === 'events') return handleEventsGet(request, twinId);
+  if (resource === 'graph') return handleGraphGet(request, twinId);
   if (resource === 'versions') return handleVersionsGet(request, twinId);
   if (resource === 'scenarios') return handleScenariosGet(request, twinId);
   return NextResponse.json({ error: { code: 'NOT_FOUND', message: 'Not found.' } }, { status: 404 });

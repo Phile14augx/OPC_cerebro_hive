@@ -56,9 +56,34 @@ type Scenario = {
   inputs: JsonObject;
   runs: ScenarioRun[];
 };
+type TwinEvent = {
+  id: string;
+  ruleKey: string;
+  status: string;
+  message: string;
+  kind: string;
+  source: string;
+  classification: string;
+  openedAt: string;
+  clearedAt: string | null;
+  state: JsonObject;
+  entity: { id: string; key: string; name: string; typeKey: string };
+};
+type TwinGraph = {
+  nodes: Array<{ id: string; key: string; name: string; typeKey: string }>;
+  edges: Array<{
+    id: string;
+    type: string;
+    fromEntityId: string;
+    toEntityId: string;
+    fromKey: string;
+    toKey: string;
+    viaAttribute: string;
+  }>;
+};
 
 const API = '/app/api/twins';
-const tabs = ['Overview', 'Live state', 'History', 'Versions', 'Scenarios', 'Ask twin', 'Generate'] as const;
+const tabs = ['Overview', 'Live state', 'Graph', 'Events', 'History', 'Versions', 'Scenarios', 'Ask twin', 'Generate'] as const;
 type Tab = (typeof tabs)[number];
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -94,6 +119,8 @@ export function CommandCenter() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [approvedProposalId, setApprovedProposalId] = useState('');
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
+  const [events, setEvents] = useState<TwinEvent[]>([]);
+  const [graph, setGraph] = useState<TwinGraph | null>(null);
   const [askAnswer, setAskAnswer] = useState<JsonObject | null>(null);
   const [tick, setTick] = useState(0);
   const [query, setQuery] = useState('');
@@ -146,6 +173,8 @@ export function CommandCenter() {
     setHistoryEntityId(selected?.entities[0]?.id ?? '');
     setHistory([]);
     setAskAnswer(null);
+    setEvents([]);
+    setGraph(null);
     setTick(0);
   }
 
@@ -182,6 +211,24 @@ export function CommandCenter() {
       })
       .catch((loadError) =>
         setError(loadError instanceof Error ? loadError.message : 'Version load failed.'),
+      );
+  }, [selected, tab]);
+
+  useEffect(() => {
+    if (!selected || tab !== 'Events') return;
+    request<TwinEvent[]>(`${API}/${selected.id}/events`, { cache: 'no-store' })
+      .then(setEvents)
+      .catch((loadError) =>
+        setError(loadError instanceof Error ? loadError.message : 'Event load failed.'),
+      );
+  }, [selected, tab]);
+
+  useEffect(() => {
+    if (!selected || tab !== 'Graph') return;
+    request<TwinGraph>(`${API}/${selected.id}/graph`, { cache: 'no-store' })
+      .then(setGraph)
+      .catch((loadError) =>
+        setError(loadError instanceof Error ? loadError.message : 'Graph load failed.'),
       );
   }, [selected, tab]);
 
@@ -531,7 +578,7 @@ export function CommandCenter() {
           ))}
         </nav>
         <p className="railNote">
-          PHASE 1 CONTROL PLANE<br />
+          PHASE 2 CONTROL PLANE<br />
           POSTGRES AUTHORITATIVE
         </p>
       </aside>
@@ -580,7 +627,7 @@ export function CommandCenter() {
                     <div>
                       <p className="eyebrow">Authoritative state</p>
                       <h2>{selected.entities.filter((entity) => entity.currentState).length} current projections</h2>
-                      <p>Simulated ticks write SIMULATED provenance. Measured observations are ingested from Live state.</p>
+                      <p>Simulated ticks write SIMULATED provenance. Measured observations are ingested from Live state. Definition rules open and clear persisted events after those writes.</p>
                     </div>
                     <div className="actions">
                       <button
@@ -654,6 +701,86 @@ export function CommandCenter() {
                       {working === 'ingest' ? 'Persisting…' : 'Ingest observed state'}
                     </button>
                   </form>
+                </section>
+              )}
+
+              {tab === 'Graph' && (
+                <section className="stack">
+                  <header>
+                    <h2>Relationship graph</h2>
+                    <p>
+                      Nodes are persisted entities. Edges are inferred only when an entity attribute
+                      references another entity key and a matching relationship type exists in the
+                      active definition.
+                    </p>
+                  </header>
+                  {!graph || graph.nodes.length === 0 ? (
+                    <p className="muted">No persisted entities to graph.</p>
+                  ) : (
+                    <>
+                      <h3>Nodes</h3>
+                      {graph.nodes.map((node) => (
+                        <article className="dataRow" key={node.id}>
+                          <div>
+                            <strong>{node.name}</strong>
+                            <small>{node.key} · {node.typeKey}</small>
+                          </div>
+                          <span className="muted">{node.id}</span>
+                        </article>
+                      ))}
+                      <h3>Edges</h3>
+                      {graph.edges.length === 0 ? (
+                        <p className="muted">
+                          No relationship edges were inferred from persisted entity attributes.
+                        </p>
+                      ) : (
+                        graph.edges.map((edge) => (
+                          <article className="dataRow" key={edge.id}>
+                            <div>
+                              <strong>{edge.fromKey} → {edge.toKey}</strong>
+                              <small>{edge.type} via {edge.viaAttribute}</small>
+                            </div>
+                          </article>
+                        ))
+                      )}
+                    </>
+                  )}
+                </section>
+              )}
+
+              {tab === 'Events' && (
+                <section className="stack">
+                  <header>
+                    <h2>Rule events</h2>
+                    <p>
+                      Events are written when a definition rule becomes true against persisted current
+                      state, and cleared when that rule is no longer true. They are not invented from
+                      the UI.
+                    </p>
+                  </header>
+                  {events.length === 0 ? (
+                    <p className="muted">
+                      No rule events. Ingest an observation or advance a simulated tick that satisfies
+                      an active definition rule.
+                    </p>
+                  ) : (
+                    <div className="timeline">
+                      {events.map((event) => (
+                        <article key={event.id}>
+                          <strong className={event.status === 'OPEN' ? 'eventOpen' : 'eventCleared'}>
+                            {event.status} · {event.ruleKey}
+                          </strong>
+                          <span>{event.entity.name} · {event.classification} · {event.source}</span>
+                          <span>Opened {new Date(event.openedAt).toLocaleString()}</span>
+                          {event.clearedAt && (
+                            <span>Cleared {new Date(event.clearedAt).toLocaleString()}</span>
+                          )}
+                          <p>{event.message}</p>
+                          <JsonView value={event.state} />
+                        </article>
+                      ))}
+                    </div>
+                  )}
                 </section>
               )}
 

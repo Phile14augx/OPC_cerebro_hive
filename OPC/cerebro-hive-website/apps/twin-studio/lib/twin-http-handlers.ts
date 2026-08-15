@@ -98,6 +98,25 @@ export async function handleStatePost(request: NextRequest, twinId: string) {
   }
 }
 
+export async function handleEventsGet(request: NextRequest, twinId: string) {
+  try {
+    const scope = await authenticatedRequestContext(request, 'READ');
+    const take = Number(request.nextUrl.searchParams.get('take') ?? 200);
+    return NextResponse.json({ data: await twinRepository.listEvents(scope, twinId, take) });
+  } catch (error) {
+    return apiError(error);
+  }
+}
+
+export async function handleGraphGet(request: NextRequest, twinId: string) {
+  try {
+    const scope = await authenticatedRequestContext(request, 'READ');
+    return NextResponse.json({ data: await twinRepository.getGraph(scope, twinId) });
+  } catch (error) {
+    return apiError(error);
+  }
+}
+
 export async function handleAskPost(request: NextRequest, twinId: string) {
   try {
     const scope = await authenticatedRequestContext(request, 'READ');

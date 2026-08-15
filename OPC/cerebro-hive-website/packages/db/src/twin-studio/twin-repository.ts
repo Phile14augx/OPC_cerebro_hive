@@ -8,11 +8,14 @@ import type {
   UpdateEntityStateCommand,
 } from '@cerebro/twin-contracts';
 import { TwinDefinitionSchema } from '@cerebro/twin-contracts';
-import { evaluateScenario } from '@cerebro/twin-domain';
+import { buildTwinGraph, evaluateScenario, evaluateTwinRules } from '@cerebro/twin-domain';
 import { Prisma, PrismaClient } from '../generated/client';
 
 const json = (value: unknown): Prisma.InputJsonValue =>
   JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
+
+const asRecord = (value: unknown): Record<string, unknown> =>
+  value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
 
 const nullable = <T>(value: T | undefined): T | null => value ?? null;
 
@@ -132,7 +135,7 @@ export class TwinRepository {
   }
 
   async appendState(command: UpdateEntityStateCommand) {
-    return this.db.$transaction(
+    const result = await this.db.$transaction(
       async (tx) => {
         const twin = await tx.digitalTwin.findFirst({
           where: {
@@ -212,6 +215,117 @@ export class TwinRepository {
       },
       { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
     );
+    if (result.projected) {
+      await this.syncRuleEvents(command, command.twinId);
+    }
+    return result;
+  }
+
+  async listEvents(scope: Scope, twinId: string, take = 200) {
+    const twin = await this.getById(scope, twinId);
+    if (!twin) throw new Error('TWIN_NOT_FOUND');
+    const events = await this.db.twinEvent.findMany({
+      where: { ...scopeWhere(scope), twinId },
+      include: { entity: { select: { id: true, key: true, name: true, typeKey: true } } },
+      orderBy: { openedAt: 'desc' },
+      take: Math.min(Math.max(take, 1), 500),
+    });
+    return events.sort((left, right) => {
+      if (left.status !== right.status) return left.status === 'OPEN' ? -1 : 1;
+      return right.openedAt.getTime() - left.openedAt.getTime();
+    });
+  }
+
+  async getGraph(scope: Scope, twinId: string) {
+    const twin = await this.getById(scope, twinId);
+    if (!twin) throw new Error('TWIN_NOT_FOUND');
+    const definition = TwinDefinitionSchema.safeParse(twin.activeVersion?.definition);
+    return buildTwinGraph({
+      relationshipTypes: definition.success ? definition.data.relationshipTypes : [],
+      entities: twin.entities.map((entity) => ({
+        id: entity.id,
+        key: entity.key,
+        name: entity.name,
+        typeKey: entity.typeKey,
+        attributes: asRecord(entity.attributes),
+      })),
+    });
+  }
+
+  async syncRuleEvents(scope: Scope, twinId: string) {
+    const twin = await this.getById(scope, twinId);
+    if (!twin?.activeVersionId) throw new Error('TWIN_NOT_FOUND');
+    const definition = TwinDefinitionSchema.safeParse(twin.activeVersion?.definition);
+    const rules = definition.success ? definition.data.rules : [];
+    if (rules.length === 0) return { opened: 0, cleared: 0 };
+    const now = new Date();
+    let opened = 0;
+    let cleared = 0;
+    await this.db.$transaction(async (tx) => {
+      for (const entity of twin.entities) {
+        if (!entity.currentState) continue;
+        const current = entity.currentState;
+        const state = asRecord(current.state);
+        const evaluations = evaluateTwinRules(rules, state);
+        for (const evaluation of evaluations) {
+          if (evaluation.parseError) continue;
+          const open = await tx.twinEvent.findFirst({
+            where: {
+              ...scopeWhere(scope),
+              twinId,
+              entityId: entity.id,
+              ruleKey: evaluation.key,
+              status: 'OPEN',
+            },
+          });
+          if (evaluation.fired) {
+            if (open) continue;
+            try {
+              await tx.twinEvent.create({
+                data: {
+                  tenantId: scope.tenantId,
+                  workspaceId: scope.workspaceId,
+                  twinId,
+                  entityId: entity.id,
+                  versionId: twin.activeVersionId!,
+                  ruleKey: evaluation.key,
+                  kind: 'RULE_FIRED',
+                  status: 'OPEN',
+                  message: `Rule ${evaluation.key} fired: ${evaluation.expression}`,
+                  state: json(state),
+                  provenance: json({
+                    source: 'twin-rule-engine',
+                    classification: current.classification,
+                    observedAt: current.observedAt,
+                    effectiveAt: current.effectiveAt,
+                    ingestedAt: now,
+                    evidenceIds: [current.id],
+                    ruleKey: evaluation.key,
+                    expression: evaluation.expression,
+                  }),
+                  source: 'twin-rule-engine',
+                  classification: current.classification,
+                  openedAt: now,
+                },
+              });
+              opened += 1;
+            } catch (error) {
+              if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+                continue;
+              }
+              throw error;
+            }
+          } else if (open) {
+            await tx.twinEvent.update({
+              where: { id: open.id },
+              data: { status: 'CLEARED', clearedAt: now },
+            });
+            cleared += 1;
+          }
+        }
+      }
+    });
+    return { opened, cleared };
   }
 
   async listStateHistory(scope: Scope, twinId: string, entityId: string, take = 100) {

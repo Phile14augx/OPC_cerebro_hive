@@ -65,7 +65,7 @@ async function seedDevelopmentTwinData() {
     const twin = await twinRepository.create({
       ...scope,
       ...seed,
-      metadata: { seeded: true, phase: 'PHASE_1' },
+      metadata: { seeded: true, phase: 'PHASE_2' },
       createdBy: DEV_USER_ID,
     });
     const now = new Date();
