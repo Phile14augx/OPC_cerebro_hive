@@ -1,5 +1,7 @@
 # Twin Industry Framework Implementation Plan
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.** Twin Studio is not a Wave 0 product slot. Park on `feat/twin-studio-full-implementation`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Extend Twin Studio from the Smart Factory slice into an industry-neutral platform that can generate validated ontologies for physical, operational, and business domains.

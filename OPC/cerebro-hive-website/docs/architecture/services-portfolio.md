@@ -1,5 +1,7 @@
 # CerebroHive™ Enterprise Services Portfolio
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.** This file remains the 50-service catalog. Delivery-ready status is the ledger, not this document.
+
 **Status:** Canonical Version 2.0  
 **Governing Document:** `CEREBROHIVE_CONSTITUTION.md`  
 **Upstream Dependency:** `CAPABILITY_ARCHITECTURE.md`  

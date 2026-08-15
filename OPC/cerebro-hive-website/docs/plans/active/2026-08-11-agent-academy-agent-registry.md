@@ -1,5 +1,7 @@
 # Agent Academy Agent Registry Implementation Plan
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.** Fold into `KRN-005` during Wave 0.4. Do not open as a new front.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Deliver a database-backed, workspace-isolated Agent Registry vertical slice that lets authorized Studio users create, edit, publish, version, and govern canonical agents.

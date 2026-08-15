@@ -1,5 +1,7 @@
 # Services Portfolio Index
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.**
+
 **Canonical Source:** [`architecture/services-portfolio.md`](./architecture/services-portfolio.md)
 
 ## 50 Services Across 5 Categories

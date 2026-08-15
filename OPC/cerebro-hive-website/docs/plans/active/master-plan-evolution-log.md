@@ -1,5 +1,7 @@
 # Master Plan Evolution Log
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.** This log remains valid as history of plan-vs-implementation divergence.
+
 ## [2026-08-03] Architecture Pivot to EIOS
 *   **Trigger:** Market shift towards governed autonomous systems and AI-native enterprise architecture.
 *   **Action:** Deprecated the 5-Tier architecture and repositioned CerebroHive as a 10-Layer **Enterprise Intelligence Operating System (EIOS)**.

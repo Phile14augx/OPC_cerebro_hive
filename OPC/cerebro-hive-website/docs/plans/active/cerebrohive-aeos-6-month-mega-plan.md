@@ -1,6 +1,8 @@
 # CerebroHive AEOS — 6-Month Production Launch Mega Plan
 ## AI Enterprise Operating System | Zero Human Intervention | Full GTM
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.**
+
 > **Document Version:** 1.0 | **Date:** August 2026 | **Classification:** Strategic — Internal
 > **AI Build Team:** Claude (Anthropic) · Codex (OpenAI) · Gemini (Google DeepMind)
 

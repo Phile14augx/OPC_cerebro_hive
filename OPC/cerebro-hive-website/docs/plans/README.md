@@ -1,5 +1,7 @@
 # Plans
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.** `active/` below is historical. Wave 0 execution is `docs/portfolio/WAVE-0.md`.
+
 Implementation plans — the "work being executed" side of documentation, as distinct from permanent documentation (`../architecture/`, `../domains/`, etc.) that describes how the system currently works. See [`../documentation-guidelines.md`](../documentation-guidelines.md) for the full rule on keeping these separate.
 
 | Folder | Contents |

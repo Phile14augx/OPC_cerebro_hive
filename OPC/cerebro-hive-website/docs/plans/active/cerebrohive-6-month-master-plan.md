@@ -1,5 +1,7 @@
 # CerebroHive 6-Month Master Implementation Plan
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.**
+
 **Source:** `CerebroHive 6-Month Master Implementation Plan.pdf` (CerebroHive OPC Pvt. Ltd., Confidential), uploaded 2026-07-31/08-01. Transcribed in full below (via `pdftotext -layout`) and stored here as a durable knowledge artifact per user instruction, so it can be referenced by future work without re-uploading the PDF.
 
 **Companion document:** see `MASTER-PLAN-GAP-ASSESSMENT.md` for an evidence-based assessment of what in this plan is already built in this repository versus what remains, and what parts are business/operational actions outside what a coding agent can execute.

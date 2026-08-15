@@ -1,5 +1,7 @@
 # Enterprise Agent Runtime — Phased Implementation Backlog
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.** Fold remaining M10.x items into `KRN-AGENT-001` / `KRN-006` after Wave 0.3.
+
 This document operationalizes the "Milestone 10/10" north-star architecture as a program of independently
 shippable milestones (M10.1–M10.7), grounded directly in the current state of this repository. It supersedes
 the single-milestone/10-epic framing: that document stays useful as the long-term architectural target, but

@@ -1,5 +1,7 @@
 # CerebroHive™ Enterprise Capability Architecture
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.** Layer model retained. Sequencing is Wave 0, not product-number order.
+
 **Status:** Canonical Version 2.0  
 **Governing Document:** `CEREBROHIVE_CONSTITUTION.md`  
 **Upstream Dependency:** `PRODUCT_REGISTRY.md`  

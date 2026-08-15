@@ -1,5 +1,7 @@
 # Capability Architecture Index
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.**
+
 **Canonical Source:** [`architecture/capability-model.md`](./architecture/capability-model.md)
 
 Quick-reference for the five-tier platform architecture and dependency graph.

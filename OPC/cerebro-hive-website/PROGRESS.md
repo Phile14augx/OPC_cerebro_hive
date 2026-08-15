@@ -14,7 +14,7 @@ Source of truth for each concern lives in one place. This doc is not that place 
 | Governance rules | `CEREBROHIVE_CONSTITUTION.md` | Active — listed in `ARCHITECTURE_INDEX.md` as pending a "P1 update" |
 | Architecture taxonomy | `architecture/ARCHITECTURE_INDEX.md`, `architecture/reference/*`, `architecture/adrs/*` | Active, mid-migration (Phase P2) |
 | Capability/product/services detail | `architecture/capabilities/{CAPABILITY_MODEL.md, PRODUCT_REGISTRY.md, SERVICES_PORTFOLIO.md, COMMERCIAL_STRATEGY.md}` | Active — migrated here from repo-root files on 2026-08-03 |
-| 6-month plan vs. reality | `CEREBROHIVE-6-MONTH-MASTER-PLAN.md`, `MASTER-PLAN-GAP-ASSESSMENT.md`, `MASTER-PLAN-EVOLUTION-LOG.md` | Active — evolution log has entries through 2026-08-03 |
+| 6-month plan vs. reality | `docs/portfolio/` (ledger + governance; supersedes mega-plan sequencing), `docs/plans/active/master-plan-evolution-log.md` | Active — portfolio recovery control plane as of 2026-08-15 |
 | Point-in-time audits | `AUDIT-REPORT-2026-08-02.md` (website/CI/security sweep) | Has open "action required" items — see §3 |
 | Codebase reference (auto-generated) | `.planning/codebase/{STACK,ARCHITECTURE,STRUCTURE,CONVENTIONS,TESTING,INTEGRATIONS,CONCERNS}.md` | Refreshed 2026-08-04, commit `1402d75`. Regenerate via `/gsd:map-codebase` when it drifts. |
 | Project overview | `README.md` | Active |
@@ -434,4 +434,94 @@ by those audits; see the Codex product-delivery cycle entries in CURRENT-SPRINT.
 - [ ] G-P1-3: Produce `agents/AUTH-GAP-ACTION-PLAN.md` from `audit/P0-AUTH-AUTHZ-GAP.md` — 6 cycles, P0 security
 
 **Oldest P0 cycle counts (as of 2026-08-14 03:00 IST):** C-P0-1=12, C-P0-2=12, G-P0-1=12 🚨
+
+
+---
+
+### 2026-08-15 (Noon Audit — 12:00 IST)
+
+**Audit performed:**
+- Noon audit ran at 12:00 IST. Git remains unreachable from audit sandbox; completion assessed via file modification timestamps and disk inspection.
+- 0 commits detected to local main or origin/main since 3 AM Aug 14 audit.
+- **MAJOR new work found on disk** (all uncommitted): Nexarch Command Center built overnight (Aug 14–15 IST).
+
+**New files detected since last audit (3 AM Aug 14):**
+- `app/nexarch/` — Command Center UI, 6 sections (agents, missions, governance, topology, observability, approvals), created Aug 14 23:51 IST
+- `lib/agent-os/` — seed.ts, store.ts, types.ts (agent OS client utilities), Aug 14 23:41–51 IST
+- `data/agent-os.json` (23 KB agent registry seed data), Aug 14 23:55 IST
+- `packages/kernel-core/` — kernel, scheduler, watchdog, lifecycle, delegation
+- `packages/memory-sdk/` — context-engine, memory-manager
+- `packages/runtime-core/` — mission/, task/, execution.ts
+- `packages/governance-core/` — policy-engine, risk-engine, approval-service, budget-enforcer, audit-trail
+- `knowledge/` — 16-directory AI intelligence knowledge base
+- `CEREBRO-NEXARCH-AI-INTELLIGENCE-BRIEF.md` (6 KB), `AI-REVOLUTION-KNOWLEDGE-BASE-BASELINE.md` (30 KB), `WEEKLY-CTO-TECHNOLOGY-INTELLIGENCE.md` (22 KB, Aug 15 04:59 IST)
+- `nexarch-commit.sh` — 8-commit script ready to run from local terminal (Aug 15 00:55 IST)
+- `pnpm-lock.yaml` updated Aug 15 14:16 IST (synced for new @cerebro/* packages)
+
+**Ongoing blockers (unchanged):**
+- C-P0-1 (M10.1 PR) and C-P0-2 (Prisma migration) now at **13 cycles** — formal critical breach
+- G-P0-1 (documentation changeset) at **13 cycles**
+- Codex sandbox registry EACCES (`registry.npmjs.org:443`) still blocking all Codex installs
+
+**Shipped (this audit):**
+- `agents/CLAUDE-TASKS.md` — noon assignment; C-P0-NEXARCH (run nexarch-commit.sh) as new P0; all cycle counts +1
+- `agents/GEMINI-TASKS.md` — noon assignment; G-P0-NEXARCH verification task; G-P2-3 intel brief marked done-on-disk
+- `agents/CURRENT-SPRINT.md` — full sprint board refreshed; new nexarch work table; updated risk register
+- `PROGRESS.md` — this entry
+
+**Tasks completed since last entry (3 AM Aug 14):** None by commit. Significant implementation work on Nexarch Command Center completed on disk — all queued in `nexarch-commit.sh` for immediate commit.
+
+**Goals for 2026-08-15 (today — critical):**
+- [ ] **HUMAN (highest priority):** Run `bash nexarch-commit.sh && git push origin main` from local terminal — lands 8 commits of completed work
+- [ ] **HUMAN:** Unblock `registry.npmjs.org:443` in Codex sandbox — 2 cycles overdue
+- [ ] C-P0-1: Separate M10.2 files, commit M10.1, open PR — 13 cycles, CRITICAL BREACH
+- [ ] C-P0-2: Apply Prisma migration — 13 cycles, CRITICAL BREACH (Postgres must be running)
+- [ ] G-P0-1: Pull first; commit remaining docs not on origin/main — 13 cycles, CRITICAL BREACH
+- [ ] G-P0-1b: Commit M26.1 audit batch (~30 files, pure docs) — 8 cycles
+- [ ] G-P1-3: Write `agents/AUTH-GAP-ACTION-PLAN.md` from `audit/P0-AUTH-AUTHZ-GAP.md` — 7 cycles, P0 security
+- [ ] G-P1-1: Validate and commit Python agent-runner roles — 11 cycles
+
+**Oldest P0 cycle counts (as of 2026-08-15 12:00 IST):** C-P0-1=13, C-P0-2=13, G-P0-1=13 🚨
+
+---
+
+### 2026-08-15 (Afternoon — Portfolio Completion Audit)
+
+**Audit performed:**
+- Full portfolio-recovery audit against the website repo. Canonical catalogues, 141 workspace packages, 10 apps, 19 services, 50 product specs, 50-service catalog, Nexarch/OS packages, and CI workflows were scored on evidence maturity L0–L7.
+- Declared lifecycle (GA 10 / Beta 20 / MVP 18 / Research 2) is **not** treated as engineering evidence. Nothing reached L5–L7.
+- Five numbers written to `docs/portfolio/README.md`. Ledger and governance (no-new-plans, WIP limits, dependency waves, superseded plans, CI fail-closed) written to `docs/portfolio/`.
+
+**Shipped (on disk, this session):**
+- `docs/portfolio/README.md` — control plane index + freeze + five numbers
+- `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md` — 50 products + 50 services + 27 kernel + Personal OS + Enterprise OS
+- `docs/portfolio/GOVERNANCE.md` — DoD, WIP, waves, superseded plans, P0/P1/P2
+- `PROGRESS.md` — this entry
+
+**Goals (Wave 0 only — do not open new product fronts):**
+- [ ] Use `docs/portfolio/` as the only assignment source; stop assigning from mega-plans and agent sprint boards
+- [ ] Split uncommitted batches by ledger ID and commit (Nexarch → OS-E/KRN, not a mixed 8-commit dump if it mixes kernel + UI + knowledge)
+- [ ] Fail-closed CI: real typecheck/lint/test scripts; ban `exit 0`; cover `identity-core` and `apps/studio`
+- [ ] Replace `data/agent-os.json` and InMemory execution/memory stores with Prisma
+- [ ] Collapse duplicate agent runtimes into one approved kernel
+
+---
+
+### 2026-08-15 (Afternoon — Wave 0.1 isolation)
+
+**Audit performed:**
+- Baseline v1.0 frozen. No re-score of product/service/kernel numbers.
+- Dirty tree on `feat/twin-studio-full-implementation` classified by ledger ID. `nexarch-commit.sh` must not run (mixed dump).
+- Historical mega-plans, registries, and agent sprint boards bannered superseded for assignment; files retained.
+
+**Shipped (constitution, this session):**
+- `docs/portfolio/WAVE-0.md` — W0.1–W0.5, WIP interpretation, gates A–C, Verified Capability Throughput
+- `docs/portfolio/W0.1-WORKTREE-ISOLATION.md` — dirty-path map
+- Baseline freeze in `docs/portfolio/README.md` and ledger header
+- Superseded banners on active plans, registries, capability model, agent boards
+
+**Goals:**
+- [ ] Commit constitution only on `docs/w0-1-portfolio-baseline-v1`
+- [ ] Do not start W0.2 until that commit exists and contains no product/runtime/CI code
+- [ ] Product slots remain Studio, Archive, Forge only
 

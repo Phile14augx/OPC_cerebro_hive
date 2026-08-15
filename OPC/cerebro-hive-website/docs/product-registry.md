@@ -1,5 +1,7 @@
 # Product Registry Index
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.** Lifecycle labels in this index are not evidence.
+
 **Canonical Source:** [`architecture/product-registry.md`](./architecture/product-registry.md)
 
 This index maps all 50 products to their specification files and docs pages.

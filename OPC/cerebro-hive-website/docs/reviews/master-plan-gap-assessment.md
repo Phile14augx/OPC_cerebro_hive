@@ -1,5 +1,7 @@
 # Gap Assessment: CerebroHive 6-Month Master Implementation Plan vs. Current Repository State
 
+> **STATUS: SUPERSEDED FOR WORK ASSIGNMENT — retained for historical/commercial context only. Current work must originate in `docs/portfolio/MASTER-IMPLEMENTATION-LEDGER.md`.** This remains a point-in-time audit (2026-08-01). Baseline v1.0 supersedes it for operating numbers.
+
 **Date:** 2026-08-01
 **Companion document:** `CEREBROHIVE-6-MONTH-MASTER-PLAN.md` (full transcribed plan)
 **Method:** direct inspection of this repository's actual files (not assumption) — `ls`/`grep` against `app/`, `infra/`, `.github/workflows/`, `docs/`, `hiveforge/`, `PRODUCT_SPECIFICATIONS/`. Where a plan item could not be directly verified, it is marked Unverified rather than assumed done or missing.
