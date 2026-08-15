@@ -48,7 +48,7 @@ module "networking" {
 
   environment        = "staging"
   vpc_cidr           = var.vpc_cidr
-  single_nat_gateway = true   # Single NAT GW to save cost in staging
+  single_nat_gateway = true # Single NAT GW to save cost in staging
 }
 
 # ── Kubernetes (EKS) ──────────────────────────────────────────────────────────
@@ -62,7 +62,7 @@ module "kubernetes" {
   private_subnet_ids = module.networking.private_subnet_ids
   cluster_sg_id      = module.networking.eks_cluster_sg_id
 
-  public_api_endpoint    = true    # Allow direct kubectl access in staging
+  public_api_endpoint    = true # Allow direct kubectl access in staging
   general_instance_types = ["m5.xlarge", "m5a.xlarge"]
   general_min_size       = 2
   general_desired_size   = 3
@@ -79,18 +79,14 @@ module "database" {
   source = "../../modules/database"
 
   environment        = "staging"
-  vpc_id             = module.networking.vpc_id
   private_subnet_ids = module.networking.private_subnet_ids
-  db_sg_id           = module.networking.db_sg_id
+  rds_sg_id          = module.networking.rds_sg_id
 
   # Smaller instance, no Multi-AZ in staging
-  instance_class          = "db.t3.medium"
-  multi_az                = false
-  deletion_protection     = false
-  backup_retention_period = 3
-
-  db_name     = "cerebrohive_staging"
-  db_username = "cerebrohive"
+  instance_class        = "db.t3.medium"
+  multi_az              = false
+  deletion_protection   = false
+  backup_retention_days = 3
 }
 
 # ── ElastiCache Redis ─────────────────────────────────────────────────────────
@@ -101,12 +97,12 @@ resource "aws_elasticache_subnet_group" "staging" {
 }
 
 resource "aws_elasticache_replication_group" "staging" {
-  replication_group_id = "cerebro-hive-staging"
-  description          = "CerebroHive staging Redis"
-  engine               = "redis"
-  engine_version       = "7.2"
-  node_type            = "cache.t3.small"
-  num_cache_clusters   = 1    # Single node in staging
+  replication_group_id       = "cerebro-hive-staging"
+  description                = "CerebroHive staging Redis"
+  engine                     = "redis"
+  engine_version             = "7.2"
+  node_type                  = "cache.t3.small"
+  num_cache_clusters         = 1 # Single node in staging
   automatic_failover_enabled = false
 
   subnet_group_name  = aws_elasticache_subnet_group.staging.name
@@ -233,7 +229,7 @@ module "irsa_eso" {
 
 resource "aws_s3_bucket" "assets_staging" {
   bucket        = "cerebro-hive-assets-staging"
-  force_destroy = true   # OK to destroy in staging
+  force_destroy = true # OK to destroy in staging
 
   tags = { Name = "cerebro-hive-assets-staging" }
 }
