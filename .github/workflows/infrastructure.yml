@@ -10,11 +10,13 @@ name: Infrastructure
 on:
   pull_request:
     paths:
-      - "infra/terraform/**"
+      - "OPC/cerebro-hive-website/infra/terraform/**"
+      - ".github/workflows/infrastructure.yml"
     branches: [main, develop]
   push:
     paths:
-      - "infra/terraform/**"
+      - "OPC/cerebro-hive-website/infra/terraform/**"
+      - ".github/workflows/infrastructure.yml"
     branches: [main]
   workflow_dispatch:
     inputs:
@@ -32,8 +34,8 @@ on:
 permissions:
   contents: read
   pull-requests: write
-  id-token: write        # AWS OIDC
-  security-events: write # for SARIF uploads
+  id-token: write
+  security-events: write
 
 env:
   TF_VERSION: "1.8.5"
@@ -44,9 +46,6 @@ defaults:
     working-directory: OPC/cerebro-hive-website
 
 jobs:
-  # ────────────────────────────────────────────────────────────
-  # Detect which environments changed
-  # ────────────────────────────────────────────────────────────
   detect-changes:
     name: Detect Environment Changes
     runs-on: ubuntu-latest
@@ -64,22 +63,20 @@ jobs:
         with:
           filters: |
             dev:
-              - 'infra/terraform/environments/dev/**'
-              - 'infra/terraform/modules/**'
+              - 'OPC/cerebro-hive-website/infra/terraform/environments/dev/**'
+              - 'OPC/cerebro-hive-website/infra/terraform/modules/**'
             staging:
-              - 'infra/terraform/environments/staging/**'
-              - 'infra/terraform/modules/**'
+              - 'OPC/cerebro-hive-website/infra/terraform/environments/staging/**'
+              - 'OPC/cerebro-hive-website/infra/terraform/modules/**'
             production:
-              - 'infra/terraform/environments/production/**'
-              - 'infra/terraform/modules/**'
+              - 'OPC/cerebro-hive-website/infra/terraform/environments/production/**'
+              - 'OPC/cerebro-hive-website/infra/terraform/modules/**'
 
-  # ────────────────────────────────────────────────────────────
-  # Terraform validate (always runs)
-  # ────────────────────────────────────────────────────────────
   validate:
     name: Terraform Validate
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         environment: [dev, staging, production]
     steps:
@@ -94,14 +91,11 @@ jobs:
         continue-on-error: true
 
       - name: Terraform validate — ${{ matrix.environment }}
-        working-directory: infra/terraform/environments/${{ matrix.environment }}
+        working-directory: OPC/cerebro-hive-website/infra/terraform/environments/${{ matrix.environment }}
         run: |
           terraform init -backend=false
           terraform validate
 
-  # ────────────────────────────────────────────────────────────
-  # Terraform plan (on PR + push)
-  # ────────────────────────────────────────────────────────────
   plan:
     name: Plan — ${{ matrix.environment }}
     runs-on: ubuntu-latest
@@ -116,69 +110,83 @@ jobs:
         include:
           - environment: dev
             changed: ${{ needs.detect-changes.outputs.dev }}
-            role_arn: ${{ secrets.AWS_DEV_ROLE_ARN }}
+            role_secret: AWS_DEV_ROLE_ARN
           - environment: staging
             changed: ${{ needs.detect-changes.outputs.staging }}
-            role_arn: ${{ secrets.AWS_STAGING_ROLE_ARN }}
+            role_secret: AWS_STAGING_ROLE_ARN
           - environment: production
             changed: ${{ needs.detect-changes.outputs.production }}
-            role_arn: ${{ secrets.AWS_PROD_ROLE_ARN }}
+            role_secret: AWS_PROD_ROLE_ARN
+    env:
+      AWS_ROLE_ARN: ${{ secrets[matrix.role_secret] }}
     steps:
       - uses: actions/checkout@v7
-        if: matrix.changed == 'true' || github.event_name == 'workflow_dispatch'
+
+      - name: No Terraform changes for environment
+        if: matrix.changed != 'true' && github.event_name != 'workflow_dispatch'
+        run: echo "No Terraform changes detected for ${{ matrix.environment }}; plan not required."
+
+      - name: Skip cloud plan when AWS role is not configured
+        if: (matrix.changed == 'true' || github.event_name == 'workflow_dispatch') && env.AWS_ROLE_ARN == ''
+        run: |
+          echo "::warning::${{ matrix.role_secret }} is not configured or not available to this event. Terraform validate passed; cloud-backed plan is skipped."
+          echo "Configure the repository/environment OIDC role secret to enable terraform plan."
 
       - name: Configure AWS OIDC credentials
-        if: matrix.changed == 'true' || github.event_name == 'workflow_dispatch'
+        if: (matrix.changed == 'true' || github.event_name == 'workflow_dispatch') && env.AWS_ROLE_ARN != ''
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ matrix.role_arn }}
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - uses: hashicorp/setup-terraform@v3
-        if: matrix.changed == 'true' || github.event_name == 'workflow_dispatch'
+        if: (matrix.changed == 'true' || github.event_name == 'workflow_dispatch') && env.AWS_ROLE_ARN != ''
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: Terraform Init
-        if: matrix.changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: infra/terraform/environments/${{ matrix.environment }}
+        if: (matrix.changed == 'true' || github.event_name == 'workflow_dispatch') && env.AWS_ROLE_ARN != ''
+        working-directory: OPC/cerebro-hive-website/infra/terraform/environments/${{ matrix.environment }}
         run: terraform init
 
       - name: Terraform Plan
-        if: matrix.changed == 'true' || github.event_name == 'workflow_dispatch'
+        if: (matrix.changed == 'true' || github.event_name == 'workflow_dispatch') && env.AWS_ROLE_ARN != ''
         id: plan
-        working-directory: infra/terraform/environments/${{ matrix.environment }}
+        working-directory: OPC/cerebro-hive-website/infra/terraform/environments/${{ matrix.environment }}
         run: |
           terraform plan \
             -out=tfplan-${{ matrix.environment }} \
             -var-file=terraform.tfvars \
             -detailed-exitcode \
             2>&1 | tee plan-output.txt
-          echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
-        continue-on-error: true
+          exit_code=${PIPESTATUS[0]}
+          echo "exit_code=$exit_code" >> "$GITHUB_OUTPUT"
+          if [[ "$exit_code" -eq 1 ]]; then
+            exit 1
+          fi
 
       - name: Upload plan artifact
-        if: steps.plan.outcome != 'skipped'
+        if: steps.plan.outcome == 'success'
         uses: actions/upload-artifact@v7
         with:
           name: tfplan-${{ matrix.environment }}
-          path: infra/terraform/environments/${{ matrix.environment }}/tfplan-${{ matrix.environment }}
+          path: OPC/cerebro-hive-website/infra/terraform/environments/${{ matrix.environment }}/tfplan-${{ matrix.environment }}
           retention-days: 7
 
       - name: Post plan to PR
-        if: github.event_name == 'pull_request' && (matrix.changed == 'true' || github.event_name == 'workflow_dispatch')
+        if: github.event_name == 'pull_request' && steps.plan.outcome == 'success'
         uses: actions/github-script@v9
         continue-on-error: true
         with:
           script: |
             const fs = require('fs');
+            const path = 'OPC/cerebro-hive-website/infra/terraform/environments/${{ matrix.environment }}/plan-output.txt';
             let planOutput = '';
             try {
-              planOutput = fs.readFileSync('infra/terraform/environments/${{ matrix.environment }}/plan-output.txt', 'utf8');
+              planOutput = fs.readFileSync(path, 'utf8');
             } catch(e) {
               planOutput = 'Plan output not available.';
             }
-            // Truncate to GitHub comment limit
             const truncated = planOutput.length > 60000
               ? planOutput.substring(0, 60000) + '\n\n[... truncated ...]'
               : planOutput;
@@ -189,9 +197,6 @@ jobs:
               body: `## 🏗️ Terraform Plan — \`${{ matrix.environment }}\`\n\n<details><summary>Show Plan</summary>\n\n\`\`\`hcl\n${truncated}\n\`\`\`\n</details>`
             });
 
-  # ────────────────────────────────────────────────────────────
-  # Terraform apply (main push or manual dispatch)
-  # ────────────────────────────────────────────────────────────
   apply:
     name: Apply — ${{ github.event.inputs.environment || 'dev' }}
     runs-on: ubuntu-latest
@@ -202,34 +207,43 @@ jobs:
     environment:
       name: ${{ github.event.inputs.environment || 'dev' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Determine environment
         id: env
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "name=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+            echo "name=${{ github.event.inputs.environment }}" >> "$GITHUB_OUTPUT"
           else
-            echo "name=dev" >> $GITHUB_OUTPUT
+            echo "name=dev" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Select AWS role secret
+        id: role
+        run: |
+          case "${{ steps.env.outputs.name }}" in
+            dev) echo "secret=AWS_DEV_ROLE_ARN" >> "$GITHUB_OUTPUT" ;;
+            staging) echo "secret=AWS_STAGING_ROLE_ARN" >> "$GITHUB_OUTPUT" ;;
+            production) echo "secret=AWS_PROD_ROLE_ARN" >> "$GITHUB_OUTPUT" ;;
+            *) echo "Unsupported environment" >&2; exit 1 ;;
+          esac
 
       - name: Configure AWS OIDC credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets[format('AWS_{0}_ROLE_ARN', steps.env.outputs.name)] }}
+          role-to-assume: ${{ secrets[steps.role.outputs.secret] }}
           aws-region: ${{ env.AWS_REGION }}
-        continue-on-error: true
 
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: Terraform Init
-        working-directory: infra/terraform/environments/${{ steps.env.outputs.name }}
+        working-directory: OPC/cerebro-hive-website/infra/terraform/environments/${{ steps.env.outputs.name }}
         run: terraform init
 
       - name: Terraform Apply
-        working-directory: infra/terraform/environments/${{ steps.env.outputs.name }}
+        working-directory: OPC/cerebro-hive-website/infra/terraform/environments/${{ steps.env.outputs.name }}
         run: |
           terraform apply \
             -auto-approve \
@@ -237,9 +251,9 @@ jobs:
             2>&1 | tee apply-output.txt
 
       - name: Upload apply output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: terraform-apply-${{ steps.env.outputs.name }}-${{ github.run_id }}
-          path: infra/terraform/environments/${{ steps.env.outputs.name }}/apply-output.txt
+          path: OPC/cerebro-hive-website/infra/terraform/environments/${{ steps.env.outputs.name }}/apply-output.txt
           retention-days: 30
