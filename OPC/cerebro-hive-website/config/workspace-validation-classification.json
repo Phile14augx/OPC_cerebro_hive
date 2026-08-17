@@ -1,0 +1,4972 @@
+{
+  "baselineWorkspaceCount": 141,
+  "controlPlane": [
+    {
+      "path": ".",
+      "classification": "CONTROL-PLANE"
+    }
+  ],
+  "workspaces": [
+    {
+      "path": "apps/archive-portal",
+      "packageName": "archive-portal",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "next build",
+          "evidence": "Declared package script: next build"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit",
+          "evidence": "Declared package script: tsc --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint app components",
+          "evidence": "Declared package script: eslint app components"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "apps/eda-api",
+      "packageName": "@cerebro/eda-api",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "apps/eda-portal",
+      "packageName": "@cerebro/eda-portal",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "apps/forge",
+      "packageName": "@cerebro/forge",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "next build",
+          "evidence": "Declared package script: next build"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit",
+          "evidence": "Declared package script: tsc --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint",
+          "evidence": "Declared package script: eslint"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "apps/platform",
+      "packageName": "platform",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "next build",
+          "evidence": "Declared package script: next build"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit",
+          "evidence": "Declared package script: tsc --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint",
+          "evidence": "Declared package script: eslint"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "apps/platform-api",
+      "packageName": "@cerebro/platform-api",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "typecheck",
+          "contract": "typecheck",
+          "classification": "FALSE-GREEN",
+          "command": "exit 0",
+          "evidence": "Validation script contains an unconditional or failure-swallowing success path."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "Declared package script: vitest run"
+        },
+        "typecheck": {
+          "classification": "FALSE-GREEN",
+          "command": "exit 0",
+          "evidence": "Declared typecheck script can report success without meaningful validation: exit 0"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "apps/pulse",
+      "packageName": "@cerebro/pulse",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "next build",
+          "evidence": "Declared package script: next build"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit",
+          "evidence": "Declared package script: tsc --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint",
+          "evidence": "Declared package script: eslint"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "apps/sphere",
+      "packageName": "@cerebro/sphere",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "next build",
+          "evidence": "Declared package script: next build"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit",
+          "evidence": "Declared package script: tsc --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint",
+          "evidence": "Declared package script: eslint"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "apps/studio",
+      "packageName": "@cerebro/studio",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "next build",
+          "evidence": "Declared package script: next build"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit",
+          "evidence": "Declared package script: tsc --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint",
+          "evidence": "Declared package script: eslint"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "apps/twin-studio",
+      "packageName": "@cerebro/twin-studio",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "next build",
+          "evidence": "Declared package script: next build"
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "tsx --test tests/*.test.ts",
+          "evidence": "Declared package script: tsx --test tests/*.test.ts"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit",
+          "evidence": "Declared package script: tsc --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint",
+          "evidence": "Declared package script: eslint"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/agent-sdk",
+      "packageName": "@cerebro/agent-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/ai",
+      "packageName": "@cerebro/ai",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/ai-gateway",
+      "packageName": "@cerebro/ai-gateway",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/ai-governance-core",
+      "packageName": "@cerebro/ai-governance-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/aiops-core",
+      "packageName": "@cerebro/aiops-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/aiops-sdk",
+      "packageName": "@cerebro/aiops-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/api-client",
+      "packageName": "@cerebro/api-client",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/architecture-core",
+      "packageName": "@cerebro/architecture-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/archive-contracts",
+      "packageName": "@cerebro/archive-contracts",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint src/",
+          "evidence": "Declared package script: eslint src/"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/asset-core",
+      "packageName": "@cerebro/asset-core",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/auth",
+      "packageName": "@cerebro/auth",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts*\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts*\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/capabilities/agent-builder",
+      "packageName": "@cerebro/agent-builder-capability",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "Declared package script: vitest run"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/capabilities/deployment",
+      "packageName": "@cerebro/deployment-capability",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/capabilities/evaluation",
+      "packageName": "@cerebro/evaluation",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/capabilities/knowledge",
+      "packageName": "@cerebro/knowledge-capability",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/capabilities/memory",
+      "packageName": "@cerebro/memory",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/capabilities/workflow",
+      "packageName": "@cerebro/workflow-capability",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/capability-contracts",
+      "packageName": "@cerebro/capability-contracts",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/capability-core",
+      "packageName": "@cerebro/capability-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/capability-registry",
+      "packageName": "@cerebro/capability-registry",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "Declared package script: vitest run"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit",
+          "evidence": "Declared package script: tsc --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/change-core",
+      "packageName": "@cerebro/change-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/compliance-core",
+      "packageName": "@cerebro/compliance-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/config",
+      "packageName": "@cerebro/config",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/config-core",
+      "packageName": "@cerebro/config-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/contracts",
+      "packageName": "@cerebro/contracts",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/core-bus",
+      "packageName": "@cerebro/core-bus",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/data-core",
+      "packageName": "@cerebro/data-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/data-governance-core",
+      "packageName": "@cerebro/data-governance-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/db",
+      "packageName": "@cerebro/db",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc && node -e \"require('fs').cpSync('src/generated/client','dist/db/src/generated/client',{recursive:true})\"",
+          "evidence": "Declared package script: tsc && node -e \"require('fs').cpSync('src/generated/client','dist/db/src/generated/client',{recursive:true})\""
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "tsx --test src/**/*.test.ts",
+          "evidence": "Declared package script: tsx --test src/**/*.test.ts"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"**/*.ts*\"",
+          "evidence": "Declared package script: eslint \"**/*.ts*\""
+        },
+        "schema-config": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Schema/config assets lack a declared validation contract: prisma/schema.prisma"
+        }
+      }
+    },
+    {
+      "path": "packages/decision-intelligence-core",
+      "packageName": "@cerebro/decision-intelligence-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/domain",
+      "packageName": "@cerebro/domain",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "ABSENT-BY-DESIGN",
+          "command": null,
+          "rationale": "The package exports source files directly and has no independent build artifact.",
+          "owner": "Phile14augx",
+          "review": {
+            "reviewer": "philemonvnath",
+            "repository": "Phile14augx/OPC_cerebro_hive",
+            "pullRequest": 45,
+            "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+            "reviewDatabaseId": 4951837838,
+            "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+            "submittedAt": "2026-08-17T12:59:00Z",
+            "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+          }
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "Declared package script: vitest run"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"**/*.ts*\"",
+          "evidence": "Declared package script: eslint \"**/*.ts*\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/domain-graph",
+      "packageName": "@cerebro/domain-graph",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/domain-model",
+      "packageName": "@cerebro/domain-model",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "Declared package script: vitest run"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit",
+          "evidence": "Declared package script: tsc --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-artifacts",
+      "packageName": "@cerebro/eda-artifacts",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-coverage",
+      "packageName": "@cerebro/eda-coverage",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-domain",
+      "packageName": "@cerebro/eda-domain",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-events",
+      "packageName": "@cerebro/eda-events",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-execution",
+      "packageName": "@cerebro/eda-execution",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-findings",
+      "packageName": "@cerebro/eda-findings",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-knowledge",
+      "packageName": "@cerebro/eda-knowledge",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-observability",
+      "packageName": "@cerebro/eda-observability",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-parser",
+      "packageName": "@cerebro/eda-parser",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-parsers",
+      "packageName": "@cerebro/eda-parsers",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-sdk",
+      "packageName": "@cerebro/eda-sdk",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-security",
+      "packageName": "@cerebro/eda-security",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-storage",
+      "packageName": "@cerebro/eda-storage",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-tenancy",
+      "packageName": "@cerebro/eda-tenancy",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-ui",
+      "packageName": "@cerebro/eda-ui",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/eda-workflow",
+      "packageName": "@cerebro/eda-workflow",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/engineering-review",
+      "packageName": "@cerebro/engineering-review",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "Declared package script: vitest run"
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/evaluation-sdk",
+      "packageName": "@cerebro/evaluation-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/event-bus",
+      "packageName": "@cerebro/event-bus",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/events",
+      "packageName": "@cerebro/events",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/execution-providers",
+      "packageName": "@cerebro/execution-providers",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/execution-runtime-adapters",
+      "packageName": "@cerebro/execution-runtime-adapters",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "Declared package script: vitest run"
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/experience",
+      "packageName": "@cerebro/experience",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/federation-core",
+      "packageName": "@cerebro/federation-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/governance-api",
+      "packageName": "@cerebro/governance-api",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/governance-core",
+      "packageName": "@cerebro/governance-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/governance-sdk",
+      "packageName": "@cerebro/governance-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/hiveshield-policy",
+      "packageName": "@cerebro/hiveshield-policy",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "Declared package script: vitest run"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/icons",
+      "packageName": "@cerebro/icons",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/icons-ai",
+      "packageName": "@cerebro/icons-ai",
+      "hasSource": false,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "test": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "typecheck": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "lint": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/icons-angular",
+      "packageName": "@cerebro/icons-angular",
+      "hasSource": false,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "test": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "typecheck": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "lint": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/icons-cli",
+      "packageName": "@cerebro/icons-cli",
+      "hasSource": false,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "test": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "typecheck": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "lint": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/icons-core",
+      "packageName": "@cerebro/icons-core",
+      "hasSource": false,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "test": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "typecheck": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "lint": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/icons-figma",
+      "packageName": "@cerebro/icons-figma",
+      "hasSource": false,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "test": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "typecheck": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "lint": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/icons-react",
+      "packageName": "@cerebro/icons-react",
+      "hasSource": false,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "test": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "typecheck": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "lint": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/icons-vue",
+      "packageName": "@cerebro/icons-vue",
+      "hasSource": false,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "test": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "typecheck": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "lint": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/icons-web",
+      "packageName": "@cerebro/icons-web",
+      "hasSource": false,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "test": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "typecheck": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "lint": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/identity-core",
+      "packageName": "@cerebro/identity-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/intelligence-core",
+      "packageName": "@cerebro/intelligence-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/kernel-core",
+      "packageName": "@cerebro/kernel-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/knowledge-graph-core",
+      "packageName": "@cerebro/knowledge-graph-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/knowledge-sdk",
+      "packageName": "@cerebro/knowledge-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/marketplace-sdk",
+      "packageName": "@cerebro/marketplace-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/memory-sdk",
+      "packageName": "@cerebro/memory-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/motion",
+      "packageName": "@cerebro/motion",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/observability-api",
+      "packageName": "@cerebro/observability-api",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/ontology-sdk",
+      "packageName": "@cerebro/ontology-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/operational-intelligence-core",
+      "packageName": "@cerebro/operational-intelligence-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/plugin-sdk",
+      "packageName": "@cerebro/plugin-sdk",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/plugins",
+      "packageName": "@cerebro/plugins",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/policy",
+      "packageName": "@cerebro/policy",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/policy-core",
+      "packageName": "@cerebro/policy-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "Declared package script: vitest run"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/privacy-core",
+      "packageName": "@cerebro/privacy-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/prompt-sdk",
+      "packageName": "@cerebro/prompt-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/query",
+      "packageName": "@cerebro/query",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/reasoning-sdk",
+      "packageName": "@cerebro/reasoning-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/recommendation-api",
+      "packageName": "@cerebro/recommendation-api",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/records-core",
+      "packageName": "@cerebro/records-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/resilience-core",
+      "packageName": "@cerebro/resilience-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/risk-core",
+      "packageName": "@cerebro/risk-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/runtime",
+      "packageName": "@cerebro/runtime",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/runtime-contracts",
+      "packageName": "@cerebro/runtime-contracts",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/runtime-core",
+      "packageName": "@cerebro/runtime-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "Declared package script: vitest run"
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/sdk",
+      "packageName": "@cerebro/sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/secops-core",
+      "packageName": "@cerebro/secops-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/secrets-core",
+      "packageName": "@cerebro/secrets-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/simulation-core",
+      "packageName": "@cerebro/simulation-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/state",
+      "packageName": "@cerebro/state",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/swarm-sdk",
+      "packageName": "@cerebro/swarm-sdk",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/tables",
+      "packageName": "@cerebro/tables",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/telemetry",
+      "packageName": "@cerebro/telemetry",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/telemetry-api",
+      "packageName": "@cerebro/telemetry-api",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/telemetry-core",
+      "packageName": "@cerebro/telemetry-core",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/tokens",
+      "packageName": "@cerebro/tokens",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "node --experimental-strip-types build.ts",
+          "evidence": "Declared package script: node --experimental-strip-types build.ts"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/twin-contracts",
+      "packageName": "@cerebro/twin-contracts",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "ABSENT-BY-DESIGN",
+          "command": null,
+          "rationale": "The package exports source files directly and has no independent build artifact.",
+          "owner": "Phile14augx",
+          "review": {
+            "reviewer": "philemonvnath",
+            "repository": "Phile14augx/OPC_cerebro_hive",
+            "pullRequest": 45,
+            "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+            "reviewDatabaseId": 4951837838,
+            "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+            "submittedAt": "2026-08-17T12:59:00Z",
+            "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+          }
+        },
+        "test": {
+          "classification": "REAL",
+          "command": "vitest run --configLoader native --config vitest.config.mjs",
+          "evidence": "Declared package script: vitest run --configLoader native --config vitest.config.mjs"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/twin-domain",
+      "packageName": "@cerebro/twin-domain",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/ui",
+      "packageName": "@cerebro/ui",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts*\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts*\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/visualization",
+      "packageName": "@cerebro/visualization",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "packages/workflow",
+      "packageName": "@cerebro/workflow",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/aiops-api",
+      "packageName": "@cerebro/aiops-api",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/app-builder-api",
+      "packageName": "@cerebro/app-builder-api",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/archive-api",
+      "packageName": "@cerebro/archive-api",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint src/",
+          "evidence": "Declared package script: eslint src/"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/archive-worker",
+      "packageName": "@cerebro/archive-worker",
+      "hasSource": false,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint src/",
+          "evidence": "Declared package script: eslint src/"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/contentops",
+      "packageName": "@cerebro-hive/contentops",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "tsc --noEmit",
+          "evidence": "Declared package script: tsc --noEmit"
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint src --ext .ts",
+          "evidence": "Declared package script: eslint src --ext .ts"
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/eda-execution-worker",
+      "packageName": "@cerebro/eda-execution-worker",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/eda-parser-worker",
+      "packageName": "@cerebro/eda-parser-worker",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/eda-rtl-index-worker",
+      "packageName": "@cerebro/eda-rtl-index-worker",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/eda-temporal-worker",
+      "packageName": "@cerebro/eda-temporal-worker",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "REAL",
+          "command": "tsc --noEmit -p tsconfig.json",
+          "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/enterprise-control-plane",
+      "packageName": "@cerebro/enterprise-control-plane",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/evaluation-api",
+      "packageName": "@cerebro/evaluation-api",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/forge-api",
+      "packageName": "@cerebro/forge-api",
+      "hasSource": true,
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "jest --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        },
+        {
+          "script": "test:break",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "jest --testPathPattern='break-tests' --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        },
+        {
+          "script": "typecheck",
+          "contract": "typecheck",
+          "classification": "FALSE-GREEN",
+          "command": "exit 0",
+          "evidence": "Validation script contains an unconditional or failure-swallowing success path."
+        }
+      ],
+      "contracts": {
+        "build": {
+          "classification": "REAL",
+          "command": "nest build",
+          "evidence": "Declared package script: nest build"
+        },
+        "test": {
+          "classification": "FALSE-GREEN",
+          "command": "jest --passWithNoTests",
+          "evidence": "Declared test script can report success without meaningful validation: jest --passWithNoTests"
+        },
+        "typecheck": {
+          "classification": "FALSE-GREEN",
+          "command": "exit 0",
+          "evidence": "Declared typecheck script can report success without meaningful validation: exit 0"
+        },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/governance-api",
+      "packageName": "@cerebro/governance-policy-service",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/knowledge-api",
+      "packageName": "@cerebro/knowledge-api",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/llm-gateway",
+      "packageName": "@cerebro/llm-gateway",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/memory-service",
+      "packageName": "@cerebro/memory-service",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/reasoning-service",
+      "packageName": "@cerebro/reasoning-service",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/swarm-runtime",
+      "packageName": "@cerebro/swarm-runtime",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    },
+    {
+      "path": "services/workflow-api",
+      "packageName": "@cerebro/workflow-api",
+      "hasSource": true,
+      "semanticCandidates": [],
+      "contracts": {
+        "build": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared build validation contract."
+        },
+        "test": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared test validation contract."
+        },
+        "typecheck": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+        },
+        "lint": {
+          "classification": "BROKEN",
+          "command": null,
+          "evidence": "Source-bearing workspace has no declared lint validation contract."
+        },
+        "schema-config": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "No applicable schema/config validation script was declared."
+        }
+      }
+    }
+  ]
+}

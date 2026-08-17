@@ -1,0 +1,2417 @@
+{
+  "baselineWorkspaceCount": 141,
+  "rootControlPlane": true,
+  "workspaces": [
+    {
+      "path": "apps/archive-portal",
+      "packageName": "archive-portal",
+      "hasSource": true,
+      "contracts": {
+        "build": "next build",
+        "test": null,
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint app components",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "apps/eda-api",
+      "packageName": "@cerebro/eda-api",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "apps/eda-portal",
+      "packageName": "@cerebro/eda-portal",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "apps/forge",
+      "packageName": "@cerebro/forge",
+      "hasSource": true,
+      "contracts": {
+        "build": "next build",
+        "test": null,
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "apps/platform",
+      "packageName": "platform",
+      "hasSource": true,
+      "contracts": {
+        "build": "next build",
+        "test": null,
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "apps/platform-api",
+      "packageName": "@cerebro/platform-api",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run",
+        "typecheck": "exit 0",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "typecheck",
+          "contract": "typecheck",
+          "classification": "FALSE-GREEN",
+          "command": "exit 0",
+          "evidence": "Validation script contains an unconditional or failure-swallowing success path."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "apps/pulse",
+      "packageName": "@cerebro/pulse",
+      "hasSource": true,
+      "contracts": {
+        "build": "next build",
+        "test": null,
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "apps/sphere",
+      "packageName": "@cerebro/sphere",
+      "hasSource": true,
+      "contracts": {
+        "build": "next build",
+        "test": null,
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "apps/studio",
+      "packageName": "@cerebro/studio",
+      "hasSource": true,
+      "contracts": {
+        "build": "next build",
+        "test": null,
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "apps/twin-studio",
+      "packageName": "@cerebro/twin-studio",
+      "hasSource": true,
+      "contracts": {
+        "build": "next build",
+        "test": "tsx --test tests/*.test.ts",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/agent-sdk",
+      "packageName": "@cerebro/agent-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/ai",
+      "packageName": "@cerebro/ai",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint \"src/**/*.ts\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/ai-gateway",
+      "packageName": "@cerebro/ai-gateway",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint \"src/**/*.ts\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/ai-governance-core",
+      "packageName": "@cerebro/ai-governance-core",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/aiops-core",
+      "packageName": "@cerebro/aiops-core",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/aiops-sdk",
+      "packageName": "@cerebro/aiops-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/api-client",
+      "packageName": "@cerebro/api-client",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/architecture-core",
+      "packageName": "@cerebro/architecture-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/archive-contracts",
+      "packageName": "@cerebro/archive-contracts",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": null,
+        "lint": "eslint src/",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/asset-core",
+      "packageName": "@cerebro/asset-core",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/auth",
+      "packageName": "@cerebro/auth",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint \"src/**/*.ts*\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/capabilities/agent-builder",
+      "packageName": "@cerebro/agent-builder-capability",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/capabilities/deployment",
+      "packageName": "@cerebro/deployment-capability",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/capabilities/evaluation",
+      "packageName": "@cerebro/evaluation",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/capabilities/knowledge",
+      "packageName": "@cerebro/knowledge-capability",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/capabilities/memory",
+      "packageName": "@cerebro/memory",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/capabilities/workflow",
+      "packageName": "@cerebro/workflow-capability",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/capability-contracts",
+      "packageName": "@cerebro/capability-contracts",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/capability-core",
+      "packageName": "@cerebro/capability-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/capability-registry",
+      "packageName": "@cerebro/capability-registry",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint \"src/**/*.ts\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/change-core",
+      "packageName": "@cerebro/change-core",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/compliance-core",
+      "packageName": "@cerebro/compliance-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/config",
+      "packageName": "@cerebro/config",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint .",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/config-core",
+      "packageName": "@cerebro/config-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/contracts",
+      "packageName": "@cerebro/contracts",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint \"src/**/*.ts\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/core-bus",
+      "packageName": "@cerebro/core-bus",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/data-core",
+      "packageName": "@cerebro/data-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/data-governance-core",
+      "packageName": "@cerebro/data-governance-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/db",
+      "packageName": "@cerebro/db",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc && node -e \"require('fs').cpSync('src/generated/client','dist/db/src/generated/client',{recursive:true})\"",
+        "test": "tsx --test src/**/*.test.ts",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint \"**/*.ts*\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [
+        "prisma/schema.prisma"
+      ],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/decision-intelligence-core",
+      "packageName": "@cerebro/decision-intelligence-core",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/domain",
+      "packageName": "@cerebro/domain",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint \"**/*.ts*\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/domain-graph",
+      "packageName": "@cerebro/domain-graph",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/domain-model",
+      "packageName": "@cerebro/domain-model",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint \"src/**/*.ts\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-artifacts",
+      "packageName": "@cerebro/eda-artifacts",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-coverage",
+      "packageName": "@cerebro/eda-coverage",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-domain",
+      "packageName": "@cerebro/eda-domain",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-events",
+      "packageName": "@cerebro/eda-events",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-execution",
+      "packageName": "@cerebro/eda-execution",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-findings",
+      "packageName": "@cerebro/eda-findings",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-knowledge",
+      "packageName": "@cerebro/eda-knowledge",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-observability",
+      "packageName": "@cerebro/eda-observability",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-parser",
+      "packageName": "@cerebro/eda-parser",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-parsers",
+      "packageName": "@cerebro/eda-parsers",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-sdk",
+      "packageName": "@cerebro/eda-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-security",
+      "packageName": "@cerebro/eda-security",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-storage",
+      "packageName": "@cerebro/eda-storage",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-tenancy",
+      "packageName": "@cerebro/eda-tenancy",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-ui",
+      "packageName": "@cerebro/eda-ui",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/eda-workflow",
+      "packageName": "@cerebro/eda-workflow",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/engineering-review",
+      "packageName": "@cerebro/engineering-review",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run",
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/evaluation-sdk",
+      "packageName": "@cerebro/evaluation-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/event-bus",
+      "packageName": "@cerebro/event-bus",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/events",
+      "packageName": "@cerebro/events",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/execution-providers",
+      "packageName": "@cerebro/execution-providers",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/execution-runtime-adapters",
+      "packageName": "@cerebro/execution-runtime-adapters",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run",
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/experience",
+      "packageName": "@cerebro/experience",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint .",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/federation-core",
+      "packageName": "@cerebro/federation-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/governance-api",
+      "packageName": "@cerebro/governance-api",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/governance-core",
+      "packageName": "@cerebro/governance-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/governance-sdk",
+      "packageName": "@cerebro/governance-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/hiveshield-policy",
+      "packageName": "@cerebro/hiveshield-policy",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/icons",
+      "packageName": "@cerebro/icons",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/icons-ai",
+      "packageName": "@cerebro/icons-ai",
+      "hasSource": false,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/icons-angular",
+      "packageName": "@cerebro/icons-angular",
+      "hasSource": false,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/icons-cli",
+      "packageName": "@cerebro/icons-cli",
+      "hasSource": false,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/icons-core",
+      "packageName": "@cerebro/icons-core",
+      "hasSource": false,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/icons-figma",
+      "packageName": "@cerebro/icons-figma",
+      "hasSource": false,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/icons-react",
+      "packageName": "@cerebro/icons-react",
+      "hasSource": false,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/icons-vue",
+      "packageName": "@cerebro/icons-vue",
+      "hasSource": false,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/icons-web",
+      "packageName": "@cerebro/icons-web",
+      "hasSource": false,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/identity-core",
+      "packageName": "@cerebro/identity-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/intelligence-core",
+      "packageName": "@cerebro/intelligence-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/kernel-core",
+      "packageName": "@cerebro/kernel-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/knowledge-graph-core",
+      "packageName": "@cerebro/knowledge-graph-core",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/knowledge-sdk",
+      "packageName": "@cerebro/knowledge-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/marketplace-sdk",
+      "packageName": "@cerebro/marketplace-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/memory-sdk",
+      "packageName": "@cerebro/memory-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/motion",
+      "packageName": "@cerebro/motion",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint .",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/observability-api",
+      "packageName": "@cerebro/observability-api",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/ontology-sdk",
+      "packageName": "@cerebro/ontology-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/operational-intelligence-core",
+      "packageName": "@cerebro/operational-intelligence-core",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/plugin-sdk",
+      "packageName": "@cerebro/plugin-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint .",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/plugins",
+      "packageName": "@cerebro/plugins",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/policy",
+      "packageName": "@cerebro/policy",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint \"src/**/*.ts\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/policy-core",
+      "packageName": "@cerebro/policy-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/privacy-core",
+      "packageName": "@cerebro/privacy-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/prompt-sdk",
+      "packageName": "@cerebro/prompt-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/query",
+      "packageName": "@cerebro/query",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/reasoning-sdk",
+      "packageName": "@cerebro/reasoning-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/recommendation-api",
+      "packageName": "@cerebro/recommendation-api",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/records-core",
+      "packageName": "@cerebro/records-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/resilience-core",
+      "packageName": "@cerebro/resilience-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/risk-core",
+      "packageName": "@cerebro/risk-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/runtime",
+      "packageName": "@cerebro/runtime",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/runtime-contracts",
+      "packageName": "@cerebro/runtime-contracts",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/runtime-core",
+      "packageName": "@cerebro/runtime-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run",
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/sdk",
+      "packageName": "@cerebro/sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/secops-core",
+      "packageName": "@cerebro/secops-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/secrets-core",
+      "packageName": "@cerebro/secrets-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/simulation-core",
+      "packageName": "@cerebro/simulation-core",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/state",
+      "packageName": "@cerebro/state",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/swarm-sdk",
+      "packageName": "@cerebro/swarm-sdk",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/tables",
+      "packageName": "@cerebro/tables",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint .",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/telemetry",
+      "packageName": "@cerebro/telemetry",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint \"src/**/*.ts\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/telemetry-api",
+      "packageName": "@cerebro/telemetry-api",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/telemetry-core",
+      "packageName": "@cerebro/telemetry-core",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/tokens",
+      "packageName": "@cerebro/tokens",
+      "hasSource": true,
+      "contracts": {
+        "build": "node --experimental-strip-types build.ts",
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint .",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/twin-contracts",
+      "packageName": "@cerebro/twin-contracts",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --configLoader native --config vitest.config.mjs",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/twin-domain",
+      "packageName": "@cerebro/twin-domain",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/ui",
+      "packageName": "@cerebro/ui",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint \"src/**/*.ts*\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "packages/visualization",
+      "packageName": "@cerebro/visualization",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint .",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "packages/workflow",
+      "packageName": "@cerebro/workflow",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint \"src/**/*.ts\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/aiops-api",
+      "packageName": "@cerebro/aiops-api",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/app-builder-api",
+      "packageName": "@cerebro/app-builder-api",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/archive-api",
+      "packageName": "@cerebro/archive-api",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run --passWithNoTests",
+        "typecheck": null,
+        "lint": "eslint src/",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "services/archive-worker",
+      "packageName": "@cerebro/archive-worker",
+      "hasSource": false,
+      "contracts": {
+        "build": "tsc",
+        "test": "vitest run --passWithNoTests",
+        "typecheck": null,
+        "lint": "eslint src/",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "services/contentops",
+      "packageName": "@cerebro-hive/contentops",
+      "hasSource": true,
+      "contracts": {
+        "build": "tsc --noEmit",
+        "test": null,
+        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "lint": "eslint src --ext .ts",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/eda-execution-worker",
+      "packageName": "@cerebro/eda-execution-worker",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "services/eda-parser-worker",
+      "packageName": "@cerebro/eda-parser-worker",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "services/eda-rtl-index-worker",
+      "packageName": "@cerebro/eda-rtl-index-worker",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "services/eda-temporal-worker",
+      "packageName": "@cerebro/eda-temporal-worker",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": "vitest run --passWithNoTests",
+        "typecheck": "tsc --noEmit -p tsconfig.json",
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "vitest run --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "services/enterprise-control-plane",
+      "packageName": "@cerebro/enterprise-control-plane",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/evaluation-api",
+      "packageName": "@cerebro/evaluation-api",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/forge-api",
+      "packageName": "@cerebro/forge-api",
+      "hasSource": true,
+      "contracts": {
+        "build": "nest build",
+        "test": "jest --passWithNoTests",
+        "typecheck": "exit 0",
+        "lint": "eslint \"src/**/*.ts\"",
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [
+        {
+          "script": "test",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "jest --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        },
+        {
+          "script": "test:break",
+          "contract": "test",
+          "classification": "FALSE-GREEN",
+          "command": "jest --testPathPattern='break-tests' --passWithNoTests",
+          "evidence": "Validation script can succeed when no tests are discovered."
+        },
+        {
+          "script": "typecheck",
+          "contract": "typecheck",
+          "classification": "FALSE-GREEN",
+          "command": "exit 0",
+          "evidence": "Validation script contains an unconditional or failure-swallowing success path."
+        }
+      ],
+      "findings": []
+    },
+    {
+      "path": "services/governance-api",
+      "packageName": "@cerebro/governance-policy-service",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/knowledge-api",
+      "packageName": "@cerebro/knowledge-api",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/llm-gateway",
+      "packageName": "@cerebro/llm-gateway",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/memory-service",
+      "packageName": "@cerebro/memory-service",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/reasoning-service",
+      "packageName": "@cerebro/reasoning-service",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/swarm-runtime",
+      "packageName": "@cerebro/swarm-runtime",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    },
+    {
+      "path": "services/workflow-api",
+      "packageName": "@cerebro/workflow-api",
+      "hasSource": true,
+      "contracts": {
+        "build": null,
+        "test": null,
+        "typecheck": null,
+        "lint": null,
+        "schema-config": null
+      },
+      "schemaConfigEvidence": [],
+      "semanticCandidates": [],
+      "findings": []
+    }
+  ],
+  "controlPlane": [
+    {
+      "path": ".",
+      "classification": "CONTROL-PLANE"
+    }
+  ],
+  "externalDependencies": [],
+  "findings": []
+}
