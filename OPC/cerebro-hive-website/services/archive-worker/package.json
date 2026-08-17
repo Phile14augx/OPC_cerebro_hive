@@ -2,13 +2,6 @@
   "name": "@cerebro/archive-worker",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "tsx watch src/worker.ts",
-    "build": "tsc",
-    "start": "node dist/worker.js",
-    "lint": "eslint src/",
-    "test": "vitest run --passWithNoTests"
-  },
   "dependencies": {
     "@cerebro/archive-contracts": "workspace:*",
     "@sentry/node": "^8.0.0",

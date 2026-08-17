@@ -3,25 +3,26 @@
   "version": "1.0.0",
   "private": true,
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "src/index.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./server": {
-      "types": "./dist/server.d.ts",
+      "types": "./src/server.ts",
       "default": "./dist/server.js"
     },
     "./react": {
-      "types": "./dist/react.d.ts",
+      "types": "./src/react.ts",
       "default": "./dist/react.js"
     }
   },
   "scripts": {
     "build": "tsc",
-    "lint": "eslint \"src/**/*.ts*\"",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "lint": "node ../../scripts/eslint-eslintrc.cjs src",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --experimental-strip-types --no-warnings --test src/rbac/permissions.test.ts"
   },
   "dependencies": {
     "react": "^18.2.0",

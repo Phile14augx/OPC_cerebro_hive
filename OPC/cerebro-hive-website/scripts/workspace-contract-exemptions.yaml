@@ -1,0 +1,91 @@
+# KRN-CI-001 — workspace contract exemptions
+#
+# SOURCE_PACKAGE gaps are CI failures, not silent skips.
+# expiry: null is allowed only for GENERATED_PACKAGE / fixture packages.
+#
+# Classification overrides (package_types) are for GENERATED / CONFIG / DOCS /
+# META packages. Do not reclassify real application/service/library source
+# just to go green.
+#
+# Applicable SOURCE scripts (see WAVE-0.md W0.2):
+#   typecheck — tsconfig.json exists
+#   lint      — ESLint config exists
+#   test      — test files exist
+#   build     — Next/Vite app or dist/ publish contract
+
+package_types:
+  services/archive-worker: META_PACKAGE
+  packages/icons-ai: GENERATED_PACKAGE
+  packages/icons-angular: GENERATED_PACKAGE
+  packages/icons-cli: GENERATED_PACKAGE
+  packages/icons-core: GENERATED_PACKAGE
+  packages/icons-figma: GENERATED_PACKAGE
+  packages/icons-react: GENERATED_PACKAGE
+  packages/icons-vue: GENERATED_PACKAGE
+  packages/icons-web: GENERATED_PACKAGE
+
+exemptions:
+  - package: packages/icons-ai
+    scripts:
+      - typecheck
+      - lint
+      - test
+      - build
+    reason: "Generated/fixture icon adapter stub; package.json only, no authored source."
+    expiry: null
+  - package: packages/icons-angular
+    scripts:
+      - typecheck
+      - lint
+      - test
+      - build
+    reason: "Generated/fixture icon adapter stub; package.json only, no authored source."
+    expiry: null
+  - package: packages/icons-cli
+    scripts:
+      - typecheck
+      - lint
+      - test
+      - build
+    reason: "Generated/fixture icon adapter stub; package.json only, no authored source."
+    expiry: null
+  - package: packages/icons-core
+    scripts:
+      - typecheck
+      - lint
+      - test
+      - build
+    reason: "Generated/fixture icon adapter stub; package.json only, no authored source."
+    expiry: null
+  - package: packages/icons-figma
+    scripts:
+      - typecheck
+      - lint
+      - test
+      - build
+    reason: "Generated/fixture icon adapter stub; package.json only, no authored source."
+    expiry: null
+  - package: packages/icons-react
+    scripts:
+      - typecheck
+      - lint
+      - test
+      - build
+    reason: "Generated/fixture icon adapter stub; package.json only, no authored source."
+    expiry: null
+  - package: packages/icons-vue
+    scripts:
+      - typecheck
+      - lint
+      - test
+      - build
+    reason: "Generated/fixture icon adapter stub; package.json only, no authored source."
+    expiry: null
+  - package: packages/icons-web
+    scripts:
+      - typecheck
+      - lint
+      - test
+      - build
+    reason: "Generated/fixture icon adapter stub; package.json only, no authored source."
+    expiry: null

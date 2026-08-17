@@ -14,7 +14,7 @@
     "test:break": "jest --testPathPattern='break-tests' --passWithNoTests",
     "generate-openapi": "ts-node -P tsconfig.json scripts/generate-openapi.ts",
     "prisma:generate": "prisma generate --schema=../../packages/database/prisma/schema.prisma",
-    "typecheck": "exit 0"
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@cerebro/auth": "workspace:*",

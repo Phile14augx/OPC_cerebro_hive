@@ -1,4 +1,4 @@
-import { ExecutionEvent } from './ExecutionEvent';
+import { ExecutionEvent } from '@cerebro/runtime-contracts/src/events/ExecutionEvent';
 import { ExecutionState } from './ExecutionStateMachine';
 
 export interface ExecutionSnapshotPolicyContext {

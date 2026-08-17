@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "vitest run",
-    "typecheck": "exit 0"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@cerebro/agent-builder-capability": "workspace:*",

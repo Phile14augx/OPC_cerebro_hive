@@ -127,4 +127,9 @@ export class RuntimeRegistry {
     await Promise.all(unloadPromises);
     this.registry.clear();
   }
+
+  /** Kernel shutdown: stop every registered provider. */
+  public async stopAll(): Promise<void> {
+    await this.clearAll();
+  }
 }

@@ -7,8 +7,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "lint": "eslint src/",
-    "clean": "rm -rf dist"
+    "lint": "node ../../scripts/eslint-eslintrc.cjs src",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "zod": "^3.23.0"

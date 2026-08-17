@@ -71,7 +71,7 @@ export class DefaultEvaluationProvider implements EvaluationProvider {
         allRuleResults = allRuleResults.concat(preScoringResults);
         
         preScoringResults.forEach(r => {
-          if (!r.passed) {
+          if (r.status !== 'Passed') {
             reasons.push(`Vetoed (Rule ${r.ruleId}): ${r.reason}`);
           }
         });
@@ -118,7 +118,7 @@ export class DefaultEvaluationProvider implements EvaluationProvider {
           scored.ruleResults = scored.ruleResults.concat(postScoringResults);
           
           postScoringResults.forEach(r => {
-            if (!r.passed) {
+            if (r.status !== 'Passed') {
               scored.score.reasons.push(`Vetoed (Rule ${r.ruleId}): ${r.reason}`);
               scored.score.compositeScore = 0;
             }

@@ -3,10 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "main": "src/index.ts",
-  "cerebroEda": { "layer": "capability", "adr": ["0014", "0011"] },
+  "cerebroEda": {
+    "layer": "capability",
+    "adr": [
+      "0014",
+      "0011"
+    ]
+  },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "lint": "node ../../scripts/eslint-eslintrc.cjs src"
   },
   "dependencies": {
     "@cerebro/eda-domain": "workspace:*",

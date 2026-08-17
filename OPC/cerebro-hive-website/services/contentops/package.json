@@ -9,7 +9,7 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "build": "tsc --noEmit",
-    "lint": "eslint src --ext .ts",
+    "lint": "node ../../scripts/eslint-eslintrc.cjs src",
     "auth:linkedin": "tsx src/auth/linkedin-oauth.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

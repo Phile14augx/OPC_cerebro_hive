@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "node ../../scripts/eslint-eslintrc.cjs src",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

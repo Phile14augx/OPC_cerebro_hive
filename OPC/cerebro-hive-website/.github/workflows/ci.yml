@@ -1,3 +1,7 @@
+# NOT GitHub-visible. GitHub Actions only loads `.github/workflows/*.yml` at
+# the repository root. Canonical W0.2 / website CI:
+#   .github/workflows/website-ci.yml
+# Keep this file for docs/local references. Do not treat it as a second CI system.
 name: CI
 
 on:
@@ -71,13 +75,14 @@ jobs:
       - name: Sitemap drift check
         run: pnpm sitemap:check
 
-      # Enforces monorepo conventions on every workspace package:
-      # - tsconfig.json present → "typecheck" script required
-      # - eslint config present → "lint" script required
-      # - vitest/jest config present → "test" script required
-      # - "typecheck" value must use canonical form
+      # KRN-CI-001 / W0.2: classify every workspace package and fail on
+      # missing required scripts or prohibited no-ops (exit 0 / true / echo no tests).
+      # Dummy scripts for all 141 packages are not the fix; exemptions are YAML.
       - name: Repository policy check
         run: pnpm repo:policy
+
+      - name: Workspace contract audit (fail-closed)
+        run: node scripts/audit-workspace-contracts.mjs
 
   # ── Job 2: Unit Tests ─────────────────────────────────────────────────────
   unit-tests:

@@ -23,10 +23,13 @@ export class CircuitBreaker {
   private lastFailureTime = 0;
   private readonly cfg: Required<CircuitBreakerConfig>;
 
+  readonly name: string;
+
   constructor(
-    public readonly name: string,
+    name: string,
     config: Partial<CircuitBreakerConfig> = {}
   ) {
+    this.name = name;
     this.cfg = {
       errorThreshold: config.errorThreshold ?? 0.5,
       minRequests: config.minRequests ?? 10,
