@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc && node -e \"require('fs').cpSync('src/generated/client','dist/db/src/generated/client',{recursive:true})\"",
     "generate": "prisma generate",
+    "validate:schema": "prisma validate",
     "push": "prisma db push",
     "migrate:dev": "prisma migrate dev",
     "studio": "prisma studio",

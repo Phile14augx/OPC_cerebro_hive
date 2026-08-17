@@ -2,84 +2,9 @@
   "schemaVersion": 1,
   "groups": [
     {
-      "id": "false-green:no-op-typecheck",
-      "priority": "P0",
-      "contracts": [
-        "typecheck"
-      ],
-      "workspaces": [
-        "apps/platform-api",
-        "services/forge-api"
-      ],
-      "dependsOn": [
-        "audit-infrastructure"
-      ]
-    },
-    {
-      "id": "false-green:no-tests-tolerated",
-      "priority": "P0",
-      "contracts": [
-        "test"
-      ],
-      "workspaces": [
-        "apps/eda-api",
-        "apps/eda-portal",
-        "packages/asset-core",
-        "packages/config",
-        "packages/eda-artifacts",
-        "packages/eda-coverage",
-        "packages/eda-domain",
-        "packages/eda-events",
-        "packages/eda-execution",
-        "packages/eda-findings",
-        "packages/eda-knowledge",
-        "packages/eda-observability",
-        "packages/eda-parser",
-        "packages/eda-parsers",
-        "packages/eda-sdk",
-        "packages/eda-security",
-        "packages/eda-storage",
-        "packages/eda-tenancy",
-        "packages/eda-ui",
-        "packages/eda-workflow",
-        "packages/experience",
-        "packages/motion",
-        "packages/plugin-sdk",
-        "packages/tables",
-        "packages/tokens",
-        "packages/visualization",
-        "services/archive-api",
-        "services/archive-worker",
-        "services/eda-execution-worker",
-        "services/eda-parser-worker",
-        "services/eda-rtl-index-worker",
-        "services/eda-temporal-worker",
-        "services/forge-api"
-      ],
-      "dependsOn": [
-        "audit-infrastructure"
-      ]
-    },
-    {
-      "id": "schema:missing-validation",
-      "priority": "P0",
-      "contracts": [
-        "schema-config"
-      ],
-      "workspaces": [
-        "packages/db"
-      ],
-      "dependsOn": [
-        "test-contracts",
-        "typecheck-contracts"
-      ]
-    },
-    {
       "id": "build:missing-contract",
       "priority": "P1",
-      "contracts": [
-        "build"
-      ],
+      "contracts": ["build"],
       "workspaces": [
         "apps/eda-api",
         "apps/eda-portal",
@@ -99,16 +24,12 @@
         "services/swarm-runtime",
         "services/workflow-api"
       ],
-      "dependsOn": [
-        "lint-contracts"
-      ]
+      "dependsOn": ["lint-contracts"]
     },
     {
       "id": "test:missing-suite",
       "priority": "P1",
-      "contracts": [
-        "test"
-      ],
+      "contracts": ["test"],
       "workspaces": [
         "apps/archive-portal",
         "apps/forge",
@@ -196,30 +117,19 @@
         "services/swarm-runtime",
         "services/workflow-api"
       ],
-      "dependsOn": [
-        "typecheck-contracts"
-      ]
+      "dependsOn": ["typecheck-contracts"]
     },
     {
       "id": "test:unwired-existing-tests",
       "priority": "P1",
-      "contracts": [
-        "test"
-      ],
-      "workspaces": [
-        "apps/studio",
-        "packages/ui"
-      ],
-      "dependsOn": [
-        "typecheck-contracts"
-      ]
+      "contracts": ["test"],
+      "workspaces": ["apps/studio", "packages/ui"],
+      "dependsOn": ["typecheck-contracts"]
     },
     {
       "id": "typecheck:missing-config-and-script",
       "priority": "P1",
-      "contracts": [
-        "typecheck"
-      ],
+      "contracts": ["typecheck"],
       "workspaces": [
         "packages/aiops-sdk",
         "packages/architecture-core",
@@ -270,16 +180,12 @@
         "services/swarm-runtime",
         "services/workflow-api"
       ],
-      "dependsOn": [
-        "false-green-hotspots"
-      ]
+      "dependsOn": ["false-green-hotspots"]
     },
     {
       "id": "typecheck:missing-script",
       "priority": "P1",
-      "contracts": [
-        "typecheck"
-      ],
+      "contracts": ["typecheck"],
       "workspaces": [
         "packages/agent-sdk",
         "packages/archive-contracts",
@@ -289,16 +195,12 @@
         "packages/state",
         "services/archive-api"
       ],
-      "dependsOn": [
-        "false-green-hotspots"
-      ]
+      "dependsOn": ["false-green-hotspots"]
     },
     {
       "id": "build:rejected-exception",
       "priority": "P2",
-      "contracts": [
-        "build"
-      ],
+      "contracts": ["build"],
       "workspaces": [
         "packages/aiops-sdk",
         "packages/architecture-core",
@@ -369,16 +271,12 @@
         "packages/telemetry-core",
         "packages/twin-domain"
       ],
-      "dependsOn": [
-        "schema-validation"
-      ]
+      "dependsOn": ["schema-validation"]
     },
     {
       "id": "lint:missing-contract",
       "priority": "P2",
-      "contracts": [
-        "lint"
-      ],
+      "contracts": ["lint"],
       "workspaces": [
         "apps/eda-api",
         "apps/eda-portal",
@@ -483,10 +381,7 @@
         "services/swarm-runtime",
         "services/workflow-api"
       ],
-      "dependsOn": [
-        "schema-validation",
-        "test-contracts"
-      ]
+      "dependsOn": ["schema-validation", "test-contracts"]
     }
   ],
   "dag": [
@@ -496,45 +391,31 @@
     },
     {
       "id": "false-green-hotspots",
-      "dependsOn": [
-        "audit-infrastructure"
-      ]
+      "dependsOn": ["audit-infrastructure"]
     },
     {
       "id": "typecheck-contracts",
-      "dependsOn": [
-        "false-green-hotspots"
-      ]
+      "dependsOn": ["false-green-hotspots"]
     },
     {
       "id": "test-contracts",
-      "dependsOn": [
-        "typecheck-contracts"
-      ]
+      "dependsOn": ["typecheck-contracts"]
     },
     {
       "id": "schema-validation",
-      "dependsOn": [
-        "test-contracts"
-      ]
+      "dependsOn": ["test-contracts"]
     },
     {
       "id": "lint-build-cleanup",
-      "dependsOn": [
-        "schema-validation"
-      ]
+      "dependsOn": ["schema-validation"]
     },
     {
       "id": "negative-controls",
-      "dependsOn": [
-        "lint-build-cleanup"
-      ]
+      "dependsOn": ["lint-build-cleanup"]
     },
     {
       "id": "governance-gate-integration",
-      "dependsOn": [
-        "negative-controls"
-      ]
+      "dependsOn": ["negative-controls"]
     }
   ]
 }

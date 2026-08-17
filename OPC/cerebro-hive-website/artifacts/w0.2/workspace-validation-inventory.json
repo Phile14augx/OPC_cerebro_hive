@@ -23,21 +23,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -46,21 +38,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -100,20 +84,12 @@
       "contracts": {
         "build": "tsc",
         "test": "vitest run",
-        "typecheck": "exit 0",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "typecheck",
-          "contract": "typecheck",
-          "classification": "FALSE-GREEN",
-          "command": "exit 0",
-          "evidence": "Validation script contains an unconditional or failure-swallowing success path."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -317,21 +293,13 @@
       "hasSource": true,
       "contracts": {
         "build": "tsc",
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -520,21 +488,13 @@
       "hasSource": true,
       "contracts": {
         "build": "tsc",
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": "eslint .",
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -621,11 +581,9 @@
         "test": "tsx --test src/**/*.test.ts",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": "eslint \"**/*.ts*\"",
-        "schema-config": null
+        "schema-config": "prisma validate"
       },
-      "schemaConfigEvidence": [
-        "prisma/schema.prisma"
-      ],
+      "schemaConfigEvidence": ["prisma/schema.prisma", "src/generated/client/schema.prisma"],
       "semanticCandidates": [],
       "findings": []
     },
@@ -695,21 +653,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -718,21 +668,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -741,21 +683,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -764,21 +698,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -787,21 +713,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -810,21 +728,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -833,21 +743,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -856,21 +758,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -879,21 +773,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -902,21 +788,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -925,21 +803,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -948,21 +818,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -971,21 +833,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -994,21 +848,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -1017,21 +863,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -1040,21 +878,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -1153,21 +983,13 @@
       "hasSource": true,
       "contracts": {
         "build": "tsc",
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": "eslint .",
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -1491,21 +1313,13 @@
       "hasSource": true,
       "contracts": {
         "build": "tsc",
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": "eslint .",
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -1559,21 +1373,13 @@
       "hasSource": true,
       "contracts": {
         "build": "tsc",
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": "eslint .",
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -1882,21 +1688,13 @@
       "hasSource": true,
       "contracts": {
         "build": "tsc",
-        "test": "vitest run --passWithNoTests",
+        "test": null,
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": "eslint .",
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -1950,21 +1748,13 @@
       "hasSource": true,
       "contracts": {
         "build": "node --experimental-strip-types build.ts",
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": "eslint .",
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -2018,21 +1808,13 @@
       "hasSource": true,
       "contracts": {
         "build": "tsc",
-        "test": "vitest run --passWithNoTests",
+        "test": null,
         "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": "eslint .",
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -2086,21 +1868,13 @@
       "hasSource": true,
       "contracts": {
         "build": "tsc",
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": null,
         "lint": "eslint src/",
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -2109,21 +1883,13 @@
       "hasSource": false,
       "contracts": {
         "build": "tsc",
-        "test": "vitest run --passWithNoTests",
+        "test": null,
         "typecheck": null,
         "lint": "eslint src/",
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -2147,21 +1913,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -2170,21 +1928,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -2193,21 +1943,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -2216,21 +1958,13 @@
       "hasSource": true,
       "contracts": {
         "build": null,
-        "test": "vitest run --passWithNoTests",
+        "test": "vitest run",
         "typecheck": "tsc --noEmit -p tsconfig.json",
         "lint": null,
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "vitest run --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {
@@ -2269,35 +2003,13 @@
       "hasSource": true,
       "contracts": {
         "build": "nest build",
-        "test": "jest --passWithNoTests",
-        "typecheck": "exit 0",
+        "test": "jest",
+        "typecheck": "tsc -p tsconfig.json --noEmit",
         "lint": "eslint \"src/**/*.ts\"",
         "schema-config": null
       },
       "schemaConfigEvidence": [],
-      "semanticCandidates": [
-        {
-          "script": "test",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "jest --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        },
-        {
-          "script": "test:break",
-          "contract": "test",
-          "classification": "FALSE-GREEN",
-          "command": "jest --testPathPattern='break-tests' --passWithNoTests",
-          "evidence": "Validation script can succeed when no tests are discovered."
-        },
-        {
-          "script": "typecheck",
-          "contract": "typecheck",
-          "classification": "FALSE-GREEN",
-          "command": "exit 0",
-          "evidence": "Validation script contains an unconditional or failure-swallowing success path."
-        }
-      ],
+      "semanticCandidates": [],
       "findings": []
     },
     {

@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint src/",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "test:integration": "vitest run -c vitest.integration.ts"
   },
   "dependencies": {
