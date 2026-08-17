@@ -34,10 +34,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/architecture-core",
@@ -74,10 +88,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/capabilities/agent-builder",
@@ -115,10 +143,24 @@
       ],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/capabilities/deployment",
@@ -154,10 +196,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/capabilities/knowledge",
@@ -193,10 +249,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/capabilities/workflow",
@@ -232,10 +302,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/capability-contracts",
@@ -274,10 +358,24 @@
       ],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/capability-core",
@@ -314,10 +412,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/capability-registry",
@@ -351,10 +463,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/compliance-core",
@@ -391,10 +517,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/config-core",
@@ -434,10 +574,24 @@
       ],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/core-bus",
@@ -476,10 +630,24 @@
       ],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/data-core",
@@ -518,10 +686,24 @@
       ],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/data-governance-core",
@@ -558,10 +740,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/domain",
@@ -601,10 +797,24 @@
       ],
       "proposedDisposition": "ABSENT-BY-DESIGN",
       "reason": "Private source-distributed library is compiled by a verified consumer and has no independent artifact or release surface.",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "APPROVED",
+      "adoptedDecision": "ABSENT-BY-DESIGN",
+      "finalDisposition": "ABSENT-BY-DESIGN",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/domain-graph",
@@ -641,10 +851,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-artifacts",
@@ -678,10 +902,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-coverage",
@@ -715,10 +953,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-domain",
@@ -752,10 +1004,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-events",
@@ -789,10 +1055,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-execution",
@@ -826,10 +1106,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-findings",
@@ -863,10 +1157,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-knowledge",
@@ -900,10 +1208,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-observability",
@@ -937,10 +1259,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-parser",
@@ -974,10 +1310,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-parsers",
@@ -1011,10 +1361,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-sdk",
@@ -1048,10 +1412,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-security",
@@ -1085,10 +1463,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-storage",
@@ -1122,10 +1514,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-tenancy",
@@ -1159,10 +1565,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-ui",
@@ -1196,10 +1616,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/eda-workflow",
@@ -1233,10 +1667,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/engineering-review",
@@ -1273,10 +1721,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/evaluation-sdk",
@@ -1310,10 +1772,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/events",
@@ -1347,10 +1823,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/execution-providers",
@@ -1384,10 +1874,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/execution-runtime-adapters",
@@ -1422,10 +1926,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/federation-core",
@@ -1462,10 +1980,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/governance-api",
@@ -1499,10 +2031,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/governance-core",
@@ -1539,10 +2085,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/governance-sdk",
@@ -1576,10 +2136,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/hiveshield-policy",
@@ -1613,10 +2187,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/icons",
@@ -1650,10 +2238,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/identity-core",
@@ -1693,10 +2295,24 @@
       ],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/intelligence-core",
@@ -1733,10 +2349,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/kernel-core",
@@ -1773,10 +2403,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/knowledge-sdk",
@@ -1810,10 +2454,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/marketplace-sdk",
@@ -1847,10 +2505,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/memory-sdk",
@@ -1884,10 +2556,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/observability-api",
@@ -1921,10 +2607,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/ontology-sdk",
@@ -1958,10 +2658,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/plugins",
@@ -1995,10 +2709,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/policy-core",
@@ -2034,10 +2762,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/privacy-core",
@@ -2074,10 +2816,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/prompt-sdk",
@@ -2111,10 +2867,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/query",
@@ -2153,10 +2923,24 @@
       ],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/reasoning-sdk",
@@ -2190,10 +2974,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/recommendation-api",
@@ -2227,10 +3025,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/records-core",
@@ -2267,10 +3079,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/resilience-core",
@@ -2307,10 +3133,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/risk-core",
@@ -2347,10 +3187,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/runtime-contracts",
@@ -2411,10 +3265,24 @@
       ],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/runtime-core",
@@ -2476,10 +3344,24 @@
       ],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/secops-core",
@@ -2516,10 +3398,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/secrets-core",
@@ -2556,10 +3452,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/swarm-sdk",
@@ -2593,10 +3503,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/telemetry-api",
@@ -2630,10 +3554,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/telemetry-core",
@@ -2670,10 +3608,24 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/twin-contracts",
@@ -2731,10 +3683,24 @@
       ],
       "proposedDisposition": "ABSENT-BY-DESIGN",
       "reason": "Private source-distributed library is compiled by a verified consumer and has no independent artifact or release surface.",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "APPROVED",
+      "adoptedDecision": "ABSENT-BY-DESIGN",
+      "finalDisposition": "ABSENT-BY-DESIGN",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     },
     {
       "workspacePath": "packages/twin-domain",
@@ -2769,10 +3735,36 @@
       "compilingConsumers": [],
       "proposedDisposition": "REPAIR",
       "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
-      "owner": null,
-      "reviewer": null,
+      "owner": "Phile14augx",
+      "reviewer": "philemonvnath",
       "reviewReference": null,
-      "reviewStatus": "REQUIRED"
+      "reviewStatus": "REJECTED",
+      "adoptedDecision": "REPAIR",
+      "finalDisposition": "REPAIR",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      }
     }
-  ]
+  ],
+  "humanReviewEvidence": {
+    "provider": "github",
+    "repository": "Phile14augx/OPC_cerebro_hive",
+    "pullRequest": 45,
+    "reviewer": "philemonvnath",
+    "reviewState": "APPROVED",
+    "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+    "reviewDatabaseId": 4951837838,
+    "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+    "submittedAt": "2026-08-17T12:59:00Z",
+    "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+  }
 }

@@ -527,9 +527,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -675,9 +675,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -890,9 +890,9 @@
         "1 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -948,9 +948,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -1073,9 +1073,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -1198,9 +1198,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -1278,9 +1278,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -1358,9 +1358,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -1461,9 +1461,9 @@
         "1 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -1541,9 +1541,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -1666,9 +1666,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -1791,9 +1791,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -1871,9 +1871,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -1974,9 +1974,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -2146,13 +2146,11 @@
         "tsconfig present"
       ],
       "needsContract": false,
-      "semanticDisposition": "PENDING_ABSENT_BY_DESIGN_REVIEW",
-      "proposedDisposition": "Approve ABSENT-BY-DESIGN after eligible human reviewer sign-off.",
+      "semanticDisposition": "ABSENT-BY-DESIGN",
+      "proposedDisposition": "Reviewed permanent build exception approved.",
       "priority": "P3",
-      "repairGroup": "build:pending-approved-exception",
-      "dependsOn": [
-        "audit-infrastructure"
-      ],
+      "repairGroup": null,
+      "dependsOn": [],
       "exception": {
         "workspacePath": "packages/domain",
         "packageName": "@cerebro/domain",
@@ -2180,9 +2178,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -2283,9 +2281,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -2363,9 +2361,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -2443,9 +2441,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -2523,9 +2521,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -2603,9 +2601,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -2683,9 +2681,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -2763,9 +2761,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -2843,9 +2841,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -2923,9 +2921,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3003,9 +3001,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3083,9 +3081,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3163,9 +3161,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3243,9 +3241,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3323,9 +3321,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3403,9 +3401,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3483,9 +3481,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3563,9 +3561,9 @@
         "10 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3644,9 +3642,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3815,9 +3813,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3895,9 +3893,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -3998,9 +3996,9 @@
         "2 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -4101,9 +4099,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -4204,9 +4202,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -4307,9 +4305,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -4410,9 +4408,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -4513,9 +4511,9 @@
         "1 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -4571,9 +4569,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -4651,9 +4649,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -4754,9 +4752,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -4857,9 +4855,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -5005,9 +5003,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -5108,9 +5106,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -5211,9 +5209,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -5336,9 +5334,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -5439,9 +5437,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -5609,9 +5607,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -5734,9 +5732,9 @@
         "1 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -5792,9 +5790,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -5895,9 +5893,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -5998,9 +5996,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -6078,9 +6076,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -6181,9 +6179,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -6284,9 +6282,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -6387,9 +6385,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -6490,9 +6488,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -6661,9 +6659,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -6764,9 +6762,9 @@
         "23 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -6890,9 +6888,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -6993,9 +6991,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -7209,9 +7207,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -7333,9 +7331,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -7436,9 +7434,9 @@
         "0 test files",
         "no tsconfig"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -7562,13 +7560,11 @@
         "tsconfig present"
       ],
       "needsContract": false,
-      "semanticDisposition": "PENDING_ABSENT_BY_DESIGN_REVIEW",
-      "proposedDisposition": "Approve ABSENT-BY-DESIGN after eligible human reviewer sign-off.",
+      "semanticDisposition": "ABSENT-BY-DESIGN",
+      "proposedDisposition": "Reviewed permanent build exception approved.",
       "priority": "P3",
-      "repairGroup": "build:pending-approved-exception",
-      "dependsOn": [
-        "audit-infrastructure"
-      ],
+      "repairGroup": null,
+      "dependsOn": [],
       "exception": {
         "workspacePath": "packages/twin-contracts",
         "packageName": "@cerebro/twin-contracts",
@@ -7619,9 +7615,9 @@
         "0 test files",
         "tsconfig present"
       ],
-      "needsContract": false,
+      "needsContract": true,
       "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add an independently verifiable build contract; technical exception proposal rejected.",
+      "proposedDisposition": "Add an independently verifiable build contract; reviewed exception proposal rejected.",
       "priority": "P2",
       "repairGroup": "build:rejected-exception",
       "dependsOn": [
@@ -9151,17 +9147,28 @@
       "contract": "build",
       "rationale": "The package exports source files directly and has no independent build artifact.",
       "owner": "Phile14augx",
-      "reviewer": null,
-      "reviewEvidence": null,
+      "reviewer": "philemonvnath",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      },
       "architecturalJustification": "The consuming application or bundler owns compilation; a package-local build would duplicate that boundary.",
       "permanence": "PERMANENT",
       "expiryOrReviewTrigger": "Review when package architecture, publication model, or root validation topology changes.",
-      "reviewStatus": "PENDING_REVIEWER",
+      "reviewStatus": "APPROVED",
       "technicalRecommendation": "APPROVE",
       "adoptedDecision": "ABSENT-BY-DESIGN",
       "disposition": "ABSENT-BY-DESIGN",
       "decisionReason": "Private source-distributed library is compiled by a verified consumer and has no independent artifact or release surface.",
-      "reviewReference": "docs/portfolio/W0.2-BUILD-EXCEPTION-REVIEW.md; artifacts/w0.2/workspace-validation-exception-review.json; manifest SHA-256 c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124",
+      "reviewReference": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
       "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
     },
     {
@@ -9170,17 +9177,28 @@
       "contract": "build",
       "rationale": "The package exports source files directly and has no independent build artifact.",
       "owner": "Phile14augx",
-      "reviewer": null,
-      "reviewEvidence": null,
+      "reviewer": "philemonvnath",
+      "reviewEvidence": {
+        "provider": "github",
+        "repository": "Phile14augx/OPC_cerebro_hive",
+        "pullRequest": 45,
+        "reviewer": "philemonvnath",
+        "reviewState": "APPROVED",
+        "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+        "reviewDatabaseId": 4951837838,
+        "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+        "submittedAt": "2026-08-17T12:59:00Z",
+        "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+      },
       "architecturalJustification": "The consuming application or bundler owns compilation; a package-local build would duplicate that boundary.",
       "permanence": "PERMANENT",
       "expiryOrReviewTrigger": "Review when package architecture, publication model, or root validation topology changes.",
-      "reviewStatus": "PENDING_REVIEWER",
+      "reviewStatus": "APPROVED",
       "technicalRecommendation": "APPROVE",
       "adoptedDecision": "ABSENT-BY-DESIGN",
       "disposition": "ABSENT-BY-DESIGN",
       "decisionReason": "Private source-distributed library is compiled by a verified consumer and has no independent artifact or release surface.",
-      "reviewReference": "docs/portfolio/W0.2-BUILD-EXCEPTION-REVIEW.md; artifacts/w0.2/workspace-validation-exception-review.json; manifest SHA-256 c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124",
+      "reviewReference": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
       "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
     }
   ],

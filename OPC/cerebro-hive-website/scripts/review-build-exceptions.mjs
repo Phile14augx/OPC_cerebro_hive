@@ -172,3 +172,117 @@ export function adoptBuildExceptionReview({ triage, exceptions, review, owner, r
     exceptions: { ...exceptions, exceptions: updatedExceptions },
   };
 }
+
+export function finalizeBuildExceptionReview({ triage, exceptions, manifest, review, reviewEvidence }) {
+  if (reviewEvidence.reviewedManifestSha256 !== review.reviewedManifestSha256) {
+    throw new Error(`W0C_REVIEW_HASH_MISMATCH expected ${review.reviewedManifestSha256}, received ${reviewEvidence.reviewedManifestSha256}`);
+  }
+  if (reviewEvidence.reviewState !== "APPROVED") {
+    throw new Error(`W0C_REVIEW_NOT_APPROVED ${reviewEvidence.reviewState ?? "MISSING"}`);
+  }
+
+  const reviewer = reviewEvidence.reviewer;
+  const decisionByPath = new Map(review.decisions.map((decision) => [decision.workspacePath, decision]));
+  for (const exception of exceptions.exceptions) {
+    if (!reviewer || exception.owner?.toLowerCase() === reviewer.toLowerCase()) {
+      throw new Error(`W0C_NONINDEPENDENT_REVIEWER ${exception.workspacePath}`);
+    }
+  }
+
+  const updatedExceptions = exceptions.exceptions.map((exception) => {
+    const decision = decisionByPath.get(exception.workspacePath);
+    const approvedException = exception.adoptedDecision === "ABSENT-BY-DESIGN";
+    return {
+      ...exception,
+      disposition: approvedException ? "ABSENT-BY-DESIGN" : "REPAIR",
+      reviewer,
+      reviewEvidence,
+      reviewReference: reviewEvidence.reviewUrl ?? exception.reviewReference,
+      reviewedManifestSha256: review.reviewedManifestSha256,
+      reviewStatus: approvedException ? "APPROVED" : "REJECTED",
+      decisionReason: exception.decisionReason ?? decision?.reason,
+    };
+  });
+  const exceptionByPath = new Map(updatedExceptions.map((exception) => [exception.workspacePath, exception]));
+
+  const updatedFindings = triage.findings.map((finding) => {
+    const exception = exceptionByPath.get(finding.workspacePath);
+    if (finding.contract !== "build" || !exception) return finding;
+    if (exception.reviewStatus === "APPROVED") {
+      return {
+        ...finding,
+        needsContract: false,
+        semanticDisposition: "ABSENT-BY-DESIGN",
+        proposedDisposition: "Reviewed permanent build exception approved.",
+        priority: "P3",
+        repairGroup: null,
+        dependsOn: [],
+      };
+    }
+    return {
+      ...finding,
+      needsContract: true,
+      semanticDisposition: "REPAIR",
+      proposedDisposition: "Add an independently verifiable build contract; reviewed exception proposal rejected.",
+      priority: "P2",
+      repairGroup: "build:rejected-exception",
+      dependsOn: ["schema-validation"],
+    };
+  });
+
+  const updatedWorkspaces = manifest.workspaces.map((workspace) => {
+    const exception = exceptionByPath.get(workspace.path);
+    if (!exception || exception.reviewStatus !== "APPROVED") return workspace;
+    return {
+      ...workspace,
+      contracts: {
+        ...workspace.contracts,
+        build: {
+          classification: "ABSENT-BY-DESIGN",
+          command: null,
+          rationale: exception.rationale ?? exception.decisionReason,
+          owner: exception.owner,
+          review: {
+            reviewer,
+            repository: reviewEvidence.repository,
+            pullRequest: reviewEvidence.pullRequest,
+            reviewNodeId: reviewEvidence.reviewNodeId,
+            reviewDatabaseId: reviewEvidence.reviewDatabaseId,
+            reviewUrl: reviewEvidence.reviewUrl,
+            submittedAt: reviewEvidence.submittedAt,
+            reviewedManifestSha256: review.reviewedManifestSha256,
+          },
+        },
+      },
+    };
+  });
+
+  const updatedReview = {
+    ...review,
+    humanReviewEvidence: reviewEvidence,
+    decisions: review.decisions.map((decision) => {
+      const exception = exceptionByPath.get(decision.workspacePath);
+      return {
+        ...decision,
+        owner: exception.owner,
+        adoptedDecision: exception.adoptedDecision,
+        reviewer,
+        reviewStatus: exception.reviewStatus,
+        finalDisposition: exception.disposition,
+        reviewEvidence,
+      };
+    }),
+  };
+
+  return {
+    review: updatedReview,
+    exceptions: { ...exceptions, exceptions: updatedExceptions },
+    manifest: { ...manifest, workspaces: updatedWorkspaces },
+    triage: {
+      ...triage,
+      findings: updatedFindings,
+      exceptions: updatedExceptions.filter((exception) => exception.reviewStatus === "APPROVED"),
+      repairQueue: buildRepairQueue(updatedFindings),
+    },
+  };
+}

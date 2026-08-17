@@ -1374,9 +1374,20 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "ABSENT-BY-DESIGN",
           "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "rationale": "The package exports source files directly and has no independent build artifact.",
+          "owner": "Phile14augx",
+          "review": {
+            "reviewer": "philemonvnath",
+            "repository": "Phile14augx/OPC_cerebro_hive",
+            "pullRequest": 45,
+            "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+            "reviewDatabaseId": 4951837838,
+            "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+            "submittedAt": "2026-08-17T12:59:00Z",
+            "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+          }
         },
         "test": {
           "classification": "REAL",
@@ -4083,9 +4094,20 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "ABSENT-BY-DESIGN",
           "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "rationale": "The package exports source files directly and has no independent build artifact.",
+          "owner": "Phile14augx",
+          "review": {
+            "reviewer": "philemonvnath",
+            "repository": "Phile14augx/OPC_cerebro_hive",
+            "pullRequest": 45,
+            "reviewNodeId": "PRR_kwDOTPTAls8AAAABJycMjg",
+            "reviewDatabaseId": 4951837838,
+            "reviewUrl": "https://github.com/Phile14augx/OPC_cerebro_hive/pull/45#pullrequestreview-4951837838",
+            "submittedAt": "2026-08-17T12:59:00Z",
+            "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124"
+          }
         },
         "test": {
           "classification": "REAL",

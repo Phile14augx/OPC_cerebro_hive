@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
+import * as reviewModule from "./review-build-exceptions.mjs";
 import { adoptBuildExceptionReview, reviewBuildExceptionProposals } from "./review-build-exceptions.mjs";
 
 function fixtureReview({ privatePackage = true, testClassification = "REAL", extraPackage = {} } = {}) {
@@ -133,4 +134,124 @@ test("returns an adopted rejection to the repair queue while review remains pend
   assert.equal(adopted.exceptions.exceptions[0].adoptedDecision, "REPAIR");
   assert.equal(adopted.exceptions.exceptions[0].reviewStatus, "PENDING_REVIEWER");
   assert.equal(adopted.triage.repairQueue[0].workspaces[0], "packages/library");
+});
+
+function pendingReviewFixture({ privatePackage = true } = {}) {
+  const fixture = fixtureReview({ privatePackage });
+  const review = reviewBuildExceptionProposals({ ...fixture, manifestSha256: "reviewed-sha" });
+  const triage = {
+    findings: [{
+      workspacePath: "packages/library",
+      contract: "build",
+      semanticDisposition: "PROPOSE_ABSENT_BY_DESIGN",
+      priority: "P3",
+      repairGroup: "build:source-distributed-exception",
+      dependsOn: ["audit-infrastructure"],
+    }],
+    repairDag: [],
+  };
+  const adopted = adoptBuildExceptionReview({
+    triage,
+    exceptions: fixture.exceptions,
+    review,
+    owner: "Phile14augx",
+    reviewReference: "docs/review.md; artifacts/review.json; manifest SHA-256 reviewed-sha",
+  });
+  const reviewEvidence = {
+    provider: "github",
+    repository: "Phile14augx/OPC_cerebro_hive",
+    pullRequest: 45,
+    reviewer: "philemonvnath",
+    reviewState: "APPROVED",
+    reviewNodeId: "PRR_fixture",
+    reviewDatabaseId: 123,
+    reviewUrl: "https://github.example/review/123",
+    submittedAt: "2026-08-17T12:59:00Z",
+    reviewedManifestSha256: "reviewed-sha",
+  };
+  return { fixture, review, adopted, reviewEvidence };
+}
+
+function finalizeFixture(options = {}) {
+  assert.equal(
+    typeof reviewModule.finalizeBuildExceptionReview,
+    "function",
+    "finalizeBuildExceptionReview must implement the post-approval transition",
+  );
+  const fixture = pendingReviewFixture(options);
+  return reviewModule.finalizeBuildExceptionReview({
+    triage: fixture.adopted.triage,
+    exceptions: fixture.adopted.exceptions,
+    manifest: fixture.fixture.manifest,
+    review: fixture.review,
+    reviewEvidence: fixture.reviewEvidence,
+  });
+}
+
+test("finalizes an independently approved build exception", () => {
+  const finalized = finalizeFixture();
+  const exception = finalized.exceptions.exceptions[0];
+  const build = finalized.manifest.workspaces[0].contracts.build;
+
+  assert.equal(exception.reviewStatus, "APPROVED");
+  assert.equal(exception.disposition, "ABSENT-BY-DESIGN");
+  assert.equal(exception.reviewer, "philemonvnath");
+  assert.equal(build.classification, "ABSENT-BY-DESIGN");
+  assert.equal(build.owner, "Phile14augx");
+  assert.equal(build.review.reviewer, "philemonvnath");
+  assert.equal(finalized.triage.findings[0].semanticDisposition, "ABSENT-BY-DESIGN");
+});
+
+test("finalizes an independently rejected build exception as a repair", () => {
+  const finalized = finalizeFixture({ privatePackage: false });
+  const exception = finalized.exceptions.exceptions[0];
+
+  assert.equal(exception.reviewStatus, "REJECTED");
+  assert.equal(exception.disposition, "REPAIR");
+  assert.equal(exception.reviewer, "philemonvnath");
+  assert.equal(finalized.manifest.workspaces[0].contracts.build.classification, "BROKEN");
+  assert.equal(finalized.triage.findings[0].semanticDisposition, "REPAIR");
+  assert.deepEqual(finalized.triage.repairQueue[0].workspaces, ["packages/library"]);
+});
+
+test("rejects finalization when the approved manifest hash does not match", () => {
+  const fixture = pendingReviewFixture();
+  fixture.reviewEvidence.reviewedManifestSha256 = "wrong-sha";
+
+  assert.equal(typeof reviewModule.finalizeBuildExceptionReview, "function");
+  assert.throws(() => reviewModule.finalizeBuildExceptionReview({
+    triage: fixture.adopted.triage,
+    exceptions: fixture.adopted.exceptions,
+    manifest: fixture.fixture.manifest,
+    review: fixture.review,
+    reviewEvidence: fixture.reviewEvidence,
+  }), /W0C_REVIEW_HASH_MISMATCH/);
+});
+
+test("rejects an owner masquerading as the independent reviewer", () => {
+  const fixture = pendingReviewFixture();
+  fixture.reviewEvidence.reviewer = "Phile14augx";
+
+  assert.equal(typeof reviewModule.finalizeBuildExceptionReview, "function");
+  assert.throws(() => reviewModule.finalizeBuildExceptionReview({
+    triage: fixture.adopted.triage,
+    exceptions: fixture.adopted.exceptions,
+    manifest: fixture.fixture.manifest,
+    review: fixture.review,
+    reviewEvidence: fixture.reviewEvidence,
+  }), /W0C_NONINDEPENDENT_REVIEWER/);
+});
+
+test("rejects finalization from a non-approved GitHub review", () => {
+  const fixture = pendingReviewFixture();
+  fixture.reviewEvidence.reviewState = "COMMENTED";
+
+  assert.equal(typeof reviewModule.finalizeBuildExceptionReview, "function");
+  assert.throws(() => reviewModule.finalizeBuildExceptionReview({
+    triage: fixture.adopted.triage,
+    exceptions: fixture.adopted.exceptions,
+    manifest: fixture.fixture.manifest,
+    review: fixture.review,
+    reviewEvidence: fixture.reviewEvidence,
+  }), /W0C_REVIEW_NOT_APPROVED/);
 });
