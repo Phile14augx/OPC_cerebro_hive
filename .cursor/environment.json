@@ -1,0 +1,17 @@
+{
+  "name": "CerebroHive EIOS",
+  "install": "cd OPC/cerebro-hive-website && corepack pnpm install --no-frozen-lockfile && { [ -f apps/studio/.env.local ] || printf 'NEXT_PUBLIC_API_URL=http://localhost:8900/api/v1\\n' > apps/studio/.env.local; }",
+  "terminals": [
+    {
+      "name": "studio-web",
+      "command": "cd OPC/cerebro-hive-website/apps/studio && corepack pnpm exec next dev -p 3401",
+      "description": "CerebroHive Studio Next.js dev server (http://localhost:3401). The primary web app; depends on transpiled @cerebro/* workspace packages."
+    }
+  ],
+  "ports": [
+    {
+      "name": "studio",
+      "port": 3401
+    }
+  ]
+}
