@@ -1,0 +1,2778 @@
+{
+  "schemaVersion": 1,
+  "reviewedManifestSha256": "c55784b42528ff4d8053a372d304254e97d6c24164d21aa73fd9b1bd771e4124",
+  "decisions": [
+    {
+      "workspacePath": "packages/aiops-sdk",
+      "packageName": "@cerebro/aiops-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/architecture-core",
+      "packageName": "@cerebro/architecture-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/capabilities/agent-builder",
+      "packageName": "@cerebro/agent-builder-capability",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "NO_FALSE_GREEN_RELEASE"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": true
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/platform-api"
+        ],
+        "typecheckClassification": "REAL",
+        "testClassification": "REAL"
+      },
+      "compilingConsumers": [
+        "apps/platform-api"
+      ],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/capabilities/deployment",
+      "packageName": "@cerebro/deployment-capability",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/capabilities/knowledge",
+      "packageName": "@cerebro/knowledge-capability",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/capabilities/workflow",
+      "packageName": "@cerebro/workflow-capability",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/capability-contracts",
+      "packageName": "@cerebro/capability-contracts",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/platform-api"
+        ],
+        "typecheckClassification": "REAL",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [
+        "apps/platform-api"
+      ],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/capability-core",
+      "packageName": "@cerebro/capability-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/capability-registry",
+      "packageName": "@cerebro/capability-registry",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": true
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "REAL"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/compliance-core",
+      "packageName": "@cerebro/compliance-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/config-core",
+      "packageName": "@cerebro/config-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/platform-api"
+        ],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [
+        "apps/platform-api"
+      ],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/core-bus",
+      "packageName": "@cerebro/core-bus",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/platform-api"
+        ],
+        "typecheckClassification": "REAL",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [
+        "apps/platform-api"
+      ],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/data-core",
+      "packageName": "@cerebro/data-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/pulse",
+          "packages/experience"
+        ],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [
+        "apps/pulse",
+        "packages/experience"
+      ],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/data-governance-core",
+      "packageName": "@cerebro/data-governance-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/domain",
+      "packageName": "@cerebro/domain",
+      "contract": "build",
+      "technicalRecommendation": "APPROVE",
+      "failedCriteria": [],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": true
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "./index.ts",
+          "./index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/platform-api",
+          "packages/capabilities/evaluation",
+          "packages/capabilities/memory"
+        ],
+        "typecheckClassification": "REAL",
+        "testClassification": "REAL"
+      },
+      "compilingConsumers": [
+        "apps/platform-api",
+        "packages/capabilities/evaluation",
+        "packages/capabilities/memory"
+      ],
+      "proposedDisposition": "ABSENT-BY-DESIGN",
+      "reason": "Private source-distributed library is compiled by a verified consumer and has no independent artifact or release surface.",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/domain-graph",
+      "packageName": "@cerebro/domain-graph",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-artifacts",
+      "packageName": "@cerebro/eda-artifacts",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-coverage",
+      "packageName": "@cerebro/eda-coverage",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-domain",
+      "packageName": "@cerebro/eda-domain",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-events",
+      "packageName": "@cerebro/eda-events",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-execution",
+      "packageName": "@cerebro/eda-execution",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-findings",
+      "packageName": "@cerebro/eda-findings",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-knowledge",
+      "packageName": "@cerebro/eda-knowledge",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-observability",
+      "packageName": "@cerebro/eda-observability",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-parser",
+      "packageName": "@cerebro/eda-parser",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-parsers",
+      "packageName": "@cerebro/eda-parsers",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-sdk",
+      "packageName": "@cerebro/eda-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-security",
+      "packageName": "@cerebro/eda-security",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-storage",
+      "packageName": "@cerebro/eda-storage",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-tenancy",
+      "packageName": "@cerebro/eda-tenancy",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-ui",
+      "packageName": "@cerebro/eda-ui",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/eda-workflow",
+      "packageName": "@cerebro/eda-workflow",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "FALSE-GREEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/engineering-review",
+      "packageName": "@cerebro/engineering-review",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "REAL"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/evaluation-sdk",
+      "packageName": "@cerebro/evaluation-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/events",
+      "packageName": "@cerebro/events",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/execution-providers",
+      "packageName": "@cerebro/execution-providers",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/execution-runtime-adapters",
+      "packageName": "@cerebro/execution-runtime-adapters",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "./index.ts",
+          "./index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "REAL"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/federation-core",
+      "packageName": "@cerebro/federation-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/governance-api",
+      "packageName": "@cerebro/governance-api",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/governance-core",
+      "packageName": "@cerebro/governance-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/governance-sdk",
+      "packageName": "@cerebro/governance-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/hiveshield-policy",
+      "packageName": "@cerebro/hiveshield-policy",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": true
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "REAL"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/icons",
+      "packageName": "@cerebro/icons",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/identity-core",
+      "packageName": "@cerebro/identity-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/platform-api"
+        ],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [
+        "apps/platform-api"
+      ],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/intelligence-core",
+      "packageName": "@cerebro/intelligence-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/kernel-core",
+      "packageName": "@cerebro/kernel-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/knowledge-sdk",
+      "packageName": "@cerebro/knowledge-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/marketplace-sdk",
+      "packageName": "@cerebro/marketplace-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/memory-sdk",
+      "packageName": "@cerebro/memory-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/observability-api",
+      "packageName": "@cerebro/observability-api",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/ontology-sdk",
+      "packageName": "@cerebro/ontology-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/plugins",
+      "packageName": "@cerebro/plugins",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/policy-core",
+      "packageName": "@cerebro/policy-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": true
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "REAL"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/privacy-core",
+      "packageName": "@cerebro/privacy-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/prompt-sdk",
+      "packageName": "@cerebro/prompt-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/query",
+      "packageName": "@cerebro/query",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/platform-api"
+        ],
+        "typecheckClassification": "REAL",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [
+        "apps/platform-api"
+      ],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/reasoning-sdk",
+      "packageName": "@cerebro/reasoning-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/recommendation-api",
+      "packageName": "@cerebro/recommendation-api",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/records-core",
+      "packageName": "@cerebro/records-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/resilience-core",
+      "packageName": "@cerebro/resilience-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/risk-core",
+      "packageName": "@cerebro/risk-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/runtime-contracts",
+      "packageName": "@cerebro/runtime-contracts",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/forge",
+          "apps/platform-api",
+          "apps/pulse",
+          "apps/sphere",
+          "apps/studio",
+          "apps/twin-studio",
+          "packages/ai-gateway",
+          "packages/auth",
+          "packages/capabilities/evaluation",
+          "packages/capabilities/memory",
+          "packages/db",
+          "services/forge-api"
+        ],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [
+        "apps/forge",
+        "apps/platform-api",
+        "apps/pulse",
+        "apps/sphere",
+        "apps/studio",
+        "apps/twin-studio",
+        "packages/ai-gateway",
+        "packages/auth",
+        "packages/capabilities/evaluation",
+        "packages/capabilities/memory",
+        "packages/db",
+        "services/forge-api"
+      ],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/runtime-core",
+      "packageName": "@cerebro/runtime-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/forge",
+          "apps/platform-api",
+          "apps/pulse",
+          "apps/sphere",
+          "apps/studio",
+          "apps/twin-studio",
+          "packages/ai-gateway",
+          "packages/auth",
+          "packages/capabilities/evaluation",
+          "packages/capabilities/memory",
+          "packages/db",
+          "services/forge-api"
+        ],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "REAL"
+      },
+      "compilingConsumers": [
+        "apps/forge",
+        "apps/platform-api",
+        "apps/pulse",
+        "apps/sphere",
+        "apps/studio",
+        "apps/twin-studio",
+        "packages/ai-gateway",
+        "packages/auth",
+        "packages/capabilities/evaluation",
+        "packages/capabilities/memory",
+        "packages/db",
+        "services/forge-api"
+      ],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/secops-core",
+      "packageName": "@cerebro/secops-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/secrets-core",
+      "packageName": "@cerebro/secrets-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/swarm-sdk",
+      "packageName": "@cerebro/swarm-sdk",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/telemetry-api",
+      "packageName": "@cerebro/telemetry-api",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/telemetry-core",
+      "packageName": "@cerebro/telemetry-core",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "PRIVATE_SOURCE_DISTRIBUTION",
+        "COMPILING_CONSUMER",
+        "NO_FALSE_GREEN_RELEASE",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": false,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": false,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": false,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "BROKEN",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: PRIVATE_SOURCE_DISTRIBUTION, COMPILING_CONSUMER, NO_FALSE_GREEN_RELEASE, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/twin-contracts",
+      "packageName": "@cerebro/twin-contracts",
+      "contract": "build",
+      "technicalRecommendation": "APPROVE",
+      "failedCriteria": [],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": true,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": true
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [
+          "apps/forge",
+          "apps/platform-api",
+          "apps/pulse",
+          "apps/sphere",
+          "apps/studio",
+          "apps/twin-studio",
+          "packages/ai-gateway",
+          "packages/auth",
+          "packages/capabilities/evaluation",
+          "packages/capabilities/memory",
+          "packages/db",
+          "services/forge-api"
+        ],
+        "typecheckClassification": "REAL",
+        "testClassification": "REAL"
+      },
+      "compilingConsumers": [
+        "apps/forge",
+        "apps/platform-api",
+        "apps/pulse",
+        "apps/sphere",
+        "apps/studio",
+        "apps/twin-studio",
+        "packages/ai-gateway",
+        "packages/auth",
+        "packages/capabilities/evaluation",
+        "packages/capabilities/memory",
+        "packages/db",
+        "services/forge-api"
+      ],
+      "proposedDisposition": "ABSENT-BY-DESIGN",
+      "reason": "Private source-distributed library is compiled by a verified consumer and has no independent artifact or release surface.",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    },
+    {
+      "workspacePath": "packages/twin-domain",
+      "packageName": "@cerebro/twin-domain",
+      "contract": "build",
+      "technicalRecommendation": "REJECT",
+      "failedCriteria": [
+        "COMPILING_CONSUMER",
+        "REAL_TYPECHECK_AND_TEST"
+      ],
+      "criteria": {
+        "PRIVATE_SOURCE_DISTRIBUTION": true,
+        "NO_PREBUILT_EXPORT": true,
+        "NO_STANDALONE_ARTIFACT": true,
+        "COMPILING_CONSUMER": false,
+        "NO_EXPLICIT_ROOT_BUILD_ASSUMPTION": true,
+        "NO_FALSE_GREEN_RELEASE": true,
+        "REAL_TYPECHECK_AND_TEST": false
+      },
+      "evidence": {
+        "private": true,
+        "sourceTargets": [
+          "src/index.ts",
+          "src/index.ts"
+        ],
+        "prebuiltTargets": [],
+        "standaloneSignals": [],
+        "compilingConsumers": [],
+        "typecheckClassification": "REAL",
+        "testClassification": "BROKEN"
+      },
+      "compilingConsumers": [],
+      "proposedDisposition": "REPAIR",
+      "reason": "Build exception criteria failed: COMPILING_CONSUMER, REAL_TYPECHECK_AND_TEST",
+      "owner": null,
+      "reviewer": null,
+      "reviewReference": null,
+      "reviewStatus": "REQUIRED"
+    }
+  ]
+}
