@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node --experimental-strip-types build.ts",
     "lint": "eslint .",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {},

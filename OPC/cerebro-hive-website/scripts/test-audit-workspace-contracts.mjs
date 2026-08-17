@@ -3,6 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   auditWorkspaceContracts,
@@ -18,7 +19,10 @@ function fixtureProject({ manifest = {}, scripts = {} } = {}) {
     path.join(root, "packages", "source-package", "package.json"),
     JSON.stringify({ name: "@fixture/source-package", scripts }),
   );
-  fs.writeFileSync(path.join(root, "packages", "source-package", "src", "index.ts"), "export const value = 1;\n");
+  fs.writeFileSync(
+    path.join(root, "packages", "source-package", "src", "index.ts"),
+    "export const value = 1;\n",
+  );
   const manifestPath = path.join(root, "workspace-validation-classification.json");
   fs.writeFileSync(manifestPath, JSON.stringify(manifest));
   return { root, manifestPath };
@@ -28,33 +32,45 @@ test("rejects a source-bearing workspace missing from the classification manifes
   const fixture = fixtureProject();
 
   assert.throws(
-    () => auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 1 }),
+    () =>
+      auditWorkspaceContracts({
+        projectRoot: fixture.root,
+        manifestPath: fixture.manifestPath,
+        expectedWorkspaceCount: 1,
+      }),
     /W0C_MISSING_WORKSPACE/,
   );
 });
 
 test("generates a root-separated workspace inventory with source and contract evidence", () => {
-  const fixture = fixtureProject({ scripts: { build: "tsc -p tsconfig.json", test: "node --test" } });
+  const fixture = fixtureProject({
+    scripts: { build: "tsc -p tsconfig.json", test: "node --test" },
+  });
 
-  const inventory = generateWorkspaceInventory({ projectRoot: fixture.root, expectedWorkspaceCount: 1 });
+  const inventory = generateWorkspaceInventory({
+    projectRoot: fixture.root,
+    expectedWorkspaceCount: 1,
+  });
 
   assert.equal(inventory.baselineWorkspaceCount, 1);
   assert.deepEqual(inventory.controlPlane, [{ path: ".", classification: "CONTROL-PLANE" }]);
-  assert.deepEqual(inventory.workspaces, [{
-    path: "packages/source-package",
-    packageName: "@fixture/source-package",
-    hasSource: true,
-    contracts: {
-      build: "tsc -p tsconfig.json",
-      test: "node --test",
-      typecheck: null,
-      lint: null,
-      "schema-config": null,
+  assert.deepEqual(inventory.workspaces, [
+    {
+      path: "packages/source-package",
+      packageName: "@fixture/source-package",
+      hasSource: true,
+      contracts: {
+        build: "tsc -p tsconfig.json",
+        test: "node --test",
+        typecheck: null,
+        lint: null,
+        "schema-config": null,
+      },
+      schemaConfigEvidence: [],
+      semanticCandidates: [],
+      findings: [],
     },
-    schemaConfigEvidence: [],
-    semanticCandidates: [],
-    findings: [],
-  }]);
+  ]);
   assert.deepEqual(inventory.externalDependencies, []);
   assert.deepEqual(inventory.findings, []);
 });
@@ -63,7 +79,10 @@ test("classifies every core contract without implicit source-bearing omissions",
   const fixture = fixtureProject({
     scripts: { build: "tsc -p tsconfig.json", test: "vitest run --passWithNoTests" },
   });
-  const inventory = generateWorkspaceInventory({ projectRoot: fixture.root, expectedWorkspaceCount: 1 });
+  const inventory = generateWorkspaceInventory({
+    projectRoot: fixture.root,
+    expectedWorkspaceCount: 1,
+  });
 
   const manifest = generateClassificationManifest(inventory);
   const [workspace] = manifest.workspaces;
@@ -76,14 +95,19 @@ test("classifies every core contract without implicit source-bearing omissions",
   assert.equal(workspace.contracts.typecheck.classification, "BROKEN");
   assert.equal(workspace.contracts.lint.classification, "BROKEN");
   assert.equal(workspace.contracts["schema-config"].classification, "NOT-APPLICABLE");
-  assert.equal(Object.values(workspace.contracts).filter((contract) => !contract.classification).length, 0);
-  assert.deepEqual(workspace.semanticCandidates, [{
-    script: "test",
-    contract: "test",
-    classification: "FALSE-GREEN",
-    command: "vitest run --passWithNoTests",
-    evidence: "Validation script can succeed when no tests are discovered.",
-  }]);
+  assert.equal(
+    Object.values(workspace.contracts).filter((contract) => !contract.classification).length,
+    0,
+  );
+  assert.deepEqual(workspace.semanticCandidates, [
+    {
+      script: "test",
+      contract: "test",
+      classification: "FALSE-GREEN",
+      command: "vitest run --passWithNoTests",
+      evidence: "Validation script can succeed when no tests are discovered.",
+    },
+  ]);
   assert.deepEqual(manifest.controlPlane, [{ path: ".", classification: "CONTROL-PLANE" }]);
 });
 
@@ -92,28 +116,41 @@ test("classifies an unvalidated schema asset as BROKEN", () => {
   fs.mkdirSync(path.join(fixture.root, "packages", "source-package", "prisma"));
   fs.writeFileSync(
     path.join(fixture.root, "packages", "source-package", "prisma", "schema.prisma"),
-    "datasource db { provider = \"postgresql\" }\n",
+    'datasource db { provider = "postgresql" }\n',
   );
 
-  const inventory = generateWorkspaceInventory({ projectRoot: fixture.root, expectedWorkspaceCount: 1 });
+  const inventory = generateWorkspaceInventory({
+    projectRoot: fixture.root,
+    expectedWorkspaceCount: 1,
+  });
   const manifest = generateClassificationManifest(inventory);
 
   assert.deepEqual(inventory.workspaces[0].schemaConfigEvidence, ["prisma/schema.prisma"]);
   assert.equal(manifest.workspaces[0].contracts["schema-config"].classification, "BROKEN");
-  assert.match(manifest.workspaces[0].contracts["schema-config"].evidence, /prisma\/schema\.prisma/);
+  assert.match(
+    manifest.workspaces[0].contracts["schema-config"].evidence,
+    /prisma\/schema\.prisma/,
+  );
 });
 
 test("audits a complete manifest and preserves every classified defect", () => {
   const fixture = fixtureProject({
     scripts: { build: "tsc -p tsconfig.json", test: "vitest run --passWithNoTests" },
   });
-  const inventory = generateWorkspaceInventory({ projectRoot: fixture.root, expectedWorkspaceCount: 1 });
+  const inventory = generateWorkspaceInventory({
+    projectRoot: fixture.root,
+    expectedWorkspaceCount: 1,
+  });
   const manifest = generateClassificationManifest(inventory);
   fs.writeFileSync(fixture.manifestPath, JSON.stringify(manifest));
 
   let error;
   try {
-    auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 1 });
+    auditWorkspaceContracts({
+      projectRoot: fixture.root,
+      manifestPath: fixture.manifestPath,
+      expectedWorkspaceCount: 1,
+    });
   } catch (caught) {
     error = caught;
   }
@@ -128,85 +165,165 @@ test("audits a complete manifest and preserves every classified defect", () => {
     "NOT-APPLICABLE": 1,
   });
   assert.equal(error.auditResult.unclassified, 0);
-  assert.equal(error.auditResult.findings.filter((finding) => finding.code === "W0C_CLASSIFIED_DEFECT").length, 3);
+  assert.equal(
+    error.auditResult.findings.filter((finding) => finding.code === "W0C_CLASSIFIED_DEFECT").length,
+    3,
+  );
 });
 
 test("rejects ABSENT-BY-DESIGN when owner and review evidence are missing", () => {
   const fixture = fixtureProject({
     manifest: {
-      workspaces: [{
-        path: "packages/source-package",
-        contracts: { test: { status: "ABSENT-BY-DESIGN", rationale: "fixture" } },
-      }],
+      workspaces: [
+        {
+          path: "packages/source-package",
+          contracts: { test: { status: "ABSENT-BY-DESIGN", rationale: "fixture" } },
+        },
+      ],
     },
   });
 
   assert.throws(
-    () => auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 1 }),
+    () =>
+      auditWorkspaceContracts({
+        projectRoot: fixture.root,
+        manifestPath: fixture.manifestPath,
+        expectedWorkspaceCount: 1,
+      }),
     /W0C_UNREVIEWED_EXCEPTION/,
   );
 });
 
 test("rejects an unknown classification value", () => {
   const fixture = fixtureProject({
-    manifest: { workspaces: [{ path: "packages/source-package", contracts: { test: { status: "MAYBE" } } }] },
+    manifest: {
+      workspaces: [{ path: "packages/source-package", contracts: { test: { status: "MAYBE" } } }],
+    },
   });
 
   assert.throws(
-    () => auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 1 }),
+    () =>
+      auditWorkspaceContracts({
+        projectRoot: fixture.root,
+        manifestPath: fixture.manifestPath,
+        expectedWorkspaceCount: 1,
+      }),
     /W0C_UNKNOWN_CLASSIFICATION/,
   );
 });
 
 test("rejects duplicate and stale manifest paths", () => {
   const fixture = fixtureProject({
-    manifest: { workspaces: [
-      { path: "packages/source-package", contracts: {} },
-      { path: "packages/source-package", contracts: {} },
-      { path: "packages/removed-package", contracts: {} },
-    ] },
+    manifest: {
+      workspaces: [
+        { path: "packages/source-package", contracts: {} },
+        { path: "packages/source-package", contracts: {} },
+        { path: "packages/removed-package", contracts: {} },
+      ],
+    },
   });
 
   assert.throws(
-    () => auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 1 }),
+    () =>
+      auditWorkspaceContracts({
+        projectRoot: fixture.root,
+        manifestPath: fixture.manifestPath,
+        expectedWorkspaceCount: 1,
+      }),
     /W0C_DUPLICATE_MANIFEST_PATH/,
   );
 });
 
 test("rejects a stale manifest entry when there is no duplicate", () => {
-  const fixture = fixtureProject({ manifest: { workspaces: [{ path: "packages/removed-package", contracts: {} }] } });
-  assert.throws(() => auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 1 }), /W0C_STALE_MANIFEST_PATH/);
+  const fixture = fixtureProject({
+    manifest: { workspaces: [{ path: "packages/removed-package", contracts: {} }] },
+  });
+  assert.throws(
+    () =>
+      auditWorkspaceContracts({
+        projectRoot: fixture.root,
+        manifestPath: fixture.manifestPath,
+        expectedWorkspaceCount: 1,
+      }),
+    /W0C_STALE_MANIFEST_PATH/,
+  );
 });
 
 test("rejects a declared workspace missing from the manifest", () => {
   const fixture = fixtureProject({ manifest: { workspaces: [] } });
-  assert.throws(() => auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 1 }), /W0C_MISSING_WORKSPACE/);
+  assert.throws(
+    () =>
+      auditWorkspaceContracts({
+        projectRoot: fixture.root,
+        manifestPath: fixture.manifestPath,
+        expectedWorkspaceCount: 1,
+      }),
+    /W0C_MISSING_WORKSPACE/,
+  );
 });
 
 test("rejects a declared graph count mismatch", () => {
   const fixture = fixtureProject({ manifest: { workspaces: [] } });
-  assert.throws(() => auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 2 }), /W0C_WORKSPACE_GRAPH_MISMATCH/);
+  assert.throws(
+    () =>
+      auditWorkspaceContracts({
+        projectRoot: fixture.root,
+        manifestPath: fixture.manifestPath,
+        expectedWorkspaceCount: 2,
+      }),
+    /W0C_WORKSPACE_GRAPH_MISMATCH/,
+  );
 });
 
 test("rejects the monorepo root as a workspace record", () => {
   const fixture = fixtureProject({ manifest: { workspaces: [{ path: ".", contracts: {} }] } });
-  assert.throws(() => auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 1 }), /W0C_ROOT_SCOPE_VIOLATION/);
+  assert.throws(
+    () =>
+      auditWorkspaceContracts({
+        projectRoot: fixture.root,
+        manifestPath: fixture.manifestPath,
+        expectedWorkspaceCount: 1,
+      }),
+    /W0C_ROOT_SCOPE_VIOLATION/,
+  );
 });
 
 test("rejects a REAL validation contract that unconditionally exits successfully", () => {
   const fixture = fixtureProject({
     scripts: { typecheck: "exit 0" },
-    manifest: { workspaces: [{ path: "packages/source-package", contracts: { typecheck: { status: "REAL" } } }] },
+    manifest: {
+      workspaces: [
+        { path: "packages/source-package", contracts: { typecheck: { status: "REAL" } } },
+      ],
+    },
   });
-  assert.throws(() => auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 1 }), /W0C_FALSE_GREEN_CONTRACT/);
+  assert.throws(
+    () =>
+      auditWorkspaceContracts({
+        projectRoot: fixture.root,
+        manifestPath: fixture.manifestPath,
+        expectedWorkspaceCount: 1,
+      }),
+    /W0C_FALSE_GREEN_CONTRACT/,
+  );
 });
 
 test("records a dangling source path while retaining its owning workspace", () => {
-  const fixture = fixtureProject({ manifest: { workspaces: [{ path: "packages/source-package", contracts: {} }] } });
-  fs.symlinkSync(path.join(fixture.root, "missing-internal"), path.join(fixture.root, "packages", "source-package", "internal"), "junction");
+  const fixture = fixtureProject({
+    manifest: { workspaces: [{ path: "packages/source-package", contracts: {} }] },
+  });
+  fs.symlinkSync(
+    path.join(fixture.root, "missing-internal"),
+    path.join(fixture.root, "packages", "source-package", "internal"),
+    "junction",
+  );
   let error;
   try {
-    auditWorkspaceContracts({ projectRoot: fixture.root, manifestPath: fixture.manifestPath, expectedWorkspaceCount: 1 });
+    auditWorkspaceContracts({
+      projectRoot: fixture.root,
+      manifestPath: fixture.manifestPath,
+      expectedWorkspaceCount: 1,
+    });
   } catch (caught) {
     error = caught;
   }
@@ -214,10 +331,82 @@ test("records a dangling source path while retaining its owning workspace", () =
   assert.equal(error.auditResult.workspaceCount, 1);
   assert.deepEqual(error.auditResult.workspacePaths, ["packages/source-package"]);
   assert.equal(error.auditResult.inventory[0].hasSource, true);
-  assert.deepEqual(error.auditResult.findings, [{
-    code: "W0C_DANGLING_SOURCE_PATH",
-    workspacePath: "packages/source-package",
-    path: "packages/source-package/internal",
-    phase: "source-discovery",
-  }]);
+  assert.deepEqual(error.auditResult.findings, [
+    {
+      code: "W0C_DANGLING_SOURCE_PATH",
+      workspacePath: "packages/source-package",
+      path: "packages/source-package/internal",
+      phase: "source-discovery",
+    },
+  ]);
+});
+
+test("requires the P0 typecheck hotspots to expose real compiler contracts", () => {
+  const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const inventory = generateWorkspaceInventory({ projectRoot, expectedWorkspaceCount: 141 });
+
+  for (const workspacePath of ["apps/platform-api", "services/forge-api"]) {
+    const workspace = inventory.workspaces.find((entry) => entry.path === workspacePath);
+    assert.ok(workspace, `${workspacePath} must remain in the authoritative inventory`);
+    assert.match(
+      workspace.contracts.typecheck,
+      /\btsc\b/,
+      `${workspacePath} must invoke TypeScript`,
+    );
+    assert.equal(
+      workspace.semanticCandidates.some((candidate) => candidate.contract === "typecheck"),
+      false,
+      `${workspacePath} must not expose a false-green typecheck candidate`,
+    );
+  }
+});
+
+test("requires every P0 test hotspot to stop tolerating zero discovered tests", () => {
+  const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const inventory = generateWorkspaceInventory({ projectRoot, expectedWorkspaceCount: 141 });
+  const falseGreenTests = inventory.workspaces
+    .filter((workspace) =>
+      workspace.semanticCandidates.some((candidate) => candidate.contract === "test"),
+    )
+    .map((workspace) => workspace.path);
+
+  assert.deepEqual(
+    falseGreenTests,
+    [],
+    `false-green test contracts remain: ${falseGreenTests.join(", ")}`,
+  );
+});
+
+test("records the completed P0 tranche without weakening the remaining repair surface", () => {
+  const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const manifestPath = path.join(projectRoot, "config", "workspace-validation-classification.json");
+  const repairQueue = JSON.parse(
+    fs.readFileSync(
+      path.join(projectRoot, "artifacts", "w0.2", "workspace-validation-repair-queue.json"),
+      "utf8",
+    ),
+  );
+  let auditResult;
+  try {
+    auditWorkspaceContracts({ projectRoot, manifestPath, expectedWorkspaceCount: 141 });
+  } catch (error) {
+    auditResult = error.auditResult;
+  }
+
+  assert.ok(auditResult, "the intentionally non-green repository must expose its audit result");
+  assert.equal(auditResult.classificationCounts["FALSE-GREEN"], 0);
+  assert.equal(auditResult.classificationCounts["ABSENT-BY-DESIGN"], 2);
+  assert.equal(auditResult.classificationCounts.BROKEN, 329);
+  assert.equal(
+    auditResult.findings.filter((finding) => finding.code === "W0C_CLASSIFIED_DEFECT").length,
+    329,
+  );
+  assert.deepEqual(
+    repairQueue.groups.filter((group) => group.priority === "P0"),
+    [],
+  );
+  assert.equal(
+    repairQueue.groups.reduce((total, group) => total + group.workspaces.length, 0),
+    329,
+  );
 });

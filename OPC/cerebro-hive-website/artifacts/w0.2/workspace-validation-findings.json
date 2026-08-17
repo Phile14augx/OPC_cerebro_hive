@@ -711,12 +711,12 @@
     }
   ],
   "classificationCounts": {
-    "REAL": 165,
-    "ABSENT-BY-DESIGN": 0,
-    "BROKEN": 332,
+    "REAL": 198,
+    "ABSENT-BY-DESIGN": 2,
+    "BROKEN": 329,
     "PLACEHOLDER": 0,
-    "FALSE-GREEN": 35,
-    "NOT-APPLICABLE": 173
+    "FALSE-GREEN": 0,
+    "NOT-APPLICABLE": 176
   },
   "unclassified": 0,
   "findingsByContract": {
@@ -829,13 +829,6 @@
       {
         "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "packages/data-governance-core",
-        "contract": "build",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared build validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/domain",
         "contract": "build",
         "classification": "BROKEN",
         "evidence": "Source-bearing workspace has no declared build validation contract."
@@ -1213,13 +1206,6 @@
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/twin-contracts",
-        "contract": "build",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared build validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "packages/twin-domain",
         "contract": "build",
         "classification": "BROKEN",
@@ -1341,20 +1327,6 @@
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "apps/eda-api",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "apps/eda-portal",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "apps/forge",
         "contract": "test",
         "classification": "BROKEN",
@@ -1453,13 +1425,6 @@
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/asset-core",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "packages/auth",
         "contract": "test",
         "classification": "BROKEN",
@@ -1530,13 +1495,6 @@
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/config",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "packages/config-core",
         "contract": "test",
         "classification": "BROKEN",
@@ -1586,118 +1544,6 @@
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-artifacts",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-coverage",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-domain",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-events",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-execution",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-findings",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-knowledge",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-observability",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-parser",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-parsers",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-sdk",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-security",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-storage",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-tenancy",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-ui",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/eda-workflow",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "packages/evaluation-sdk",
         "contract": "test",
         "classification": "BROKEN",
@@ -1723,13 +1569,6 @@
         "contract": "test",
         "classification": "BROKEN",
         "evidence": "Source-bearing workspace has no declared test validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/experience",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
@@ -1817,13 +1656,6 @@
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/motion",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "packages/observability-api",
         "contract": "test",
         "classification": "BROKEN",
@@ -1842,13 +1674,6 @@
         "contract": "test",
         "classification": "BROKEN",
         "evidence": "Source-bearing workspace has no declared test validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/plugin-sdk",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
@@ -1978,13 +1803,6 @@
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/tables",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "packages/telemetry",
         "contract": "test",
         "classification": "BROKEN",
@@ -2006,13 +1824,6 @@
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/tokens",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "packages/twin-domain",
         "contract": "test",
         "classification": "BROKEN",
@@ -2024,13 +1835,6 @@
         "contract": "test",
         "classification": "BROKEN",
         "evidence": "Source-bearing workspace has no declared test validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/visualization",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
@@ -2055,52 +1859,10 @@
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/archive-api",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/archive-worker",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "services/contentops",
         "contract": "test",
         "classification": "BROKEN",
         "evidence": "Source-bearing workspace has no declared test validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/eda-execution-worker",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/eda-parser-worker",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/eda-rtl-index-worker",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/eda-temporal-worker",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
@@ -2115,13 +1877,6 @@
         "contract": "test",
         "classification": "BROKEN",
         "evidence": "Source-bearing workspace has no declared test validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/forge-api",
-        "contract": "test",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared test script can report success without meaningful validation: jest --passWithNoTests"
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
@@ -2174,13 +1929,6 @@
       }
     ],
     "typecheck": [
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "apps/platform-api",
-        "contract": "typecheck",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared typecheck script can report success without meaningful validation: exit 0"
-      },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
         "workspacePath": "packages/agent-sdk",
@@ -2516,13 +2264,6 @@
         "contract": "typecheck",
         "classification": "BROKEN",
         "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/forge-api",
-        "contract": "typecheck",
-        "classification": "FALSE-GREEN",
-        "evidence": "Declared typecheck script can report success without meaningful validation: exit 0"
       },
       {
         "code": "W0C_CLASSIFIED_DEFECT",
@@ -3290,15 +3031,7 @@
         "evidence": "Source-bearing workspace has no declared lint validation contract."
       }
     ],
-    "schema-config": [
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/db",
-        "contract": "schema-config",
-        "classification": "BROKEN",
-        "evidence": "Schema/config assets lack a declared validation contract: prisma/schema.prisma"
-      }
-    ]
+    "schema-config": []
   },
   "findings": [
     {
@@ -3318,13 +3051,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "apps/eda-api",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "apps/eda-api",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3335,13 +3061,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "apps/eda-portal",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -3363,13 +3082,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "apps/platform-api",
-      "contract": "typecheck",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared typecheck script can report success without meaningful validation: exit 0"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -3545,13 +3257,6 @@
       "contract": "typecheck",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/asset-core",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -3772,13 +3477,6 @@
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/config",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/config-core",
       "contract": "build",
       "classification": "BROKEN",
@@ -3891,13 +3589,6 @@
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/db",
-      "contract": "schema-config",
-      "classification": "BROKEN",
-      "evidence": "Schema/config assets lack a declared validation contract: prisma/schema.prisma"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/decision-intelligence-core",
       "contract": "test",
       "classification": "BROKEN",
@@ -3912,13 +3603,6 @@
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/domain",
-      "contract": "build",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/domain-graph",
       "contract": "build",
       "classification": "BROKEN",
@@ -3955,13 +3639,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/eda-artifacts",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-artifacts",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3976,13 +3653,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/eda-coverage",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-coverage",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3993,13 +3663,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-domain",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4014,13 +3677,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-events",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4035,13 +3691,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-execution",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4056,13 +3705,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-findings",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4077,13 +3719,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-knowledge",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4098,13 +3733,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-observability",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4119,13 +3747,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-parser",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4140,13 +3761,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-parsers",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4161,13 +3775,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-sdk",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4182,13 +3789,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-security",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4203,13 +3803,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-storage",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4224,13 +3817,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-tenancy",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4245,13 +3831,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-ui",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4266,13 +3845,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/eda-workflow",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4420,13 +3992,6 @@
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/experience",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4759,13 +4324,6 @@
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/motion",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/observability-api",
       "contract": "build",
       "classification": "BROKEN",
@@ -4833,13 +4391,6 @@
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/plugin-sdk",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5305,13 +4856,6 @@
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/tables",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/telemetry",
       "contract": "test",
       "classification": "BROKEN",
@@ -5375,20 +4919,6 @@
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/tokens",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/twin-contracts",
-      "contract": "build",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/twin-contracts",
       "contract": "lint",
       "classification": "BROKEN",
@@ -5421,13 +4951,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/visualization",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5495,23 +5018,9 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "services/archive-api",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/archive-api",
       "contract": "typecheck",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/archive-worker",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5530,13 +5039,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "services/eda-execution-worker",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/eda-execution-worker",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -5551,13 +5053,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "services/eda-parser-worker",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/eda-parser-worker",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -5568,13 +5063,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/eda-rtl-index-worker",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5589,13 +5077,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/eda-temporal-worker",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: vitest run --passWithNoTests"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5659,20 +5140,6 @@
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/forge-api",
-      "contract": "test",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared test script can report success without meaningful validation: jest --passWithNoTests"
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/forge-api",
-      "contract": "typecheck",
-      "classification": "FALSE-GREEN",
-      "evidence": "Declared typecheck script can report success without meaningful validation: exit 0"
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",

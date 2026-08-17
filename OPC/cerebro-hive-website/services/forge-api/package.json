@@ -9,12 +9,12 @@
     "start": "nest start",
     "start:prod": "node dist/main",
     "lint": "eslint \"src/**/*.ts\"",
-    "test": "jest --passWithNoTests",
+    "test": "jest",
     "test:watch": "jest --watch",
-    "test:break": "jest --testPathPattern='break-tests' --passWithNoTests",
+    "test:break": "jest --testPathPattern='break-tests'",
     "generate-openapi": "ts-node -P tsconfig.json scripts/generate-openapi.ts",
     "prisma:generate": "prisma generate --schema=../../packages/database/prisma/schema.prisma",
-    "typecheck": "exit 0"
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@cerebro/auth": "workspace:*",

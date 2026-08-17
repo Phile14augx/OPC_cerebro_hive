@@ -6,7 +6,6 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint .",
-    "test": "vitest run --passWithNoTests",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {},

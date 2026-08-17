@@ -6,8 +6,7 @@
     "dev": "tsx watch src/worker.ts",
     "build": "tsc",
     "start": "node dist/worker.js",
-    "lint": "eslint src/",
-    "test": "vitest run --passWithNoTests"
+    "lint": "eslint src/"
   },
   "dependencies": {
     "@cerebro/archive-contracts": "workspace:*",
