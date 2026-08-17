@@ -4,6 +4,7 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
@@ -12,9 +13,13 @@
     "@aws-sdk/client-sns": "^3.1096.0",
     "@aws-sdk/util-dynamodb": "^3.996.7",
     "@cerebro/api-client": "workspace:^",
-    "@opentelemetry/api": "^1.8.0"
+    "@opentelemetry/api": "^1.8.0",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.0",
+    "@types/aws-lambda": "^8.10.0",
+    "@types/node": "^20.0.0",
     "typescript": "^5.0.0",
     "vitest": "^3.2.4"
   }

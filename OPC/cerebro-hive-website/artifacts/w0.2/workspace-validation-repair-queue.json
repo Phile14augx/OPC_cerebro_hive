@@ -127,77 +127,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "id": "typecheck:missing-config-and-script",
-      "priority": "P1",
-      "contracts": ["typecheck"],
-      "workspaces": [
-        "packages/aiops-sdk",
-        "packages/architecture-core",
-        "packages/capability-core",
-        "packages/compliance-core",
-        "packages/config-core",
-        "packages/data-core",
-        "packages/data-governance-core",
-        "packages/domain-graph",
-        "packages/engineering-review",
-        "packages/evaluation-sdk",
-        "packages/execution-providers",
-        "packages/execution-runtime-adapters",
-        "packages/federation-core",
-        "packages/governance-api",
-        "packages/governance-core",
-        "packages/governance-sdk",
-        "packages/identity-core",
-        "packages/intelligence-core",
-        "packages/kernel-core",
-        "packages/knowledge-sdk",
-        "packages/marketplace-sdk",
-        "packages/memory-sdk",
-        "packages/observability-api",
-        "packages/ontology-sdk",
-        "packages/privacy-core",
-        "packages/prompt-sdk",
-        "packages/reasoning-sdk",
-        "packages/recommendation-api",
-        "packages/records-core",
-        "packages/resilience-core",
-        "packages/risk-core",
-        "packages/runtime-contracts",
-        "packages/runtime-core",
-        "packages/secops-core",
-        "packages/secrets-core",
-        "packages/telemetry-api",
-        "packages/telemetry-core",
-        "services/aiops-api",
-        "services/app-builder-api",
-        "services/enterprise-control-plane",
-        "services/evaluation-api",
-        "services/governance-api",
-        "services/knowledge-api",
-        "services/llm-gateway",
-        "services/memory-service",
-        "services/reasoning-service",
-        "services/swarm-runtime",
-        "services/workflow-api"
-      ],
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
-      "id": "typecheck:missing-script",
-      "priority": "P1",
-      "contracts": ["typecheck"],
-      "workspaces": [
-        "packages/agent-sdk",
-        "packages/archive-contracts",
-        "packages/event-bus",
-        "packages/plugins",
-        "packages/runtime",
-        "packages/state",
-        "services/archive-api"
-      ],
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "id": "build:rejected-exception",
       "priority": "P2",
       "contracts": ["build"],
@@ -385,37 +314,13 @@
     }
   ],
   "dag": [
-    {
-      "id": "audit-infrastructure",
-      "dependsOn": []
-    },
-    {
-      "id": "false-green-hotspots",
-      "dependsOn": ["audit-infrastructure"]
-    },
-    {
-      "id": "typecheck-contracts",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
-      "id": "test-contracts",
-      "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "id": "schema-validation",
-      "dependsOn": ["test-contracts"]
-    },
-    {
-      "id": "lint-build-cleanup",
-      "dependsOn": ["schema-validation"]
-    },
-    {
-      "id": "negative-controls",
-      "dependsOn": ["lint-build-cleanup"]
-    },
-    {
-      "id": "governance-gate-integration",
-      "dependsOn": ["negative-controls"]
-    }
+    { "id": "audit-infrastructure", "dependsOn": [] },
+    { "id": "false-green-hotspots", "dependsOn": ["audit-infrastructure"] },
+    { "id": "typecheck-contracts", "dependsOn": ["false-green-hotspots"] },
+    { "id": "test-contracts", "dependsOn": ["typecheck-contracts"] },
+    { "id": "schema-validation", "dependsOn": ["test-contracts"] },
+    { "id": "lint-build-cleanup", "dependsOn": ["schema-validation"] },
+    { "id": "negative-controls", "dependsOn": ["lint-build-cleanup"] },
+    { "id": "governance-gate-integration", "dependsOn": ["negative-controls"] }
   ]
 }

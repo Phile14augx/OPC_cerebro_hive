@@ -145,575 +145,152 @@
   ],
   "controlPlaneCount": 1,
   "inventory": [
-    {
-      "path": "apps/archive-portal",
-      "hasSource": true
-    },
-    {
-      "path": "apps/eda-api",
-      "hasSource": true
-    },
-    {
-      "path": "apps/eda-portal",
-      "hasSource": true
-    },
-    {
-      "path": "apps/forge",
-      "hasSource": true
-    },
-    {
-      "path": "apps/platform",
-      "hasSource": true
-    },
-    {
-      "path": "apps/platform-api",
-      "hasSource": true
-    },
-    {
-      "path": "apps/pulse",
-      "hasSource": true
-    },
-    {
-      "path": "apps/sphere",
-      "hasSource": true
-    },
-    {
-      "path": "apps/studio",
-      "hasSource": true
-    },
-    {
-      "path": "apps/twin-studio",
-      "hasSource": true
-    },
-    {
-      "path": "packages/agent-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/ai",
-      "hasSource": true
-    },
-    {
-      "path": "packages/ai-gateway",
-      "hasSource": true
-    },
-    {
-      "path": "packages/ai-governance-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/aiops-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/aiops-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/api-client",
-      "hasSource": true
-    },
-    {
-      "path": "packages/architecture-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/archive-contracts",
-      "hasSource": true
-    },
-    {
-      "path": "packages/asset-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/auth",
-      "hasSource": true
-    },
-    {
-      "path": "packages/capabilities/agent-builder",
-      "hasSource": true
-    },
-    {
-      "path": "packages/capabilities/deployment",
-      "hasSource": true
-    },
-    {
-      "path": "packages/capabilities/evaluation",
-      "hasSource": true
-    },
-    {
-      "path": "packages/capabilities/knowledge",
-      "hasSource": true
-    },
-    {
-      "path": "packages/capabilities/memory",
-      "hasSource": true
-    },
-    {
-      "path": "packages/capabilities/workflow",
-      "hasSource": true
-    },
-    {
-      "path": "packages/capability-contracts",
-      "hasSource": true
-    },
-    {
-      "path": "packages/capability-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/capability-registry",
-      "hasSource": true
-    },
-    {
-      "path": "packages/change-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/compliance-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/config",
-      "hasSource": true
-    },
-    {
-      "path": "packages/config-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/contracts",
-      "hasSource": true
-    },
-    {
-      "path": "packages/core-bus",
-      "hasSource": true
-    },
-    {
-      "path": "packages/data-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/data-governance-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/db",
-      "hasSource": true
-    },
-    {
-      "path": "packages/decision-intelligence-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/domain",
-      "hasSource": true
-    },
-    {
-      "path": "packages/domain-graph",
-      "hasSource": true
-    },
-    {
-      "path": "packages/domain-model",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-artifacts",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-coverage",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-domain",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-events",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-execution",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-findings",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-knowledge",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-observability",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-parser",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-parsers",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-security",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-storage",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-tenancy",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-ui",
-      "hasSource": true
-    },
-    {
-      "path": "packages/eda-workflow",
-      "hasSource": true
-    },
-    {
-      "path": "packages/engineering-review",
-      "hasSource": true
-    },
-    {
-      "path": "packages/evaluation-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/event-bus",
-      "hasSource": true
-    },
-    {
-      "path": "packages/events",
-      "hasSource": true
-    },
-    {
-      "path": "packages/execution-providers",
-      "hasSource": true
-    },
-    {
-      "path": "packages/execution-runtime-adapters",
-      "hasSource": true
-    },
-    {
-      "path": "packages/experience",
-      "hasSource": true
-    },
-    {
-      "path": "packages/federation-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/governance-api",
-      "hasSource": true
-    },
-    {
-      "path": "packages/governance-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/governance-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/hiveshield-policy",
-      "hasSource": true
-    },
-    {
-      "path": "packages/icons",
-      "hasSource": true
-    },
-    {
-      "path": "packages/icons-ai",
-      "hasSource": false
-    },
-    {
-      "path": "packages/icons-angular",
-      "hasSource": false
-    },
-    {
-      "path": "packages/icons-cli",
-      "hasSource": false
-    },
-    {
-      "path": "packages/icons-core",
-      "hasSource": false
-    },
-    {
-      "path": "packages/icons-figma",
-      "hasSource": false
-    },
-    {
-      "path": "packages/icons-react",
-      "hasSource": false
-    },
-    {
-      "path": "packages/icons-vue",
-      "hasSource": false
-    },
-    {
-      "path": "packages/icons-web",
-      "hasSource": false
-    },
-    {
-      "path": "packages/identity-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/intelligence-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/kernel-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/knowledge-graph-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/knowledge-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/marketplace-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/memory-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/motion",
-      "hasSource": true
-    },
-    {
-      "path": "packages/observability-api",
-      "hasSource": true
-    },
-    {
-      "path": "packages/ontology-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/operational-intelligence-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/plugin-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/plugins",
-      "hasSource": true
-    },
-    {
-      "path": "packages/policy",
-      "hasSource": true
-    },
-    {
-      "path": "packages/policy-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/privacy-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/prompt-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/query",
-      "hasSource": true
-    },
-    {
-      "path": "packages/reasoning-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/recommendation-api",
-      "hasSource": true
-    },
-    {
-      "path": "packages/records-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/resilience-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/risk-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/runtime",
-      "hasSource": true
-    },
-    {
-      "path": "packages/runtime-contracts",
-      "hasSource": true
-    },
-    {
-      "path": "packages/runtime-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/secops-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/secrets-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/simulation-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/state",
-      "hasSource": true
-    },
-    {
-      "path": "packages/swarm-sdk",
-      "hasSource": true
-    },
-    {
-      "path": "packages/tables",
-      "hasSource": true
-    },
-    {
-      "path": "packages/telemetry",
-      "hasSource": true
-    },
-    {
-      "path": "packages/telemetry-api",
-      "hasSource": true
-    },
-    {
-      "path": "packages/telemetry-core",
-      "hasSource": true
-    },
-    {
-      "path": "packages/tokens",
-      "hasSource": true
-    },
-    {
-      "path": "packages/twin-contracts",
-      "hasSource": true
-    },
-    {
-      "path": "packages/twin-domain",
-      "hasSource": true
-    },
-    {
-      "path": "packages/ui",
-      "hasSource": true
-    },
-    {
-      "path": "packages/visualization",
-      "hasSource": true
-    },
-    {
-      "path": "packages/workflow",
-      "hasSource": true
-    },
-    {
-      "path": "services/aiops-api",
-      "hasSource": true
-    },
-    {
-      "path": "services/app-builder-api",
-      "hasSource": true
-    },
-    {
-      "path": "services/archive-api",
-      "hasSource": true
-    },
-    {
-      "path": "services/archive-worker",
-      "hasSource": false
-    },
-    {
-      "path": "services/contentops",
-      "hasSource": true
-    },
-    {
-      "path": "services/eda-execution-worker",
-      "hasSource": true
-    },
-    {
-      "path": "services/eda-parser-worker",
-      "hasSource": true
-    },
-    {
-      "path": "services/eda-rtl-index-worker",
-      "hasSource": true
-    },
-    {
-      "path": "services/eda-temporal-worker",
-      "hasSource": true
-    },
-    {
-      "path": "services/enterprise-control-plane",
-      "hasSource": true
-    },
-    {
-      "path": "services/evaluation-api",
-      "hasSource": true
-    },
-    {
-      "path": "services/forge-api",
-      "hasSource": true
-    },
-    {
-      "path": "services/governance-api",
-      "hasSource": true
-    },
-    {
-      "path": "services/knowledge-api",
-      "hasSource": true
-    },
-    {
-      "path": "services/llm-gateway",
-      "hasSource": true
-    },
-    {
-      "path": "services/memory-service",
-      "hasSource": true
-    },
-    {
-      "path": "services/reasoning-service",
-      "hasSource": true
-    },
-    {
-      "path": "services/swarm-runtime",
-      "hasSource": true
-    },
-    {
-      "path": "services/workflow-api",
-      "hasSource": true
-    }
+    { "path": "apps/archive-portal", "hasSource": true },
+    { "path": "apps/eda-api", "hasSource": true },
+    { "path": "apps/eda-portal", "hasSource": true },
+    { "path": "apps/forge", "hasSource": true },
+    { "path": "apps/platform", "hasSource": true },
+    { "path": "apps/platform-api", "hasSource": true },
+    { "path": "apps/pulse", "hasSource": true },
+    { "path": "apps/sphere", "hasSource": true },
+    { "path": "apps/studio", "hasSource": true },
+    { "path": "apps/twin-studio", "hasSource": true },
+    { "path": "packages/agent-sdk", "hasSource": true },
+    { "path": "packages/ai", "hasSource": true },
+    { "path": "packages/ai-gateway", "hasSource": true },
+    { "path": "packages/ai-governance-core", "hasSource": true },
+    { "path": "packages/aiops-core", "hasSource": true },
+    { "path": "packages/aiops-sdk", "hasSource": true },
+    { "path": "packages/api-client", "hasSource": true },
+    { "path": "packages/architecture-core", "hasSource": true },
+    { "path": "packages/archive-contracts", "hasSource": true },
+    { "path": "packages/asset-core", "hasSource": true },
+    { "path": "packages/auth", "hasSource": true },
+    { "path": "packages/capabilities/agent-builder", "hasSource": true },
+    { "path": "packages/capabilities/deployment", "hasSource": true },
+    { "path": "packages/capabilities/evaluation", "hasSource": true },
+    { "path": "packages/capabilities/knowledge", "hasSource": true },
+    { "path": "packages/capabilities/memory", "hasSource": true },
+    { "path": "packages/capabilities/workflow", "hasSource": true },
+    { "path": "packages/capability-contracts", "hasSource": true },
+    { "path": "packages/capability-core", "hasSource": true },
+    { "path": "packages/capability-registry", "hasSource": true },
+    { "path": "packages/change-core", "hasSource": true },
+    { "path": "packages/compliance-core", "hasSource": true },
+    { "path": "packages/config", "hasSource": true },
+    { "path": "packages/config-core", "hasSource": true },
+    { "path": "packages/contracts", "hasSource": true },
+    { "path": "packages/core-bus", "hasSource": true },
+    { "path": "packages/data-core", "hasSource": true },
+    { "path": "packages/data-governance-core", "hasSource": true },
+    { "path": "packages/db", "hasSource": true },
+    { "path": "packages/decision-intelligence-core", "hasSource": true },
+    { "path": "packages/domain", "hasSource": true },
+    { "path": "packages/domain-graph", "hasSource": true },
+    { "path": "packages/domain-model", "hasSource": true },
+    { "path": "packages/eda-artifacts", "hasSource": true },
+    { "path": "packages/eda-coverage", "hasSource": true },
+    { "path": "packages/eda-domain", "hasSource": true },
+    { "path": "packages/eda-events", "hasSource": true },
+    { "path": "packages/eda-execution", "hasSource": true },
+    { "path": "packages/eda-findings", "hasSource": true },
+    { "path": "packages/eda-knowledge", "hasSource": true },
+    { "path": "packages/eda-observability", "hasSource": true },
+    { "path": "packages/eda-parser", "hasSource": true },
+    { "path": "packages/eda-parsers", "hasSource": true },
+    { "path": "packages/eda-sdk", "hasSource": true },
+    { "path": "packages/eda-security", "hasSource": true },
+    { "path": "packages/eda-storage", "hasSource": true },
+    { "path": "packages/eda-tenancy", "hasSource": true },
+    { "path": "packages/eda-ui", "hasSource": true },
+    { "path": "packages/eda-workflow", "hasSource": true },
+    { "path": "packages/engineering-review", "hasSource": true },
+    { "path": "packages/evaluation-sdk", "hasSource": true },
+    { "path": "packages/event-bus", "hasSource": true },
+    { "path": "packages/events", "hasSource": true },
+    { "path": "packages/execution-providers", "hasSource": true },
+    { "path": "packages/execution-runtime-adapters", "hasSource": true },
+    { "path": "packages/experience", "hasSource": true },
+    { "path": "packages/federation-core", "hasSource": true },
+    { "path": "packages/governance-api", "hasSource": true },
+    { "path": "packages/governance-core", "hasSource": true },
+    { "path": "packages/governance-sdk", "hasSource": true },
+    { "path": "packages/hiveshield-policy", "hasSource": true },
+    { "path": "packages/icons", "hasSource": true },
+    { "path": "packages/icons-ai", "hasSource": false },
+    { "path": "packages/icons-angular", "hasSource": false },
+    { "path": "packages/icons-cli", "hasSource": false },
+    { "path": "packages/icons-core", "hasSource": false },
+    { "path": "packages/icons-figma", "hasSource": false },
+    { "path": "packages/icons-react", "hasSource": false },
+    { "path": "packages/icons-vue", "hasSource": false },
+    { "path": "packages/icons-web", "hasSource": false },
+    { "path": "packages/identity-core", "hasSource": true },
+    { "path": "packages/intelligence-core", "hasSource": true },
+    { "path": "packages/kernel-core", "hasSource": true },
+    { "path": "packages/knowledge-graph-core", "hasSource": true },
+    { "path": "packages/knowledge-sdk", "hasSource": true },
+    { "path": "packages/marketplace-sdk", "hasSource": true },
+    { "path": "packages/memory-sdk", "hasSource": true },
+    { "path": "packages/motion", "hasSource": true },
+    { "path": "packages/observability-api", "hasSource": true },
+    { "path": "packages/ontology-sdk", "hasSource": true },
+    { "path": "packages/operational-intelligence-core", "hasSource": true },
+    { "path": "packages/plugin-sdk", "hasSource": true },
+    { "path": "packages/plugins", "hasSource": true },
+    { "path": "packages/policy", "hasSource": true },
+    { "path": "packages/policy-core", "hasSource": true },
+    { "path": "packages/privacy-core", "hasSource": true },
+    { "path": "packages/prompt-sdk", "hasSource": true },
+    { "path": "packages/query", "hasSource": true },
+    { "path": "packages/reasoning-sdk", "hasSource": true },
+    { "path": "packages/recommendation-api", "hasSource": true },
+    { "path": "packages/records-core", "hasSource": true },
+    { "path": "packages/resilience-core", "hasSource": true },
+    { "path": "packages/risk-core", "hasSource": true },
+    { "path": "packages/runtime", "hasSource": true },
+    { "path": "packages/runtime-contracts", "hasSource": true },
+    { "path": "packages/runtime-core", "hasSource": true },
+    { "path": "packages/sdk", "hasSource": true },
+    { "path": "packages/secops-core", "hasSource": true },
+    { "path": "packages/secrets-core", "hasSource": true },
+    { "path": "packages/simulation-core", "hasSource": true },
+    { "path": "packages/state", "hasSource": true },
+    { "path": "packages/swarm-sdk", "hasSource": true },
+    { "path": "packages/tables", "hasSource": true },
+    { "path": "packages/telemetry", "hasSource": true },
+    { "path": "packages/telemetry-api", "hasSource": true },
+    { "path": "packages/telemetry-core", "hasSource": true },
+    { "path": "packages/tokens", "hasSource": true },
+    { "path": "packages/twin-contracts", "hasSource": true },
+    { "path": "packages/twin-domain", "hasSource": true },
+    { "path": "packages/ui", "hasSource": true },
+    { "path": "packages/visualization", "hasSource": true },
+    { "path": "packages/workflow", "hasSource": true },
+    { "path": "services/aiops-api", "hasSource": true },
+    { "path": "services/app-builder-api", "hasSource": true },
+    { "path": "services/archive-api", "hasSource": true },
+    { "path": "services/archive-worker", "hasSource": false },
+    { "path": "services/contentops", "hasSource": true },
+    { "path": "services/eda-execution-worker", "hasSource": true },
+    { "path": "services/eda-parser-worker", "hasSource": true },
+    { "path": "services/eda-rtl-index-worker", "hasSource": true },
+    { "path": "services/eda-temporal-worker", "hasSource": true },
+    { "path": "services/enterprise-control-plane", "hasSource": true },
+    { "path": "services/evaluation-api", "hasSource": true },
+    { "path": "services/forge-api", "hasSource": true },
+    { "path": "services/governance-api", "hasSource": true },
+    { "path": "services/knowledge-api", "hasSource": true },
+    { "path": "services/llm-gateway", "hasSource": true },
+    { "path": "services/memory-service", "hasSource": true },
+    { "path": "services/reasoning-service", "hasSource": true },
+    { "path": "services/swarm-runtime", "hasSource": true },
+    { "path": "services/workflow-api", "hasSource": true }
   ],
   "classificationCounts": {
-    "REAL": 198,
+    "REAL": 253,
     "ABSENT-BY-DESIGN": 2,
-    "BROKEN": 329,
+    "BROKEN": 274,
     "PLACEHOLDER": 0,
     "FALSE-GREEN": 0,
     "NOT-APPLICABLE": 176
@@ -1928,393 +1505,7 @@
         "evidence": "Source-bearing workspace has no declared test validation contract."
       }
     ],
-    "typecheck": [
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/agent-sdk",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/aiops-sdk",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/architecture-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/archive-contracts",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/capability-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/compliance-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/config-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/data-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/data-governance-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/domain-graph",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/engineering-review",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/evaluation-sdk",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/event-bus",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/execution-providers",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/execution-runtime-adapters",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/federation-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/governance-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/governance-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/governance-sdk",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/identity-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/intelligence-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/kernel-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/knowledge-sdk",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/marketplace-sdk",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/memory-sdk",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/observability-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/ontology-sdk",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/plugins",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/privacy-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/prompt-sdk",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/reasoning-sdk",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/recommendation-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/records-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/resilience-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/risk-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/runtime",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/runtime-contracts",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/runtime-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/secops-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/secrets-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/state",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/telemetry-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "packages/telemetry-core",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/aiops-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/app-builder-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/archive-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/enterprise-control-plane",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/evaluation-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/governance-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/knowledge-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/llm-gateway",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/memory-service",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/reasoning-service",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/swarm-runtime",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      },
-      {
-        "code": "W0C_CLASSIFIED_DEFECT",
-        "workspacePath": "services/workflow-api",
-        "contract": "typecheck",
-        "classification": "BROKEN",
-        "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-      }
-    ],
+    "typecheck": [],
     "lint": [
       {
         "code": "W0C_CLASSIFIED_DEFECT",
@@ -3121,13 +2312,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/agent-sdk",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/agent-sdk",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3191,13 +2375,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/aiops-sdk",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/aiops-sdk",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3233,13 +2410,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/architecture-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/architecture-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3250,13 +2420,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/archive-contracts",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -3415,13 +2578,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/capability-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/capability-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3464,13 +2620,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/compliance-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/compliance-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3488,13 +2637,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/config-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -3548,13 +2690,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/data-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/data-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3572,13 +2707,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/data-governance-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -3614,13 +2742,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/domain-graph",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -3863,13 +2984,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/engineering-review",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/engineering-review",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3891,13 +3005,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/evaluation-sdk",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/evaluation-sdk",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3908,13 +3015,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/event-bus",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -3961,13 +3061,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/execution-providers",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/execution-providers",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -3978,13 +3071,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/execution-runtime-adapters",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4010,13 +3096,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/federation-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/federation-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4038,13 +3117,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/governance-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/governance-api",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4062,13 +3134,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/governance-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4090,13 +3155,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/governance-sdk",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4157,13 +3215,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/identity-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/identity-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4185,13 +3236,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/intelligence-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/intelligence-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4209,13 +3253,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/kernel-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4255,13 +3292,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/knowledge-sdk",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/knowledge-sdk",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4279,13 +3309,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/marketplace-sdk",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4311,13 +3334,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/memory-sdk",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/memory-sdk",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4335,13 +3351,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/observability-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4363,13 +3372,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/ontology-sdk",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4405,13 +3407,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/plugins",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4458,13 +3453,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/privacy-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/privacy-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4482,13 +3470,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/prompt-sdk",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4535,13 +3516,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/reasoning-sdk",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/reasoning-sdk",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4559,13 +3533,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/recommendation-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4591,13 +3558,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/records-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/records-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4615,13 +3575,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/resilience-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4643,13 +3596,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/risk-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4664,13 +3610,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/runtime",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4692,13 +3631,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/runtime-contracts",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4713,13 +3645,6 @@
       "contract": "build",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared build validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/runtime-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4759,13 +3684,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/secops-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/secops-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4787,13 +3705,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/secrets-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/secrets-core",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4818,13 +3729,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/state",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4878,13 +3782,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "packages/telemetry-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/telemetry-api",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -4902,13 +3799,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "packages/telemetry-core",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -4976,13 +3866,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "services/aiops-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/aiops-api",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -5004,23 +3887,9 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "services/app-builder-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/app-builder-api",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/archive-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5102,13 +3971,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "services/enterprise-control-plane",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/enterprise-control-plane",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -5126,13 +3988,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/evaluation-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5158,13 +4013,6 @@
     {
       "code": "W0C_CLASSIFIED_DEFECT",
       "workspacePath": "services/governance-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/governance-api",
       "contract": "lint",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared lint validation contract."
@@ -5182,13 +4030,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/knowledge-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5210,13 +4051,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/llm-gateway",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5238,13 +4072,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/memory-service",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5266,13 +4093,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/reasoning-service",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5294,13 +4114,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/swarm-runtime",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",
@@ -5322,13 +4135,6 @@
       "contract": "test",
       "classification": "BROKEN",
       "evidence": "Source-bearing workspace has no declared test validation contract."
-    },
-    {
-      "code": "W0C_CLASSIFIED_DEFECT",
-      "workspacePath": "services/workflow-api",
-      "contract": "typecheck",
-      "classification": "BROKEN",
-      "evidence": "Source-bearing workspace has no declared typecheck validation contract."
     },
     {
       "code": "W0C_CLASSIFIED_DEFECT",

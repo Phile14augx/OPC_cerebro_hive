@@ -1,6 +1,9 @@
 {
   "name": "@cerebro/runtime-contracts",
   "version": "1.0.0",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "main": "index.ts",
   "dependencies": {},
   "devDependencies": {

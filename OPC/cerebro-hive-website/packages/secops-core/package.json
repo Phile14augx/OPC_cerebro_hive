@@ -1,17 +1,21 @@
 {
   "name": "@cerebro/secops-core",
   "version": "1.0.0",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {
+    "@cerebro/governance-core": "workspace:*",
     "@cerebro/identity-core": "workspace:*",
+    "@cerebro/intelligence-core": "workspace:*",
     "@cerebro/policy-core": "workspace:*",
     "@cerebro/secrets-core": "workspace:*",
-    "@cerebro/governance-core": "workspace:*",
-    "@cerebro/intelligence-core": "workspace:*",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/node": "^20.0.0",
     "typescript": "^5.0.0"
   }
 }

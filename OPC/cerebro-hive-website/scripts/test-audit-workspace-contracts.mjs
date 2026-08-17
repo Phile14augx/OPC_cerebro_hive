@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 
 import {
   auditWorkspaceContracts,
@@ -377,7 +379,7 @@ test("requires every P0 test hotspot to stop tolerating zero discovered tests", 
   );
 });
 
-test("records the completed P0 tranche without weakening the remaining repair surface", () => {
+test("preserves the completed P0 tranche without reintroducing false-green contracts", () => {
   const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const manifestPath = path.join(projectRoot, "config", "workspace-validation-classification.json");
   const repairQueue = JSON.parse(
@@ -396,10 +398,10 @@ test("records the completed P0 tranche without weakening the remaining repair su
   assert.ok(auditResult, "the intentionally non-green repository must expose its audit result");
   assert.equal(auditResult.classificationCounts["FALSE-GREEN"], 0);
   assert.equal(auditResult.classificationCounts["ABSENT-BY-DESIGN"], 2);
-  assert.equal(auditResult.classificationCounts.BROKEN, 329);
+  assert.ok(auditResult.classificationCounts.BROKEN > 0);
   assert.equal(
     auditResult.findings.filter((finding) => finding.code === "W0C_CLASSIFIED_DEFECT").length,
-    329,
+    auditResult.classificationCounts.BROKEN,
   );
   assert.deepEqual(
     repairQueue.groups.filter((group) => group.priority === "P0"),
@@ -407,6 +409,231 @@ test("records the completed P0 tranche without weakening the remaining repair su
   );
   assert.equal(
     repairQueue.groups.reduce((total, group) => total + group.workspaces.length, 0),
-    329,
+    auditResult.classificationCounts.BROKEN,
   );
+});
+
+test("requires every queued P1A workspace to expose an effective package-local typecheck", () => {
+  const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const baseline = JSON.parse(
+    fs.readFileSync(
+      path.join(projectRoot, "artifacts", "w0.2", "p1a-typecheck-baseline.json"),
+      "utf8",
+    ),
+  );
+  const expectedPaths = baseline.groups.flatMap((group) => group.workspaces);
+  const inventory = generateWorkspaceInventory({ projectRoot, expectedWorkspaceCount: 141 });
+  const inventoryByPath = new Map(
+    inventory.workspaces.map((workspace) => [workspace.path, workspace]),
+  );
+  const violations = [];
+
+  assert.equal(
+    new Set(expectedPaths).size,
+    expectedPaths.length,
+    "P1A baseline paths must be unique",
+  );
+  assert.equal(
+    expectedPaths.length,
+    55,
+    "P1A baseline must retain the reviewed 55-workspace scope",
+  );
+
+  for (const workspacePath of expectedPaths) {
+    const workspace = inventoryByPath.get(workspacePath);
+    if (!workspace) {
+      violations.push(`${workspacePath}: missing from authoritative inventory`);
+      continue;
+    }
+
+    const command = workspace.contracts.typecheck;
+    if (
+      typeof command !== "string" ||
+      !/\btsc\b/.test(command) ||
+      !/(?:^|\s)(?:-p|--project)(?:\s|=)/.test(command) ||
+      !/(?:^|\s)--noEmit(?:\s|$)/.test(command)
+    ) {
+      violations.push(`${workspacePath}: missing canonical tsc project/noEmit command`);
+      continue;
+    }
+
+    const projectMatch = command.match(/(?:^|\s)(?:-p|--project)(?:\s+|=)([^\s]+)/);
+    const configPath = path.resolve(projectRoot, workspacePath, projectMatch[1]);
+    const workspaceRoot = path.resolve(projectRoot, workspacePath);
+    if (!configPath.startsWith(`${workspaceRoot}${path.sep}`) || !fs.existsSync(configPath)) {
+      violations.push(`${workspacePath}: typecheck config is not package-local or does not exist`);
+      continue;
+    }
+
+    const config = ts.readConfigFile(configPath, ts.sys.readFile);
+    if (config.error) {
+      violations.push(`${workspacePath}: TypeScript cannot parse ${path.basename(configPath)}`);
+      continue;
+    }
+    const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, path.dirname(configPath));
+    const productionFiles = parsed.fileNames.filter((file) => {
+      const relative = path.relative(workspaceRoot, file);
+      return (
+        relative &&
+        !relative.startsWith("..") &&
+        !/[\\/](?:test|tests|__tests__)[\\/]/.test(relative) &&
+        !/\.(?:test|spec)\.[cm]?[jt]sx?$/.test(relative)
+      );
+    });
+    if (productionFiles.length === 0) {
+      violations.push(`${workspacePath}: effective config includes no production source`);
+    }
+    if (workspace.semanticCandidates.some((candidate) => candidate.contract === "typecheck")) {
+      violations.push(`${workspacePath}: typecheck remains a semantic false-green candidate`);
+    }
+  }
+
+  assert.deepEqual(violations, []);
+});
+
+test("P1A package-local configs do not introduce compiler weakening", () => {
+  const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const baseline = JSON.parse(
+    fs.readFileSync(
+      path.join(projectRoot, "artifacts", "w0.2", "p1a-typecheck-baseline.json"),
+      "utf8",
+    ),
+  );
+  const newConfigWorkspaces = baseline.groups.find(
+    (group) => group.id === "typecheck:missing-config-and-script",
+  )?.workspaces;
+  const violations = [];
+
+  assert.equal(newConfigWorkspaces?.length, 48);
+
+  for (const workspacePath of newConfigWorkspaces) {
+    const configPath = path.join(projectRoot, workspacePath, "tsconfig.json");
+    const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+    const options = config.compilerOptions ?? {};
+
+    if (options.skipLibCheck === true) {
+      violations.push(`${workspacePath}: local skipLibCheck=true`);
+    }
+    if (options.strict === false) {
+      violations.push(`${workspacePath}: local strict=false`);
+    }
+    if (options.noEmitOnError === false) {
+      violations.push(`${workspacePath}: local noEmitOnError=false`);
+    }
+  }
+
+  assert.deepEqual(violations, []);
+});
+
+test("a repaired P1A package typecheck fails on a semantic TypeScript error", () => {
+  const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const workspacePath = "packages/architecture-core";
+  const packageJson = JSON.parse(
+    fs.readFileSync(path.join(projectRoot, workspacePath, "package.json"), "utf8"),
+  );
+  const negativeSource = path.join(
+    projectRoot,
+    workspacePath,
+    "src",
+    "__w0_2_negative_typecheck__.ts",
+  );
+
+  assert.equal(packageJson.scripts.typecheck, "tsc -p tsconfig.json --noEmit");
+  assert.equal(fs.existsSync(negativeSource), false, "negative fixture must not overwrite source");
+
+  let result;
+  try {
+    fs.writeFileSync(negativeSource, "export const deliberatelyInvalid: string = 42;\n", "utf8");
+    result = spawnSync(
+      process.platform === "win32" ? "pnpm.cmd" : "pnpm",
+      ["--filter", packageJson.name, "run", "typecheck"],
+      {
+        cwd: projectRoot,
+        encoding: "utf8",
+        env: { ...process.env, NO_COLOR: "1" },
+        shell: process.platform === "win32",
+        windowsHide: true,
+      },
+    );
+  } finally {
+    fs.rmSync(negativeSource, { force: true });
+  }
+
+  assert.notEqual(result.status, 0, "the declared package typecheck must reject invalid source");
+  assert.match(`${result.stdout}\n${result.stderr}`, /TS2322/);
+});
+
+test("records the completed P1A tranche and preserves reviewed build decisions", () => {
+  const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const manifestPath = path.join(projectRoot, "config", "workspace-validation-classification.json");
+  const repairQueue = JSON.parse(
+    fs.readFileSync(
+      path.join(projectRoot, "artifacts", "w0.2", "workspace-validation-repair-queue.json"),
+      "utf8",
+    ),
+  );
+  let auditResult;
+  try {
+    auditWorkspaceContracts({ projectRoot, manifestPath, expectedWorkspaceCount: 141 });
+  } catch (error) {
+    auditResult = error.auditResult;
+  }
+
+  assert.ok(auditResult, "the real repository audit must remain intentionally non-green");
+  assert.equal(auditResult.classificationCounts["FALSE-GREEN"], 0);
+  assert.equal(auditResult.classificationCounts["ABSENT-BY-DESIGN"], 2);
+  assert.equal(auditResult.classificationCounts.BROKEN, 274);
+  assert.equal(
+    auditResult.findings.filter((finding) => finding.code === "W0C_CLASSIFIED_DEFECT").length,
+    274,
+  );
+  assert.deepEqual(
+    repairQueue.groups.filter((group) => group.id.startsWith("typecheck:")),
+    [],
+  );
+  assert.equal(
+    repairQueue.groups.reduce((total, group) => total + group.workspaces.length, 0),
+    274,
+  );
+  assert.equal(
+    repairQueue.groups.find((group) => group.id === "build:rejected-exception")?.workspaces.length,
+    68,
+  );
+});
+
+test("the P1A artifact updater is idempotent after the tranche is applied", () => {
+  const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const generatedArtifacts = [
+    "artifacts/w0.2/workspace-validation-findings.json",
+    "artifacts/w0.2/workspace-validation-inventory.json",
+    "artifacts/w0.2/workspace-validation-repair-queue.json",
+    "artifacts/w0.2/workspace-validation-triage.json",
+    "config/workspace-validation-classification.json",
+  ];
+  const result = spawnSync(process.execPath, ["scripts/update-task3-p1a-artifacts.mjs"], {
+    cwd: projectRoot,
+    encoding: "utf8",
+    env: { ...process.env, NO_COLOR: "1" },
+    windowsHide: true,
+  });
+
+  assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+  assert.match(result.stdout, /"repairSurface": 274/);
+
+  const prettier = spawnSync(
+    path.join(
+      projectRoot,
+      "node_modules",
+      ".bin",
+      process.platform === "win32" ? "prettier.cmd" : "prettier",
+    ),
+    ["--check", ...generatedArtifacts],
+    {
+      cwd: projectRoot,
+      encoding: "utf8",
+      shell: process.platform === "win32",
+      windowsHide: true,
+    },
+  );
+  assert.equal(prettier.status, 0, `${prettier.stdout}\n${prettier.stderr}`);
 });
