@@ -1,6 +1,9 @@
 {
   "name": "@cerebro/recommendation-api",
   "version": "0.1.0",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "private": true,
   "main": "src/index.ts",
   "dependencies": {

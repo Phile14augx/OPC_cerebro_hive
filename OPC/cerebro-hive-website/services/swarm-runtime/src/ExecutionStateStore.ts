@@ -1,12 +1,11 @@
-
 // Mock PostgreSQL backed state store
 export class ExecutionStateStore {
   private states = new Map<string, any>();
-  
+
   async saveContext(taskId: string, context: any) {
     this.states.set(taskId, context);
   }
-  
+
   async getContext(taskId: string) {
     return this.states.get(taskId) || {};
   }
@@ -18,5 +17,9 @@ export class ArtifactStore {
     const ref = `art-${Date.now()}`;
     console.log(`[ArtifactStore] Saved large payload to object storage. Ref: ${ref}`);
     return ref;
+  }
+
+  async moveToDeadLetterQueue(taskId: string, error: Error): Promise<void> {
+    console.error(`[ArtifactStore] Task ${taskId} moved to dead-letter queue: ${error.message}`);
   }
 }

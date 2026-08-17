@@ -1,5 +1,4 @@
-
-import { ExecutionProfile } from '@cerebro/swarm-sdk';
+import { ExecutionProfile, TaskNode } from "@cerebro/swarm-sdk";
 
 export class WorkerPool {
   private availableCpu = 1000; // Mock units
@@ -10,7 +9,7 @@ export class WorkerPool {
   }
 
   allocate(profile: ExecutionProfile) {
-    if (!this.hasCapacity(profile)) throw new Error('Insufficient Capacity');
+    if (!this.hasCapacity(profile)) throw new Error("Insufficient Capacity");
     this.availableCpu -= profile.cpu;
     this.availableMemory -= profile.memory;
   }
@@ -18,5 +17,16 @@ export class WorkerPool {
   release(profile: ExecutionProfile) {
     this.availableCpu += profile.cpu;
     this.availableMemory += profile.memory;
+  }
+
+  async dispatchToWorker(
+    node: TaskNode,
+    context: unknown,
+    cancelToken: { cancelled: boolean },
+  ): Promise<{ taskId: string; context: unknown }> {
+    if (cancelToken.cancelled) {
+      throw new Error("Cancelled");
+    }
+    return { taskId: node.id, context };
   }
 }

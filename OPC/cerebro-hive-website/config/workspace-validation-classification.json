@@ -1,11 +1,6 @@
 {
   "baselineWorkspaceCount": 141,
-  "controlPlane": [
-    {
-      "path": ".",
-      "classification": "CONTROL-PLANE"
-    }
-  ],
+  "controlPlane": [{ "path": ".", "classification": "CONTROL-PLANE" }],
   "workspaces": [
     {
       "path": "apps/archive-portal",
@@ -127,11 +122,7 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint",
-          "evidence": "Declared package script: eslint"
-        },
+        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -160,11 +151,7 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint",
-          "evidence": "Declared package script: eslint"
-        },
+        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -178,11 +165,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -226,11 +209,7 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint",
-          "evidence": "Declared package script: eslint"
-        },
+        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -259,11 +238,7 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint",
-          "evidence": "Declared package script: eslint"
-        },
+        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -292,11 +267,7 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint",
-          "evidence": "Declared package script: eslint"
-        },
+        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -325,11 +296,7 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint",
-          "evidence": "Declared package script: eslint"
-        },
+        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -343,20 +310,16 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -376,11 +339,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -409,11 +368,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -442,11 +397,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -475,11 +426,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -519,9 +466,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -541,11 +488,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -585,9 +528,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -607,20 +550,16 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "REAL",
@@ -640,11 +579,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -673,11 +608,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -772,11 +703,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -838,11 +765,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -948,9 +871,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -1003,11 +926,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -1047,9 +966,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -1069,11 +988,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -1084,11 +999,7 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint .",
-          "evidence": "Declared package script: eslint ."
-        },
+        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -1113,9 +1024,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -1135,11 +1046,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -1212,9 +1119,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -1245,9 +1152,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -1300,11 +1207,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -1388,9 +1291,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -1410,11 +1313,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -1982,9 +1881,9 @@
           "evidence": "Declared package script: vitest run"
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2015,9 +1914,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2037,20 +1936,16 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2114,9 +2009,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2147,9 +2042,9 @@
           "evidence": "Declared package script: vitest run"
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2169,11 +2064,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -2184,11 +2075,7 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint .",
-          "evidence": "Declared package script: eslint ."
-        },
+        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -2213,9 +2100,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2246,9 +2133,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2279,9 +2166,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2312,9 +2199,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2675,9 +2562,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2708,9 +2595,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2741,9 +2628,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2763,11 +2650,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -2807,9 +2690,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2840,9 +2723,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2873,9 +2756,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2895,11 +2778,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -2910,11 +2789,7 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint .",
-          "evidence": "Declared package script: eslint ."
-        },
+        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -2939,9 +2814,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2972,9 +2847,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -2994,11 +2869,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3027,11 +2898,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -3042,11 +2909,7 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint .",
-          "evidence": "Declared package script: eslint ."
-        },
+        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -3071,9 +2934,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3093,11 +2956,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3170,9 +3029,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3203,9 +3062,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3269,9 +3128,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3302,9 +3161,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3335,9 +3194,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3368,9 +3227,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3401,9 +3260,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3423,20 +3282,16 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3467,9 +3322,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3500,9 +3355,9 @@
           "evidence": "Declared package script: vitest run"
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3522,11 +3377,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3566,9 +3417,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3599,9 +3450,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3621,11 +3472,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3654,20 +3501,16 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3720,11 +3563,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -3735,11 +3574,7 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint .",
-          "evidence": "Declared package script: eslint ."
-        },
+        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -3753,11 +3588,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3797,9 +3628,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3830,9 +3661,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -3867,11 +3698,7 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint .",
-          "evidence": "Declared package script: eslint ."
-        },
+        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -3962,11 +3789,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3995,11 +3818,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -4010,11 +3829,7 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": {
-          "classification": "REAL",
-          "command": "eslint .",
-          "evidence": "Declared package script: eslint ."
-        },
+        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -4028,11 +3843,7 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -4072,9 +3883,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -4105,9 +3916,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -4127,20 +3938,16 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
           "evidence": "Task 3B verified test contract with discovered tests: vitest run"
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "REAL",
@@ -4160,11 +3967,7 @@
       "hasSource": false,
       "semanticCandidates": [],
       "contracts": {
-        "build": {
-          "classification": "REAL",
-          "command": "tsc",
-          "evidence": "Declared package script: tsc"
-        },
+        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -4369,9 +4172,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -4402,9 +4205,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -4468,9 +4271,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -4501,9 +4304,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -4534,9 +4337,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -4567,9 +4370,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -4600,9 +4403,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -4633,9 +4436,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",
@@ -4666,9 +4469,9 @@
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared typecheck validation contract."
+          "classification": "REAL",
+          "command": "tsc -p tsconfig.json --noEmit",
+          "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
           "classification": "BROKEN",

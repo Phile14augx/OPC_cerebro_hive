@@ -1,6 +1,6 @@
-import { TaskDAG, TaskNode, emitSwarmEvent } from '@cerebro/swarm-sdk';
-import { ExecutionStateStore, ArtifactStore } from './ExecutionStateStore';
-import { WorkerPool } from './WorkerPool';
+import { TaskDAG, TaskNode, TaskStatus, emitSwarmEvent } from "@cerebro/swarm-sdk";
+import { ArtifactStore, ExecutionStateStore } from "./ExecutionStateStore";
+import { WorkerPool } from "./WorkerPool";
 
 export interface ExecutionProvider {
   execute(node: TaskNode, context: any, cancelToken: { cancelled: boolean }): Promise<any>;
@@ -18,11 +18,11 @@ export class ExecutionEngine {
   private inDegree = new Map<string, number>();
   private adjacencyList = new Map<string, string[]>(); // node -> children
   private readyQueue: TaskNode[] = [];
-  
+
   private workerPool = new WorkerPool();
   private stateStore = new ExecutionStateStore();
   private artifactStore = new ArtifactStore();
-  
+
   private activeTasks = new Set<string>();
   private cancelTokens = new Map<string, { cancelled: boolean }>();
   private dagMap = new Map<string, TaskNode>();
@@ -31,29 +31,29 @@ export class ExecutionEngine {
   constructor(private provider: ExecutionProvider) {}
 
   async run(dag: TaskDAG) {
-    emitSwarmEvent('WORKFLOW_STARTED', { dagId: dag.id });
+    emitSwarmEvent("WORKFLOW_STARTED", { dagId: dag.id });
     this.buildGraph(dag);
-    
+
     // Initial Dispatch
     this.dispatchLoop();
   }
 
   private buildGraph(dag: TaskDAG) {
-    dag.nodes.forEach(n => {
-      n.status = 'PENDING';
+    dag.nodes.forEach((n) => {
+      n.status = "PENDING";
       this.inDegree.set(n.id, 0);
       this.adjacencyList.set(n.id, []);
       this.dagMap.set(n.id, n);
     });
 
-    dag.edges.forEach(e => {
+    dag.edges.forEach((e) => {
       this.adjacencyList.get(e.from)!.push(e.to);
       this.inDegree.set(e.to, this.inDegree.get(e.to)! + 1);
     });
 
-    dag.nodes.forEach(n => {
+    dag.nodes.forEach((n) => {
       if (this.inDegree.get(n.id) === 0) {
-        this.transitionState(n, 'READY');
+        this.transitionState(n, "READY");
       }
     });
   }
@@ -68,7 +68,7 @@ export class ExecutionEngine {
       if (this.workerPool.hasCapacity(node.profile)) {
         this.readyQueue.splice(i, 1);
         i--; // Adjust index
-        
+
         this.workerPool.allocate(node.profile);
         this.activeTasks.add(node.id);
         this.executeNode(node);
@@ -77,23 +77,23 @@ export class ExecutionEngine {
   }
 
   private async executeNode(node: TaskNode) {
-    this.transitionState(node, 'RUNNING');
-    
+    this.transitionState(node, "RUNNING");
+
     const cancelToken = { cancelled: false };
     this.cancelTokens.set(node.id, cancelToken);
 
     try {
       const context = await this.resolveContext(node);
       const result = await this.provider.execute(node, context, cancelToken);
-      
-      const artifactRef = await this.artifactStore.saveArtifact(result);
-      await this.stateStore.saveContext(node.id, { artifactRef, summary: 'Task completed' });
 
-      this.transitionState(node, 'COMPLETED');
+      const artifactRef = await this.artifactStore.saveArtifact(result);
+      await this.stateStore.saveContext(node.id, { artifactRef, summary: "Task completed" });
+
+      this.transitionState(node, "COMPLETED");
       this.handleTaskCompletion(node);
     } catch (err: any) {
-      if (err.message.includes('Cancelled')) {
-        this.transitionState(node, 'CANCELLED');
+      if (err.message.includes("Cancelled")) {
+        this.transitionState(node, "CANCELLED");
       } else {
         await this.handleTaskError(node, err);
       }
@@ -106,16 +106,16 @@ export class ExecutionEngine {
 
   private async handleTaskError(node: TaskNode, err: Error) {
     const retries = this.retryCounts.get(node.id) || 0;
-    const maxRetries = node.profile.retryLimit || 3;
+    const maxRetries = node.profile.retryPolicy.maxAttempts;
 
-    if (retries < maxRetries && err.name !== 'FatalError') {
+    if (retries < maxRetries && err.name !== "FatalError") {
       this.retryCounts.set(node.id, retries + 1);
       const backoff = Math.pow(2, retries) * 1000;
-      await new Promise(resolve => setTimeout(resolve, backoff));
-      this.transitionState(node, 'READY');
+      await new Promise((resolve) => setTimeout(resolve, backoff));
+      this.transitionState(node, "READY");
     } else {
       await this.artifactStore.moveToDeadLetterQueue(node.id, err);
-      this.transitionState(node, 'FAILED');
+      this.transitionState(node, "FAILED");
       this.handleTaskFailure(node);
     }
   }
@@ -134,11 +134,11 @@ export class ExecutionEngine {
     for (const childId of children) {
       const currentInDegree = this.inDegree.get(childId)! - 1;
       this.inDegree.set(childId, currentInDegree);
-      
+
       if (currentInDegree === 0) {
         const childNode = this.dagMap.get(childId)!;
-        if (childNode.status === 'PENDING') {
-          this.transitionState(childNode, 'READY');
+        if (childNode.status === "PENDING") {
+          this.transitionState(childNode, "READY");
         }
       }
     }
@@ -148,8 +148,8 @@ export class ExecutionEngine {
     const children = this.adjacencyList.get(node.id) || [];
     for (const childId of children) {
       const childNode = this.dagMap.get(childId)!;
-      if (childNode.status === 'PENDING') {
-        this.transitionState(childNode, 'SKIPPED');
+      if (childNode.status === "PENDING") {
+        this.transitionState(childNode, "SKIPPED");
         this.handleTaskFailure(childNode);
       }
     }
@@ -158,14 +158,14 @@ export class ExecutionEngine {
   private transitionState(node: TaskNode, newState: TaskStatus) {
     node.status = newState;
     emitSwarmEvent(`NODE_${newState}`, { taskId: node.id });
-    
-    if (newState === 'READY') {
+
+    if (newState === "READY") {
       this.readyQueue.push(node);
     }
   }
 
   cancelWorkflow() {
-    this.cancelTokens.forEach(t => t.cancelled = true);
-    emitSwarmEvent('WORKFLOW_FAILED', { reason: 'Cancelled by operator' });
+    this.cancelTokens.forEach((t) => (t.cancelled = true));
+    emitSwarmEvent("WORKFLOW_FAILED", { reason: "Cancelled by operator" });
   }
 }

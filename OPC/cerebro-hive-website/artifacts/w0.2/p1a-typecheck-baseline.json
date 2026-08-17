@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "75eb5b1d2a496ee0454a873e901e3d89accc9f46",
+  "sourceArtifact": "artifacts/w0.2/workspace-validation-repair-queue.json",
+  "groups": [
+    {
+      "id": "typecheck:missing-config-and-script",
+      "workspaces": [
+        "packages/aiops-sdk",
+        "packages/architecture-core",
+        "packages/capability-core",
+        "packages/compliance-core",
+        "packages/config-core",
+        "packages/data-core",
+        "packages/data-governance-core",
+        "packages/domain-graph",
+        "packages/engineering-review",
+        "packages/evaluation-sdk",
+        "packages/execution-providers",
+        "packages/execution-runtime-adapters",
+        "packages/federation-core",
+        "packages/governance-api",
+        "packages/governance-core",
+        "packages/governance-sdk",
+        "packages/identity-core",
+        "packages/intelligence-core",
+        "packages/kernel-core",
+        "packages/knowledge-sdk",
+        "packages/marketplace-sdk",
+        "packages/memory-sdk",
+        "packages/observability-api",
+        "packages/ontology-sdk",
+        "packages/privacy-core",
+        "packages/prompt-sdk",
+        "packages/reasoning-sdk",
+        "packages/recommendation-api",
+        "packages/records-core",
+        "packages/resilience-core",
+        "packages/risk-core",
+        "packages/runtime-contracts",
+        "packages/runtime-core",
+        "packages/secops-core",
+        "packages/secrets-core",
+        "packages/telemetry-api",
+        "packages/telemetry-core",
+        "services/aiops-api",
+        "services/app-builder-api",
+        "services/enterprise-control-plane",
+        "services/evaluation-api",
+        "services/governance-api",
+        "services/knowledge-api",
+        "services/llm-gateway",
+        "services/memory-service",
+        "services/reasoning-service",
+        "services/swarm-runtime",
+        "services/workflow-api"
+      ]
+    },
+    {
+      "id": "typecheck:missing-script",
+      "workspaces": [
+        "packages/agent-sdk",
+        "packages/archive-contracts",
+        "packages/event-bus",
+        "packages/plugins",
+        "packages/runtime",
+        "packages/state",
+        "services/archive-api"
+      ]
+    }
+  ]
+}

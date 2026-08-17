@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 export interface ConfigLoader {
   load(): Record<string, any>;
   get<T>(key: string): T;
@@ -37,6 +35,10 @@ export class ConfigManager {
     this.loader = loader || new EnvironmentConfigLoader();
   }
 
+  load(): Record<string, any> {
+    return this.loader.load();
+  }
+
   get(key: string, defaultValue?: string): string {
     try {
       return this.loader.get<string>(key);
@@ -47,7 +49,7 @@ export class ConfigManager {
   }
 
   getFeatureFlag(flag: string): boolean {
-    const val = this.get(`FEATURE_${flag.toUpperCase()}`, 'false');
-    return val === 'true' || val === '1';
+    const val = this.get(`FEATURE_${flag.toUpperCase()}`, "false");
+    return val === "true" || val === "1";
   }
 }

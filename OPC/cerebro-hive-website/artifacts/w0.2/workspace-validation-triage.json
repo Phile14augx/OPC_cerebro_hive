@@ -210,27 +210,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/agent-sdk",
-      "packageName": "@cerebro/agent-sdk",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": [
-        "4 source files",
-        "0 test files",
-        "tsconfig present",
-        "TypeScript source requires compiler validation"
-      ],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/ai",
       "packageName": "@cerebro/ai",
       "sourceBearing": true,
@@ -388,22 +367,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/aiops-sdk",
-      "packageName": "@cerebro/aiops-sdk",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/api-client",
       "packageName": "@cerebro/api-client",
       "sourceBearing": true,
@@ -497,22 +460,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/architecture-core",
-      "packageName": "@cerebro/architecture-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["6 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/archive-contracts",
       "packageName": "@cerebro/archive-contracts",
       "sourceBearing": true,
@@ -527,27 +474,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/archive-contracts",
-      "packageName": "@cerebro/archive-contracts",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": [
-        "1 source files",
-        "0 test files",
-        "tsconfig present",
-        "TypeScript source requires compiler validation"
-      ],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/asset-core",
@@ -996,22 +922,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/capability-core",
-      "packageName": "@cerebro/capability-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["1 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/capability-registry",
       "packageName": "@cerebro/capability-registry",
       "sourceBearing": true,
@@ -1134,22 +1044,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/compliance-core",
-      "packageName": "@cerebro/compliance-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["7 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/config-core",
       "packageName": "@cerebro/config-core",
       "sourceBearing": true,
@@ -1209,22 +1103,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/config-core",
-      "packageName": "@cerebro/config-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["1 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/contracts",
@@ -1365,22 +1243,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/data-core",
-      "packageName": "@cerebro/data-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["4 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/data-governance-core",
       "packageName": "@cerebro/data-governance-core",
       "sourceBearing": true,
@@ -1440,22 +1302,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/data-governance-core",
-      "packageName": "@cerebro/data-governance-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["9 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/decision-intelligence-core",
@@ -1578,22 +1424,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/domain-graph",
-      "packageName": "@cerebro/domain-graph",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["1 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/eda-artifacts",
@@ -2361,22 +2191,6 @@
       "dependsOn": ["test-contracts", "schema-validation"]
     },
     {
-      "workspacePath": "packages/engineering-review",
-      "packageName": "@cerebro/engineering-review",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["66 source files", "10 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/evaluation-sdk",
       "packageName": "@cerebro/evaluation-sdk",
       "sourceBearing": true,
@@ -2438,22 +2252,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/evaluation-sdk",
-      "packageName": "@cerebro/evaluation-sdk",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/event-bus",
       "packageName": "@cerebro/event-bus",
       "sourceBearing": true,
@@ -2484,27 +2282,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/event-bus",
-      "packageName": "@cerebro/event-bus",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": [
-        "2 source files",
-        "0 test files",
-        "tsconfig present",
-        "TypeScript source requires compiler validation"
-      ],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/events",
@@ -2629,22 +2406,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/execution-providers",
-      "packageName": "@cerebro/execution-providers",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["5 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/execution-runtime-adapters",
       "packageName": "@cerebro/execution-runtime-adapters",
       "sourceBearing": true,
@@ -2688,22 +2449,6 @@
       "priority": "P2",
       "repairGroup": "lint:missing-contract",
       "dependsOn": ["test-contracts", "schema-validation"]
-    },
-    {
-      "workspacePath": "packages/execution-runtime-adapters",
-      "packageName": "@cerebro/execution-runtime-adapters",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["9 source files", "2 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/federation-core",
@@ -2767,22 +2512,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/federation-core",
-      "packageName": "@cerebro/federation-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["7 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/governance-api",
       "packageName": "@cerebro/governance-api",
       "sourceBearing": true,
@@ -2842,22 +2571,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/governance-api",
-      "packageName": "@cerebro/governance-api",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["5 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/governance-core",
@@ -2921,22 +2634,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/governance-core",
-      "packageName": "@cerebro/governance-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["8 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/governance-sdk",
       "packageName": "@cerebro/governance-sdk",
       "sourceBearing": true,
@@ -2996,22 +2693,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/governance-sdk",
-      "packageName": "@cerebro/governance-sdk",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/hiveshield-policy",
@@ -3181,22 +2862,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/identity-core",
-      "packageName": "@cerebro/identity-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["10 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/intelligence-core",
       "packageName": "@cerebro/intelligence-core",
       "sourceBearing": true,
@@ -3258,22 +2923,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/intelligence-core",
-      "packageName": "@cerebro/intelligence-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["8 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/kernel-core",
       "packageName": "@cerebro/kernel-core",
       "sourceBearing": true,
@@ -3333,22 +2982,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/kernel-core",
-      "packageName": "@cerebro/kernel-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/knowledge-graph-core",
@@ -3444,22 +3077,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/knowledge-sdk",
-      "packageName": "@cerebro/knowledge-sdk",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["3 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/marketplace-sdk",
       "packageName": "@cerebro/marketplace-sdk",
       "sourceBearing": true,
@@ -3519,22 +3136,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/marketplace-sdk",
-      "packageName": "@cerebro/marketplace-sdk",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/memory-sdk",
@@ -3598,22 +3199,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/memory-sdk",
-      "packageName": "@cerebro/memory-sdk",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/observability-api",
       "packageName": "@cerebro/observability-api",
       "sourceBearing": true,
@@ -3675,22 +3260,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/observability-api",
-      "packageName": "@cerebro/observability-api",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["5 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/ontology-sdk",
       "packageName": "@cerebro/ontology-sdk",
       "sourceBearing": true,
@@ -3750,22 +3319,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/ontology-sdk",
-      "packageName": "@cerebro/ontology-sdk",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/operational-intelligence-core",
@@ -3859,27 +3412,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/plugins",
-      "packageName": "@cerebro/plugins",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": [
-        "6 source files",
-        "0 test files",
-        "tsconfig present",
-        "TypeScript source requires compiler validation"
-      ],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/policy",
@@ -4004,22 +3536,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/privacy-core",
-      "packageName": "@cerebro/privacy-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["7 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/prompt-sdk",
       "packageName": "@cerebro/prompt-sdk",
       "sourceBearing": true,
@@ -4079,22 +3595,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/prompt-sdk",
-      "packageName": "@cerebro/prompt-sdk",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/query",
@@ -4219,22 +3719,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/reasoning-sdk",
-      "packageName": "@cerebro/reasoning-sdk",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/recommendation-api",
       "packageName": "@cerebro/recommendation-api",
       "sourceBearing": true,
@@ -4294,22 +3778,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/recommendation-api",
-      "packageName": "@cerebro/recommendation-api",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["5 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/records-core",
@@ -4373,22 +3841,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/records-core",
-      "packageName": "@cerebro/records-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["6 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/resilience-core",
       "packageName": "@cerebro/resilience-core",
       "sourceBearing": true,
@@ -4448,22 +3900,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/resilience-core",
-      "packageName": "@cerebro/resilience-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["7 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/risk-core",
@@ -4527,22 +3963,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/risk-core",
-      "packageName": "@cerebro/risk-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["8 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/runtime",
       "packageName": "@cerebro/runtime",
       "sourceBearing": true,
@@ -4573,27 +3993,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/runtime",
-      "packageName": "@cerebro/runtime",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": [
-        "3 source files",
-        "0 test files",
-        "tsconfig present",
-        "TypeScript source requires compiler validation"
-      ],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/runtime-contracts",
@@ -4657,22 +4056,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/runtime-contracts",
-      "packageName": "@cerebro/runtime-contracts",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["6 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/runtime-core",
       "packageName": "@cerebro/runtime-core",
       "sourceBearing": true,
@@ -4716,22 +4099,6 @@
       "priority": "P2",
       "repairGroup": "lint:missing-contract",
       "dependsOn": ["test-contracts", "schema-validation"]
-    },
-    {
-      "workspacePath": "packages/runtime-core",
-      "packageName": "@cerebro/runtime-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["79 source files", "23 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/sdk",
@@ -4827,22 +4194,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/secops-core",
-      "packageName": "@cerebro/secops-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["6 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/secrets-core",
       "packageName": "@cerebro/secrets-core",
       "sourceBearing": true,
@@ -4904,22 +4255,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/secrets-core",
-      "packageName": "@cerebro/secrets-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["8 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/simulation-core",
       "packageName": "@cerebro/simulation-core",
       "sourceBearing": true,
@@ -4982,27 +4317,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/state",
-      "packageName": "@cerebro/state",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": [
-        "2 source files",
-        "0 test files",
-        "tsconfig present",
-        "TypeScript source requires compiler validation"
-      ],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/swarm-sdk",
@@ -5143,22 +4457,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "packages/telemetry-api",
-      "packageName": "@cerebro/telemetry-api",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["5 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "packages/telemetry-core",
       "packageName": "@cerebro/telemetry-core",
       "sourceBearing": true,
@@ -5218,22 +4516,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "packages/telemetry-core",
-      "packageName": "@cerebro/telemetry-core",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "packages/twin-contracts",
@@ -5422,22 +4704,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "services/aiops-api",
-      "packageName": "@cerebro/aiops-api",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "services/app-builder-api",
       "packageName": "@cerebro/app-builder-api",
       "sourceBearing": true,
@@ -5484,43 +4750,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "services/app-builder-api",
-      "packageName": "@cerebro/app-builder-api",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["7 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
-      "workspacePath": "services/archive-api",
-      "packageName": "@cerebro/archive-api",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": [
-        "7 source files",
-        "0 test files",
-        "tsconfig present",
-        "TypeScript source requires compiler validation"
-      ],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "services/contentops",
@@ -5715,22 +4944,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "services/enterprise-control-plane",
-      "packageName": "@cerebro/enterprise-control-plane",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["7 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "services/evaluation-api",
       "packageName": "@cerebro/evaluation-api",
       "sourceBearing": true,
@@ -5777,22 +4990,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "services/evaluation-api",
-      "packageName": "@cerebro/evaluation-api",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "services/governance-api",
@@ -5843,22 +5040,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "services/governance-api",
-      "packageName": "@cerebro/governance-policy-service",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "services/knowledge-api",
       "packageName": "@cerebro/knowledge-api",
       "sourceBearing": true,
@@ -5905,22 +5086,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "services/knowledge-api",
-      "packageName": "@cerebro/knowledge-api",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["2 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "services/llm-gateway",
@@ -5969,22 +5134,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "services/llm-gateway",
-      "packageName": "@cerebro/llm-gateway",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["3 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "services/memory-service",
@@ -6035,22 +5184,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "services/memory-service",
-      "packageName": "@cerebro/memory-service",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["10 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "services/reasoning-service",
       "packageName": "@cerebro/reasoning-service",
       "sourceBearing": true,
@@ -6097,22 +5230,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "services/reasoning-service",
-      "packageName": "@cerebro/reasoning-service",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["3 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     },
     {
       "workspacePath": "services/swarm-runtime",
@@ -6163,22 +5280,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "workspacePath": "services/swarm-runtime",
-      "packageName": "@cerebro/swarm-runtime",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["15 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "workspacePath": "services/workflow-api",
       "packageName": "@cerebro/workflow-api",
       "sourceBearing": true,
@@ -6225,22 +5326,6 @@
       "priority": "P1",
       "repairGroup": "test:missing-suite",
       "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "workspacePath": "services/workflow-api",
-      "packageName": "@cerebro/workflow-api",
-      "sourceBearing": true,
-      "contract": "typecheck",
-      "originalClassification": "BROKEN",
-      "currentCommandOrState": "MISSING",
-      "whyDefective": "Source-bearing workspace has no declared typecheck validation contract.",
-      "evidence": ["3 source files", "0 test files", "no tsconfig", "TypeScript source requires compiler validation"],
-      "needsContract": true,
-      "semanticDisposition": "REPAIR",
-      "proposedDisposition": "Add a real TypeScript typecheck covering production source.",
-      "priority": "P1",
-      "repairGroup": "typecheck:missing-config-and-script",
-      "dependsOn": ["false-green-hotspots"]
     }
   ],
   "exceptions": [
@@ -6432,77 +5517,6 @@
       "dependsOn": ["typecheck-contracts"]
     },
     {
-      "id": "typecheck:missing-config-and-script",
-      "priority": "P1",
-      "contracts": ["typecheck"],
-      "workspaces": [
-        "packages/aiops-sdk",
-        "packages/architecture-core",
-        "packages/capability-core",
-        "packages/compliance-core",
-        "packages/config-core",
-        "packages/data-core",
-        "packages/data-governance-core",
-        "packages/domain-graph",
-        "packages/engineering-review",
-        "packages/evaluation-sdk",
-        "packages/execution-providers",
-        "packages/execution-runtime-adapters",
-        "packages/federation-core",
-        "packages/governance-api",
-        "packages/governance-core",
-        "packages/governance-sdk",
-        "packages/identity-core",
-        "packages/intelligence-core",
-        "packages/kernel-core",
-        "packages/knowledge-sdk",
-        "packages/marketplace-sdk",
-        "packages/memory-sdk",
-        "packages/observability-api",
-        "packages/ontology-sdk",
-        "packages/privacy-core",
-        "packages/prompt-sdk",
-        "packages/reasoning-sdk",
-        "packages/recommendation-api",
-        "packages/records-core",
-        "packages/resilience-core",
-        "packages/risk-core",
-        "packages/runtime-contracts",
-        "packages/runtime-core",
-        "packages/secops-core",
-        "packages/secrets-core",
-        "packages/telemetry-api",
-        "packages/telemetry-core",
-        "services/aiops-api",
-        "services/app-builder-api",
-        "services/enterprise-control-plane",
-        "services/evaluation-api",
-        "services/governance-api",
-        "services/knowledge-api",
-        "services/llm-gateway",
-        "services/memory-service",
-        "services/reasoning-service",
-        "services/swarm-runtime",
-        "services/workflow-api"
-      ],
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
-      "id": "typecheck:missing-script",
-      "priority": "P1",
-      "contracts": ["typecheck"],
-      "workspaces": [
-        "packages/agent-sdk",
-        "packages/archive-contracts",
-        "packages/event-bus",
-        "packages/plugins",
-        "packages/runtime",
-        "packages/state",
-        "services/archive-api"
-      ],
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
       "id": "build:rejected-exception",
       "priority": "P2",
       "contracts": ["build"],
@@ -6690,37 +5704,13 @@
     }
   ],
   "repairDag": [
-    {
-      "id": "audit-infrastructure",
-      "dependsOn": []
-    },
-    {
-      "id": "false-green-hotspots",
-      "dependsOn": ["audit-infrastructure"]
-    },
-    {
-      "id": "typecheck-contracts",
-      "dependsOn": ["false-green-hotspots"]
-    },
-    {
-      "id": "test-contracts",
-      "dependsOn": ["typecheck-contracts"]
-    },
-    {
-      "id": "schema-validation",
-      "dependsOn": ["test-contracts"]
-    },
-    {
-      "id": "lint-build-cleanup",
-      "dependsOn": ["schema-validation"]
-    },
-    {
-      "id": "negative-controls",
-      "dependsOn": ["lint-build-cleanup"]
-    },
-    {
-      "id": "governance-gate-integration",
-      "dependsOn": ["negative-controls"]
-    }
+    { "id": "audit-infrastructure", "dependsOn": [] },
+    { "id": "false-green-hotspots", "dependsOn": ["audit-infrastructure"] },
+    { "id": "typecheck-contracts", "dependsOn": ["false-green-hotspots"] },
+    { "id": "test-contracts", "dependsOn": ["typecheck-contracts"] },
+    { "id": "schema-validation", "dependsOn": ["test-contracts"] },
+    { "id": "lint-build-cleanup", "dependsOn": ["schema-validation"] },
+    { "id": "negative-controls", "dependsOn": ["lint-build-cleanup"] },
+    { "id": "governance-gate-integration", "dependsOn": ["negative-controls"] }
   ]
 }

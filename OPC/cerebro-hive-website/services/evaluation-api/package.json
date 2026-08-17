@@ -1,9 +1,15 @@
 {
   "name": "@cerebro/evaluation-api",
   "version": "0.1.0",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "private": true,
   "main": "src/index.ts",
   "dependencies": {
     "@cerebro/evaluation-sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
   }
 }
