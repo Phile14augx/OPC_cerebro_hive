@@ -1,0 +1,56 @@
+# =============================================================================
+# Hermes Agent — MCP Security Policy (enforce at review time)
+# =============================================================================
+# These are NON-NEGOTIABLE guardrails for any MCP server a CerebroHive
+# developer connects to Hermes. They are review-time rules (Hermes does not yet
+# evaluate this file natively), so the team enforces them in PR review and the
+# onboarding checklist. See docs/tech-stack/05-hermes-mcp-stack.md section 5.
+# =============================================================================
+
+policy:
+  # 1. Secrets never live in config or chat; only in ~/.hermes/.env (env vars).
+  secrets:
+    allowed_locations: ["~/.hermes/.env", "system keychain"]
+    forbidden_in_prompts: true
+    forbidden_in_config: true
+
+  # 2. Filesystem server is strictly allowlisted to repo roots.
+  filesystem:
+    mode: allowlist
+    allowed_paths:
+      - "./apps"
+      - "./packages"
+      - "./docs"
+    forbidden_paths:
+      - "/"
+      - "~"
+      - "../"
+    note: "A filesystem MCP pointed at '/' is effectively full shell access."
+
+  # 3. Destructive / shell-escalating tools are denied unless explicitly needed
+  #    and reviewed. Use `hermes mcp configure <name>` to uncheck them.
+  tool_deny_patterns:
+    - "delete*"
+    - "drop*"
+    - "exec*"
+    - "shell*"
+    - "force_push*"
+    - "rm_*"
+  exception_process: "Require a PR note plus lead approval to enable any denied tool."
+
+  # 4. Catalog vs manual trust
+  trust:
+    catalog_servers: "Nous-reviewed; install is allowed after reading manifest source."
+    manual_servers: "Required to read upstream repo and bootstrap commands before trust."
+    review_required_before_enabled: true
+
+  # 5. Production boundary: Hermes MCP is dev-only. AgentOS owns runtime.
+  boundary:
+    hermes_is_dev_only: true
+    agentos_owns_runtime: true
+    no_hermes_in_ci_or_prod: true
+
+  # 6. Per-server tool filtering is mandatory for anything mutating.
+  tool_selection:
+    required_for_mutating_servers: true
+    command: "hermes mcp configure <name>"
