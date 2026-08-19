@@ -59,6 +59,7 @@ const orchestrator = new RecoveryOrchestrator({
     wave: env("RECOVERY_WAVE", "W0.2"),
     status: "ACTIVE",
     canonicalBaseSha: env("RECOVERY_BASE_SHA", "UNKNOWN"),
+    pr42HeadSha: env("RECOVERY_PR42_HEAD_SHA", "") || undefined,
     repository,
     constitutionPath,
     createdAt: new Date().toISOString(),
@@ -68,4 +69,4 @@ const orchestrator = new RecoveryOrchestrator({
 const once = process.argv.includes("--once");
 const state = await orchestrator.run({ once });
 process.stdout.write(`${JSON.stringify(state, null, 2)}\n`);
-process.exit(state.status === "FROZEN" || state.status === "BLOCKED" ? 2 : 0);
+process.exit(["FROZEN", "BLOCKED", "EXECUTION_FAILED"].includes(state.status) ? 2 : 0);
