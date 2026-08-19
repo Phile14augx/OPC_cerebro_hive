@@ -26,6 +26,14 @@ function matchesPrefix(args, prefix) {
   return prefix.every((item, i) => args[i] === item);
 }
 
+function executableName(command) {
+  return command.exe.toLowerCase().replace(/\\/g, "/").split("/").pop();
+}
+
+function normalizeArg(value) {
+  return String(value).toLowerCase().replace(/\\/g, "/");
+}
+
 function isBlocked(command) {
   const exe = command.exe.toLowerCase();
   return ALWAYS_BLOCKED.some(([blockedExe, prefix]) => exe.endsWith(blockedExe) && matchesPrefix(command.args, prefix));
@@ -39,8 +47,17 @@ function mutatesGit(command) {
 }
 
 function isShell(command) {
-  const name = command.exe.toLowerCase().replace(/\\/g, "/").split("/").pop();
+  const name = executableName(command);
   return ["sh", "bash", "zsh", "cmd", "cmd.exe", "powershell", "powershell.exe", "pwsh", "pwsh.exe"].includes(name);
+}
+
+function reentersRecoveryControlPlane(command) {
+  const name = executableName(command);
+  if (!["node", "node.exe", "bun", "bun.exe", "deno", "deno.exe"].includes(name)) return false;
+  return command.args.some((arg) => {
+    const normalized = normalizeArg(arg);
+    return normalized.includes("/scripts/recovery-orchestrator/") || normalized.endsWith("/scripts/recovery-orchestrator");
+  });
 }
 
 export class RecoveryPolicyEngine {
@@ -55,6 +72,9 @@ export class RecoveryPolicyEngine {
     for (const command of order.commands) {
       if (isBlocked(command)) violations.push(`PROHIBITED_COMMAND ${command.exe} ${command.args.join(" ")}`);
       if (!this.allowShell && isShell(command)) violations.push(`SHELL_EXECUTION_BLOCKED ${command.exe}`);
+      if (reentersRecoveryControlPlane(command)) {
+        violations.push(`CONTROL_PLANE_REENTRY_BLOCKED ${command.exe} ${command.args.join(" ")}`);
+      }
       if (order.mode === "READ_ONLY" && mutatesGit(command)) {
         violations.push(`READ_ONLY_GIT_MUTATION ${command.exe} ${command.args.join(" ")}`);
       }
