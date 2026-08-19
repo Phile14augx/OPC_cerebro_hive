@@ -53,6 +53,7 @@ const orchestrator = new RecoveryOrchestrator({
   evidenceStore: new EvidenceStore(evidenceDir),
   ledger: new RecoveryLedger(ledgerFile),
   maxIterations: Number(env("RECOVERY_MAX_ITERATIONS", "50")),
+  allowClosureProposal: env("RECOVERY_ALLOW_CLOSURE_PROPOSAL", "false") === "true",
   initialState: {
     portfolio: "Cerebro Nexarch",
     wave: env("RECOVERY_WAVE", "W0.2"),
