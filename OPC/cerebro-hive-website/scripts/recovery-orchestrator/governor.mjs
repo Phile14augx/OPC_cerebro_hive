@@ -18,6 +18,12 @@ function nextDecisionId(input) {
   return `${wave}-${String(max + 1).padStart(3, "0")}`;
 }
 
+function decisionEnum(input) {
+  const values = ["COLLECT_EVIDENCE", "AUTHORIZE_IMPLEMENTATION", "VERIFY", "PUSH", "BLOCK"];
+  if (input?.closurePolicy?.proposalAllowed === true) values.push("CLOSE_WAVE");
+  return values;
+}
+
 function executionOrderSchema({ expectedActionId, repository }) {
   return {
     type: "object",
@@ -73,7 +79,7 @@ function governorDecisionSchema(input) {
       wave: wave ? { type: "string", const: wave } : { type: "string", minLength: 1 },
       decision: {
         type: "string",
-        enum: ["COLLECT_EVIDENCE", "AUTHORIZE_IMPLEMENTATION", "VERIFY", "PUSH", "BLOCK", "CLOSE_WAVE"],
+        enum: decisionEnum(input),
       },
       canonicalBaseSha: { type: "string", minLength: 1 },
       verifiedFacts: { type: "array", items: { type: "string" } },
@@ -248,13 +254,16 @@ export class QwenGovernorAdapter {
     const schema = governorDecisionSchema(input);
     const expectedDecisionId = requiredShape.decisionId;
     const expectedActionId = requiredShape.nextAction.actionId;
+    const closureInstruction = input?.closurePolicy?.proposalAllowed === true
+      ? "CLOSE_WAVE may be proposed only if every wave acceptance criterion has direct evidence; it still requires human approval."
+      : "CLOSE_WAVE is disabled for this run. Do not propose closure. Continue COLLECT_EVIDENCE or VERIFY, or BLOCK only for a genuine repository/policy blocker.";
     const baseMessages = [
       { role: "system", content: this.systemPrompt },
       {
         role: "user",
         content: JSON.stringify({
           protocolVersion: 1,
-          instruction: `Return exactly one GovernorDecision JSON object. Use decisionId ${expectedDecisionId} exactly. If nextAction is non-null, use actionId ${expectedActionId} exactly. Do not return a status report or wrapper object. Every required field must be present. verifiedFacts/conflicts/unknowns are arrays of strings. If no executor action is needed, set nextAction to null.`,
+          instruction: `Return exactly one GovernorDecision JSON object. Use decisionId ${expectedDecisionId} exactly. If nextAction is non-null, use actionId ${expectedActionId} exactly. Do not return a status report or wrapper object. Every required field must be present. verifiedFacts/conflicts/unknowns are arrays of strings. If no executor action is needed, set nextAction to null. ${closureInstruction}`,
           requiredDecisionId: expectedDecisionId,
           requiredActionId: expectedActionId,
           requiredShape,
@@ -274,7 +283,7 @@ export class QwenGovernorAdapter {
         {
           role: "user",
           content: JSON.stringify({
-            instruction: `Your previous response violated the GovernorDecision protocol. Repair it. Return ONLY the corrected top-level GovernorDecision JSON object. Use decisionId ${expectedDecisionId} exactly and, when nextAction is non-null, actionId ${expectedActionId} exactly. Do not return a recovery-status object.`,
+            instruction: `Your previous response violated the GovernorDecision protocol. Repair it. Return ONLY the corrected top-level GovernorDecision JSON object. Use decisionId ${expectedDecisionId} exactly and, when nextAction is non-null, actionId ${expectedActionId} exactly. Do not return a recovery-status object. ${closureInstruction}`,
             validationError: serializeError(firstError),
             requiredDecisionId: expectedDecisionId,
             requiredActionId: expectedActionId,
