@@ -245,7 +245,10 @@ function workspaceGlobSupported(glob) {
 }
 
 function globToPackagePathspec(glob) {
-  return `:(glob)${WORKSPACE_ROOT}/${glob}/package.json`;
+  // `git ls-tree` accepts ordinary path patterns but rejects the `:(glob)`
+  // magic form on supported Git builds. Keep the executor shell-free and let
+  // the deterministic parser below enforce exact one-segment workspace depth.
+  return `${WORKSPACE_ROOT}/${glob}/package.json`;
 }
 
 function escapeRegex(value) {
@@ -283,13 +286,16 @@ export function deriveWorkspaceDenominator({ stdout, workspaceGlobs, sourceRef, 
     .split(/\r?\n/)
     .map((line) => line.trim().replace(/\\/g, "/"))
     .filter(Boolean);
-  const unexpectedPaths = rawPaths.filter((candidate) => !matchers.some((matcher) => matcher.test(candidate)));
-  const childWorkspacePaths = [...new Set(rawPaths.filter((candidate) => matchers.some((matcher) => matcher.test(candidate))))].sort();
+  const packageManifestPaths = rawPaths.filter((candidate) => candidate.endsWith("/package.json"));
+  const unexpectedPaths = rawPaths.filter((candidate) => !candidate.endsWith("/package.json"));
+  const childWorkspacePaths = [...new Set(packageManifestPaths.filter((candidate) => matchers.some((matcher) => matcher.test(candidate))))].sort();
+  const excludedPackageJsonPaths = [...new Set(packageManifestPaths.filter((candidate) => !matchers.some((matcher) => matcher.test(candidate))))].sort();
 
   return {
     sourceRef,
     workspaceGlobs: [...workspaceGlobs],
     childWorkspacePaths,
+    excludedPackageJsonPaths,
     unexpectedPaths,
     childWorkspaceCount: childWorkspacePaths.length,
     rootControlPlaneCount: rootControlPlaneCaptured ? 1 : 0,
