@@ -29,7 +29,7 @@
     "policy:check": "turbo policy:check",
     "prepare": "husky",
     "sitemap:check": "node scripts/check-sitemap.mjs",
-    "repo:policy": "node scripts/repo-policy.mjs",
+    "repo:policy": "node scripts/audit-workspace-contracts.mjs",
     "repo:policy:fix": "node scripts/repo-policy.mjs --fix",
     "governance:contract": "node scripts/test-governance-gate-contract.mjs",
     "repo:health": "node scripts/repo-health.mjs",
