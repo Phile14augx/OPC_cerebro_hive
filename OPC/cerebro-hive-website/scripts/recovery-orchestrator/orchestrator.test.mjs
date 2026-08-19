@@ -272,27 +272,28 @@ test("workspace globs are parsed from captured pnpm-workspace.yaml", () => {
   assert.deepEqual(parseWorkspaceGlobs(denominatorYaml), denominatorGlobs);
 });
 
-test("workspace denominator command uses immutable ref and ls-tree-compatible package patterns", () => {
+test("workspace denominator command enumerates immutable workspace roots with full-tree", () => {
   assert.deepEqual(buildWorkspaceDenominatorCommand(denominatorBase, denominatorGlobs), {
     exe: "git",
     args: [
       "ls-tree",
       "-r",
       "--name-only",
+      "--full-tree",
       denominatorBase,
       "--",
-      `${denominatorRoot}/apps/*/package.json`,
-      `${denominatorRoot}/packages/*/package.json`,
-      `${denominatorRoot}/packages/capabilities/*/package.json`,
-      `${denominatorRoot}/services/*/package.json`,
+      `${denominatorRoot}/apps`,
+      `${denominatorRoot}/packages`,
+      `${denominatorRoot}/services`,
     ],
   });
 });
 
-test("workspace denominator derivation deduplicates children and counts root once", () => {
+test("workspace denominator derivation filters manifests, excludes nested packages, and counts root once", () => {
   const evidence = deriveWorkspaceDenominator({
     stdout: [
       `${denominatorRoot}/apps/studio/package.json`,
+      `${denominatorRoot}/apps/studio/src/index.ts`,
       `${denominatorRoot}/apps/studio/platform/package.json`,
       `${denominatorRoot}/packages/auth/package.json`,
       `${denominatorRoot}/packages/capabilities/memory/package.json`,
@@ -304,6 +305,9 @@ test("workspace denominator derivation deduplicates children and counts root onc
     rootControlPlaneCaptured: true,
   });
   assert.equal(evidence.valid, true);
+  assert.equal(evidence.rawTreePathCount, 7);
+  assert.equal(evidence.packageManifestCount, 5);
+  assert.equal(evidence.ignoredNonManifestPathCount, 2);
   assert.equal(evidence.childWorkspaceCount, 4);
   assert.equal(evidence.rootControlPlaneCount, 1);
   assert.equal(evidence.totalProjectEntities, 5);
@@ -328,18 +332,64 @@ test("nested package manifests are explicitly excluded rather than recursively c
   assert.deepEqual(evidence.excludedPackageJsonPaths, [`${denominatorRoot}/apps/studio/platform/package.json`]);
 });
 
-test("unexpected non-manifest output invalidates workspace denominator evidence", () => {
+test("non-manifest files inside enumerated workspace roots are ignored", () => {
   const evidence = deriveWorkspaceDenominator({
     stdout: [
       `${denominatorRoot}/apps/studio/package.json`,
       `${denominatorRoot}/apps/studio/README.md`,
+      `${denominatorRoot}/packages/auth/src/index.ts`,
+    ].join("\n"),
+    workspaceGlobs: denominatorGlobs,
+    sourceRef: denominatorBase,
+    rootControlPlaneCaptured: true,
+  });
+  assert.equal(evidence.valid, true);
+  assert.equal(evidence.childWorkspaceCount, 1);
+  assert.equal(evidence.ignoredNonManifestPathCount, 2);
+  assert.deepEqual(evidence.unexpectedPaths, []);
+});
+
+test("paths outside canonical workspace roots invalidate denominator evidence", () => {
+  const evidence = deriveWorkspaceDenominator({
+    stdout: [
+      `${denominatorRoot}/apps/studio/package.json`,
+      `${denominatorRoot}/docs/package.json`,
     ].join("\n"),
     workspaceGlobs: denominatorGlobs,
     sourceRef: denominatorBase,
     rootControlPlaneCaptured: true,
   });
   assert.equal(evidence.valid, false);
-  assert.deepEqual(evidence.unexpectedPaths, [`${denominatorRoot}/apps/studio/README.md`]);
+  assert.deepEqual(evidence.unexpectedPaths, [`${denominatorRoot}/docs/package.json`]);
+});
+
+test("zero-workspace tree output cannot prove the denominator", () => {
+  const evidence = deriveWorkspaceDenominator({
+    stdout: "",
+    workspaceGlobs: denominatorGlobs,
+    sourceRef: denominatorBase,
+    rootControlPlaneCaptured: true,
+  });
+  assert.equal(evidence.valid, false);
+  assert.equal(evidence.childWorkspaceCount, 0);
+  assert.equal(evidence.totalProjectEntities, 1);
+});
+
+test("known 141-child fixture produces canonical 142 project entities while excluding 13 nested manifests", () => {
+  const direct = Array.from({ length: 141 }, (_, index) => `${denominatorRoot}/packages/pkg-${String(index + 1).padStart(3, "0")}/package.json`);
+  const nested = Array.from({ length: 13 }, (_, index) => `${denominatorRoot}/packages/widgets/widget-${String(index + 1).padStart(2, "0")}/package.json`);
+  const evidence = deriveWorkspaceDenominator({
+    stdout: [...direct, ...nested].join("\n"),
+    workspaceGlobs: denominatorGlobs,
+    sourceRef: denominatorBase,
+    rootControlPlaneCaptured: true,
+  });
+  assert.equal(evidence.valid, true);
+  assert.equal(evidence.packageManifestCount, 154);
+  assert.equal(evidence.childWorkspaceCount, 141);
+  assert.equal(evidence.excludedPackageJsonPaths.length, 13);
+  assert.equal(evidence.rootControlPlaneCount, 1);
+  assert.equal(evidence.totalProjectEntities, 142);
 });
 
 test("W0.2 planner recommends deterministic denominator probe after source capture", () => {
@@ -351,11 +401,12 @@ test("W0.2 planner recommends deterministic denominator probe after source captu
   assert.deepEqual(progress.recommendedCommands, [buildWorkspaceDenominatorCommand(denominatorBase, denominatorGlobs)]);
 });
 
-test("W0.2 denominator becomes evidenced after immutable tree output is captured", () => {
+test("W0.2 denominator becomes evidenced after immutable full-tree output is captured", () => {
   const history = denominatorPriorHistory();
   const command = buildWorkspaceDenominatorCommand(denominatorBase, denominatorGlobs);
   history.push(completedExecution(command, [
     `${denominatorRoot}/apps/studio/package.json`,
+    `${denominatorRoot}/apps/studio/src/index.ts`,
     `${denominatorRoot}/apps/studio/platform/package.json`,
     `${denominatorRoot}/packages/auth/package.json`,
     `${denominatorRoot}/packages/capabilities/memory/package.json`,
@@ -369,12 +420,22 @@ test("W0.2 denominator becomes evidenced after immutable tree output is captured
   assert.equal(progress.nextObjective.id, "PR42_TRUE_DELTA_RECONCILED");
 });
 
+test("successful zero-output denominator probe remains outstanding", () => {
+  const history = denominatorPriorHistory();
+  const command = buildWorkspaceDenominatorCommand(denominatorBase, denominatorGlobs);
+  history.push(completedExecution(command, ""));
+  const progress = buildEvidenceProgress(history, { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase });
+  assert.ok(!progress.completed.includes("WORKSPACE_DENOMINATOR_PROVEN"));
+  assert.equal(progress.denominatorEvidence.valid, false);
+  assert.equal(progress.nextObjective.id, "WORKSPACE_DENOMINATOR_PROVEN");
+});
+
 test("governor must include deterministic recommended denominator command", () => {
   const history = denominatorPriorHistory();
   const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase };
   const progress = buildEvidenceProgress(history, state);
   assert.throws(() => validateDecisionAgainstState({
-    decisionId: "W0.2-015",
+    decisionId: "W0.2-017",
     wave: "W0.2",
     decision: "COLLECT_EVIDENCE",
     canonicalBaseSha: denominatorBase,
@@ -383,7 +444,7 @@ test("governor must include deterministic recommended denominator command", () =
     unknowns: ["WORKSPACE_DENOMINATOR_PROVEN"],
     writeAuthorized: false,
     nextAction: {
-      actionId: "W0.2-015-ACTION",
+      actionId: "W0.2-017-ACTION",
       mode: "READ_ONLY",
       repository: "D:/repo",
       commands: [{ exe: "git", args: ["log", "-1", "--oneline"] }],
