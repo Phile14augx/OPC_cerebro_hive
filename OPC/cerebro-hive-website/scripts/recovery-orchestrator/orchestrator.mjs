@@ -24,6 +24,7 @@ function clearTransientFailureState(state) {
     closureProposal: _closureProposal,
     transientControlPlaneFailureOmitted: _transientControlPlaneFailureOmitted,
     unverifiedClosureReopened: _unverifiedClosureReopened,
+    recoverableEvidenceMiss: _recoverableEvidenceMiss,
     ...rest
   } = state;
   return rest;
@@ -60,10 +61,42 @@ function stateHasUnapprovedClosureBlock(state) {
   return state?.status === "BLOCKED" && state?.blocker === "WAVE_CLOSURE_REQUIRES_HUMAN_APPROVAL";
 }
 
+function parseMissingImmutablePath({ command, exitCode, timedOut, stderr } = {}) {
+  if (executableName(command) !== "git") return null;
+  if (normalizeArg(command?.args?.[0]) !== "show") return null;
+  if (exitCode !== 128 || timedOut === true) return null;
+  const match = String(stderr ?? "").match(/fatal: path '([^']+)' does not exist in '([^']+)'/i);
+  if (!match) return null;
+  return {
+    classification: "IMMUTABLE_PATH_ABSENT",
+    path: match[1],
+    ref: match[2],
+    command,
+  };
+}
+
+function recoverableEvidenceMissFromState(state) {
+  if (state?.status !== "EXECUTION_FAILED") return null;
+  return parseMissingImmutablePath({
+    command: state.executionFailure?.command,
+    exitCode: state.executionFailure?.exitCode,
+    timedOut: state.executionFailure?.timedOut,
+    stderr: state.executionFailure?.stderr,
+  });
+}
+
+function recoverableEvidenceMissFromResult(result) {
+  if (result?.status === "COMPLETED") return null;
+  const entries = Array.isArray(result?.commands) ? result.commands : [];
+  const failed = entries.length ? entries.at(-1) : null;
+  return parseMissingImmutablePath(failed);
+}
+
 export function sanitizeStateForGovernor(state) {
   let clean = state;
   let transientControlPlaneFailureOmitted = false;
   let unverifiedClosureReopened = false;
+  let recoverableEvidenceMiss = null;
 
   if (stateHasTransientControlPlaneFailure(clean)) {
     clean = clearTransientFailureState(clean);
@@ -72,6 +105,18 @@ export function sanitizeStateForGovernor(state) {
       status: clean.lastActionId ? "EVIDENCE_READY" : "ACTIVE",
     };
     transientControlPlaneFailureOmitted = true;
+  }
+
+  // A failed immutable `git show <ref>:<path>` that proves the path does not
+  // exist is evidence, not a terminal executor defect. Reopen so the governor
+  // can inspect the candidate recovery ref without repeating the failed probe.
+  recoverableEvidenceMiss = recoverableEvidenceMissFromState(clean);
+  if (recoverableEvidenceMiss) {
+    clean = {
+      ...clearTransientFailureState(clean),
+      status: clean.lastActionId ? "EVIDENCE_READY" : "ACTIVE",
+      recoverableEvidenceMiss,
+    };
   }
 
   // v0.1 has no authenticated closure-approval artifact. Therefore a prior
@@ -84,11 +129,12 @@ export function sanitizeStateForGovernor(state) {
     unverifiedClosureReopened = true;
   }
 
-  if (!transientControlPlaneFailureOmitted && !unverifiedClosureReopened) return clean;
+  if (!transientControlPlaneFailureOmitted && !unverifiedClosureReopened && !recoverableEvidenceMiss) return clean;
   return {
     ...clean,
     ...(transientControlPlaneFailureOmitted ? { transientControlPlaneFailureOmitted: true } : {}),
     ...(unverifiedClosureReopened ? { unverifiedClosureReopened: true } : {}),
+    ...(recoverableEvidenceMiss ? { recoverableEvidenceMiss } : {}),
   };
 }
 
@@ -126,19 +172,22 @@ function usedIds(history) {
   return { decisionIds, actionIds };
 }
 
-function successfulEvidenceCommands(records) {
-  const commands = [];
+function executionEntries(records) {
+  const entries = [];
   for (const record of records) {
     if (record?.type !== "EXECUTION_RESULT") continue;
-    if (record.payload?.result?.status !== "COMPLETED") continue;
     if (record.payload?.integrity?.ok === false) continue;
     for (const entry of record.payload?.result?.commands ?? []) {
-      if (entry?.exitCode === 0 && entry?.timedOut !== true && entry?.command) {
-        commands.push(entry.command);
-      }
+      if (entry?.command) entries.push(entry);
     }
   }
-  return commands;
+  return entries;
+}
+
+function successfulEvidenceCommands(records) {
+  return executionEntries(records)
+    .filter((entry) => entry.exitCode === 0 && entry.timedOut !== true)
+    .map((entry) => entry.command);
 }
 
 function commandHasArgs(command, expected) {
@@ -146,6 +195,19 @@ function commandHasArgs(command, expected) {
   const args = Array.isArray(command?.args) ? command.args.map(normalizeArg) : [];
   const normalizedExpected = expected.map(normalizeArg);
   return args.length === normalizedExpected.length && args.every((arg, index) => arg === normalizedExpected[index]);
+}
+
+function missingPathEvidence(records, ref, repoPath) {
+  const normalizedRef = normalizeArg(ref);
+  const normalizedPath = normalizeArg(repoPath);
+  for (const entry of executionEntries(records)) {
+    const miss = parseMissingImmutablePath(entry);
+    if (!miss) continue;
+    if (normalizeArg(miss.ref) === normalizedRef && normalizeArg(miss.path) === normalizedPath) {
+      return miss;
+    }
+  }
+  return null;
 }
 
 const W02_OBJECTIVES = [
@@ -167,15 +229,15 @@ const W02_OBJECTIVES = [
   },
   {
     id: "CONTRACT_AUDIT_SOURCE_CAPTURED",
-    description: "Read the canonical workspace-contract audit implementation from the immutable base/ref before executing or judging it.",
+    description: "Reconcile the workspace-contract audit implementation across the canonical base and the immutable PR #42 candidate ref.",
   },
   {
     id: "EXEMPTION_POLICY_CAPTURED",
-    description: "Read the canonical workspace-contract exemptions source and prove exception semantics/expiry rules.",
+    description: "Reconcile the workspace-contract exemptions source across the canonical base and the immutable PR #42 candidate ref, including baseline absence when applicable.",
   },
   {
     id: "GITHUB_WORKFLOW_SOURCE_CAPTURED",
-    description: "Read the GitHub-visible Website CI workflow and prove job/final-gate wiring from immutable Git data.",
+    description: "Reconcile the GitHub-visible Website CI workflow across the canonical base and the immutable PR #42 candidate ref.",
   },
   {
     id: "WORKSPACE_DENOMINATOR_PROVEN",
@@ -211,8 +273,15 @@ export function buildEvidenceProgress(records, state) {
   const successful = successfulEvidenceCommands(records);
   const successfulFingerprints = [...new Set(successful.map(commandFingerprint))];
   const baseSha = state?.canonicalBaseSha;
+  const pr42HeadSha = state?.pr42HeadSha;
+  const knownMissing = executionEntries(records)
+    .map((entry) => ({ entry, miss: parseMissingImmutablePath(entry) }))
+    .filter(({ miss }) => Boolean(miss));
+  const knownMissingFingerprints = [...new Set(knownMissing.map(({ entry }) => commandFingerprint(entry.command)))];
 
   const completed = new Set();
+  const evidenceNotes = [];
+
   if (successful.some((command) => commandHasArgs(command, ["status", "--porcelain=v1"]))) {
     completed.add("REPOSITORY_STATUS_CAPTURED");
   }
@@ -222,6 +291,25 @@ export function buildEvidenceProgress(records, state) {
   const hasOriginMain = successful.some((command) => commandHasArgs(command, ["rev-parse", "refs/remotes/origin/main"]));
   if (hasHead && hasBranch && hasOriginMain) completed.add("REPOSITORY_IDENTITY_RECONCILED");
 
+  function immutableSourceStatus(repoPath) {
+    if (!baseSha) return { captured: false, baseAbsent: false, sourceRef: null };
+    const baseSpec = `${baseSha}:${repoPath}`;
+    const baseCaptured = successful.some((command) => commandHasArgs(command, ["show", baseSpec]));
+    const baseAbsent = Boolean(missingPathEvidence(records, baseSha, repoPath));
+    const candidateSpec = pr42HeadSha ? `${pr42HeadSha}:${repoPath}` : null;
+    const candidateCaptured = Boolean(candidateSpec) && successful.some((command) => commandHasArgs(command, ["show", candidateSpec]));
+
+    if (baseAbsent) {
+      evidenceNotes.push(`${repoPath} is absent at canonical base ${baseSha}; candidate-ref evidence is required before treating the source as captured.`);
+    }
+
+    return {
+      captured: baseCaptured || (baseAbsent && candidateCaptured),
+      baseAbsent,
+      sourceRef: baseCaptured ? baseSha : (candidateCaptured ? pr42HeadSha : null),
+    };
+  }
+
   if (baseSha) {
     if (successful.some((command) => commandHasArgs(command, ["show", `${baseSha}:OPC/cerebro-hive-website/pnpm-workspace.yaml`]))) {
       completed.add("WORKSPACE_DEFINITION_CAPTURED");
@@ -229,15 +317,15 @@ export function buildEvidenceProgress(records, state) {
     if (successful.some((command) => commandHasArgs(command, ["show", `${baseSha}:OPC/cerebro-hive-website/package.json`]))) {
       completed.add("ROOT_CONTROL_PLANE_CAPTURED");
     }
-    if (successful.some((command) => commandHasArgs(command, ["show", `${baseSha}:OPC/cerebro-hive-website/scripts/audit-workspace-contracts.mjs`]))) {
-      completed.add("CONTRACT_AUDIT_SOURCE_CAPTURED");
-    }
-    if (successful.some((command) => commandHasArgs(command, ["show", `${baseSha}:OPC/cerebro-hive-website/scripts/workspace-contract-exemptions.yaml`]))) {
-      completed.add("EXEMPTION_POLICY_CAPTURED");
-    }
-    if (successful.some((command) => commandHasArgs(command, ["show", `${baseSha}:.github/workflows/website-ci.yml`]))) {
-      completed.add("GITHUB_WORKFLOW_SOURCE_CAPTURED");
-    }
+
+    const auditStatus = immutableSourceStatus("OPC/cerebro-hive-website/scripts/audit-workspace-contracts.mjs");
+    if (auditStatus.captured) completed.add("CONTRACT_AUDIT_SOURCE_CAPTURED");
+
+    const exemptionStatus = immutableSourceStatus("OPC/cerebro-hive-website/scripts/workspace-contract-exemptions.yaml");
+    if (exemptionStatus.captured) completed.add("EXEMPTION_POLICY_CAPTURED");
+
+    const workflowStatus = immutableSourceStatus(".github/workflows/website-ci.yml");
+    if (workflowStatus.captured) completed.add("GITHUB_WORKFLOW_SOURCE_CAPTURED");
   }
 
   const objectives = W02_OBJECTIVES.map((objective) => ({
@@ -246,6 +334,16 @@ export function buildEvidenceProgress(records, state) {
   }));
   const outstanding = objectives.filter((objective) => objective.status === "OUTSTANDING");
 
+  function recommendedSourceCommand(repoPath) {
+    if (!baseSha) return [];
+    const baseAbsent = Boolean(missingPathEvidence(records, baseSha, repoPath));
+    if (baseAbsent) {
+      if (!pr42HeadSha) return [];
+      return [{ exe: "git", args: ["show", `${pr42HeadSha}:${repoPath}`] }];
+    }
+    return [{ exe: "git", args: ["show", `${baseSha}:${repoPath}`] }];
+  }
+
   let recommendedCommands = [];
   const next = outstanding[0]?.id;
   if (next === "REPOSITORY_IDENTITY_RECONCILED") {
@@ -253,17 +351,17 @@ export function buildEvidenceProgress(records, state) {
       { exe: "git", args: ["rev-parse", "HEAD"] },
       { exe: "git", args: ["branch", "--show-current"] },
       { exe: "git", args: ["rev-parse", "refs/remotes/origin/main"] },
-    ];
+    ].filter((command) => !successfulFingerprints.includes(commandFingerprint(command)));
   } else if (next === "WORKSPACE_DEFINITION_CAPTURED" && baseSha) {
     recommendedCommands = [{ exe: "git", args: ["show", `${baseSha}:OPC/cerebro-hive-website/pnpm-workspace.yaml`] }];
   } else if (next === "ROOT_CONTROL_PLANE_CAPTURED" && baseSha) {
     recommendedCommands = [{ exe: "git", args: ["show", `${baseSha}:OPC/cerebro-hive-website/package.json`] }];
-  } else if (next === "CONTRACT_AUDIT_SOURCE_CAPTURED" && baseSha) {
-    recommendedCommands = [{ exe: "git", args: ["show", `${baseSha}:OPC/cerebro-hive-website/scripts/audit-workspace-contracts.mjs`] }];
-  } else if (next === "EXEMPTION_POLICY_CAPTURED" && baseSha) {
-    recommendedCommands = [{ exe: "git", args: ["show", `${baseSha}:OPC/cerebro-hive-website/scripts/workspace-contract-exemptions.yaml`] }];
-  } else if (next === "GITHUB_WORKFLOW_SOURCE_CAPTURED" && baseSha) {
-    recommendedCommands = [{ exe: "git", args: ["show", `${baseSha}:.github/workflows/website-ci.yml`] }];
+  } else if (next === "CONTRACT_AUDIT_SOURCE_CAPTURED") {
+    recommendedCommands = recommendedSourceCommand("OPC/cerebro-hive-website/scripts/audit-workspace-contracts.mjs");
+  } else if (next === "EXEMPTION_POLICY_CAPTURED") {
+    recommendedCommands = recommendedSourceCommand("OPC/cerebro-hive-website/scripts/workspace-contract-exemptions.yaml");
+  } else if (next === "GITHUB_WORKFLOW_SOURCE_CAPTURED") {
+    recommendedCommands = recommendedSourceCommand(".github/workflows/website-ci.yml");
   }
 
   return {
@@ -273,8 +371,14 @@ export function buildEvidenceProgress(records, state) {
     outstanding: outstanding.map((objective) => objective.id),
     nextObjective: outstanding[0] ?? null,
     recommendedCommands,
+    evidenceNotes,
+    candidateRefs: {
+      canonicalBaseSha: baseSha ?? null,
+      pr42HeadSha: pr42HeadSha ?? null,
+    },
     recentSuccessfulCommandFingerprints: successfulFingerprints.slice(-50),
-    rule: "Every evidence action must advance at least one outstanding W0.2 objective. Exact successful command repetition is prohibited unless the target state is proven to have changed.",
+    knownMissingCommandFingerprints: knownMissingFingerprints.slice(-50),
+    rule: "Every evidence action must advance at least one outstanding W0.2 objective. Exact successful commands and immutable-path probes already proven missing must not be repeated unless the inspected ref changed.",
   };
 }
 
@@ -324,10 +428,13 @@ export function validateDecisionAgainstState(decision, state, history, evidenceP
   }
 
   if (["COLLECT_EVIDENCE", "VERIFY"].includes(decision.decision) && decision.nextAction) {
-    const prior = new Set(evidenceProgress.recentSuccessfulCommandFingerprints);
+    const prior = new Set([
+      ...evidenceProgress.recentSuccessfulCommandFingerprints,
+      ...(evidenceProgress.knownMissingCommandFingerprints ?? []),
+    ]);
     const proposed = decision.nextAction.commands.map(commandFingerprint);
     if (proposed.length > 0 && proposed.every((fingerprint) => prior.has(fingerprint))) {
-      throw new Error(`NON_ADVANCING_EVIDENCE_ACTION: all proposed commands already completed successfully: ${proposed.join(", ")}`);
+      throw new Error(`NON_ADVANCING_EVIDENCE_ACTION: all proposed commands already completed successfully or proved an immutable path missing: ${proposed.join(", ")}`);
     }
   }
 }
@@ -355,7 +462,8 @@ export class RecoveryOrchestrator {
   }
 
   async run({ once = false } = {}) {
-    let state = await this.ledger.latestState(this.initialState);
+    const persistedState = await this.ledger.latestState(this.initialState);
+    let state = { ...this.initialState, ...persistedState };
 
     for (let iteration = 0; iteration < this.maxIterations; iteration += 1) {
       const fullHistory = await this.ledger.readAll();
@@ -381,7 +489,7 @@ export class RecoveryOrchestrator {
                   "recursive recovery-orchestrator execution",
                   "unapproved wave closure",
                 ],
-                rule: "Treat only target-repository execution evidence as candidate repository facts. Control-plane transport/protocol failures are diagnostics, not portfolio facts. CLOSE_WAVE is only a proposal in v0.1 and cannot itself close a wave.",
+                rule: "Treat only target-repository execution evidence as candidate repository facts. Control-plane transport/protocol failures are diagnostics, not portfolio facts. An immutable path absence is evidence about the inspected ref, not a repository execution defect. CLOSE_WAVE is only a proposal in v0.1 and cannot itself close a wave.",
               },
               closurePolicy: {
                 proposalAllowed: this.allowClosureProposal,
@@ -400,7 +508,7 @@ export class RecoveryOrchestrator {
             if (!retryablePlanningError(error) || planningAttempt === 2) throw error;
             planningFeedback = {
               rejectedPlan: error.message,
-              instruction: "Replan the same decisionId. Remove unsupported aggregate claims and choose a different bounded READ_ONLY/VERIFY action that advances the next outstanding W0.2 evidence objective. Do not repeat a successful command fingerprint.",
+              instruction: "Replan the same decisionId. Remove unsupported aggregate claims and choose a different bounded READ_ONLY/VERIFY action that advances the next outstanding W0.2 evidence objective. Do not repeat a successful or known-missing command fingerprint. Prefer recommendedCommands when supplied.",
               nextObjective: evidenceProgress.nextObjective,
               recommendedCommands: evidenceProgress.recommendedCommands,
             };
@@ -530,23 +638,26 @@ export class RecoveryOrchestrator {
 
       const completed = result.status === "COMPLETED";
       const executionFailure = summarizeExecutionFailure(result);
+      const recoverableEvidenceMiss = recoverableEvidenceMissFromResult(result);
+      const evidenceReady = completed || Boolean(recoverableEvidenceMiss);
       state = {
         ...clearTransientFailureState(state),
         wave: decision.wave,
-        status: completed ? "EVIDENCE_READY" : "EXECUTION_FAILED",
+        status: evidenceReady ? "EVIDENCE_READY" : "EXECUTION_FAILED",
         canonicalBaseSha: decision.canonicalBaseSha,
         lastDecisionId: decision.decisionId,
         lastActionId: order.actionId,
         lastEvidence: artifact,
-        ...(completed ? {} : {
+        ...(recoverableEvidenceMiss ? { recoverableEvidenceMiss } : {}),
+        ...(!evidenceReady ? {
           blocker: executionFailure?.classification ?? "EXECUTION_FAILED",
           executionFailure,
-        }),
+        } : {}),
         updatedAt: new Date().toISOString(),
       };
       await this.ledger.append("STATE", state);
 
-      if (once || !completed) return state;
+      if (once || !evidenceReady) return state;
     }
 
     const exhausted = { ...clearTransientFailureState(state), status: "BLOCKED", blocker: "MAX_ITERATIONS_EXCEEDED" };
