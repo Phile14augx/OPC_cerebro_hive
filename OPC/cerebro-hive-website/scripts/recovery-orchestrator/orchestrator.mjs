@@ -192,6 +192,15 @@ function successfulEvidenceCommands(records) {
     .map((entry) => entry.command);
 }
 
+function successfulExecutionEntry(records, expectedCommand) {
+  const expectedFingerprint = commandFingerprint(expectedCommand);
+  return executionEntries(records).find((entry) => (
+    entry.exitCode === 0
+    && entry.timedOut !== true
+    && commandFingerprint(entry.command) === expectedFingerprint
+  )) ?? null;
+}
+
 function commandHasArgs(command, expected) {
   if (executableName(command) !== "git") return false;
   const args = Array.isArray(command?.args) ? command.args.map(normalizeArg) : [];
@@ -210,6 +219,83 @@ function missingPathEvidence(records, ref, repoPath) {
     }
   }
   return null;
+}
+
+const WORKSPACE_ROOT = "OPC/cerebro-hive-website";
+const WORKSPACE_FILE = `${WORKSPACE_ROOT}/pnpm-workspace.yaml`;
+const ROOT_PACKAGE_FILE = `${WORKSPACE_ROOT}/package.json`;
+
+export function parseWorkspaceGlobs(stdout) {
+  const patterns = [];
+  for (const rawLine of String(stdout ?? "").split(/\r?\n/)) {
+    const line = rawLine.trim();
+    const match = line.match(/^-\s*["']?([^"'#]+?)["']?\s*(?:#.*)?$/);
+    if (!match) continue;
+    const value = match[1].trim().replace(/\\/g, "/");
+    if (value) patterns.push(value);
+  }
+  return [...new Set(patterns)];
+}
+
+function workspaceGlobSupported(glob) {
+  return /^[A-Za-z0-9._/-]+\/\*$/.test(glob)
+    && !glob.startsWith("/")
+    && !glob.includes("..")
+    && !glob.includes("//");
+}
+
+function globToPackagePathspec(glob) {
+  return `:(glob)${WORKSPACE_ROOT}/${glob}/package.json`;
+}
+
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function globToPackageRegex(glob) {
+  const template = `${WORKSPACE_ROOT}/${glob}/package.json`;
+  const escaped = escapeRegex(template).replace(/\\\*/g, "[^/]+");
+  return new RegExp(`^${escaped}$`);
+}
+
+export function buildWorkspaceDenominatorCommand(baseSha, workspaceGlobs) {
+  if (!baseSha || !Array.isArray(workspaceGlobs) || workspaceGlobs.length === 0) return null;
+  if (workspaceGlobs.some((glob) => !workspaceGlobSupported(glob))) return null;
+  return {
+    exe: "git",
+    args: [
+      "ls-tree",
+      "-r",
+      "--name-only",
+      baseSha,
+      "--",
+      ...workspaceGlobs.map(globToPackagePathspec),
+    ],
+  };
+}
+
+export function deriveWorkspaceDenominator({ stdout, workspaceGlobs, sourceRef, rootControlPlaneCaptured }) {
+  if (!Array.isArray(workspaceGlobs) || workspaceGlobs.length === 0) return null;
+  if (workspaceGlobs.some((glob) => !workspaceGlobSupported(glob))) return null;
+
+  const matchers = workspaceGlobs.map(globToPackageRegex);
+  const rawPaths = String(stdout ?? "")
+    .split(/\r?\n/)
+    .map((line) => line.trim().replace(/\\/g, "/"))
+    .filter(Boolean);
+  const unexpectedPaths = rawPaths.filter((candidate) => !matchers.some((matcher) => matcher.test(candidate)));
+  const childWorkspacePaths = [...new Set(rawPaths.filter((candidate) => matchers.some((matcher) => matcher.test(candidate))))].sort();
+
+  return {
+    sourceRef,
+    workspaceGlobs: [...workspaceGlobs],
+    childWorkspacePaths,
+    unexpectedPaths,
+    childWorkspaceCount: childWorkspacePaths.length,
+    rootControlPlaneCount: rootControlPlaneCaptured ? 1 : 0,
+    totalProjectEntities: childWorkspacePaths.length + (rootControlPlaneCaptured ? 1 : 0),
+    valid: rootControlPlaneCaptured === true && childWorkspacePaths.length > 0 && unexpectedPaths.length === 0,
+  };
 }
 
 const W02_OBJECTIVES = [
@@ -243,7 +329,7 @@ const W02_OBJECTIVES = [
   },
   {
     id: "WORKSPACE_DENOMINATOR_PROVEN",
-    description: "Prove the canonical child-workspace denominator plus root control plane from immutable refs; do not recursively count arbitrary package.json files.",
+    description: "Derive the child-workspace denominator from the captured pnpm workspace globs and immutable Git tree, then add the separately captured root control plane exactly once.",
   },
   {
     id: "PR42_TRUE_DELTA_RECONCILED",
@@ -283,6 +369,7 @@ export function buildEvidenceProgress(records, state) {
 
   const completed = new Set();
   const evidenceNotes = [];
+  let denominatorEvidence = null;
 
   if (successful.some((command) => commandHasArgs(command, ["status", "--porcelain=v1"]))) {
     completed.add("REPOSITORY_STATUS_CAPTURED");
@@ -312,13 +399,29 @@ export function buildEvidenceProgress(records, state) {
     };
   }
 
+  let workspaceGlobs = [];
+  let workspaceDefinitionEntry = null;
+  let rootControlPlaneCaptured = false;
+
   if (baseSha) {
-    if (successful.some((command) => commandHasArgs(command, ["show", `${baseSha}:OPC/cerebro-hive-website/pnpm-workspace.yaml`]))) {
+    const workspaceCommand = { exe: "git", args: ["show", `${baseSha}:${WORKSPACE_FILE}`] };
+    workspaceDefinitionEntry = successfulExecutionEntry(records, workspaceCommand);
+    if (workspaceDefinitionEntry) {
       completed.add("WORKSPACE_DEFINITION_CAPTURED");
+      workspaceGlobs = parseWorkspaceGlobs(workspaceDefinitionEntry.stdout);
+      const unsupported = workspaceGlobs.filter((glob) => !workspaceGlobSupported(glob));
+      if (workspaceGlobs.length === 0) {
+        evidenceNotes.push("The captured pnpm-workspace.yaml yielded no workspace globs; denominator proof is blocked.");
+      } else if (unsupported.length > 0) {
+        evidenceNotes.push(`Unsupported workspace globs require explicit planner support before denominator proof: ${unsupported.join(", ")}`);
+      }
     }
-    if (successful.some((command) => commandHasArgs(command, ["show", `${baseSha}:OPC/cerebro-hive-website/package.json`]))) {
-      completed.add("ROOT_CONTROL_PLANE_CAPTURED");
-    }
+
+    rootControlPlaneCaptured = Boolean(successfulExecutionEntry(records, {
+      exe: "git",
+      args: ["show", `${baseSha}:${ROOT_PACKAGE_FILE}`],
+    }));
+    if (rootControlPlaneCaptured) completed.add("ROOT_CONTROL_PLANE_CAPTURED");
 
     const auditStatus = immutableSourceStatus("OPC/cerebro-hive-website/scripts/audit-workspace-contracts.mjs");
     if (auditStatus.captured) completed.add("CONTRACT_AUDIT_SOURCE_CAPTURED");
@@ -328,6 +431,24 @@ export function buildEvidenceProgress(records, state) {
 
     const workflowStatus = immutableSourceStatus(".github/workflows/website-ci.yml");
     if (workflowStatus.captured) completed.add("GITHUB_WORKFLOW_SOURCE_CAPTURED");
+
+    const denominatorCommand = buildWorkspaceDenominatorCommand(baseSha, workspaceGlobs);
+    if (denominatorCommand) {
+      const denominatorEntry = successfulExecutionEntry(records, denominatorCommand);
+      if (denominatorEntry) {
+        denominatorEvidence = deriveWorkspaceDenominator({
+          stdout: denominatorEntry.stdout,
+          workspaceGlobs,
+          sourceRef: baseSha,
+          rootControlPlaneCaptured,
+        });
+        if (denominatorEvidence?.valid && completed.has("WORKSPACE_DEFINITION_CAPTURED") && completed.has("ROOT_CONTROL_PLANE_CAPTURED")) {
+          completed.add("WORKSPACE_DENOMINATOR_PROVEN");
+        } else if (denominatorEvidence && !denominatorEvidence.valid) {
+          evidenceNotes.push(`Workspace denominator evidence is invalid: child=${denominatorEvidence.childWorkspaceCount}, root=${denominatorEvidence.rootControlPlaneCount}, unexpectedPaths=${denominatorEvidence.unexpectedPaths.length}.`);
+        }
+      }
+    }
   }
 
   const objectives = W02_OBJECTIVES.map((objective) => ({
@@ -355,15 +476,18 @@ export function buildEvidenceProgress(records, state) {
       { exe: "git", args: ["rev-parse", "refs/remotes/origin/main"] },
     ].filter((command) => !successfulFingerprints.includes(commandFingerprint(command)));
   } else if (next === "WORKSPACE_DEFINITION_CAPTURED" && baseSha) {
-    recommendedCommands = [{ exe: "git", args: ["show", `${baseSha}:OPC/cerebro-hive-website/pnpm-workspace.yaml`] }];
+    recommendedCommands = [{ exe: "git", args: ["show", `${baseSha}:${WORKSPACE_FILE}`] }];
   } else if (next === "ROOT_CONTROL_PLANE_CAPTURED" && baseSha) {
-    recommendedCommands = [{ exe: "git", args: ["show", `${baseSha}:OPC/cerebro-hive-website/package.json`] }];
+    recommendedCommands = [{ exe: "git", args: ["show", `${baseSha}:${ROOT_PACKAGE_FILE}`] }];
   } else if (next === "CONTRACT_AUDIT_SOURCE_CAPTURED") {
     recommendedCommands = recommendedSourceCommand("OPC/cerebro-hive-website/scripts/audit-workspace-contracts.mjs");
   } else if (next === "EXEMPTION_POLICY_CAPTURED") {
     recommendedCommands = recommendedSourceCommand("OPC/cerebro-hive-website/scripts/workspace-contract-exemptions.yaml");
   } else if (next === "GITHUB_WORKFLOW_SOURCE_CAPTURED") {
     recommendedCommands = recommendedSourceCommand(".github/workflows/website-ci.yml");
+  } else if (next === "WORKSPACE_DENOMINATOR_PROVEN") {
+    const command = buildWorkspaceDenominatorCommand(baseSha, workspaceGlobs);
+    recommendedCommands = command ? [command] : [];
   }
 
   return {
@@ -378,9 +502,14 @@ export function buildEvidenceProgress(records, state) {
       canonicalBaseSha: baseSha ?? null,
       pr42HeadSha: pr42HeadSha ?? null,
     },
+    workspaceDefinition: {
+      sourceRef: workspaceDefinitionEntry ? baseSha : null,
+      globs: workspaceGlobs,
+    },
+    denominatorEvidence,
     recentSuccessfulCommandFingerprints: successfulFingerprints.slice(-50),
     knownMissingCommandFingerprints: knownMissingFingerprints.slice(-50),
-    rule: "Every evidence action must advance at least one outstanding W0.2 objective. Exact successful commands and immutable-path probes already proven missing must not be repeated unless the inspected ref changed.",
+    rule: "Every evidence action must advance the next outstanding W0.2 objective. When recommendedCommands are supplied, the action must include at least one exact recommended deterministic probe. Exact successful commands and immutable-path probes already proven missing must not be repeated unless the inspected ref changed.",
   };
 }
 
@@ -437,6 +566,11 @@ export function validateDecisionAgainstState(decision, state, history, evidenceP
     const proposed = decision.nextAction.commands.map(commandFingerprint);
     if (proposed.length > 0 && proposed.every((fingerprint) => prior.has(fingerprint))) {
       throw new Error(`NON_ADVANCING_EVIDENCE_ACTION: all proposed commands already completed successfully or proved an immutable path missing: ${proposed.join(", ")}`);
+    }
+
+    const recommended = new Set((evidenceProgress.recommendedCommands ?? []).map(commandFingerprint));
+    if (recommended.size > 0 && !proposed.some((fingerprint) => recommended.has(fingerprint))) {
+      throw new Error(`NON_ADVANCING_EVIDENCE_ACTION: action does not include a deterministic recommended command for ${evidenceProgress.nextObjective?.id ?? "the next objective"}`);
     }
   }
 }
@@ -510,7 +644,7 @@ export class RecoveryOrchestrator {
             if (!retryablePlanningError(error) || planningAttempt === 2) throw error;
             planningFeedback = {
               rejectedPlan: error.message,
-              instruction: "Replan the same decisionId. Remove unsupported aggregate claims and choose a different bounded READ_ONLY/VERIFY action that advances the next outstanding W0.2 evidence objective. Do not repeat a successful or known-missing command fingerprint. Prefer recommendedCommands when supplied.",
+              instruction: "Replan the same decisionId. Remove unsupported aggregate claims and choose a different bounded READ_ONLY/VERIFY action that advances the next outstanding W0.2 evidence objective. Do not repeat a successful or known-missing command fingerprint. When recommendedCommands are supplied, include an exact recommended deterministic command.",
               nextObjective: evidenceProgress.nextObjective,
               recommendedCommands: evidenceProgress.recommendedCommands,
             };
