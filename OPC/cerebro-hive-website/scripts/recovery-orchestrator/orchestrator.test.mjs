@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { RecoveryPolicyEngine, pathAllowed } from "./policy.mjs";
 import { validateExecutionOrder, validateGovernorDecision } from "./protocol.mjs";
 import { GitGuard } from "./git-guard.mjs";
-import { buildGovernorHistory, sanitizeStateForGovernor } from "./orchestrator.mjs";
+import { buildGovernorHistory, closureRequiresHumanApproval, sanitizeStateForGovernor } from "./orchestrator.mjs";
 
 const baseOrder = {
   actionId: "A1",
@@ -149,6 +149,21 @@ test("transient blocked state is normalized before governor sees it", () => {
   assert.equal(state.status, "EVIDENCE_READY");
   assert.equal(state.blocker, undefined);
   assert.equal(state.transientControlPlaneFailureOmitted, true);
+});
+
+test("unverified CLOSED state is reopened before governor sees it", () => {
+  const state = sanitizeStateForGovernor({
+    status: "CLOSED",
+    lastActionId: "A1",
+    repository: "D:/repo",
+  });
+  assert.equal(state.status, "EVIDENCE_READY");
+  assert.equal(state.unverifiedClosureReopened, true);
+});
+
+test("CLOSE_WAVE is human-gated in v0.1", () => {
+  assert.equal(closureRequiresHumanApproval({ decision: "CLOSE_WAVE" }), true);
+  assert.equal(closureRequiresHumanApproval({ decision: "VERIFY" }), false);
 });
 
 test("git guard freezes read-only state changes", () => {
