@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { RecoveryPolicyEngine, pathAllowed } from "./policy.mjs";
 import { validateExecutionOrder, validateGovernorDecision } from "./protocol.mjs";
 import { GitGuard } from "./git-guard.mjs";
+import { buildGovernorHistory, sanitizeStateForGovernor } from "./orchestrator.mjs";
 
 const baseOrder = {
   actionId: "A1",
@@ -109,6 +110,45 @@ test("governor BLOCK decision with null action is valid", () => {
     nextAction: null,
   });
   assert.equal(result.decision, "BLOCK");
+});
+
+test("governor history omits protocol errors and recursive control-plane executions", () => {
+  const records = [
+    { type: "GOVERNOR_ERROR", payload: { error: { message: "AbortError" } } },
+    { type: "STATE", payload: { status: "BLOCKED", blocker: "GOVERNOR_PROTOCOL_ERROR" } },
+    {
+      type: "EXECUTION_RESULT",
+      payload: {
+        result: {
+          commands: [{ command: { exe: "node", args: ["D:/runner/scripts/recovery-orchestrator/cli.mjs"] } }],
+        },
+      },
+    },
+    {
+      type: "EXECUTION_RESULT",
+      payload: {
+        result: {
+          commands: [{ command: { exe: "git", args: ["status", "--porcelain=v1"] }, exitCode: 0 }],
+        },
+      },
+    },
+  ];
+  const history = buildGovernorHistory(records);
+  assert.equal(history.length, 1);
+  assert.equal(history[0].type, "EXECUTION_RESULT");
+  assert.equal(history[0].payload.result.commands[0].command.exe, "git");
+});
+
+test("transient blocked state is normalized before governor sees it", () => {
+  const state = sanitizeStateForGovernor({
+    status: "BLOCKED",
+    blocker: "GOVERNOR_PROTOCOL_ERROR",
+    lastActionId: "A1",
+    repository: "D:/repo",
+  });
+  assert.equal(state.status, "EVIDENCE_READY");
+  assert.equal(state.blocker, undefined);
+  assert.equal(state.transientControlPlaneFailureOmitted, true);
 });
 
 test("git guard freezes read-only state changes", () => {
