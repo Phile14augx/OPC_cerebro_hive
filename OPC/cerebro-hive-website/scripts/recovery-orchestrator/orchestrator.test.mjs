@@ -3,7 +3,14 @@ import assert from "node:assert/strict";
 import { RecoveryPolicyEngine, pathAllowed } from "./policy.mjs";
 import { validateExecutionOrder, validateGovernorDecision } from "./protocol.mjs";
 import { GitGuard } from "./git-guard.mjs";
-import { buildGovernorHistory, closureRequiresHumanApproval, sanitizeStateForGovernor } from "./orchestrator.mjs";
+import {
+  buildEvidenceProgress,
+  buildGovernorHistory,
+  closureRequiresHumanApproval,
+  commandFingerprint,
+  sanitizeStateForGovernor,
+  validateDecisionAgainstState,
+} from "./orchestrator.mjs";
 
 const baseOrder = {
   actionId: "A1",
@@ -27,6 +34,19 @@ const baseDecision = {
   writeAuthorized: false,
   nextAction: { ...baseOrder },
 };
+
+function completedExecution(command = baseOrder.commands[0]) {
+  return {
+    type: "EXECUTION_RESULT",
+    payload: {
+      result: {
+        status: "COMPLETED",
+        commands: [{ command, exitCode: 0, timedOut: false }],
+      },
+      integrity: { ok: true },
+    },
+  };
+}
 
 test("protocol accepts structured read-only order", () => {
   assert.equal(validateExecutionOrder({ ...baseOrder }).actionId, "A1");
@@ -115,6 +135,7 @@ test("governor BLOCK decision with null action is valid", () => {
 test("governor history omits protocol errors and recursive control-plane executions", () => {
   const records = [
     { type: "GOVERNOR_ERROR", payload: { error: { message: "AbortError" } } },
+    { type: "GOVERNOR_REPLAN", payload: { reason: "NON_ADVANCING_EVIDENCE_ACTION" } },
     { type: "STATE", payload: { status: "BLOCKED", blocker: "GOVERNOR_PROTOCOL_ERROR" } },
     {
       type: "EXECUTION_RESULT",
@@ -124,14 +145,7 @@ test("governor history omits protocol errors and recursive control-plane executi
         },
       },
     },
-    {
-      type: "EXECUTION_RESULT",
-      payload: {
-        result: {
-          commands: [{ command: { exe: "git", args: ["status", "--porcelain=v1"] }, exitCode: 0 }],
-        },
-      },
-    },
+    completedExecution(),
   ];
   const history = buildGovernorHistory(records);
   assert.equal(history.length, 1);
@@ -178,6 +192,49 @@ test("unapproved closure proposal block is reopened for evidence collection", ()
 test("CLOSE_WAVE is human-gated in v0.1", () => {
   assert.equal(closureRequiresHumanApproval({ decision: "CLOSE_WAVE" }), true);
   assert.equal(closureRequiresHumanApproval({ decision: "VERIFY" }), false);
+});
+
+test("command fingerprint normalizes executable path and arguments", () => {
+  assert.equal(
+    commandFingerprint({ exe: "C:\\Program Files\\Git\\bin\\git.exe", args: ["STATUS", "--PORCELAIN=v1"] }),
+    "git.exe|status\u001f--porcelain=v1|",
+  );
+});
+
+test("W0.2 evidence progress marks repeated git status as evidenced and advances to identity", () => {
+  const progress = buildEvidenceProgress([completedExecution()], {
+    wave: "W0.2",
+    canonicalBaseSha: "abc",
+  });
+  assert.ok(progress.completed.includes("REPOSITORY_STATUS_CAPTURED"));
+  assert.equal(progress.nextObjective.id, "REPOSITORY_IDENTITY_RECONCILED");
+  assert.deepEqual(progress.recommendedCommands[0], { exe: "git", args: ["rev-parse", "HEAD"] });
+});
+
+test("governor planning rejects exact repetition of successful evidence commands", () => {
+  const history = [completedExecution()];
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: "abc" };
+  const progress = buildEvidenceProgress(history, state);
+  assert.throws(() => validateDecisionAgainstState({
+    ...baseDecision,
+    decisionId: "D2",
+  }, state, history, progress), /NON_ADVANCING_EVIDENCE_ACTION/);
+});
+
+test("governor planning rejects sweeping evidence claims while W0.2 objectives remain outstanding", () => {
+  const history = [completedExecution()];
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: "abc" };
+  const progress = buildEvidenceProgress(history, state);
+  assert.throws(() => validateDecisionAgainstState({
+    ...baseDecision,
+    decisionId: "D2",
+    verifiedFacts: ["All evidence collected for wave W0.2 is consistent and valid."],
+    nextAction: {
+      ...baseOrder,
+      actionId: "A2",
+      commands: [{ exe: "git", args: ["rev-parse", "HEAD"] }],
+    },
+  }, state, history, progress), /UNSUPPORTED_AGGREGATE_EVIDENCE_CLAIM/);
 });
 
 test("git guard freezes read-only state changes", () => {
