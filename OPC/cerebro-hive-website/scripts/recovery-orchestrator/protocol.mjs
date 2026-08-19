@@ -1,4 +1,12 @@
 export const MODES = new Set(["READ_ONLY", "VERIFY", "WRITE", "PUSH"]);
+export const DECISIONS = new Set([
+  "COLLECT_EVIDENCE",
+  "AUTHORIZE_IMPLEMENTATION",
+  "VERIFY",
+  "PUSH",
+  "BLOCK",
+  "CLOSE_WAVE",
+]);
 
 export function assertObject(value, label) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -49,6 +57,51 @@ export function validateExecutionOrder(order) {
   };
 }
 
+function validateDecisionSemantics(decision) {
+  const action = decision.nextAction;
+
+  if (["BLOCK", "CLOSE_WAVE"].includes(decision.decision)) {
+    if (action !== null && action !== undefined) {
+      throw new Error(`${decision.decision} decisions must set nextAction to null`);
+    }
+    if (decision.writeAuthorized) {
+      throw new Error(`${decision.decision} decisions cannot authorize writes`);
+    }
+    return;
+  }
+
+  if (!action) {
+    throw new Error(`${decision.decision} decisions require nextAction`);
+  }
+
+  if (["COLLECT_EVIDENCE", "VERIFY"].includes(decision.decision)) {
+    if (!["READ_ONLY", "VERIFY"].includes(action.mode)) {
+      throw new Error(`${decision.decision} requires READ_ONLY or VERIFY action mode`);
+    }
+    if (decision.writeAuthorized) {
+      throw new Error(`${decision.decision} cannot set writeAuthorized=true`);
+    }
+  }
+
+  if (decision.decision === "AUTHORIZE_IMPLEMENTATION") {
+    if (action.mode !== "WRITE") {
+      throw new Error("AUTHORIZE_IMPLEMENTATION requires WRITE action mode");
+    }
+    if (!decision.writeAuthorized) {
+      throw new Error("AUTHORIZE_IMPLEMENTATION requires writeAuthorized=true");
+    }
+  }
+
+  if (decision.decision === "PUSH") {
+    if (action.mode !== "PUSH") {
+      throw new Error("PUSH decision requires PUSH action mode");
+    }
+    if (!decision.writeAuthorized) {
+      throw new Error("PUSH decision requires writeAuthorized=true");
+    }
+  }
+}
+
 export function validateGovernorDecision(decision) {
   assertObject(decision, "governor decision");
   if (typeof decision.decisionId !== "string" || !decision.decisionId.trim()) {
@@ -57,11 +110,16 @@ export function validateGovernorDecision(decision) {
   if (typeof decision.wave !== "string" || !decision.wave.trim()) {
     throw new Error("wave is required");
   }
-  if (typeof decision.decision !== "string" || !decision.decision.trim()) {
-    throw new Error("decision is required");
+  if (!DECISIONS.has(decision.decision)) {
+    throw new Error(`unsupported governor decision: ${decision.decision}`);
   }
   if (typeof decision.canonicalBaseSha !== "string" || !decision.canonicalBaseSha.trim()) {
     throw new Error("canonicalBaseSha is required");
+  }
+  for (const key of ["verifiedFacts", "conflicts", "unknowns"]) {
+    if (!Array.isArray(decision[key]) || decision[key].some((value) => typeof value !== "string")) {
+      throw new Error(`${key} must be a string array`);
+    }
   }
   if (typeof decision.writeAuthorized !== "boolean") {
     throw new Error("writeAuthorized must be boolean");
@@ -69,6 +127,7 @@ export function validateGovernorDecision(decision) {
   if (decision.nextAction !== undefined && decision.nextAction !== null) {
     decision.nextAction = validateExecutionOrder(decision.nextAction);
   }
+  validateDecisionSemantics(decision);
   return decision;
 }
 
