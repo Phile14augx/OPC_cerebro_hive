@@ -10,6 +10,19 @@ function withoutFreezeFields(state) {
   return rest;
 }
 
+function summarizeExecutionFailure(result) {
+  if (result?.status !== "FAILED") return null;
+  const commands = Array.isArray(result?.commands) ? result.commands : [];
+  const failed = [...commands].reverse().find((entry) => entry?.exitCode !== 0 || entry?.timedOut === true) ?? commands.at(-1);
+  return {
+    classification: result?.failure ?? "EXECUTION_FAILED",
+    command: failed?.command,
+    exitCode: failed?.exitCode,
+    timedOut: failed?.timedOut,
+    stderr: typeof failed?.stderr === "string" ? failed.stderr.slice(0, 4000) : failed?.stderr,
+  };
+}
+
 export function validateFalsePositiveFreezeEvidence(state, evidence) {
   const failures = [];
 
@@ -21,7 +34,9 @@ export function validateFalsePositiveFreezeEvidence(state, evidence) {
   if (evidence?.decisionId !== state?.lastDecisionId) failures.push("DECISION_ID_MISMATCH");
   if (evidence?.order?.mode !== "VERIFY") failures.push("FALSE_POSITIVE_RECONCILIATION_REQUIRES_VERIFY_MODE");
   if (evidence?.decision?.writeAuthorized !== false) failures.push("WRITE_AUTHORIZATION_PRESENT");
-  if (evidence?.result?.status !== "COMPLETED") failures.push("EXECUTION_NOT_COMPLETED");
+
+  const resultStatus = evidence?.result?.status;
+  if (!["COMPLETED", "FAILED"].includes(resultStatus)) failures.push("EXECUTION_STATUS_UNSUPPORTED");
 
   const commands = Array.isArray(evidence?.order?.commands) ? evidence.order.commands : [];
   if (commands.length === 0 || !commands.every(isReadOnlyGitCommand)) {
@@ -40,8 +55,12 @@ export function validateFalsePositiveFreezeEvidence(state, evidence) {
   return {
     ok: failures.length === 0,
     failures,
+    executionStatus: resultStatus,
+    executionFailure: summarizeExecutionFailure(evidence?.result),
     classification: failures.length === 0
-      ? "CONTROL_PLANE_GUARD_FALSE_POSITIVE"
+      ? (resultStatus === "FAILED"
+          ? "CONTROL_PLANE_GUARD_FALSE_POSITIVE_WITH_EXECUTION_FAILURE"
+          : "CONTROL_PLANE_GUARD_FALSE_POSITIVE")
       : "FREEZE_RECONCILIATION_REJECTED",
   };
 }
@@ -68,15 +87,25 @@ export async function reconcileFalsePositiveFreeze({
     frozenDecisionId: state.lastDecisionId,
     frozenActionId: state.lastActionId,
     evidence: state.lastEvidence,
-    reason: "VERIFY-mode action contained only read-only Git commands; HEAD, branch, and porcelain status were byte-identical before and after. OUT_OF_SCOPE_PATH flags therefore described pre-existing dirty evidence rather than executor mutations.",
+    executionStatus: validation.executionStatus,
+    executionFailure: validation.executionFailure,
+    reason: validation.executionStatus === "FAILED"
+      ? "VERIFY-mode action contained only read-only Git commands and HEAD, branch, and porcelain status were byte-identical before and after. OUT_OF_SCOPE_PATH flags therefore described pre-existing dirty evidence, not executor mutations. The independent executor command failure is preserved and remains unresolved."
+      : "VERIFY-mode action contained only read-only Git commands; HEAD, branch, and porcelain status were byte-identical before and after. OUT_OF_SCOPE_PATH flags therefore described pre-existing dirty evidence rather than executor mutations.",
     reconciledAt: new Date().toISOString(),
   };
 
   await ledger.append("FREEZE_RECONCILIATION", reconciliation);
+
+  const executionFailed = validation.executionStatus === "FAILED";
   const reconciledState = {
     ...withoutFreezeFields(state),
-    status: "EVIDENCE_READY",
+    status: executionFailed ? "EXECUTION_FAILED" : "EVIDENCE_READY",
     freezeReconciliation: reconciliation,
+    ...(executionFailed ? {
+      blocker: validation.executionFailure?.classification ?? "EXECUTION_FAILED",
+      executionFailure: validation.executionFailure,
+    } : {}),
     updatedAt: new Date().toISOString(),
   };
   await ledger.append("STATE", reconciledState);
