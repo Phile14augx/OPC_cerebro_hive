@@ -1,3 +1,4 @@
+import path from "node:path";
 import { validateGovernorDecision } from "./protocol.mjs";
 
 function serializableError(error) {
@@ -39,6 +40,23 @@ function summarizeExecutionFailure(result) {
   };
 }
 
+function normalizeFsPath(value) {
+  const resolved = path.resolve(value);
+  return process.platform === "win32" ? resolved.toLowerCase() : resolved;
+}
+
+function validateDecisionAgainstState(decision, state) {
+  if (state.lastDecisionId && decision.decisionId === state.lastDecisionId) {
+    throw new Error(`DUPLICATE_DECISION_ID: ${decision.decisionId}`);
+  }
+  if (decision.nextAction && state.lastActionId && decision.nextAction.actionId === state.lastActionId) {
+    throw new Error(`DUPLICATE_ACTION_ID: ${decision.nextAction.actionId}`);
+  }
+  if (decision.nextAction && normalizeFsPath(decision.nextAction.repository) !== normalizeFsPath(state.repository)) {
+    throw new Error(`EXECUTION_TARGET_MISMATCH: expected ${state.repository}, got ${decision.nextAction.repository}`);
+  }
+}
+
 export class RecoveryOrchestrator {
   constructor({ governor, executor, policy, gitGuard, evidenceStore, ledger, initialState, maxIterations = 50 }) {
     this.governor = governor;
@@ -59,6 +77,7 @@ export class RecoveryOrchestrator {
       let decision;
       try {
         decision = validateGovernorDecision(await this.governor.decide({ state, history: history.slice(-20) }));
+        validateDecisionAgainstState(decision, state);
       } catch (error) {
         const failure = {
           classification: "GOVERNOR_PROTOCOL_ERROR",
