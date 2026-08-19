@@ -43,6 +43,10 @@ function stateHasTransientControlPlaneFailure(state) {
   return isRecoveryControlPlaneCommand(state.executionFailure?.command);
 }
 
+function stateHasUnapprovedClosureBlock(state) {
+  return state?.status === "BLOCKED" && state?.blocker === "WAVE_CLOSURE_REQUIRES_HUMAN_APPROVAL";
+}
+
 export function sanitizeStateForGovernor(state) {
   let clean = state;
   let transientControlPlaneFailureOmitted = false;
@@ -58,8 +62,8 @@ export function sanitizeStateForGovernor(state) {
   }
 
   // v0.1 has no authenticated closure-approval artifact. Therefore a prior
-  // CLOSED state is treated as an unverified governor proposal and reopened.
-  if (clean.status === "CLOSED") {
+  // CLOSED state or unapproved closure proposal is reopened for more evidence.
+  if (clean.status === "CLOSED" || stateHasUnapprovedClosureBlock(clean)) {
     clean = {
       ...clearTransientFailureState(clean),
       status: clean.lastActionId ? "EVIDENCE_READY" : "ACTIVE",
@@ -152,7 +156,7 @@ export function closureRequiresHumanApproval(decision) {
 }
 
 export class RecoveryOrchestrator {
-  constructor({ governor, executor, policy, gitGuard, evidenceStore, ledger, initialState, maxIterations = 50 }) {
+  constructor({ governor, executor, policy, gitGuard, evidenceStore, ledger, initialState, maxIterations = 50, allowClosureProposal = false }) {
     this.governor = governor;
     this.executor = executor;
     this.policy = policy;
@@ -161,6 +165,7 @@ export class RecoveryOrchestrator {
     this.ledger = ledger;
     this.initialState = initialState;
     this.maxIterations = maxIterations;
+    this.allowClosureProposal = allowClosureProposal;
   }
 
   async run({ once = false } = {}) {
@@ -186,6 +191,12 @@ export class RecoveryOrchestrator {
               "unapproved wave closure",
             ],
             rule: "Treat only target-repository execution evidence as candidate repository facts. Control-plane transport/protocol failures are diagnostics, not portfolio facts. CLOSE_WAVE is only a proposal in v0.1 and cannot itself close a wave.",
+          },
+          closurePolicy: {
+            proposalAllowed: this.allowClosureProposal,
+            rule: this.allowClosureProposal
+              ? "A CLOSE_WAVE proposal may be emitted, but the orchestrator still requires human approval."
+              : "CLOSE_WAVE is disabled. Continue COLLECT_EVIDENCE or VERIFY until a human explicitly enables closure proposals after reviewing acceptance evidence.",
           },
           usedDecisionIds: ids.decisionIds.slice(-50),
           usedActionIds: ids.actionIds.slice(-50),
