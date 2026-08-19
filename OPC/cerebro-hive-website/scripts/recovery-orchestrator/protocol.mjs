@@ -8,6 +8,22 @@ export const DECISIONS = new Set([
   "CLOSE_WAVE",
 ]);
 
+const READ_ONLY_GIT = new Set([
+  "status", "rev-parse", "branch", "show", "log", "diff", "cat-file", "ls-tree",
+  "merge-base", "rev-list", "remote", "tag", "describe", "name-rev", "for-each-ref",
+]);
+
+function executableName(command) {
+  return String(command?.exe ?? "").toLowerCase().replace(/\\/g, "/").split("/").pop();
+}
+
+export function isReadOnlyGitCommand(command) {
+  const name = executableName(command);
+  if (!["git", "git.exe"].includes(name)) return false;
+  const subcommand = String(command?.args?.[0] ?? "").toLowerCase();
+  return READ_ONLY_GIT.has(subcommand);
+}
+
 export function assertObject(value, label) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error(`${label} must be an object`);
@@ -74,6 +90,13 @@ function validateDecisionSemantics(decision) {
     throw new Error(`${decision.decision} decisions require nextAction`);
   }
 
+  // Pure Git inspection must always use READ_ONLY mode. This prevents the
+  // VERIFY path-scope guard from treating pre-existing dirty evidence as if a
+  // read-only probe had created it.
+  if (action.commands.length > 0 && action.commands.every(isReadOnlyGitCommand) && action.mode !== "READ_ONLY") {
+    throw new Error("read-only Git commands require READ_ONLY action mode");
+  }
+
   if (["COLLECT_EVIDENCE", "VERIFY"].includes(decision.decision)) {
     if (!["READ_ONLY", "VERIFY"].includes(action.mode)) {
       throw new Error(`${decision.decision} requires READ_ONLY or VERIFY action mode`);
@@ -97,7 +120,7 @@ function validateDecisionSemantics(decision) {
       throw new Error("PUSH decision requires PUSH action mode");
     }
     if (!decision.writeAuthorized) {
-      throw new Error("PUSH decision requires writeAuthorized=true");
+      throw new Error("PUSH requires writeAuthorized=true");
     }
   }
 }
