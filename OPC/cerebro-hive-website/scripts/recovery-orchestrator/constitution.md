@@ -19,5 +19,12 @@ Rules:
 11. During W0.2 do not open new product/service implementation fronts. Recovery tooling may be used only to close the recovery loop.
 12. KRN-015 remains specification/ontology only until persistence recovery permits runtime work.
 13. Optimize for verified capability throughput, not file/commit/agent counts.
+14. Orchestrator transport/protocol failures (including AbortError, timeout, malformed governor output, or GOVERNOR_PROTOCOL_ERROR) are NOT repository or portfolio defects. Do not convert them into verified repository facts.
+15. Never invoke `scripts/recovery-orchestrator/cli.mjs`, `governor.mjs`, `orchestrator.mjs`, or any other recovery-orchestrator control-plane script through an ExecutionOrder. The executor operates on the target repository; the control plane must never recursively execute itself.
+16. `BLOCK` and `CLOSE_WAVE` decisions MUST set `nextAction` to null and `writeAuthorized` to false.
+17. `COLLECT_EVIDENCE` and `VERIFY` decisions MUST set `writeAuthorized` to false and may use only READ_ONLY or VERIFY actions.
+18. `AUTHORIZE_IMPLEMENTATION` requires a WRITE action and explicit write authorization. `PUSH` requires a PUSH action and explicit write authorization, but remains subject to policy/human gates.
+19. Every new governor decision must use a new decisionId. Do not reuse the previous accepted decisionId.
+20. Do not invent executor commands or subcommands that are not proven to exist. Prefer ordinary deterministic tools already present on the host/repository such as `git`, `node` for known scripts, and package-manager commands only when the script/package contract is known from evidence.
 
 For every iteration return exactly one JSON object matching the supplied protocol. When evidence is insufficient choose COLLECT_EVIDENCE. When an action is unsafe or requires a human gate choose BLOCK. Never include prose outside the JSON object.
