@@ -109,9 +109,6 @@ export function sanitizeStateForGovernor(state) {
     transientControlPlaneFailureOmitted = true;
   }
 
-  // A failed immutable `git show <ref>:<path>` that proves the path does not
-  // exist is evidence, not a terminal executor defect. Reopen so the governor
-  // can inspect the candidate recovery ref without repeating the failed probe.
   recoverableEvidenceMiss = recoverableEvidenceMissFromState(clean);
   if (recoverableEvidenceMiss) {
     clean = {
@@ -121,8 +118,6 @@ export function sanitizeStateForGovernor(state) {
     };
   }
 
-  // v0.1 has no authenticated closure-approval artifact. Therefore a prior
-  // CLOSED state or unapproved closure proposal is reopened for more evidence.
   if (clean.status === "CLOSED" || stateHasUnapprovedClosureBlock(clean)) {
     clean = {
       ...clearTransientFailureState(clean),
@@ -244,11 +239,11 @@ function workspaceGlobSupported(glob) {
     && !glob.includes("//");
 }
 
-function globToPackagePathspec(glob) {
-  // `git ls-tree` accepts ordinary path patterns but rejects the `:(glob)`
-  // magic form on supported Git builds. Keep the executor shell-free and let
-  // the deterministic parser below enforce exact one-segment workspace depth.
-  return `${WORKSPACE_ROOT}/${glob}/package.json`;
+function workspaceTreeRoots(workspaceGlobs) {
+  if (!Array.isArray(workspaceGlobs) || workspaceGlobs.length === 0) return [];
+  if (workspaceGlobs.some((glob) => !workspaceGlobSupported(glob))) return [];
+  return [...new Set(workspaceGlobs.map((glob) => glob.split("/")[0]))]
+    .map((root) => `${WORKSPACE_ROOT}/${root}`);
 }
 
 function escapeRegex(value) {
@@ -264,15 +259,18 @@ function globToPackageRegex(glob) {
 export function buildWorkspaceDenominatorCommand(baseSha, workspaceGlobs) {
   if (!baseSha || !Array.isArray(workspaceGlobs) || workspaceGlobs.length === 0) return null;
   if (workspaceGlobs.some((glob) => !workspaceGlobSupported(glob))) return null;
+  const roots = workspaceTreeRoots(workspaceGlobs);
+  if (roots.length === 0) return null;
   return {
     exe: "git",
     args: [
       "ls-tree",
       "-r",
       "--name-only",
+      "--full-tree",
       baseSha,
       "--",
-      ...workspaceGlobs.map(globToPackagePathspec),
+      ...roots,
     ],
   };
 }
@@ -282,18 +280,23 @@ export function deriveWorkspaceDenominator({ stdout, workspaceGlobs, sourceRef, 
   if (workspaceGlobs.some((glob) => !workspaceGlobSupported(glob))) return null;
 
   const matchers = workspaceGlobs.map(globToPackageRegex);
+  const treeRoots = workspaceTreeRoots(workspaceGlobs);
   const rawPaths = String(stdout ?? "")
     .split(/\r?\n/)
     .map((line) => line.trim().replace(/\\/g, "/"))
     .filter(Boolean);
-  const packageManifestPaths = rawPaths.filter((candidate) => candidate.endsWith("/package.json"));
-  const unexpectedPaths = rawPaths.filter((candidate) => !candidate.endsWith("/package.json"));
-  const childWorkspacePaths = [...new Set(packageManifestPaths.filter((candidate) => matchers.some((matcher) => matcher.test(candidate))))].sort();
-  const excludedPackageJsonPaths = [...new Set(packageManifestPaths.filter((candidate) => !matchers.some((matcher) => matcher.test(candidate))))].sort();
+  const unexpectedPaths = rawPaths.filter((candidate) => !treeRoots.some((root) => candidate === root || candidate.startsWith(`${root}/`)));
+  const packageManifestPaths = [...new Set(rawPaths.filter((candidate) => candidate.endsWith("/package.json")))].sort();
+  const childWorkspacePaths = packageManifestPaths.filter((candidate) => matchers.some((matcher) => matcher.test(candidate)));
+  const excludedPackageJsonPaths = packageManifestPaths.filter((candidate) => !matchers.some((matcher) => matcher.test(candidate)));
 
   return {
     sourceRef,
     workspaceGlobs: [...workspaceGlobs],
+    treeRoots,
+    rawTreePathCount: rawPaths.length,
+    packageManifestCount: packageManifestPaths.length,
+    ignoredNonManifestPathCount: rawPaths.length - packageManifestPaths.length,
     childWorkspacePaths,
     excludedPackageJsonPaths,
     unexpectedPaths,
@@ -583,7 +586,8 @@ export function validateDecisionAgainstState(decision, state, history, evidenceP
 
 function retryablePlanningError(error) {
   const message = error instanceof Error ? error.message : String(error);
-  return /^(NON_ADVANCING_EVIDENCE_ACTION|UNSUPPORTED_AGGREGATE_EVIDENCE_CLAIM):/.test(message);
+  return /^(NON_ADVANCING_EVIDENCE_ACTION|UNSUPPORTED_AGGREGATE_EVIDENCE_CLAIM):/.test(message)
+    || /read-only Git commands require READ_ONLY action mode/i.test(message);
 }
 
 export function closureRequiresHumanApproval(decision) {
@@ -650,7 +654,7 @@ export class RecoveryOrchestrator {
             if (!retryablePlanningError(error) || planningAttempt === 2) throw error;
             planningFeedback = {
               rejectedPlan: error.message,
-              instruction: "Replan the same decisionId. Remove unsupported aggregate claims and choose a different bounded READ_ONLY/VERIFY action that advances the next outstanding W0.2 evidence objective. Do not repeat a successful or known-missing command fingerprint. When recommendedCommands are supplied, include an exact recommended deterministic command.",
+              instruction: "Replan the same decisionId. Remove unsupported aggregate claims and choose a bounded action that advances the next outstanding W0.2 evidence objective. Pure Git inspection commands MUST use action.mode READ_ONLY. Do not repeat a successful or known-missing command fingerprint. When recommendedCommands are supplied, include an exact recommended deterministic command.",
               nextObjective: evidenceProgress.nextObjective,
               recommendedCommands: evidenceProgress.recommendedCommands,
             };
