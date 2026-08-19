@@ -6,8 +6,11 @@ import { GitGuard } from "./git-guard.mjs";
 import {
   buildEvidenceProgress,
   buildGovernorHistory,
+  buildWorkspaceDenominatorCommand,
   closureRequiresHumanApproval,
   commandFingerprint,
+  deriveWorkspaceDenominator,
+  parseWorkspaceGlobs,
   sanitizeStateForGovernor,
   validateDecisionAgainstState,
 } from "./orchestrator.mjs";
@@ -35,13 +38,13 @@ const baseDecision = {
   nextAction: { ...baseOrder },
 };
 
-function completedExecution(command = baseOrder.commands[0]) {
+function completedExecution(command = baseOrder.commands[0], stdout = "") {
   return {
     type: "EXECUTION_RESULT",
     payload: {
       result: {
         status: "COMPLETED",
-        commands: [{ command, exitCode: 0, timedOut: false }],
+        commands: [{ command, exitCode: 0, stdout, stderr: "", timedOut: false }],
       },
       integrity: { ok: true },
     },
@@ -244,4 +247,128 @@ test("git guard freezes read-only state changes", () => {
     { head: "b", branch: "main", statusRaw: "", changedPaths: [] });
   assert.equal(result.ok, false);
   assert.deepEqual(result.violations, ["READ_ONLY_HEAD_CHANGED"]);
+});
+
+const denominatorBase = "f5db3c622988edf91d69f5617fe603e93e5f2e1d";
+const denominatorRoot = "OPC/cerebro-hive-website";
+const denominatorYaml = `packages:\n  - "apps/*"\n  - "packages/*"\n  - "packages/capabilities/*"\n  - "services/*"\n`;
+const denominatorGlobs = ["apps/*", "packages/*", "packages/capabilities/*", "services/*"];
+
+function denominatorPriorHistory() {
+  return [
+    completedExecution({ exe: "git", args: ["status", "--porcelain=v1"] }),
+    completedExecution({ exe: "git", args: ["rev-parse", "HEAD"] }, "local-head\n"),
+    completedExecution({ exe: "git", args: ["branch", "--show-current"] }, "recovery\n"),
+    completedExecution({ exe: "git", args: ["rev-parse", "refs/remotes/origin/main"] }, `${denominatorBase}\n`),
+    completedExecution({ exe: "git", args: ["show", `${denominatorBase}:${denominatorRoot}/pnpm-workspace.yaml`] }, denominatorYaml),
+    completedExecution({ exe: "git", args: ["show", `${denominatorBase}:${denominatorRoot}/package.json`] }, '{"private":true}\n'),
+    completedExecution({ exe: "git", args: ["show", `${denominatorBase}:${denominatorRoot}/scripts/audit-workspace-contracts.mjs`] }, "// audit\n"),
+    completedExecution({ exe: "git", args: ["show", `${denominatorBase}:${denominatorRoot}/scripts/workspace-contract-exemptions.yaml`] }, "exemptions: []\n"),
+    completedExecution({ exe: "git", args: ["show", `${denominatorBase}:.github/workflows/website-ci.yml`] }, "name: Website CI\n"),
+  ];
+}
+
+test("workspace globs are parsed from captured pnpm-workspace.yaml", () => {
+  assert.deepEqual(parseWorkspaceGlobs(denominatorYaml), denominatorGlobs);
+});
+
+test("workspace denominator command uses immutable ref and exact package pathspecs", () => {
+  assert.deepEqual(buildWorkspaceDenominatorCommand(denominatorBase, denominatorGlobs), {
+    exe: "git",
+    args: [
+      "ls-tree",
+      "-r",
+      "--name-only",
+      denominatorBase,
+      "--",
+      `:(glob)${denominatorRoot}/apps/*/package.json`,
+      `:(glob)${denominatorRoot}/packages/*/package.json`,
+      `:(glob)${denominatorRoot}/packages/capabilities/*/package.json`,
+      `:(glob)${denominatorRoot}/services/*/package.json`,
+    ],
+  });
+});
+
+test("workspace denominator derivation deduplicates children and counts root once", () => {
+  const evidence = deriveWorkspaceDenominator({
+    stdout: [
+      `${denominatorRoot}/apps/studio/package.json`,
+      `${denominatorRoot}/packages/auth/package.json`,
+      `${denominatorRoot}/packages/capabilities/memory/package.json`,
+      `${denominatorRoot}/services/forge-api/package.json`,
+      `${denominatorRoot}/services/forge-api/package.json`,
+    ].join("\n"),
+    workspaceGlobs: denominatorGlobs,
+    sourceRef: denominatorBase,
+    rootControlPlaneCaptured: true,
+  });
+  assert.equal(evidence.valid, true);
+  assert.equal(evidence.childWorkspaceCount, 4);
+  assert.equal(evidence.rootControlPlaneCount, 1);
+  assert.equal(evidence.totalProjectEntities, 5);
+  assert.equal(evidence.childWorkspacePaths.length, 4);
+  assert.deepEqual(evidence.unexpectedPaths, []);
+});
+
+test("unexpected package paths invalidate workspace denominator evidence", () => {
+  const evidence = deriveWorkspaceDenominator({
+    stdout: `${denominatorRoot}/apps/studio/deep/package.json\n`,
+    workspaceGlobs: denominatorGlobs,
+    sourceRef: denominatorBase,
+    rootControlPlaneCaptured: true,
+  });
+  assert.equal(evidence.valid, false);
+  assert.equal(evidence.childWorkspaceCount, 0);
+  assert.deepEqual(evidence.unexpectedPaths, [`${denominatorRoot}/apps/studio/deep/package.json`]);
+});
+
+test("W0.2 planner recommends deterministic denominator probe after source capture", () => {
+  const history = denominatorPriorHistory();
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase };
+  const progress = buildEvidenceProgress(history, state);
+  assert.equal(progress.nextObjective.id, "WORKSPACE_DENOMINATOR_PROVEN");
+  assert.deepEqual(progress.workspaceDefinition.globs, denominatorGlobs);
+  assert.deepEqual(progress.recommendedCommands, [buildWorkspaceDenominatorCommand(denominatorBase, denominatorGlobs)]);
+});
+
+test("W0.2 denominator becomes evidenced after immutable tree output is captured", () => {
+  const history = denominatorPriorHistory();
+  const command = buildWorkspaceDenominatorCommand(denominatorBase, denominatorGlobs);
+  history.push(completedExecution(command, [
+    `${denominatorRoot}/apps/studio/package.json`,
+    `${denominatorRoot}/packages/auth/package.json`,
+    `${denominatorRoot}/packages/capabilities/memory/package.json`,
+    `${denominatorRoot}/services/forge-api/package.json`,
+  ].join("\n")));
+  const progress = buildEvidenceProgress(history, { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase });
+  assert.ok(progress.completed.includes("WORKSPACE_DENOMINATOR_PROVEN"));
+  assert.equal(progress.denominatorEvidence.childWorkspaceCount, 4);
+  assert.equal(progress.denominatorEvidence.totalProjectEntities, 5);
+  assert.equal(progress.nextObjective.id, "PR42_TRUE_DELTA_RECONCILED");
+});
+
+test("governor must include deterministic recommended denominator command", () => {
+  const history = denominatorPriorHistory();
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase };
+  const progress = buildEvidenceProgress(history, state);
+  assert.throws(() => validateDecisionAgainstState({
+    decisionId: "W0.2-015",
+    wave: "W0.2",
+    decision: "COLLECT_EVIDENCE",
+    canonicalBaseSha: denominatorBase,
+    verifiedFacts: [],
+    conflicts: [],
+    unknowns: ["WORKSPACE_DENOMINATOR_PROVEN"],
+    writeAuthorized: false,
+    nextAction: {
+      actionId: "W0.2-015-ACTION",
+      mode: "READ_ONLY",
+      repository: "D:/repo",
+      commands: [{ exe: "git", args: ["log", "-1", "--oneline"] }],
+      allowedPaths: [],
+      forbiddenPaths: [],
+      acceptanceCriteria: ["advance denominator proof"],
+      stopConditions: ["stop on failure"],
+    },
+  }, state, history, progress), /does not include a deterministic recommended command/);
 });
