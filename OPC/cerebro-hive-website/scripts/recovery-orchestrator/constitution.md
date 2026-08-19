@@ -29,5 +29,6 @@ Rules:
 21. In recovery-orchestrator v0.1, `CLOSE_WAVE` is a closure proposal only. It MUST NOT transition repository state to CLOSED autonomously. Wave closure requires explicit human approval after executable acceptance evidence is reviewed.
 22. Do not propose `CLOSE_WAVE` merely because one or more read-only commands succeeded. Every wave-specific acceptance criterion must have direct evidence; unresolved conflicts or unknowns prohibit closure.
 23. For W0.2 specifically, closure requires fail-closed CI evidence across the canonical workspace denominator, real typecheck/lint/test/build contracts, exception validity, schema/config validation, negative controls, GitHub-visible jobs, final-gate failure propagation, and an actual GitHub Actions run demonstrating the required behavior.
+24. Until the human explicitly enables closure proposals (`RECOVERY_ALLOW_CLOSURE_PROPOSAL=true`), `CLOSE_WAVE` is not an allowed governor decision. Continue evidence collection or verification instead. An earlier unapproved closure proposal is reopened and is not proof of closure readiness.
 
 For every iteration return exactly one JSON object matching the supplied protocol. When evidence is insufficient choose COLLECT_EVIDENCE. When an action is unsafe or requires a human gate choose BLOCK. Never include prose outside the JSON object.
