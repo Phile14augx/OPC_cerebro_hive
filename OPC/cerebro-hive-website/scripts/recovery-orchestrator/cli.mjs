@@ -10,6 +10,7 @@ import { GitGuard } from "./git-guard.mjs";
 import { EvidenceStore } from "./evidence-store.mjs";
 import { RecoveryLedger } from "./ledger.mjs";
 import { RecoveryOrchestrator } from "./orchestrator.mjs";
+import { reconcileFalsePositiveFreeze } from "./freeze-reconciliation.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const workspaceRoot = path.resolve(here, "../..");
@@ -26,6 +27,44 @@ const ledgerFile = path.join(stateDir, "recovery-ledger.jsonl");
 const executorMode = env("RECOVERY_EXECUTOR", "local");
 const constitutionPath = path.resolve(env("RECOVERY_CONSTITUTION_FILE", path.join(here, "constitution.md")));
 const systemPrompt = fs.readFileSync(constitutionPath, "utf8");
+
+const initialState = {
+  portfolio: "Cerebro Nexarch",
+  wave: env("RECOVERY_WAVE", "W0.2"),
+  status: "ACTIVE",
+  canonicalBaseSha: env("RECOVERY_BASE_SHA", "UNKNOWN"),
+  pr42HeadSha: env("RECOVERY_PR42_HEAD_SHA", "") || undefined,
+  repository,
+  constitutionPath,
+  createdAt: new Date().toISOString(),
+};
+
+const evidenceStore = new EvidenceStore(evidenceDir);
+const ledger = new RecoveryLedger(ledgerFile);
+const persistedState = await ledger.latestState(initialState);
+
+if (process.argv.includes("--reconcile-freeze")) {
+  try {
+    const state = await reconcileFalsePositiveFreeze({
+      state: persistedState,
+      evidenceStore,
+      ledger,
+      expectedSha256: env("RECOVERY_RECONCILE_FREEZE_SHA256", ""),
+    });
+    process.stdout.write(`${JSON.stringify(state, null, 2)}\n`);
+    process.exit(0);
+  } catch (error) {
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    process.exit(2);
+  }
+}
+
+// A freeze is a hard stop. The governor must not be invoked again until an
+// explicit, evidence-bound reconciliation has appended a new ledger state.
+if (persistedState.status === "FROZEN") {
+  process.stdout.write(`${JSON.stringify(persistedState, null, 2)}\n`);
+  process.exit(2);
+}
 
 const governor = new QwenGovernorAdapter({
   baseUrl: env("QWEN_BASE_URL"),
@@ -50,20 +89,11 @@ const orchestrator = new RecoveryOrchestrator({
     allowShell: false,
   }),
   gitGuard: new GitGuard({ git: env("GIT_EXE", "git") }),
-  evidenceStore: new EvidenceStore(evidenceDir),
-  ledger: new RecoveryLedger(ledgerFile),
+  evidenceStore,
+  ledger,
   maxIterations: Number(env("RECOVERY_MAX_ITERATIONS", "50")),
   allowClosureProposal: env("RECOVERY_ALLOW_CLOSURE_PROPOSAL", "false") === "true",
-  initialState: {
-    portfolio: "Cerebro Nexarch",
-    wave: env("RECOVERY_WAVE", "W0.2"),
-    status: "ACTIVE",
-    canonicalBaseSha: env("RECOVERY_BASE_SHA", "UNKNOWN"),
-    pr42HeadSha: env("RECOVERY_PR42_HEAD_SHA", "") || undefined,
-    repository,
-    constitutionPath,
-    createdAt: new Date().toISOString(),
-  },
+  initialState,
 });
 
 const once = process.argv.includes("--once");
