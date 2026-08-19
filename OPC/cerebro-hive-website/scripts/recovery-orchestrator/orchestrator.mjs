@@ -1,5 +1,20 @@
 import { validateGovernorDecision } from "./protocol.mjs";
 
+function serializableError(error) {
+  if (!error || typeof error !== "object") {
+    return { name: "Error", message: String(error) };
+  }
+  return {
+    name: error.name ?? "Error",
+    message: error.message ?? String(error),
+    stack: error.stack,
+    firstValidationError: error.firstValidationError,
+    firstContent: error.firstContent,
+    secondContent: error.secondContent,
+    rawResponse: error.rawResponse,
+  };
+}
+
 export class RecoveryOrchestrator {
   constructor({ governor, executor, policy, gitGuard, evidenceStore, ledger, initialState, maxIterations = 50 }) {
     this.governor = governor;
@@ -17,7 +32,31 @@ export class RecoveryOrchestrator {
 
     for (let iteration = 0; iteration < this.maxIterations; iteration += 1) {
       const history = await this.ledger.readAll();
-      const decision = validateGovernorDecision(await this.governor.decide({ state, history: history.slice(-20) }));
+      let decision;
+      try {
+        decision = validateGovernorDecision(await this.governor.decide({ state, history: history.slice(-20) }));
+      } catch (error) {
+        const failure = {
+          classification: "GOVERNOR_PROTOCOL_ERROR",
+          iteration,
+          state,
+          error: serializableError(error),
+          capturedAt: new Date().toISOString(),
+        };
+        const artifact = await this.evidenceStore.write("governor-error", `iteration-${iteration + 1}`, failure);
+        await this.evidenceStore.appendManifest({ ...artifact, actionId: `GOVERNOR-ERROR-${iteration + 1}` });
+        await this.ledger.append("GOVERNOR_ERROR", { artifact, error: failure.error });
+        const blocked = {
+          ...state,
+          status: "BLOCKED",
+          blocker: "GOVERNOR_PROTOCOL_ERROR",
+          lastEvidence: artifact,
+          updatedAt: new Date().toISOString(),
+        };
+        await this.ledger.append("STATE", blocked);
+        return blocked;
+      }
+
       await this.ledger.append("GOVERNOR_DECISION", decision);
 
       if (!decision.nextAction) {
