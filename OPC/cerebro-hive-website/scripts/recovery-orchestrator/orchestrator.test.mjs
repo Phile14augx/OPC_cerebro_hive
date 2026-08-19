@@ -272,7 +272,7 @@ test("workspace globs are parsed from captured pnpm-workspace.yaml", () => {
   assert.deepEqual(parseWorkspaceGlobs(denominatorYaml), denominatorGlobs);
 });
 
-test("workspace denominator command uses immutable ref and exact package pathspecs", () => {
+test("workspace denominator command uses immutable ref and ls-tree-compatible package patterns", () => {
   assert.deepEqual(buildWorkspaceDenominatorCommand(denominatorBase, denominatorGlobs), {
     exe: "git",
     args: [
@@ -281,10 +281,10 @@ test("workspace denominator command uses immutable ref and exact package pathspe
       "--name-only",
       denominatorBase,
       "--",
-      `:(glob)${denominatorRoot}/apps/*/package.json`,
-      `:(glob)${denominatorRoot}/packages/*/package.json`,
-      `:(glob)${denominatorRoot}/packages/capabilities/*/package.json`,
-      `:(glob)${denominatorRoot}/services/*/package.json`,
+      `${denominatorRoot}/apps/*/package.json`,
+      `${denominatorRoot}/packages/*/package.json`,
+      `${denominatorRoot}/packages/capabilities/*/package.json`,
+      `${denominatorRoot}/services/*/package.json`,
     ],
   });
 });
@@ -293,6 +293,7 @@ test("workspace denominator derivation deduplicates children and counts root onc
   const evidence = deriveWorkspaceDenominator({
     stdout: [
       `${denominatorRoot}/apps/studio/package.json`,
+      `${denominatorRoot}/apps/studio/platform/package.json`,
       `${denominatorRoot}/packages/auth/package.json`,
       `${denominatorRoot}/packages/capabilities/memory/package.json`,
       `${denominatorRoot}/services/forge-api/package.json`,
@@ -307,19 +308,38 @@ test("workspace denominator derivation deduplicates children and counts root onc
   assert.equal(evidence.rootControlPlaneCount, 1);
   assert.equal(evidence.totalProjectEntities, 5);
   assert.equal(evidence.childWorkspacePaths.length, 4);
+  assert.deepEqual(evidence.excludedPackageJsonPaths, [`${denominatorRoot}/apps/studio/platform/package.json`]);
   assert.deepEqual(evidence.unexpectedPaths, []);
 });
 
-test("unexpected package paths invalidate workspace denominator evidence", () => {
+test("nested package manifests are explicitly excluded rather than recursively counted", () => {
   const evidence = deriveWorkspaceDenominator({
-    stdout: `${denominatorRoot}/apps/studio/deep/package.json\n`,
+    stdout: [
+      `${denominatorRoot}/apps/studio/package.json`,
+      `${denominatorRoot}/apps/studio/platform/package.json`,
+    ].join("\n"),
+    workspaceGlobs: denominatorGlobs,
+    sourceRef: denominatorBase,
+    rootControlPlaneCaptured: true,
+  });
+  assert.equal(evidence.valid, true);
+  assert.equal(evidence.childWorkspaceCount, 1);
+  assert.deepEqual(evidence.childWorkspacePaths, [`${denominatorRoot}/apps/studio/package.json`]);
+  assert.deepEqual(evidence.excludedPackageJsonPaths, [`${denominatorRoot}/apps/studio/platform/package.json`]);
+});
+
+test("unexpected non-manifest output invalidates workspace denominator evidence", () => {
+  const evidence = deriveWorkspaceDenominator({
+    stdout: [
+      `${denominatorRoot}/apps/studio/package.json`,
+      `${denominatorRoot}/apps/studio/README.md`,
+    ].join("\n"),
     workspaceGlobs: denominatorGlobs,
     sourceRef: denominatorBase,
     rootControlPlaneCaptured: true,
   });
   assert.equal(evidence.valid, false);
-  assert.equal(evidence.childWorkspaceCount, 0);
-  assert.deepEqual(evidence.unexpectedPaths, [`${denominatorRoot}/apps/studio/deep/package.json`]);
+  assert.deepEqual(evidence.unexpectedPaths, [`${denominatorRoot}/apps/studio/README.md`]);
 });
 
 test("W0.2 planner recommends deterministic denominator probe after source capture", () => {
@@ -336,6 +356,7 @@ test("W0.2 denominator becomes evidenced after immutable tree output is captured
   const command = buildWorkspaceDenominatorCommand(denominatorBase, denominatorGlobs);
   history.push(completedExecution(command, [
     `${denominatorRoot}/apps/studio/package.json`,
+    `${denominatorRoot}/apps/studio/platform/package.json`,
     `${denominatorRoot}/packages/auth/package.json`,
     `${denominatorRoot}/packages/capabilities/memory/package.json`,
     `${denominatorRoot}/services/forge-api/package.json`,
@@ -344,6 +365,7 @@ test("W0.2 denominator becomes evidenced after immutable tree output is captured
   assert.ok(progress.completed.includes("WORKSPACE_DENOMINATOR_PROVEN"));
   assert.equal(progress.denominatorEvidence.childWorkspaceCount, 4);
   assert.equal(progress.denominatorEvidence.totalProjectEntities, 5);
+  assert.deepEqual(progress.denominatorEvidence.excludedPackageJsonPaths, [`${denominatorRoot}/apps/studio/platform/package.json`]);
   assert.equal(progress.nextObjective.id, "PR42_TRUE_DELTA_RECONCILED");
 });
 
