@@ -1,15 +1,33 @@
 import { parseJsonContent, validateGovernorDecision } from "./protocol.mjs";
 
-const DEFAULT_PROTOCOL_SYSTEM = `You are the Cerebro Nexarch Recovery Governor. You MUST return exactly one JSON object matching the GovernorDecision protocol supplied in the user message and no prose. The top-level object MUST contain decisionId, wave, decision, canonicalBaseSha, verifiedFacts, conflicts, unknowns, writeAuthorized, and nextAction (which may be null). Never return a recovery-status report instead of the GovernorDecision object. Never fabricate repository facts. Never issue destructive Git commands. Use the supplied evidence and state only. If evidence is insufficient, choose COLLECT_EVIDENCE. Execution commands must be structured as {exe,args,cwd?}; do not use shell pipelines. High-risk actions such as merge, reset, branch deletion, worktree deletion, force push, or production deployment must be BLOCKed for human approval. A prior GOVERNOR_PROTOCOL_ERROR is an orchestrator transport/protocol failure, not evidence that the portfolio itself is blocked; resume from the last valid recovery evidence.`;
+const DEFAULT_PROTOCOL_SYSTEM = `You are the Cerebro Nexarch Recovery Governor. You MUST return exactly one JSON object matching the GovernorDecision protocol supplied in the user message and no prose. The top-level object MUST contain decisionId, wave, decision, canonicalBaseSha, verifiedFacts, conflicts, unknowns, writeAuthorized, and nextAction (which may be null). Use the exact decisionId/actionId values supplied by the protocol constraints; do not invent or reuse identifiers. Never return a recovery-status report instead of the GovernorDecision object. Never fabricate repository facts. Never issue destructive Git commands. Use the supplied evidence and state only. If evidence is insufficient, choose COLLECT_EVIDENCE. Execution commands must be structured as {exe,args,cwd?}; do not use shell pipelines. High-risk actions such as merge, reset, branch deletion, worktree deletion, force push, or production deployment must be BLOCKed for human approval. A prior GOVERNOR_PROTOCOL_ERROR is an orchestrator transport/protocol failure, not evidence that the portfolio itself is blocked; resume from the last valid recovery evidence.`;
 
-function executionOrderSchema() {
+function nextDecisionId(input) {
+  const wave = input?.state?.wave ?? "W0.2";
+  const used = new Set([
+    ...(Array.isArray(input?.usedDecisionIds) ? input.usedDecisionIds : []),
+    ...(typeof input?.state?.lastDecisionId === "string" ? [input.state.lastDecisionId] : []),
+  ]);
+  const escaped = wave.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(`^${escaped}-(\\d+)$`);
+  let max = 0;
+  for (const id of used) {
+    const match = pattern.exec(id);
+    if (match) max = Math.max(max, Number(match[1]));
+  }
+  return `${wave}-${String(max + 1).padStart(3, "0")}`;
+}
+
+function executionOrderSchema({ expectedActionId, repository }) {
   return {
     type: "object",
     additionalProperties: false,
     properties: {
-      actionId: { type: "string", minLength: 1 },
+      actionId: { type: "string", const: expectedActionId },
       mode: { type: "string", enum: ["READ_ONLY", "VERIFY", "WRITE", "PUSH"] },
-      repository: { type: "string", minLength: 1 },
+      repository: repository
+        ? { type: "string", const: repository }
+        : { type: "string", minLength: 1 },
       commands: {
         type: "array",
         minItems: 1,
@@ -42,13 +60,17 @@ function executionOrderSchema() {
   };
 }
 
-function governorDecisionSchema() {
+function governorDecisionSchema(input) {
+  const expectedDecisionId = nextDecisionId(input);
+  const expectedActionId = `${expectedDecisionId}-ACTION`;
+  const wave = input?.state?.wave;
+  const repository = input?.state?.repository;
   return {
     type: "object",
     additionalProperties: false,
     properties: {
-      decisionId: { type: "string", minLength: 1 },
-      wave: { type: "string", minLength: 1 },
+      decisionId: { type: "string", const: expectedDecisionId },
+      wave: wave ? { type: "string", const: wave } : { type: "string", minLength: 1 },
       decision: {
         type: "string",
         enum: ["COLLECT_EVIDENCE", "AUTHORIZE_IMPLEMENTATION", "VERIFY", "PUSH", "BLOCK", "CLOSE_WAVE"],
@@ -61,7 +83,7 @@ function governorDecisionSchema() {
       nextAction: {
         anyOf: [
           { type: "null" },
-          executionOrderSchema(),
+          executionOrderSchema({ expectedActionId, repository }),
         ],
       },
     },
@@ -79,20 +101,22 @@ function governorDecisionSchema() {
   };
 }
 
-function protocolShape() {
+function protocolShape(input) {
+  const decisionId = nextDecisionId(input);
+  const actionId = `${decisionId}-ACTION`;
   return {
-    decisionId: "W0.2-002",
-    wave: "W0.2",
+    decisionId,
+    wave: input?.state?.wave ?? "W0.2",
     decision: "COLLECT_EVIDENCE",
-    canonicalBaseSha: "full git SHA",
-    verifiedFacts: ["fact supported by supplied evidence"],
+    canonicalBaseSha: input?.state?.canonicalBaseSha ?? "full git SHA",
+    verifiedFacts: ["fact supported by supplied target-repository evidence"],
     conflicts: ["unresolved contradiction"],
     unknowns: ["missing fact"],
     writeAuthorized: false,
     nextAction: {
-      actionId: "W0.2-002-EVIDENCE",
+      actionId,
       mode: "READ_ONLY",
-      repository: "absolute path supplied in state",
+      repository: input?.state?.repository ?? "absolute path supplied in state",
       commands: [{ exe: "git", args: ["status", "--porcelain=v1"] }],
       allowedPaths: [],
       forbiddenPaths: [],
@@ -148,7 +172,7 @@ export class QwenGovernorAdapter {
     return url.toString();
   }
 
-  async request(messages) {
+  async request(messages, schema) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.timeoutMs);
     try {
@@ -161,7 +185,7 @@ export class QwenGovernorAdapter {
             messages,
             stream: false,
             think: false,
-            format: governorDecisionSchema(),
+            format: schema,
             options: { temperature: 0 },
           }),
           signal: controller.signal,
@@ -193,7 +217,7 @@ export class QwenGovernorAdapter {
             json_schema: {
               name: "governor_decision",
               strict: true,
-              schema: governorDecisionSchema(),
+              schema,
             },
           },
           messages,
@@ -220,15 +244,19 @@ export class QwenGovernorAdapter {
   }
 
   async decide(input) {
-    const requiredShape = protocolShape();
-    const schema = governorDecisionSchema();
+    const requiredShape = protocolShape(input);
+    const schema = governorDecisionSchema(input);
+    const expectedDecisionId = requiredShape.decisionId;
+    const expectedActionId = requiredShape.nextAction.actionId;
     const baseMessages = [
       { role: "system", content: this.systemPrompt },
       {
         role: "user",
         content: JSON.stringify({
           protocolVersion: 1,
-          instruction: "Return exactly one GovernorDecision JSON object. Do not return a status report or wrapper object. Every required field must be present. verifiedFacts/conflicts/unknowns are arrays of strings. If no executor action is needed, set nextAction to null.",
+          instruction: `Return exactly one GovernorDecision JSON object. Use decisionId ${expectedDecisionId} exactly. If nextAction is non-null, use actionId ${expectedActionId} exactly. Do not return a status report or wrapper object. Every required field must be present. verifiedFacts/conflicts/unknowns are arrays of strings. If no executor action is needed, set nextAction to null.`,
+          requiredDecisionId: expectedDecisionId,
+          requiredActionId: expectedActionId,
           requiredShape,
           jsonSchema: schema,
           input,
@@ -236,7 +264,7 @@ export class QwenGovernorAdapter {
       },
     ];
 
-    const firstContent = await this.request(baseMessages);
+    const firstContent = await this.request(baseMessages, schema);
     try {
       return this.parseAndValidate(firstContent);
     } catch (firstError) {
@@ -246,15 +274,17 @@ export class QwenGovernorAdapter {
         {
           role: "user",
           content: JSON.stringify({
-            instruction: "Your previous response violated the GovernorDecision protocol. Repair it. Return ONLY the corrected top-level GovernorDecision JSON object. decisionId is mandatory. Do not return a recovery-status object.",
+            instruction: `Your previous response violated the GovernorDecision protocol. Repair it. Return ONLY the corrected top-level GovernorDecision JSON object. Use decisionId ${expectedDecisionId} exactly and, when nextAction is non-null, actionId ${expectedActionId} exactly. Do not return a recovery-status object.`,
             validationError: serializeError(firstError),
+            requiredDecisionId: expectedDecisionId,
+            requiredActionId: expectedActionId,
             requiredShape,
             jsonSchema: schema,
           }),
         },
       ];
 
-      const secondContent = await this.request(repairMessages);
+      const secondContent = await this.request(repairMessages, schema);
       try {
         return this.parseAndValidate(secondContent);
       } catch (secondError) {
