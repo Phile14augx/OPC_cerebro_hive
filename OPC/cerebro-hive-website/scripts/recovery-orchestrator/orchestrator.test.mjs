@@ -30,11 +30,17 @@ test("policy rejects git reset even for write mode", () => {
   assert.match(result.reason, /PROHIBITED_COMMAND/);
 });
 
+test("policy rejects commits in v0.1 so path scope cannot be bypassed", () => {
+  const policy = new RecoveryPolicyEngine();
+  const result = policy.evaluate({ ...baseOrder, mode: "WRITE", commands: [{ exe: "git", args: ["commit", "-m", "x"] }] });
+  assert.equal(result.allowed, false);
+  assert.match(result.reason, /PROHIBITED_COMMAND/);
+});
+
 test("policy rejects git commit in read-only mode", () => {
   const policy = new RecoveryPolicyEngine();
   const result = policy.evaluate({ ...baseOrder, commands: [{ exe: "git", args: ["commit", "-m", "x"] }] });
   assert.equal(result.allowed, false);
-  assert.match(result.reason, /READ_ONLY_GIT_MUTATION/);
 });
 
 test("path scope is prefix-bounded", () => {

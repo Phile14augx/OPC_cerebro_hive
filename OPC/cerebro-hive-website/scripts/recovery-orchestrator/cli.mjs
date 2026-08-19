@@ -19,7 +19,7 @@ function env(name, fallback) {
   return value === undefined || value === "" ? fallback : value;
 }
 
-const repository = path.resolve(env("RECOVERY_REPOSITORY", path.resolve(workspaceRoot, "../../..")));
+const repository = path.resolve(env("RECOVERY_REPOSITORY", path.resolve(workspaceRoot, "../..")));
 const stateDir = path.resolve(env("RECOVERY_STATE_DIR", path.join(repository, "..", "CEREBRO_RECOVERY_ORCHESTRATOR")));
 const evidenceDir = path.join(stateDir, "evidence");
 const ledgerFile = path.join(stateDir, "recovery-ledger.jsonl");
