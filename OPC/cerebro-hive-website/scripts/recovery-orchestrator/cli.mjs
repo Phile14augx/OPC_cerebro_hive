@@ -31,6 +31,7 @@ const governor = new QwenGovernorAdapter({
   baseUrl: env("QWEN_BASE_URL"),
   apiKey: env("QWEN_API_KEY"),
   model: env("QWEN_MODEL"),
+  apiStyle: env("QWEN_API_STYLE", "auto"),
   systemPrompt,
 });
 
