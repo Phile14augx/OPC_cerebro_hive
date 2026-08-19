@@ -1,5 +1,10 @@
 import path from "node:path";
 import { validateGovernorDecision } from "./protocol.mjs";
+import {
+  PR42_POLICY,
+  buildPr42ReconciliationCommands,
+  derivePr42Reconciliation
+} from "./pr42-reconciliation.mjs";
 
 function serializableError(error) {
   if (!error || typeof error !== "object") {
@@ -458,6 +463,21 @@ export function buildEvidenceProgress(records, state) {
         }
       }
     }
+
+    if (completed.has("WORKSPACE_DENOMINATOR_PROVEN")) {
+      const pr42Commands = buildPr42ReconciliationCommands(baseSha, pr42HeadSha);
+      if (pr42Commands.length > 0) {
+        const pr42Entries = pr42Commands.map((cmd) => successfulExecutionEntry(records, cmd));
+        if (pr42Entries.every(Boolean)) {
+          const pr42Evidence = derivePr42Reconciliation(pr42Entries);
+          if (pr42Evidence?.valid) {
+            completed.add("PR42_TRUE_DELTA_RECONCILED");
+          } else if (pr42Evidence) {
+            evidenceNotes.push(`PR42 reconciliation evidence is invalid: ${pr42Evidence.note}`);
+          }
+        }
+      }
+    }
   }
 
   const objectives = W02_OBJECTIVES.map((objective) => ({
@@ -497,6 +517,9 @@ export function buildEvidenceProgress(records, state) {
   } else if (next === "WORKSPACE_DENOMINATOR_PROVEN") {
     const command = buildWorkspaceDenominatorCommand(baseSha, workspaceGlobs);
     recommendedCommands = command ? [command] : [];
+  } else if (next === "PR42_TRUE_DELTA_RECONCILED") {
+    const pr42Commands = buildPr42ReconciliationCommands(baseSha, pr42HeadSha);
+    recommendedCommands = pr42Commands.filter((cmd) => !successfulFingerprints.includes(commandFingerprint(cmd)));
   }
 
   return {

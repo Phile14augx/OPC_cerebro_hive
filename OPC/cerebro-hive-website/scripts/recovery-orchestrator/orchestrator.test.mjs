@@ -14,6 +14,15 @@ import {
   sanitizeStateForGovernor,
   validateDecisionAgainstState,
 } from "./orchestrator.mjs";
+import {
+  buildPr42ReconciliationCommands,
+  derivePr42Reconciliation,
+  PR42_EXPECTED_MERGE_BASE,
+  PR42_PRESERVED_COMMIT,
+  PR42_PRESERVED_PARENT,
+  PR42_KNOWN_PRESERVED_PATHS,
+  PR42_POLICY
+} from "./pr42-reconciliation.mjs";
 
 const baseOrder = {
   actionId: "A1",
@@ -454,4 +463,218 @@ test("governor must include deterministic recommended denominator command", () =
       stopConditions: ["stop on failure"],
     },
   }, state, history, progress), /does not include a deterministic recommended command/);
+});
+
+const pr42Head = "1252a95ed563ad2c3343b407f789bfe1c084b2be";
+
+function setupPr42BaseHistory() {
+  const history = denominatorPriorHistory();
+  const command = buildWorkspaceDenominatorCommand(denominatorBase, denominatorGlobs);
+  history.push(completedExecution(command, [
+    `${denominatorRoot}/apps/studio/package.json`,
+  ].join("\n")));
+  return history;
+}
+
+function mockPr42Outputs({
+  mergeBase = PR42_EXPECTED_MERGE_BASE,
+  baseCount = 5,
+  pr42Count = 28,
+  mainPaths = 203,
+  pr42Paths = 84,
+  overlap = 43,
+  preservedPaths = PR42_KNOWN_PRESERVED_PATHS,
+  preservedParent = PR42_PRESERVED_PARENT,
+  diffPr42Preserved = [],
+  uniquePreserved = false
+} = {}) {
+  let mainOwnedPaths = Array.from({length: mainPaths}, (_, i) => `main-${i}`);
+  let pr42OwnedPaths = Array.from({length: pr42Paths}, (_, i) => `pr42-${i}`);
+
+  for (let i = 0; i < overlap; i++) {
+    mainOwnedPaths[i] = `overlap-${i}`;
+    pr42OwnedPaths[i] = `overlap-${i}`;
+  }
+
+  if (!uniquePreserved) {
+    for (let i = 0; i < preservedPaths.length; i++) {
+      pr42OwnedPaths[overlap + i] = preservedPaths[i];
+    }
+  }
+
+  mainOwnedPaths.sort();
+  pr42OwnedPaths.sort();
+
+  return [
+    completedExecution({ exe: "git", args: ["cat-file", "-e", `${denominatorBase}^{commit}`] }),
+    completedExecution({ exe: "git", args: ["cat-file", "-e", `${pr42Head}^{commit}`] }),
+    completedExecution({ exe: "git", args: ["cat-file", "-e", `${PR42_PRESERVED_COMMIT}^{commit}`] }),
+    completedExecution({ exe: "git", args: ["merge-base", denominatorBase, pr42Head] }, mergeBase + "\n"),
+    completedExecution({ exe: "git", args: ["rev-list", "--left-right", "--count", `${denominatorBase}...${pr42Head}`] }, `${baseCount}\t${pr42Count}\n`),
+    completedExecution({ exe: "git", args: ["diff", "--name-only", "--no-renames", PR42_EXPECTED_MERGE_BASE, denominatorBase] }, mainOwnedPaths.join("\n") + "\n"),
+    completedExecution({ exe: "git", args: ["diff", "--name-only", "--no-renames", PR42_EXPECTED_MERGE_BASE, pr42Head] }, pr42OwnedPaths.join("\n") + "\n"),
+    completedExecution({ exe: "git", args: ["rev-parse", `${PR42_PRESERVED_COMMIT}^`] }, preservedParent + "\n"),
+    completedExecution({ exe: "git", args: ["diff", "--name-only", "--no-renames", PR42_PRESERVED_PARENT, PR42_PRESERVED_COMMIT] }, preservedPaths.join("\n") + "\n"),
+    completedExecution({ exe: "git", args: ["diff", "--name-only", "--no-renames", pr42Head, PR42_PRESERVED_COMMIT, "--", ...PR42_KNOWN_PRESERVED_PATHS] }, diffPr42Preserved.join("\n") + "\n"),
+  ];
+}
+
+test("no reconciliation evidence => Objective 9 OUTSTANDING", () => {
+  const history = setupPr42BaseHistory();
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase, pr42HeadSha: pr42Head };
+  const progress = buildEvidenceProgress(history, state);
+  assert.equal(progress.nextObjective.id, "PR42_TRUE_DELTA_RECONCILED");
+  assert.equal(progress.completed.includes("PR42_TRUE_DELTA_RECONCILED"), false);
+});
+
+test("correct deterministic commands are recommended", () => {
+  const history = setupPr42BaseHistory();
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase, pr42HeadSha: pr42Head };
+  const progress = buildEvidenceProgress(history, state);
+  assert.deepEqual(progress.recommendedCommands, buildPr42ReconciliationCommands(denominatorBase, pr42Head));
+});
+
+test("all Objective-9 commands are read-only Git", () => {
+  const commands = buildPr42ReconciliationCommands(denominatorBase, pr42Head);
+  for (const command of commands) {
+    assert.equal(command.exe, "git");
+    const allowed = ["cat-file", "merge-base", "rev-list", "diff", "rev-parse"];
+    assert.ok(allowed.includes(command.args[0]));
+  }
+});
+
+test("correct counts => Objective 9 EVIDENCED", () => {
+  const history = setupPr42BaseHistory();
+  history.push(...mockPr42Outputs());
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase, pr42HeadSha: pr42Head };
+  const progress = buildEvidenceProgress(history, state);
+  assert.equal(progress.completed.includes("PR42_TRUE_DELTA_RECONCILED"), true);
+});
+
+test("wrong merge base => OUTSTANDING", () => {
+  const history = setupPr42BaseHistory();
+  history.push(...mockPr42Outputs({ mergeBase: "wrong-base" }));
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase, pr42HeadSha: pr42Head };
+  const progress = buildEvidenceProgress(history, state);
+  assert.equal(progress.completed.includes("PR42_TRUE_DELTA_RECONCILED"), false);
+  assert.ok(progress.evidenceNotes.some(n => n.includes("wrong merge base")));
+});
+
+test("wrong topology counts => OUTSTANDING", () => {
+  const history = setupPr42BaseHistory();
+  history.push(...mockPr42Outputs({ baseCount: 4 }));
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase, pr42HeadSha: pr42Head };
+  const progress = buildEvidenceProgress(history, state);
+  assert.equal(progress.completed.includes("PR42_TRUE_DELTA_RECONCILED"), false);
+  assert.ok(progress.evidenceNotes.some(n => n.includes("wrong topology counts")));
+});
+
+test("missing preserved path => OUTSTANDING", () => {
+  const history = setupPr42BaseHistory();
+  history.push(...mockPr42Outputs({ preservedPaths: [PR42_KNOWN_PRESERVED_PATHS[0]] }));
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase, pr42HeadSha: pr42Head };
+  const progress = buildEvidenceProgress(history, state);
+  assert.equal(progress.completed.includes("PR42_TRUE_DELTA_RECONCILED"), false);
+  assert.ok(progress.evidenceNotes.some(n => n.includes("missing preserved path")));
+});
+
+test("non-empty PR42/preserved diff => OUTSTANDING", () => {
+  const history = setupPr42BaseHistory();
+  history.push(...mockPr42Outputs({ diffPr42Preserved: ["some/path"] }));
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase, pr42HeadSha: pr42Head };
+  const progress = buildEvidenceProgress(history, state);
+  assert.equal(progress.completed.includes("PR42_TRUE_DELTA_RECONCILED"), false);
+  assert.ok(progress.evidenceNotes.some(n => n.includes("non-empty PR42/preserved diff")));
+});
+
+test("unique preserved work => OUTSTANDING", () => {
+  const history = setupPr42BaseHistory();
+  history.push(...mockPr42Outputs({ uniquePreserved: true }));
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase, pr42HeadSha: pr42Head };
+  const progress = buildEvidenceProgress(history, state);
+  assert.equal(progress.completed.includes("PR42_TRUE_DELTA_RECONCILED"), false);
+  assert.ok(progress.evidenceNotes.some(n => n.includes("unique preserved work")));
+});
+
+test("pnpm-lock.yaml disposition is REGENERATE", () => {
+  assert.ok(PR42_POLICY.REGENERATE.includes("OPC/cerebro-hive-website/pnpm-lock.yaml"));
+  assert.equal(PR42_POLICY.REGENERATE.length, 1);
+});
+
+test("KEEP_MAIN paths cannot become PR42 replacement candidates", () => {
+  assert.ok(PR42_POLICY.KEEP_MAIN.includes("OPC/cerebro-hive-website/packages/config-core/src/index.ts"));
+  assert.equal(PR42_POLICY.KEEP_MAIN.length, 9);
+});
+
+test("preserved parent mismatch => OUTSTANDING", () => {
+  const history = setupPr42BaseHistory();
+  history.push(...mockPr42Outputs({ preservedParent: "0000000000000000000000000000000000000000" }));
+  const state = { repository: "D:/repo", wave: "W0.2", canonicalBaseSha: denominatorBase, pr42HeadSha: pr42Head };
+  const progress = buildEvidenceProgress(history, state);
+  assert.equal(progress.completed.includes("PR42_TRUE_DELTA_RECONCILED"), false);
+  assert.ok(progress.evidenceNotes.some(n => n.includes("wrong preserved parent")));
+});
+
+test("PR42 branch-owned path partitions are derived exactly", () => {
+  const entries = mockPr42Outputs();
+  // Extract the execution-entry objects expected by derivePr42Reconciliation
+  // mockPr42Outputs returns EXECUTION_RESULT records; we need the inner entry objects
+  const extractedEntries = entries.map(record => {
+    const commands = record.payload?.result?.commands ?? [];
+    return commands.length > 0 ? commands[0] : null;
+  });
+  const evidence = derivePr42Reconciliation(extractedEntries);
+  assert.ok(evidence !== null, "derivePr42Reconciliation must return evidence");
+  assert.equal(evidence.mainOwnedPaths.length, 203);
+  assert.equal(evidence.pr42OwnedPaths.length, 84);
+  assert.equal(evidence.overlapPaths.length, 43);
+  assert.equal(evidence.pr42OnlyPaths.length, 41);
+  assert.equal(evidence.mainOnlyPaths.length, 160);
+  assert.equal(evidence.preservedChangedPaths.length, 9);
+  assert.equal(evidence.uniquePreservedPaths.length, 0);
+
+  // Partition set identities
+  const overlapSet = new Set(evidence.overlapPaths);
+  const pr42OnlySet = new Set(evidence.pr42OnlyPaths);
+  const mainOnlySet = new Set(evidence.mainOnlyPaths);
+  const pr42OwnedSet = new Set(evidence.pr42OwnedPaths);
+  const mainOwnedSet = new Set(evidence.mainOwnedPaths);
+
+  // Set(overlap + pr42Only) === Set(pr42OwnedPaths)
+  const derivedPr42Owned = new Set([...overlapSet, ...pr42OnlySet]);
+  assert.deepEqual(
+    [...derivedPr42Owned].sort(),
+    [...pr42OwnedSet].sort(),
+    "overlap ∪ pr42Only must equal pr42OwnedPaths"
+  );
+
+  // Set(overlap + mainOnly) === Set(mainOwnedPaths)
+  const derivedMainOwned = new Set([...overlapSet, ...mainOnlySet]);
+  assert.deepEqual(
+    [...derivedMainOwned].sort(),
+    [...mainOwnedSet].sort(),
+    "overlap ∪ mainOnly must equal mainOwnedPaths"
+  );
+
+  // No path in both mainOnlyPaths and pr42OnlyPaths
+  for (const p of evidence.mainOnlyPaths) {
+    assert.equal(pr42OnlySet.has(p), false, `"${p}" must not appear in both mainOnly and pr42Only`);
+  }
+});
+
+test("packages/db/package.json disposition is VERIFY_BEFORE_RECOVERY", () => {
+  assert.ok(PR42_POLICY.VERIFY_BEFORE_RECOVERY.includes("OPC/cerebro-hive-website/packages/db/package.json"));
+});
+
+test("KEEP_MAIN paths are absent from every RECOVERY_CANDIDATE path collection", () => {
+  const keepMainSet = new Set(PR42_POLICY.KEEP_MAIN);
+  for (const [groupKey, group] of Object.entries(PR42_POLICY.RECOVERY_CANDIDATE)) {
+    for (const candidatePath of group.paths ?? []) {
+      assert.equal(
+        keepMainSet.has(candidatePath),
+        false,
+        `RECOVERY_CANDIDATE.${groupKey} must not contain KEEP_MAIN path "${candidatePath}"`
+      );
+    }
+  }
 });
