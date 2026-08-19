@@ -29,10 +29,11 @@ function snapshot(statusRaw) {
   };
 }
 
-function frozenEvidence() {
+function frozenEvidence({ executionStatus = "COMPLETED" } = {}) {
   const dirty = " M OPC/cerebro-hive-website/PROGRESS.md\n?? .worktrees/\n";
   const before = snapshot(dirty);
   const after = snapshot(dirty);
+  const failed = executionStatus === "FAILED";
   return {
     decisionId: "W0.2-015",
     actionId: "W0.2-015-ACTION",
@@ -60,8 +61,15 @@ function frozenEvidence() {
     before,
     result: {
       actionId: "W0.2-015-ACTION",
-      status: "COMPLETED",
-      commands: [{ command, exitCode: 0, stdout: "OPC/cerebro-hive-website/apps/studio/package.json\n", stderr: "", timedOut: false }],
+      status: executionStatus,
+      commands: [{
+        command,
+        exitCode: failed ? 128 : 0,
+        stdout: failed ? "" : "OPC/cerebro-hive-website/apps/studio/package.json\n",
+        stderr: failed ? "fatal: pathspec magic not supported in fixture\n" : "",
+        timedOut: false,
+      }],
+      ...(failed ? { failure: "COMMAND_FAILED" } : {}),
     },
     after,
     integrity: {
@@ -136,6 +144,21 @@ test("false-positive freeze evidence requires byte-identical Git state and read-
   assert.equal(validation.classification, "CONTROL_PLANE_GUARD_FALSE_POSITIVE");
 });
 
+test("false-positive freeze can be reconciled even when independent read-only command failed", () => {
+  const evidence = frozenEvidence({ executionStatus: "FAILED" });
+  const state = {
+    status: "FROZEN",
+    blocker: "UNAUTHORIZED_RECOVERY_MUTATION",
+    lastDecisionId: evidence.decisionId,
+    lastActionId: evidence.actionId,
+  };
+  const validation = validateFalsePositiveFreezeEvidence(state, evidence);
+  assert.equal(validation.ok, true);
+  assert.equal(validation.classification, "CONTROL_PLANE_GUARD_FALSE_POSITIVE_WITH_EXECUTION_FAILURE");
+  assert.equal(validation.executionFailure.classification, "COMMAND_FAILED");
+  assert.equal(validation.executionFailure.exitCode, 128);
+});
+
 test("evidence-bound reconciliation appends additive thaw state without rewriting freeze evidence", async () => {
   const temp = await fs.mkdtemp(path.join(os.tmpdir(), "cerebro-freeze-test-"));
   try {
@@ -166,6 +189,45 @@ test("evidence-bound reconciliation appends additive thaw state without rewritin
     assert.equal(reconciled.blocker, undefined);
     assert.equal(reconciled.integrityViolations, undefined);
     assert.equal(reconciled.freezeReconciliation.classification, "CONTROL_PLANE_GUARD_FALSE_POSITIVE");
+
+    const records = await ledger.readAll();
+    assert.equal(records.at(-2).type, "FREEZE_RECONCILIATION");
+    assert.equal(records.at(-1).type, "STATE");
+  } finally {
+    await fs.rm(temp, { recursive: true, force: true });
+  }
+});
+
+test("failed executor command is preserved as EXECUTION_FAILED after false-freeze reconciliation", async () => {
+  const temp = await fs.mkdtemp(path.join(os.tmpdir(), "cerebro-freeze-failed-test-"));
+  try {
+    const evidenceStore = new EvidenceStore(path.join(temp, "evidence"));
+    const ledger = new RecoveryLedger(path.join(temp, "recovery-ledger.jsonl"));
+    const evidence = frozenEvidence({ executionStatus: "FAILED" });
+    const artifact = await evidenceStore.write("execution", evidence.actionId, evidence);
+    const state = {
+      portfolio: "Cerebro Nexarch",
+      wave: "W0.2",
+      status: "FROZEN",
+      blocker: "UNAUTHORIZED_RECOVERY_MUTATION",
+      lastDecisionId: evidence.decisionId,
+      lastActionId: evidence.actionId,
+      lastEvidence: artifact,
+      integrityViolations: evidence.integrity.violations,
+    };
+    await ledger.append("STATE", state);
+
+    const reconciled = await reconcileFalsePositiveFreeze({
+      state,
+      evidenceStore,
+      ledger,
+      expectedSha256: artifact.sha256,
+    });
+
+    assert.equal(reconciled.status, "EXECUTION_FAILED");
+    assert.equal(reconciled.blocker, "COMMAND_FAILED");
+    assert.equal(reconciled.executionFailure.exitCode, 128);
+    assert.equal(reconciled.freezeReconciliation.classification, "CONTROL_PLANE_GUARD_FALSE_POSITIVE_WITH_EXECUTION_FAILURE");
 
     const records = await ledger.readAll();
     assert.equal(records.at(-2).type, "FREEZE_RECONCILIATION");
