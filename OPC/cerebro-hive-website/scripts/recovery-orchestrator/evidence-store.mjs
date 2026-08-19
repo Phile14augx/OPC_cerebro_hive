@@ -6,6 +6,10 @@ function stableStringify(value) {
   return JSON.stringify(value, null, 2) + "\n";
 }
 
+function sha256(content) {
+  return crypto.createHash("sha256").update(content).digest("hex");
+}
+
 export class EvidenceStore {
   constructor(rootDir) {
     this.rootDir = rootDir;
@@ -19,8 +23,23 @@ export class EvidenceStore {
     const fullPath = path.join(this.rootDir, filename);
     const content = stableStringify(payload);
     await fs.writeFile(fullPath, content, { encoding: "utf8", flag: "wx" });
-    const sha256 = crypto.createHash("sha256").update(content).digest("hex");
-    return { path: fullPath, sha256, bytes: Buffer.byteLength(content) };
+    return { path: fullPath, sha256: sha256(content), bytes: Buffer.byteLength(content) };
+  }
+
+  async readVerified(artifact) {
+    if (!artifact?.path || !artifact?.sha256) throw new Error("EVIDENCE_ARTIFACT_REFERENCE_REQUIRED");
+    const root = path.resolve(this.rootDir);
+    const fullPath = path.resolve(artifact.path);
+    const relative = path.relative(root, fullPath);
+    if (relative.startsWith("..") || path.isAbsolute(relative)) {
+      throw new Error(`EVIDENCE_PATH_OUTSIDE_STORE: ${fullPath}`);
+    }
+    const content = await fs.readFile(fullPath, "utf8");
+    const actualSha256 = sha256(content);
+    if (actualSha256 !== artifact.sha256) {
+      throw new Error(`EVIDENCE_SHA256_MISMATCH: expected ${artifact.sha256}, got ${actualSha256}`);
+    }
+    return JSON.parse(content);
   }
 
   async appendManifest(record) {
