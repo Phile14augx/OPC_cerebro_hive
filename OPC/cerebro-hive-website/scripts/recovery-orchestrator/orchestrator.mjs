@@ -21,6 +21,7 @@ function clearTransientFailureState(state) {
     blocker: _blocker,
     integrityViolations: _integrityViolations,
     executionFailure: _executionFailure,
+    closureProposal: _closureProposal,
     ...rest
   } = state;
   return rest;
@@ -43,12 +44,34 @@ function stateHasTransientControlPlaneFailure(state) {
 }
 
 export function sanitizeStateForGovernor(state) {
-  if (!stateHasTransientControlPlaneFailure(state)) return state;
-  const clean = clearTransientFailureState(state);
+  let clean = state;
+  let transientControlPlaneFailureOmitted = false;
+  let unverifiedClosureReopened = false;
+
+  if (stateHasTransientControlPlaneFailure(clean)) {
+    clean = clearTransientFailureState(clean);
+    clean = {
+      ...clean,
+      status: clean.lastActionId ? "EVIDENCE_READY" : "ACTIVE",
+    };
+    transientControlPlaneFailureOmitted = true;
+  }
+
+  // v0.1 has no authenticated closure-approval artifact. Therefore a prior
+  // CLOSED state is treated as an unverified governor proposal and reopened.
+  if (clean.status === "CLOSED") {
+    clean = {
+      ...clearTransientFailureState(clean),
+      status: clean.lastActionId ? "EVIDENCE_READY" : "ACTIVE",
+    };
+    unverifiedClosureReopened = true;
+  }
+
+  if (!transientControlPlaneFailureOmitted && !unverifiedClosureReopened) return clean;
   return {
     ...clean,
-    status: state.lastActionId ? "EVIDENCE_READY" : "ACTIVE",
-    transientControlPlaneFailureOmitted: true,
+    ...(transientControlPlaneFailureOmitted ? { transientControlPlaneFailureOmitted: true } : {}),
+    ...(unverifiedClosureReopened ? { unverifiedClosureReopened: true } : {}),
   };
 }
 
@@ -124,6 +147,10 @@ function validateDecisionAgainstState(decision, state, history) {
   }
 }
 
+export function closureRequiresHumanApproval(decision) {
+  return decision?.decision === "CLOSE_WAVE";
+}
+
 export class RecoveryOrchestrator {
   constructor({ governor, executor, policy, gitGuard, evidenceStore, ledger, initialState, maxIterations = 50 }) {
     this.governor = governor;
@@ -151,12 +178,14 @@ export class RecoveryOrchestrator {
           history,
           historyPolicy: {
             transientControlPlaneDiagnosticsOmitted: true,
+            unverifiedClosedStateReopened: governorState.unverifiedClosureReopened === true,
             excludedClasses: [
               "GOVERNOR_PROTOCOL_ERROR",
               "AbortError",
               "recursive recovery-orchestrator execution",
+              "unapproved wave closure",
             ],
-            rule: "Treat only target-repository execution evidence as candidate repository facts. Control-plane transport/protocol failures are diagnostics, not portfolio facts.",
+            rule: "Treat only target-repository execution evidence as candidate repository facts. Control-plane transport/protocol failures are diagnostics, not portfolio facts. CLOSE_WAVE is only a proposal in v0.1 and cannot itself close a wave.",
           },
           usedDecisionIds: ids.decisionIds.slice(-50),
           usedActionIds: ids.actionIds.slice(-50),
@@ -186,19 +215,46 @@ export class RecoveryOrchestrator {
 
       await this.ledger.append("GOVERNOR_DECISION", decision);
 
+      if (closureRequiresHumanApproval(decision)) {
+        const blocked = {
+          ...clearTransientFailureState(governorState),
+          wave: decision.wave,
+          status: "BLOCKED",
+          blocker: "WAVE_CLOSURE_REQUIRES_HUMAN_APPROVAL",
+          canonicalBaseSha: decision.canonicalBaseSha,
+          lastDecisionId: decision.decisionId,
+          closureProposal: {
+            verifiedFacts: decision.verifiedFacts,
+            conflicts: decision.conflicts,
+            unknowns: decision.unknowns,
+          },
+          updatedAt: new Date().toISOString(),
+        };
+        await this.ledger.append("CLOSURE_PROPOSAL", {
+          wave: decision.wave,
+          decisionId: decision.decisionId,
+          canonicalBaseSha: decision.canonicalBaseSha,
+          verifiedFacts: decision.verifiedFacts,
+          conflicts: decision.conflicts,
+          unknowns: decision.unknowns,
+        });
+        await this.ledger.append("STATE", blocked);
+        return blocked;
+      }
+
       if (!decision.nextAction) {
         const cleanState = clearTransientFailureState(state);
         state = {
           ...cleanState,
           wave: decision.wave,
-          status: decision.decision === "CLOSE_WAVE" ? "CLOSED" : decision.decision,
+          status: decision.decision,
           canonicalBaseSha: decision.canonicalBaseSha,
           lastDecisionId: decision.decisionId,
           ...(decision.decision === "BLOCK" ? { blocker: "GOVERNOR_BLOCK" } : {}),
           updatedAt: new Date().toISOString(),
         };
         await this.ledger.append("STATE", state);
-        if (once || decision.decision === "BLOCK" || decision.decision === "CLOSE_WAVE") return state;
+        if (once || decision.decision === "BLOCK") return state;
         continue;
       }
 
