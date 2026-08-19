@@ -15,6 +15,30 @@ function serializableError(error) {
   };
 }
 
+function clearTransientFailureState(state) {
+  const {
+    blocker: _blocker,
+    integrityViolations: _integrityViolations,
+    executionFailure: _executionFailure,
+    ...rest
+  } = state;
+  return rest;
+}
+
+function summarizeExecutionFailure(result) {
+  if (result?.status === "COMPLETED") return undefined;
+  const failed = Array.isArray(result?.commands) && result.commands.length > 0
+    ? result.commands[result.commands.length - 1]
+    : undefined;
+  return {
+    classification: result?.failure ?? "EXECUTION_FAILED",
+    command: failed?.command,
+    exitCode: failed?.exitCode,
+    timedOut: failed?.timedOut,
+    stderr: typeof failed?.stderr === "string" ? failed.stderr.slice(0, 4000) : failed?.stderr,
+  };
+}
+
 export class RecoveryOrchestrator {
   constructor({ governor, executor, policy, gitGuard, evidenceStore, ledger, initialState, maxIterations = 50 }) {
     this.governor = governor;
@@ -47,7 +71,7 @@ export class RecoveryOrchestrator {
         await this.evidenceStore.appendManifest({ ...artifact, actionId: `GOVERNOR-ERROR-${iteration + 1}` });
         await this.ledger.append("GOVERNOR_ERROR", { artifact, error: failure.error });
         const blocked = {
-          ...state,
+          ...clearTransientFailureState(state),
           status: "BLOCKED",
           blocker: "GOVERNOR_PROTOCOL_ERROR",
           lastEvidence: artifact,
@@ -60,12 +84,14 @@ export class RecoveryOrchestrator {
       await this.ledger.append("GOVERNOR_DECISION", decision);
 
       if (!decision.nextAction) {
+        const cleanState = clearTransientFailureState(state);
         state = {
-          ...state,
+          ...cleanState,
           wave: decision.wave,
           status: decision.decision === "CLOSE_WAVE" ? "CLOSED" : decision.decision,
           canonicalBaseSha: decision.canonicalBaseSha,
           lastDecisionId: decision.decisionId,
+          ...(decision.decision === "BLOCK" ? { blocker: "GOVERNOR_BLOCK" } : {}),
           updatedAt: new Date().toISOString(),
         };
         await this.ledger.append("STATE", state);
@@ -77,13 +103,13 @@ export class RecoveryOrchestrator {
       if (["WRITE", "PUSH"].includes(order.mode) && !decision.writeAuthorized) {
         const blocked = { classification: "WRITE_WITHOUT_GOVERNOR_AUTHORIZATION", order };
         await this.ledger.append("POLICY_BLOCK", blocked);
-        return { ...state, status: "BLOCKED", blocker: blocked.classification };
+        return { ...clearTransientFailureState(state), status: "BLOCKED", blocker: blocked.classification };
       }
 
       const policy = this.policy.evaluate(order);
       if (!policy.allowed) {
         await this.ledger.append("POLICY_BLOCK", { order, policy });
-        return { ...state, status: "BLOCKED", blocker: policy.reason };
+        return { ...clearTransientFailureState(state), status: "BLOCKED", blocker: policy.reason };
       }
 
       const before = await this.gitGuard.capture(order.repository);
@@ -107,32 +133,41 @@ export class RecoveryOrchestrator {
 
       if (!integrity.ok) {
         const frozen = {
-          ...state,
+          ...clearTransientFailureState(state),
           status: "FROZEN",
           blocker: "UNAUTHORIZED_RECOVERY_MUTATION",
           integrityViolations: integrity.violations,
+          lastDecisionId: decision.decisionId,
+          lastActionId: order.actionId,
+          lastEvidence: artifact,
           updatedAt: new Date().toISOString(),
         };
         await this.ledger.append("STATE", frozen);
         return frozen;
       }
 
+      const completed = result.status === "COMPLETED";
+      const executionFailure = summarizeExecutionFailure(result);
       state = {
-        ...state,
+        ...clearTransientFailureState(state),
         wave: decision.wave,
-        status: result.status === "COMPLETED" ? "EVIDENCE_READY" : "EXECUTION_FAILED",
+        status: completed ? "EVIDENCE_READY" : "EXECUTION_FAILED",
         canonicalBaseSha: decision.canonicalBaseSha,
         lastDecisionId: decision.decisionId,
         lastActionId: order.actionId,
         lastEvidence: artifact,
+        ...(completed ? {} : {
+          blocker: executionFailure?.classification ?? "EXECUTION_FAILED",
+          executionFailure,
+        }),
         updatedAt: new Date().toISOString(),
       };
       await this.ledger.append("STATE", state);
 
-      if (once || result.status !== "COMPLETED") return state;
+      if (once || !completed) return state;
     }
 
-    const exhausted = { ...state, status: "BLOCKED", blocker: "MAX_ITERATIONS_EXCEEDED" };
+    const exhausted = { ...clearTransientFailureState(state), status: "BLOCKED", blocker: "MAX_ITERATIONS_EXCEEDED" };
     await this.ledger.append("STATE", exhausted);
     return exhausted;
   }
