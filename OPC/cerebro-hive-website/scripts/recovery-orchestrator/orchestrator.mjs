@@ -26,6 +26,66 @@ function clearTransientFailureState(state) {
   return rest;
 }
 
+function normalizeArg(value) {
+  return String(value ?? "").toLowerCase().replace(/\\/g, "/");
+}
+
+function isRecoveryControlPlaneCommand(command) {
+  if (!command || typeof command !== "object") return false;
+  const args = Array.isArray(command.args) ? command.args : [];
+  return args.some((arg) => normalizeArg(arg).includes("/scripts/recovery-orchestrator/"));
+}
+
+function stateHasTransientControlPlaneFailure(state) {
+  if (!state || typeof state !== "object") return false;
+  if (state.blocker === "GOVERNOR_PROTOCOL_ERROR") return true;
+  return isRecoveryControlPlaneCommand(state.executionFailure?.command);
+}
+
+export function sanitizeStateForGovernor(state) {
+  if (!stateHasTransientControlPlaneFailure(state)) return state;
+  const clean = clearTransientFailureState(state);
+  return {
+    ...clean,
+    status: state.lastActionId ? "EVIDENCE_READY" : "ACTIVE",
+    transientControlPlaneFailureOmitted: true,
+  };
+}
+
+function recordIsTransientControlPlaneDiagnostic(record) {
+  if (!record || typeof record !== "object") return false;
+  if (record.type === "GOVERNOR_ERROR") return true;
+
+  if (record.type === "STATE" && stateHasTransientControlPlaneFailure(record.payload)) {
+    return true;
+  }
+
+  if (record.type === "EXECUTION_RESULT") {
+    const commands = record.payload?.result?.commands;
+    return Array.isArray(commands) && commands.some((entry) => isRecoveryControlPlaneCommand(entry?.command));
+  }
+
+  return false;
+}
+
+export function buildGovernorHistory(records, limit = 20) {
+  return records
+    .filter((record) => !recordIsTransientControlPlaneDiagnostic(record))
+    .slice(-limit);
+}
+
+function usedIds(history) {
+  const decisionIds = [];
+  const actionIds = [];
+  for (const record of history) {
+    if (record?.type === "GOVERNOR_DECISION") {
+      if (typeof record.payload?.decisionId === "string") decisionIds.push(record.payload.decisionId);
+      if (typeof record.payload?.nextAction?.actionId === "string") actionIds.push(record.payload.nextAction.actionId);
+    }
+  }
+  return { decisionIds, actionIds };
+}
+
 function summarizeExecutionFailure(result) {
   if (result?.status === "COMPLETED") return undefined;
   const failed = Array.isArray(result?.commands) && result.commands.length > 0
@@ -45,15 +105,22 @@ function normalizeFsPath(value) {
   return process.platform === "win32" ? resolved.toLowerCase() : resolved;
 }
 
-function validateDecisionAgainstState(decision, state) {
-  if (state.lastDecisionId && decision.decisionId === state.lastDecisionId) {
+const TRANSIENT_FACT_PATTERN = /(aborterror|governor[_ ]protocol[_ ]error|governor protocol error|recovery orchestrator.*blocked|orchestrator transport|malformed governor output)/i;
+
+function validateDecisionAgainstState(decision, state, history) {
+  const ids = usedIds(history);
+  if (ids.decisionIds.includes(decision.decisionId)) {
     throw new Error(`DUPLICATE_DECISION_ID: ${decision.decisionId}`);
   }
-  if (decision.nextAction && state.lastActionId && decision.nextAction.actionId === state.lastActionId) {
+  if (decision.nextAction && ids.actionIds.includes(decision.nextAction.actionId)) {
     throw new Error(`DUPLICATE_ACTION_ID: ${decision.nextAction.actionId}`);
   }
   if (decision.nextAction && normalizeFsPath(decision.nextAction.repository) !== normalizeFsPath(state.repository)) {
     throw new Error(`EXECUTION_TARGET_MISMATCH: expected ${state.repository}, got ${decision.nextAction.repository}`);
+  }
+  const leaked = decision.verifiedFacts.find((fact) => TRANSIENT_FACT_PATTERN.test(fact));
+  if (leaked) {
+    throw new Error(`TRANSIENT_CONTROL_PLANE_FACT_LEAK: ${leaked}`);
   }
 }
 
@@ -73,16 +140,33 @@ export class RecoveryOrchestrator {
     let state = await this.ledger.latestState(this.initialState);
 
     for (let iteration = 0; iteration < this.maxIterations; iteration += 1) {
-      const history = await this.ledger.readAll();
+      const fullHistory = await this.ledger.readAll();
+      const history = buildGovernorHistory(fullHistory, 20);
+      const governorState = sanitizeStateForGovernor(state);
+      const ids = usedIds(fullHistory);
       let decision;
       try {
-        decision = validateGovernorDecision(await this.governor.decide({ state, history: history.slice(-20) }));
-        validateDecisionAgainstState(decision, state);
+        decision = validateGovernorDecision(await this.governor.decide({
+          state: governorState,
+          history,
+          historyPolicy: {
+            transientControlPlaneDiagnosticsOmitted: true,
+            excludedClasses: [
+              "GOVERNOR_PROTOCOL_ERROR",
+              "AbortError",
+              "recursive recovery-orchestrator execution",
+            ],
+            rule: "Treat only target-repository execution evidence as candidate repository facts. Control-plane transport/protocol failures are diagnostics, not portfolio facts.",
+          },
+          usedDecisionIds: ids.decisionIds.slice(-50),
+          usedActionIds: ids.actionIds.slice(-50),
+        }));
+        validateDecisionAgainstState(decision, governorState, fullHistory);
       } catch (error) {
         const failure = {
           classification: "GOVERNOR_PROTOCOL_ERROR",
           iteration,
-          state,
+          state: governorState,
           error: serializableError(error),
           capturedAt: new Date().toISOString(),
         };
