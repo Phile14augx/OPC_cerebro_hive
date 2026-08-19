@@ -65,7 +65,9 @@ function parseMissingImmutablePath({ command, exitCode, timedOut, stderr } = {})
   if (executableName(command) !== "git") return null;
   if (normalizeArg(command?.args?.[0]) !== "show") return null;
   if (exitCode !== 128 || timedOut === true) return null;
-  const match = String(stderr ?? "").match(/fatal: path '([^']+)' does not exist in '([^']+)'/i);
+  const stderrText = String(stderr ?? "");
+  const match = stderrText.match(/fatal: path '([^']+)' does not exist in '([^']+)'/i)
+    ?? stderrText.match(/fatal: path '([^']+)' exists on disk, but not in '([^']+)'/i);
   if (!match) return null;
   return {
     classification: "IMMUTABLE_PATH_ABSENT",
