@@ -89,8 +89,12 @@ export class ProjectGraph {
 
   // ─── Subscribe to changes ─────────────────────────────────────────────────
   subscribe(projectId: string, cb: (ctx: AgentContext) => void): () => void {
-    if (!this.listeners.has(projectId)) this.listeners.set(projectId, new Set());
-    this.listeners.get(projectId)!.add(cb);
+    let listeners = this.listeners.get(projectId);
+    if (!listeners) {
+      listeners = new Set();
+      this.listeners.set(projectId, listeners);
+    }
+    listeners.add(cb);
     return () => this.listeners.get(projectId)?.delete(cb);
   }
 

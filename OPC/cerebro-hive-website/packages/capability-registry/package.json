@@ -8,7 +8,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "eslint --max-warnings=0 .",
     "format:check": "prettier --check \"src/**/*.ts\""
   },
   "dependencies": {
