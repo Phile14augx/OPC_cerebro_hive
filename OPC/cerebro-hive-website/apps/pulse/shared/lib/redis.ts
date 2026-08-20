@@ -6,7 +6,6 @@
 import Redis from 'ioredis';
 
 declare global {
-  // eslint-disable-next-line no-var
   var __redis: Redis | undefined;
 }
 
@@ -26,10 +25,9 @@ function createClient(): Redis {
   return client;
 }
 
-export const redis: Redis =
-  process.env.NODE_ENV === 'production'
-    ? createClient()
-    : (global.__redis ?? (global.__redis = createClient()));
+function getRedis(): Redis {
+  return global.__redis ?? (global.__redis = createClient());
+}
 
 /* ── Typed cache helpers ─────────────────────────────────────────────────── */
 const TTL = {
@@ -41,13 +39,17 @@ const TTL = {
 };
 
 export async function cacheGet<T>(key: string): Promise<T | null> {
-  const raw = await redis.get(key);
+  const raw = await getRedis().get(key);
   if (!raw) return null;
   try { return JSON.parse(raw) as T; } catch { return null; }
 }
 
 export async function cacheSet<T>(key: string, value: T, ttl = TTL.HEALTH_SCORE): Promise<void> {
-  await redis.set(key, JSON.stringify(value), 'EX', ttl);
+  await getRedis().set(key, JSON.stringify(value), 'EX', ttl);
+}
+
+export async function cacheDelete(key: string): Promise<void> {
+  await getRedis().del(key);
 }
 
 export { TTL };
