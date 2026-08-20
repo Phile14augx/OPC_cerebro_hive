@@ -2,16 +2,16 @@ export interface EvaluationContext {
   subject: {
     id: string;
     roles: string[];
-    attributes: Record<string, any>;
+    attributes: Record<string, unknown>;
   };
   resource: {
     type: string;
     id?: string;
     tenantId?: string;
-    attributes: Record<string, any>;
+    attributes: Record<string, unknown>;
   };
   action: string;
-  environment?: Record<string, any>;
+  environment?: Record<string, unknown>;
 }
 
 export interface PolicyRule {

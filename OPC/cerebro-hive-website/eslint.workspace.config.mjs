@@ -15,9 +15,8 @@ const artifactIgnores = [
 export function defineTypeScriptWorkspace({ tsconfigRootDir, eda = false } = {}) {
   if (!tsconfigRootDir) throw new Error("defineTypeScriptWorkspace requires tsconfigRootDir");
 
-  return [{
+  return [{ ignores: artifactIgnores }, {
     files: ["src/**/*.{ts,tsx}"],
-    ignores: artifactIgnores,
     languageOptions: {
       parser: tsParser,
       parserOptions: { project: "./tsconfig.json", tsconfigRootDir },
