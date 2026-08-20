@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { getPermissions, hasPermission, highestRole } from "./permissions.ts";
+import { getPermissions, hasPermission, highestRole } from "./permissions";
 
 describe("hasPermission", () => {
   it("grants OWNER org:delete and denies VIEWER org:delete", () => {

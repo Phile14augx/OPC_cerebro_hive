@@ -22,7 +22,7 @@
     "build": "tsc",
     "lint": "eslint \"src/**/*.ts*\"",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --experimental-strip-types --no-warnings --test src/rbac/permissions.test.ts"
+    "test": "pnpm build && node --test dist/rbac/permissions.test.js"
   },
   "dependencies": {
     "react": "^18.2.0",

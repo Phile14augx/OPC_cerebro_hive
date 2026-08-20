@@ -610,9 +610,9 @@
       "contracts": {
         "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
-            "classification": "REAL",
-            "command": "node --experimental-strip-types --no-warnings --test src/rbac/permissions.test.ts",
-            "evidence": "Verified manually and negative control passed"
+          "classification": "REAL",
+          "command": "pnpm build && node --test dist/rbac/permissions.test.js",
+          "evidence": "W0.2 verified the shipped CommonJS permissions test artifact: 4 tests passed, an OWNER permission assertion mutation failed non-zero, and the restored package test and typecheck passed."
         },
         "typecheck": {
           "classification": "REAL",
