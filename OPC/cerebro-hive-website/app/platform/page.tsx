@@ -5,9 +5,9 @@ import {
   Shield, Scale, Cpu, Database, Brain, Layers, BarChart2, Bot, Zap,
   Activity, DollarSign, Package, HardDrive, FolderOpen, Globe, ShoppingBag,
   CreditCard, Key, Handshake, Rocket, Cloud, Lock, Network, Waves, Eye,
-  Route, Terminal, Cog, Search, Archive, Lightbulb, GraduationCap, MessageSquare,
+  Route, Search, Archive, Lightbulb, GraduationCap, MessageSquare,
   Briefcase, Users, Clipboard, FolderKanban, Wrench, CheckSquare, UserCheck,
-  BookOpen, Code2, Settings, LayoutDashboard, Building2, UserCog,
+  BookOpen, Code2, Settings, LayoutDashboard, Building2,
 } from "lucide-react";
 
 type Product = {

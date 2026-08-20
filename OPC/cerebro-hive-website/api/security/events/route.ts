@@ -8,27 +8,12 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { 
-  detectAIThreats, 
-  checkRateLimit, 
   logSecurityEvent, 
-  clearRateLimit,
   type SecurityEvent,
 } from "@/lib/cybersecurity";
 
 // Security metrics storage (in production, use Redis/ClickHouse)
 const securityEvents: SecurityEvent[] = [];
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
-
-// API Key for internal service access (in production, use proper secrets management)
-const API_SECRET = process.env.CYBER_API_SECRET || "development-key-change-in-production";
-
-/**
- * Validate API key for internal service authentication
- */
-async function validateApiKey(request: NextRequest): Promise<boolean> {
-  const apiKey = request.headers.get("x-api-key") || "";
-  return apiKey === API_SECRET;
-}
 
 /**
  * GET /api/security/events
@@ -106,7 +91,7 @@ export async function POST(request: NextRequest) {
     await logSecurityEvent(event);
 
     return NextResponse.json({ success: true, eventId: event.id });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 }
@@ -165,7 +150,6 @@ export async function GET_METRICS(request: NextRequest) {
 
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { validateApiKey } from "./utils";
 
 // Re-export for route handlers
 export const GET = async (request: NextRequest) => {
@@ -224,7 +208,7 @@ export const POST = async (request: NextRequest) => {
     await logSecurityEvent(event);
 
     return NextResponse.json({ success: true, eventId: event.id });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 };

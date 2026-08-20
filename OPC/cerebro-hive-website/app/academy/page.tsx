@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Users, Briefcase, Gift } from "lucide-react";
+import { ArrowRight, BookOpen, Briefcase, Gift } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "CerebroHive Academy — Enterprise AI Education",

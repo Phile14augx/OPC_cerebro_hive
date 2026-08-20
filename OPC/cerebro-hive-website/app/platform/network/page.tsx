@@ -8,8 +8,6 @@ type Tab = "topology" | "policies" | "health";
 type Node = { id: string; name: string; type: "gateway" | "service" | "agent" | "external"; zone: "dmz" | "internal" | "trusted"; status: "healthy" | "degraded" | "down" };
 type Route = { id: string; src: string; dst: string; protocol: string; port: number; encrypted: boolean; rateLimit: number };
 
-const btnPrimary = "rounded-md border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40";
-const inputCls = "rounded-md border border-border bg-surface-elevated/40 px-2.5 py-1.5 text-sm text-text-primary w-full";
 
 const INIT_NODES: Node[] = [
   { id: "n1", name: "HiveGateway", type: "gateway", zone: "dmz", status: "healthy" },

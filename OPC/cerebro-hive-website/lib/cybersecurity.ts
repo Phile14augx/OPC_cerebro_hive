@@ -311,7 +311,7 @@ async function validateToken(token: string): Promise<{ valid: true; claims: JWTC
     }
 
     return { valid: true, claims: payload };
-  } catch (error) {
+  } catch {
     return { valid: false, error: "Failed to decode token" };
   }
 }
@@ -664,7 +664,7 @@ export const SECURITY_EVENT_TYPES = {
 // EXPORT DEFAULT
 // ============================================================================
 
-export default {
+const cybersecurity = {
   checkRateLimit,
   clearRateLimit,
   detectAIThreats,
@@ -673,3 +673,5 @@ export default {
   generateComplianceEvidence,
   validateToken,
 };
+
+export default cybersecurity;

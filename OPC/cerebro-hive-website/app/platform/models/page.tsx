@@ -66,7 +66,6 @@ function SkillsPanel({ online }: { online: boolean | null }) {
 
 function TemplatesPanel({ online }: { online: boolean | null }) {
   const [templates, setTemplates] = useState<TemplateOut[]>([]);
-  const [busy, setBusy] = useState(false);
   const [installing, setInstalling] = useState<string | null>(null);
 
   useEffect(() => {

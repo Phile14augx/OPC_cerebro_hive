@@ -11,6 +11,17 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    files: [
+      ".dependency-cruiser.js",
+      "fix.js",
+      "scratch/fix_workflows.js",
+      "tooling/eslint-plugin-design-system/src/index.js",
+    ],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+    },
+  },
   globalIgnores([
     ".next/**",
     "out/**",
