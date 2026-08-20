@@ -456,9 +456,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -1142,9 +1142,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -2585,9 +2585,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -2924,9 +2924,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -3217,9 +3217,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -3250,9 +3250,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -3312,9 +3312,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced the expected command JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -3440,9 +3440,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
