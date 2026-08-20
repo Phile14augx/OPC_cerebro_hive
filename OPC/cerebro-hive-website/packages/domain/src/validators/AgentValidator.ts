@@ -3,7 +3,7 @@ import { MaximumToolsSpecification } from '../specifications/AgentSpecifications
 export class AgentValidator {
   private maxToolsSpec = new MaximumToolsSpecification(50);
 
-  validatePublish(agentId: string, modelId: string, instructions: string, tools: any[]) {
+  validatePublish(agentId: string, modelId: string, instructions: string, tools: readonly unknown[]) {
     const errors: string[] = [];
 
     if (!modelId) errors.push("Model ID is required.");

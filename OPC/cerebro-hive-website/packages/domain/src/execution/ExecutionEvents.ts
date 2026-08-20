@@ -42,7 +42,29 @@ interface ExecutionEventBase {
   readonly correlationId?: string;
 }
 
-export class ExecutionCreatedEvent extends DomainEvent {
+interface ExecutionCreatedPayload {
+  readonly kind: string;
+  readonly status: ExecutionStatus;
+  readonly parentExecutionId?: string;
+}
+
+interface ExecutionStatusPayload {
+  readonly status: ExecutionStatus;
+}
+
+interface ExecutionReasonPayload extends ExecutionStatusPayload {
+  readonly reason?: string;
+}
+
+interface ExecutionCompletedPayload extends ExecutionStatusPayload {
+  readonly result?: unknown;
+}
+
+interface ExecutionFailedPayload extends ExecutionStatusPayload {
+  readonly reason: string;
+}
+
+export class ExecutionCreatedEvent extends DomainEvent<ExecutionCreatedPayload> {
   /** `parentExecutionId` is optional and, per the event-contract test suite
    * (`ExecutionEventContract.test.ts`), is the one field that lets a
    * retry's lineage (`Execution.createRetryOf()`, `ADR-040` decision 6) be
@@ -61,7 +83,7 @@ export class ExecutionCreatedEvent extends DomainEvent {
   }
 }
 
-export class ExecutionValidatedEvent extends DomainEvent {
+export class ExecutionValidatedEvent extends DomainEvent<ExecutionStatusPayload> {
   constructor(base: ExecutionEventBase) {
     super('Execution', base.executionId, base.tenantId, base.workspaceId, base.userId, base.correlationId, undefined, {
       status: ExecutionStatus.Validating,
@@ -69,7 +91,7 @@ export class ExecutionValidatedEvent extends DomainEvent {
   }
 }
 
-export class ExecutionQueuedEvent extends DomainEvent {
+export class ExecutionQueuedEvent extends DomainEvent<ExecutionStatusPayload> {
   constructor(base: ExecutionEventBase) {
     super('Execution', base.executionId, base.tenantId, base.workspaceId, base.userId, base.correlationId, undefined, {
       status: ExecutionStatus.Queued,
@@ -77,7 +99,7 @@ export class ExecutionQueuedEvent extends DomainEvent {
   }
 }
 
-export class ExecutionStartedEvent extends DomainEvent {
+export class ExecutionStartedEvent extends DomainEvent<ExecutionStatusPayload> {
   constructor(base: ExecutionEventBase) {
     super('Execution', base.executionId, base.tenantId, base.workspaceId, base.userId, base.correlationId, undefined, {
       status: ExecutionStatus.Running,
@@ -85,7 +107,7 @@ export class ExecutionStartedEvent extends DomainEvent {
   }
 }
 
-export class ExecutionWaitingEvent extends DomainEvent {
+export class ExecutionWaitingEvent extends DomainEvent<ExecutionReasonPayload> {
   constructor(base: ExecutionEventBase & { reason?: string }) {
     super('Execution', base.executionId, base.tenantId, base.workspaceId, base.userId, base.correlationId, undefined, {
       status: ExecutionStatus.Waiting,
@@ -94,7 +116,7 @@ export class ExecutionWaitingEvent extends DomainEvent {
   }
 }
 
-export class ExecutionCancellingEvent extends DomainEvent {
+export class ExecutionCancellingEvent extends DomainEvent<ExecutionReasonPayload> {
   constructor(base: ExecutionEventBase & { reason?: string }) {
     super('Execution', base.executionId, base.tenantId, base.workspaceId, base.userId, base.correlationId, undefined, {
       status: ExecutionStatus.Cancelling,
@@ -103,7 +125,7 @@ export class ExecutionCancellingEvent extends DomainEvent {
   }
 }
 
-export class ExecutionResumedEvent extends DomainEvent {
+export class ExecutionResumedEvent extends DomainEvent<ExecutionStatusPayload> {
   constructor(base: ExecutionEventBase) {
     super('Execution', base.executionId, base.tenantId, base.workspaceId, base.userId, base.correlationId, undefined, {
       status: ExecutionStatus.Running,
@@ -111,7 +133,7 @@ export class ExecutionResumedEvent extends DomainEvent {
   }
 }
 
-export class ExecutionCompletedEvent extends DomainEvent {
+export class ExecutionCompletedEvent extends DomainEvent<ExecutionCompletedPayload> {
   constructor(base: ExecutionEventBase & { result?: unknown }) {
     super('Execution', base.executionId, base.tenantId, base.workspaceId, base.userId, base.correlationId, undefined, {
       status: ExecutionStatus.Completed,
@@ -120,7 +142,7 @@ export class ExecutionCompletedEvent extends DomainEvent {
   }
 }
 
-export class ExecutionFailedEvent extends DomainEvent {
+export class ExecutionFailedEvent extends DomainEvent<ExecutionFailedPayload> {
   constructor(base: ExecutionEventBase & { reason: string }) {
     super('Execution', base.executionId, base.tenantId, base.workspaceId, base.userId, base.correlationId, undefined, {
       status: ExecutionStatus.Failed,
@@ -129,7 +151,7 @@ export class ExecutionFailedEvent extends DomainEvent {
   }
 }
 
-export class ExecutionCancelledEvent extends DomainEvent {
+export class ExecutionCancelledEvent extends DomainEvent<ExecutionReasonPayload> {
   constructor(base: ExecutionEventBase & { reason?: string }) {
     super('Execution', base.executionId, base.tenantId, base.workspaceId, base.userId, base.correlationId, undefined, {
       status: ExecutionStatus.Cancelled,
@@ -138,7 +160,7 @@ export class ExecutionCancelledEvent extends DomainEvent {
   }
 }
 
-export class ExecutionTimedOutEvent extends DomainEvent {
+export class ExecutionTimedOutEvent extends DomainEvent<ExecutionStatusPayload> {
   constructor(base: ExecutionEventBase) {
     super('Execution', base.executionId, base.tenantId, base.workspaceId, base.userId, base.correlationId, undefined, {
       status: ExecutionStatus.TimedOut,

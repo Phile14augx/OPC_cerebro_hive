@@ -4,11 +4,11 @@ import { ExecutionStatus } from '../ExecutionStatus';
 import { ExecutionId } from '../ExecutionId';
 import { InMemoryExecutionRepository } from '../InMemoryExecutionRepository';
 import { ExecutionOrchestrator, ExecutionProviderPort, ExecutionProviderResult } from '../ExecutionOrchestrator';
-import { InMemoryExecutionIdempotencyStore, NoOpExecutionIdempotencyStore } from '../ExecutionIdempotency';
+import { InMemoryExecutionIdempotencyStore } from '../ExecutionIdempotency';
 import { InMemoryExecutionLeaseStore } from '../ExecutionLease';
 import { Clock } from '../Clock';
 import { DefaultExecutionFailureClassifier } from '../ExecutionFailureClassification';
-import { MaxAttemptsRetryPolicy, NeverRetryPolicy } from '../ExecutionRetryPolicy';
+import { MaxAttemptsRetryPolicy } from '../ExecutionRetryPolicy';
 import { ConflictError, DuplicateCommandError } from '../../errors/DomainError';
 
 const baseInput = {
@@ -116,7 +116,8 @@ describe('ExecutionOrchestrator — retry eligibility and failure classification
 
     const retried = await orchestrator.retryIfEligible(execution, { attempt: 1 });
     expect(retried).toBeDefined();
-    expect(retried!.parentExecutionId?.equals(execution.id)).toBe(true);
+    if (!retried) throw new Error('Expected an eligible retry execution.');
+    expect(retried.parentExecutionId?.equals(execution.id)).toBe(true);
   });
 
   it('MaxAttemptsRetryPolicy does not retry once the attempt cap is reached', async () => {

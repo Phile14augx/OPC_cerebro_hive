@@ -1,4 +1,4 @@
-import { OutboxRepository, RequestContext } from '@cerebro/db';
+import { OutboxRepository, RequestContext, PrismaTransactionClient } from '@cerebro/db';
 import { DomainEvent } from './DomainEvent';
 import { ITransactionContext } from '../transactions/UnitOfWork';
 
@@ -17,6 +17,6 @@ export class OutboxPublisher {
       tenantId: context.tenantId,
       partitionKey: event.aggregateId, // Default partition by aggregate ID
       schemaVersion: '1.0',
-    }, { context, tx: tx as any });
+    }, { context, tx: tx as unknown as PrismaTransactionClient });
   }
 }

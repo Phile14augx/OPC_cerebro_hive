@@ -1,7 +1,6 @@
-import { OutboxRepository, RequestContext } from '@cerebro/db';
+import { OutboxRepository } from '@cerebro/db';
 import { HiveEventBus } from '@cerebro/domain-model';
 import { HiveEventEnvelope } from '@cerebro/domain-model';
-import { DomainEvent } from './DomainEvent';
 
 /**
  * Generic delivery worker that polls the Outbox table, deserializes events,
@@ -52,14 +51,20 @@ export class OutboxRelay {
           // 2. Deserialize payload to DomainEvent
           // Note: Real implementations would map the JSON payload to the specific DomainEvent class.
           // For now, we trust the JSON payload format.
-          const domainEvent = record.payload as any;
+          const domainEvent = record.payload;
+          const aggregateId = typeof domainEvent === 'object'
+            && domainEvent !== null
+            && 'aggregateId' in domainEvent
+            && typeof domainEvent.aggregateId === 'string'
+            ? domainEvent.aggregateId
+            : 'unknown';
           
           const envelope: HiveEventEnvelope = {
             event: {
               eventId: record.id,
               eventType: record.eventType,
               occurredAt: record.createdAt,
-              aggregateId: domainEvent.aggregateId || 'unknown',
+              aggregateId,
               payload: domainEvent
             },
             metadata: {
@@ -75,9 +80,10 @@ export class OutboxRelay {
           // 4. Mark as delivered
           await this.outboxRepository.markPublished(record.id, { context: { tenantId: 'SYSTEM' } });
 
-        } catch (error: any) {
+        } catch (error: unknown) {
           // 5. Retry / Failure handling
-          await this.outboxRepository.markFailed(record.id, error.message, { context: { tenantId: 'SYSTEM' } });
+          const message = error instanceof Error ? error.message : String(error);
+          await this.outboxRepository.markFailed(record.id, message, { context: { tenantId: 'SYSTEM' } });
         }
       }
     } catch (err) {
