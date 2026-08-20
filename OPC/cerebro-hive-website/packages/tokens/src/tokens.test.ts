@@ -36,7 +36,7 @@ describe("design token references", () => {
       load("./semantic/dark.json"),
       load("./component/button.json"),
     ];
-    const declared = documents.reduce((keys, document) => {
+    const declared = documents.reduce<Set<string>>((keys, document) => {
       for (const key of flattenKeys(document)) keys.add(key);
       return keys;
     }, new Set<string>());
