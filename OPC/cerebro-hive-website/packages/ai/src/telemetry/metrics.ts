@@ -15,7 +15,6 @@ import {
   type Counter,
   type Histogram,
   type UpDownCounter,
-  type ObservableGauge,
   metrics,
   ValueType,
 } from "@opentelemetry/api";

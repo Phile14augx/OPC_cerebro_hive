@@ -1,7 +1,6 @@
 import React from 'react';
 import { Sidebar, SidebarItemConfig } from './Sidebar';
 import { TopBar } from './TopBar';
-import { cn } from '../utils';
 
 export interface EnterpriseShellProps {
   children: React.ReactNode;
