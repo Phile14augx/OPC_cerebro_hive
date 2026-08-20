@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
+    "test": "node ../../node_modules/vitest/vitest.mjs run src/secrets-core.test.ts --environment node",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "main": "src/index.ts",
