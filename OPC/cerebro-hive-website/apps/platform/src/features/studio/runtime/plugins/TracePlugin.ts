@@ -12,7 +12,8 @@ export class TracePlugin implements RuntimePlugin {
   readonly id = 'core.trace';
   private inputSnapshots = new Map<string, Record<string, TypedValue>>();
 
-  beforeNode(node: StudioNode, inputs: Record<string, TypedValue>, _ctx: ExecutionContext): void {
+  beforeNode(node: StudioNode, inputs: Record<string, TypedValue>, context: ExecutionContext): void {
+    void context;
     this.inputSnapshots.set(node.id, JSON.parse(JSON.stringify(inputs)));
   }
 

@@ -18,7 +18,7 @@ export const HierarchicalEvidenceExplorer: React.FC<{ findingId: string }> = ({ 
       </div>
       
       <div className="bg-slate-950 rounded p-4 border border-slate-800 font-mono text-sm text-slate-300 overflow-x-auto">
-        {depth === 'summary' && <div>Summary: Evaluated Policy 'data-encryption-v2' against Edge 'E-45'. Node resolved to unencrypted transport.</div>}
+        {depth === 'summary' && <div>Summary: Evaluated Policy &apos;data-encryption-v2&apos; against Edge &apos;E-45&apos;. Node resolved to unencrypted transport.</div>}
         {depth === 'graph' && <div className="animate-pulse">Loading visual graph projection...</div>}
         {depth === 'raw' && <div className="animate-pulse text-xs text-slate-500">Fetching raw JSON trace payloads...</div>}
       </div>

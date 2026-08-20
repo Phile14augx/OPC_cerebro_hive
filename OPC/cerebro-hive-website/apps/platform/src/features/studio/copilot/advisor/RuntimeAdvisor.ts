@@ -33,7 +33,7 @@ export class RuntimeAdvisor {
     }) : null;
 
     if (plannerTrace) {
-      plannerTrace.steps.forEach((step: any) => {
+      plannerTrace.steps.forEach((step) => {
         evidence.push({
           source: `PlannerTrace#${executionId}`,
           excerpt: `[${step.stage}] ${step.decision}: ${step.reason}${step.confidence ? ` (confidence: ${step.confidence})` : ''}`,

@@ -13,11 +13,12 @@ export class CompilerEngine {
   }
 
   // Helper to hash node state
-  private hashNode(node: any): string {
+  private hashNode(node: StudioGraph['nodes'][number]): string {
     return JSON.stringify(node); // Naive hash for demonstration
   }
 
   public compile(graph: StudioGraph, workflowId: string): CompilationContext {
+    void workflowId;
     const prevSnapshot = this.cache.getSnapshot();
     const newSnapshot: CacheSnapshot = { versionId: crypto.randomUUID(), nodeHashes: {}, symbolTable: { ...prevSnapshot.symbolTable } };
     
@@ -55,7 +56,7 @@ export class CompilerEngine {
 
     // 4. Centralized Pass Orchestration
     // Pass gets ONLY the dirty nodes. Passes remain pure and ignorant of caching.
-    let context: any = {
+    let context: CompilationContext = {
       graph: { ...graph, nodes: graph.nodes.filter(n => dirtyNodes.has(n.id)) },
       artifacts: { symbolTable: newSnapshot.symbolTable, dependencyGraph: depGraph }
     };
