@@ -370,9 +370,9 @@
       "contracts": {
         "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
-            "classification": "REAL",
-            "command": "node --experimental-transform-types --no-warnings --test src/circuit-breaker.test.ts",
-            "evidence": "Verified manually and negative control passed"
+          "classification": "REAL",
+          "command": "pnpm build && node --test dist/circuit-breaker.test.js",
+          "evidence": "W0.2 verified the shipped CommonJS test artifact: package test passed 3 tests, a semantic CLOSED-to-OPEN assertion mutation failed non-zero, and the restored contract passed with typecheck green."
         },
         "typecheck": {
           "classification": "REAL",

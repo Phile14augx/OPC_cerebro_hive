@@ -8,7 +8,7 @@
     "dev": "tsc --watch",
     "lint": "eslint \"src/**/*.ts\"",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --experimental-transform-types --no-warnings --test src/circuit-breaker.test.ts"
+    "test": "pnpm build && node --test dist/circuit-breaker.test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
