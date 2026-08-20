@@ -197,7 +197,7 @@
         "build": {
           "classification": "REAL",
           "command": "next build",
-          "evidence": "Declared package script: next build"
+          "evidence": "W0.2 integration build completed all 8 pages without REDIS_URL after moving Redis construction from module evaluation to the first cache operation."
         },
         "test": {
           "classification": "BROKEN",
@@ -209,7 +209,11 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint",
+          "evidence": "W0.2 repaired all real Pulse findings; an unescaped-entity negative control failed non-zero, then restored lint, typecheck, and production build passed."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -238,7 +242,11 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local Next/TypeScript lint covered app and shared source, repaired 11 real findings, and passed a fail-closed mutation plus integration typecheck/build."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -296,7 +304,11 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local Next/TypeScript lint covered app, modules, scripts, and tests; repaired 5 findings and passed mutation, 20 tests, typecheck, and build."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
