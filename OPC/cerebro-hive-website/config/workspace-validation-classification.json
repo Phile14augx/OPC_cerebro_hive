@@ -523,9 +523,9 @@
           "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/architecture-core.test.ts --environment node",
+          "evidence": "W0.2 B3 verified capability-manifest defaults, invalid maturity rejection, and naming invariants with a semantic mutation negative control."
         },
         "typecheck": {
           "classification": "REAL",
@@ -866,9 +866,9 @@
           "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/capability-core.test.ts --environment node",
+          "evidence": "W0.2 B3 verified capability registry registration, retrieval, and cardinality with a semantic mutation negative control."
         },
         "typecheck": {
           "classification": "REAL",
@@ -1019,9 +1019,9 @@
           "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/config-core.test.ts --environment node",
+          "evidence": "W0.2 B3 verified injected configuration loading, fallback, and missing-key failure with a semantic mutation negative control."
         },
         "typecheck": {
           "classification": "REAL",
@@ -1286,9 +1286,9 @@
           "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/domain-graph.test.ts --environment node",
+          "evidence": "W0.2 B3 verified directed traversal filters by target node type with a semantic mutation negative control."
         },
         "typecheck": {
           "classification": "REAL",
@@ -2958,9 +2958,9 @@
       "contracts": {
         "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/policy.test.ts --environment node",
+          "evidence": "W0.2 B3 verified default-deny and matching-deny precedence with a semantic mutation negative control."
         },
         "typecheck": {
           "classification": "REAL",
