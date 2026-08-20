@@ -961,9 +961,9 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/compliance.test.ts --environment node",
+          "evidence": "W0.2 Batch 2A verified 3 semantic compliance tests and proved assertion-level fail-closed behavior through both the direct Vitest CLI and package-local test contract."
         },
         "typecheck": {
           "classification": "REAL",
