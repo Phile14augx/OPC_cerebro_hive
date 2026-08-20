@@ -1904,9 +1904,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
           "classification": "BROKEN",
@@ -2189,9 +2189,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
           "classification": "BROKEN",
@@ -2680,9 +2680,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
           "classification": "BROKEN",
@@ -2713,9 +2713,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
           "classification": "BROKEN",
@@ -2746,9 +2746,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
           "classification": "BROKEN",
@@ -2837,9 +2837,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
           "classification": "BROKEN",
@@ -3052,9 +3052,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
           "classification": "BROKEN",
@@ -3118,9 +3118,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
           "classification": "BROKEN",
@@ -3184,9 +3184,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
           "classification": "BROKEN",
