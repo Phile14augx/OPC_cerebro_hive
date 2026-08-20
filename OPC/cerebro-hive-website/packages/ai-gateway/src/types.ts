@@ -14,7 +14,7 @@ export type ProviderName = 'anthropic' | 'openai' | 'google' | 'azure' | 'ollama
 export interface ToolDefinition {
   name: string;
   description: string;
-  inputSchema: Record<string, any>;
+  inputSchema: Record<string, unknown>;
 }
 
 /** A tool invocation requested by the model. */

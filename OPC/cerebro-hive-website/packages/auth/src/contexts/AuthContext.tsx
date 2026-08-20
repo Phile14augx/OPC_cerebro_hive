@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Session, User } from '../types';
-import { IAuthProvider } from '../interfaces';
+import { createContext } from 'react';
+import type { Session } from '../types';
 
 export interface AuthContextType extends Session {
   login: () => Promise<void>;
