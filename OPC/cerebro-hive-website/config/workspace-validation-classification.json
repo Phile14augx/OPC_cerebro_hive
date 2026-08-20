@@ -57,9 +57,9 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 ESLint 9 proof verified workspace-local flat config applies to real EDA source, retains ADR import restrictions, and fails non-zero for rule violations."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -1326,8 +1326,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 ESLint 9 proof verified workspace-local type-aware flat config applies to 39 production TypeScript sources and fails non-zero for explicit-any violations."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
