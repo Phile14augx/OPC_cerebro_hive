@@ -1,6 +1,11 @@
 {
   "baselineWorkspaceCount": 141,
-  "controlPlane": [{ "path": ".", "classification": "CONTROL-PLANE" }],
+  "controlPlane": [
+    {
+      "path": ".",
+      "classification": "CONTROL-PLANE"
+    }
+  ],
   "workspaces": [
     {
       "path": "apps/archive-portal",
@@ -122,7 +127,11 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint --max-warnings=0 .", "evidence": "W0.2 repaired 90 findings, proved a deliberate no-explicit-any negative control, and restored lint, typecheck, and production build passes." },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 repaired 90 findings, proved a deliberate no-explicit-any negative control, and restored lint, typecheck, and production build passes."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -151,7 +160,11 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint",
+          "evidence": "Declared package script: eslint"
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -165,7 +178,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -275,7 +292,11 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint",
+          "evidence": "Declared package script: eslint"
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -322,7 +343,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -351,7 +376,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -380,7 +409,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "pnpm build && node --test dist/circuit-breaker.test.js",
@@ -409,7 +442,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "node ../../node_modules/vitest/vitest.mjs run src/ai-governance-core.test.ts --environment node",
@@ -438,7 +475,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -500,7 +541,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -562,7 +607,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -591,7 +640,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -620,7 +673,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "pnpm build && node --test dist/rbac/permissions.test.js",
@@ -715,7 +772,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -777,7 +838,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -840,9 +905,8 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc"
         },
         "test": {
           "classification": "BROKEN",
@@ -938,7 +1002,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -1000,7 +1068,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -1011,7 +1083,11 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -1058,7 +1134,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -1088,9 +1168,8 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc"
         },
         "test": {
           "classification": "BROKEN",
@@ -1219,7 +1298,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -1325,7 +1408,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -1948,7 +2035,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -1978,9 +2069,8 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc"
         },
         "test": {
           "classification": "BROKEN",
@@ -2011,9 +2101,8 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc"
         },
         "test": {
           "classification": "BROKEN",
@@ -2044,9 +2133,8 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc"
         },
         "test": {
           "classification": "REAL",
@@ -2076,7 +2164,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -2087,7 +2179,11 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -2135,9 +2231,8 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc"
         },
         "test": {
           "classification": "BROKEN",
@@ -2569,9 +2664,9 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-            "classification": "REAL",
-            "command": "node --experimental-strip-types --no-warnings --test src/tenancy/Tenancy.test.ts",
-            "evidence": "Verified manually and negative control passed"
+          "classification": "REAL",
+          "command": "node --experimental-strip-types --no-warnings --test src/tenancy/Tenancy.test.ts",
+          "evidence": "Verified manually and negative control passed"
         },
         "typecheck": {
           "classification": "REAL",
@@ -2630,9 +2725,8 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc"
         },
         "test": {
           "classification": "BROKEN",
@@ -2662,7 +2756,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -2790,7 +2888,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -2801,7 +2903,11 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -2881,7 +2987,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -2910,7 +3020,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
@@ -2921,7 +3035,11 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -2968,7 +3086,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "node ../../node_modules/vitest/vitest.mjs run src/policy.test.ts --environment node",
@@ -3294,7 +3416,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3389,7 +3515,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3484,7 +3614,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3513,7 +3647,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3543,9 +3681,8 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc"
         },
         "test": {
           "classification": "BROKEN",
@@ -3575,7 +3712,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -3586,7 +3727,11 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -3600,7 +3745,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3710,7 +3859,11 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -3801,7 +3954,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3830,7 +3987,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -3841,7 +4002,11 @@
           "command": "tsc -p tsconfig.json --noEmit",
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint .", "evidence": "Declared package script: eslint ." },
+        "lint": {
+          "classification": "REAL",
+          "command": "eslint .",
+          "evidence": "Declared package script: eslint ."
+        },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -3855,7 +4020,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "BROKEN",
           "command": null,
@@ -3950,7 +4119,11 @@
       "hasSource": true,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "Declared package script: tsc"
+        },
         "test": {
           "classification": "REAL",
           "command": "vitest run",
