@@ -64,7 +64,7 @@ test("malformed preview models are rejected before reaching the service", async 
 
   assert.equal(response.status, 400);
   assert.equal(
-    calls.some((item: any) => item.create),
+    calls.some((item) => typeof item === "object" && item !== null && "create" in item),
     false,
   );
 });
@@ -78,7 +78,7 @@ test("APPLY is bound to the URL twin and requires explicit approval", async () =
 
   assert.equal(response.status, 200);
   assert.deepEqual(
-    calls.find((item: any) => item.apply),
+    calls.find((item) => typeof item === "object" && item !== null && "apply" in item),
     {
       apply: [
         { tenantId: "tenant-a", workspaceId: "workspace-a" },
@@ -103,7 +103,7 @@ test("preview creation accepts a validated generated model", async () => {
 
   assert.equal(response.status, 201);
   assert.equal(
-    calls.some((item: any) => item.create),
+    calls.some((item) => typeof item === "object" && item !== null && "create" in item),
     true,
   );
 });
