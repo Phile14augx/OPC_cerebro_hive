@@ -3967,7 +3967,11 @@
       "hasSource": false,
       "semanticCandidates": [],
       "contracts": {
-        "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
+        "build": {
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy; build becomes required when source is introduced."
+        },
         "test": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -3979,9 +3983,9 @@
           "evidence": "Workspace contains no qualifying source under the deterministic discovery policy."
         },
         "lint": {
-          "classification": "REAL",
-          "command": "eslint src/",
-          "evidence": "Declared package script: eslint src/"
+          "classification": "NOT-APPLICABLE",
+          "command": null,
+          "evidence": "Workspace contains no qualifying source under the deterministic discovery policy; lint becomes required when source is introduced."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
