@@ -322,9 +322,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 ESLint 9 workspace-local flat-config proof passed, including an explicit-any negative control that failed non-zero before restoration."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -352,8 +352,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 ESLint 9 workspace-local flat-config proof passed after remediating the package's real lint findings; typecheck and build also passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -438,9 +438,9 @@
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 ESLint 9 workspace-local flat-config proof passed, including an explicit-any negative control that failed non-zero before restoration."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -471,9 +471,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 ESLint 9 workspace-local flat-config proof passed, including an explicit-any negative control that failed non-zero before restoration."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -1948,9 +1948,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 ESLint 9 workspace-local flat-config proof passed, including an explicit-any negative control that failed non-zero before restoration."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -3802,8 +3802,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts*\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts*\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 ESLint 9 workspace-local flat-config proof passed after remediating all real package findings; typecheck and build also passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
