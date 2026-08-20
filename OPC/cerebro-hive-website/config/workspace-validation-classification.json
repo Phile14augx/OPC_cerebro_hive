@@ -381,8 +381,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 proof passed after real type-safety remediation; lint mutation failed non-zero and restored lint, typecheck, build, and semantic tests passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -563,8 +563,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint src/",
-          "evidence": "Declared package script: eslint src/"
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 proof passed with source-not-ignored and explicit-any negative controls; restored lint, typecheck, and build passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -621,8 +621,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts*\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts*\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 proof passed after real unused-code remediation; lint mutation failed non-zero and restored lint, typecheck, build, and semantic tests passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -910,8 +910,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 proof passed with an explicit-any negative control; restored lint, typecheck, and 13 Vitest tests passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -1059,8 +1059,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 proof passed after replacing unsafe record values; negative control and restored lint, typecheck, and build passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -2969,8 +2969,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 proof passed after replacing unsafe policy attribute values; negative control and restored lint, typecheck, build, and semantic test passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -3601,8 +3601,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 proof passed after real OpenTelemetry type-safety remediation; negative control and post-build lint, typecheck, and build passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -3856,8 +3856,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 proof passed after removing an unsafe listener assertion; negative control and restored lint, typecheck, and build passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -3951,8 +3951,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint src/",
-          "evidence": "Declared package script: eslint src/"
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 proof passed with source-not-ignored and explicit-any negative controls; restored lint, typecheck, and build passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -4017,8 +4017,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint src --ext .ts",
-          "evidence": "Declared package script: eslint src --ext .ts"
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 proof passed after using contextual callback types; negative control and restored lint, typecheck, and build passed."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
