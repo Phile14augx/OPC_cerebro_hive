@@ -2,7 +2,8 @@
   "name": "@cerebro/governance-api",
   "version": "0.1.0",
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc"
   },
   "private": true,
   "main": "src/index.ts",

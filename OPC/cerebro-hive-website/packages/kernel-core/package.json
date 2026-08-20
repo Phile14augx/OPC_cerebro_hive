@@ -2,7 +2,8 @@
   "name": "@cerebro/kernel-core",
   "version": "1.0.0",
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc"
   },
   "main": "src/index.ts",
   "types": "src/index.ts",
