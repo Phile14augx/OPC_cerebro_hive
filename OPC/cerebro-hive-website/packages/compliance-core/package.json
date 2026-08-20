@@ -2,6 +2,7 @@
   "name": "@cerebro/compliance-core",
   "version": "1.0.0",
   "scripts": {
+    "test": "node ../../node_modules/vitest/vitest.mjs run src/compliance.test.ts --environment node",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "main": "src/index.ts",
