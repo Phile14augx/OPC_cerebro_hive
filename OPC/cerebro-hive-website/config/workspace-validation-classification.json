@@ -1159,9 +1159,9 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/data-governance-core.test.ts --environment node",
+          "evidence": "W0.2 semantic Vitest contract passed 3 lineage, classification, and quality invariants, failed a deliberate domain assertion mutation, then passed after restoration."
         },
         "typecheck": {
           "classification": "REAL",
@@ -2102,9 +2102,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -2168,9 +2168,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -2234,9 +2234,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "REAL",
@@ -2602,9 +2602,9 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/intelligence-core.test.ts --environment node",
+          "evidence": "W0.2 semantic Vitest contract passed 2 principal-isolation and timeline invariants, failed a deliberate domain assertion mutation, then passed after restoration."
         },
         "typecheck": {
           "classification": "REAL",
@@ -2998,9 +2998,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "REAL",
@@ -3234,9 +3234,9 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/resilience-core.test.ts --environment node",
+          "evidence": "W0.2 semantic Vitest contract passed 2 recovery-propagation and SPOF invariants, failed a deliberate domain assertion mutation, then passed after restoration."
         },
         "typecheck": {
           "classification": "REAL",
@@ -3267,9 +3267,9 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/risk-core.test.ts --environment node",
+          "evidence": "W0.2 semantic Vitest contract passed 6 risk scoring, rating, mitigation, and penalty invariants, failed a deliberate domain assertion mutation, then passed after restoration."
         },
         "typecheck": {
           "classification": "REAL",
@@ -3357,9 +3357,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "REAL",
@@ -3419,9 +3419,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -3457,9 +3457,9 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/secrets-core.test.ts --environment node",
+          "evidence": "W0.2 semantic Vitest contract passed 2 secret versioning and verification invariants, failed a deliberate domain assertion mutation, then passed after restoration."
         },
         "typecheck": {
           "classification": "REAL",
@@ -3663,9 +3663,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
@@ -3769,9 +3769,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
           "classification": "BROKEN",
