@@ -399,9 +399,9 @@
       "contracts": {
         "build": { "classification": "REAL", "command": "tsc", "evidence": "Declared package script: tsc" },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/ai-governance-core.test.ts --environment node",
+          "evidence": "W0.2 Batch 2B verified the AI governance lifecycle and semantic fail-closed controls through the direct Vitest CLI and package contract."
         },
         "typecheck": {
           "classification": "REAL",
@@ -518,9 +518,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
           "classification": "BROKEN",
@@ -861,9 +861,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
           "classification": "BROKEN",
@@ -956,9 +956,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
           "classification": "REAL",
@@ -1014,9 +1014,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
           "classification": "BROKEN",
@@ -1109,9 +1109,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
           "classification": "BROKEN",
@@ -1281,9 +1281,9 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared build validation contract."
+          "classification": "REAL",
+          "command": "tsc",
+          "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
           "classification": "BROKEN",
@@ -3024,9 +3024,9 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "node ../../node_modules/vitest/vitest.mjs run src/privacy-core.test.ts --environment node",
+          "evidence": "W0.2 Batch 2B verified consent and residency enforcement with semantic fail-closed controls through the direct Vitest CLI and package contract."
         },
         "typecheck": {
           "classification": "REAL",
