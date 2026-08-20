@@ -63,7 +63,7 @@ export class EngineeringReviewClient {
       }
 
       return await response.json() as T;
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err.name === 'AbortError') {
         throw new ApiError(408, 'Request timed out');
       }

@@ -15,7 +15,7 @@ export class ContinuousMonitor {
   /**
    * Subscribes to the Event Bus (simulated).
    */
-  async consumeEvent(eventType: string, payload: any): Promise<void> {
+  async consumeEvent(eventType: string, payload: unknown): Promise<void> {
     // 1. Record event in the immutable ledger
     await this.ledger.append('system', eventType, payload);
 

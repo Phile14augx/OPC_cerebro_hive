@@ -5,7 +5,8 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.3.4",

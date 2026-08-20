@@ -14,7 +14,7 @@ export interface ChangeProvider {
 }
 
 export class MockChangeProvider implements ChangeProvider {
-  async requestDeploymentChange(assetId: string, description: string): Promise<string> {
+  async requestDeploymentChange(_assetId: string, _description: string): Promise<string> {
     return `CHG-${Date.now()}`;
   }
 }

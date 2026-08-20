@@ -4,14 +4,14 @@ import { Command, ICommandHandler } from './Command';
 import { IMiddleware, MiddlewareNext } from './Middleware';
 
 export class CommandBus {
-  private handlers = new Map<string, ICommandHandler<any, any>>();
+  private handlers = new Map<string, ICommandHandler<unknown, unknown>>();
   private middlewares: IMiddleware[] = [];
 
   use(middleware: IMiddleware) {
     this.middlewares.push(middleware);
   }
 
-  register(type: string, handler: ICommandHandler<any, any>) {
+  register(type: string, handler: ICommandHandler<unknown, unknown>) {
     this.handlers.set(type, handler);
   }
 

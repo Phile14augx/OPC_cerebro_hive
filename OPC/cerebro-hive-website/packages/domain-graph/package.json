@@ -4,7 +4,8 @@
   "scripts": {
     "build": "tsc",
     "test": "node ../../node_modules/vitest/vitest.mjs run src/domain-graph.test.ts --environment node",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.ts\""
   },
   "main": "src/index.ts",
   "types": "src/index.ts",

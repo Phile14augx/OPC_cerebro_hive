@@ -8,7 +8,7 @@ export interface ResilienceProvider {
 }
 
 export class MockResilienceProvider implements ResilienceProvider {
-  async validateRecoveryObjectives(ciIds: string[]): Promise<ResilienceAssessment> {
+  async validateRecoveryObjectives(_ciIds: string[]): Promise<ResilienceAssessment> {
     return { violatesRTO: false, message: 'All dependencies meet required RTO' };
   }
 }

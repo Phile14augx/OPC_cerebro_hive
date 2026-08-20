@@ -4,7 +4,7 @@ export interface HealthStatus {
   state: HealthState;
   dependencies: Record<string, HealthState>;
   lastHeartbeat: Date;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 export interface HealthContract {

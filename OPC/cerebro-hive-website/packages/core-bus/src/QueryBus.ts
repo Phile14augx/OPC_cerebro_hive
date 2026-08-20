@@ -4,14 +4,14 @@ import { Query, IQueryHandler } from './Query';
 import { IMiddleware, MiddlewareNext } from './Middleware';
 
 export class QueryBus {
-  private handlers = new Map<string, IQueryHandler<any, any>>();
+  private handlers = new Map<string, IQueryHandler<unknown, unknown>>();
   private middlewares: IMiddleware[] = [];
 
   use(middleware: IMiddleware) {
     this.middlewares.push(middleware);
   }
 
-  register(type: string, handler: IQueryHandler<any, any>) {
+  register(type: string, handler: IQueryHandler<unknown, unknown>) {
     this.handlers.set(type, handler);
   }
 
