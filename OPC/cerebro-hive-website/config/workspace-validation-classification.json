@@ -122,7 +122,7 @@
           "command": "tsc --noEmit",
           "evidence": "Declared package script: tsc --noEmit"
         },
-        "lint": { "classification": "REAL", "command": "eslint", "evidence": "Declared package script: eslint" },
+        "lint": { "classification": "REAL", "command": "eslint --max-warnings=0 .", "evidence": "W0.2 repaired 90 findings, proved a deliberate no-explicit-any negative control, and restored lint, typecheck, and production build passes." },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
           "command": null,
@@ -1203,8 +1203,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"**/*.ts*\"",
-          "evidence": "Declared package script: eslint \"**/*.ts*\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 contract covers production and tests, repaired 87 findings, failed a deliberate explicit-any canary, then passed with 191 tests."
         },
         "schema-config": {
           "classification": "REAL",
@@ -4260,8 +4260,8 @@
         },
         "lint": {
           "classification": "REAL",
-          "command": "eslint \"src/**/*.ts\"",
-          "evidence": "Declared package script: eslint \"src/**/*.ts\""
+          "command": "eslint --max-warnings=0 .",
+          "evidence": "W0.2 workspace-local ESLint 9 contract repaired 35 findings, failed a deliberate explicit-any canary, then passed with typecheck, build, and 74 tests."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
