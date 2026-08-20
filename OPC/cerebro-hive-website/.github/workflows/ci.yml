@@ -98,27 +98,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run unit tests with coverage
-        run: pnpm turbo test -- --coverage --reporter=verbose --reporter=junit --outputFile=test-results.xml
+      # Workspace contracts use Vitest, node:test, Jest, and tsx --test. Runner-
+      # specific reporting flags cannot be broadcast safely through Turborepo.
+      - name: Run workspace test contracts
+        run: pnpm turbo test --color
         env:
           CI: true
           VITEST_POOL: forks
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: unit-test-results
-          path: |
-            **/test-results.xml
-            **/coverage/**
-
-      - name: Publish test report
-        if: always()
-        uses: mikepenz/action-junit-report@v4
-        with:
-          report_paths: "**/test-results.xml"
-          check_name: Unit Test Results
 
   # ── Job 3: Build ──────────────────────────────────────────────────────────
   build:
