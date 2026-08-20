@@ -15,7 +15,6 @@ import {
   type JetStreamClient,
   type ConsumerMessages,
   StringCodec,
-  type NatsError,
   StorageType,
   AckPolicy,
   DeliverPolicy,

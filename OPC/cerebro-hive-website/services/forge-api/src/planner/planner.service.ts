@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@cerebro/db';
+import { PrismaClient, type Prisma } from '@cerebro/db';
 import { FORGE_PLAN_SCHEMA } from '@cerebro/ai';
 import { projectGraph } from '@cerebro/workflow';
 import type { ForgePlan } from '@cerebro/workflow';
@@ -16,7 +16,7 @@ export class PlannerService {
     // Ensure graph context exists
     let ctx = projectGraph.get(projectId);
     if (!ctx) {
-      const p = this.prisma as any;
+      const p = this.prisma;
       const project = await p.project.findUniqueOrThrow({ where: { id: projectId } });
       ctx = projectGraph.init(projectId, project.name, prompt ?? (project.prompt ?? ''));
     }
@@ -35,18 +35,18 @@ export class PlannerService {
     const plan = result.output;
 
     // Persist plan back to project and modules
-    const p = this.prisma as any;
+    const p = this.prisma;
     await p.$transaction([
       p.project.update({
         where: { id: projectId },
         data: {
-          planJson: plan as any,
+          planJson: plan as unknown as Prisma.InputJsonValue,
           forgePhase: 'planning',
           forgeStatus: 'planning',
           totalModules: plan.modules.length,
           totalStories: plan.totalStories,
           totalApis: plan.totalApis,
-          stack: plan.stack as any,
+          stack: plan.stack as unknown as Prisma.InputJsonValue,
           actorList: plan.actors,
         },
       }),

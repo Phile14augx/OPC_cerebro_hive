@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@cerebro/db';
+import { PrismaClient, type Prisma } from '@cerebro/db';
 import { FORGE_ARCHITECTURE_SCHEMA } from '@cerebro/ai';
 import { projectGraph } from '@cerebro/workflow';
 import type { ForgeArchitecture } from '@cerebro/workflow';
@@ -41,11 +41,11 @@ ports, databases, tech stack per layer, and Architecture Decision Records.`;
     const arch = result.output;
 
     // Persist ADRs as ArchitectureDecision records
-    const p = this.prisma as any;
+    const p = this.prisma;
     await p.$transaction([
       p.project.update({
         where: { id: projectId },
-        data: { archJson: arch as any, forgePhase: 'architecture' },
+        data: { archJson: arch as unknown as Prisma.InputJsonValue, forgePhase: 'architecture' },
       }),
       p.architectureDecision.deleteMany({ where: { projectId } }),
       ...arch.decisions.map(d =>

@@ -96,7 +96,7 @@ export class WorkflowService {
     }
   }
 
-  async getStatus(executionId: string, orgId: string): Promise<WorkflowStatus | null> {
+  async getStatus(executionId: string, _orgId: string): Promise<WorkflowStatus | null> {
     const execution = await prisma.workflowExecution.findUnique({ where: { id: executionId } });
     if (!execution) return null;
 
@@ -119,7 +119,7 @@ export class WorkflowService {
     };
   }
 
-  async cancelExecution(executionId: string, orgId: string): Promise<void> {
+  async cancelExecution(executionId: string, _orgId: string): Promise<void> {
     const execution = await prisma.workflowExecution.findUnique({ where: { id: executionId } });
     if (!execution?.temporalWorkflowId) return;
 
@@ -134,7 +134,7 @@ export class WorkflowService {
     });
   }
 
-  async sendSignal(executionId: string, orgId: string, signalName: string, payload: unknown): Promise<void> {
+  async sendSignal(executionId: string, _orgId: string, signalName: string, payload: unknown): Promise<void> {
     const execution = await prisma.workflowExecution.findUnique({ where: { id: executionId } });
     if (!execution?.temporalWorkflowId) {
       throw new Error(`Execution ${executionId} has no associated Temporal workflow`);

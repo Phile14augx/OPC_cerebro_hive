@@ -79,7 +79,7 @@ wordCount per section must be proportional to complexity. A full API Reference f
     const aiSections = result.output.sections;
 
     // Persist doc artifacts to DB
-    const p = this.prisma as any;
+    const p = this.prisma;
     await p.$transaction([
       p.project.update({
         where: { id: projectId },

@@ -96,7 +96,7 @@ Keep step commands realistic and tool-specific (pnpm, docker, kubectl, terraform
       { filePath: '.github/workflows/release.yml',    type: 'ci_pipeline',    description: 'Semantic release + changelog generation'   },
     ];
 
-    const p = this.prisma as any;
+    const p = this.prisma;
     await p.$transaction([
       p.project.update({
         where: { id: projectId },
