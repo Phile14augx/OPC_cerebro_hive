@@ -10,10 +10,9 @@ function createClient(): Redis {
   return client;
 }
 
-export const redis: Redis =
-  process.env.NODE_ENV === 'production'
-    ? createClient()
-    : (global.__sphereRedis ?? (global.__sphereRedis = createClient()));
+function getRedis(): Redis {
+  return global.__sphereRedis ?? (global.__sphereRedis = createClient());
+}
 
 export const TTL = {
   DASHBOARD:   20,   // seconds — live data
@@ -24,11 +23,11 @@ export const TTL = {
 };
 
 export async function cacheGet<T>(key: string): Promise<T | null> {
-  const raw = await redis.get(key);
+  const raw = await getRedis().get(key);
   if (!raw) return null;
   try { return JSON.parse(raw) as T; } catch { return null; }
 }
 
 export async function cacheSet<T>(key: string, value: T, ttl: number): Promise<void> {
-  await redis.set(key, JSON.stringify(value), 'EX', ttl);
+  await getRedis().set(key, JSON.stringify(value), 'EX', ttl);
 }
