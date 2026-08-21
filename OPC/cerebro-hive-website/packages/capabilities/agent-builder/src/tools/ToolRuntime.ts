@@ -36,7 +36,7 @@ export class ToolRuntime {
   private async executeSync(metadata: unknown, executor: unknown, args: unknown, context: unknown): Promise<unknown> {
     // In a real system, enforce timeoutMs here
     try {
-      const result = await executor.execute(args, context);
+      const result = await (executor as { execute(args: unknown, context: unknown): Promise<unknown> }).execute(args, context);
       // Telemetry success
       return result;
     } catch (e) {

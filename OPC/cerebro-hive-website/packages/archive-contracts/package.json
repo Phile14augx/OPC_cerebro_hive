@@ -1,20 +1,21 @@
 {
-  "name": "@cerebro/archive-contracts",
-  "version": "0.1.0",
-  "private": true,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "dev": "tsc --watch",
-    "lint": "eslint --max-warnings=0 .",
-    "clean": "rm -rf dist"
-  },
-  "dependencies": {
-    "zod": "^3.23.0"
-  },
-  "devDependencies": {
-    "typescript": "^5.6.0"
-  }
+    "name":  "@cerebro/archive-contracts",
+    "version":  "0.1.0",
+    "private":  true,
+    "main":  "dist/index.js",
+    "types":  "dist/index.d.ts",
+    "scripts":  {
+                    "build":  "tsc",
+                    "typecheck":  "tsc -p tsconfig.json --noEmit",
+                    "dev":  "tsc --watch",
+                    "lint":  "eslint --max-warnings=0 .",
+                    "clean":  "rm -rf dist",
+                    "test":  "vitest run"
+                },
+    "dependencies":  {
+                         "zod":  "^3.23.0"
+                     },
+    "devDependencies":  {
+                            "typescript":  "^5.6.0"
+                        }
 }

@@ -4,14 +4,14 @@ import { Query, IQueryHandler } from './Query';
 import { IMiddleware, MiddlewareNext } from './Middleware';
 
 export class QueryBus {
-  private handlers = new Map<string, IQueryHandler<unknown, unknown>>();
+  private handlers = new Map<string, IQueryHandler<Query, unknown>>();
   private middlewares: IMiddleware[] = [];
 
   use(middleware: IMiddleware) {
     this.middlewares.push(middleware);
   }
 
-  register(type: string, handler: IQueryHandler<unknown, unknown>) {
+  register(type: string, handler: IQueryHandler<Query, unknown>) {
     this.handlers.set(type, handler);
   }
 
@@ -21,7 +21,7 @@ export class QueryBus {
       throw new Error(`No handler registered for query: ${query.type}`);
     }
 
-    return this.executeWithMiddleware(query, context, () => handler.handle(query, context));
+    return this.executeWithMiddleware(query, context, () => handler.handle(query, context)) as Promise<Result<TResult>>;
   }
 
   private async executeWithMiddleware<T>(query: Query, context: RequestContext, target: MiddlewareNext<T>): Promise<T> {

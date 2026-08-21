@@ -1,7 +1,7 @@
 // This file represents the Temporal Workflow Definition.
 // It will be executed by a Temporal Worker.
 
-import { _proxyActivities } from '@temporalio/workflow';
+import { proxyActivities } from '@temporalio/workflow';
 // import type { createActivities } from './activities';
 
 // const { executeAgentStep } = proxyActivities<ReturnType<typeof createActivities>>({

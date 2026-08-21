@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
     "@cerebro/runtime-contracts": "workspace:*"

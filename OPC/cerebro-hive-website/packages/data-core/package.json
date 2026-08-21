@@ -4,7 +4,8 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint \"src/**/*.ts\""
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "vitest run"
   },
   "private": true,
   "main": "src/index.ts",

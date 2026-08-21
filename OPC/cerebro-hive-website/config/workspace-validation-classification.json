@@ -95,7 +95,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -349,8 +349,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -382,8 +382,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -480,8 +480,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -513,8 +513,8 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -546,8 +546,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -610,8 +610,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -703,7 +703,7 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
@@ -735,12 +735,12 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -772,8 +772,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -799,12 +799,12 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -836,7 +836,7 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -863,12 +863,12 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -899,8 +899,8 @@
           "command": "tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -996,8 +996,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -1125,8 +1125,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -1157,8 +1157,8 @@
           "command": "tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -1189,7 +1189,7 @@
           "evidence": "W0.2 build cohort verified TypeScript compilation emits dist/index.js and dist/index.d.ts and fails non-zero for a missing compiler configuration."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -1286,7 +1286,7 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -1422,7 +1422,7 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
@@ -1454,7 +1454,7 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
@@ -1486,7 +1486,7 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
@@ -1518,7 +1518,7 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
@@ -1550,7 +1550,7 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
@@ -1582,7 +1582,7 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
@@ -1614,7 +1614,7 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
@@ -1646,7 +1646,7 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
@@ -1693,7 +1693,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -1726,7 +1726,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -1759,7 +1759,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -1792,7 +1792,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -1825,7 +1825,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -1858,7 +1858,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -1891,7 +1891,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -1980,8 +1980,8 @@
           "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -1990,7 +1990,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2013,7 +2013,7 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -2045,8 +2045,8 @@
           "command": "tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -2077,8 +2077,8 @@
           "command": "tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -2175,7 +2175,7 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -2207,8 +2207,8 @@
           "command": "tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -2217,7 +2217,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2240,8 +2240,8 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -2273,8 +2273,8 @@
           "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -2339,7 +2339,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -2631,7 +2631,7 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
@@ -2701,7 +2701,7 @@
           "command": "tsc"
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -2734,7 +2734,7 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -2767,8 +2767,8 @@
           "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -2800,8 +2800,8 @@
           "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -2833,8 +2833,8 @@
           "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -2894,13 +2894,13 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -2909,7 +2909,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2932,8 +2932,8 @@
           "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -2965,7 +2965,7 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -3031,8 +3031,8 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3041,7 +3041,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -3140,7 +3140,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -3163,8 +3163,8 @@
           "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3173,7 +3173,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -3191,12 +3191,12 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -3229,8 +3229,8 @@
           "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3257,13 +3257,13 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3272,7 +3272,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -3295,7 +3295,7 @@
           "evidence": "W0.2 emitting-build cohort verified dist/index.js and dist/index.d.ts; missing-config negative control failed TS5058 and restored build passed."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -3394,8 +3394,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3427,8 +3427,8 @@
           "evidence": "W0.2 emitting TypeScript build produced the expected command JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3493,7 +3493,7 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -3526,7 +3526,7 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -3592,7 +3592,7 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -3625,8 +3625,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3657,8 +3657,8 @@
           "command": "tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3723,8 +3723,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3751,13 +3751,13 @@
       "semanticCandidates": [],
       "contracts": {
         "build": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3766,7 +3766,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -3789,8 +3789,8 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -3876,7 +3876,7 @@
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -3899,7 +3899,7 @@
           "evidence": "W0.2 emitting TypeScript build produced exact JS and declaration artifacts, failed TS2322 under a real-source negative control, then passed after restoration."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -3909,7 +3909,7 @@
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -3998,8 +3998,8 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
+          "classification": "REAL",
+          "command": "vitest run",
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
         "typecheck": {
@@ -4031,7 +4031,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4064,7 +4064,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4163,7 +4163,7 @@
           "evidence": "Declared package script: tsc --noEmit"
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4206,7 +4206,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -4239,7 +4239,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -4272,7 +4272,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -4305,7 +4305,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -4328,7 +4328,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4361,7 +4361,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4427,7 +4427,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4460,7 +4460,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4470,7 +4470,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -4493,7 +4493,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4526,7 +4526,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4559,7 +4559,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4592,7 +4592,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },
@@ -4625,7 +4625,7 @@
           "evidence": "Source-bearing workspace has no declared build validation contract."
         },
         "test": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared test validation contract."
         },

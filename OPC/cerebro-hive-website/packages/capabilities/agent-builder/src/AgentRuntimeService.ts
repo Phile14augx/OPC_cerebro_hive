@@ -60,7 +60,7 @@ export class AgentRuntimeService {
 
     const messages: RuntimeMessage[] = [
       ...(systemPrompt ? [{ role: 'system' as const, content: systemPrompt }] : []),
-      ...context.memory.conversationHistory,
+      ...(context.memory.conversationHistory as RuntimeMessage[]),
       { role: 'user' as const, content: userInput },
     ];
 
@@ -134,7 +134,7 @@ export class AgentRuntimeService {
             // so it can recover gracefully
             messages.push({
               role: 'tool',
-              content: JSON.stringify({ error: err.message ?? 'Tool execution failed' }),
+              content: JSON.stringify({ error: (err instanceof Error ? err.message : String(err)) ?? 'Tool execution failed' }),
               toolCallId: toolCall.id,
             });
           }

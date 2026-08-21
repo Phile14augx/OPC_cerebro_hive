@@ -4,7 +4,9 @@
   "main": "index.ts",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint \"src/**/*.ts\""
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "vitest run",
+    "build": "tsc"
   },
   "dependencies": {
     "@cerebro/domain": "workspace:*",
