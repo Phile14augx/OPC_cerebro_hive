@@ -32,7 +32,7 @@ export class MemoryEventBus implements EventBus {
     if (!this.handlers.has(eventType)) {
       this.handlers.set(eventType, new Set());
     }
-    this.handlers.get(eventType).add(handler as EventHandler);
+    this.handlers.get(eventType)!.add(handler as EventHandler);
   }
 
   unsubscribe<T>(eventType: string, handler: EventHandler<T>): void {
@@ -55,14 +55,14 @@ export class MemoryEventBus implements EventBus {
     if (!responder) {
       throw new Error(`No responder registered for event request: ${eventType}`);
     }
-    return await responder(payload);
+    return await responder(payload) as Res;
   }
 
   respond<Req, Res>(eventType: string, handler: (payload: Req) => Promise<Res>): void {
     if (this.responders.has(eventType)) {
       throw new Error(`Responder already registered for: ${eventType}`);
     }
-    this.responders.set(eventType, handler);
+    this.responders.set(eventType, handler as unknown as (payload: unknown) => Promise<unknown>);
   }
 
   middleware(fn: (event: DomainEvent, next: () => Promise<void>) => Promise<void>): void {

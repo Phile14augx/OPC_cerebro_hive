@@ -15,6 +15,7 @@ export class ImpactAnalyzer {
     
     while (queue.length > 0) {
       const currentId = queue.shift();
+      if (!currentId) continue;
       const dependents = await this.repository.getUpstreamDependencies(currentId);
       
       for (const rel of dependents) {

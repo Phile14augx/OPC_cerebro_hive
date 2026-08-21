@@ -13,11 +13,11 @@ import { z } from 'zod';
 const registry = new OpenAPIRegistry();
 
 // Register the components using the schema itself
-registry.registerComponent('schemas', 'EngineeringReviewSummary', EngineeringReviewSummarySchema as unknown);
-registry.registerComponent('schemas', 'FindingDetail', FindingDetailSchema as unknown);
-registry.registerComponent('schemas', 'Evidence', EvidenceSchema as unknown);
-registry.registerComponent('schemas', 'ContributorResult', ContributorResultSchema as unknown);
-registry.registerComponent('schemas', 'FreshnessStatus', FreshnessStatusSchema as unknown);
+registry.registerComponent('schemas', 'EngineeringReviewSummary', EngineeringReviewSummarySchema as any);
+registry.registerComponent('schemas', 'FindingDetail', FindingDetailSchema as any);
+registry.registerComponent('schemas', 'Evidence', EvidenceSchema as any);
+registry.registerComponent('schemas', 'ContributorResult', ContributorResultSchema as any);
+registry.registerComponent('schemas', 'FreshnessStatus', FreshnessStatusSchema as any);
 
 // Define API Key or Bearer Security (Cognito Phase 3 prep)
 const bearerAuth = registry.registerComponent('securitySchemes', 'bearerAuth', {
@@ -38,7 +38,7 @@ registry.registerPath({
   responses: {
     200: {
       description: 'The review summary',
-      content: { 'application/json': { schema: EngineeringReviewSummarySchema as unknown } }
+      content: { 'application/json': { schema: EngineeringReviewSummarySchema as any } }
     },
     404: { description: 'Review not found' }
   }
@@ -55,7 +55,7 @@ registry.registerPath({
   responses: {
     200: {
       description: 'List of reviews',
-      content: { 'application/json': { schema: z.array(EngineeringReviewSummarySchema) as unknown } }
+      content: { 'application/json': { schema: z.array(EngineeringReviewSummarySchema) as any } }
     }
   }
 });
@@ -71,7 +71,7 @@ registry.registerPath({
   responses: {
     200: {
       description: 'List of findings',
-      content: { 'application/json': { schema: z.array(FindingDetailSchema) as unknown } }
+      content: { 'application/json': { schema: z.array(FindingDetailSchema) as any } }
     }
   }
 });
@@ -87,7 +87,7 @@ registry.registerPath({
   responses: {
     200: {
       description: 'List of evidence artifacts',
-      content: { 'application/json': { schema: z.array(EvidenceSchema) as unknown } }
+      content: { 'application/json': { schema: z.array(EvidenceSchema) as any } }
     }
   }
 });
@@ -103,7 +103,7 @@ registry.registerPath({
   responses: {
     200: {
       description: 'List of contributor results',
-      content: { 'application/json': { schema: z.array(ContributorResultSchema) as unknown } }
+      content: { 'application/json': { schema: z.array(ContributorResultSchema) as any } }
     }
   }
 });
