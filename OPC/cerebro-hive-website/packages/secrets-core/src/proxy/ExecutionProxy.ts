@@ -5,7 +5,7 @@ export interface ExecutionProxyConfig {
   targetUrl: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   headers?: Record<string, string>;
-  body?: any;
+  body?: unknown;
 }
 
 export class ExecutionProxy {
@@ -16,7 +16,7 @@ export class ExecutionProxy {
    * based on the provided CredentialReference.
    * The caller NEVER sees the secret value.
    */
-  async execute(credentialRef: CredentialReference, config: ExecutionProxyConfig): Promise<any> {
+  async execute(credentialRef: CredentialReference, config: ExecutionProxyConfig): Promise<unknown> {
     // 1. Audit check
     // Ensure the lease is still valid
     if (new Date() > credentialRef.expiresAt) {
