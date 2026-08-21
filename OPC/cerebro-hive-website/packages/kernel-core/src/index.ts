@@ -16,7 +16,7 @@ export class CerebroKernel {
   public capabilities: CapabilityRegistry;
   private state: "booting" | "running" | "stopped" = "stopped";
 
-  constructor(options?: KernelOptions) {
+  constructor(_options?: KernelOptions) {
     this.config = new ConfigManager();
     this.eventBus = new MemoryEventBus();
     this.runtime = RuntimeRegistry.getInstance();

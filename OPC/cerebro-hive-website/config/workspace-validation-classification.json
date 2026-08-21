@@ -2087,9 +2087,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "B1.3-A unused-vars conversion sweep eliminated all lint diagnostics."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -2250,9 +2250,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "B1.3-A unused-vars conversion sweep eliminated all lint diagnostics."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -2711,9 +2711,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "B1.3-A unused-vars conversion sweep eliminated all lint diagnostics."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -2975,9 +2975,9 @@
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "B1.3-A unused-vars conversion sweep eliminated all lint diagnostics."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -3338,9 +3338,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "B1.3-A unused-vars conversion sweep eliminated all lint diagnostics."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -3371,9 +3371,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "B1.3-A unused-vars conversion sweep eliminated all lint diagnostics."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -3571,7 +3571,7 @@
         "lint": {
           "classification": "BROKEN",
           "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "evidence": "ARCH-LINT-002: injectedHeaders reveals incomplete proxy security implementation. Repair deferred for architectural work."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -3602,9 +3602,9 @@
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "B1.3-A unused-vars conversion sweep eliminated all lint diagnostics."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -4371,9 +4371,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "B1.3-A unused-vars conversion sweep eliminated all lint diagnostics."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -4536,9 +4536,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "B1.3-A unused-vars conversion sweep eliminated all lint diagnostics."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",

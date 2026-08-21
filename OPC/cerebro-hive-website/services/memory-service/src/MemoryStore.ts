@@ -1,5 +1,5 @@
 
-import { WorkingMemory, TaskMemory, EpisodicMemory } from '@cerebro/memory-sdk';
+import { WorkingMemory, EpisodicMemory } from '@cerebro/memory-sdk';
 
 export class MemoryStore {
   private workingDb = new Map<string, WorkingMemory>();

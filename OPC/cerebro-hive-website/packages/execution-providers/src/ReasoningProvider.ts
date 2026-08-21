@@ -12,7 +12,7 @@ export interface ReasoningContext {
 
 // Mock representation of HiveSwarm calling the standalone Reasoning Service
 export class ReasoningProvider {
-  async execute(node: ReasoningNode, context: ReasoningContext) {
+  async execute(node: ReasoningNode, _context: ReasoningContext) {
     console.log(`[ReasoningProvider] Delegating task ${node.id} to ReasoningService...`);
     
     // Simulating the network call to reasoning-service
