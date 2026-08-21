@@ -1,11 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { CerebroRuntime } from './CerebroRuntime';
+import { AgentDefinition } from '@cerebro/contracts';
 
 describe('CerebroRuntime Contract', () => {
   it('should throw when an unregistered provider is requested (Negative Control)', async () => {
     const runtime = new CerebroRuntime();
     await expect(
-      runtime.compileAgent({ id: 'agent-1', name: 'Test', version: '1.0', type: 'assistant', nodes: [] }, 'nonexistent')
+      runtime.compileAgent({ id: 'agent-1', name: 'Test', version: '1.0', nodes: [] } as unknown as AgentDefinition, 'nonexistent')
     ).rejects.toThrow("Execution provider 'nonexistent' is not registered.");
   });
 
@@ -18,7 +19,7 @@ describe('CerebroRuntime Contract', () => {
       cancel: async () => {},
     });
     const agent = await runtime.compileAgent(
-      { id: 'agent-2', name: 'Test', version: '1.0', type: 'assistant', nodes: [] },
+      { id: 'agent-2', name: 'Test', version: '1.0', nodes: [] } as unknown as AgentDefinition,
       'mock'
     );
     expect(agent).toBeDefined();

@@ -1924,7 +1924,7 @@
           "evidence": "Declared package script: tsc --noEmit -p tsconfig.json"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2119,7 +2119,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2283,7 +2283,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2349,7 +2349,7 @@
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2679,7 +2679,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2777,7 +2777,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2810,7 +2810,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2843,7 +2843,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2942,7 +2942,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -3239,9 +3239,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "evidence": "W0.2 semantic lint cohort B1.2-A successfully replaced explicit any with strict typing, passing isolated local lint, build, test, and typecheck without downstream fan-out breakage."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -3404,9 +3404,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "evidence": "W0.2 semantic lint cohort B1.2-A successfully replaced explicit any with strict typing, passing isolated local lint, build, test, and typecheck without downstream fan-out breakage."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -3635,9 +3635,9 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "evidence": "W0.2 semantic lint cohort B1.2-A successfully replaced explicit any with strict typing, passing isolated local lint, build, test, and typecheck without downstream fan-out breakage."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",

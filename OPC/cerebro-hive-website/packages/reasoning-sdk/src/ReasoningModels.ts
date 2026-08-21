@@ -10,7 +10,7 @@ export interface ReasoningSummary {
 
 export interface ReasoningStrategy {
   name: string;
-  initialize(inputs: any): Promise<void>;
+  initialize(inputs: unknown): Promise<void>;
   execute(): Promise<void>;
   evaluate(): Promise<void>;
   finalize(): Promise<ReasoningSummary>;

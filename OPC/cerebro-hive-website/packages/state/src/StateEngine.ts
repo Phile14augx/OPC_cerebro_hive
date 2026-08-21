@@ -4,10 +4,10 @@
  */
 export interface ExecutionState {
   id: string;
-  variables: Record<string, any>;
-  messages: Array<Record<string, any>>; // e.g., LLM conversation history
-  toolOutputs: Record<string, any>;
-  plannerContext?: Record<string, any>;
+  variables: Record<string, unknown>;
+  messages: Array<Record<string, unknown>>; // e.g., LLM conversation history
+  toolOutputs: Record<string, unknown>;
+  plannerContext?: Record<string, unknown>;
 }
 
 /**

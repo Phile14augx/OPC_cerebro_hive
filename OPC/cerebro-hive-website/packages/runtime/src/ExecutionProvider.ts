@@ -20,7 +20,7 @@ export interface ExecutionProvider {
    * @param input The starting state.
    * @returns The final state after execution.
    */
-  execute(input: Record<string, any>): Promise<Record<string, any>>;
+  execute(input: Record<string, unknown>): Promise<Record<string, unknown>>;
 
   /**
    * Halts any currently running execution.
