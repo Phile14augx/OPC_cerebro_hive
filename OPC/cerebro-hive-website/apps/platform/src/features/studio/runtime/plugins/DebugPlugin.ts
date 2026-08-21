@@ -20,7 +20,8 @@ export class DebugPlugin implements RuntimePlugin {
   addBreakpoint(nodeId: string): void { this.breakpoints.add(nodeId); }
   removeBreakpoint(nodeId: string): void { this.breakpoints.delete(nodeId); }
 
-  beforeNode(node: StudioNode, inputs: Record<string, TypedValue>, _ctx: ExecutionContext): void {
+  beforeNode(node: StudioNode, inputs: Record<string, TypedValue>, context: ExecutionContext): void {
+    void context;
     if (this.breakpoints.has(node.id)) {
       this.handler?.({ type: 'BreakpointHit', nodeId: node.id, data: { inputs } });
       this.pauseSignal?.();

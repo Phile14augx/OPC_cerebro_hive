@@ -5,7 +5,7 @@ export interface StudioNode {
   id: string;
   type: string;
   position: XYPosition;
-  configuration: Record<string, any>;
+  configuration: Record<string, unknown>;
 }
 
 export interface StudioEdge {

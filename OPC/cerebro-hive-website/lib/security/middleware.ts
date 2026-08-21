@@ -248,7 +248,7 @@ async function validateToken(token: string): Promise<{ valid: true; claims: JWTC
     }
 
     return { valid: true, claims: payload };
-  } catch (error) {
+  } catch {
     return { valid: false, error: "Failed to decode token" };
   }
 }

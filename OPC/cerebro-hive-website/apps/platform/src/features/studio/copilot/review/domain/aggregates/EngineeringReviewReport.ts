@@ -12,7 +12,7 @@ export type ReportState = 'Draft' | 'EvaluationCompleted' | 'Published';
 export class EngineeringReviewReport {
   private state: ReportState = 'Draft';
   private verdict: ReviewVerdict = ReviewVerdict.DRAFT;
-  private readonly domainEvents: any[] = [];
+  private readonly domainEvents: unknown[] = [];
 
   constructor(
     public readonly reportId: string,

@@ -43,7 +43,7 @@ class NoopSpan implements Span {
     if (this.status === 'unset') this.status = 'ok';
   }
 
-  setStatus(status: 'ok' | 'error', _msg?: string): void { this.status = status; }
+  setStatus(status: 'ok' | 'error', message?: string): void { void message; this.status = status; }
   setAttribute(key: string, value: unknown): void { this.attributes[key] = value; }
 }
 
@@ -51,7 +51,8 @@ class InProcessTracer implements Tracer {
   private spans: NoopSpan[] = [];
   private rootTraceId = crypto.randomUUID();
 
-  startSpan(name: string, _parentSpan?: Span): Span {
+  startSpan(name: string, parentSpan?: Span): Span {
+    void parentSpan;
     const span = new NoopSpan(name, this.rootTraceId);
     this.spans.push(span);
     return span;

@@ -2,7 +2,10 @@
   "name": "@cerebro/resilience-core",
   "version": "1.0.0",
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "build": "tsc",
+    "test": "node ../../node_modules/vitest/vitest.mjs run src/resilience-core.test.ts --environment node",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.ts\""
   },
   "main": "src/index.ts",
   "types": "src/index.ts",

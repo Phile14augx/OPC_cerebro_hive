@@ -2,7 +2,7 @@
 // Anthropic Provider — wraps @ai-sdk/anthropic
 // =============================================================================
 import { createAnthropic } from '@ai-sdk/anthropic';
-import { generateText, streamText } from 'ai';
+import { generateText, streamText, type CoreMessage } from 'ai';
 import type {
   AIService, AIServiceConfig, AIGenerateRequest,
   AIGenerateResult, AIStreamChunk,
@@ -17,10 +17,8 @@ export class AnthropicProvider implements AIService {
     this.client = createAnthropic({ apiKey: config.apiKey ?? process.env.ANTHROPIC_API_KEY });
   }
 
-  private buildMessages(req: AIGenerateRequest) {
-    const msgs: Array<{ role: string; content: string }> = [];
-    msgs.push(...req.messages);
-    return msgs as any;
+  private buildMessages(req: AIGenerateRequest): CoreMessage[] {
+    return req.messages;
   }
 
   async generateText(req: AIGenerateRequest): Promise<AIGenerateResult> {

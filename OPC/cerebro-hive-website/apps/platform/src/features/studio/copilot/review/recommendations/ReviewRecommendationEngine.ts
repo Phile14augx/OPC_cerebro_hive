@@ -12,6 +12,8 @@ export interface ReviewRecommendation {
 
 export class ReviewRecommendationEngine {
   static async recommend(gates: ReviewGateResult[], changeset: SemanticChangeset, evidence: EvidenceGraph): Promise<ReviewRecommendation[]> {
+    void changeset;
+    void evidence;
     const recs: ReviewRecommendation[] = [];
 
     for (const gate of gates) {

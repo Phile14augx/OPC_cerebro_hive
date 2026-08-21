@@ -21,7 +21,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function AccountsPanel({ online }: { online: boolean | null }) {
   const [accounts, setAccounts] = useState<Account[]>([]);
-  const [trialBalance, setTrialBalance] = useState<TrialBalance | null>(null);
+  const [, setTrialBalance] = useState<TrialBalance | null>(null);
   const [form, setForm] = useState({ code: "", name: "", type: "asset", currency: "USD" });
   const [busy, setBusy] = useState(false);
 

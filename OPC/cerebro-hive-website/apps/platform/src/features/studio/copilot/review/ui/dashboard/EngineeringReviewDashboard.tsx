@@ -3,9 +3,6 @@ import React from 'react';
 import { DashboardHeader } from './DashboardHeader';
 import { DashboardNavigation } from './DashboardNavigation';
 import { FindingsTab } from '../findings/FindingsTab';
-import { RecommendationsTab } from '../recommendations/RecommendationsTab';
-import { ContributorExecutionPanel } from './ContributorExecutionPanel';
-import { ReviewComparisonView } from '../comparison/ReviewComparisonView';
 
 export const EngineeringReviewDashboard: React.FC<{ reviewId: string }> = ({ reviewId }) => {
   return (

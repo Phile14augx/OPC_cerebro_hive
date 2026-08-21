@@ -3,7 +3,7 @@
  */
 
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { safeVerifyJWT, isSystemAdmin, type CerebroJWTPayload } from "@cerebro/auth/server";
+import { safeVerifyJWT, isSystemAdmin, type CerebroJWTPayload, type OrgRole } from "@cerebro/auth/server";
 import type { Request } from "express";
 
 @Injectable()
@@ -13,7 +13,7 @@ export class JwtGuard implements CanActivate {
       auth?: {
         userId:  string;
         orgId:   string | null;
-        orgRole: string | null;
+        orgRole: OrgRole | null;
         email:   string | null;
         name:    string | null;
         isAdmin: boolean;
@@ -41,7 +41,7 @@ export class JwtGuard implements CanActivate {
     req.auth = {
       userId:     p.sub,
       orgId:      p.org_id ?? null,
-      orgRole:    (p.org_role as any) ?? null,
+      orgRole:    (p.org_role as OrgRole | undefined) ?? null,
       email:      p.email   ?? null,
       name:       p.name    ?? null,
       isAdmin:    isSystemAdmin(p),

@@ -1,0 +1,169 @@
+name: Website CI
+
+# Canonical W0.2 / website workspace CI.
+# GitHub Actions only loads `.github/workflows/*.yml` at the repository root.
+# Nested copy (not executed): OPC/cerebro-hive-website/.github/workflows/ci.yml
+#
+# Required check name for later branch protection (do not set via API here):
+#   Website CI / workspace-contracts
+
+on:
+  push:
+    branches: ["main", "develop", "release/*"]
+    paths:
+      - "OPC/cerebro-hive-website/**"
+      - ".github/workflows/website-ci.yml"
+      - ".github/actions/website-pnpm-setup/**"
+  pull_request:
+    branches: ["main", "develop"]
+    paths:
+      - "OPC/cerebro-hive-website/**"
+      - ".github/workflows/website-ci.yml"
+      - ".github/actions/website-pnpm-setup/**"
+
+concurrency:
+  group: website-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  checks: write
+
+env:
+  PNPM_VERSION: "9"
+  NODE_VERSION: "22"
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  # ── Fail-closed gate (KRN-CI-001 / W0.2) ──────────────────────────────────
+  workspace-contracts:
+    name: workspace-contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/website-pnpm-setup
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      # Source of truth: package.json "repo:policy" → scripts/audit-workspace-contracts.mjs
+      - name: Repository policy (fail-closed)
+        run: pnpm repo:policy
+
+  # ── Typecheck + Lint (nested ci.yml Job 1, minus duplicate policy) ────────
+  typecheck-lint:
+    name: Typecheck & Lint
+    runs-on: ubuntu-latest
+    needs: [workspace-contracts]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/website-pnpm-setup
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      # Lint is materially faster than the full-workspace typecheck and should
+      # fail first while W0.2 backlog is being burned down. Both remain hard
+      # gates; this only changes diagnostic ordering.
+      - name: Lint (Turborepo)
+        run: pnpm turbo lint --color
+
+      - name: Typecheck (Turborepo)
+        run: pnpm turbo typecheck --color
+
+      # Confirmed gap (2026-08-01): pnpm-workspace.yaml only declares
+      # apps/*, packages/*, packages/capabilities/*, services/*. The
+      # website-root Next.js app is not a workspace package.
+      - name: Typecheck root Next.js app (not a Turborepo workspace package)
+        run: pnpm exec tsc -p tsconfig.json --noEmit
+
+      - name: Typecheck root dashboard tests
+        run: pnpm typecheck:test
+
+      - name: Lint root Next.js app (not a Turborepo workspace package)
+        run: pnpm lint:root
+
+      - name: Sitemap drift check
+        run: pnpm sitemap:check
+
+  # ── Unit Tests (nested ci.yml Job 2) ──────────────────────────────────────
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: [workspace-contracts]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/website-pnpm-setup
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      # apps/studio/platform is a separate npm project with its own lockfile
+      # and is intentionally outside the root pnpm workspace glob.
+      - name: Install Studio platform test dependencies
+        working-directory: OPC/cerebro-hive-website/apps/studio/platform
+        run: npm ci --ignore-scripts
+
+      # W0.2 validates that package test scripts are real contracts. Execute
+      # those declared contracts directly; do not inject runner-specific
+      # coverage/reporting flags into heterogeneous workspace packages.
+      - name: Run declared workspace unit tests
+        run: pnpm turbo test --color
+        env:
+          CI: true
+          VITEST_POOL: forks
+
+  # ── Build (nested ci.yml Job 3) ───────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [typecheck-lint]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/website-pnpm-setup
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build all packages and apps (Turborepo)
+        run: pnpm turbo build --color
+        env:
+          NODE_ENV: production
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            OPC/cerebro-hive-website/apps/studio/.next/**
+            OPC/cerebro-hive-website/apps/forge/.next/**
+            OPC/cerebro-hive-website/apps/platform-api/dist/**
+            OPC/cerebro-hive-website/services/forge-api/dist/**
+          retention-days: 1
+
+  # ── CI Gate ───────────────────────────────────────────────────────────────
+  ci-gate:
+    name: CI Gate
+    runs-on: ubuntu-latest
+    needs:
+      - workspace-contracts
+      - typecheck-lint
+      - unit-tests
+      - build
+    if: always()
+    steps:
+      - name: Check all required jobs passed
+        working-directory: .
+        run: |
+          results='${{ toJSON(needs) }}'
+          failed=$(echo "$results" | jq -r 'to_entries[] | select(.value.result != "success") | .key')
+          if [ -n "$failed" ]; then
+            echo "The following required jobs failed or were skipped:"
+            echo "$failed"
+            exit 1
+          fi
+          echo "All required Website CI checks passed"

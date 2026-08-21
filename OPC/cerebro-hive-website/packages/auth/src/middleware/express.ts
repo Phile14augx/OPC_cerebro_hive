@@ -6,7 +6,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { apiKeyRepository } from "@cerebro/db";
 import { createHash, timingSafeEqual } from "node:crypto";
-import { safeVerifyJWT, type CerebroJWTPayload, hasRealmRole, isSystemAdmin } from "../jwt/verify.js";
+import { safeVerifyJWT, type CerebroJWTPayload, isSystemAdmin } from "../jwt/verify.js";
 import { PERMISSION_MAP, type RBACPermission, type OrgRole } from "../rbac/permissions.js";
 
 // ── Augment Express Request ───────────────────────────────────────────────────

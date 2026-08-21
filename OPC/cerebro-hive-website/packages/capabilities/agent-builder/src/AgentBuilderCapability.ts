@@ -18,7 +18,7 @@ export class AgentBuilderCapability implements IAgentBuilderCapability {
     agentInput: PublishAgentInput,
     context: RequestContext,
     idempotencyKey?: string
-  ): Promise<Result<any>> {
+  ): Promise<Result<unknown>> {
     // 1. Publish the agent via Domain layer
     const agentResult = await this.agentAppService.publishVersion(agentId, agentInput, context, idempotencyKey);
     

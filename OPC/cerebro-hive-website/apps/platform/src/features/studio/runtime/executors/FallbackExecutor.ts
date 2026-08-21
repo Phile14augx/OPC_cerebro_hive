@@ -13,9 +13,10 @@ import { Types } from '../../compiler/types/TypeSystem';
 
 export class FallbackExecutor implements RuntimeExecutor {
   readonly supportedTypes = ['*'];
-  canHandle(_node: StudioNode): boolean { return true; }
+  canHandle(node: StudioNode): boolean { void node; return true; }
 
   async execute(node: StudioNode, context: ExecutionContext, _inputs: Record<string, TypedValue>): Promise<ExecutionResult> {
+    void _inputs;
     context.logger(`[FallbackExecutor] No executor registered for type "${node.type}" — returning null`);
     return ok(null, Types.Unknown, {
       durationMs: 0,

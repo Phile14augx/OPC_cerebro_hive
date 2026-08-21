@@ -86,8 +86,9 @@ describe('InMemoryExecutionRepository — save/load and optimistic concurrency',
 
     const loaded = await repo.load(exec.id);
     expect(loaded).toBeDefined();
-    expect(loaded!.id.equals(exec.id)).toBe(true);
-    expect(loaded!.status).toBe(ExecutionStatus.Running);
+    if (!loaded) throw new Error('Expected the persisted execution to load.');
+    expect(loaded.id.equals(exec.id)).toBe(true);
+    expect(loaded.status).toBe(ExecutionStatus.Running);
   });
 
   it('returns undefined for an unknown id', async () => {
@@ -201,7 +202,8 @@ describe('ExecutionCheckpointStore — checkpoint save/restore', () => {
     exec.transitionTo(ExecutionStatus.Completed, { result: 'done' });
 
     const checkpoint = await store.loadLatestCheckpoint(exec.id);
-    const restored = fromExecutionSnapshot(checkpoint!.snapshot);
+    if (!checkpoint) throw new Error('Expected the latest checkpoint to load.');
+    const restored = fromExecutionSnapshot(checkpoint.snapshot);
     // The checkpoint reflects RUNNING (pre-completion), proving it's a real
     // historical point, not just an alias for "current state."
     expect(restored.status).toBe(ExecutionStatus.Running);
@@ -286,14 +288,16 @@ describe('Crash recovery — orchestrator resumes correctly from persisted state
     const rehydrated = await repo.load(execution.id);
     expect(rehydrated).toBeDefined();
     expect(rehydrated).not.toBe(execution);
-    expect(rehydrated!.status).toBe(ExecutionStatus.Waiting);
-    expect(rehydrated!.transitionHistory).toEqual(execution.transitionHistory);
+    if (!rehydrated) throw new Error('Expected the waiting execution to rehydrate.');
+    expect(rehydrated.status).toBe(ExecutionStatus.Waiting);
+    expect(rehydrated.transitionHistory).toEqual(execution.transitionHistory);
 
-    const resumed = await orchestrator.resume(rehydrated!);
+    const resumed = await orchestrator.resume(rehydrated);
     expect(resumed.status).toBe(ExecutionStatus.Completed);
 
     const finalPersisted = await repo.load(execution.id);
-    expect(finalPersisted!.status).toBe(ExecutionStatus.Completed);
+    if (!finalPersisted) throw new Error('Expected the resumed execution to persist.');
+    expect(finalPersisted.status).toBe(ExecutionStatus.Completed);
   });
 
   it('a persisted Execution\'s history alone (via replayExecution) matches what the repository independently persisted', async () => {
@@ -303,19 +307,20 @@ describe('Crash recovery — orchestrator resumes correctly from persisted state
 
     const execution = await orchestrator.run(baseInput);
     const persisted = await repo.load(execution.id);
+    if (!persisted) throw new Error('Expected the completed execution to persist.');
 
     const replayed = replayExecution({
-      id: persisted!.id,
-      kind: persisted!.kind,
-      tenantId: persisted!.tenantId,
-      workspaceId: persisted!.workspaceId,
-      userId: persisted!.userId,
-      traceId: persisted!.traceId,
-      correlationId: persisted!.correlationId,
-      transitionHistory: persisted!.transitionHistory,
+      id: persisted.id,
+      kind: persisted.kind,
+      tenantId: persisted.tenantId,
+      workspaceId: persisted.workspaceId,
+      userId: persisted.userId,
+      traceId: persisted.traceId,
+      correlationId: persisted.correlationId,
+      transitionHistory: persisted.transitionHistory,
     });
 
-    expect(replayed.status).toBe(persisted!.status);
+    expect(replayed.status).toBe(persisted.status);
     expect(replayed.status).toBe(ExecutionStatus.Completed);
   });
 });

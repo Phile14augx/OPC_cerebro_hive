@@ -39,7 +39,11 @@ class MemoryVersionStore implements VersionProposalStore {
     }
     if (proposal.twinId !== input.twinId) throw new Error('PROPOSAL_TWIN_MISMATCH');
     if (proposal.appliedVersionId) {
-      return clone(this.versions.get(input.twinId)!.find((item) => item.id === proposal.appliedVersionId)!);
+      const appliedVersion = this.versions
+        .get(input.twinId)
+        ?.find((item) => item.id === proposal.appliedVersionId);
+      if (!appliedVersion) throw new Error('APPLIED_VERSION_NOT_FOUND');
+      return clone(appliedVersion);
     }
 
     const current = this.versions.get(input.twinId) ?? [];

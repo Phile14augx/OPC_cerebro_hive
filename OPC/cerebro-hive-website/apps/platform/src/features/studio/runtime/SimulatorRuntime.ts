@@ -87,6 +87,6 @@ export class SimulatorRuntime {
   // ── State & recording ─────────────────────────────────────────────────────
 
   get state() { return this.kernel.state; }
-  getRecording(): ExecutionRecording { return this.kernel.getRecording() as any; }
+  getRecording(): ExecutionRecording { return this.kernel.getRecording(); }
   getEventLog(): DispatchedEvent[] { return this.kernel.eventDispatcher.getLog(); }
 }

@@ -29,7 +29,11 @@ export async function GET(): Promise<Response> {
 
       pingTimer = setInterval(() => { if (!closed) { try { ctrl.enqueue(enc.encode(': ping\n\n')); } catch { closed = true; } } }, 15_000);
       dataTimer = setInterval(async () => {
-        if (closed) { clearInterval(dataTimer!); clearInterval(pingTimer!); return; }
+        if (closed) {
+          if (dataTimer) clearInterval(dataTimer);
+          if (pingTimer) clearInterval(pingTimer);
+          return;
+        }
         try {
           const d = await aggregateDashboard();
           send('platform', { platform: d.platform, alerts: d.alerts, agents: d.agents, ts: new Date().toISOString() });

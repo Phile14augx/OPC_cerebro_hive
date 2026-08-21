@@ -3,7 +3,7 @@ import { DomainEvent } from '../contracts/DomainEvent';
 
 export class MemoryEventBus implements EventBus {
   private handlers: Map<string, Set<EventHandler>> = new Map();
-  private responders: Map<string, (payload: any) => Promise<any>> = new Map();
+  private responders: Map<string, (payload: unknown) => Promise<unknown>> = new Map();
   private middlewares: Array<(event: DomainEvent, next: () => Promise<void>) => Promise<void>> = [];
 
   async publish<T>(event: DomainEvent<T>): Promise<void> {
@@ -32,7 +32,7 @@ export class MemoryEventBus implements EventBus {
     if (!this.handlers.has(eventType)) {
       this.handlers.set(eventType, new Set());
     }
-    this.handlers.get(eventType)!.add(handler as EventHandler);
+    this.handlers.get(eventType).add(handler as EventHandler);
   }
 
   unsubscribe<T>(eventType: string, handler: EventHandler<T>): void {

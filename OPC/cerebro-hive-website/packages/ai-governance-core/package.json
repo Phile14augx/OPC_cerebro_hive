@@ -6,7 +6,9 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "test": "node ../../node_modules/vitest/vitest.mjs run src/ai-governance-core.test.ts --environment node",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.ts\""
   },
   "devDependencies": {
     "typescript": "^5.0.0"

@@ -23,7 +23,7 @@ export class RateLimiter {
    * Attempt to consume a request slot for org+provider.
    * Returns true if allowed, false if rate limited.
    */
-  consume(key: string, tokens = 0): boolean {
+  consume(key: string, _tokens = 0): boolean {
     const now = Date.now();
     let bucket = this.buckets.get(key);
 

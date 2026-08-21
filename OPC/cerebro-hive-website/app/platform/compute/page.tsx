@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Cpu, List, Zap } from "lucide-react";
+import { ArrowLeft, List, Zap } from "lucide-react";
 import { api, checkOnline, type RunOut } from "./lib";
 
 type Tab = "submit" | "runs";

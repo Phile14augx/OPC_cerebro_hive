@@ -58,7 +58,7 @@ async function runTest() {
   // Simulate CAB Approval manually for the test
   if (change.state === ChangeState.AwaitingApproval) {
     console.log(`\n[4] Simulating CAB Approval...`);
-    change.approvals.forEach(a => a.status = 'Approved' as any);
+    change.approvals.forEach(a => a.status = 'Approved' as unknown);
     // Since we mutated it manually, just force state to Approved for test flow
     change.state = ChangeState.Approved;
   }

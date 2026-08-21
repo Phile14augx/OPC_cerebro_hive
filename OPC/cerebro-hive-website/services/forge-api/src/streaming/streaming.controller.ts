@@ -3,7 +3,7 @@
  * SSE endpoint for real-time workflow execution events.
  */
 
-import { Controller, Get, Param, Req, Res, UseGuards, Sse } from "@nestjs/common";
+import { Controller, Get, Param, Req, Res, UseGuards } from "@nestjs/common";
 import type { Request, Response } from "express";
 import { StreamingService } from "./streaming.service.js";
 import { JwtGuard } from "../auth/jwt.guard.js";

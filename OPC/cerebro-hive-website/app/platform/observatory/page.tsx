@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Activity, AlertTriangle, BarChart2, Zap } from "lucide-react";
+import { ArrowLeft, Activity, AlertTriangle, BarChart2 } from "lucide-react";
 import { API, KEY } from "@/lib/platform-api";
 
 

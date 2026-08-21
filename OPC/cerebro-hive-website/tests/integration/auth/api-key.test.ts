@@ -5,8 +5,6 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { PrismaClient } from "@cerebro/db";
 import { SignJWT } from "jose";
-import { createHash, randomBytes } from "node:crypto";
-
 const BASE   = process.env["PLATFORM_API_URL"] ?? "http://localhost:4000";
 const prisma = new PrismaClient({ datasources: { db: { url: process.env["TEST_DATABASE_URL"] } } });
 

@@ -3,7 +3,6 @@ import { ExecutionApplicationService } from '../ExecutionApplicationService';
 import { ExecutionRepository } from '../../execution/ExecutionRepository';
 import { UnitOfWork, ITransactionContext } from '../../transactions/UnitOfWork';
 import { OutboxPublisher } from '../../events/OutboxPublisher';
-import { Execution } from '../../execution/Execution';
 import { ExecutionId } from '../../execution/ExecutionId';
 import { ExecutionStatus } from '../../execution/ExecutionStatus';
 import { RequestContext } from '@cerebro/db';
@@ -16,12 +15,17 @@ class MockUnitOfWork implements UnitOfWork {
 }
 
 describe('ExecutionApplicationService (Atomicity & Persistence)', () => {
-  let executionRepo: any;
-  let outboxPublisher: any;
+  let executionRepo: Record<'load' | 'save', ReturnType<typeof vi.fn>>;
+  let outboxPublisher: Record<'publish', ReturnType<typeof vi.fn>>;
   let uow: UnitOfWork;
   let service: ExecutionApplicationService;
   let mockContext: RequestContext;
-  let mockExecution: any;
+  let mockExecution: {
+    id: ExecutionId;
+    version: number;
+    status: ExecutionStatus;
+    transitionTo: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     mockExecution = {

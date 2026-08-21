@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   SphereCard, SphereCardHeader, SphereCardBody,
@@ -41,7 +41,6 @@ function relTime(iso: string) {
 
 /* ── Product mini-chip ────────────────────────────────────────────────────── */
 function ProductChip({ p }: { p: ProductHealth }) {
-  const color = STATUS_COLOR[p.status];
   return (
     <div
       className="sphere-card interactive"

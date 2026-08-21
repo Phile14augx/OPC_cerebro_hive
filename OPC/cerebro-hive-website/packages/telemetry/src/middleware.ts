@@ -2,7 +2,7 @@
 // CerebroHive — OTel HTTP middleware for Express, Fastify, and Next.js
 // =============================================================================
 
-import { SpanStatusCode, SpanKind, trace, context } from '@opentelemetry/api';
+import { SpanStatusCode, SpanKind, trace } from '@opentelemetry/api';
 import type { Request, Response, NextFunction } from 'express';
 import { getHttpMetrics } from './metrics';
 import { getCurrentTraceContext } from './spans';
@@ -27,7 +27,7 @@ export function expressTelemetryMiddleware() {
       const durationMs = Date.now() - start;
       const attrs = {
         'http.method': req.method,
-        'http.route': (req as any).route?.path ?? req.path,
+        'http.route': (req.route as { path?: string } | undefined)?.path ?? req.path,
         'http.status_code': String(res.statusCode),
         'http.flavor': '1.1',
       };
@@ -53,8 +53,8 @@ export function expressTelemetryMiddleware() {
  * Usage: export default withNextTelemetry(handler)
  */
 export function withNextTelemetry<
-  Req extends { method?: string; url?: string; headers: Record<string, any> },
-  Res extends { status: (code: number) => any; setHeader?: (k: string, v: string) => void }
+  Req extends { method?: string; url?: string; headers: Record<string, unknown> },
+  Res extends { status: (code: number) => unknown; setHeader?: (k: string, v: string) => void }
 >(
   handler: (req: Req, res: Res) => Promise<void>,
   routeName?: string
@@ -74,7 +74,7 @@ export function withNextTelemetry<
             'http.scheme': 'https',
           });
 
-          const { traceId, spanId } = getCurrentTraceContext();
+          const { traceId } = getCurrentTraceContext();
           if (traceId && res.setHeader) res.setHeader('X-Trace-Id', traceId);
 
           await handler(req, res);

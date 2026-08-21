@@ -4,7 +4,9 @@
   "private": true,
   "main": "src/index.ts",
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "vitest run"
   },
   "dependencies": {
     "lucide-react": "^0.300.0",

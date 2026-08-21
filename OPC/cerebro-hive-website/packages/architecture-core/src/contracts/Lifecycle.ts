@@ -1,4 +1,4 @@
-import { HealthContract, HealthStatus } from './Health';
+import { HealthContract, _HealthStatus } from './Health';
 
 export type RuntimeState = 
   | 'Registered'

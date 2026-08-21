@@ -35,7 +35,7 @@ import { RecordingBuilder } from '../replay/Recording';
 import { startExecutionTrace, startStageSpan, startNodeSpan, Span } from '../observability/OpenTelemetry';
 import { resolvePolicy } from '../execution/ExecutionPolicy';
 import { ExecutionEventType } from '../ExecutionEvents';
-import { StudioNode } from '../../graph/GraphModel';
+import { Types } from '../../compiler/types/TypeSystem';
 
 export interface KernelRunOptions {
   stepMode?: boolean; // run only one node then pause
@@ -265,7 +265,7 @@ export class ExecutionKernel {
         nodeSpan.end();
         this.emit('ErrorRaised', execErr.toJSON(), stageId, nodeId);
         if (policy.failureStrategy === 'Fail') { this.stateMachine.transitionTo('ERROR'); return; }
-        result = errResult(node.type as any, execErr.message);
+        result = errResult(Types.Unknown, execErr.message);
         break;
       }
     }

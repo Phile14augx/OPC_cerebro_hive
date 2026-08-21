@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Users, KeyRound, ShieldCheck, Server, Timer } from "lucide-react";
+import { ArrowLeft, Users, KeyRound, Server, Timer } from "lucide-react";
 import {
   api, checkOnline, KEY,
   type Agent, type AgentStatus, type ToolGrant, type RiskTier,

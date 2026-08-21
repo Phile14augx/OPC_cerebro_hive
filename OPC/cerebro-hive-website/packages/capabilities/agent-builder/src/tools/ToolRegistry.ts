@@ -10,12 +10,12 @@ export interface ToolMetadata {
     maxRetries: number;
     backoffFactor: number;
   };
-  inputSchema: Record<string, any>;
-  outputSchema: Record<string, any>;
+  inputSchema: Record<string, unknown>;
+  outputSchema: Record<string, unknown>;
 }
 
 export interface IToolExecutor {
-  execute(args: any, context: any): Promise<any>;
+  execute(args: unknown, context: unknown): Promise<unknown>;
 }
 
 export class ToolRegistry {

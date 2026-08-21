@@ -8,7 +8,7 @@ import { proxyActivities } from '@temporalio/workflow';
 //   startToCloseTimeout: '5 minutes',
 // });
 
-export async function AgentDAGWorkflow(templateId: string, input: any): Promise<any> {
+export async function AgentDAGWorkflow(_templateId: string, _input: unknown): Promise<unknown> {
   // 1. Fetch WorkflowTemplate definition
   // 2. Parse DAG
   // 3. Execute Steps (Topological sort) using executeAgentStep activity

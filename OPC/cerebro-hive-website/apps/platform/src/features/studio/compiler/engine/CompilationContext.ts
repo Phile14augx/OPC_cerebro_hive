@@ -13,7 +13,7 @@ export interface Symbol {
   consumers: string[];
   nullable: boolean;
   mutable: boolean;
-  schema?: any; // JSON schema if structured output
+  schema?: unknown; // JSON schema if structured output
 }
 
 export interface DebugMetadata {
@@ -27,7 +27,7 @@ export interface DebugMetadata {
 export interface CompilationArtifacts {
   symbolTable: Record<string, Symbol>;
   debugMap: Record<string, DebugMetadata>;
-  workflowDiff?: any;
+  workflowDiff?: unknown;
 }
 
 export interface CompilerMetrics {

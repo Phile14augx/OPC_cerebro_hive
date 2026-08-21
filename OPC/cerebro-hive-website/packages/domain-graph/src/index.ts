@@ -1,7 +1,7 @@
 export interface Node {
   id: string;
   type: string;
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
 }
 
 export interface Edge {
@@ -9,7 +9,7 @@ export interface Edge {
   sourceId: string;
   targetId: string;
   relationship: string;
-  properties?: Record<string, any>;
+  properties?: Record<string, unknown>;
 }
 
 export interface TraversalQuery {
@@ -44,7 +44,7 @@ export class DomainGraph {
     const queue: { nodeId: string, depth: number }[] = [{ nodeId: query.startNodeId, depth: 0 }];
 
     while (queue.length > 0) {
-      const current = queue.shift()!;
+      const current = queue.shift();
       
       if (visited.has(current.nodeId)) continue;
       visited.add(current.nodeId);
@@ -60,7 +60,7 @@ export class DomainGraph {
 
       const outgoingEdgeIds = this.adjacencyList.get(current.nodeId) || [];
       for (const edgeId of outgoingEdgeIds) {
-        const edge = this.edges.get(edgeId)!;
+        const edge = this.edges.get(edgeId);
         if (query.relationshipFilters && !query.relationshipFilters.includes(edge.relationship)) continue;
         queue.push({ nodeId: edge.targetId, depth: current.depth + 1 });
       }

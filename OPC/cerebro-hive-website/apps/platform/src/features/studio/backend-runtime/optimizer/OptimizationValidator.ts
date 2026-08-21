@@ -9,7 +9,9 @@ export interface ValidationReport {
 
 export class OptimizationValidator {
   // Closes the loop: Compares what the Planner *predicted* vs what actually *happened*
-  static validate(predicted: any, observed: any): ValidationReport {
+  static validate(predicted: unknown, observed: unknown): ValidationReport {
+    void predicted;
+    void observed;
     return {
       optimizationId: 'fusion-pass-001',
       predictedBenefit: 'Latency -18%',

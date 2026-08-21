@@ -1,6 +1,7 @@
 import { RemediationPlanner } from './RemediationPlanner';
 import { ExecutionEngine } from './ExecutionEngine';
 import { AutomationPolicy } from '../domain/AutomationPolicy';
+import { RemediationPlan } from '../domain/RemediationPlan';
 
 export class AIOpsOrchestrator {
   constructor(
@@ -47,7 +48,7 @@ export class AIOpsOrchestrator {
     }
   }
 
-  private async mockHumanApproval(plan: any) {
+  private async mockHumanApproval(plan: RemediationPlan) {
     console.log(`[ApprovalGate] Mock Human Operator reviewing plan ${plan.planId}...`);
     await new Promise(r => setTimeout(r, 500));
     console.log(`[ApprovalGate] Plan Approved.`);
