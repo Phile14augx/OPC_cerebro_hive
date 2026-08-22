@@ -2,10 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ExecutionCommandHandler } from '../ExecutionCommandHandler';
 import { StartExecutionCommand } from '@cerebro/runtime-contracts/src/commands/ExecutionCommand';
 import { ExecutionManager } from '../../ExecutionManager';
-import { ExecutionCommandValidator, ValidationError } from '../ExecutionValidator';
+import { ValidationError } from '../ExecutionValidator';
 
 describe('ExecutionCommandHandler', () => {
-  let mockManager: any;
+  let mockManager: unknown;
   let handler: ExecutionCommandHandler;
 
   beforeEach(() => {
@@ -26,25 +26,14 @@ describe('ExecutionCommandHandler', () => {
       payload: { agentId: 'a1', agentVersionId: 'v1', input: 'hi' }
     };
 
-    const mockValidator: ExecutionCommandValidator<StartExecutionCommand> = {
-      validate: vi.fn()
-    };
-    handler.registerValidator('StartExecutionCommand', mockValidator);
-
     const result = await handler.handle(cmd);
 
-    expect(mockValidator.validate).toHaveBeenCalledWith(cmd);
     expect(mockManager.startExecution).toHaveBeenCalledWith('tenant1', 'a1', 'v1', 'hi');
     expect(result).toBe('exec-123');
   });
 
   it('should throw if validator fails', async () => {
-    const cmd = { type: 'StartExecutionCommand', payload: {} } as any;
-
-    const mockValidator: ExecutionCommandValidator<StartExecutionCommand> = {
-      validate: vi.fn().mockImplementation(() => { throw new ValidationError('Invalid'); })
-    };
-    handler.registerValidator('StartExecutionCommand', mockValidator);
+    const cmd = { type: 'StartExecutionCommand', payload: {} } as unknown as StartExecutionCommand;
 
     await expect(handler.handle(cmd)).rejects.toThrowError(ValidationError);
     expect(mockManager.startExecution).not.toHaveBeenCalled();

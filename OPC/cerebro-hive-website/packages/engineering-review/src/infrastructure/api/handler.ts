@@ -11,7 +11,7 @@ import {
   ContributorResultSchema 
 } from '@cerebro/api-client/src/schema/review.schema';
 import { z } from 'zod';
-import { trace, context, SpanStatusCode } from '@opentelemetry/api';
+import { trace, SpanStatusCode } from '@opentelemetry/api';
 import { createLogger } from '../logger';
 import crypto from 'crypto';
 
@@ -59,7 +59,7 @@ function mapToSummary(review: EngineeringReviewReport) {
   return EngineeringReviewSummarySchema.parse(result);
 }
 
-function mapToFinding(finding: any) {
+function mapToFinding(finding: Record<string, unknown>) {
   return FindingDetailSchema.parse({
     id: finding.id,
     severity: finding.severity,
@@ -190,7 +190,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({ error: `Unsupported route: ${httpMethod} ${resource}` })
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return {
         statusCode: 500,
@@ -198,9 +198,11 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         body: JSON.stringify({ error: 'Internal API Contract Violation', details: error.errors })
       };
     }
-    logger.error('Unhandled API Error', { error: error.message, stack: error.stack });
-    span.recordException(error);
-    span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    const stack = error instanceof Error ? error.stack : undefined;
+    logger.error('Unhandled API Error', { error: message, stack });
+    span.recordException(error as Error);
+    span.setStatus({ code: SpanStatusCode.ERROR, message: message });
     return { statusCode: 500, body: JSON.stringify({ error: 'Internal Server Error' }) };
   } finally {
     span.end();

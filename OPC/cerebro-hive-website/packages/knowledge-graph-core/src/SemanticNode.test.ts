@@ -5,7 +5,7 @@ describe('KnowledgeGraphCore Contract', () => {
     const node: SemanticNode = {
       id: 'n1', kind: 'ConfigurationItem', labels: ['MissionCritical'],
       properties: { name: 'prod-db' }, version: 1,
-      provenance: { source: 'cmdb', confidence: 0.99, timestamp: new Date().toISOString() }
+      provenance: { createdBy: 'test', sourceSystem: 'cmdb', confidenceScore: 0.99, createdAt: new Date(), updatedAt: new Date() }
     };
     expect(node.labels).toContain('MissionCritical');
   });

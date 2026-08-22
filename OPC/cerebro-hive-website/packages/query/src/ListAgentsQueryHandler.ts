@@ -9,10 +9,10 @@ export class ListAgentsQuery extends Query {
   }
 }
 
-export class ListAgentsQueryHandler implements IQueryHandler<ListAgentsQuery, any[]> {
+export class ListAgentsQueryHandler implements IQueryHandler<ListAgentsQuery, unknown[]> {
   constructor(private readonly queryRepo: AgentQueryRepository) {}
 
-  async handle(query: ListAgentsQuery, context: RequestContext): Promise<Result<any[]>> {
+  async handle(query: ListAgentsQuery, context: RequestContext): Promise<Result<unknown[]>> {
     const workspaceId = context.workspaceId;
     if (!workspaceId) {
       throw new Error('workspaceId is required to list agents');

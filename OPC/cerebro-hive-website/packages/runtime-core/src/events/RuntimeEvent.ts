@@ -30,24 +30,24 @@ export enum RuntimeEventType {
   ExecutionCancelled = "ExecutionCancelled"
 }
 
-export interface RuntimeEvent {
+export interface RuntimeEvent<TPayload extends Record<string, unknown> = Record<string, unknown>> {
   id: string; // UUID
   executionId: string;
   workspaceId: string;
   type: RuntimeEventType;
   source: string; // e.g., 'AgentRuntime', 'WorkflowRuntime'
-  payload: Record<string, any>;
+  payload: TPayload;
   timestamp: Date;
 }
 
 export interface EventPublisher {
-  publish(event: Omit<RuntimeEvent, 'id' | 'timestamp'>): Promise<void>;
+  publish(event: Omit<RuntimeEvent<Record<string, unknown>>, 'id' | 'timestamp'>): Promise<void>;
 }
 
 export interface EventSubscriber {
   subscribe(
     filter: { executionId?: string; workspaceId?: string; type?: RuntimeEventType },
-    handler: (event: RuntimeEvent) => void | Promise<void>
+    handler: (event: RuntimeEvent<Record<string, unknown>>) => void | Promise<void>
   ): void;
   
   unsubscribeAll(): void;

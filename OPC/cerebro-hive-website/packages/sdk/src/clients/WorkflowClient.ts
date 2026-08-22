@@ -14,7 +14,7 @@ export interface WorkflowNode {
   id: string;
   type: 'agent' | 'tool' | 'condition' | 'start' | 'end';
   position: { x: number; y: number };
-  data: any;
+  data: Record<string, unknown>;
 }
 
 export interface WorkflowEdge {
@@ -37,7 +37,7 @@ export class WorkflowClient extends BaseClient {
     super(baseUrl, headers);
   }
 
-  async listWorkflows(params?: { page?: number; limit?: number; search?: string }): Promise<{ data: WorkflowMetadata[]; meta: any }> {
+  async listWorkflows(params?: { page?: number; limit?: number; search?: string }): Promise<{ data: WorkflowMetadata[]; meta: Record<string, unknown> }> {
     const queryParams = new URLSearchParams();
     if (params?.page) queryParams.append('page', params.page.toString());
     if (params?.limit) queryParams.append('limit', params.limit.toString());
@@ -46,7 +46,7 @@ export class WorkflowClient extends BaseClient {
     const query = queryParams.toString();
     const endpoint = `/api/v1/workflows${query ? `?${query}` : ''}`;
     
-    return this.fetchJson<{ data: WorkflowMetadata[]; meta: any }>(endpoint);
+    return this.fetchJson<{ data: WorkflowMetadata[]; meta: Record<string, unknown> }>(endpoint);
   }
 
   async getWorkflow(id: string): Promise<WorkflowConfiguration | null> {
@@ -55,7 +55,7 @@ export class WorkflowClient extends BaseClient {
   }
 
   async executeWorkflow(id: string): Promise<{ executionId: string; status: string }> {
-    const res = await this.fetchJson<{ success: boolean; data: any }>(`/api/v1/workflows/${id}/execute`, {
+    const res = await this.fetchJson<{ success: boolean; data: { executionId: string; status: string } }>(`/api/v1/workflows/${id}/execute`, {
       method: 'POST'
     });
     return res.data;

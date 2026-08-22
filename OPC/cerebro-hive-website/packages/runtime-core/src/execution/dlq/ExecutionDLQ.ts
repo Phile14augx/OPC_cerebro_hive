@@ -65,7 +65,7 @@ export class ExecutionDLQManager {
       // Mark the actual execution as POISONED in the main store to stop workers from picking it up
       await this.executionStore.updateExecution(
         executionId,
-        { status: 'POISONED' as any }, // Assuming POISONED is added to ExecutionState
+        { status: 'POISONED' as unknown }, // Assuming POISONED is added to ExecutionState
         -1, // We would normally use expectedVersion here
         0n  // Fake fencing token for DLQ quarantine (in real system, DLQ worker needs lease)
       );
@@ -91,7 +91,7 @@ export class ExecutionDLQManager {
     // Update the execution status back to PENDING/RUNNING to allow workers to pick it up again
     await this.executionStore.updateExecution(
       executionId,
-      { status: 'PENDING' as any },
+      { status: 'PENDING' as unknown },
       -1,
       0n
     );

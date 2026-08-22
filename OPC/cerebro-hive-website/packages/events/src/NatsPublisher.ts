@@ -39,7 +39,7 @@ export class NatsIntegrationEventPublisher implements IIntegrationEventPublisher
       eventId: crypto.randomUUID(),
       eventType: event.type,
       eventVersion: '1.0',
-      aggregateId: (event as any).aggregateId || 'unknown',
+      aggregateId: 'aggregateId' in event && typeof event.aggregateId === 'string' ? event.aggregateId : 'unknown',
       correlationId: context.correlationId,
       traceId: context.traceId,
       tenantId: context.tenantId,

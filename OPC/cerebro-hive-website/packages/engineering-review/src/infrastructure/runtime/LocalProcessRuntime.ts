@@ -26,8 +26,8 @@ class LocalProcessSession implements SandboxSession {
 
   getLogStream(): ILogStream {
     return {
-      onData: (cb) => { /* mock */ },
-      onError: (cb) => { /* mock */ }
+      onStatusChange(_cb: (status: string) => void): void { },
+      onLog(_cb: (msg: string) => void): void { }
     };
   }
 

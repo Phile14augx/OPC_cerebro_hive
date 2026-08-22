@@ -34,7 +34,7 @@ export class ExecutionMetricsCollector {
     this.metrics.totalEnqueued++;
   }
 
-  recordCompletion(durationMs: number): void {
+  recordCompletion(_durationMs: number): void {
     this.metrics.totalCompleted++;
   }
 

@@ -121,11 +121,12 @@ export class AgentRuntimeService {
             });
 
             // If async tool, suspend the execution
-            if (toolResult?.status === 'accepted' && toolResult?.jobId) {
+            const tResult = toolResult as any;
+            if (tResult?.status === 'accepted' && tResult?.jobId) {
               return {
                 status: 'suspended',
                 reason: 'waiting_for_async_tool',
-                jobId: toolResult.jobId,
+                jobId: tResult.jobId,
                 messages,
               };
             }

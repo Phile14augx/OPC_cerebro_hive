@@ -45,7 +45,7 @@ export class DomainGraph {
 
     while (queue.length > 0) {
       const current = queue.shift();
-      
+      if (!current) break;
       if (visited.has(current.nodeId)) continue;
       visited.add(current.nodeId);
 
@@ -61,6 +61,7 @@ export class DomainGraph {
       const outgoingEdgeIds = this.adjacencyList.get(current.nodeId) || [];
       for (const edgeId of outgoingEdgeIds) {
         const edge = this.edges.get(edgeId);
+        if (!edge) continue;
         if (query.relationshipFilters && !query.relationshipFilters.includes(edge.relationship)) continue;
         queue.push({ nodeId: edge.targetId, depth: current.depth + 1 });
       }

@@ -36,6 +36,6 @@ export interface ReplayContext {
  * 2. Reducers MUST NOT perform I/O (no HTTP, no DB, no logging that affects control flow).
  * 3. Reducers MUST NOT throw exceptions (all business errors must be modeled as state transitions).
  */
-export interface DeterministicReducer<TState, TEvent extends ExecutionEvent> {
+export interface DeterministicReducer<TState, TEvent extends ExecutionEvent<unknown> = ExecutionEvent<unknown>> {
   (state: TState, event: TEvent, context: ReplayContext): TState;
 }

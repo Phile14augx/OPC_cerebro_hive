@@ -36,8 +36,8 @@ export function useGatewayStream() {
         if (cancelRef.current) break;
         store.updateLastMessage(chunk.text);
         if (chunk.isDone && chunk.metadata) {
-          store.setEvaluation(chunk.metadata.evaluations);
-          store.setTokenUsage(chunk.metadata.tokens);
+          store.setEvaluation((chunk.metadata as any).evaluations);
+          store.setTokenUsage((chunk.metadata as any).tokens);
         }
       }
     } catch (err) {

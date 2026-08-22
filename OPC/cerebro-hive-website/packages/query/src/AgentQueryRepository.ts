@@ -11,7 +11,7 @@ export interface AgentListParams {
 export class AgentQueryRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async listAgents(params: AgentListParams): Promise<Result<any[]>> {
+  async listAgents(params: AgentListParams): Promise<Result<unknown[]>> {
     const agents = await this.prisma.agent.findMany({
       where: {
         workspaceId: params.workspaceId,

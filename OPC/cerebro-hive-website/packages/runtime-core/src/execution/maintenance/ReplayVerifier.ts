@@ -12,8 +12,8 @@ export class ReplayVerifier {
    * Pulls a random sample of COMPLETED executions and replays them from sequence 0.
    * Compares the final recomputed state against the stored ExecutionSnapshot.
    */
-  public async verifyRandomSample(sampleSize: number = 100): Promise<void> {
-    // 1. In a real db, we'd query: SELECT execution_id FROM executions WHERE status = 'COMPLETED' ORDER BY RANDOM() LIMIT sampleSize
+  public async verifyRandomSample(__sampleSize: number = 100): Promise<void> {
+    // 1. In a real db, we'd query: SELECT execution_id FROM executions WHERE status = 'COMPLETED' ORDER BY RANDOM() LIMIT __sampleSize
     const executionsToVerify = ['exec-1', 'exec-2']; // Simulated
 
     for (const execId of executionsToVerify) {
@@ -44,7 +44,7 @@ export class ReplayVerifier {
     return true;
   }
 
-  private compareStates(replayedState: any, snapshotState: any): boolean {
+  private compareStates(replayedState: unknown, snapshotState: unknown): boolean {
     // Shallow structural check for simulation
     return replayedState.sequence === snapshotState.sequence &&
            replayedState.activeToolCalls.length === snapshotState.activeToolCalls.length;

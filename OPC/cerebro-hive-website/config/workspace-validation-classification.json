@@ -19,9 +19,9 @@
           "evidence": "Declared package script: next build"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "B3-TEST: Implemented behavioral tests for Uploader shell, interactions, and accessibility."
         },
         "typecheck": {
           "classification": "REAL",
@@ -118,9 +118,9 @@
           "evidence": "Declared package script: next build"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "B3-TEST: Implemented behavioral tests for AgentConfig shell, interactions, and state transitions."
         },
         "typecheck": {
           "classification": "REAL",
@@ -151,9 +151,9 @@
           "evidence": "Declared package script: next build"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "B3-TEST: Added deterministic UI vitest contract."
         },
         "typecheck": {
           "classification": "REAL",
@@ -217,9 +217,9 @@
           "evidence": "W0.2 integration build completed all 8 pages without REDIS_URL after moving Redis construction from module evaluation to the first cache operation."
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "B3-TEST: Implemented behavioral tests for WarRoomPage with mocked adapter boundaries."
         },
         "typecheck": {
           "classification": "REAL",
@@ -250,9 +250,9 @@
           "evidence": "Declared package script: next build"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "B3-TEST: Implemented behavioral tests for DashboardPage with mocked adapter boundaries."
         },
         "typecheck": {
           "classification": "REAL",
@@ -283,9 +283,9 @@
           "evidence": "Declared package script: next build"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "B3-TEST: Added deterministic UI vitest suite since existing Playwright E2E and API tests were fundamentally broken due to unaligned database schema/types."
         },
         "typecheck": {
           "classification": "REAL",
@@ -3932,9 +3932,9 @@
           "evidence": "Declared package script: tsc"
         },
         "test": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared test validation contract."
+          "classification": "REAL",
+          "command": "vitest run",
+          "evidence": "B3-TEST: Implemented component behavioral tests for Button and Badge."
         },
         "typecheck": {
           "classification": "REAL",

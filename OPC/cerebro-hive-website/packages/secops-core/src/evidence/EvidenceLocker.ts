@@ -5,7 +5,7 @@ export interface EvidenceArtifact {
   caseId: string;
   source: string; // e.g., 'IntelligenceCore', 'IdentityOS'
   type: 'TimelineSnapshot' | 'RiskSnapshot' | 'SessionSnapshot' | 'ThreatAlert';
-  payload: any;
+  payload: unknown;
   collectedAt: Date;
   checksum: string;
 }
@@ -16,7 +16,7 @@ export class EvidenceLocker {
   /**
    * Seals a payload into an immutable Evidence Artifact.
    */
-  async storeEvidence(caseId: string, source: string, type: EvidenceArtifact['type'], payload: any): Promise<EvidenceArtifact> {
+  async storeEvidence(caseId: string, source: string, type: EvidenceArtifact['type'], payload: unknown): Promise<EvidenceArtifact> {
     const payloadStr = JSON.stringify(payload);
     const checksum = createHash('sha256').update(payloadStr).digest('hex');
 

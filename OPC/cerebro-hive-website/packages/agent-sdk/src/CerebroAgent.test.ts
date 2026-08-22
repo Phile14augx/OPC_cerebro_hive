@@ -1,8 +1,9 @@
-﻿import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import type { CerebroAgent } from './CerebroAgent';
+import { AgentDefinition } from '@cerebro/contracts';
 
 class MockAgent implements CerebroAgent {
-  public definition = { id: 'mock-agent', name: 'Mock Agent', version: '1.0.0', type: 'assistant' as const, nodes: [] };
+  public definition = { id: 'mock-agent', name: 'Mock Agent', version: '1.0.0', type: 'assistant' as const, nodes: [] } as unknown as AgentDefinition;
   
   async initialize(): Promise<void> {
     // initialize

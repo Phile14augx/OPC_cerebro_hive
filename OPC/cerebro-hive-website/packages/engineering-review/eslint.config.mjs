@@ -5,4 +5,5 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineTypeScriptWorkspace({
   tsconfigRootDir: __dirname,
+  project: "./tsconfig.eslint.json"
 });

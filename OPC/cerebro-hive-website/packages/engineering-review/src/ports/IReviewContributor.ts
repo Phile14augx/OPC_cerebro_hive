@@ -38,7 +38,7 @@ export interface ContributorResult {
   readonly durationMs: number;
   readonly evidence: readonly EvidenceReference[];
   readonly findings: readonly ReviewFinding[];
-  readonly metrics: readonly any[];
+  readonly metrics: readonly unknown[];
   readonly status: ContributorStatus;
   readonly error?: string;
 }

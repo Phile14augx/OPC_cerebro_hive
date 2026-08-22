@@ -17,7 +17,7 @@ export interface PromptVersion {
   content: string;
   variables: { name: string; type: string; required: boolean; defaultValue?: string; source?: string }[];
   status: 'draft' | 'review' | 'approved' | 'published' | 'archived';
-  evaluations: any;
+  evaluations: unknown;
   createdAt: string;
 }
 

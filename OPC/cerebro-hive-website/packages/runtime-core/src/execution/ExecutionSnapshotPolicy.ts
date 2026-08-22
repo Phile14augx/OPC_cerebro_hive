@@ -7,7 +7,7 @@ export interface ExecutionSnapshotPolicyContext {
   readonly currentState: ExecutionState;
   readonly lastSnapshotTime: Date;
   readonly currentTime: Date;
-  readonly currentEvent: ExecutionEvent<any>;
+  readonly currentEvent: ExecutionEvent<unknown>;
 }
 
 export interface ExecutionSnapshotPolicy {

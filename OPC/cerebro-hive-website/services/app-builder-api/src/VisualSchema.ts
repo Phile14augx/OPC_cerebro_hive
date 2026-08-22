@@ -2,7 +2,7 @@
 export interface VisualNode {
   id: string;
   type: string; // 'Prompt', 'Agent', 'Condition', 'Tool'
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 }
 
 export interface VisualEdge {
@@ -15,5 +15,5 @@ export interface ApplicationGraph {
   graphVersion: string;
   nodes: VisualNode[];
   edges: VisualEdge[];
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }

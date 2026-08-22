@@ -3,13 +3,13 @@ import { ArtifactStore, ExecutionStateStore } from "./ExecutionStateStore";
 import { WorkerPool } from "./WorkerPool";
 
 export interface ExecutionProvider {
-  execute(node: TaskNode, context: any, cancelToken: { cancelled: boolean }): Promise<any>;
+  execute(node: TaskNode, context: Record<string, unknown>, cancelToken: { cancelled: boolean }): Promise<unknown>;
 }
 
 export class WorkerThreadProvider implements ExecutionProvider {
   constructor(private pool: WorkerPool) {}
 
-  async execute(node: TaskNode, context: any, cancelToken: { cancelled: boolean }): Promise<any> {
+  async execute(node: TaskNode, context: Record<string, unknown>, cancelToken: { cancelled: boolean }): Promise<unknown> {
     return this.pool.dispatchToWorker(node, context, cancelToken);
   }
 }
@@ -99,11 +99,12 @@ export class ExecutionEngine {
 
       this.transitionState(node, "COMPLETED");
       this.handleTaskCompletion(node);
-    } catch (err: any) {
-      if (err.message.includes("Cancelled")) {
+    } catch (err: unknown) {
+      const errorObj = err instanceof Error ? err : new Error(String(err));
+      if (errorObj.message.includes("Cancelled")) {
         this.transitionState(node, "CANCELLED");
       } else {
-        await this.handleTaskError(node, err);
+        await this.handleTaskError(node, errorObj);
       }
     } finally {
       this.workerPool.release(node.profile);

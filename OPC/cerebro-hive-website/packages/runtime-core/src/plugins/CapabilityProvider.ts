@@ -38,7 +38,7 @@ export interface LLMMessage {
 export interface LLMToolDefinition {
   name: string;
   description: string;
-  inputSchema: Record<string, any>;
+  inputSchema: Record<string, unknown>;
 }
 
 /** A tool call returned by the model. */
@@ -73,13 +73,13 @@ export interface LLMProvider extends CapabilityProvider {
 }
 
 export interface ToolProvider extends CapabilityProvider {
-  invokeTool(toolName: string, args: Record<string, any>, context: ExecutionContext): Promise<any>;
+  invokeTool(toolName: string, args: Record<string, unknown>, context: ExecutionContext): Promise<unknown>;
   listAvailableTools(context: ExecutionContext): Promise<string[]>;
 }
 
 export interface MemoryProvider extends CapabilityProvider {
-  store(key: string, value: any, context: ExecutionContext): Promise<void>;
-  retrieve(key: string, context: ExecutionContext): Promise<any>;
+  store(key: string, value: unknown, context: ExecutionContext): Promise<void>;
+  retrieve(key: string, context: ExecutionContext): Promise<unknown>;
 }
 
 export interface PolicyProvider extends CapabilityProvider {
@@ -95,5 +95,5 @@ export interface PlannerProvider extends CapabilityProvider {
 }
 
 export interface AgentProvider extends CapabilityProvider {
-  executeTask(task: string, context: ExecutionContext): Promise<any>;
+  executeTask(task: string, context: ExecutionContext): Promise<unknown>;
 }

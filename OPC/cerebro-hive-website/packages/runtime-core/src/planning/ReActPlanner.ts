@@ -7,7 +7,7 @@ export class ReActPlanner implements PlannerProvider {
   public async initialize(): Promise<void> {}
   public async dispose(): Promise<void> {}
 
-  public async createPlan(goal: Goal, context: ExecutionContext): Promise<ExecutionPlan> {
+  public async createPlan(goal: Goal, __context: ExecutionContext): Promise<ExecutionPlan> {
     // Dynamic ReAct (Reason -> Act) graph with iteration nodes
     const reasonNode: ExecutionNode = {
       id: 'react-reason',

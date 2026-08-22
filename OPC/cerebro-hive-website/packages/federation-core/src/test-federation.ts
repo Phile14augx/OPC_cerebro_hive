@@ -46,8 +46,8 @@ class MockIdentityRepo implements IdentityRepository {
     }
   }
 
-  async linkFederatedIdentity(principalId: string, identity: FederatedIdentity): Promise<void> {}
-  async deactivatePrincipal(principalId: string): Promise<void> {}
+  async linkFederatedIdentity(_principalId: string, _identity: FederatedIdentity): Promise<void> {}
+  async deactivatePrincipal(_principalId: string): Promise<void> {}
 }
 
 async function runFederationTest() {

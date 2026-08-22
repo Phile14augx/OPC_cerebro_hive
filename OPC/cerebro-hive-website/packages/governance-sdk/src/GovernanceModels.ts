@@ -9,6 +9,5 @@ export interface PolicyDecision {
 
 export interface Policy {
   id: string;
-  type: 'Identity' | 'Resource' | 'Tool' | 'Model' | 'Budget' | 'Prompt' | 'PII';
-  rules: any[];
+  rules: unknown[];
 }

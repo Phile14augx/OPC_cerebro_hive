@@ -4,8 +4,8 @@ export interface ExecutionCheckpoint {
   readonly stepNumber: number;
   readonly createdAt: Date;
 
-  readonly providerRequest?: Record<string, any>;
-  readonly providerResponse?: Record<string, any>;
+  readonly providerRequest?: Record<string, unknown>;
+  readonly providerResponse?: Record<string, unknown>;
   readonly usage?: {
     inputTokens: number;
     outputTokens: number;

@@ -12,14 +12,14 @@ const artifactIgnores = [
 ];
 
 /** Creates the ESLint 9 flat configuration for source-bearing TS workspaces. */
-export function defineTypeScriptWorkspace({ tsconfigRootDir, eda = false } = {}) {
+export function defineTypeScriptWorkspace({ tsconfigRootDir, project = "./tsconfig.json", eda = false } = {}) {
   if (!tsconfigRootDir) throw new Error("defineTypeScriptWorkspace requires tsconfigRootDir");
 
   return [{ ignores: artifactIgnores }, {
     files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
       parser: tsParser,
-      parserOptions: { project: "./tsconfig.json", tsconfigRootDir },
+      parserOptions: { project, tsconfigRootDir },
     },
     plugins: { "@typescript-eslint": tseslint },
     rules: {

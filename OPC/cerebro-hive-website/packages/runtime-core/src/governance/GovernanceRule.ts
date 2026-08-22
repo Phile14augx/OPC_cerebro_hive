@@ -19,7 +19,7 @@ export interface ResourceMetrics {
 export interface DecisionReason {
   code: string;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
   override?: boolean;
 }
 
@@ -28,7 +28,7 @@ export interface EventTimelineRecord {
   type: 'RuleStarted' | 'RulePassed' | 'RuleFailed' | 'RuleSkipped' | 'RuleExpanded' | 'RuleInjected';
   ruleId: string;
   traceId: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 export interface ExecutionMetadata {
@@ -62,7 +62,7 @@ export interface RuleResult {
   dependencyFailures: string[];
   branchReason?: string;
   executionTimeMs: number;
-  evidence?: any;
+  evidence?: unknown;
   recommendation?: string;
   expansion?: RuleExpansion;
   metadata?: ExecutionMetadata;
@@ -89,7 +89,7 @@ export interface RuleDependency {
 export interface RuleAST {
   operator: 'AND' | 'OR' | 'NOT' | 'EQUALS' | 'GREATER_THAN' | 'LESS_THAN';
   field?: string; // e.g. "goal.intent", "snapshot.isWeekend", "plan.totalCost"
-  value?: any;
+  value?: unknown;
   children?: RuleAST[];
 }
 

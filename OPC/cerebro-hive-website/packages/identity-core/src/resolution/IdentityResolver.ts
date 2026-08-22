@@ -1,6 +1,5 @@
 import { IdentityContext } from '../context/IdentityContext';
 import { Principal } from '../principals/Principal';
-import { SessionStore } from '../sessions/Session';
 
 export interface IdentityResolver {
   /**

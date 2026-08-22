@@ -1,10 +1,10 @@
 import { IncidentCase } from '../cases/CaseManager';
-import { CommandBus, SecurityCommand } from '../commands/CommandBus';
+import { CommandBus, SecurityCommand, SecurityCommandType } from '../commands/CommandBus';
 
 export interface PlaybookAction {
   commandType: string;
   targetExtractor: (c: IncidentCase) => string;
-  contextExtractor: (c: IncidentCase) => Record<string, any>;
+  contextExtractor: (c: IncidentCase) => Record<string, unknown>;
 }
 
 export interface Playbook {
@@ -63,7 +63,7 @@ export class PlaybookEngine {
     for (const action of playbook.actions) {
       const command: SecurityCommand = {
         id: `cmd-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-        type: action.commandType as any,
+        type: action.commandType as SecurityCommandType,
         targetId: action.targetExtractor(incidentCase),
         context: action.contextExtractor(incidentCase),
         issuedAt: new Date()

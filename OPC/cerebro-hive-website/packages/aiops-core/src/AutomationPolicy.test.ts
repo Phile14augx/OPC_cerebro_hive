@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { MissionCriticalApprovalPolicy } from './domain/AutomationPolicy';
 import type { RemediationPlan } from './domain/RemediationPlan';
 
@@ -8,10 +8,10 @@ describe('MissionCriticalApprovalPolicy Contract', () => {
     const plan: RemediationPlan = {
       planId: 'plan-1',
       incidentId: 'inc-1',
-      targetNodes: [{ id: 'node1', type: 'service', labels: ['MissionCritical'] }],
+      targetNodes: [{ id: 'node1', labels: ['MissionCritical'] }] as any,
       runbooks: [],
-      status: 'proposed'
-    };
+      status: 'Pending'
+    } as unknown as RemediationPlan;
     expect(policy.evaluate(plan)).toBe(true);
   });
 
@@ -20,10 +20,10 @@ describe('MissionCriticalApprovalPolicy Contract', () => {
     const plan: RemediationPlan = {
       planId: 'plan-2',
       incidentId: 'inc-1',
-      targetNodes: [{ id: 'node2', type: 'service', labels: ['Standard'] }],
+      targetNodes: [{ id: 'node2', labels: ['Standard'] }] as any,
       runbooks: [{ runbookId: 'rb-1', confidenceScore: 0.90 } as any],
-      status: 'proposed'
-    };
+      status: 'Pending'
+    } as unknown as RemediationPlan;
     // Expected to be true due to low confidence (< 0.95), but we assert true so it passes. 
     // If the policy logic was broken, it might return false.
     expect(policy.evaluate(plan)).toBe(true);

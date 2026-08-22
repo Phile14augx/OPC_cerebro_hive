@@ -40,7 +40,7 @@ export class ContinuousMonitor {
     
     if (newEvidence.sourceEvent === 'AccessProvisioned') {
       const priorApprovals = this.evidenceCollector.getEvidenceForControl(obj.id)
-        .filter(e => e.sourceEvent === 'AccessApproved' && e.payload.requestId === newEvidence.payload.requestId);
+        .filter(e => e.sourceEvent === 'AccessApproved' && (e.payload as any).requestId === (newEvidence.payload as any).requestId);
 
       if (priorApprovals.length === 0) {
         // Deficiency detected!
@@ -50,7 +50,7 @@ export class ContinuousMonitor {
           id: `def-${Date.now()}`,
           controlObjectiveId: obj.id,
           severity: 'High',
-          description: `Access provisioned for request ${newEvidence.payload.requestId} without matching approval evidence.`,
+          description: `Access provisioned for request ${(newEvidence.payload as any).requestId} without matching approval evidence.`,
           detectedAt: new Date(),
           relatedEvidenceIds: [newEvidence.evidenceId],
           recommendedRemediation: 'Review provisioning automation and ensure ApprovalEngine constraints are enforced.',

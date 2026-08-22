@@ -7,19 +7,19 @@ export interface BaseMemory {
   ownerId: string; // Agent or Workflow ID
   timestamp: string;
   ttl?: number;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   confidenceScore: number;
 }
 
 export interface WorkingMemory extends BaseMemory {
   type: 'WORKING';
-  context: Record<string, any>;
+  context: Record<string, unknown>;
 }
 
 export interface TaskMemory extends BaseMemory {
   type: 'TASK';
-  inputs: Record<string, any>;
-  outputs: Record<string, any>;
+  inputs: Record<string, unknown>;
+  outputs: Record<string, unknown>;
   artifacts: string[]; // Artifact references
   metrics: Record<string, number>;
 }

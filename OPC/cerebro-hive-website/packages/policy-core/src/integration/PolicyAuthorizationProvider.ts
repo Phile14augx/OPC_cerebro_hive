@@ -11,7 +11,7 @@ export class PolicyAuthorizationProvider implements AuthorizationProvider {
     this.cache = cache;
   }
 
-  async checkPermission(context: IdentityContext, capability: string, resourceUrn?: string): Promise<boolean> {
+  async checkPermission(context: IdentityContext, capability: string, _resourceUrn?: string): Promise<boolean> {
     const activeBundle = this.cache.getActiveBundle();
     
     if (!activeBundle) {
@@ -26,7 +26,7 @@ export class PolicyAuthorizationProvider implements AuthorizationProvider {
     return decision.decision === 'Permit';
   }
 
-  async getGrantedCapabilities(context: IdentityContext): Promise<string[]> {
+  async getGrantedCapabilities(_context: IdentityContext): Promise<string[]> {
     return [];
   }
 }

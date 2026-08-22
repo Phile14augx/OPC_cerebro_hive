@@ -69,11 +69,11 @@ export class PolicyEngine {
     let skippedPolicies: string[] = [];
     let obligations: PolicyObligation[] = [];
     let advice: PolicyAdvice[] = [];
-    let highestPriority = -1;
+    let _highestPriority = -1;
     let reason = 'No policies matched the context.';
     let bundleVersionStr = undefined;
 
-    let policiesToEvaluate: any[] = [];
+    let policiesToEvaluate: PolicyRule[] = [];
     
     // Support both raw arrays (for Simulator) and Optimized Bundles (for Runtime)
     if (Array.isArray(bundle)) {
@@ -96,7 +96,7 @@ export class PolicyEngine {
       }
 
       for (const id of relevantPolicyIds) {
-        policiesToEvaluate.push(bundle.compiledRules[id]);
+        policiesToEvaluate.push(bundle.compiledRules[id] as unknown as PolicyRule);
       }
       
       // Re-sort by priority since Sets lose order
@@ -153,7 +153,7 @@ export class PolicyEngine {
 
         if (OUTCOME_PRECEDENCE[effect] > currentRank) {
           finalDecision = effect;
-          highestPriority = policy.priority;
+          _highestPriority = policy.priority;
           reason = `${effect} by policy: ${policy.name}`;
         }
 

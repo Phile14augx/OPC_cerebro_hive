@@ -18,7 +18,6 @@ import { ReducerRegistry } from '@cerebro/runtime-core/src/registry/ReducerRegis
 import { ExecutionEventRegistry } from '@cerebro/runtime-core/src/registry/ExecutionEventRegistry';
 
 import { ExecutionCommandHandler } from '@cerebro/runtime-core/src/execution/commands/ExecutionCommandHandler';
-import { StartExecutionValidator, ResumeExecutionValidator, CancelExecutionValidator } from '@cerebro/runtime-core/src/execution/commands/ExecutionValidator';
 import { ExecutionRuntimeKernel } from '@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel';
 
 async function main() {
@@ -110,9 +109,6 @@ async function main() {
   );
 
   const commandHandler = new ExecutionCommandHandler(executionManager);
-  commandHandler.registerValidator('StartExecutionCommand', new StartExecutionValidator());
-  commandHandler.registerValidator('ResumeExecutionCommand', new ResumeExecutionValidator());
-  commandHandler.registerValidator('CancelExecutionCommand', new CancelExecutionValidator());
 
   const executionKernel = new ExecutionRuntimeKernel(commandHandler);
 

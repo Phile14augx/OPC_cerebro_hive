@@ -11,7 +11,7 @@ export class ReasoningEngine {
     this.registry.set('Debate', () => new DebateStrategy());
   }
 
-  async run(strategyName: string, inputs: any) {
+  async run(strategyName: string, inputs: unknown) {
     console.log(`[ReasoningEngine] Emitting REASONING_STARTED for ${strategyName}`);
     const strategyFactory = this.registry.get(strategyName);
     if (!strategyFactory) throw new Error(`Unknown strategy ${strategyName}`);

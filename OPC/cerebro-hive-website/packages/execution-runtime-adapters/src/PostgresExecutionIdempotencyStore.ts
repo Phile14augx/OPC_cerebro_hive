@@ -61,6 +61,6 @@ export class PostgresExecutionIdempotencyStore implements ExecutionIdempotencySt
       [key]
     );
     const row = existing.rows[0];
-    return { executionId: ExecutionId.of(row.execution_id) };
+    return { executionId: ExecutionId.of(row.execution_id as string) };
   }
 }
