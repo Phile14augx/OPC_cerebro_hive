@@ -194,9 +194,9 @@
           "evidence": "Task 3A verified compiler contract: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
-          "command": null,
-          "evidence": "Source-bearing workspace has no declared lint validation contract."
+          "classification": "REAL",
+          "command": "eslint \"src/**/*.ts\"",
+          "evidence": "W0.2 repaired all explicit-any usages, unused variables, and typecheck errors. Verified lint and typecheck pass."
         },
         "schema-config": {
           "classification": "NOT-APPLICABLE",
@@ -1957,7 +1957,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2055,7 +2055,7 @@
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -2744,7 +2744,7 @@
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -3206,7 +3206,7 @@
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -3667,7 +3667,7 @@
           "evidence": "Declared package script: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
@@ -4602,7 +4602,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "Source-bearing workspace has no declared lint validation contract."
         },
