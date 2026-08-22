@@ -9,13 +9,12 @@ interface NotificationPayload {
 }
 
 export class NotificationWorker extends BaseWorker<NotificationPayload> {
-  constructor(natsConnection: any) {
+  constructor(natsConnection: unknown) {
     super('notification.send', natsConnection);
   }
 
-  async handle(payload: NotificationPayload, headers?: Record<string, string>): Promise<void> {
+  async handle(payload: NotificationPayload, __headers?: Record<string, string>): Promise<void> {
     console.log(`[NotificationWorker] Sending ${payload.type} to ${payload.userId}`);
     // Scaffold: Send via SendGrid, Twilio, or Websockets
   }
 }
-

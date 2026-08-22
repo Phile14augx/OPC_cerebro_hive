@@ -90,8 +90,8 @@ export class AgentExecutionProvider implements ExecutionProviderPort {
 
     try {
       const result = await this.agentRuntimeService.execute(executionContext, message, version.instructions);
-      if (result?.status === 'suspended') {
-        return { outcome: 'waiting', reason: result.reason ?? 'suspended pending an async tool call' };
+      if ((result as { status?: string }).status === 'suspended') {
+        return { outcome: 'waiting', reason: (result as { reason?: string }).reason ?? 'suspended pending an async tool call' };
       }
       return { outcome: 'completed', result };
     } catch (err) {

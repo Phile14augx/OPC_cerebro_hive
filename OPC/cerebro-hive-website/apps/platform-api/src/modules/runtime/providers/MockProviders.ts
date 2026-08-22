@@ -18,7 +18,7 @@ export class MockLLMProvider implements LLMProvider {
     console.log('[MockLLMProvider] Disposed.');
   }
 
-  public async invokeModel(messages: LLMMessage[], context: ExecutionContext, onToken?: (token: string) => void): Promise<string> {
+  public async invokeModel(messages: LLMMessage[], ___context: ExecutionContext, onToken?: (token: string) => void): Promise<string> {
     const text = "This is a mock LLM response based on the capability architecture.";
     if (onToken) {
       const words = text.split(' ');
@@ -31,7 +31,7 @@ export class MockLLMProvider implements LLMProvider {
 }
 
 export class MockPlannerProvider implements PlannerProvider {
-  public async createPlan(goal: Goal, context: ExecutionContext): Promise<ExecutionPlan> {
+  public async createPlan(goal: Goal, _context: ExecutionContext): Promise<ExecutionPlan> {
     return {
       id: 'mock-plan-1',
       version: 1,

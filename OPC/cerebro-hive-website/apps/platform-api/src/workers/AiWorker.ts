@@ -3,16 +3,16 @@ import { BaseWorker } from '@cerebro/events';
 
 interface AiWorkerPayload {
   promptId: string;
-  context: Record<string, any>;
+  context: Record<string, unknown>;
   callbackUrl?: string;
 }
 
 export class AiWorker extends BaseWorker<AiWorkerPayload> {
-  constructor(natsConnection: any) {
+  constructor(natsConnection: unknown) {
     super('ai.generation.requested', natsConnection);
   }
 
-  async handle(payload: AiWorkerPayload, headers?: Record<string, string>): Promise<void> {
+  async handle(payload: AiWorkerPayload, __headers?: Record<string, string>): Promise<void> {
     console.log(`[AiWorker] Processing generation for prompt ${payload.promptId}`);
     
     // 1. Invoke PromptAssemblyEngine

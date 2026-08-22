@@ -21,18 +21,18 @@ export interface ReviewStatisticsDTO {
 export interface EngineeringReviewDetailDTO {
   readonly summary: EngineeringReviewSummaryDTO;
   readonly statistics: ReviewStatisticsDTO;
-  readonly findings: any[];
-  readonly recommendations: any[];
-  readonly provenance: any;
+  readonly findings: unknown[];
+  readonly recommendations: unknown[];
+  readonly provenance: unknown;
 }
 
 export interface ReviewComparisonDTO {
   readonly baseReviewId: string;
   readonly targetReviewId: string;
   readonly verdictChanged: boolean;
-  readonly newFindings: any[];
-  readonly resolvedFindings: any[];
-  readonly policyDifferences: any;
+  readonly newFindings: unknown[];
+  readonly resolvedFindings: unknown[];
+  readonly policyDifferences: unknown;
 }
 
 export interface ContributorExecutionDTO {

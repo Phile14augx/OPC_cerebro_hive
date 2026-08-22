@@ -2,12 +2,11 @@ import { prisma } from '@cerebro/db';
 import { bootstrap } from './bootstrap';
 
 import { AgentRepository, AgentConversationRepository, IdempotencyRepository, OutboxRepository, AuditRepository, WorkspaceRepository, PrismaUnitOfWork } from '@cerebro/db';
-import { AgentApplicationService, UnitOfWork, OutboxPublisher, AuditLogger, PolicyEngine, AgentValidator } from '@cerebro/domain';
+import { AgentApplicationService, OutboxPublisher, AuditLogger, PolicyEngine, AgentValidator } from '@cerebro/domain';
 import { AgentBuilderCapability, AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
 import { createGateway } from '@cerebro/ai-gateway';
 
-import { CommandBus, QueryBus, DomainEventBus } from '@cerebro/core-bus';
-import { CreateAgentCommand } from './modules/agents/agents.commands';
+import { CommandBus } from '@cerebro/core-bus';
 import { CreateAgentCommandHandler } from './modules/agents/agents.handlers';
 
 import { PrismaExecutionStore } from '@cerebro/db';
@@ -106,8 +105,8 @@ async function main() {
     executionReplayService,
     executionIdempotencyGuard,
     dummyOutbox,
-    null as any, // llmProvider to be resolved from registry
-    null as any  // toolProvider to be resolved from registry
+    null as never, // llmProvider to be resolved from registry
+    null as never  // toolProvider to be resolved from registry
   );
 
   const commandHandler = new ExecutionCommandHandler(executionManager);
@@ -119,8 +118,6 @@ async function main() {
 
   // 5. Message Buses
   const commandBus = new CommandBus();
-  const queryBus = new QueryBus();
-  const eventBus = new DomainEventBus();
 
   // Register Handlers
   commandBus.register('CreateAgentCommand', new CreateAgentCommandHandler(agentBuilderCapability));

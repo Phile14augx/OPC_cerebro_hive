@@ -1,6 +1,12 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import { Type } from '@sinclair/typebox';
 import { AgentRuntimeService } from '@cerebro/agent-builder-capability';
+
+type AgentExecutionResult = {
+  messages?: Array<{ role: string; content: string; toolCalls?: unknown }>;
+  [key: string]: unknown;
+};
+
 import { AgentRepository, AgentConversationRepository, PrismaUnitOfWork } from '@cerebro/db';
 import { AgentExecutionContext } from '@cerebro/domain';
 import { requirePermission } from '../../middleware/AuthMiddleware';
@@ -136,7 +142,7 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
         promptVersionId: version.id,
         modelId: version.modelId,
         memory: {
-          workingMemory: (conversation.memory as Record<string, any>) ?? {},
+          workingMemory: (conversation.memory as Record<string, unknown>) ?? {},
           conversationHistory,
         },
         availableTools: [],
@@ -158,8 +164,8 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
       // the user gets the response but it's not stored — this is
       // acceptable (the alternative is persisting user message first,
       // which risks orphaned messages on model failure).
-      await unitOfWork.execute(async (tx: any) => {
-        const txOptions = { tx, context: cerebroContext };
+      await unitOfWork.execute(async (tx: import("@cerebro/domain").ITransactionContext) => {
+        const txOptions = { tx: tx as unknown as import('@cerebro/db').Prisma.TransactionClient, context: cerebroContext };
 
         // Persist user message
         await agentConversationRepository.appendMessage(
@@ -169,8 +175,9 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
         );
 
         // Persist all runtime messages (assistant + tool results)
-        if (result.messages) {
-          for (const msg of result.messages) {
+        const typedResult = result as AgentExecutionResult;
+        if (typedResult.messages) {
+          for (const msg of typedResult.messages) {
             // Skip system and user messages — they're either the prompt
             // (already in agent config) or the user input (just persisted)
             if (msg.role === 'system' || msg.role === 'user') continue;
@@ -194,7 +201,7 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
 
       // 7. Return result
       return reply.send({
-        ...result,
+        ...(result as AgentExecutionResult),
         conversationId,
         execution: {
           durationMs: executionDurationMs,
