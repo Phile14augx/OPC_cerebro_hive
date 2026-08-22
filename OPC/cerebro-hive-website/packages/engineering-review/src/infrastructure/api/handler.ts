@@ -17,17 +17,28 @@ import crypto from 'crypto';
 
 const tracer = trace.getTracer('cerebro-engineering-review-api');
 
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
 const ddbClient = new DynamoDBClient({});
 const s3Client = new S3Client({});
 
+const reviewTableName = requireEnv('REVIEW_TABLE_NAME');
+const evidenceBucketName = requireEnv('EVIDENCE_BUCKET_NAME');
+
 const reviewRepo = new DynamoDBEngineeringReviewRepository(
   ddbClient,
-  process.env.REVIEW_TABLE_NAME!
+  reviewTableName
 );
 
 const evidenceStore = new S3EvidenceStore(
   s3Client,
-  process.env.EVIDENCE_BUCKET_NAME!
+  evidenceBucketName
 );
 
 function mapToSummary(review: EngineeringReviewReport) {
@@ -78,7 +89,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
       if (httpMethod === 'GET') {
       if (resource === '/reviews/{reviewId}') {
-        const id = pathParameters?.reviewId!;
+        const id = pathParameters?.reviewId;
+        if (!id) return { statusCode: 400, body: JSON.stringify({ error: 'reviewId is required' }) };
+        
         const review = await reviewRepo.findById(id);
         if (!review) return { statusCode: 404, body: 'Not Found' };
         
@@ -90,7 +103,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }
 
       if (resource === '/workflows/{workflowId}/reviews') {
-        const workflowId = pathParameters?.workflowId!;
+        const workflowId = pathParameters?.workflowId;
+        if (!workflowId) return { statusCode: 400, body: JSON.stringify({ error: 'workflowId is required' }) };
+        
         const reviews = await reviewRepo.findByWorkflow(workflowId);
         return {
           statusCode: 200,
@@ -100,7 +115,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }
 
       if (resource === '/reviews/{reviewId}/findings') {
-        const id = pathParameters?.reviewId!;
+        const id = pathParameters?.reviewId;
+        if (!id) return { statusCode: 400, body: JSON.stringify({ error: 'reviewId is required' }) };
+        
         const review = await reviewRepo.findById(id);
         if (!review) return { statusCode: 404, body: 'Not Found' };
         
@@ -112,7 +129,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }
 
       if (resource === '/reviews/{reviewId}/contributors') {
-        const id = pathParameters?.reviewId!;
+        const id = pathParameters?.reviewId;
+        if (!id) return { statusCode: 400, body: JSON.stringify({ error: 'reviewId is required' }) };
+        
         const review = await reviewRepo.findById(id);
         if (!review) return { statusCode: 404, body: 'Not Found' };
         
@@ -132,8 +151,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }
 
       if (resource === '/reviews/{reviewId}/evidence/{findingId}') {
-        const reviewId = pathParameters?.reviewId!;
-        const findingId = pathParameters?.findingId!;
+        const reviewId = pathParameters?.reviewId;
+        const findingId = pathParameters?.findingId;
+        if (!reviewId || !findingId) return { statusCode: 400, body: JSON.stringify({ error: 'reviewId and findingId are required' }) };
         
         const review = await reviewRepo.findById(reviewId);
         if (!review) return { statusCode: 404, body: 'Review Not Found' };

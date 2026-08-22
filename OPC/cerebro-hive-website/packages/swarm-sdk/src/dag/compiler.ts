@@ -63,6 +63,21 @@ export interface CompiledDAG {
 
 // ── Compiler ─────────────────────────────────────────────────────────────────
 
+function requireAdjacency(
+  adjacency: Map<string, NodeAdjacency>,
+  nodeId: string,
+): NodeAdjacency {
+  const value = adjacency.get(nodeId);
+
+  if (!value) {
+    throw new Error(
+      `DAG invariant violated: adjacency missing for node '${nodeId}'`,
+    );
+  }
+
+  return value;
+}
+
 export function compileDAG(dag: TaskDAG): CompiledDAG {
   // Validate first — throws on structural errors
   const result = validateDAG(dag);
@@ -79,13 +94,13 @@ export function compileDAG(dag: TaskDAG): CompiledDAG {
     adjacency.set(node.id, { predecessors: [], successors: [] });
   }
   for (const edge of dag.edges) {
-    adjacency.get(edge.source)!.successors.push(edge.target);
-    adjacency.get(edge.target)!.predecessors.push(edge.source);
+    requireAdjacency(adjacency, edge.source).successors.push(edge.target);
+    requireAdjacency(adjacency, edge.target).predecessors.push(edge.source);
   }
 
   // Determine entry / exit nodes
-  const entryNodeIds = dag.nodes.filter((n) => adjacency.get(n.id)!.predecessors.length === 0).map((n) => n.id);
-  const exitNodeIds  = dag.nodes.filter((n) => adjacency.get(n.id)!.successors.length === 0).map((n) => n.id);
+  const entryNodeIds = dag.nodes.filter((n) => requireAdjacency(adjacency, n.id).predecessors.length === 0).map((n) => n.id);
+  const exitNodeIds  = dag.nodes.filter((n) => requireAdjacency(adjacency, n.id).successors.length === 0).map((n) => n.id);
 
   // Kahn's topological sort → wave groups
   const waves = buildWaves(dag, adjacency);
@@ -113,7 +128,7 @@ function buildWaves(
   // because they don't block — we track them separately for metadata)
   const inDegree = new Map<string, number>();
   for (const node of dag.nodes) {
-    const blocking = adjacency.get(node.id)!.predecessors.filter((predId) => {
+    const blocking = requireAdjacency(adjacency, node.id).predecessors.filter((predId) => {
       const edge = dag.edges.find((e) => e.source === predId && e.target === node.id);
       return edge?.type !== "parallel";
     });
@@ -145,7 +160,7 @@ function buildWaves(
     // Mark visited and decrement successors' in-degree
     for (const nodeId of wave) {
       visited.add(nodeId);
-      for (const succId of adjacency.get(nodeId)!.successors) {
+      for (const succId of requireAdjacency(adjacency, nodeId).successors) {
         const edge = dag.edges.find((e) => e.source === nodeId && e.target === succId);
         // Only blocking dependency types reduce in-degree
         if (edge?.type !== "parallel") {

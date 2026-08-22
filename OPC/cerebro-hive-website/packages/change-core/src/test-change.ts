@@ -6,6 +6,7 @@ import { MockPolicyProvider } from './integrations/PolicyProvider';
 import { MockResilienceProvider } from './integrations/ResilienceProvider';
 import { ChangeRequest } from './domain/ChangeRequest';
 import { ChangeState, ChangeCategory, ChangePriority } from './domain/ChangeState';
+import { ApprovalStatus } from './domain/Approval';
 
 async function runTest() {
   console.log('--- Starting Enterprise Change Orchestration Test ---');
@@ -58,7 +59,7 @@ async function runTest() {
   // Simulate CAB Approval manually for the test
   if (change.state === ChangeState.AwaitingApproval) {
     console.log(`\n[4] Simulating CAB Approval...`);
-    change.approvals.forEach(a => a.status = 'Approved' as unknown);
+    change.approvals.forEach(a => a.status = ApprovalStatus.Approved);
     // Since we mutated it manually, just force state to Approved for test flow
     change.state = ChangeState.Approved;
   }

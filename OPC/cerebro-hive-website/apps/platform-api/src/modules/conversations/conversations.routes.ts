@@ -21,6 +21,16 @@ export interface ConversationsRouteOptions extends FastifyPluginOptions {
  *  - Idempotency: duplicate message submissions are prevented via Idempotency-Key header
  *  - Conversation history from DB threaded into AgentExecutionContext
  */
+function requireContextValue(
+  value: string | undefined,
+  field: string,
+): string {
+  if (!value) {
+    throw new Error(`Request context invariant violated: ${field} is missing`);
+  }
+  return value;
+}
+
 export default async function conversationsRoutes(fastify: FastifyInstance, opts: ConversationsRouteOptions) {
   const { agentRuntimeService, agentRepository, agentConversationRepository, unitOfWork } = opts;
 
@@ -116,12 +126,12 @@ export default async function conversationsRoutes(fastify: FastifyInstance, opts
         // registered behind WorkspaceAccessMiddleware (bootstrap.ts), which
         // 403s before this handler runs if it isn't a verified workspace of
         // the authenticated tenant -- see RequestContextMiddleware.ts.
-        workspaceId: cerebroContext.workspaceId!,
+        workspaceId: requireContextValue(cerebroContext.workspaceId, 'workspaceId'),
         userId: cerebroContext.userId ?? 'anonymous',
         // traceId/correlationId are typed optional but unconditionally set
         // by requestContextHook on every request.
-        traceId: cerebroContext.traceId!,
-        correlationId: cerebroContext.correlationId!,
+        traceId: requireContextValue(cerebroContext.traceId, 'traceId'),
+        correlationId: requireContextValue(cerebroContext.correlationId, 'correlationId'),
         agentVersionId: version.id,
         promptVersionId: version.id,
         modelId: version.modelId,

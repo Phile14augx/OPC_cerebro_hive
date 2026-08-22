@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { ApprovalEngine } from './services/ApprovalEngine';
 import type { PolicyProvider, PolicyDecision } from './integrations/PolicyProvider';
 import { ChangeRequest } from './domain/ChangeRequest';
@@ -6,7 +6,7 @@ import { ChangeRequest } from './domain/ChangeRequest';
 class MockPolicyProvider implements PolicyProvider {
   async evaluateChangePolicy(riskScore: number, isEmergency: boolean): Promise<PolicyDecision> {
     if (riskScore > 90) return { allowed: false, reason: 'Risk too high', requiredApprovals: [] };
-    return { allowed: true, requiredApprovals: ['CAB'] as any };
+    return { allowed: true, reason: 'Allowed by policy', requiredApprovals: ['CAB'] as any };
   }
 }
 

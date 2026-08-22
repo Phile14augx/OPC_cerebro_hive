@@ -13,9 +13,14 @@ export class ListAgentsQueryHandler implements IQueryHandler<ListAgentsQuery, an
   constructor(private readonly queryRepo: AgentQueryRepository) {}
 
   async handle(query: ListAgentsQuery, context: RequestContext): Promise<Result<any[]>> {
+    const workspaceId = context.workspaceId;
+    if (!workspaceId) {
+      throw new Error('workspaceId is required to list agents');
+    }
+
     return this.queryRepo.listAgents({
       tenantId: context.tenantId,
-      workspaceId: context.workspaceId!,
+      workspaceId,
       limit: query.limit,
       offset: query.offset,
     });

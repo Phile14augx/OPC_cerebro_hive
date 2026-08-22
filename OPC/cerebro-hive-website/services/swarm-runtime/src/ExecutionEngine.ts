@@ -47,8 +47,16 @@ export class ExecutionEngine {
     });
 
     dag.edges.forEach((e) => {
-      this.adjacencyList.get(e.from)!.push(e.to);
-      this.inDegree.set(e.to, this.inDegree.get(e.to)! + 1);
+      const children = this.adjacencyList.get(e.from);
+      if (!children) {
+        throw new Error(`DAG invariant violated: unknown source node ${e.from}`);
+      }
+      children.push(e.to);
+      const currentInDegree = this.inDegree.get(e.to);
+      if (currentInDegree === undefined) {
+        throw new Error(`DAG invariant violated: unknown target node ${e.to}`);
+      }
+      this.inDegree.set(e.to, currentInDegree + 1);
     });
 
     dag.nodes.forEach((n) => {
@@ -132,11 +140,18 @@ export class ExecutionEngine {
   private handleTaskCompletion(node: TaskNode) {
     const children = this.adjacencyList.get(node.id) || [];
     for (const childId of children) {
-      const currentInDegree = this.inDegree.get(childId)! - 1;
+      const currentInDegreeVal = this.inDegree.get(childId);
+      if (currentInDegreeVal === undefined) {
+        throw new Error(`DAG invariant violated: unknown child node ${childId}`);
+      }
+      const currentInDegree = currentInDegreeVal - 1;
       this.inDegree.set(childId, currentInDegree);
 
       if (currentInDegree === 0) {
-        const childNode = this.dagMap.get(childId)!;
+        const childNode = this.dagMap.get(childId);
+        if (!childNode) {
+          throw new Error(`DAG invariant violated: unknown child node in map ${childId}`);
+        }
         if (childNode.status === "PENDING") {
           this.transitionState(childNode, "READY");
         }
@@ -147,7 +162,10 @@ export class ExecutionEngine {
   private handleTaskFailure(node: TaskNode) {
     const children = this.adjacencyList.get(node.id) || [];
     for (const childId of children) {
-      const childNode = this.dagMap.get(childId)!;
+      const childNode = this.dagMap.get(childId);
+      if (!childNode) {
+        throw new Error(`DAG invariant violated: unknown child node ${childId}`);
+      }
       if (childNode.status === "PENDING") {
         this.transitionState(childNode, "SKIPPED");
         this.handleTaskFailure(childNode);

@@ -30,6 +30,11 @@ export class NatsIntegrationEventPublisher implements IIntegrationEventPublisher
       await this.connect();
     }
 
+    const js = this.js;
+    if (!js) {
+      throw new Error('JetStream client failed to initialize');
+    }
+
     const envelope: EventEnvelope = {
       eventId: crypto.randomUUID(),
       eventType: event.type,
@@ -46,6 +51,6 @@ export class NatsIntegrationEventPublisher implements IIntegrationEventPublisher
     const subject = `events.${event.type}`;
     const data = this.sc.encode(JSON.stringify(envelope));
 
-    await this.js!.publish(subject, data);
+    await js.publish(subject, data);
   }
 }
