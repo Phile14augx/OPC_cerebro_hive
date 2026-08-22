@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { useExecutiveStore } from '@/src/store/trust/useExecutiveStore';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Shield, ShieldCheck, Activity, Scale, Server, FileText, Bell, AlertTriangle } from 'lucide-react';
 
 export function ExecutiveScorecard() {

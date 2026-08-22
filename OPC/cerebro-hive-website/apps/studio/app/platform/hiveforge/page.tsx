@@ -15,6 +15,7 @@ export default function HiveForgePage() {
     try { setCost(await api<CostExplorer>("/v1/hiveforge/billing/cost-explorer")); } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   return (

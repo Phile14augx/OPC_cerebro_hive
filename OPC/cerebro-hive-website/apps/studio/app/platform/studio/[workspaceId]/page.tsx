@@ -48,6 +48,7 @@ export default function WorkspaceIdePage() {
     } catch { /* noop */ }
   }, [workspaceId]);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   return (

@@ -8,6 +8,7 @@ import { TrackedLink } from "@/components/cerebro/TrackedLink";
 export type ProgressiveServiceProps = {
   id: string;
   title: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   icon: any;
   color: string;
   problem: string;

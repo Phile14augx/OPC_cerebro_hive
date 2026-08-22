@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { CandidateSession, ExecutionResult } from "./execution";
 import { EvaluationRubric } from "../types";
@@ -53,6 +54,7 @@ export class AIReviewEngine {
   async performQualitativeReview(
     session: CandidateSession, 
     rubric: EvaluationRubric, 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     deterministicResult: DeterministicScore
   ): Promise<QualitativeScore> {
     

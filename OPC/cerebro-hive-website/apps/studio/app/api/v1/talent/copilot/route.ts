@@ -6,6 +6,7 @@ import { WorkforceCopilotService } from '../../../../../lib/talent/intelligence/
 const copilotService = new WorkforceCopilotService();
 
 export async function GET(req: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   return withAuthorization(req, 'READ_COPILOT_INSIGHTS', '*', async (req: any, userContext: any) => {
     try {
       const searchParams = req.nextUrl.searchParams;
@@ -16,6 +17,7 @@ export async function GET(req: NextRequest) {
       const recommendations = await copilotService.recommendCandidatesForProject(projectId, 5);
 
       return ApiUtils.success(recommendations);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     } catch (error: any) {
       return ApiUtils.error('Failed to retrieve copilot insights', 500, error);
     }

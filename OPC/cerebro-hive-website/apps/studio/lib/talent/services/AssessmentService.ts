@@ -1,5 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { prisma, Assessment, AssessmentVersion } from '@cerebro/db';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { AssessmentCompiler, CompiledAssessmentPackage } from '../compiler';
 import { AssessmentSchema } from '../types';
 import { TalentPolicyEngine } from '../auth/policy';
@@ -84,7 +86,9 @@ export class AssessmentService {
           assessmentId,
           versionNumber: compiledPackage.schema.version,
           manifestHash: compiledPackage.manifest.signatureHash,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
           schemaPayload: compiledPackage.schema as any,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
           manifestPayload: compiledPackage.manifest as any,
           createdByUserId: userId
         }

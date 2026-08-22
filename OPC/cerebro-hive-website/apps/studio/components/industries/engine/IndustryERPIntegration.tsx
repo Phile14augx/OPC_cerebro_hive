@@ -53,6 +53,7 @@ export function IndustryERPIntegration({ erp, config }: { erp: string[], config:
             </p>
             <div className="p-6 rounded-2xl bg-surface border border-border border-l-4" style={{ borderLeftColor: config.secondaryColor }}>
               <p className="text-sm text-text-primary italic">
+// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
                 "CerebroHive doesn't just analyze data in a silo—it acts on it through direct, secure integration with Quantiva ERP."
               </p>
             </div>

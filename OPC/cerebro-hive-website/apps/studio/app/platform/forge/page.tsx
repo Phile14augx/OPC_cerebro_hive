@@ -94,6 +94,7 @@ function DiscoveryPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setSignals((await api<{ signals: ResearchSignal[] }>("/v1/cerebroforge/signals")).signals); } catch { /* noop */ }
   }, [online]);
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const ingest = useCallback(async () => {

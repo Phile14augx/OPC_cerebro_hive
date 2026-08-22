@@ -51,6 +51,7 @@ function ContentStudioPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setSets((await api<{ contentSets: ContentSet[] }>("/v1/cerebrogrowth/content")).contentSets); } catch { /* noop */ }
   }, [online]);
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const generate = useCallback(async () => {

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { motion } from "framer-motion";
 import { EnterpriseService } from "@/lib/data/types";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
@@ -37,6 +38,7 @@ export const ServiceArchitecture = ({ service }: { service: EnterpriseService })
                 <h3 className="text-xl font-space font-bold text-text-primary">Packaged Applications</h3>
               </div>
               <div className="flex flex-col gap-4">
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
                 {usedProducts.map((prod, i) => (
                   <TrackedLink
                     key={prod.id}
@@ -66,6 +68,7 @@ export const ServiceArchitecture = ({ service }: { service: EnterpriseService })
                 <h3 className="text-xl font-space font-bold text-text-primary">Core Platform Capabilities</h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
                 {usedCapabilities.map((cap, i) => (
                   <TrackedLink
                     key={cap.id}

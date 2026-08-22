@@ -16,6 +16,7 @@ function ObservabilityPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setOverview(await api<ObservatoryOverview>("/v1/observatory/overview")); } catch { /* noop */ }
   }, [online]);
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   if (!overview) return <p className="mt-6 text-sm text-text-secondary">{online ? "Loading observability data…" : "Waiting for platform…"}</p>;

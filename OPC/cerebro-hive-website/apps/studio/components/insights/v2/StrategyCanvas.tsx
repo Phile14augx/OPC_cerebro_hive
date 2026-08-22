@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { FileDown, CheckCircle2, Bot, Layers, Network, DollarSign, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";

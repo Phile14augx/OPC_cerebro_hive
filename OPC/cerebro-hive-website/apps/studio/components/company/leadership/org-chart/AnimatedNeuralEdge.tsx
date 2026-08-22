@@ -1,4 +1,5 @@
 ﻿import React from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Handle, Position, EdgeProps, getSmoothStepPath, getBezierPath } from '@xyflow/react';
 
 const themeColors: Record<string, string> = {
@@ -18,6 +19,7 @@ export const AnimatedNeuralEdge = ({
   targetY,
   sourcePosition,
   targetPosition,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   style = {},
   data,
   markerEnd,

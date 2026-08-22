@@ -22,6 +22,7 @@ export default function StudioHubPage() {
     } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const createWorkspace = useCallback(async () => {

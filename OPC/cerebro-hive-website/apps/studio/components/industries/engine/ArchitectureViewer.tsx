@@ -6,6 +6,7 @@ import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { motion } from 'framer-motion';
 import { Database, Server, User, Box, BrainCircuit, Activity } from 'lucide-react';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
 const iconMap: Record<string, any> = {
   client: User,
   gateway: Server,
@@ -15,6 +16,7 @@ const iconMap: Record<string, any> = {
   system: Box
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
 export function ArchitectureViewer({ architecture, config }: { architecture: { nodes: any[], edges: any[] }, config: EngineConfig }) {
   if (!architecture || !architecture.nodes || architecture.nodes.length === 0) return null;
 

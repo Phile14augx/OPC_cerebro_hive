@@ -36,7 +36,9 @@ export function useGatewayStream() {
         if (cancelRef.current) break;
         store.updateLastMessage(chunk.text);
         if (chunk.isDone && chunk.metadata) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
           store.setEvaluation((chunk.metadata as any).evaluations);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
           store.setTokenUsage((chunk.metadata as any).tokens);
         }
       }

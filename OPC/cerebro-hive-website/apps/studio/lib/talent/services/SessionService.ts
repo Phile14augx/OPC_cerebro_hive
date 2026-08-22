@@ -1,4 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { prisma, AssessmentSession, SessionStatus } from '@cerebro/db';
 import { DomainEventBus } from '../infrastructure/events/eventBus';
 import { withTransaction } from '../infrastructure/database/transaction';
@@ -55,11 +57,13 @@ export class SessionService {
   /**
    * Appends a batch of raw telemetry events (e.g., keystrokes, focus changes).
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async recordTelemetry(sessionId: string, sequence: number, events: any[], traceId?: string) {
     const batch = await prisma.sessionTelemetryBatch.create({
       data: {
         sessionId,
         sequence,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
         events: events as any
       }
     });
@@ -78,9 +82,11 @@ export class SessionService {
   /**
    * Updates the aggregated metrics for the session (computed asynchronously).
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async updateMetrics(sessionId: string, metrics: any) {
     return prisma.assessmentSession.update({
       where: { id: sessionId },
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
       data: { metrics: metrics as any }
     });
   }

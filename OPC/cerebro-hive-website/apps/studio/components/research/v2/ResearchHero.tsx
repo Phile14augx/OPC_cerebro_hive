@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { BrainCircuit, BookOpen, FlaskConical, Code2, Network, ArrowRight } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
@@ -28,6 +29,7 @@ export const ResearchHero = () => {
   const router = useRouter();
 
   useEffect(() => {
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setMounted(true);
   }, []);
 

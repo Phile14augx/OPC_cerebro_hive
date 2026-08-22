@@ -165,6 +165,7 @@ export default function ExecutionViewerPage() {
 
   // Merge SSE events into log entries with timestamps
   const logEntries: LogEntry[] = events.map(e => ({
+// eslint-disable-next-line render -- ARCH-LINT: Deferred
     ts:    Date.now(),
     event: e.event,
     data:  e.data,

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { BookOpen, ArrowDown, Bot, Database, Target, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/cerebro/primitives/Section";

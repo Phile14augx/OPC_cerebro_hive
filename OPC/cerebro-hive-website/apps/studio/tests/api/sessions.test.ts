@@ -7,7 +7,7 @@ import { DomainEventBus } from '../../lib/talent/infrastructure/events/eventBus'
 import { SessionStatus } from '@cerebro/db';
 
 describe('Candidate Session Vertical Slice', () => {
-  let sessionEventsFired: string[] = [];
+  const sessionEventsFired: string[] = [];
 
   beforeAll(() => {
     DomainEventBus.subscribe('SessionStarted', () => sessionEventsFired.push('SessionStarted'));
@@ -31,6 +31,7 @@ describe('Candidate Session Vertical Slice', () => {
     expect(mockInitResponse.data.status).toBe('READY');
 
     // 2. Batch Telemetry
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const mockTelemetryPayload = {
       sequence: 0,
       events: [

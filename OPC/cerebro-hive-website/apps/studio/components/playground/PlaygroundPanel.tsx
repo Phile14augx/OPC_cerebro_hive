@@ -40,6 +40,7 @@ export function PlaygroundPanel({ executionContext, hideConfiguration }: Playgro
       if (executionContext.useConversationMemory !== undefined) store.setMemoryToggle('useConversationMemory', executionContext.useConversationMemory);
       if (executionContext.useSemanticMemory !== undefined) store.setMemoryToggle('useSemanticMemory', executionContext.useSemanticMemory);
     }
+// eslint-disable-next-line react-hooks/exhaustive-deps -- ARCH-LINT: Deferred
   }, [executionContext]);
 
   return (

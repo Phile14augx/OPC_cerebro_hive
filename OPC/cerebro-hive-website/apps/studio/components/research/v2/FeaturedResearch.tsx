@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ArrowRight, Clock, User, Bookmark } from "lucide-react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { cn } from "@/lib/utils";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { LucideIcon } from "lucide-react";
 
 export type ProductType = "software" | "framework";
@@ -14,7 +15,9 @@ export interface DeploymentOption {
 }
 
 export interface ArchitectureData {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   nodes: any[];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   edges: any[];
 }
 

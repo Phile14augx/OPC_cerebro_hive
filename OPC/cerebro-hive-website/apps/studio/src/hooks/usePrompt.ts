@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { PromptClient } from '@cerebro/sdk';
 

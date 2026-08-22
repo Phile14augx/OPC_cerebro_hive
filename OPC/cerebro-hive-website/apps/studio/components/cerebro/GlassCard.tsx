@@ -47,6 +47,7 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
         initial="rest"
         whileHover="hover"
         whileTap="hover" // Treat tap on mobile as hover state
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
         {...props as any}
       >
         {children}

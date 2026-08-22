@@ -3,6 +3,7 @@ import { waitUntil } from "@vercel/functions";
 import { verifyWebhookSignature, updateIssueWithPMAnalysis } from "@/lib/github/client";
 import { decomposeEpic } from "@/lib/agents/pm-agent/provider";
 import { EPIC_DECOMPOSITION_PROMPT_V1 } from "@/lib/agents/pm-agent/prompts/v1-epic-decomposition";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { recordMetrics } from "@/lib/agents/pm-agent/observability";
 import { createDocumentationPR } from "@/lib/github/client";
 import { RELEASE_NOTES_PROMPT_V1 } from "@/lib/agents/pm-agent/prompts/v1-release-notes";

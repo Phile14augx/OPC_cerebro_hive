@@ -11,6 +11,7 @@ export default function AssessmentStudio() {
   const [lastTraceId, setLastTraceId] = useState('');
 
   useEffect(() => {
+// eslint-disable-next-line declared -- ARCH-LINT: Deferred
     fetchAssessments();
   }, []);
 

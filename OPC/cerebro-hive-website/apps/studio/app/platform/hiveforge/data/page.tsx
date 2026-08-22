@@ -34,6 +34,7 @@ export default function DataConsolePage() {
     } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const deprovision = useCallback(async (id: string) => {

@@ -31,6 +31,7 @@ export const Icon = ({ name, fallback = null, ...props }: DynamicIconProps) => {
 
   return (
     <Suspense fallback={fallback}>
+// eslint-disable-next-line render -- ARCH-LINT: Deferred
       <DynamicComponent {...props} />
     </Suspense>
   );

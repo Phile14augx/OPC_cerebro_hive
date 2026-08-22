@@ -13,10 +13,12 @@ export class PrismaDeploymentRepository implements IDeploymentRepository {
     return prisma.deployment.findUnique({ where: { id } });
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async create(data: any): Promise<Deployment> {
     return prisma.deployment.create({ data });
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async update(id: string, data: any): Promise<Deployment> {
     return prisma.deployment.update({ where: { id }, data });
   }

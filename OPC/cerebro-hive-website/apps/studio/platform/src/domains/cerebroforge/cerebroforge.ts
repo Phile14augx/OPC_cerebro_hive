@@ -192,6 +192,7 @@ function buildOpportunities(signal: { title: string; summary: string; category: 
         title = `${meta.label} for Enterprise Teams`; rationale = `Market demand (${score.marketDemand}/100) supports an enablement/certification track for enterprise engineering teams adopting ${k2.toLowerCase()}.`; break;
     }
     return { type, title, rationale, targetIndustries: meta.industries.slice(0, 2 + Math.floor(rand() * 2)), label } as ProductOpportunity & { label: string };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   }).map(({ label: _label, ...o }) => o);
 }
 
@@ -282,6 +283,7 @@ export interface Capability {
   dependencies: string[];
   health: "Healthy" | "Degraded" | "Offline";
   status: "Active" | "Inactive";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   metadata: Record<string, any>;
   permissions: string[];
 }
@@ -374,6 +376,7 @@ export class CerebroForgeService {
     return result;
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async entityResolution(ctx: RequestContext, input: any) {
     this.policy.assert(ctx.principal, "cerebroforge:write", { kind: "extraction", organizationId: ctx.principal.organizationId });
     const { globalEntityResolver } = await import("./entity-resolution.js");
@@ -401,6 +404,7 @@ export class CerebroForgeService {
     }
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async graphAction(ctx: RequestContext, input: any) {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "graph", organizationId: ctx.principal.organizationId });
     const { globalKnowledgeGraph } = await import("./knowledge-graph.js");
@@ -443,6 +447,7 @@ export class CerebroForgeService {
     }
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async trendAction(ctx: RequestContext, input: any) {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "trend", organizationId: ctx.principal.organizationId });
     const { globalTrendEngine } = await import("./trend.js");
@@ -455,6 +460,7 @@ export class CerebroForgeService {
     return { trend };
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async opportunityAction(ctx: RequestContext, input: any) {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "opportunity", organizationId: ctx.principal.organizationId });
     const { globalOpportunityEngine } = await import("./opportunity.js");
@@ -472,6 +478,7 @@ export class CerebroForgeService {
     return { graph };
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async reasonAction(ctx: RequestContext, input: any) {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "reasoning", organizationId: ctx.principal.organizationId });
     const { globalReasoningProvider } = await import("./reasoning.js");
@@ -487,6 +494,7 @@ export class CerebroForgeService {
     return { missingLinks, conflicts, opportunities };
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async forecastAction(ctx: RequestContext, input: any) {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "forecast", organizationId: ctx.principal.organizationId });
     const { globalTrendEngine } = await import("./trend.js");

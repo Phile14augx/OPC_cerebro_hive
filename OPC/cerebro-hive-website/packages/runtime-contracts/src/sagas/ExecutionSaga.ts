@@ -3,6 +3,7 @@ import { ExecutionCommand } from '../commands/ExecutionCommand';
 export interface SagaStepContext {
   readonly executionId: string;
   readonly currentState: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   readonly payload: Record<string, any>;
 }
 

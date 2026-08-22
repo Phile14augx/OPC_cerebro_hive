@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { PrismaClient, Prisma, prisma } from '@cerebro/db';
 

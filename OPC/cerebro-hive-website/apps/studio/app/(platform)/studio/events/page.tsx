@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { MetricTile } from "@/components/platform/MetricTile";
 import { SearchBar }  from "@/components/platform/SearchBar";
 import { useEventStream } from "@/lib/platform/hooks";

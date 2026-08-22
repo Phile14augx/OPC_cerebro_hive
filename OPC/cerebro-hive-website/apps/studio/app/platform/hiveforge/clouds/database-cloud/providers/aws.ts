@@ -46,6 +46,7 @@ export class MockAWSProvider implements ProviderContract {
     return path.startsWith("databases"); 
   }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   async estimateCost(blueprintId: string, spec: unknown): Promise<{ currency: string; amount: number }> {
     return { currency: "USD", amount: 150 };
   }

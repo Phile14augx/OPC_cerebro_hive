@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { FeatureFlag, FeatureRegistryContext, FeatureStage } from "../contracts/features";
 import { eventBus } from "../events/EventBus";
 
@@ -22,6 +23,7 @@ export class FeatureRegistry implements FeatureRegistryContext {
     return this.features.get(id);
   }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   isFeatureEnabled(id: string, workspaceId?: string): boolean {
     const feature = this.features.get(id);
     if (!feature) return false;

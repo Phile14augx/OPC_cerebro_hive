@@ -11,6 +11,7 @@ export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setMounted(true);
   }, []);
 

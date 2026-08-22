@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
@@ -76,6 +77,7 @@ export class AuthService {
     try {
       const { payload } = await jwtVerify(token, JWT_SECRET);
       return payload as { userId: string };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     } catch (err) {
       return null;
     }

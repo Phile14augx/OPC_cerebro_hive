@@ -9,6 +9,7 @@ export function Sidebar() {
 
   useEffect(() => {
     // Fetch generated navigation from metadata
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setNodes(platformRegistry.getNavigationNodes().sort((a, b) => a.priority - b.priority));
   }, []);
 

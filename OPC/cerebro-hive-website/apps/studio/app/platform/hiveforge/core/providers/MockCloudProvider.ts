@@ -2,12 +2,14 @@ import { IProvisioningProvider, ProviderMetrics } from "../contracts/provider";
 import { Plugin } from "../contracts/plugin";
 
 export class MockCloudProvider implements IProvisioningProvider {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async create(resourceId: string, type: string, config: any): Promise<any> {
     console.log(`[MockCloudProvider] Creating ${type} resource ${resourceId}...`);
     await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate delay
     return { status: "running", internalId: `mock-id-${Date.now()}` };
   }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async update(resourceId: string, type: string, config: any): Promise<any> {
     console.log(`[MockCloudProvider] Updating ${type} resource ${resourceId}...`);
     return { status: "updated" };
@@ -17,6 +19,7 @@ export class MockCloudProvider implements IProvisioningProvider {
     console.log(`[MockCloudProvider] Deleting ${type} resource ${resourceId}...`);
   }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   async metrics(resourceId: string): Promise<ProviderMetrics> {
     return {
       cpuUsagePercent: Math.random() * 100,

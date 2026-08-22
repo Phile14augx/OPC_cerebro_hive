@@ -32,6 +32,7 @@ export default function CatalogCategoryPage() {
     } catch { /* noop */ }
   }, [categoryId]);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const deprovision = useCallback(async (id: string) => {

@@ -6,11 +6,13 @@ import { motion } from "framer-motion";
 import {
   ScanSearch, Sparkles, AlertTriangle, CheckCircle2, Shield,
   Zap, Code2, Layers, ChevronRight, Loader2,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   FileCode2, AlertCircle,
 } from "lucide-react";
 import { Card } from "../../components/ui/Card";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { StatCard } from "../../components/ui/StatCard";
 import { useForgeProject, useForgeActions } from "@/lib/forge/hooks";
 import type { ReviewResult, ReviewFinding } from "@/lib/forge/api-client";

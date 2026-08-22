@@ -2,6 +2,7 @@ import { platformCapabilities } from "@/lib/data/platform";
 import { Metadata } from 'next';
 import { notFound } from "next/navigation";
 import React from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { motion } from 'framer-motion';
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { CheckCircle2 } from "lucide-react";

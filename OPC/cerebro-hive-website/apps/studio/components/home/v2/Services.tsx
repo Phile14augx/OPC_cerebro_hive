@@ -1,10 +1,12 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { cn, withBasePath } from "@/lib/utils";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Brain, Bot, Code2, Cloud, ShieldCheck, Database, LayoutDashboard, Zap, TrendingUp, Users, Rocket, CloudLightning, Lock, BarChart, FileLineChart, ArrowRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);

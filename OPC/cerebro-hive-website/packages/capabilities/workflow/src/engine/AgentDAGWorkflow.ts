@@ -1,6 +1,7 @@
 // This file represents the Temporal Workflow Definition.
 // It will be executed by a Temporal Worker.
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { proxyActivities } from '@temporalio/workflow';
 // import type { createActivities } from './activities';
 

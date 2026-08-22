@@ -42,6 +42,7 @@ export function AnimatedIndustryBackground({ config }: { config: EngineConfig })
           {[...Array(15)].map((_, i) => (
             <motion.circle
               key={i}
+// eslint-disable-next-line render -- ARCH-LINT: Deferred
               r={Math.random() * 3 + 1}
               fill={i % 3 === 0 ? config.secondaryColor : config.primaryColor}
               initial={{ 

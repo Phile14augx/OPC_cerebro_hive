@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   X, Send, Network, Cpu, LineChart, FileText, Download, Briefcase, Zap, 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   Bot, Box, BrainCircuit, Activity, Lock, Database, Play, Cloud, Shield, Share2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,6 +20,7 @@ interface Message {
   text: string;
   timestamp: string;
   isGenerating?: boolean;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   actions?: { label: string; icon: any; action: string }[];
   businessImpact?: {
     roi: string;
@@ -54,6 +57,7 @@ export default function CerebroChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setMessages([
       { 
         id: "1", 

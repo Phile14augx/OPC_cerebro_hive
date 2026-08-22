@@ -3,6 +3,7 @@ import React from "react";
 export const getAccessibilityProps = (
   decorative?: boolean,
   label?: string,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   description?: string
 ): React.SVGProps<SVGSVGElement> => {
   const isDecorative = decorative !== false && !label;

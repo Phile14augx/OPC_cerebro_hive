@@ -35,6 +35,7 @@ export function FloatingPanels() {
         >
           <div className={cn(
             "w-48 p-4 rounded-xl border border-border bg-surface/80 backdrop-blur-md shadow-elevated flex flex-col gap-1 transition-opacity",
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
             (panel as any).className
           )}>
             <span className="text-[10px] font-space font-semibold uppercase tracking-widest text-secondary-accent">

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Network, Database, BrainCircuit, Bot, Building2, ArrowDown } from "lucide-react";
 
 const landscape = [

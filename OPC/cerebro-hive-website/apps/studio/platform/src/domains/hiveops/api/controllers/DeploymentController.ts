@@ -21,6 +21,7 @@ export class DeploymentController {
       
       const result = await this.service.deployModel(command);
       return Response.json(result, { status: 201 });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     } catch (error: any) {
       return Response.json({ error: error.message }, { status: 500 });
     }

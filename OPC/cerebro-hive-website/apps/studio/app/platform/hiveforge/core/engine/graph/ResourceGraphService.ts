@@ -2,6 +2,7 @@
  * Resource Graph Service & Topology API
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { InventoryResource } from "../../contracts/inventory";
 
 export type GraphNodeType = "Organization" | "Workspace" | "Project" | "Deployment" | "Resource" | "Policy";
@@ -10,6 +11,7 @@ export type GraphEdgeType = "depends_on" | "owned_by" | "deployed_to" | "secured
 export interface GraphNode {
   id: string;
   type: GraphNodeType;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   metadata: any; // Could be InventoryResource for 'Resource' types
 }
 

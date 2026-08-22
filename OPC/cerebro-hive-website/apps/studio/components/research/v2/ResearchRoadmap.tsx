@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { CheckCircle2, CircleDashed, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 

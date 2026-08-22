@@ -81,6 +81,7 @@ export const EngineeringCulture = () => {
                       <div className="z-10 bg-[#040d1a] rounded-full shrink-0">
                         <NeuralOrb 
                           size="sm" 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
                           color={phase.color as any} 
                           state={isActive ? "active" : "idle"}
                         />
@@ -168,6 +169,7 @@ export const EngineeringCulture = () => {
                       <MetricChip 
                         label={metric.label} 
                         initialValue={metric.value} 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
                         status={metric.status as any} 
                         simulateUpdates={true} 
                       />

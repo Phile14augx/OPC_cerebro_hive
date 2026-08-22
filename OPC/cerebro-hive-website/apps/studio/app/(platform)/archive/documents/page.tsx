@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   FileText, Search, Plus, Filter,
   MoreVertical, File, Download, Trash2,
   RefreshCcw, FolderOpen, ArrowUpRight

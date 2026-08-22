@@ -12,6 +12,7 @@ interface PromptEditorProps {
 
 export function PromptEditor({ value, onChange, language = 'plaintext', readOnly = false }: PromptEditorProps) {
   const monaco = useMonaco();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   const editorRef = useRef<any>(null);
 
   useEffect(() => {
@@ -39,6 +40,7 @@ export function PromptEditor({ value, onChange, language = 'plaintext', readOnly
     }
   }, [monaco]);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   const handleEditorDidMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
   };

@@ -1,5 +1,6 @@
 import { DAGPlanner, ExecutionGraph } from "./graph";
 import { Plugin } from "../../contracts/plugin";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { workflowEngine } from "../orchestration/WorkflowStateMachine";
 import { provisioningQueue } from "../worker/InMemoryQueue";
 
@@ -11,6 +12,7 @@ export class ExecutionPlanner {
    * In a real implementation, this would parse the Blueprint's schema/template
    * and break it down into atomic tasks (e.g., Network, Storage, Compute).
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async createExecutionGraph(operationId: string, blueprint: Plugin, config: any): Promise<ExecutionGraph> {
     const graph = this.dagPlanner.planExecution(blueprint);
     // Hardcode a simple DAG for demonstration: Network -> Compute

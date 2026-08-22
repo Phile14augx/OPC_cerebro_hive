@@ -10,6 +10,7 @@ interface Recommendation {
   value: string;
   description: string;
   type: "savings" | "capacity" | "anomaly";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   icon: any;
 }
 

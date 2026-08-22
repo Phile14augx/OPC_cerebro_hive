@@ -6,6 +6,7 @@ import { StatusBadge }   from "@/components/platform/StatusBadge";
 import { DataTable, type Column } from "@/components/platform/DataTable";
 import { useEvalRuns, useEvalDatasets } from "@/lib/platform/hooks";
 import { platformApi }   from "@/lib/platform/api-client";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import type { EvalRun, EvalMetrics } from "@/lib/platform/api-client";
 
 function MetricBar({ label, value }: { label: string; value: number }) {

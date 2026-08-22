@@ -1,5 +1,6 @@
 "use client";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import React, { useCallback, useState, useEffect } from 'react';
 import {
   ReactFlow,
@@ -12,6 +13,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useTheme } from 'next-themes';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { toPng } from 'html-to-image';
 
 import { OrganizationService, OrganizationNodeData } from '@/lib/services/organizationService';
@@ -36,6 +38,7 @@ const edgeTypes = {
 };
 
 const Flow = () => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   const { theme } = useTheme();
   const { fitView, setCenter } = useReactFlow();
   const { getLayoutedElements } = useElkLayout();

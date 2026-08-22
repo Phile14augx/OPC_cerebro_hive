@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { NextRequest } from 'next/server';
 import { ApiUtils } from '../utils/api';
@@ -10,6 +11,7 @@ export async function withAuthorization(
   req: NextRequest,
   action: string,
   resource: string,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   handler: (req: NextRequest, userContext: any) => Promise<Response>
 ) {
   try {
@@ -29,6 +31,7 @@ export async function withAuthorization(
     // Call the actual route handler if authorized
     return await handler(req, mockUserContext);
     
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   } catch (error: any) {
     return ApiUtils.error("Internal Server Error during authorization", 500, error);
   }

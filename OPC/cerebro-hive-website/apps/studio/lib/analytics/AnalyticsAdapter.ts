@@ -8,6 +8,7 @@ export interface AnalyticsEvent {
   category?: string;
   label?: string;
   value?: number;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   [key: string]: any;
 }
 

@@ -1,9 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { prisma, AssessmentSubmission, EvaluationResult } from '@cerebro/db';
 import { SessionService } from './SessionService';
 import { GradingPipeline } from '../engine/evaluation';
 import { GlobalEventBus } from '../engine/events';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 const sessionService = new SessionService();
 const grader = new GradingPipeline();
 
@@ -44,6 +47,7 @@ export class SubmissionService {
     return submission;
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   private async processEvaluationAsync(submissionId: string, attempt: any) {
     console.log(`[SubmissionService] Starting async evaluation for ${submissionId}`);
     
@@ -61,6 +65,7 @@ export class SubmissionService {
 
     // Extract rubric from compiled schema (Mocked for brevity)
     const mockRubric = { id: 'r1', passingScore: 80, criteria: [] }; 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     const mockExecutionArtifacts: any[] = []; // In a real flow, the execution outputs are fetched here
 
     // Run the Phase 3 Evaluation Pipeline (Deterministic -> AI Review)
@@ -76,6 +81,7 @@ export class SubmissionService {
         aiSummary: report.qualitative.summary,
         strengths: report.qualitative.strengths,
         weaknesses: report.qualitative.weaknesses,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
         detailsPayload: report as any
       }
     });

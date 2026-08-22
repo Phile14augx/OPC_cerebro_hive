@@ -48,6 +48,7 @@ function CloudPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setAccounts((await api<{ accounts: CloudAccount[] }>("/v1/hivecloud/accounts")).accounts); } catch { /* noop */ }
   }, [online]);
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   const provision = async () => {

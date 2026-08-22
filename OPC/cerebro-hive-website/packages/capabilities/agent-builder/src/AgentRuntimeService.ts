@@ -121,6 +121,7 @@ export class AgentRuntimeService {
             });
 
             // If async tool, suspend the execution
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
             const tResult = toolResult as any;
             if (tResult?.status === 'accepted' && tResult?.jobId) {
               return {

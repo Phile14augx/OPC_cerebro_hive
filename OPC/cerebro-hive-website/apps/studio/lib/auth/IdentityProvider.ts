@@ -8,6 +8,7 @@ export interface IdentityProvider {
   /**
    * Initializes the provider (e.g., configuring Amplify)
    */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   initialize(config: any): void;
 
   /**

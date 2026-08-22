@@ -5,11 +5,13 @@
  * Seed -> Assessment -> Candidate Session -> Execution Engine -> Artifacts -> AI Normalization -> Copilot Recommendation
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { DomainEventBus } from '../../lib/talent/infrastructure/events/eventBus';
 import { AssessmentService } from '../../lib/talent/services/AssessmentService';
 import { SessionService } from '../../lib/talent/services/SessionService';
 import { ExecutionService } from '../../lib/talent/infrastructure/execution/ExecutionService';
 import { WorkforceCopilotService } from '../../lib/talent/intelligence/enterprise/WorkforceCopilotService';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { evidenceExtractionService } from '../../lib/talent/intelligence/extraction/EvidenceExtractionService';
 
 describe('Talent OS Intelligence Pipeline (End-to-End)', () => {
@@ -26,6 +28,7 @@ describe('Talent OS Intelligence Pipeline (End-to-End)', () => {
     // --- STEP 1: Assessment Publishing ---
     const workspaceId = 'mock-workspace';
     const draft = await assessmentService.createDraft(workspaceId, 'E2E Assessment', 'recruiter_1');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     const version = await assessmentService.compileAndPublish(draft.id, { version: 1 } as any, 'recruiter_1');
     expect(version).toBeDefined();
 

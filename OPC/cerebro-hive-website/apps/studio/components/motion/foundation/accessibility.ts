@@ -26,6 +26,7 @@ export function useMotionCapabilities(): MotionCapabilities {
     const isReduced = mediaQuery.matches;
 
     // Detect connection speed (NetworkInformation API if available)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     const nav = navigator as any;
     const isSlowConnection = nav.connection && (nav.connection.saveData || nav.connection.effectiveType === "2g" || nav.connection.effectiveType === "3g");
 
@@ -46,6 +47,7 @@ export function useMotionCapabilities(): MotionCapabilities {
       mode = "reduced";
     }
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setCapabilities({ performanceTier: tier, motionMode: mode });
 
     const handleChange = (e: MediaQueryListEvent) => {

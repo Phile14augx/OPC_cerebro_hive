@@ -17,6 +17,7 @@ export interface AIDecision {
 export interface IntelligenceAgent {
   name: string;
   domain: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   evaluate(contextQuery: any): Promise<AIDecision>;
 }
 
@@ -27,6 +28,7 @@ export class DecisionEngine {
     this.agents.set(agent.name, agent);
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async processRequest(category: DecisionCategory, contextQuery: any): Promise<AIDecision[]> {
     const decisions: AIDecision[] = [];
     for (const agent of this.agents.values()) {

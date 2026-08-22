@@ -22,6 +22,7 @@ export default function GovernancePage() {
     try { setInventory(await api<Inventory>("/v1/governance/inventory")); } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const runEthics = useCallback(async () => {

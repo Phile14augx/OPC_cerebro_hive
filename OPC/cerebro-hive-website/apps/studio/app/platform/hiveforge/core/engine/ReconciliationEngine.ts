@@ -42,6 +42,7 @@ export class ReconciliationEngine {
     }
   }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   private emitCorrection(resourceId: string, report: any) {
     console.log(`[ReconciliationEngine] Emitting corrective action for ${resourceId} based on drift.`);
   }

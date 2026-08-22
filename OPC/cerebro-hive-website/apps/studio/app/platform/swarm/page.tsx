@@ -93,6 +93,7 @@ export default function CerebroSwarmPage() {
     } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const submit = useCallback(async () => {

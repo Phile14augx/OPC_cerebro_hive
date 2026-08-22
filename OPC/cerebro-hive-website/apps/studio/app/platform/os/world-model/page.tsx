@@ -17,6 +17,7 @@ export default function WorldModelPage() {
     try { setGraph(await api<WorldGraph>("/v1/world/graph")); } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   return (

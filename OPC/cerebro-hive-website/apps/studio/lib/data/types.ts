@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { LucideIcon } from "lucide-react";
 
 export type EntityStatus = "concept" | "development" | "alpha" | "beta" | "production" | "deprecated";

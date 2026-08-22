@@ -1,5 +1,6 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Sparkles, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

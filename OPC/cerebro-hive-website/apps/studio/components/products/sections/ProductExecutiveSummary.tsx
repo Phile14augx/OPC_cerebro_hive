@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { motion } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";

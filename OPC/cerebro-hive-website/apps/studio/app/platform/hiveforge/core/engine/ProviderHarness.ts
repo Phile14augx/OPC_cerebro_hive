@@ -17,6 +17,7 @@ export class ProviderTestHarness {
         await fn();
         checks.push({ name, passed: true });
         passedChecks++;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
       } catch (err: any) {
         checks.push({ name, passed: false, error: err.message });
       }

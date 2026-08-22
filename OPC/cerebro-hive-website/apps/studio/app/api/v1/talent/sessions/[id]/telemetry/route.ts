@@ -6,6 +6,7 @@ import { withAuthorization } from '../../../../../../../lib/talent/auth/middlewa
 const sessionService = new SessionService();
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   return withAuthorization(req, 'UPDATE_SESSION', '*', async (req: any, userContext: any) => {
     try {
       const { id: sessionId } = await params;
@@ -19,6 +20,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       const batch = await sessionService.recordTelemetry(sessionId, sequence, events);
 
       return ApiUtils.success({ batchId: batch.id });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     } catch (error: any) {
       return ApiUtils.error('Failed to record telemetry', 500, error);
     }

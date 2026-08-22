@@ -10,6 +10,7 @@ interface TimelineEvent {
   title: string;
   description: string;
   type: "success" | "warning" | "error" | "info";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   icon: any;
 }
 

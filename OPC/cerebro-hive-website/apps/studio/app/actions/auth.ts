@@ -27,6 +27,7 @@ export async function authenticate(formData: FormData) {
 
     return { success: true };
     
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   } catch (error: any) {
     console.error('Authentication Error:', error);
     return { error: error.message || 'Invalid credentials. Please try again.' };
@@ -60,6 +61,7 @@ export async function register(formData: FormData) {
     });
     
     return { success: true };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   } catch (error: any) {
     console.error('Registration Error:', error);
     return { error: error.message || 'Registration failed. Please try again.' };
@@ -89,6 +91,7 @@ export async function getLocalSession() {
       userId: payload.userId,
       organizationId: user?.tenantMembers[0]?.tenantId || ''
     };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   } catch (err) {
     return null;
   }

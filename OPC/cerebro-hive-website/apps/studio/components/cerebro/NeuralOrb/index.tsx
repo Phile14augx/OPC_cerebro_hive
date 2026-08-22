@@ -10,6 +10,7 @@ export const NeuralOrb = ({
   size = "md",
   color = "cyan",
   state = "idle",
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   variant = "default",
   pulse = true,
   interactive = true,

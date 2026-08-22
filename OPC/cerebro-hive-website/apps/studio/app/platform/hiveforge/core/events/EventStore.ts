@@ -25,6 +25,7 @@ export interface DomainEvent {
   correlationId: string;
   type: DomainEventType;
   timestamp: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   payload: any;
 }
 

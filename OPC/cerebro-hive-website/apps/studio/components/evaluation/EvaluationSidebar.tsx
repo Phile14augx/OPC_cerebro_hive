@@ -6,6 +6,7 @@ import { LayoutDashboard, FileText, Database, ShieldCheck, Play, FlaskConical, B
 export function EvaluationSidebar() {
   const { activeView, setActiveView } = useEvaluationStudioStore();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   const navItems: { id: EvaluationView; label: string; icon: any }[] = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'profiles', label: 'Profiles', icon: FileText },

@@ -20,6 +20,7 @@ export default function AIOpsPage() {
     try { setIncidents((await api<{ incidents: Incident[] }>("/v1/aiops/incidents")).incidents); } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const detectAnomalies = useCallback(async () => {

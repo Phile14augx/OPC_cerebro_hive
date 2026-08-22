@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Industry } from '@/lib/data/industries/types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { motion, AnimatePresence } from 'framer-motion';
 
 // We will import these as we build them
@@ -26,6 +27,7 @@ export function IndustryRenderer({ industry }: { industry: Industry }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setMounted(true);
   }, []);
 

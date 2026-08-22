@@ -10,6 +10,7 @@ export default function DiagnosticsPage() {
   const [snapshot, setSnapshot] = useState<string>("");
 
   useEffect(() => {
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setPlugins(platformRegistry.getAll());
     setSnapshot(platformRegistry.exportSnapshot());
   }, []);

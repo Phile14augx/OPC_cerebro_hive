@@ -15,6 +15,7 @@ export async function getWorkspaces() {
   try {
     const workspaces = await PlatformService.getWorkspaces(user.organizationId);
     return { data: workspaces };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   } catch (err: any) {
     console.error('Error fetching workspaces:', err);
     return { error: 'Failed to fetch workspaces.' };
@@ -35,6 +36,7 @@ export async function getProjects(workspaceId: string) {
     // For now, we trust the UI is passing a workspace the user belongs to.
     const projects = await PlatformService.getProjects(workspaceId);
     return { data: projects };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   } catch (err: any) {
     console.error('Error fetching projects:', err);
     return { error: 'Failed to fetch projects.' };

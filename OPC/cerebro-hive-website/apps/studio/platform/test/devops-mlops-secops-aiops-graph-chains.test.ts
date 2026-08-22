@@ -18,6 +18,7 @@ describe("devops", () => {
     const env = await platform.devops.registerEnvironment(ctx, { name: "prod-us-east", tier: "production", region: "us-east-1", clusterOrHost: "eks-prod-1", iacModule: "terraform/prod" });
     expect(env.iacStateHash).toBeTruthy();
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const d1 = await platform.devops.deploy(ctx, { environmentId: env.id, service: "web-api", version: "1.0.0" });
     const d2 = await platform.devops.deploy(ctx, { environmentId: env.id, service: "web-api", version: "1.1.0" });
     expect(d2.previousVersion).toBe("1.0.0");

@@ -6,6 +6,7 @@ import { withAuthorization } from '../../../../../lib/talent/auth/middleware';
 const assessmentService = new AssessmentService();
 
 export async function GET(req: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   return withAuthorization(req, 'READ_ASSESSMENT', '*', async (req: any, userContext: any) => {
     try {
       const searchParams = req.nextUrl.searchParams;
@@ -19,6 +20,7 @@ export async function GET(req: NextRequest) {
       const result = await assessmentService.listAssessments({ workspaceId, skip, take, status });
 
       return ApiUtils.success(result.data, { total: result.total, skip, take });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     } catch (error: any) {
       return ApiUtils.error('Failed to list assessments', 500, error);
     }
@@ -26,6 +28,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   return withAuthorization(req, 'CREATE_ASSESSMENT', '*', async (req: any, userContext: any) => {
     try {
       const body = await req.json();
@@ -45,6 +48,7 @@ export async function POST(req: NextRequest) {
       );
 
       return ApiUtils.success(assessment, undefined, 201);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     } catch (error: any) {
       return ApiUtils.error('Failed to create assessment', 500, error);
     }

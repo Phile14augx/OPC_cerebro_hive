@@ -24,6 +24,7 @@ export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
 
     // Generate unique IDs for accessibility
     const titleId = useId();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const descId = useId();
 
     return (

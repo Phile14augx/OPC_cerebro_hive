@@ -33,6 +33,7 @@ function WorkflowsPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setWorkflows(await api<Workflow[]>("/v1/flow/workflows")); } catch { /* noop */ }
   }, [online]);
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 8000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {

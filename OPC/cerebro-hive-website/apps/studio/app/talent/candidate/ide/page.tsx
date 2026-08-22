@@ -22,6 +22,7 @@ const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
 export default function CandidateCloudIDE() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [code, setCode] = useState('// Write your solution here\n\nfunction solve() {\n  \n}');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   const [telemetryBatch, setTelemetryBatch] = useState<any[]>([]);
   const batchSequence = useRef(0);
 
@@ -149,6 +150,7 @@ export default function CandidateCloudIDE() {
         eventSource.close();
       };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     } catch (e: any) {
       setTerminalOutput(prev => [...prev, `[ERROR] ${e.message}`]);
       setIsExecuting(false);

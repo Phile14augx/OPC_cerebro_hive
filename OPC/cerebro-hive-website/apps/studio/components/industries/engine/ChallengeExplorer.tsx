@@ -20,6 +20,7 @@ import {
   Cpu
 } from 'lucide-react';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
 const categoryConfig: Record<string, { color: string, icon: any }> = {
   Fraud: { color: "#EF4444", icon: ShieldAlert },
   Compliance: { color: "#3B82F6", icon: ShieldCheck },

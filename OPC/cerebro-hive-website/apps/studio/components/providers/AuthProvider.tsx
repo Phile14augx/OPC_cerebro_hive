@@ -34,6 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // const session = await getSession();
         // setUser(session.user);
         // setWorkspace(session.workspace);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
       } catch (e) {
         console.error("Session missing or expired");
       } finally {

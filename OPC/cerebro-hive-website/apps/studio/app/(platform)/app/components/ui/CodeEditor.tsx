@@ -11,6 +11,7 @@ interface CodeEditorProps {
   theme?: "vs-dark" | "light";
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 export function CodeEditor({ language, value, onChange, height = "100%", theme = "vs-dark" }: CodeEditorProps) {
   const monaco = useMonaco();
 

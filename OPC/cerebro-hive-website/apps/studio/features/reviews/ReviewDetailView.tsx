@@ -48,6 +48,7 @@ export function ReviewDetailView({ reviewId }: { reviewId: string }) {
               <h1 className="text-2xl font-space font-semibold text-white mb-2 flex items-center gap-3">
                 Review v{review.reviewVersion}
                 {review.verdict && (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
                   <Badge variant={review.verdict.outcome === 'pass' ? 'success' : 'warning' as any}>
                     {review.verdict.outcome.toUpperCase()}
                   </Badge>

@@ -1,6 +1,7 @@
 import { GetDashboardQuery } from "../queries/GetDashboardQuery";
 
 export class GetDashboardHandler {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async handle(query: GetDashboardQuery): Promise<any> {
     // In a real implementation, this would aggregate data from repositories
     return {

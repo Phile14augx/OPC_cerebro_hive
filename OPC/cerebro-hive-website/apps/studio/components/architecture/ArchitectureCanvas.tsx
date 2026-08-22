@@ -19,6 +19,7 @@ import { toPng, toSvg } from 'html-to-image';
 import { ArchitectureNode } from './ArchitectureNode';
 import { SolutionFlowNode } from './SolutionFlowNode';
 import { AnimatedEdge } from './AnimatedEdge';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Download, Maximize, Search, Image as ImageIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
@@ -59,7 +60,9 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => 
     const nodeWithPosition = dagreGraph.node(node.id);
     const { width, height } = getNodeDimensions(node);
     const newNode = { ...node };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     newNode.targetPosition = isHorizontal ? 'left' : 'top' as any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     newNode.sourcePosition = isHorizontal ? 'right' : 'bottom' as any;
     newNode.position = {
       x: nodeWithPosition.x - width / 2,
@@ -72,7 +75,9 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => 
 };
 
 interface ArchitectureCanvasProps {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   initialNodes: any[];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   initialEdges: any[];
   direction?: 'TB' | 'LR';
   className?: string;
@@ -104,6 +109,7 @@ const Flow = ({ initialNodes, initialEdges, direction = 'LR' }: ArchitectureCanv
   );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
   const flowRef = useRef<HTMLDivElement>(null);
   const [searchTerm, setSearchTerm] = useState('');

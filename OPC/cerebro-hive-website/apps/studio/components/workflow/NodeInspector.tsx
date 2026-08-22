@@ -3,6 +3,7 @@
 import React from 'react';
 import { useWorkflowStudioStore } from '@/src/store/useWorkflowStudioStore';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 export function NodeInspector({ workflowId }: { workflowId: string }) {
   const { selectedNodeId } = useWorkflowStudioStore();
 

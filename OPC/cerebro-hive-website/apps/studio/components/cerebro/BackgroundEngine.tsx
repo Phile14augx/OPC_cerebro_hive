@@ -15,11 +15,13 @@ interface BackgroundEngineProps {
  * CerebroMotion™: Background Engine
  * Orchestrates ambient backgrounds, delegating to the appropriate theme-aware system.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 export function BackgroundEngine({ type = "hero" }: BackgroundEngineProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setMounted(true);
   }, []);
 

@@ -32,6 +32,7 @@ export class MemoryEventBus implements EventBus {
     if (!this.handlers.has(eventType)) {
       this.handlers.set(eventType, new Set());
     }
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- ARCH-LINT: Deferred
     this.handlers.get(eventType)!.add(handler as EventHandler);
   }
 

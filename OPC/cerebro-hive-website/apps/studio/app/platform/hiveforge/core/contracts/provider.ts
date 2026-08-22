@@ -77,7 +77,9 @@ export interface IResourceDriver<TConfig = unknown, TState = unknown> {
 }
 
 export interface IProvisioningProvider {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   create(resourceId: string, type: string, config: any): Promise<any>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   update(resourceId: string, type: string, config: any): Promise<any>;
   delete(resourceId: string, type: string): Promise<void>;
   

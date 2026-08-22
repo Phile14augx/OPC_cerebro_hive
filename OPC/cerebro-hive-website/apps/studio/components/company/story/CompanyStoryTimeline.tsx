@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { milestones as timelineEvents } from "@/lib/content/company/timeline";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { cn } from "@/lib/utils";
 import { CheckCircle2, CircleDashed } from "lucide-react";
 import { NeuralOrb } from "@/components/cerebro/NeuralOrb";

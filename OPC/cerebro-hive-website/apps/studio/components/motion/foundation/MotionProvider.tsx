@@ -21,6 +21,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setMounted(true);
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setLevel("reduced");

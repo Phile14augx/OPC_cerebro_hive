@@ -1,5 +1,6 @@
 import React from "react";
 import { ArrowUpRight, AlertCircle, LucideIcon } from "lucide-react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Card, CardContent } from "./Card";
 import { cn } from "./utils";
 

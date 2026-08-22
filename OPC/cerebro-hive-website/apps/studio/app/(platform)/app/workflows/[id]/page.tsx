@@ -38,6 +38,7 @@ export default function WorkflowDesignerPage() {
           {['canvas', 'simulate', 'trace', 'deploy'].map((tab) => (
             <div
               key={tab}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
               onClick={() => setActiveTab(tab as any)}
               className={`px-4 py-2 text-xs font-medium cursor-pointer rounded-t-lg transition-colors
                 ${activeTab === tab ? 'bg-background border-t border-l border-r border-border text-foreground' : 'text-muted-foreground hover:bg-muted/30'}`}

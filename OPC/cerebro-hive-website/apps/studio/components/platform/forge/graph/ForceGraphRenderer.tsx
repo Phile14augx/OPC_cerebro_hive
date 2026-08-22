@@ -6,15 +6,19 @@ import { GraphRenderer, GraphRendererProps } from "./GraphRenderer";
 import { useTheme } from "next-themes";
 
 // We dynamically import the force graphs to prevent SSR issues (window is not defined)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
 const ForceGraph2D: any = dynamic(() => import("react-force-graph-2d").then(m => m.default) as any, { ssr: false });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
 const ForceGraph3D: any = dynamic(() => import("react-force-graph-3d").then(m => m.default) as any, { ssr: false });
 
 export const ForceGraphRendererComponent: React.FC<GraphRendererProps> = ({ data, onNodeClick, width, height, mode = "3d" }) => {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   const fgRef = useRef<any>(null);
 
   useEffect(() => {
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setMounted(true);
   }, []);
 

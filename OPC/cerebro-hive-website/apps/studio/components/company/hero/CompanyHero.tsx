@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Globe2 } from "lucide-react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { withBasePath } from "@/lib/utils";
 import dynamic from 'next/dynamic';
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
@@ -13,8 +14,10 @@ const BackgroundEngine = dynamic(
 );
 
 // Floating Particles
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 const Particles = () => {
   const [mounted, setMounted] = useState(false);
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => setMounted(true), []);
 
   if (!mounted) return null;

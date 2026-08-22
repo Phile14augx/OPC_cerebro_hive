@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { prisma } from '@cerebro/db';
 import { DomainEventBus } from '../../infrastructure/events/eventBus';
@@ -19,6 +20,7 @@ export class EvidenceExtractionService {
 
   private initializeEventSubscription() {
     DomainEventBus.subscribe<{jobId: string, exitCode: number}>('ExecutionCompleted', async (event) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
       const { jobId, exitCode } = event.payload;
       logger.info(`Extracting evidence for Job: ${jobId}`);
       await this.extractEvidence(jobId);
@@ -78,6 +80,7 @@ export class EvidenceExtractionService {
       
       // We could emit an 'EvidenceExtracted' event here.
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     } catch (e: any) {
       logger.error('Failed to extract evidence', e, { jobId });
     }

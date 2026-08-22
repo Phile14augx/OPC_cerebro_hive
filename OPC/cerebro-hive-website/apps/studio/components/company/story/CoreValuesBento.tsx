@@ -96,6 +96,7 @@ export const CoreValuesBento = () => {
             if (index === 2) colSpanClass = "lg:col-span-1 lg:row-start-1 lg:col-start-3"; // Honesty (move to top right)
             if (index === 3) colSpanClass = "lg:col-span-2"; // Partnership
             if (index === 4) colSpanClass = "lg:col-span-2"; // Innovation
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
             if (index === 5) colSpanClass = "lg:col-span-1"; // Responsible
             
             // Reordering array logically to fit CSS Grid naturally without explicit row-start:

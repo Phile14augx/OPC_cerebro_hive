@@ -1,9 +1,11 @@
 "use client";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { useEffect, useState } from "react";
 import { URD } from "../../../app/platform/hiveforge/core/contracts/resource";
 
 export function Topbar() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   const [activeResource, setActiveResource] = useState<URD | null>(null);
 
   // Dynamic Graph-Aware Breadcrumbs

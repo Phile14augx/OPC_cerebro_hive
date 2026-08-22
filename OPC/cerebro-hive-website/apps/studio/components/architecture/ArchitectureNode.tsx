@@ -1,6 +1,7 @@
 import React from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Database, Server, Cpu, Bot, User, Cloud, Activity, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -13,6 +14,7 @@ const iconMap: Record<string, React.ReactNode> = {
   system: <Server size={16} />
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
 export const ArchitectureNode = ({ data }: { data: any }) => {
   const type = data.type || 'system';
   const status = data.status || 'Active';

@@ -3,6 +3,7 @@
 import { useReviewsByWorkflow } from './hooks/useReviews';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EngineeringReviewSummaryDTO } from '@cerebro/api-client';
@@ -93,6 +94,7 @@ function ReviewCard({ review, onClick }: { review: EngineeringReviewSummaryDTO; 
           Review v{review.reviewVersion}
         </CardTitle>
         {review.verdict && (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
           <Badge variant={getVerdictBadgeVariant(review.verdict.outcome) as any}>
             {review.verdict.outcome.toUpperCase()}
           </Badge>

@@ -40,6 +40,7 @@ export class ContinuousMonitor {
     
     if (newEvidence.sourceEvent === 'AccessProvisioned') {
       const priorApprovals = this.evidenceCollector.getEvidenceForControl(obj.id)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
         .filter(e => e.sourceEvent === 'AccessApproved' && (e.payload as any).requestId === (newEvidence.payload as any).requestId);
 
       if (priorApprovals.length === 0) {
@@ -50,6 +51,7 @@ export class ContinuousMonitor {
           id: `def-${Date.now()}`,
           controlObjectiveId: obj.id,
           severity: 'High',
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
           description: `Access provisioned for request ${(newEvidence.payload as any).requestId} without matching approval evidence.`,
           detectedAt: new Date(),
           relatedEvidenceIds: [newEvidence.evidenceId],

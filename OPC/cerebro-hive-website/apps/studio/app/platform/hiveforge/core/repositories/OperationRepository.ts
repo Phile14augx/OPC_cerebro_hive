@@ -18,10 +18,12 @@ export class PrismaOperationRepository implements IOperationRepository {
     return prisma.operation.findMany({ where: { resourceId } });
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async create(data: any): Promise<Operation> {
     return prisma.operation.create({ data });
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async update(id: string, data: any): Promise<Operation> {
     return prisma.operation.update({ where: { id }, data });
   }

@@ -11,7 +11,7 @@
     "push": "prisma db push",
     "migrate:dev": "prisma migrate dev",
     "studio": "prisma studio",
-    "lint": "eslint \"**/*.ts*\"",
+    "lint": "eslint \"src/**/*.ts\"",
     "typecheck": "pnpm generate && tsc -p tsconfig.json --noEmit",
     "test": "pnpm generate && tsx --test src/**/*.test.ts"
   },

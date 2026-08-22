@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Activity, ShieldCheck, Database, FileText, Bot, Scale, BrainCircuit } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
@@ -32,6 +33,7 @@ export const BenchmarkLab = () => {
           </span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Enterprise Task Benchmarks</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
+// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
             Generic LLM benchmarks (MMLU, HumanEval) don't reflect real business workflows. We evaluate models on actual enterprise tasks.
           </p>
         </div>

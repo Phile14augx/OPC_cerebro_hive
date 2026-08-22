@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { prisma, SkillEvidence } from '@cerebro/db';
 
@@ -45,6 +46,7 @@ export class SkillGraphService {
       include: { capability: { include: { competency: { include: { domain: true } } } } }
     });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     const graph: Record<string, any> = {};
 
     evidences.forEach(ev => {

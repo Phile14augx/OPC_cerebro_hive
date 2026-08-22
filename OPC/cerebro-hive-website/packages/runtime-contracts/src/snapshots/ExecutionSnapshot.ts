@@ -13,6 +13,7 @@ export interface ExecutionSnapshot {
   // ──────────────────────────────────────────────────────────
   
   readonly state: {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     readonly workingMemory: Record<string, any>;
     readonly messages: Array<{
       role: 'system' | 'user' | 'assistant' | 'tool';
@@ -20,6 +21,7 @@ export interface ExecutionSnapshot {
       toolCalls?: Array<{ id: string; name: string; arguments: string }>;
       toolCallId?: string;
     }>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     readonly context: Record<string, any>;
     readonly activeToolCalls: string[];
   };

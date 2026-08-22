@@ -2,10 +2,12 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { industriesData, getAllCategories, getIndustriesByTier } from '@/lib/data/industries';
 import { Search, ChevronRight, ChevronDown, Hexagon, BrainCircuit } from 'lucide-react';
 import { TrackedLink } from '@/components/cerebro/TrackedLink';
 import { TrackedButton } from '@/components/cerebro/TrackedButton';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { AnimatedConnector } from '../motion/primitives/AnimatedConnector';
 import { IntelligentOrb } from '../motion/primitives/IntelligentOrb';
 

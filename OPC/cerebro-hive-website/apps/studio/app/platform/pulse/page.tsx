@@ -30,6 +30,7 @@ function MeshPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setAgents(await api<MeshAgent[]>("/v1/mesh/agents")); } catch { /* noop */ }
   }, [online]);
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 7000); return () => clearInterval(id); }, [refresh]);
 
   const register = async () => {

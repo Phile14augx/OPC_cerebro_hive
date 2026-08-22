@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Settings2, ArrowRight, BrainCircuit, ShieldCheck, Download, Calendar, Users, BarChart3, ChevronRight, Activity } from "lucide-react";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 

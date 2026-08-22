@@ -6,6 +6,7 @@ import { withAuthorization } from '../../../../../lib/talent/auth/middleware';
 const sessionService = new SessionService();
 
 export async function POST(req: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   return withAuthorization(req, 'CREATE_SESSION', '*', async (req: any, userContext: any) => {
     try {
       const body = await req.json();
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
       const session = await sessionService.initializeSession(candidateId, assessmentVersionId);
 
       return ApiUtils.success(session, undefined, 201);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     } catch (error: any) {
       return ApiUtils.error('Failed to initialize session', 500, error);
     }

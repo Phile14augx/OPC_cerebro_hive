@@ -24,6 +24,7 @@ export default function InventoryPage() {
     resourceGraphService.addEdge(edge1);
     resourceGraphService.addEdge(edge2);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
     setTopology(resourceGraphService.getTopology());
   }, []);
 

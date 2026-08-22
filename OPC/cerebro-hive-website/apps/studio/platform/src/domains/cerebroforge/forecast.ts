@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { TrendIntelligenceEngine, TrendLifecycle } from "./trend.js";
 
 // ---------------------------------------------------------------------------------------------

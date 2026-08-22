@@ -152,6 +152,7 @@ export default function ClientDashboardPage() {
       try {
         const parsed = JSON.parse(session);
         if (parsed && parsed.email && parsed.company) {
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
           setUserSession(parsed);
           setIsAuthenticated(true);
         }

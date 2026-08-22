@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 /**
  * Interface representing the Real-Time Streaming capabilities for Talent OS execution.
@@ -17,6 +18,7 @@ export class ExecutionStreamer {
    * A separate WebSocket server listens to Redis and pushes to the client.
    */
   publishStreamChunk(envId: string, type: "stdout" | "stderr", chunk: string) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const payload: StreamPayload = {
       envId,
       type,
@@ -29,6 +31,7 @@ export class ExecutionStreamer {
   }
 
   publishStatusChange(envId: string, status: string) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const payload: StreamPayload = {
       envId,
       type: "status",

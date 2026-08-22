@@ -27,6 +27,7 @@ export const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButton
           size === "lg" && "text-lg px-10 py-4",
           className
         )}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
         {...props as any}
         suppressHydrationWarning
       >

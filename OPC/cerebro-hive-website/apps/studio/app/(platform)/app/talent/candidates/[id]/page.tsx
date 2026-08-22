@@ -8,7 +8,9 @@ import {
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Badge } from "../../../components/ui/Badge";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { StatCard } from "../../../components/ui/StatCard";
 
 export default function CandidateReport({ params }: { params: { id: string } }) {

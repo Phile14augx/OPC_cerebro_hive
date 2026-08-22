@@ -74,7 +74,9 @@ export function WorkflowCanvas({ config }: { config: WorkflowConfiguration }) {
     animated: true,
   })), [config]);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   return (

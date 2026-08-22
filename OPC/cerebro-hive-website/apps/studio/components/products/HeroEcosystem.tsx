@@ -1,6 +1,8 @@
 "use client";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import React, { useRef, useEffect, useState } from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { BrainCircuit, Cpu, Database, LayoutTemplate, Network, Search, Zap } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";

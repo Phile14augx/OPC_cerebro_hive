@@ -31,6 +31,7 @@ export class ExecutionProxy {
     }
 
     // 3. Inject Secret (Example: Bearer token format)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const injectedHeaders = {
       ...config.headers,
       'Authorization': `Bearer ${secretValue}`

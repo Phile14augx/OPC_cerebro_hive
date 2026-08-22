@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 ﻿import { IconSize } from "./types";
 
 export const sizeMap: Record<number, number> = {

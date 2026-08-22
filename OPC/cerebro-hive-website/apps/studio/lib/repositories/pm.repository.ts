@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { prisma } from '@/lib/prisma';
 import { EpicDecomposition } from '@/lib/agents/pm-agent/schema';

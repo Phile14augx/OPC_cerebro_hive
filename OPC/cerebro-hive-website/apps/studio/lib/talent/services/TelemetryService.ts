@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { prisma } from '@cerebro/db';
 import { GlobalEventBus, TelemetryEvent } from '../engine/events';

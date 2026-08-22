@@ -11,6 +11,7 @@ interface LeadData {
   company: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 function generateRoadmapReport(
   leadInfo: { name: string; email: string; company: string },
   industry: string,

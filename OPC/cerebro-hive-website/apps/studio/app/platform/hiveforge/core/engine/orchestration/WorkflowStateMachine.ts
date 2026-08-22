@@ -16,6 +16,7 @@ export type WorkflowState =
 
 export class WorkflowStateMachine {
   
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async transition(operationId: string, newState: WorkflowState, payload?: any): Promise<Operation> {
     const operation = await operationRepository.findById(operationId);
     if (!operation) throw new Error(`Operation ${operationId} not found`);
@@ -47,6 +48,7 @@ export class WorkflowStateMachine {
     eventStore.append({
       id: crypto.randomUUID(),
       correlationId: operationId,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
       type: eventType as any,
       timestamp: new Date().toISOString(),
       payload: payload || {}

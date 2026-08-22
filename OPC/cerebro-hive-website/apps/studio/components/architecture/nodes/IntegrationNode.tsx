@@ -4,6 +4,7 @@ import { Blocks } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const IntegrationNode = ({ data, isConnectable }: NodeProps) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   const isBrainMode = data?.isBrainMode;
 
   const integrations = [

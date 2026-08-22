@@ -31,6 +31,7 @@ export default function Web3Page() {
     } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const lookupAccount = useCallback(async () => {

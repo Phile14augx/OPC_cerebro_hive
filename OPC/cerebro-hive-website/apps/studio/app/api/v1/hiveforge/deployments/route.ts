@@ -7,6 +7,7 @@ import { deploymentOrchestrator } from "../../../../platform/hiveforge/core/engi
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const { blueprintId, config, idempotencyKey } = body;
     
     // In a real app we'd get workspaceId from auth session

@@ -42,6 +42,7 @@ import { BiLogoMicrosoftTeams } from "react-icons/bi";
 
 type Integration = {
   name: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   icon: any;
   category: string;
   features: string[];

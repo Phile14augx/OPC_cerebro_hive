@@ -17,6 +17,7 @@ export const realestate: Industry = {
     description: "Transform your operations with intelligent, automated systems.",
     primaryCta: "Book Strategy Session",
     secondaryCta: "Download Architecture",
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     dynamicBackgroundType: "realestate" as any
   },
   overview: {

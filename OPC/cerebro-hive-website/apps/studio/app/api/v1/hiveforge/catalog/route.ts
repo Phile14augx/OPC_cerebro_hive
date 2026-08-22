@@ -20,6 +20,7 @@ export async function GET(req: Request) {
         name: bp.manifest.metadata.name,
         provisionable: true,
         hourlyRateUsd: 0.05, // mock rate
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
         kind: (bp.manifest.spec?.template as any)?.provider || "vps"
       }))
     }

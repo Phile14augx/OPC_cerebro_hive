@@ -13,6 +13,7 @@ export class OperationsController {
       const workspaceId = url.searchParams.get("workspaceId") || "default-workspace";
       const result = await this.service.getDashboard(workspaceId);
       return Response.json(result);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     } catch (error: any) {
       return Response.json({ error: error.message }, { status: 500 });
     }

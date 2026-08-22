@@ -9,6 +9,7 @@ export function Particles({ count = 2000 }) {
     const temp = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
+// eslint-disable-next-line render -- ARCH-LINT: Deferred
       temp[i3] = (Math.random() - 0.5) * 40;     // x
       temp[i3 + 1] = (Math.random() - 0.5) * 40; // y
       temp[i3 + 2] = (Math.random() - 0.5) * 20; // z

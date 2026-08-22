@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { ArrowRight, ExternalLink } from "lucide-react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { typeTokens, spacingTokens, motionTokens } from "@/lib/design-system/tokens";
 import { useState } from "react";
 

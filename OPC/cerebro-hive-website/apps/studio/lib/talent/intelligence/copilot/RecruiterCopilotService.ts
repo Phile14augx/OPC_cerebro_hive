@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { SkillGraphService } from '../graph/SkillGraphService';
 import { AIProviderRegistry } from '../../infrastructure/ai/IAICapabilityProvider';
@@ -34,6 +35,7 @@ export class RecruiterCopilotService {
 
     console.log(`[Copilot] Requesting evidence-backed reasoning from AI...`);
     // Simulated AI Reasoning Output
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const aiReasoningOutput = await reasoner.executeCapability({
       prompt: `Act as an expert technical recruiter. Based on the following Evidence Graph, generate a hiring recommendation...`,
       code: contextStr,

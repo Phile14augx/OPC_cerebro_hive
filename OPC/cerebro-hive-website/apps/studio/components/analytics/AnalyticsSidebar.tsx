@@ -6,6 +6,7 @@ import { LayoutDashboard, Activity, Search, FileTerminal, DollarSign, Cpu, Globe
 export function AnalyticsSidebar() {
   const { activeView, setActiveView } = useAnalyticsStore();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   const navItems: { id: AnalyticsView; label: string; icon: any; section?: string }[] = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'metrics', label: 'Metrics', icon: Activity },

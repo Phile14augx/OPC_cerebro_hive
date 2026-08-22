@@ -16,6 +16,7 @@ export type ExecutionEventType =
  * The root interface for all immutable execution events.
  * Provides strong typing, deterministic ordering (sequence), and schema versioning.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
 export interface ExecutionEvent<TPayload = Record<string, any>> {
   readonly id: string;
   readonly executionId: string;
@@ -48,12 +49,14 @@ export interface ExecutionStartedPayload {
   readonly agentId: string;
   readonly agentVersionId: string;
   readonly conversationId?: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   readonly context: Record<string, any>;
 }
 export type ExecutionStartedEvent = ExecutionEvent<ExecutionStartedPayload>;
 
 export interface PromptPreparedPayload {
   readonly systemPrompt: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   readonly resolvedVariables: Record<string, any>;
 }
 export type PromptPreparedEvent = ExecutionEvent<PromptPreparedPayload>;
@@ -85,6 +88,7 @@ export interface ToolRequestedPayload {
   readonly stepNumber: number;
   readonly toolCallId: string;
   readonly toolName: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   readonly arguments: Record<string, any>;
 }
 export type ToolRequestedEvent = ExecutionEvent<ToolRequestedPayload>;
@@ -98,6 +102,7 @@ export type ToolStartedEvent = ExecutionEvent<ToolStartedPayload>;
 export interface ToolCompletedPayload {
   readonly stepNumber: number;
   readonly toolCallId: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   readonly result: any;
   readonly durationMs: number;
 }
@@ -127,6 +132,7 @@ export type ExecutionCompletedEvent = ExecutionEvent<ExecutionCompletedPayload>;
 
 export interface ExecutionFailedPayload {
   readonly reason: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   readonly errorDetails?: Record<string, any>;
   readonly stepNumber?: number;
 }

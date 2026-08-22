@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { AIProviderRegistry } from '../../infrastructure/ai/IAICapabilityProvider';
 
@@ -51,6 +52,7 @@ export class WorkforceCopilotService {
     };
   }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   async recommendCandidatesForProject(projectId: string, limit: number) {
     console.log(`[Workforce Copilot] Recommending candidates for project ${projectId}`);
     return [

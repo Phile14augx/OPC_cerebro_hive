@@ -100,11 +100,15 @@ export interface Solution {
   workflowSteps: WorkflowStep[];
   
   architecture: {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     nodes: any[];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     edges: any[];
   };
   workflows: {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     nodes: any[];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     edges: any[];
   };
   

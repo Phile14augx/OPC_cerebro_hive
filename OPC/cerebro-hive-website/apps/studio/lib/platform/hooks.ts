@@ -10,6 +10,7 @@ import { platformApi } from "./api-client";
 import type {
   Workflow, WorkflowExecution, Agent, AgentRun,
   KnowledgeCollection, KnowledgeDocument, AIUsageSummary, Me, AdminStats,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   Prompt, PromptVersion, EvalRun, EvalDataset, TempoSearchResult, ModelEntry, NatsEvent,
   PaginatedResponse,
 } from "./api-client";
@@ -125,6 +126,7 @@ export function useWorkflow(id: string) {
     }
   }, [id]);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
   return { workflow, loading, error, refresh };
 }

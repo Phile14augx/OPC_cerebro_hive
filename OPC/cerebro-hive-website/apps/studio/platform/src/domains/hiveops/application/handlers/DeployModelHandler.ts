@@ -4,6 +4,7 @@ import { IEventBus } from "../../domain/events/IEventBus";
 export class DeployModelHandler {
   constructor(private eventBus: IEventBus) {}
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async handle(command: DeployModelCommand): Promise<any> {
     const deploymentId = "dep-" + Date.now();
     

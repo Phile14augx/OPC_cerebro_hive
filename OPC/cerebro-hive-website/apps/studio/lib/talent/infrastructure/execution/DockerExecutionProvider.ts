@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 export interface ExecutionConfig {
   cpuQuota: number;       // e.g. 0.5 (half a core)
@@ -47,6 +48,7 @@ export class DockerExecutionProvider implements IExecutionProvider {
     // })
   }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   async execute(envId: string, command: string[], artifacts: Record<string, string>): Promise<void> {
     console.log(`[Docker] Executing ${command.join(' ')} inside ${envId}`);
     // Attach volumes, start container

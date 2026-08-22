@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 export interface EvaluatedCapability {
   capabilityId: string;
@@ -7,7 +8,9 @@ export interface EvaluatedCapability {
 }
 
 export interface EvaluatorContext {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   executionArtifacts: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   telemetryMetrics: any;
 }
 

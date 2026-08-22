@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { motion, AnimatePresence } from 'framer-motion';
 import { useIndustryExplorer } from './IndustryExplorerContext';
 import { industriesData } from '@/lib/data/industries';
@@ -74,6 +75,7 @@ const AICore = () => {
 };
 
 export function InteractiveIndustryGlobe() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   const { activeIndustry, hoveredIndustry, setActiveIndustry, setHoveredIndustry, reducedMotion } = useIndustryExplorer();
   const router = useRouter();
 

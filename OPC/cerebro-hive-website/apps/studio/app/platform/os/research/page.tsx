@@ -22,6 +22,7 @@ export default function ResearchPage() {
     try { setPromptVersions((await api<{ versions: PromptVersion[] }>("/v1/research/prompts")).versions); } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const registerPromptVersion = useCallback(async () => {

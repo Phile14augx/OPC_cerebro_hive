@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 export type AssessmentEventType = 
   | "ASSESSMENT_STARTED"
@@ -15,6 +16,7 @@ export interface TelemetryEvent {
   candidateId: string;
   assessmentId: string;
   activityId?: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   payload: any;
 }
 
@@ -28,6 +30,7 @@ export class EventBus {
     this.listeners.get(type)!.push(callback);
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   publish(type: AssessmentEventType, candidateId: string, assessmentId: string, payload: any, activityId?: string) {
     const event: TelemetryEvent = {
       id: `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,

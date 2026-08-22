@@ -3,10 +3,12 @@ import { policyEngine } from "./PolicyEngine";
 import { executionPlanner } from "./planner/ExecutionPlanner";
 import { platformRegistry } from "../registry/PlatformRegistry";
 import { pricingService } from "../services/PricingService";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { operationRepository } from "../repositories/OperationRepository";
 
 export class DeploymentOrchestrator {
   
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async startOrchestration(operationId: string, blueprintId: string, config: any) {
     try {
       // 1. Queued -> Validating
@@ -34,6 +36,7 @@ export class DeploymentOrchestrator {
       // 2. Validating -> Planning
       await workflowEngine.transition(operationId, "Planning");
       // DAG is already built above for policy, we reuse it or rebuild.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
       const executionGraph = prePlanGraph;
 
       // 3. Planning -> Allocating

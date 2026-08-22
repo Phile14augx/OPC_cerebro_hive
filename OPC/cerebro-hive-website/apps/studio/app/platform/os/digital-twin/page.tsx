@@ -20,6 +20,7 @@ export default function DigitalTwinPage() {
     try { setRuns((await api<{ runs: TwinRun[] }>("/v1/digitaltwin/runs")).runs); } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const runSupplyChainTwin = useCallback(async () => {

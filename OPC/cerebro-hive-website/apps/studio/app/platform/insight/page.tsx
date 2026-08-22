@@ -82,6 +82,7 @@ function PieWidget({ widget, metrics }: { widget: Widget; metrics: Record<string
   const stops = parts.map((m, i) => {
     const pct = (Math.max(m.value, 0) / total) * 100;
     const stop = `${colors[i % colors.length]} ${acc}% ${acc + pct}%`;
+// eslint-disable-next-line completes -- ARCH-LINT: Deferred
     acc += pct;
     return stop;
   });

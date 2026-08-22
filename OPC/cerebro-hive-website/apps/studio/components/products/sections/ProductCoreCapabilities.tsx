@@ -7,6 +7,7 @@ import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { Box, Code, Cpu, Database, Network, Shield, Workflow, PlayCircle, Server, DollarSign, Map, Copy, Zap, User, UserCheck, Activity, BookOpen, Lightbulb, Award } from "lucide-react";
 
 const getIcon = (name: string) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   const icons: any = {
     Box, Code, Cpu, Database, Network, Shield, Workflow, PlayCircle, Server, DollarSign, Map, Copy, Zap, User, UserCheck, Activity, BookOpen, Lightbulb, Award
   };

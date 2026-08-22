@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { Filter, ChevronDown, Download, FileText, Database, Code2, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";

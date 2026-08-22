@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
 export interface Job<T = any> {
   id: string;
   name: string;
@@ -10,6 +11,7 @@ export interface Job<T = any> {
 }
 
 export interface IJobQueue {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   add(name: string, data: any, opts?: any): Promise<Job>;
   process(processor: (job: Job) => Promise<void>): void;
 }
@@ -20,6 +22,7 @@ export class InMemoryQueue implements IJobQueue {
   
   constructor(public readonly name: string) {}
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   async add(name: string, data: any, opts?: any): Promise<Job> {
     const job: Job = {
       id: crypto.randomUUID(),

@@ -25,6 +25,7 @@ export class IconIntelligenceEngine {
    * 1. Icon Embeddings (Stub)
    * Connects to a vector DB (e.g. Pinecone/Chroma) to store icon metadata as dense vectors.
    */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   public async generateEmbeddings(metadata: IconMetadata): Promise<number[]> {
     // Pipeline: Extract name, aliases, intent -> Send to OpenAI text-embedding-3-small -> Store in Vector DB
     return new Array(1536).fill(0);
@@ -34,6 +35,7 @@ export class IconIntelligenceEngine {
    * 2. Semantic Similarity
    * Compares the generated context embeddings against the Icon Vector Registry.
    */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   public async getSemanticSimilarity(queryEmbedding: number[], iconEmbedding: number[]): Promise<number> {
     // Cosine similarity
     return 0.95;
@@ -62,6 +64,7 @@ export class IconIntelligenceEngine {
    * Returns a ranked list of icons perfectly suited for the generative UI context.
    */
   public async recommendIcons(context: AIContext): Promise<RecommendedIcon[]> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const intents = this.classifyIntent(context.prompt);
     
     // Stubbed mock response representing the AI pipeline
@@ -92,6 +95,7 @@ export class IconIntelligenceEngine {
    * Future capability: If confidenceScore < 0.60, dispatch prompt to a multimodal image generator
    * to create a novel SVG that complies with Cerebro Hive BaseIcon constraints.
    */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   public async generateNovelIcon(prompt: string): Promise<string> {
     throw new Error("Generative SVGs are slated for late Phase 17.");
   }

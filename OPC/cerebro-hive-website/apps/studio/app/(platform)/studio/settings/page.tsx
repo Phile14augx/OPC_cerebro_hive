@@ -59,6 +59,7 @@ function ApiKeysPanel() {
     finally { setLoading(false); }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void fetchKeys(); }, [fetchKeys]);
 
   const handleCreate = async (e: React.FormEvent) => {

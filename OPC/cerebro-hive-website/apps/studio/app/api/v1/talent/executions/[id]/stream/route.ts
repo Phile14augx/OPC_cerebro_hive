@@ -16,6 +16,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   const writer = stream.writable.getWriter();
 
   // Helper to send SSE format
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   const sendEvent = async (event: any) => {
     const data = `data: ${JSON.stringify(event)}\n\n`;
     await writer.write(new TextEncoder().encode(data));

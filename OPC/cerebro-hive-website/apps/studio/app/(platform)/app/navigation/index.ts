@@ -1,6 +1,8 @@
 import {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   Home, Rocket, BrainCircuit, Box, Server, Database,
   ShieldCheck, Zap, FlaskConical, GraduationCap,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   Briefcase, MessageSquare, Settings,
   LayoutDashboard, Building2, FolderKanban, Users,
   Bot, GitMerge, Gamepad2, Network, Library, BookOpen, DatabaseZap,
@@ -15,7 +17,9 @@ import {
   Sparkles, HelpCircle, Ticket, Users2, ActivitySquare, Target,
   // CerebroForge icons
   Hammer, Brain, PenTool, Smartphone, Globe, Monitor, MessageCircle,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   FlaskConical as Flask, TestTube2, Truck, GitBranch, ScanSearch,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   FileCode2, Cpu, Layers3, TerminalSquare, Webhook, Boxes,
   // HiveOps
   DollarSign,

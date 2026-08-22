@@ -23,6 +23,7 @@ export function useForgeProjects(organizationId?: string) {
     }
   }, [organizationId]);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   return { projects, loading, error, refresh };

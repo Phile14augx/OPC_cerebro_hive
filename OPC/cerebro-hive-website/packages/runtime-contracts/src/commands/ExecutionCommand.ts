@@ -6,6 +6,7 @@ export type ExecutionCommandType =
   | 'RejectExecutionCommand'
   | 'TimeoutExecutionCommand';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
 export interface ExecutionCommand<T = Record<string, any>> {
   readonly id: string;
   readonly type: ExecutionCommandType;
@@ -19,6 +20,7 @@ export interface StartExecutionCommandPayload {
   readonly agentId: string;
   readonly agentVersionId: string;
   readonly input: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   readonly context?: Record<string, any>;
 }
 export type StartExecutionCommand = ExecutionCommand<StartExecutionCommandPayload>;

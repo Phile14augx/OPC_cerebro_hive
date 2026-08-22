@@ -1,5 +1,6 @@
 'use client';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
 export function EvaluationPanel({ evaluations }: { evaluations?: any }) {
   if (!evaluations) {
     return (

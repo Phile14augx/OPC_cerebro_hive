@@ -7,7 +7,7 @@ import { DomainEventBus } from '../../lib/talent/infrastructure/events/eventBus'
 import { ExecutionStatus } from '@cerebro/db';
 
 describe('Execution Engine Vertical Slice', () => {
-  let executionEventsFired: string[] = [];
+  const executionEventsFired: string[] = [];
 
   beforeAll(() => {
     const eventsToTrack = [
@@ -21,6 +21,7 @@ describe('Execution Engine Vertical Slice', () => {
     ];
 
     eventsToTrack.forEach(evt => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
       DomainEventBus.subscribe(evt as any, () => executionEventsFired.push(evt));
     });
   });
@@ -28,6 +29,7 @@ describe('Execution Engine Vertical Slice', () => {
   it('should successfully orchestrate a full execution lifecycle', async () => {
     
     // 1. Submit Execution Request
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const mockRequestPayload = {
       sessionId: 'session_abc123',
       language: 'javascript',

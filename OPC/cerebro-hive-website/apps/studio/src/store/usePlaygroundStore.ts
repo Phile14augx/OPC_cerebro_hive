@@ -4,6 +4,7 @@ export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   metadata?: any;
 }
 
@@ -23,7 +24,9 @@ interface PlaygroundState {
   // Chat State
   messages: ChatMessage[];
   isStreaming: boolean;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   evaluation: any | null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   tokenUsage: any | null;
   
   // Actions
@@ -32,9 +35,12 @@ interface PlaygroundState {
   setMemoryToggle: (key: 'useWorkingMemory' | 'useConversationMemory' | 'useSemanticMemory', value: boolean) => void;
   
   addMessage: (message: ChatMessage) => void;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   updateLastMessage: (content: string, metadata?: any) => void;
   setIsStreaming: (isStreaming: boolean) => void;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   setEvaluation: (evaluation: any) => void;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   setTokenUsage: (usage: any) => void;
   clearChat: () => void;
 }

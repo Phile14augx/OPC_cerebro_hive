@@ -77,6 +77,7 @@ export const PlatformArchitecture = () => {
 
       <div className="container-wide relative z-10">
         <div className="text-center mb-16">
+// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
           <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">How We're Built</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Platform, Not Point Tools</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">

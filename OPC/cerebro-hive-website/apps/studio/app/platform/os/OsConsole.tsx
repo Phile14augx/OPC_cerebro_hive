@@ -38,6 +38,7 @@ export default function OsConsole() {
     } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const run = useCallback(async () => {

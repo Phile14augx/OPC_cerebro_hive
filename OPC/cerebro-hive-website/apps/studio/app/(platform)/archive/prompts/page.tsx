@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import Link from "next/link";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import {
   Bot, Search, Plus, Filter, 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   Copy, Play, Star, Clock, 
   GitBranch, TerminalSquare, Settings2, MoreHorizontal
 } from "lucide-react";

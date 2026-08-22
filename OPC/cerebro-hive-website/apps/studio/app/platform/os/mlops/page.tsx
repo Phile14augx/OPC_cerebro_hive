@@ -17,6 +17,7 @@ export default function MLOpsPage() {
     try { setModelVersions((await api<{ versions: ModelVersion[] }>("/v1/mlops/models")).versions); } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   return (

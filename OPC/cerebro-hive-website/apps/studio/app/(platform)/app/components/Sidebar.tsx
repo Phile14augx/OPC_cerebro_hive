@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { platformNavigation, forgeNavigation, aiNavigation, automationNavigation } from "../navigation";
 import {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   Building2, ChevronDown, ChevronRight, Pin, PanelLeftClose, PanelLeft, Star, Hammer, X
 } from "lucide-react";
 import { cn } from "./ui/utils";

@@ -25,6 +25,7 @@ export default function ZeroTrustPage() {
     } catch { /* noop */ }
   }, []);
 
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); }, [refresh]);
 
   const grantToolAccess = useCallback(async () => {

@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { motion, AnimatePresence } from "framer-motion";
 import { FlaskConical, Target, Layers, Database, Activity, AlertTriangle, ArrowRight } from "lucide-react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
 import { cn } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
@@ -21,6 +23,7 @@ const experiments = [
 ];
 
 export const ExperimentGallery = () => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   const [activeExp, setActiveExp] = useState(experiments[0]);
 
   return (

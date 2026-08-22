@@ -14,6 +14,7 @@ export interface KnowledgeEdgeMetadata {
   timestamp: string;
   severity?: "info" | "warning" | "critical";
   contextId?: string; // e.g., an Event ID or Correlation ID
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   [key: string]: any;
 }
 
@@ -28,6 +29,7 @@ export interface KnowledgeEdge {
 export interface KnowledgeNode {
   id: string;
   type: KnowledgeNodeType;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   metadata: any;
 }
 

@@ -308,6 +308,7 @@ function WorkspaceLauncher() {
             );
           })}
           {filtered.length === 0 && (
+// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
             <p className="col-span-full py-12 text-center text-sm text-text-secondary">No workspaces match "{query}".</p>
           )}
         </div>

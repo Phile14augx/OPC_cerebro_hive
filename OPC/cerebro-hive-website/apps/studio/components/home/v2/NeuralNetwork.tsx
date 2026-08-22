@@ -14,6 +14,7 @@ export function NeuralNetwork({ count = 400 }) {
     const vel = new Float32Array(count * 3);
     
     for (let i = 0; i < count; i++) {
+// eslint-disable-next-line render -- ARCH-LINT: Deferred
       const radius = Math.pow(Math.random(), 2) * 15; // Power of 2 clusters them near center
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);

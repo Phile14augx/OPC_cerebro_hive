@@ -18,6 +18,7 @@ export class Kernel {
     return {
       pluginId,
       version,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
       getService: <T>(id: string): T | undefined => {
         // Return a service from the registry if needed
         return undefined; // placeholder

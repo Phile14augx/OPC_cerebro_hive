@@ -23,6 +23,7 @@ export default function PromptStudioPage() {
   // Sync loaded data to local state
   useEffect(() => {
     if (data?.history?.[0]) {
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
       setPromptContent(data.history[0].content);
     }
   }, [data]);

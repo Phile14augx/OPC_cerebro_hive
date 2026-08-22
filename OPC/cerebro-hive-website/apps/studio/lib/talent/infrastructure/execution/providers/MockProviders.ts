@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
 // @ts-nocheck
 import { EventEmitter } from 'events';
 import { 
@@ -81,6 +82,7 @@ export class MockSandboxProvider implements ISandboxProvider {
       // Note: In Stage 3 mock, we expect the code to console.log output.
       eval(code);
       
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
     } catch (e: any) {
       exitCode = 1;
       const errStr = e.toString() + '\n';

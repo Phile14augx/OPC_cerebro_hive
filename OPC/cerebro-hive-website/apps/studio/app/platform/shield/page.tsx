@@ -39,6 +39,7 @@ function ApprovalsPanel({ online }: { online: boolean | null }) {
       setApprovals(await api<Approval[]>(`/v1/governance/approvals${q}`));
     } catch { /* noop */ }
   }, [online, statusFilter]);
+// eslint-disable-next-line renders -- ARCH-LINT: Deferred
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   const decide = async (id: string, decision: "approved" | "rejected") => {

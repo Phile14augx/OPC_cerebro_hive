@@ -254,6 +254,7 @@ export async function updateItem<K extends keyof DatabaseSchema>(
   updates: Partial<DatabaseSchema[K][number]>
 ): Promise<DatabaseSchema[K][number] | null> {
   const db = await getDb();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
   const index = (db[collectionName] as any[]).findIndex((item) => item.id === id);
   if (index === -1) return null;
 

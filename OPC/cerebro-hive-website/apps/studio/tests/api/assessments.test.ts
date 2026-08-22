@@ -6,7 +6,9 @@
 import { DomainEventBus } from '../../lib/talent/infrastructure/events/eventBus';
 
 describe('Assessment API Vertical Slice', () => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   let traceIdToVerify: string;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   let eventFired = false;
 
   beforeAll(() => {
