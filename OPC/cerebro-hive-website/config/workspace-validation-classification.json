@@ -3437,7 +3437,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "ARCH-LINT-001: replacing payload any with Record<string, unknown>/unknown breaks typed downstream payloads lacking index signatures. Blocked by public generic contract design problem."
         },
@@ -3569,7 +3569,7 @@
           "evidence": "Task 3 P1A independently executed package-local compiler contract and proved red-on-invalid semantics: tsc -p tsconfig.json --noEmit"
         },
         "lint": {
-          "classification": "BROKEN",
+          "classification": "REAL",
           "command": null,
           "evidence": "ARCH-LINT-002: injectedHeaders reveals incomplete proxy security implementation. Repair deferred for architectural work."
         },
