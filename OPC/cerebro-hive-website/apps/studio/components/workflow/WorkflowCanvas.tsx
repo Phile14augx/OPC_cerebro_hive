@@ -74,10 +74,8 @@ export function WorkflowCanvas({ config }: { config: WorkflowConfiguration }) {
     animated: true,
   })), [config]);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
   return (
     <div className="flex-1 h-full relative">

@@ -8,8 +8,18 @@ export interface ExecutionProxyConfig {
   body?: unknown;
 }
 
+type ExecutionTransport = (config: ExecutionProxyConfig, headers: Record<string, string>) => Promise<unknown>;
+
+const defaultTransport: ExecutionTransport = async () => ({
+  status: 200,
+  data: { success: true, message: 'Authenticated successfully with injected secret' },
+});
+
 export class ExecutionProxy {
-  constructor(private vault: VaultEngine) {}
+  constructor(
+    private vault: VaultEngine,
+    private readonly transport: ExecutionTransport = defaultTransport,
+  ) {}
 
   /**
    * Executes a network request by dynamically injecting the secret from the Vault
@@ -30,8 +40,7 @@ export class ExecutionProxy {
       throw new Error(`Vault secret not found for reference: ${credentialRef.vaultReference}`);
     }
 
-    // 3. Inject Secret (Example: Bearer token format)
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
+    // 3. Inject secret into the private transport request only.
     const injectedHeaders = {
       ...config.headers,
       'Authorization': `Bearer ${secretValue}`
@@ -40,14 +49,6 @@ export class ExecutionProxy {
     console.log(`[ExecutionProxy] Proxying ${config.method} request to ${config.targetUrl}`);
     console.log(`[ExecutionProxy] Injected secret from vault reference: ${credentialRef.vaultReference}`);
     
-    // Simulate HTTP Request
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({
-          status: 200,
-          data: { success: true, message: 'Authenticated successfully with injected secret' }
-        });
-      }, 50);
-    });
+    return this.transport(config, injectedHeaders);
   }
 }

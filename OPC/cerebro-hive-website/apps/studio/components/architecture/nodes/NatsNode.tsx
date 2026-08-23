@@ -3,9 +3,7 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export const NatsNode = ({ data, isConnectable }: NodeProps) => {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const isBrainMode = data?.isBrainMode;
+export const NatsNode = ({ isConnectable }: NodeProps) => {
 
   return (
     <motion.div 

@@ -15,10 +15,8 @@ export interface DriftReport {
   
   differences: {
     path: string;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    expected: any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    actual: any;
+    expected: unknown;
+    actual: unknown;
   }[];
 }
 

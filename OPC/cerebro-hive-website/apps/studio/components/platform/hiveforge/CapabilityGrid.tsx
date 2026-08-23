@@ -1,7 +1,6 @@
 "use client";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Plugin, ActionDefinition } from "../../../app/platform/hiveforge/core/contracts/plugin";
+import { Plugin } from "../../../app/platform/hiveforge/core/contracts/plugin";
 
 export function CapabilityGrid({ plugin }: { plugin: Plugin }) {
   const actions = plugin.actions || [];

@@ -1,30 +1,31 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-export interface Job<T = any> {
+import type { ExecutionTask } from "../planner/graph";
+
+export interface JobOptions {
+  attempts?: number;
+  delay?: number;
+}
+
+export interface Job<T = unknown> {
   id: string;
   name: string;
   data: T;
-  opts?: {
-    attempts?: number;
-    delay?: number;
-  };
+  opts?: JobOptions;
   progress: number;
 }
 
-export interface IJobQueue {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  add(name: string, data: any, opts?: any): Promise<Job>;
-  process(processor: (job: Job) => Promise<void>): void;
+export interface IJobQueue<T = unknown> {
+  add(name: string, data: T, opts?: JobOptions): Promise<Job<T>>;
+  process(processor: (job: Job<T>) => Promise<void>): void;
 }
 
-export class InMemoryQueue implements IJobQueue {
-  private jobs: Job[] = [];
-  private processor?: (job: Job) => Promise<void>;
+export class InMemoryQueue<T = unknown> implements IJobQueue<T> {
+  private jobs: Job<T>[] = [];
+  private processor?: (job: Job<T>) => Promise<void>;
   
   constructor(public readonly name: string) {}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async add(name: string, data: any, opts?: any): Promise<Job> {
-    const job: Job = {
+  async add(name: string, data: T, opts?: JobOptions): Promise<Job<T>> {
+    const job: Job<T> = {
       id: crypto.randomUUID(),
       name,
       data,
@@ -41,7 +42,7 @@ export class InMemoryQueue implements IJobQueue {
     return job;
   }
 
-  process(processor: (job: Job) => Promise<void>): void {
+  process(processor: (job: Job<T>) => Promise<void>): void {
     this.processor = processor;
     // Process any jobs already in the queue
     for (const job of this.jobs) {
@@ -49,7 +50,7 @@ export class InMemoryQueue implements IJobQueue {
     }
   }
 
-  private async executeJob(job: Job) {
+  private async executeJob(job: Job<T>) {
     if (!this.processor) return;
     try {
       await this.processor(job);
@@ -65,4 +66,4 @@ export class InMemoryQueue implements IJobQueue {
   }
 }
 
-export const provisioningQueue = new InMemoryQueue("provisioning-queue");
+export const provisioningQueue = new InMemoryQueue<ExecutionTask>("provisioning-queue");

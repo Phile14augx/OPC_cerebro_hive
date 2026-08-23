@@ -13,16 +13,14 @@ export interface ExecutionSnapshot {
   // ──────────────────────────────────────────────────────────
   
   readonly state: {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    readonly workingMemory: Record<string, any>;
+    readonly workingMemory: Record<string, unknown>;
     readonly messages: Array<{
       role: 'system' | 'user' | 'assistant' | 'tool';
       content: string;
       toolCalls?: Array<{ id: string; name: string; arguments: string }>;
       toolCallId?: string;
     }>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    readonly context: Record<string, any>;
+    readonly context: Record<string, unknown>;
     readonly activeToolCalls: string[];
   };
 }

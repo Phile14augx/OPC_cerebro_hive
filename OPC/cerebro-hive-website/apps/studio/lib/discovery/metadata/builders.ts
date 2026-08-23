@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { SITE_URL, SITE_NAME, TITLE_TEMPLATE } from '../config';
+import { SITE_URL, SITE_NAME } from '../config';
 
 export function buildPageMetadata(opts: {
   title: string;

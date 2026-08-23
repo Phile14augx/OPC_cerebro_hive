@@ -94,8 +94,7 @@ function DiscoveryPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setSignals((await api<{ signals: ResearchSignal[] }>("/v1/cerebroforge/signals")).signals); } catch { /* noop */ }
   }, [online]);
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const ingest = useCallback(async () => {
     if (!form.title.trim() || !form.summary.trim()) return;
@@ -203,13 +202,13 @@ function SpecsPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setSpecs((await api<{ specs: ProductSpec[] }>("/v1/cerebroforge/specs")).specs); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 5000); return () => clearInterval(id); }, [refresh]);
 
   return (
     <div className="mt-6 space-y-6">
       <section>
         <h2 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">Generated product specs ({specs.length})</h2>
-        <p className="mt-1 text-xs text-text-secondary">Generate specs from the Innovation Radar tab — they'll appear here automatically.</p>
+        <p className="mt-1 text-xs text-text-secondary">Generate specs from the Innovation Radar tab — they&apos;ll appear here automatically.</p>
         <div className="mt-3 space-y-3">
           {specs.map(s => <SpecCard key={s.id} spec={s} />)}
           {specs.length === 0 && <p className="text-sm text-text-secondary">No product specs yet.</p>}
@@ -237,7 +236,7 @@ export default function CerebroForgePage() {
         research signal — a paper, repo, model, or announcement — and CerebroForge scores its innovation potential
         across nine dimensions, proposes concrete product opportunities tailored to its category, and expands any
         opportunity into a full implementation-ready product spec. Continuous crawling of arXiv, GitHub, and
-        competitor feeds needs real external API access this platform doesn't have; this is the engine that would
+        competitor feeds needs real external API access this platform doesn&apos;t have; this is the engine that would
         sit behind that ingestion layer.
       </p>
 

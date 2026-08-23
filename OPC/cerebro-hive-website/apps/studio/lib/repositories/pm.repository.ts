@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 import { prisma } from '@/lib/prisma';
 import { EpicDecomposition } from '@/lib/agents/pm-agent/schema';
 
@@ -15,23 +13,27 @@ export class PmRepository {
   ) {
     // We use a Prisma transaction to ensure the Epic and all Tasks are created atomically.
     return prisma.$transaction(async (tx) => {
-      const epic = await tx.epic.create({
+      const pmModule = await tx.module.create({
         data: {
           projectId,
-          title,
+          name: title,
           description: body,
-          riskLevel: decomposition.riskLevel,
-          storyPoints: decomposition.storyPoints,
+        },
+      });
+
+      const epic = await tx.feature.create({
+        data: {
+          moduleId: pmModule.id,
+          name: title,
+          description: body,
         },
       });
 
       // Map the checklist into child Tasks
       if (decomposition.checklist && decomposition.checklist.length > 0) {
         const tasksData = decomposition.checklist.map((taskTitle) => ({
-          projectId,
-          epicId: epic.id,
+          featureId: epic.id,
           title: taskTitle,
-          labels: decomposition.labels || [],
         }));
 
         await tx.task.createMany({
@@ -44,10 +46,9 @@ export class PmRepository {
   }
 
   static async getProjectEpics(projectId: string) {
-    return prisma.epic.findMany({
-      where: { projectId },
+    return prisma.feature.findMany({
+      where: { module: { projectId } },
       include: { tasks: true },
-      orderBy: { createdAt: 'desc' },
     });
   }
 }

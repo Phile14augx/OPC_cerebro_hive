@@ -10,17 +10,17 @@ import {
   useEdgesState,
   Panel,
   ReactFlowProvider,
-  Node,
-  Edge
+  Position,
+  type Node,
+  type Edge
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import dagre from 'dagre';
 import { toPng, toSvg } from 'html-to-image';
-import { ArchitectureNode } from './ArchitectureNode';
+import { ArchitectureNode, type ArchitectureNodeData } from './ArchitectureNode';
 import { SolutionFlowNode } from './SolutionFlowNode';
 import { AnimatedEdge } from './AnimatedEdge';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Download, Maximize, Search, Image as ImageIcon } from 'lucide-react';
+import { Download, Search, Image as ImageIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { TrackedButton } from '@/components/cerebro/TrackedButton';
@@ -37,12 +37,16 @@ const edgeTypes = {
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-const getNodeDimensions = (node: Node) => {
+type ArchitectureEdgeData = { animated?: boolean };
+type ArchitectureFlowNode = Node<ArchitectureNodeData>;
+type ArchitectureFlowEdge = Edge<ArchitectureEdgeData>;
+
+const getNodeDimensions = (node: ArchitectureFlowNode) => {
   if (node.type === 'solutionFlowNode') return { width: 280, height: 170 };
   return { width: 200, height: 80 };
 };
 
-const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => {
+const getLayoutedElements = (nodes: ArchitectureFlowNode[], edges: ArchitectureFlowEdge[], direction = 'TB') => {
   const isHorizontal = direction === 'LR';
   dagreGraph.setGraph({ rankdir: direction, ranksep: 80, nodesep: 100 });
 
@@ -59,11 +63,9 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => 
   const layoutedNodes = nodes.map((node) => {
     const nodeWithPosition = dagreGraph.node(node.id);
     const { width, height } = getNodeDimensions(node);
-    const newNode = { ...node };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    newNode.targetPosition = isHorizontal ? 'left' : 'top' as any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    newNode.sourcePosition = isHorizontal ? 'right' : 'bottom' as any;
+    const newNode: ArchitectureFlowNode = { ...node };
+    newNode.targetPosition = isHorizontal ? Position.Left : Position.Top;
+    newNode.sourcePosition = isHorizontal ? Position.Right : Position.Bottom;
     newNode.position = {
       x: nodeWithPosition.x - width / 2,
       y: nodeWithPosition.y - height / 2,
@@ -75,10 +77,8 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'TB') => 
 };
 
 interface ArchitectureCanvasProps {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  initialNodes: any[];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  initialEdges: any[];
+  initialNodes: ArchitectureFlowNode[];
+  initialEdges: ArchitectureFlowEdge[];
   direction?: 'TB' | 'LR';
   className?: string;
 }
@@ -109,8 +109,7 @@ const Flow = ({ initialNodes, initialEdges, direction = 'LR' }: ArchitectureCanv
   );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
+  const [edges, , onEdgesChange] = useEdgesState(layoutedEdges);
   const flowRef = useRef<HTMLDivElement>(null);
   const [searchTerm, setSearchTerm] = useState('');
 

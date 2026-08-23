@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 export type DepartmentTheme = 'executive' | 'engineering' | 'research' | 'consulting' | 'business';
 
 export interface OrgMetrics {

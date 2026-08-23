@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 import { CompiledAssessmentPackage } from "../compiler";
 import { GlobalEventBus } from "./events";
 
@@ -17,16 +15,14 @@ export interface ExecutionResult {
  */
 export interface IExecutionProvider {
   name: string;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  executeCode(code: string, language: string, envContext: any): Promise<ExecutionResult>;
+  executeCode(code: string, language: string, envContext: unknown): Promise<ExecutionResult>;
 }
 
 // Phase 3: Mock Provider to avoid local Docker dependency during architecture iteration
 export class MockExecutionProvider implements IExecutionProvider {
   name = "MockSandbox";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async executeCode(code: string, language: string, envContext: any): Promise<ExecutionResult> {
+  async executeCode(code: string, language: string): Promise<ExecutionResult> {
     console.log(`[${this.name}] Executing ${language} code...`);
     // Simulate compilation and execution delay
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -52,8 +48,7 @@ export interface CandidateSession {
   version: number;
   startedAt: string;
   status: "in_progress" | "submitted" | "evaluating" | "completed";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  widgetStates: Record<string, any>; // widgetId -> current state (e.g. current source code)
+  widgetStates: Record<string, unknown>; // widgetId -> current state (e.g. current source code)
   timelineEvents: string[]; // references to EventBus telemetry events
 }
 
@@ -80,8 +75,7 @@ export class RuntimeContext {
     }
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  saveState(widgetId: string, state: any) {
+  saveState(widgetId: string, state: unknown) {
     this.session.widgetStates[widgetId] = state;
     // In production, this debounces and calls an API to persist state
   }

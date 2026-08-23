@@ -6,8 +6,7 @@ import { StatusBadge } from "@/components/platform/StatusBadge";
 import { MetricTile }  from "@/components/platform/MetricTile";
 import { usePrompts }  from "@/lib/platform/hooks";
 import { platformApi } from "@/lib/platform/api-client";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import type { Prompt, PromptVersion } from "@/lib/platform/api-client";
+import type { Prompt } from "@/lib/platform/api-client";
 
 function PromptCard({ prompt, selected, onClick }: { prompt: Prompt; selected: boolean; onClick: () => void }) {
   const active = prompt.versions.find(v => v.version === prompt.activeVersion);

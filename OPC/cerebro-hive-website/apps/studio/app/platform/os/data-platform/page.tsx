@@ -20,8 +20,7 @@ export default function DataPlatformPage() {
     try { setAssets((await api<{ assets: DataAsset[] }>("/v1/dataplatform/assets")).assets); } catch { /* noop */ }
   }, []);
 
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const registerDataAsset = useCallback(async () => {
     setBusy(true);

@@ -4,12 +4,9 @@ import React, { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Truck, Sparkles, Play, CheckCircle2, Cloud, Server,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  GitBranch, Activity, AlertCircle, Loader2, Terminal,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  ChevronRight, Shield, Zap, Globe, Package, AlertTriangle,
+  Truck, Sparkles, CheckCircle2, Cloud, Server,
+  GitBranch, AlertCircle, Loader2, Terminal,
+  ChevronRight, Globe, Package, AlertTriangle,
   FileCode2, Container,
 } from "lucide-react";
 import { Card } from "../../components/ui/Card";
@@ -58,12 +55,6 @@ function DeploymentStudioPageInner() {
   const infraTargets = result?.infrastructureTargets ?? [];
 
   // Metrics
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const dockerFiles = artifacts.filter(a => a.type === "dockerfile").length;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const k8sFiles = artifacts.filter(a => a.type === "kubernetes").length;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const tfFiles = artifacts.filter(a => a.type === "terraform").length;
 
   return (
     <div className="space-y-10">

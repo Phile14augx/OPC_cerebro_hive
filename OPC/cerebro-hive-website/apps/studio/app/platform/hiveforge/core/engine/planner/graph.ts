@@ -24,8 +24,8 @@ export interface ExecutionGraph {
 
 export class DAGPlanner {
   // Converts a blueprint intent into an ExecutionGraph
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   planExecution(blueprint: unknown): ExecutionGraph {
+    void blueprint;
     return {
       id: `exec-${Date.now()}`,
       correlationId: `corr-${Date.now()}`,

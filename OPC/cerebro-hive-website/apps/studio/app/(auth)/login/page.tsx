@@ -141,8 +141,7 @@ export default function LoginPage() {
       </div>
 
       <p className="mt-8 text-center text-sm text-gray-400">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-        Don't have an account?{' '}
+        Don&apos;t have an account?{' '}
         <TrackedLink href="/register" analyticsEvent="start_free_trial_click" analyticsCategory="login" analyticsLabel="Start your free trial" className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors focus:outline-none focus:underline rounded">
           Start your free trial
         </TrackedLink>

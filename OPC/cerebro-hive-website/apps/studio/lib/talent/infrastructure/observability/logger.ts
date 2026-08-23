@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 /**
  * Core Observability and Telemetry Wrapper
  * Wraps console logs for now, but provides the interface to swap in OpenTelemetry or DataDog later.
@@ -10,8 +8,7 @@ export interface LogContext {
   attemptId?: string;
   envId?: string;
   organizationId?: string;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export class Logger {

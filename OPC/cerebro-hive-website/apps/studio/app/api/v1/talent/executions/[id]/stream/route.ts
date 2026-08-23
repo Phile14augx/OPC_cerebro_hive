@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ExecutionService } from '../../../../../../../lib/talent/infrastructure/execution/ExecutionService';
+import { withAuthorization } from '../../../../../../../lib/talent/auth/middleware';
+import { ApiUtils } from '../../../../../../../lib/talent/utils/api';
+import { prisma } from '@/lib/prisma';
 
 // Ensure this route is evaluated dynamically for streaming
 export const dynamic = 'force-dynamic';
@@ -9,41 +12,50 @@ const executionService = new ExecutionService();
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id: jobId } = await params;
-  const streamingProvider = executionService.getStreamingProvider();
+  
+  const job = await prisma.executionJob.findUnique({ where: { id: jobId } });
+  if (!job) {
+    return ApiUtils.error('Execution job not found', 404);
+  }
 
-  // Create a TransformStream to push Server-Sent Events to the client
-  const stream = new TransformStream();
-  const writer = stream.writable.getWriter();
+  const target = { resourceType: 'session', resourceId: job.sessionId };
+  
+  return withAuthorization(req, 'CREATE_EXECUTION', 'talent_executions', async () => {
+    const streamingProvider = executionService.getStreamingProvider();
 
-  // Helper to send SSE format
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  const sendEvent = async (event: any) => {
-    const data = `data: ${JSON.stringify(event)}\n\n`;
-    await writer.write(new TextEncoder().encode(data));
-  };
+    // Create a TransformStream to push Server-Sent Events to the client
+    const stream = new TransformStream();
+    const writer = stream.writable.getWriter();
 
-  // Subscribe to the stream via our Pub/Sub abstraction
-  const unsubscribe = streamingProvider.subscribe(jobId, async (event) => {
-    await sendEvent(event);
-    
-    // Auto-close stream on terminal states
-    if (event.type === 'result' || (event.type === 'status' && ['COMPLETED', 'FAILED', 'TIMED_OUT', 'CANCELLED'].includes(event.status))) {
+    // Helper to send SSE format
+    const sendEvent = async (event: unknown) => {
+      const data = `data: ${JSON.stringify(event)}\n\n`;
+      await writer.write(new TextEncoder().encode(data));
+    };
+
+    // Subscribe to the stream via our Pub/Sub abstraction
+    const unsubscribe = streamingProvider.subscribe(jobId, async (event) => {
+      await sendEvent(event);
+      
+      // Auto-close stream on terminal states
+      if (event.type === 'result' || (event.type === 'status' && ['COMPLETED', 'FAILED', 'TIMED_OUT', 'CANCELLED'].includes(event.status))) {
+        unsubscribe();
+        writer.close();
+      }
+    });
+
+    // Handle client disconnects
+    req.signal.addEventListener('abort', () => {
       unsubscribe();
-      writer.close();
-    }
-  });
+      writer.close().catch(() => {});
+    });
 
-  // Handle client disconnects
-  req.signal.addEventListener('abort', () => {
-    unsubscribe();
-    writer.close().catch(() => {});
-  });
-
-  return new NextResponse(stream.readable, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      'Connection': 'keep-alive',
-    },
-  });
+    return new NextResponse(stream.readable, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache, no-transform',
+        'Connection': 'keep-alive',
+      },
+    });
+  }, target);
 }

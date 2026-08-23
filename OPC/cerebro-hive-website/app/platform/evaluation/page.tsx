@@ -20,7 +20,7 @@ function TracesPanel({ online }: { online: boolean | null }) {
     if (!online) return;
     try { setTraces(await api<TraceOut[]>("/observability/traces")); } catch { /* noop */ }
   }, [online]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(refresh, 6000); return () => clearInterval(id); }, [refresh]);
 
   return (
@@ -67,7 +67,7 @@ function MetricsPanel({ online }: { online: boolean | null }) {
     if (!online) return;
     try { setMetrics(await api<MetricOut[]>("/observability/metrics")); } catch { /* noop */ }
   }, [online]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(refresh, 6000); return () => clearInterval(id); }, [refresh]);
 
   return (
@@ -96,7 +96,7 @@ function EventsPanel({ online }: { online: boolean | null }) {
     if (!online) return;
     try { setEvents(await api<EventOut[]>("/observability/events")); } catch { /* noop */ }
   }, [online]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(refresh, 6000); return () => clearInterval(id); }, [refresh]);
 
   return (

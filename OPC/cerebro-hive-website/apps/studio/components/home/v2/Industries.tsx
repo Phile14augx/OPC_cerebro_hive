@@ -1,41 +1,26 @@
 "use client";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Landmark, HeartPulse, Factory, ShoppingBag, Zap, Shield, 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  ArrowRight, ChevronRight, Activity, Database, Network,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  AlertTriangle, CheckCircle2, ShieldCheck, Box, Server, BrainCircuit, LineChart
+  Landmark, HeartPulse, Factory, Shield,
+  ArrowRight, Activity, Database, Network,
+  AlertTriangle, CheckCircle2, Server, BrainCircuit, LineChart
 } from "lucide-react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { motion, AnimatePresence, useInView, animate } from "framer-motion";
+import { motion, AnimatePresence, animate } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
-// Animated Counter Hook
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-function useAnimatedCounter(value: number, duration = 1.5, start = false) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (start) {
-      const controls = animate(0, value, {
-        duration,
-        ease: "easeOut",
-        onUpdate(v) { setCount(v); }
-      });
-      return () => controls.stop();
-    }
-  }, [value, duration, start]);
-  return count;
+interface NumberCounterProps {
+  value: number;
+  format: string;
+  suffix?: string;
+  delay?: number;
+  start?: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-const NumberCounter = ({ value, format, suffix = "", delay = 0, start = true }: any) => {
+const NumberCounter = ({ value, format, suffix = "", delay = 0, start = true }: NumberCounterProps) => {
   const [count, setCount] = useState(0);
   useEffect(() => {
     if (start) {
@@ -198,8 +183,7 @@ export default function Industries() {
   const [focusedId, setFocusedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  const BackgroundIllustration = ({ type, isFocused }: any) => {
+  const BackgroundIllustration = ({ isFocused }: { isFocused: boolean }) => {
     return (
       <div className={cn("absolute inset-0 pointer-events-none overflow-hidden transition-opacity duration-1000", isFocused ? "opacity-100" : "opacity-0")}>
         <div className={cn("absolute inset-0 bg-surface-elevated/50 z-10", isFocused ? "opacity-100" : "opacity-0")} />
@@ -311,7 +295,7 @@ export default function Industries() {
                 </AnimatePresence>
 
                 {/* FOCUSED EXPANDED STATE */}
-                <BackgroundIllustration type={ind.id} isFocused={isFocused} />
+                <BackgroundIllustration isFocused={isFocused} />
                 
                 <AnimatePresence>
                   {isFocused && (

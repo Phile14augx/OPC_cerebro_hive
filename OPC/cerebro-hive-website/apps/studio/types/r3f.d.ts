@@ -8,7 +8,8 @@ import type { ThreeElements } from '@react-three/fiber';
 
 declare module 'react' {
   namespace JSX {
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- ARCH-LINT: Deferred
-    interface IntrinsicElements extends ThreeElements {}
+    interface IntrinsicElements extends ThreeElements {
+      mesh: ThreeElements['mesh'];
+    }
   }
 }

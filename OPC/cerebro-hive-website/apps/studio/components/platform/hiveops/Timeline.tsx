@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Activity, Rocket, Cpu, CloudLightning, ShieldAlert, CheckCircle } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface TimelineEvent {
   id: string;
@@ -10,8 +11,7 @@ interface TimelineEvent {
   title: string;
   description: string;
   type: "success" | "warning" | "error" | "info";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  icon: any;
+  icon: LucideIcon;
 }
 
 const events: TimelineEvent[] = [

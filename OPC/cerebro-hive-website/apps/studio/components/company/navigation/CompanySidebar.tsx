@@ -5,10 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { 
   BookOpen, AlignLeft, Hexagon, Target, Book, 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Users, Briefcase, Activity, Globe2, ChevronRight, ChevronDown, CheckCircle2, Circle, Search,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Workflow, History, LayoutGrid, FileText
+  Users, Briefcase, Activity, Globe2, ChevronRight, Search,
+  Workflow, LayoutGrid, FileText
 } from "lucide-react";
 import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
@@ -239,10 +237,6 @@ export const CompanySidebar = () => {
         if (node.children) {
           const filteredChildren = filterNodes(node.children);
           if (matchesQuery || filteredChildren.length > 0) {
-            // Force expand matching folders
-            if (!expandedFolders.has(node.id)) {
-              setExpandedFolders(prev => new Set(prev).add(node.id));
-            }
             return { ...node, children: filteredChildren };
           }
         }
@@ -251,8 +245,7 @@ export const CompanySidebar = () => {
     };
 
     return filterNodes(explorerTree);
-// eslint-disable-next-line react-hooks/exhaustive-deps -- ARCH-LINT: Deferred
-  }, [searchQuery, explorerTree]);
+  }, [searchQuery]);
 
 
   const isCollapsed = isScrolledPastHero && !isHovered && !explorerMode;
@@ -262,7 +255,7 @@ export const CompanySidebar = () => {
   // ============================================================================
   const renderExplorerNode = (node: ExplorerNode, depth = 0) => {
     const isFolder = !!node.children;
-    const isExpanded = expandedFolders.has(node.id);
+    const isExpanded = expandedFolders.has(node.id) || Boolean(searchQuery.trim() && node.children);
     const isActive = activeExplorerId === node.id;
     
     return (

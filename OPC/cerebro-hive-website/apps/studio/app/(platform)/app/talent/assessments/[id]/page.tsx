@@ -2,15 +2,11 @@
 
 import React, { useState } from "react";
 import {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Files, Search, GitBranch, Play, Terminal, Database, BrainCircuit,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  MessageSquare, Settings, CheckCircle2, AlertTriangle, FileCode2, Code2, PlayCircle, Loader2, ArrowUpRight
+  Files, Search, GitBranch, Database, BrainCircuit,
+  MessageSquare, Settings, FileCode2, PlayCircle, Loader2, ArrowUpRight
 } from "lucide-react";
 import { CodeEditor } from "../../../components/ui/CodeEditor";
 import { Button } from "../../../components/ui/Button";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Badge } from "../../../components/ui/Badge";
 import { cn } from "../../../components/ui/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { analytics } from "@/lib/analytics/AnalyticsAdapter";
@@ -218,8 +214,7 @@ public class DistributedCache {
 }
 
 // Simple internal icon since we didn't import ChevronDown above
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-function ChevronDown(props: any) {
+function ChevronDown(props: React.SVGProps<SVGSVGElement> & { size?: number | string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={props.size} height={props.size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
       <path d="m6 9 6 6 6-6"/>

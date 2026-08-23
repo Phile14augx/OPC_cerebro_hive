@@ -1,13 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Search, ChevronRight, X } from "lucide-react";
+import { Search, ChevronRight } from "lucide-react";
 import { Modal } from "./Modal";
 import { platformNavigation } from "../../navigation";
 import { useRouter } from "next/navigation";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { cn } from "./utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export interface CommandPaletteProps {
@@ -21,8 +18,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
   // Reset search when opened
   useEffect(() => {
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-    if (isOpen) setSearchQuery("");
+    if (isOpen) setTimeout(() => setSearchQuery(""), 0);
   }, [isOpen]);
 
   // Flatten and filter navigation items based on search query

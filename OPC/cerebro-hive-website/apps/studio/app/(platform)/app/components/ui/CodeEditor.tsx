@@ -8,11 +8,9 @@ interface CodeEditorProps {
   value: string;
   onChange: (value: string | undefined) => void;
   height?: string;
-  theme?: "vs-dark" | "light";
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-export function CodeEditor({ language, value, onChange, height = "100%", theme = "vs-dark" }: CodeEditorProps) {
+export function CodeEditor({ language, value, onChange, height = "100%" }: CodeEditorProps) {
   const monaco = useMonaco();
 
   React.useEffect(() => {

@@ -31,15 +31,6 @@ describe('Candidate Session Vertical Slice', () => {
     expect(mockInitResponse.data.status).toBe('READY');
 
     // 2. Batch Telemetry
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-    const mockTelemetryPayload = {
-      sequence: 0,
-      events: [
-        { type: 'editor_focus', timestamp: '2026-07-20T10:00:00Z' },
-        { type: 'editor_change', length: 140, timestamp: '2026-07-20T10:00:02Z' }
-      ]
-    };
-
     const mockTelemetryResponse = {
       success: true,
       data: { batchId: 'batch_001' },

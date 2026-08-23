@@ -4,6 +4,7 @@ import type { RequestContext } from "../../kernel/context/context.js";
 import type { PolicyEngine } from "../../kernel/policy/policy.js";
 import { PlatformError } from "../../kernel/errors/errors.js";
 import { seededRandom } from "../simulator/simulator.js";
+import type { EntityType } from "./entity-resolution.js";
 
 /**
  * CerebroForge™ — Phase 1 of the AI Innovation Factory: a governed-simulation research-to-product
@@ -192,8 +193,10 @@ function buildOpportunities(signal: { title: string; summary: string; category: 
         title = `${meta.label} for Enterprise Teams`; rationale = `Market demand (${score.marketDemand}/100) supports an enablement/certification track for enterprise engineering teams adopting ${k2.toLowerCase()}.`; break;
     }
     return { type, title, rationale, targetIndustries: meta.industries.slice(0, 2 + Math.floor(rand() * 2)), label } as ProductOpportunity & { label: string };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  }).map(({ label: _label, ...o }) => o);
+  }).map(({ label, ...opportunity }) => {
+    void label;
+    return opportunity;
+  });
 }
 
 export interface BuildTier { name: string; weeks: number; teamSize: number; estimatedCostUsd: number; scope: string[] }
@@ -283,8 +286,7 @@ export interface Capability {
   dependencies: string[];
   health: "Healthy" | "Degraded" | "Offline";
   status: "Active" | "Inactive";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  metadata: Record<string, any>;
+  metadata: Record<string, MetadataValue>;
   permissions: string[];
 }
 
@@ -300,6 +302,37 @@ export class CapabilityRegistry {
 }
 
 export const globalCapabilityRegistry = new CapabilityRegistry();
+
+export type MetadataValue =
+  | string
+  | number
+  | boolean
+  | null
+  | MetadataValue[]
+  | { [key: string]: MetadataValue };
+
+export interface EntityResolutionInput {
+  action: "resolve" | "canonicalize" | "deduplicate" | "merge";
+  names?: string[];
+  name?: string;
+  type?: EntityType;
+  sourceId?: string;
+  targetId?: string;
+}
+
+type GraphAction = "entities" | "graph" | "traverse" | "search" | "lineage" | "clusters" | "provenance" | "ontology" | "query";
+export type GraphActionInput = { action: GraphAction } & Record<string, unknown>;
+export interface EntityActionInput { entityId?: string; }
+export interface OpportunityActionInput { action?: "rank"; conceptId?: string; entityIds?: string[]; }
+
+function requireString(value: unknown, field: string): string {
+  if (typeof value !== "string" || !value.trim()) throw PlatformError.validation(`${field} required`);
+  return value;
+}
+
+function optionalDirection(value: unknown): "ancestors" | "descendants" {
+  return value === "descendants" ? "descendants" : "ancestors";
+}
 
 // ---------------------------------------------------------------------------------------------
 // Service
@@ -376,8 +409,7 @@ export class CerebroForgeService {
     return result;
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async entityResolution(ctx: RequestContext, input: any) {
+  async entityResolution(ctx: RequestContext, input: EntityResolutionInput) {
     this.policy.assert(ctx.principal, "cerebroforge:write", { kind: "extraction", organizationId: ctx.principal.organizationId });
     const { globalEntityResolver } = await import("./entity-resolution.js");
     
@@ -392,8 +424,9 @@ export class CerebroForgeService {
         if (!input.names || !input.type) throw PlatformError.validation("names array and type required for canonicalize");
         return { entities: globalEntityResolver.canonicalize(input.names, input.type) };
       case "deduplicate": {
-        if (!input.names || !input.type) throw PlatformError.validation("names array and type required for deduplicate");
-        const resolved = input.names.map((n: string) => globalEntityResolver.resolve(n, input.type));
+        const { names, type } = input;
+        if (!names || !type) throw PlatformError.validation("names array and type required for deduplicate");
+        const resolved = names.map((name) => globalEntityResolver.resolve(name, type));
         return { entities: globalEntityResolver.deduplicate(resolved) };
       }
       case "merge":
@@ -404,8 +437,7 @@ export class CerebroForgeService {
     }
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async graphAction(ctx: RequestContext, input: any) {
+  async graphAction(ctx: RequestContext, input: GraphActionInput) {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "graph", organizationId: ctx.principal.organizationId });
     const { globalKnowledgeGraph } = await import("./knowledge-graph.js");
     
@@ -418,20 +450,20 @@ export class CerebroForgeService {
           edges: [] // Simplified for now since we don't have a getEdges method yet, let's just return what we can
         };
       case "traverse":
-        if (!input.sourceId || !input.targetId) throw PlatformError.validation("sourceId and targetId required");
-        return { path: globalKnowledgeGraph.shortestPath(input.sourceId, input.targetId) };
-      case "search":
-        if (!input.query) throw PlatformError.validation("query required");
-        return { results: globalKnowledgeGraph.embeddings.semanticSearch(input.query, parseInt(input.topK || "5")) };
+        return { path: globalKnowledgeGraph.shortestPath(requireString(input.sourceId, "sourceId"), requireString(input.targetId, "targetId")) };
+      case "search": {
+        const query = requireString(input.query, "query");
+        const topK = typeof input.topK === "string" ? parseInt(input.topK, 10) : 5;
+        return { results: globalKnowledgeGraph.embeddings.semanticSearch(query, topK) };
+      }
       case "lineage":
-        if (!input.entityId) throw PlatformError.validation("entityId required");
-        return { lineage: globalKnowledgeGraph.getLineage(input.entityId, input.direction || "ancestors") };
+        return { lineage: globalKnowledgeGraph.getLineage(requireString(input.entityId, "entityId"), optionalDirection(input.direction)) };
       case "clusters":
         return { clusters: globalKnowledgeGraph.discoverClusters() };
       case "provenance":
-        if (!input.entityId) throw PlatformError.validation("entityId required");
-        const entity = globalKnowledgeGraph.getEntity(input.entityId);
-        if (!entity) throw PlatformError.notFound("entity", input.entityId);
+        const entityId = requireString(input.entityId, "entityId");
+        const entity = globalKnowledgeGraph.getEntity(entityId);
+        if (!entity) throw PlatformError.notFound("entity", entityId);
         return {
           source: entity.source, extractionMethod: entity.extractionMethod,
           extractorVersion: entity.extractorVersion, createdBy: entity.createdBy,
@@ -447,21 +479,19 @@ export class CerebroForgeService {
     }
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async trendAction(ctx: RequestContext, input: any) {
+  async trendAction(ctx: RequestContext, input: EntityActionInput) {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "trend", organizationId: ctx.principal.organizationId });
     const { globalTrendEngine } = await import("./trend.js");
     
-    if (!input.entityId) throw PlatformError.validation("entityId required");
-    const trend = globalTrendEngine.calculateTrendScore(input.entityId);
+    const entityId = requireString(input.entityId, "entityId");
+    const trend = globalTrendEngine.calculateTrendScore(entityId);
     
-    await this.bus.publish(Subjects.cerebroforge.trendCalculated, { entityId: input.entityId, score: trend.overallScore }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
+    await this.bus.publish(Subjects.cerebroforge.trendCalculated, { entityId, score: trend.overallScore }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
     
     return { trend };
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async opportunityAction(ctx: RequestContext, input: any) {
+  async opportunityAction(ctx: RequestContext, input: OpportunityActionInput) {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "opportunity", organizationId: ctx.principal.organizationId });
     const { globalOpportunityEngine } = await import("./opportunity.js");
     
@@ -470,42 +500,40 @@ export class CerebroForgeService {
       return { rankedOpportunities: [] }; // Mock response
     }
     
-    if (!input.conceptId) throw PlatformError.validation("conceptId required");
-    const graph = globalOpportunityEngine.discoverOpportunity(input.conceptId);
+    const conceptId = requireString(input.conceptId, "conceptId");
+    const graph = globalOpportunityEngine.discoverOpportunity(conceptId);
     
-    await this.bus.publish(Subjects.cerebroforge.opportunityGenerated, { conceptId: input.conceptId, revenue: graph.estimatedRevenue }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
+    await this.bus.publish(Subjects.cerebroforge.opportunityGenerated, { conceptId, revenue: graph.estimatedRevenue }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
     
     return { graph };
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async reasonAction(ctx: RequestContext, input: any) {
+  async reasonAction(ctx: RequestContext, input: EntityActionInput) {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "reasoning", organizationId: ctx.principal.organizationId });
     const { globalReasoningProvider } = await import("./reasoning.js");
     
-    if (!input.entityId) throw PlatformError.validation("entityId required");
+    const entityId = requireString(input.entityId, "entityId");
     
-    const missingLinks = globalReasoningProvider.inferMissingLinks(input.entityId);
-    const conflicts = globalReasoningProvider.detectConflicts(input.entityId);
-    const opportunities = globalReasoningProvider.recommendOpportunities(input.entityId);
+    const missingLinks = globalReasoningProvider.inferMissingLinks(entityId);
+    const conflicts = globalReasoningProvider.detectConflicts(entityId);
+    const opportunities = globalReasoningProvider.recommendOpportunities(entityId);
     
-    await this.bus.publish(Subjects.cerebroforge.reasoningCompleted, { entityId: input.entityId }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
+    await this.bus.publish(Subjects.cerebroforge.reasoningCompleted, { entityId }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
     
     return { missingLinks, conflicts, opportunities };
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async forecastAction(ctx: RequestContext, input: any) {
+  async forecastAction(ctx: RequestContext, input: EntityActionInput) {
     this.policy.assert(ctx.principal, "cerebroforge:read", { kind: "forecast", organizationId: ctx.principal.organizationId });
     const { globalTrendEngine } = await import("./trend.js");
     const { TrendForecastEngine } = await import("./forecast.js");
     
-    if (!input.entityId) throw PlatformError.validation("entityId required");
+    const entityId = requireString(input.entityId, "entityId");
     
     const engine = new TrendForecastEngine(globalTrendEngine);
-    const forecast = engine.forecast(input.entityId);
+    const forecast = engine.forecast(entityId);
     
-    await this.bus.publish(Subjects.cerebroforge.forecastCompleted, { entityId: input.entityId, projectedGrowth: forecast.projectedGrowth }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
+    await this.bus.publish(Subjects.cerebroforge.forecastCompleted, { entityId, projectedGrowth: forecast.projectedGrowth }, { organizationId: ctx.principal.organizationId, actor: ctx.principal.userId, traceId: ctx.traceId });
     
     return { forecast };
   }

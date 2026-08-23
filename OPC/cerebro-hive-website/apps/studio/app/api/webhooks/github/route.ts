@@ -3,8 +3,6 @@ import { waitUntil } from "@vercel/functions";
 import { verifyWebhookSignature, updateIssueWithPMAnalysis } from "@/lib/github/client";
 import { decomposeEpic } from "@/lib/agents/pm-agent/provider";
 import { EPIC_DECOMPOSITION_PROMPT_V1 } from "@/lib/agents/pm-agent/prompts/v1-epic-decomposition";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { recordMetrics } from "@/lib/agents/pm-agent/observability";
 import { createDocumentationPR } from "@/lib/github/client";
 import { RELEASE_NOTES_PROMPT_V1 } from "@/lib/agents/pm-agent/prompts/v1-release-notes";
 import { generateText } from "ai";
@@ -20,12 +18,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const payload = JSON.parse(rawBody);
+    let payload: Record<string, unknown>;
+    try {
+      payload = JSON.parse(rawBody);
+    } catch {
+      return NextResponse.json({ error: "Bad Request: Invalid JSON payload" }, { status: 400 });
+    }
+
+    if (!payload || typeof payload !== "object") {
+      return NextResponse.json({ error: "Bad Request: Malformed payload" }, { status: 400 });
+    }
 
     // 2. We handle two types of events: issues.opened and milestone.closed
-    if (payload.action === "opened" && payload.issue) {
-      const issue = payload.issue;
-      const repo = payload.repository;
+    if (payload.action === "opened" && payload.issue && typeof payload.issue === "object" && payload.repository && typeof payload.repository === "object") {
+
+      const issue = payload.issue as { number: number; title: string; body: string };
+      const repo = payload.repository as { owner: { login: string }; name: string };
 
       waitUntil(
         (async () => {
@@ -56,9 +64,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Accepted issue for processing" }, { status: 202 });
     }
 
-    if (payload.action === "closed" && payload.milestone) {
-      const milestone = payload.milestone;
-      const repo = payload.repository;
+    if (payload.action === "closed" && payload.milestone && typeof payload.milestone === "object" && payload.repository && typeof payload.repository === "object") {
+      const milestone = payload.milestone as { title: string; description?: string };
+      const repo = payload.repository as { owner: { login: string }; name: string };
 
       waitUntil(
         (async () => {

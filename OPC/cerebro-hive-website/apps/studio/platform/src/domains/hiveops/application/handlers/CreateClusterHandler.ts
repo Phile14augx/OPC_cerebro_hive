@@ -1,11 +1,15 @@
 import { CreateClusterCommand } from "../commands/CreateClusterCommand";
 import { IEventBus } from "../../domain/events/IEventBus";
 
+export interface CreatedCluster extends CreateClusterCommand {
+  id: string;
+  status: "provisioning";
+}
+
 export class CreateClusterHandler {
   constructor(private eventBus: IEventBus) {}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async handle(command: CreateClusterCommand): Promise<any> {
+  async handle(command: CreateClusterCommand): Promise<CreatedCluster> {
     // Scaffold implementation
     const clusterId = "cluster-" + Date.now();
     

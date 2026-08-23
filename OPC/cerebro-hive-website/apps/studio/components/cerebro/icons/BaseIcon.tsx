@@ -14,17 +14,17 @@ export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
     children, 
     decorative = true,
     label,
+    description,
     ...props 
   }, ref) => {
-    
     const numericSize = typeof size === "number" ? (sizeMap[size] || size) : 24;
+    const accessibleName = label ?? description;
     
     // Select animation variants
     const animationProps = iconAnimations[animation] || {};
 
     // Generate unique IDs for accessibility
     const titleId = useId();
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
     const descId = useId();
 
     return (
@@ -45,11 +45,13 @@ export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
         whileHover={animation === "hover" ? "hover" : undefined}
         role="img"
         focusable={false}
-        aria-hidden={decorative && !label ? "true" : undefined}
-        aria-labelledby={label ? titleId : undefined}
+        aria-hidden={decorative && !accessibleName ? "true" : undefined}
+        aria-labelledby={accessibleName ? titleId : undefined}
+        aria-describedby={label && description ? descId : undefined}
         {...props}
       >
-        {label && <title id={titleId}>{label}</title>}
+        {accessibleName && <title id={titleId}>{accessibleName}</title>}
+        {label && description && <desc id={descId}>{description}</desc>}
         {children}
       </motion.svg>
     );

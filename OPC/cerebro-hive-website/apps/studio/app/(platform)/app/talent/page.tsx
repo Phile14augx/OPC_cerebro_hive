@@ -2,10 +2,8 @@
 
 import React from "react";
 import { 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Users, Bot, Target, FileStack, TrendingUp, CheckCircle2, 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  ChevronRight, Calendar, Search, Filter, MoreVertical, Star
+  Users, Bot, Target, FileStack, CheckCircle2, 
+  ChevronRight, Calendar, Search, Filter
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { analytics } from "@/lib/analytics/AnalyticsAdapter";

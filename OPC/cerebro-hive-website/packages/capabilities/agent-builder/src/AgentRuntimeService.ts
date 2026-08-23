@@ -31,6 +31,15 @@ interface RuntimeMessage {
   toolCallId?: string;
 }
 
+function isAcceptedAsyncToolResult(value: unknown): value is { status: 'accepted'; jobId: string } {
+  return typeof value === 'object'
+    && value !== null
+    && 'status' in value
+    && 'jobId' in value
+    && value.status === 'accepted'
+    && typeof value.jobId === 'string';
+}
+
 export class AgentRuntimeService {
   private limits: RuntimeExecutionLimits;
 
@@ -120,14 +129,12 @@ export class AgentRuntimeService {
               toolCallId: toolCall.id,
             });
 
-            // If async tool, suspend the execution
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-            const tResult = toolResult as any;
-            if (tResult?.status === 'accepted' && tResult?.jobId) {
+            // If async tool, suspend the execution.
+            if (isAcceptedAsyncToolResult(toolResult)) {
               return {
                 status: 'suspended',
                 reason: 'waiting_for_async_tool',
-                jobId: tResult.jobId,
+                jobId: toolResult.jobId,
                 messages,
               };
             }

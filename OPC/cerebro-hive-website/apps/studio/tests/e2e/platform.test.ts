@@ -5,14 +5,12 @@
  * Seed -> Assessment -> Candidate Session -> Execution Engine -> Artifacts -> AI Normalization -> Copilot Recommendation
  */
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { DomainEventBus } from '../../lib/talent/infrastructure/events/eventBus';
 import { AssessmentService } from '../../lib/talent/services/AssessmentService';
+import type { AssessmentSchema } from '../../lib/talent/types';
 import { SessionService } from '../../lib/talent/services/SessionService';
 import { ExecutionService } from '../../lib/talent/infrastructure/execution/ExecutionService';
 import { WorkforceCopilotService } from '../../lib/talent/intelligence/enterprise/WorkforceCopilotService';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { evidenceExtractionService } from '../../lib/talent/intelligence/extraction/EvidenceExtractionService';
+import '../../lib/talent/intelligence/extraction/EvidenceExtractionService';
 
 describe('Talent OS Intelligence Pipeline (End-to-End)', () => {
 
@@ -28,8 +26,20 @@ describe('Talent OS Intelligence Pipeline (End-to-End)', () => {
     // --- STEP 1: Assessment Publishing ---
     const workspaceId = 'mock-workspace';
     const draft = await assessmentService.createDraft(workspaceId, 'E2E Assessment', 'recruiter_1');
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    const version = await assessmentService.compileAndPublish(draft.id, { version: 1 } as any, 'recruiter_1');
+    const schema: AssessmentSchema = {
+      id: 'assessment_e2e_123',
+      version: 1,
+      title: 'E2E Assessment',
+      description: 'End-to-end assessment fixture.',
+      companyId: workspaceId,
+      difficulty: 'intermediate',
+      estimatedTimeMinutes: 30,
+      tags: [],
+      resources: {},
+      rubrics: {},
+      sections: [],
+    };
+    const version = await assessmentService.compileAndPublish(draft.id, schema, 'recruiter_1');
     expect(version).toBeDefined();
 
     // --- STEP 2: Candidate Pipeline ---

@@ -1,8 +1,4 @@
 import React from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Sidebar } from "./components/Sidebar";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Topbar } from "./components/Topbar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

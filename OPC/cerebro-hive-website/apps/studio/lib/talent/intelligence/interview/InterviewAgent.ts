@@ -1,9 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
-import { AIProviderRegistry } from '../../infrastructure/ai/IAICapabilityProvider';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-const aiRegistry = new AIProviderRegistry();
+
+
 
 export type InterviewState = 
   | "INTRODUCTION"

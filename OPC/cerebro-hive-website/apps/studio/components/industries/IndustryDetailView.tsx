@@ -3,11 +3,9 @@
 import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useIndustryExplorer } from './IndustryExplorerContext';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { industriesData, getIndustryBySlug } from '@/lib/data/industries';
+import { getIndustryBySlug } from '@/lib/data/industries';
 import { SectionHeading } from '../cerebro/SectionHeading';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { ArrowRight, BrainCircuit, Activity, Database, Server, User, Box, ArrowDownRight, Layers, FileText, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, BrainCircuit, Layers, FileText, CheckCircle2 } from 'lucide-react';
 import { TrackedLink } from '../cerebro/TrackedLink';
 import { AnimatedButton as Button } from '../cerebro/AnimatedButton';
 import { analytics } from '@/lib/analytics/AnalyticsAdapter';
@@ -15,17 +13,6 @@ import { EnterpriseDigitalTwin } from './engine/EnterpriseDigitalTwin';
 import { IndustryMaturity } from './engine/IndustryMaturity';
 import { AIOpportunityMap } from './engine/AIOpportunityMap';
 import { ComplianceEngine } from './engine/ComplianceEngine';
-
-// Icon mapping for architecture nodes
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-const nodeIconMap: Record<string, any> = {
-  client: User,
-  gateway: Server,
-  database: Database,
-  ai: BrainCircuit,
-  agent: Activity,
-  system: Box
-};
 
 const getMaturityStars = (slug: string) => {
   switch (slug) {
@@ -38,56 +25,6 @@ const getMaturityStars = (slug: string) => {
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-const ArchitectureFlow = ({ architecture, color }: { architecture: any, color: string }) => {
-  if (!architecture || !architecture.nodes || architecture.nodes.length === 0) return null;
-  
-  // Create a simplified horizontal mini-flow from the nodes data
-  // For the sake of this component, we'll render a simple sequence based on x-position
-  const sortedNodes = [...architecture.nodes].sort((a, b) => a.position.x - b.position.x);
-  
-  return (
-    <div className="w-full overflow-x-auto pb-8 hide-scrollbar">
-      <div className="flex items-center min-w-max gap-4 px-4 py-8 relative">
-        {/* Connection Line */}
-        <div className="absolute top-1/2 left-10 right-10 h-0.5 bg-border -translate-y-1/2 z-0" />
-        
-        {/* Animated Data Packet */}
-        <motion.div 
-          className="absolute top-1/2 left-10 h-1.5 w-16 rounded-full z-0"
-          style={{ backgroundColor: color, y: '-50%' }}
-          animate={{ left: ['2.5rem', 'calc(100% - 4rem)'] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-        />
-
-        {sortedNodes.map((node, i) => {
-          const Icon = nodeIconMap[node.data.type || 'system'] || Box;
-          return (
-            <div key={node.id} className="relative z-10 flex flex-col items-center gap-3">
-              <motion.div 
-                initial={{ opacity: 0.4, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
-                className="w-16 h-16 rounded-2xl bg-surface border border-border shadow-sm flex items-center justify-center relative group"
-              >
-                <Icon className="text-text-secondary group-hover:text-primary-accent transition-colors" size={24} />
-                {node.data.status === 'Active' && (
-                  <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-primary-accent animate-pulse shadow-[0_0_10px_rgba(0,230,118,0.5)]" />
-                )}
-              </motion.div>
-              <div className="text-center">
-                <p className="text-xs font-bold text-text-primary whitespace-nowrap">{node.data.label}</p>
-                <p className="text-[10px] text-text-muted uppercase tracking-wider">{node.data.type}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
 export function IndustryDetailView() {
   const { activeIndustry } = useIndustryExplorer();
   
@@ -97,8 +34,6 @@ export function IndustryDetailView() {
 
   if (!industry) return null;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const isComplete = ['healthcare', 'finance'].includes(industry.slug);
   const maturityText = getMaturityStars(industry.slug);
 
   return (
@@ -253,8 +188,7 @@ export function IndustryDetailView() {
           <div className="w-full">
             <SectionHeading label="Cross-Domain" title="Related Industries" />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 mb-16">
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-              {industry.relatedIndustries.map((rel, i) => {
+              {industry.relatedIndustries.map((rel) => {
                 const relInd = getIndustryBySlug(rel);
                 if (!relInd) return null;
                 return (

@@ -6,10 +6,22 @@ import { CheckCircle2, Workflow, ArrowDown } from "lucide-react";
 import Image from "next/image";
 import { withBasePath, cn } from "@/lib/utils";
 import { organizationalCapabilities } from "@/lib/content/company/organizationalCapabilities";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { SectionMetadata } from "@/components/cerebro/SectionMetadata";
 import { MetricChip } from "@/components/cerebro/MetricChip";
 import { motionPresets } from "@/lib/motion";
+
+type MetricStatus = "success" | "warning" | "error" | "neutral";
+
+const toMetricStatus = (status: string): MetricStatus => {
+  switch (status) {
+    case "success":
+    case "warning":
+    case "error":
+    case "neutral":
+      return status;
+    default:
+      return "neutral";
+  }
+};
 
 // Helper components for visual consistency
 const CapabilityPanel = ({ children, className }: { children: React.ReactNode, className?: string }) => (
@@ -63,8 +75,7 @@ export const LeadershipGrid = () => {
             {/* Narrative */}
             <div className="lg:w-[65%] relative z-10 flex flex-col">
               <p className="text-2xl md:text-3xl font-space font-bold text-text-primary leading-tight mb-12 pl-6 border-l-2 border-amber-500/30">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                "{executive.philosophy.quote}"
+                &ldquo;{executive.philosophy.quote}&rdquo;
               </p>
               
               <div className="grid md:grid-cols-2 gap-12 mt-auto">
@@ -133,8 +144,7 @@ export const LeadershipGrid = () => {
                 </div>
               </div>
               <p className="text-sm font-inter font-medium text-text-primary/80 leading-relaxed pl-4 border-l-2 border-cyan-500/30">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                "{engineering.philosophy.quote}"
+                &ldquo;{engineering.philosophy.quote}&rdquo;
               </p>
             </div>
 
@@ -158,8 +168,7 @@ export const LeadershipGrid = () => {
                   <h4 className="text-[10px] font-space font-bold uppercase tracking-widest text-text-muted mb-4">Live Metrics</h4>
                   <div className="flex flex-col gap-3">
                     {engineering.metrics?.map((m, i) => (
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-                      <MetricChip key={i} label={m.label} initialValue={m.value} status={m.status as any} />
+                      <MetricChip key={i} label={m.label} initialValue={m.value} status={toMetricStatus(m.status)} />
                     ))}
                   </div>
                 </div>
@@ -204,8 +213,7 @@ export const LeadershipGrid = () => {
                 </div>
               </div>
               <p className="text-xs font-inter font-medium text-text-primary/70 leading-relaxed pl-4 border-l-2 border-purple-500/30">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                "{research.philosophy.quote}"
+                &ldquo;{research.philosophy.quote}&rdquo;
               </p>
             </div>
 

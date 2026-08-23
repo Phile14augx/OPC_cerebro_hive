@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { ArrowRight, MapPin, Code, Cpu, Target } from "lucide-react";
+import { MapPin, Code, Cpu } from "lucide-react";
 
 export default function GlobalOperatingModel() {
   return (

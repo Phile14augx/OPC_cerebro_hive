@@ -35,8 +35,7 @@ export class CognitoProvider implements IdentityProvider {
         email: user.signInDetails?.loginId || '',
         accessToken: session.tokens.accessToken.toString()
       };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-    } catch (err) {
+    } catch {
       return null;
     }
   }

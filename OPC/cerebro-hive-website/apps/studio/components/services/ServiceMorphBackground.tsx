@@ -1,9 +1,7 @@
 "use client";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import React, { useRef, useEffect, useState } from 'react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useSyncExternalStore } from 'react';
+import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { useServiceAnimation } from './ServiceAnimationContext';
 
 /* =========================================
@@ -135,17 +133,22 @@ const nodes = [
   { id: 'custom-ai', label: 'Custom Models', color: '#00F57A', angle: 5 * Math.PI / 6, radius: 460, shape: 'grid' }
 ];
 
+type WindowSize = { w: number; h: number };
+const fallbackWindowSize: WindowSize = { w: 1000, h: 800 };
+let currentWindowSize = fallbackWindowSize;
+const getWindowSize = (): WindowSize => {
+  const next = { w: window.innerWidth, h: window.innerHeight };
+  if (next.w !== currentWindowSize.w || next.h !== currentWindowSize.h) currentWindowSize = next;
+  return currentWindowSize;
+};
+const subscribeToWindowSize = (notify: () => void) => {
+  window.addEventListener("resize", notify);
+  return () => window.removeEventListener("resize", notify);
+};
+
 const NeuralNetworkLayer = () => {
   const { scrollStage, hoveredService, activeService } = useServiceAnimation();
-  const [winSize, setWinSize] = useState({ w: 1000, h: 800 });
-  
-  useEffect(() => {
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-    setWinSize({ w: window.innerWidth, h: window.innerHeight });
-    const handleResize = () => setWinSize({ w: window.innerWidth, h: window.innerHeight });
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const winSize = useSyncExternalStore(subscribeToWindowSize, getWindowSize, () => fallbackWindowSize);
 
   const cx = winSize.w / 2;
   const cy = winSize.h / 2;
@@ -163,7 +166,7 @@ const NeuralNetworkLayer = () => {
       <svg width="100%" height="100%" className="absolute inset-0">
         
         {/* Core Connections */}
-        {nodes.map(node => {
+        {nodes.map((node, index) => {
           const nx = cx + Math.cos(node.angle) * node.radius * scaleRatio;
           const ny = cy + Math.sin(node.angle) * node.radius * scaleRatio;
           
@@ -192,7 +195,7 @@ const NeuralNetworkLayer = () => {
                   fill={node.color}
                   initial={{ opacity: 0.4 }}
                   animate={{ opacity: [0, 1, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: Math.random() * 2 }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: (index % 5) * 0.4 }}
                 >
                   <animateMotion 
                     dur="3s" 

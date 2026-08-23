@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Plugin, PluginContext, ExtensionManifest, ActionDefinition, NavigationNode } from "../contracts/plugin";
+import { Plugin, ExtensionManifest, ActionDefinition, NavigationNode } from "../contracts/plugin";
 import { eventBus } from "../events/EventBus";
 
 export interface PlatformRegistryContext {

@@ -189,9 +189,7 @@ const QUESTIONS: Question[] = [
     ]
   }
 ];
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-function generateReadinessReport(
+export function generateReadinessReport(
   leadInfo: { name: string; email: string; company: string },
   overallScore: number,
   maturityDetails: { tier: string; desc: string },

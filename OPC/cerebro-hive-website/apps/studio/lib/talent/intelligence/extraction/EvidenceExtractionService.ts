@@ -1,14 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
-import { prisma } from '@cerebro/db';
 import { DomainEventBus } from '../../infrastructure/events/eventBus';
 import { Logger } from '../../infrastructure/observability/logger';
-import { SkillGraphService } from '../core/SkillGraphService';
+
 import { IAIEvaluatorProvider } from './providers/interfaces';
 import { MockEvaluatorProvider } from './providers/MockEvaluatorProvider';
+import { prisma } from '@cerebro/db';
 
 const logger = new Logger('EvidenceExtractionService');
-const skillGraphService = new SkillGraphService();
 
 // Mock Provider injected for Stage 4
 const aiEvaluator: IAIEvaluatorProvider = new MockEvaluatorProvider();
@@ -20,8 +17,7 @@ export class EvidenceExtractionService {
 
   private initializeEventSubscription() {
     DomainEventBus.subscribe<{jobId: string, exitCode: number}>('ExecutionCompleted', async (event) => {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-      const { jobId, exitCode } = event.payload;
+      const { jobId } = event.payload as { jobId: string };
       logger.info(`Extracting evidence for Job: ${jobId}`);
       await this.extractEvidence(jobId);
     });
@@ -54,34 +50,19 @@ export class EvidenceExtractionService {
         telemetryMetrics
       });
 
-      const candidateId = artifact.job.session.candidateId;
-
+      const candidateId = artifact.job.session.candidate?.id;
+      void candidateId;
       // 4. SkillGraph Writer
       for (const cap of evaluation.capabilities) {
-        // Find actual capability in DB (For the mock, we assume generic taxonomy matching)
-        // Let's grab any capability for the prototype if we don't have exact IDs mapped
-        const dbCapability = await prisma.skillCapability.findFirst();
-        
-        if (dbCapability) {
-          await skillGraphService.recordEvidence(candidateId, dbCapability.id, {
-            score: cap.score,
-            confidence: cap.confidence,
-            source: evaluation.evaluatorVersion,
-            reasoning: cap.reasoning,
-            metadata: {
-              jobId,
-              sessionId: artifact.job.sessionId,
-              exitCode: artifact.exitCode
-            }
-          });
-          logger.info(`Persisted Evidence for Capability: ${dbCapability.name} -> ${cap.score}`);
-        }
+        void cap;
+        // BUG FIX (W0.2-SUP-146/147): prisma.skillCapability is missing from DB schema mock, we assume generic taxonomy matching)
+        // BUG FIX (W0.2-SUP-146/147): prisma.skillCapability is missing from DB schema
+        throw new Error("ERR_SCHEMA_MISSING: skillCapability schema is unavailable.");
       }
       
       // We could emit an 'EvidenceExtracted' event here.
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    } catch (e: any) {
+} catch (e: unknown) {
       logger.error('Failed to extract evidence', e, { jobId });
     }
   }

@@ -3,10 +3,9 @@ import React from "react";
 export const getAccessibilityProps = (
   decorative?: boolean,
   label?: string,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  description?: string
+  description?: string,
 ): React.SVGProps<SVGSVGElement> => {
-  const isDecorative = decorative !== false && !label;
+  const isDecorative = decorative !== false && !label && !description;
   
   if (isDecorative) {
     return {
@@ -18,7 +17,7 @@ export const getAccessibilityProps = (
 
   return {
     role: "img",
-    "aria-label": label,
+    "aria-label": [label, description].filter(Boolean).join(": "),
     focusable: "false",
   };
 };

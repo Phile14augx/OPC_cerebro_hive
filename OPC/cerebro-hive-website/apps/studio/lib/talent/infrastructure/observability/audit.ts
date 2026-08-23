@@ -1,12 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 /**
  * Business Audit Logger
  * Separates immutable business events (compliance, auditing) from operational debug logs.
  */
 import { Logger } from './logger';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { prisma } from '@cerebro/db';
 
 const operationalLogger = new Logger('Audit_Service');
 
@@ -24,8 +20,7 @@ export class AuditLogger {
    * Records a business-critical audit event.
    * In a full enterprise system, this often writes to a dedicated immutable ledger or WORM storage.
    */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  static async log(eventType: AuditEventType, actorId: string, resourceId: string, metadata?: any) {
+  static async log(eventType: AuditEventType, actorId: string, resourceId: string, metadata?: unknown) {
     try {
       // We log to stdout as structured JSON so Datadog/ELK can ingest it as an Audit event
       console.log(JSON.stringify({

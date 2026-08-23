@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
+
 import { AssessmentSchema, Resource } from "../types";
 import { createHash } from "crypto";
 
@@ -49,7 +48,7 @@ export class AssessmentCompiler {
     const resolvedSchema = await this.resolveResources(draftSchema);
 
     console.log("[Compiler] 3. Optimizing Execution Graph...");
-    this.optimize(resolvedSchema);
+    this.optimize();
 
     console.log("[Compiler] 4. Freezing Version...");
     const frozenSchema = this.freeze(resolvedSchema);
@@ -66,15 +65,13 @@ export class AssessmentCompiler {
 
   private async resolveResources(schema: AssessmentSchema): Promise<AssessmentSchema> {
     const resolvedResources: Record<string, Resource> = {};
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-    for (const [id, _] of Object.entries(schema.resources)) {
+    for (const id of Object.keys(schema.resources)) {
       resolvedResources[id] = await this.resourceResolver.resolve(id);
     }
     return { ...schema, resources: resolvedResources };
   }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  private optimize(schema: AssessmentSchema) {
+  private optimize() {
     // Reorder/pre-compute data if needed
   }
 

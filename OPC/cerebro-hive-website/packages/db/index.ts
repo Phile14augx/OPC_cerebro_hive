@@ -32,8 +32,10 @@ export * from './src/repositories/AuditRepository';
 export * from './src/repositories/OutboxRepository';
 export * from './src/repositories/IdempotencyRepository';
 export * from './src/repositories/ApiKeyRepository';
+export * from './src/repositories/TalentAuthorizationRepository';
 export * from './src/transactions/PrismaUnitOfWork';
 export * from './src/twin-studio/twin-repository';
+export * from './src/auth/talent-permissions';
 
 
 

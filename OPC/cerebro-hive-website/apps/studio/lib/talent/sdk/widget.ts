@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 /**
  * Widget SDK: The universal contract for all Talent OS Assessment Widgets
  */
@@ -7,21 +5,16 @@
 // 1. Telemetry and Analytics Hooks
 export interface WidgetTelemetry {
   events: {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    onStart?: (context: any) => void;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    onInput?: (data: any) => void;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    onCompile?: (data: any) => void;
+onStart?: (context: unknown) => void;
+onInput?: (data: unknown) => void;
+onCompile?: (data: unknown) => void;
     onError?: (error: Error) => void;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    onComplete?: (result: any) => void;
+onComplete?: (result: unknown) => void;
   };
 }
 
 // 2. The Universal Widget SDK Interface
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-export interface IWidgetSDK<TConfig = any, TState = any, TResult = any> {
+export interface IWidgetSDK<TConfig = unknown, TState = unknown, TResult = unknown> {
   // Core Metadata
   metadata: {
     type: string;
@@ -48,17 +41,13 @@ export interface IWidgetSDK<TConfig = any, TState = any, TResult = any> {
 
   // Compilation & Validation
   validateConfig: (config: TConfig) => { valid: boolean; errors: string[] };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  compile: (config: TConfig, resolveResource: (id: string) => any) => Promise<TConfig>;
+compile: (config: TConfig, resolveResource: (id: string) => unknown) => Promise<TConfig>;
 
   // Execution & Scoring Hooks
   executionHooks: {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    prepareEnvironment: (config: TConfig) => Promise<any>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    execute: (state: TState, envContext: any) => Promise<TResult>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    cleanup: (envContext: any) => Promise<void>;
+prepareEnvironment: (config: TConfig) => Promise<unknown>;
+execute: (state: TState, envContext: unknown) => Promise<TResult>;
+cleanup: (envContext: unknown) => Promise<void>;
   };
 
   evaluationHooks: {
@@ -71,24 +60,20 @@ export interface IWidgetSDK<TConfig = any, TState = any, TResult = any> {
 
 // 3. Dynamic Widget Registry
 class Registry {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  private widgets: Map<string, IWidgetSDK<any, any, any>> = new Map();
+private widgets: Map<string, IWidgetSDK<unknown, unknown, unknown>> = new Map();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  register(widget: IWidgetSDK<any, any, any>) {
+register(widget: IWidgetSDK<unknown, unknown, unknown>) {
     if (this.widgets.has(widget.metadata.type)) {
       console.warn(`Widget ${widget.metadata.type} is already registered. Overwriting.`);
     }
     this.widgets.set(widget.metadata.type, widget);
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  get(type: string): IWidgetSDK<any, any, any> | undefined {
+get(type: string): IWidgetSDK<unknown, unknown, unknown> | undefined {
     return this.widgets.get(type);
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  getAll(): IWidgetSDK<any, any, any>[] {
+getAll(): IWidgetSDK<unknown, unknown, unknown>[] {
     return Array.from(this.widgets.values());
   }
 }

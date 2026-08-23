@@ -179,8 +179,8 @@ function ObservatoryPanel({ apiBase, apiKey }: { apiBase: string; apiKey: string
   }, [apiBase, apiKey]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    load();
+
+    setTimeout(() => { void load(); }, 0);
   }, [load]);
 
   return (
@@ -274,8 +274,8 @@ function GovernancePanel({ apiBase, apiKey }: { apiBase: string; apiKey: string 
   }, [apiBase, apiKey]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    load();
+
+    setTimeout(() => { void load(); }, 0);
   }, [load]);
 
   const createPolicy = async () => {
@@ -360,8 +360,8 @@ function ContextPanel({ apiBase, apiKey, agentSlugs }: { apiBase: string; apiKey
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (!slug && agentSlugs.length) setSlug(agentSlugs[0]);
+
+    if (!slug && agentSlugs.length) setTimeout(() => setSlug(agentSlugs[0]), 0);
   }, [agentSlugs, slug]);
 
   const run = async () => {

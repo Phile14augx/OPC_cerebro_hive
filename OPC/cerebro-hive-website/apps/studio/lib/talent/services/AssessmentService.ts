@@ -1,8 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 import { prisma, Assessment, AssessmentVersion } from '@cerebro/db';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { AssessmentCompiler, CompiledAssessmentPackage } from '../compiler';
+import { AssessmentCompiler } from '../compiler';
 import { AssessmentSchema } from '../types';
 import { TalentPolicyEngine } from '../auth/policy';
 import { withTransaction } from '../infrastructure/database/transaction';
@@ -54,7 +51,7 @@ export class AssessmentService {
   }
 
   async createDraft(workspaceId: string, title: string, userId: string, traceId?: string): Promise<Assessment> {
-    await policy.requireWorkspaceAccess(userId, workspaceId, 'CREATE_ASSESSMENT');
+    await policy.authorize(userId, { resourceType: 'workspace', resourceId: workspaceId, tenantId: '', workspaceId, ownerUserId: null }, { resource: 'talent_assessments', action: 'create', key: 'talent_assessments:create', serialized: 'talent_assessments:create' } as unknown as import('../auth/policy').TalentPermissionTuple);
     
     return withTransaction(async (tx) => {
       const assessment = await tx.assessment.create({
@@ -74,7 +71,7 @@ export class AssessmentService {
 
   async compileAndPublish(assessmentId: string, draftSchema: AssessmentSchema, userId: string, traceId?: string): Promise<AssessmentVersion> {
     const assessment = await prisma.assessment.findUniqueOrThrow({ where: { id: assessmentId } });
-    await policy.requireWorkspaceAccess(userId, assessment.workspaceId, 'PUBLISH_ASSESSMENT');
+    await policy.authorize(userId, { resourceType: 'workspace', resourceId: assessmentId, tenantId: '', workspaceId: assessment.workspaceId, ownerUserId: null }, { resource: 'talent_assessments', action: 'write', key: 'talent_assessments:write', serialized: 'talent_assessments:write' } as unknown as import('../auth/policy').TalentPermissionTuple);
 
     // 1. Compile through our robust Engine pipeline
     const compiledPackage = await compiler.compile(draftSchema, userId);
@@ -86,10 +83,8 @@ export class AssessmentService {
           assessmentId,
           versionNumber: compiledPackage.schema.version,
           manifestHash: compiledPackage.manifest.signatureHash,
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-          schemaPayload: compiledPackage.schema as any,
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-          manifestPayload: compiledPackage.manifest as any,
+          schemaPayload: compiledPackage.schema as unknown as import('@cerebro/db').Prisma.InputJsonValue,
+          manifestPayload: compiledPackage.manifest as unknown as import('@cerebro/db').Prisma.InputJsonValue,
           createdByUserId: userId
         }
       });

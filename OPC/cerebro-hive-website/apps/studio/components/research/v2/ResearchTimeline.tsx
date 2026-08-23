@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { GitCommit, ArrowDown } from "lucide-react";
 
 const timeline = [
   { year: "2024", research: "First Enterprise RAG Framework", product: "Knowledge Hub Alpha" },

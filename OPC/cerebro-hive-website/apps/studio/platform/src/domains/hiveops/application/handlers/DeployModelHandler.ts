@@ -1,11 +1,15 @@
 import { DeployModelCommand } from "../commands/DeployModelCommand";
 import { IEventBus } from "../../domain/events/IEventBus";
 
+export interface ModelDeployment extends DeployModelCommand {
+  id: string;
+  status: "deploying";
+}
+
 export class DeployModelHandler {
   constructor(private eventBus: IEventBus) {}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async handle(command: DeployModelCommand): Promise<any> {
+  async handle(command: DeployModelCommand): Promise<ModelDeployment> {
     const deploymentId = "dep-" + Date.now();
     
     // Publish domain event

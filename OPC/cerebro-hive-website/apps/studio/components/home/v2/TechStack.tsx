@@ -2,11 +2,8 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Search, ChevronDown, Layers, Terminal, Database, Cloud, Zap, ArrowDown, Activity, Code, Paintbrush, Monitor, Cpu, Workflow, Network, Brain, Bot, Box, Share2, Search as SearchIcon, GitMerge, Snowflake, Server } from "lucide-react";
+import { Search, Layers, Terminal, Database, Cloud, Zap, ArrowDown, Activity, Code, Paintbrush, Monitor, Cpu, Workflow, Network, Brain, Bot, Box, Share2, Search as SearchIcon, GitMerge, Snowflake, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 // --- Data Models ---

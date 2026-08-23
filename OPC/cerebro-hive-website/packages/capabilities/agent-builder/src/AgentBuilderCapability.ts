@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { AgentApplicationService, Result, DomainError } from '@cerebro/domain';
+import { AgentApplicationService, Result } from '@cerebro/domain';
 import { RequestContext } from '@cerebro/db';
 import { IAgentBuilderCapability, PublishAgentInput } from '@cerebro/capability-contracts';
 

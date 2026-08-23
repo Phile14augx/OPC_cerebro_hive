@@ -1,7 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { GitCommit, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { JsonLd } from "@/components/discovery";
 import { buildTechArticleSchema } from "@/lib/discovery";
 

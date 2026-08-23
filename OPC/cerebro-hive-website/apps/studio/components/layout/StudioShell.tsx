@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { useLayoutStore } from '@/src/store/useLayoutStore';
 import { CommandPalette } from './CommandPalette';
 import { getNavigationForPath } from '@/lib/navigation/registry';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Folder, Search, GitBranch, ShieldAlert, ChevronRight } from 'lucide-react';
+import { Folder, Search, GitBranch, ShieldAlert } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function StudioShell({ children }: { children: React.ReactNode }) {

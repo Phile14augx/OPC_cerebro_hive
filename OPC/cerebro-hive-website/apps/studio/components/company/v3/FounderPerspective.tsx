@@ -48,8 +48,7 @@ export default function FounderPerspective() {
                 We believed that for AI to truly transform an enterprise, it could not be an add-on. It had to be the foundation. Knowledge had to become infrastructure.
               </p>
               <p>
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                That is why we built CerebroHive. We don't just deploy models; we architect the operating system for the AI-native enterprise. Our mission is to build systems that learn, reason, and act—elevating humans from operators to strategists.
+                That is why we built CerebroHive. We don&apos;t just deploy models; we architect the operating system for the AI-native enterprise. Our mission is to build systems that learn, reason, and act—elevating humans from operators to strategists.
               </p>
             </div>
 

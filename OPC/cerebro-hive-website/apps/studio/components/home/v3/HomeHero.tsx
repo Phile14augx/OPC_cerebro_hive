@@ -2,12 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { ArrowRight, ChevronRight, Play, Database, BrainCircuit, Bot, Network, Lightbulb, Target } from "lucide-react";
+import { ArrowRight, Database, BrainCircuit, Bot, Network, Lightbulb, Target } from "lucide-react";
 import dynamic from 'next/dynamic';
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
 
 const BackgroundEngine = dynamic(

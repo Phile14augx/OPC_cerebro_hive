@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 import { EventEmitter } from 'events';
 import { Logger } from '../observability/logger';
 
@@ -24,9 +22,7 @@ export type DomainEventType =
   | 'ExecutionFailed'
   | 'SandboxDestroyed'
   | 'WorkerReleased';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-export interface DomainEvent<T = any> {
+export interface DomainEvent<T = unknown> {
   type: DomainEventType;
   payload: T;
   timestamp: string;

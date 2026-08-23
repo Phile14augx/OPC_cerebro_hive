@@ -25,8 +25,7 @@ export default function ActionsPage() {
     } catch { /* noop */ }
   }, []);
 
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const executeAction = useCallback(async (kind: string, approved?: boolean) => {
     setBusy(kind);

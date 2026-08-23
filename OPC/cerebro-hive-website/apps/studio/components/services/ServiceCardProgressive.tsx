@@ -2,14 +2,13 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, type LucideIcon } from "lucide-react";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export type ProgressiveServiceProps = {
   id: string;
   title: string;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  icon: any;
+  icon: LucideIcon;
   color: string;
   problem: string;
   outcome: string;

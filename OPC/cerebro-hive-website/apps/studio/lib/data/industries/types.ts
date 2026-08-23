@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { LucideIcon } from "lucide-react";
-
 export interface IndustrySEO {
   title: string;
   description: string;
@@ -155,17 +152,13 @@ export interface Industry {
   opportunityMatrix: MatrixItem[]; // Used for SolutionExplorer
   
   architecture: {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    nodes: any[];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    edges: any[];
+    nodes: { id: string; position: { x: number; y: number }; data: Record<string, unknown>; [key: string]: unknown }[];
+    edges: { id: string; source: string; target: string; [key: string]: unknown }[];
   };
   
   workflows?: {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    nodes: any[];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    edges: any[];
+    nodes: { id: string; position: { x: number; y: number }; data: Record<string, unknown>; [key: string]: unknown }[];
+    edges: { id: string; source: string; target: string; [key: string]: unknown }[];
   };
   
   agents: AI_Agent[];

@@ -81,8 +81,7 @@ export default function RoadmapPage() {
           Public Roadmap
         </h1>
         <p className="text-lg text-text-secondary max-w-2xl">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-          See what we're building next. Our roadmap is categorized by feature lifecycle to provide transparency into the future of the CerebroHive platform.
+          See what we&apos;re building next. Our roadmap is categorized by feature lifecycle to provide transparency into the future of the CerebroHive platform.
         </p>
       </div>
 

@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Mail, Phone, MapPin, Clock, ArrowRight, CheckCircle2, Building2, Calendar, ChevronDown } from "lucide-react";
+import { Mail, MapPin, Clock, ArrowRight, CheckCircle2, Calendar, ChevronDown } from "lucide-react";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
@@ -118,8 +117,7 @@ export default function ContactPage() {
             <div className="mb-8">
               <span className="text-[10px] font-bold uppercase tracking-widest text-primary-accent mb-3 block">Enterprise Contact Form</span>
               <h2 className="text-3xl font-space font-bold text-text-primary mb-3">Tell Us About Your Initiative</h2>
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-              <p className="text-text-secondary text-sm leading-relaxed">Share your challenge and we'll match you with the right architects and consultants.</p>
+              <p className="text-text-secondary text-sm leading-relaxed">Share your challenge and we&apos;ll match you with the right architects and consultants.</p>
             </div>
 
             {submitted ? (

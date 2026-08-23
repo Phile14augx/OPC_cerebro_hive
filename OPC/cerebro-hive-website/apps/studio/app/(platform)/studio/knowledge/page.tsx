@@ -1,7 +1,6 @@
 "use client";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { useCollections, useDocuments } from "@/lib/platform/hooks";
 import { platformApi, type KnowledgeCollection, type KnowledgeDocument } from "@/lib/platform/api-client";
 import { DataTable, type Column } from "@/components/platform/DataTable";

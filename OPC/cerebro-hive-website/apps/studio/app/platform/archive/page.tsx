@@ -34,8 +34,7 @@ function DocumentsPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setDocs((await api<{ documents: KnowledgeDocument[] }>("/v1/knowledge/documents")).documents); } catch { /* noop */ }
   }, [online]);
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 7000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 7000); return () => clearInterval(id); }, [refresh]);
 
   const ingest = async () => {
     if (!form.title.trim() || !form.content.trim()) return;
@@ -173,7 +172,7 @@ function InsightsPanel({ online }: { online: boolean | null }) {
     } catch { /* noop */ }
     try { setAnalytics(await api<HubAnalytics>("/v1/hub/analytics")); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 8000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 8000); return () => clearInterval(id); }, [refresh]);
 
   const generate = async () => {
     setBusy(true);

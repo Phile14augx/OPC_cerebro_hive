@@ -18,6 +18,7 @@ export interface ExecutionContext {
   useSemanticMemory?: boolean;
 }
 
+
 export interface PlaygroundPanelProps {
   executionContext?: ExecutionContext;
   hideConfiguration?: boolean;
@@ -25,23 +26,24 @@ export interface PlaygroundPanelProps {
 
 export function PlaygroundPanel({ executionContext, hideConfiguration }: PlaygroundPanelProps) {
   const { isInspectorOpen } = useLayoutStore();
-  const store = usePlaygroundStore();
+  const setSystemPrompt = usePlaygroundStore((state) => state.setSystemPrompt);
+  const setModelConfig = usePlaygroundStore((state) => state.setModelConfig);
+  const setMemoryToggle = usePlaygroundStore((state) => state.setMemoryToggle);
 
   // Sync execution context into playground store
   useEffect(() => {
     if (executionContext) {
-      if (executionContext.systemPrompt !== undefined) store.setSystemPrompt(executionContext.systemPrompt);
-      if (executionContext.selectedModel !== undefined) store.setModelConfig({ selectedModel: executionContext.selectedModel });
-      if (executionContext.provider !== undefined) store.setModelConfig({ provider: executionContext.provider });
-      if (executionContext.temperature !== undefined) store.setModelConfig({ temperature: executionContext.temperature });
-      if (executionContext.topP !== undefined) store.setModelConfig({ topP: executionContext.topP });
-      if (executionContext.maxTokens !== undefined) store.setModelConfig({ maxTokens: executionContext.maxTokens });
-      if (executionContext.useWorkingMemory !== undefined) store.setMemoryToggle('useWorkingMemory', executionContext.useWorkingMemory);
-      if (executionContext.useConversationMemory !== undefined) store.setMemoryToggle('useConversationMemory', executionContext.useConversationMemory);
-      if (executionContext.useSemanticMemory !== undefined) store.setMemoryToggle('useSemanticMemory', executionContext.useSemanticMemory);
+      if (executionContext.systemPrompt !== undefined) setSystemPrompt(executionContext.systemPrompt);
+      if (executionContext.selectedModel !== undefined) setModelConfig({ selectedModel: executionContext.selectedModel });
+      if (executionContext.provider !== undefined) setModelConfig({ provider: executionContext.provider });
+      if (executionContext.temperature !== undefined) setModelConfig({ temperature: executionContext.temperature });
+      if (executionContext.topP !== undefined) setModelConfig({ topP: executionContext.topP });
+      if (executionContext.maxTokens !== undefined) setModelConfig({ maxTokens: executionContext.maxTokens });
+      if (executionContext.useWorkingMemory !== undefined) setMemoryToggle('useWorkingMemory', executionContext.useWorkingMemory);
+      if (executionContext.useConversationMemory !== undefined) setMemoryToggle('useConversationMemory', executionContext.useConversationMemory);
+      if (executionContext.useSemanticMemory !== undefined) setMemoryToggle('useSemanticMemory', executionContext.useSemanticMemory);
     }
-// eslint-disable-next-line react-hooks/exhaustive-deps -- ARCH-LINT: Deferred
-  }, [executionContext]);
+  }, [executionContext, setMemoryToggle, setModelConfig, setSystemPrompt]);
 
   return (
     <div className="flex h-full w-full overflow-hidden">

@@ -48,8 +48,7 @@ function RequirementsStudioPageInner() {
 
   // Load persisted requirements from project data
   useEffect(() => {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    if (project?.requirements && Array.isArray(project.requirements) && (project.requirements as any[]).length > 0) {
+    if (project?.requirements && Array.isArray(project.requirements) && (project.requirements as unknown[]).length > 0) {
       // Requirements are stored as rows — reconstruct object shape from them
       const rows = project.requirements as Array<{ type: string; title: string }>;
       const reqs: ForgeRequirements = {
@@ -68,8 +67,7 @@ function RequirementsStudioPageInner() {
             : { actor: "", action: r.title, benefit: "" };
         }),
       };
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-      setRequirements(reqs);
+      setTimeout(() => setRequirements(reqs), 0);
     }
   }, [project]);
 

@@ -1,36 +1,32 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
+import type { Prisma } from '@cerebro/db';
 import { prisma } from '@/lib/prisma';
+
+type AuditLogClient = Pick<Prisma.TransactionClient, 'auditLog'>;
+
+export interface AuditLogWrite {
+  workspaceId: string;
+  userId?: string;
+  action: string;
+  resource: string;
+  resourceId?: string;
+  metadata?: Prisma.InputJsonValue;
+}
 
 export class AuditService {
   /**
-   * Log an immutable audit event to the database.
+   * Persist an audit record against an explicit, already-authorized workspace.
+   * Errors intentionally propagate so callers can include the write in their transaction.
    */
-  static async log(
-    action: string,
-    resource: string,
-    userId?: string,
-    metadata?: Record<string, unknown>
-  ) {
-    try {
-      await prisma.auditEvent.create({
-        data: {
-          action,
-          resource,
-          userId,
-          metadata: metadata ? JSON.stringify(metadata) : undefined,
-        },
-      });
-    } catch (error) {
-      console.error('Failed to log audit event:', error);
-      // We purposefully do not throw here to prevent audit logging failures
-      // from breaking core application flows. Instead, we enqueue it to the background worker.
-      try {
-        const { auditQueue } = await import('@/lib/queue/client');
-        await auditQueue.add('retryAuditLog', { action, resource, userId, metadata });
-      } catch (queueError) {
-        console.error('CRITICAL: Failed to enqueue audit log fallback:', queueError);
-      }
-    }
+  static async write(entry: AuditLogWrite, client: AuditLogClient = prisma) {
+    return client.auditLog.create({
+      data: {
+        workspaceId: entry.workspaceId,
+        userId: entry.userId,
+        action: entry.action,
+        resource: entry.resource,
+        resourceId: entry.resourceId,
+        metadata: entry.metadata,
+      },
+    });
   }
 }

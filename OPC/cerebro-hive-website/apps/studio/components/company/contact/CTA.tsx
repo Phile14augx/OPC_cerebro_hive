@@ -2,12 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { ArrowRight, Terminal, CheckCircle2, Circle } from "lucide-react";
+import { ArrowRight, Terminal, Circle } from "lucide-react";
 import { AnimatedButton } from "@/components/cerebro/AnimatedButton";
 import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { cn } from "@/lib/utils";
 
 // ============================================================================
 // COMMAND CENTER BACKGROUND
@@ -146,8 +143,7 @@ export const CTA = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-lg md:text-xl text-text-secondary font-inter mb-16 max-w-2xl text-center"
         >
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-          You've seen how we think. Now let's build together.
+          You&apos;ve seen how we think. Now let&apos;s build together.
         </motion.p>
         
         {/* Action Buttons */}

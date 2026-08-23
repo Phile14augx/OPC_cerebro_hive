@@ -12,17 +12,16 @@ export function ForceDarkTheme() {
   const previousTheme = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    previousTheme.current = theme;
+    if (theme === "dark") return;
+    const oldTheme = theme;
     setTheme("dark");
 
     return () => {
-      // Restore when leaving the company page
-      if (previousTheme.current && previousTheme.current !== "dark") {
-        setTheme(previousTheme.current);
+      if (oldTheme && oldTheme !== "dark") {
+        setTheme(oldTheme);
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [theme, setTheme]);
 
   return null;
 }

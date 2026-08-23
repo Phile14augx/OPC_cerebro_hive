@@ -1,13 +1,12 @@
 'use client';
 
 import { useEvaluationStudioStore, EvaluationView } from '@/src/store/useEvaluationStudioStore';
-import { LayoutDashboard, FileText, Database, ShieldCheck, Play, FlaskConical, BarChart3, Settings } from 'lucide-react';
+import { type LucideIcon, LayoutDashboard, FileText, Database, ShieldCheck, Play, FlaskConical, BarChart3, Settings } from 'lucide-react';
 
 export function EvaluationSidebar() {
   const { activeView, setActiveView } = useEvaluationStudioStore();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  const navItems: { id: EvaluationView; label: string; icon: any }[] = [
+  const navItems: { id: EvaluationView; label: string; icon: LucideIcon }[] = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'profiles', label: 'Profiles', icon: FileText },
     { id: 'datasets', label: 'Datasets', icon: Database },

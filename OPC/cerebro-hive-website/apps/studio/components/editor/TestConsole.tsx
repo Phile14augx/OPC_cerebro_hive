@@ -14,9 +14,8 @@ export function TestConsole() {
         </button>
       </div>
       <div className="flex-1 p-4 overflow-auto font-mono text-sm">
-// eslint-disable-next-line react/jsx-no-comment-textnodes -- ARCH-LINT: Deferred
         <div className="text-muted-foreground mb-4">
-          // Output will stream here.
+          {'// Output will stream here.'}
         </div>
         <div className="text-xs text-muted-foreground mt-4 border-t border-border pt-2">
           Current variables injected:

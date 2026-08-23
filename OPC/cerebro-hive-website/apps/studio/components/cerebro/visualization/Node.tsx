@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { motionTokens, visualTokens } from "@/lib/design-system/tokens";
+import { motionTokens } from "@/lib/design-system/tokens";
 
 interface NodeProps {
   icon: ReactNode;

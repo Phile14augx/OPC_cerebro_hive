@@ -10,7 +10,6 @@ export const NeuralOrb = ({
   size = "md",
   color = "cyan",
   state = "idle",
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   variant = "default",
   pulse = true,
   interactive = true,
@@ -73,6 +72,7 @@ export const NeuralOrb = ({
       onMouseLeave={() => interactive && setIsHovered(false)}
       onClick={onClick}
       role={onClick ? "button" : undefined}
+      data-variant={variant}
     >
 
       {/* ── Layer 1: Ambient Halo (breathing glow) ─────────────────── */}

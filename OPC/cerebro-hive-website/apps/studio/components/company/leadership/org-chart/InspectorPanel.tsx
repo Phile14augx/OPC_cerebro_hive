@@ -1,12 +1,7 @@
-﻿"use client";
+"use client";
 
 import React from 'react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { motion, AnimatePresence } from 'framer-motion';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { X, ExternalLink, Download, Maximize2, ZoomIn, ZoomOut, Target } from 'lucide-react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { OrganizationNodeData, OrganizationService } from '@/lib/services/organizationService';
+import { X, ExternalLink, Download, Maximize2, ZoomIn, ZoomOut } from 'lucide-react';
 import { useOrganizationWorkspace } from './OrganizationWorkspaceContext';
 import { useReactFlow, MiniMap, Panel } from '@xyflow/react';
 import { cn } from '@/lib/utils';
@@ -60,8 +55,7 @@ export const InspectorPanel = () => {
                     <Image src={node.avatar} alt="Avatar" fill className="object-cover" />
                   </div>
                   <div className="text-[10px] text-text-muted italic leading-relaxed">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                    "Leading the {node.title} division towards our enterprise objectives."
+                    &ldquo;Leading the {node.title} division towards our enterprise objectives.&rdquo;
                   </div>
                 </div>
               )}

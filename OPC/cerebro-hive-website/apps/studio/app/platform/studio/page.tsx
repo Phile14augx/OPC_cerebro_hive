@@ -22,8 +22,7 @@ export default function StudioHubPage() {
     } catch { /* noop */ }
   }, []);
 
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const createWorkspace = useCallback(async () => {
     if (!name.trim()) return;
@@ -56,7 +55,7 @@ export default function StudioHubPage() {
       {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
 
       <section className="mt-6 rounded-xl border border-primary-accent/40 bg-primary-accent/5 p-6">
-        <p className="text-xs font-semibold uppercase tracking-widest text-primary-accent">Need it planned before it's built?</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary-accent">Need it planned before it&apos;s built?</p>
         <h2 className="mt-2 text-xl font-semibold text-text-primary">CerebroSwarm™ — the executive council that coordinates the work</h2>
         <p className="mt-2 max-w-2xl text-sm text-text-secondary">Submit an objective and five domain-expert agents — CEO, Strategy, Enterprise Architect, Planner, Reviewer — chain a plan together before anything gets built here.</p>
         <Link href="/platform/swarm" className="mt-4 inline-block rounded-lg border border-primary-accent px-4 py-2 text-sm font-semibold text-primary-accent">Open CerebroSwarm™ →</Link>

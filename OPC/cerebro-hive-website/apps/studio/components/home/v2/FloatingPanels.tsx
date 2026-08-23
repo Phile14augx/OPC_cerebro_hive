@@ -4,7 +4,15 @@ import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { cn } from '@/lib/utils';
 
-const panels = [
+interface FloatingPanel {
+  title: string;
+  metric: string;
+  sub: string;
+  pos: [number, number, number];
+  className?: string;
+}
+
+const panels: FloatingPanel[] = [
   { title: "Enterprise AI", metric: "97%", sub: "Automation", pos: [11, 4.5, -2] as [number, number, number] },
   { title: "RAG System", metric: "128 ms", sub: "Latency", pos: [-12, 5.5, -4] as [number, number, number] },
   { title: "AI Agents", metric: "24", sub: "Active", pos: [11.5, -6, -3] as [number, number, number] },
@@ -35,8 +43,7 @@ export function FloatingPanels() {
         >
           <div className={cn(
             "w-48 p-4 rounded-xl border border-border bg-surface/80 backdrop-blur-md shadow-elevated flex flex-col gap-1 transition-opacity",
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-            (panel as any).className
+            panel.className
           )}>
             <span className="text-[10px] font-space font-semibold uppercase tracking-widest text-secondary-accent">
               {panel.title}

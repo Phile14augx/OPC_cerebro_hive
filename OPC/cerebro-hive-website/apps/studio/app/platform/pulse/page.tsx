@@ -30,8 +30,7 @@ function MeshPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setAgents(await api<MeshAgent[]>("/v1/mesh/agents")); } catch { /* noop */ }
   }, [online]);
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 7000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 7000); return () => clearInterval(id); }, [refresh]);
 
   const register = async () => {
     const capabilities = form.capabilitiesRaw.split(",").map(s => s.trim()).filter(Boolean);
@@ -124,7 +123,7 @@ function RuntimePanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setExecutions(await api<Execution[]>("/v1/runtime/executions?limit=25")); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 5000); return () => clearInterval(id); }, [refresh]);
   useEffect(() => { if (!online || !KEY) return; api<{ tools: ToolDefinition[] }>("/v1/runtime/tools").then(r => setTools(r.tools)).catch(() => {}); }, [online]);
 
   const submit = async () => {

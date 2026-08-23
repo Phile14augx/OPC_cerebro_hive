@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 interface ModuleNode {

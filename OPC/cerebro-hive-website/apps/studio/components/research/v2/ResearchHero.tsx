@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { BrainCircuit, BookOpen, FlaskConical, Code2, Network, ArrowRight } from "lucide-react";
+import { FlaskConical, Code2, Network, ArrowRight } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
@@ -25,15 +24,7 @@ const connections = [
 ];
 
 export const ResearchHero = () => {
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return <section className="min-h-[90vh] bg-background" />;
 
   return (
     <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-border bg-background flex flex-col justify-center">
@@ -64,7 +55,7 @@ export const ResearchHero = () => {
           </h1>
 
           <p className="text-lg text-text-secondary font-inter leading-[1.8] mb-10 max-w-[50ch]">
-            We don't just study AI—we operationalize it. Our research focuses on translating cutting-edge developments in agentic workflows, reasoning, and intelligent architecture into production-ready enterprise systems.
+            We don&apos;t just study AI—we operationalize it. Our research focuses on translating cutting-edge developments in agentic workflows, reasoning, and intelligent architecture into production-ready enterprise systems.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -128,9 +119,9 @@ export const ResearchHero = () => {
                       opacity: [0, 1, 0]
                     }}
                     transition={{ 
-                      duration: 2 + Math.random() * 2, 
+                      duration: 2 + (i % 3) * 0.5,
                       repeat: Infinity, 
-                      delay: Math.random() * 2,
+                      delay: (i % 4) * 0.5,
                       ease: "linear"
                     }}
                   />

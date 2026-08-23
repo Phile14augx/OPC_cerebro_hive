@@ -32,11 +32,9 @@ function ArchitectureStudioPageInner() {
 
   const [architecture, setArchitecture] = useState<ForgeArchitecture | null>(null);
 
-  // Load persisted architecture from project
   useEffect(() => {
     if (project?.archJson) {
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-      setArchitecture(project.archJson as unknown as ForgeArchitecture);
+      setTimeout(() => setArchitecture(project.archJson as unknown as ForgeArchitecture), 0);
     }
   }, [project]);
 

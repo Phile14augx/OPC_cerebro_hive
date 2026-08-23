@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Quote, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { withBasePath, cn } from "@/lib/utils";
+import { withBasePath } from "@/lib/utils";
 import { executiveProfile } from "@/lib/content/company/leadership";
 import { SectionMetadata } from "@/components/cerebro/SectionMetadata";
 import { motionPresets } from "@/lib/motion";
@@ -102,8 +101,7 @@ export const CEOMessage = () => {
             <motion.blockquote variants={motionPresets.fadeUp} className="relative mb-16 pl-8 lg:pl-12">
               <Quote size={64} className="absolute -top-6 -left-4 lg:-left-2 text-text-muted z-0" />
               <p className="relative z-10 text-2xl md:text-3xl lg:text-4xl font-space font-bold text-text-primary leading-[1.2] tracking-tight">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                "{executiveProfile.quote.text}"
+                &ldquo;{executiveProfile.quote.text}&rdquo;
               </p>
             </motion.blockquote>
 

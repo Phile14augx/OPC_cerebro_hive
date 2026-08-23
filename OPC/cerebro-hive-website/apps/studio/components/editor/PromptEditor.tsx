@@ -1,7 +1,10 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { type ComponentProps, useRef, useEffect } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
+
+type EditorOnMount = NonNullable<ComponentProps<typeof Editor>['onMount']>;
+type MonacoEditorInstance = Parameters<EditorOnMount>[0];
 
 interface PromptEditorProps {
   value: string;
@@ -12,8 +15,7 @@ interface PromptEditorProps {
 
 export function PromptEditor({ value, onChange, language = 'plaintext', readOnly = false }: PromptEditorProps) {
   const monaco = useMonaco();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<MonacoEditorInstance | null>(null);
 
   useEffect(() => {
     if (monaco) {
@@ -40,8 +42,7 @@ export function PromptEditor({ value, onChange, language = 'plaintext', readOnly
     }
   }, [monaco]);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const handleEditorDidMount = (editor: any, monaco: any) => {
+  const handleEditorDidMount: EditorOnMount = (editor) => {
     editorRef.current = editor;
   };
 

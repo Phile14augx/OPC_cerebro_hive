@@ -1,13 +1,12 @@
 'use client';
 
 import { useAnalyticsStore, AnalyticsView } from '@/src/store/useAnalyticsStore';
-import { LayoutDashboard, Activity, Search, FileTerminal, DollarSign, Cpu, Globe, Bot, Workflow, Bell, Settings } from 'lucide-react';
+import { type LucideIcon, LayoutDashboard, Activity, Search, FileTerminal, DollarSign, Cpu, Globe, Bot, Workflow, Bell, Settings } from 'lucide-react';
 
 export function AnalyticsSidebar() {
   const { activeView, setActiveView } = useAnalyticsStore();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  const navItems: { id: AnalyticsView; label: string; icon: any; section?: string }[] = [
+  const navItems: { id: AnalyticsView; label: string; icon: LucideIcon; section?: string }[] = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'metrics', label: 'Metrics', icon: Activity },
     { id: 'traces', label: 'Traces', icon: Search },

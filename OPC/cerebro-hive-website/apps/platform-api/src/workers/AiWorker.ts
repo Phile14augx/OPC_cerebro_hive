@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { BaseWorker } from '@cerebro/events';
 
 interface AiWorkerPayload {

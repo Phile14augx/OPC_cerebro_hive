@@ -1,55 +1,50 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 import { prisma } from '@cerebro/db';
-import { GlobalEventBus, TelemetryEvent } from '../engine/events';
+import { TalentPolicyEngine } from '../auth/policy';
 
+export interface TelemetryEvent {
+  type: string;
+  timestamp: string;
+  payload: Record<string, unknown>;
+}
 
 export class TelemetryService {
-  
-  constructor() {
-    this.initializeSubscriptions();
-  }
+  private policy = new TalentPolicyEngine();
 
-  private initializeSubscriptions() {
-    const eventsToPersist = [
-      "ASSESSMENT_STARTED",
-      "WIDGET_EXECUTED",
-      "COMPILATION_ERROR",
-      "TESTS_RUN",
-      "AI_REVIEW_REQUESTED",
-      "ASSESSMENT_SUBMITTED"
-    ] as const;
-
-    eventsToPersist.forEach(eventType => {
-      GlobalEventBus.subscribe(eventType, async (event: TelemetryEvent) => {
-        try {
-          await this.persistEvent(event);
-        } catch (e) {
-          console.error(`[TelemetryService] Failed to persist event ${event.id}:`, e);
-        }
-      });
+  async logEvent(userId: string, sessionId: string, event: TelemetryEvent): Promise<void> {
+    const session = await prisma.assessmentSession.findUnique({
+      where: { id: sessionId },
+      include: { assessmentVersion: { include: {
+        assessment: {
+          select: { workspaceId: true }
+        } } }
+      }
     });
-  }
 
-  private async persistEvent(event: TelemetryEvent) {
-    // Requires an active attempt to associate the event
-    if (!event.payload || !event.payload.attemptId) {
-      // In a real system, some events might not have an attemptId yet, or we fetch it via context.
-      // We will skip persisting dangling events for this prototype.
-      return;
+    if (!session) {
+      throw new Error(`Session not found: ${sessionId}`);
     }
 
-    await prisma.telemetryEvent.create({
+    const authorized = await this.policy.authorize(
+      userId,
+      {
+        resourceType: 'session',
+        resourceId: session.id,
+        tenantId: '',
+        workspaceId: session.assessmentVersion.assessment.workspaceId,
+        ownerUserId: session.candidateId
+      },
+      { resource: 'talent_session_telemetry', action: 'write', key: 'talent_session_telemetry:write', serialized: 'talent_session_telemetry:write' } as unknown as import('../auth/policy').TalentPermissionTuple
+    );
+
+    if (!authorized) {
+      throw new Error('Unauthorized');
+    }
+
+    await prisma.sessionTelemetryBatch.create({
       data: {
-        id: event.id,
-        attemptId: event.payload.attemptId,
-        eventType: event.type,
-        widgetId: event.activityId, // Mapping generic activity to widget
-        payload: event.payload
+        sessionId, sequence: Math.floor(Math.random() * 1000000),
+        events: [event as unknown] as unknown as import('@cerebro/db').Prisma.InputJsonValue
       }
     });
   }
 }
-
-// Instantiate to start listening globally
-export const globalTelemetryService = new TelemetryService();

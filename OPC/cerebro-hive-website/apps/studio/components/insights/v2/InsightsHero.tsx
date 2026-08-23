@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { BrainCircuit, TrendingUp, ArrowUpRight, ArrowRight, ShieldCheck, Activity, BarChart3 } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";
@@ -18,15 +18,6 @@ const trendStatuses = [
 ];
 
 export const InsightsHero = () => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return <section className="min-h-[90vh] bg-background" />;
-
   return (
     <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-border bg-background flex flex-col justify-center">
       
@@ -53,7 +44,7 @@ export const InsightsHero = () => {
           </h1>
 
           <p className="text-lg text-text-secondary font-inter leading-[1.8] mb-10 max-w-[50ch]">
-            Strategic analysis, executive briefings, market trends, and technical insights for leaders building AI-first organizations. We don't report the news; we decode what it means for your business.
+            Strategic analysis, executive briefings, market trends, and technical insights for leaders building AI-first organizations. We don&apos;t report the news; we decode what it means for your business.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">

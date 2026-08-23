@@ -70,7 +70,7 @@ export default function DashboardPage() {
   const narrative = narrativeMutation.data?.narrative;
 
   // Refresh narrative when role changes
-  useEffect(() => { narrativeMutation.mutate(role); }, [role]);// eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { narrativeMutation.mutate(role); }, [role]);
 
   const platform   = dash?.platform;
   const alerts     = (dash?.alerts ?? []).filter(a => !a.acknowledged);

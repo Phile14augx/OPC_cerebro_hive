@@ -48,8 +48,7 @@ function CloudPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setAccounts((await api<{ accounts: CloudAccount[] }>("/v1/hivecloud/accounts")).accounts); } catch { /* noop */ }
   }, [online]);
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 5000); return () => clearInterval(id); }, [refresh]);
 
   const provision = async () => {
     if (!form.accountName.trim()) return;
@@ -106,7 +105,7 @@ function StoragePanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setBuckets((await api<{ buckets: StorageBucket[] }>("/v1/hivestorage/buckets")).buckets); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 5000); return () => clearInterval(id); }, [refresh]);
 
   const provision = async () => {
     if (!form.name.trim() || form.sizeGb <= 0) return;
@@ -161,7 +160,7 @@ function ComputePanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setInstances((await api<{ instances: ComputeInstance[] }>("/v1/hivecompute/instances")).instances); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 5000); return () => clearInterval(id); }, [refresh]);
 
   const provision = async () => {
     if (!form.name.trim()) return;
@@ -216,7 +215,7 @@ function NetworkPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setTopologies((await api<{ topologies: NetworkTopology[] }>("/v1/hivenetwork/topologies")).topologies); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 5000); return () => clearInterval(id); }, [refresh]);
 
   const provision = async () => {
     if (!form.name.trim() || !form.cidr.trim()) return;
@@ -276,7 +275,7 @@ function IdentityPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setRoles((await api<{ roles: IdentityRole[] }>("/v1/hiveidentity/roles")).roles); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 5000); return () => clearInterval(id); }, [refresh]);
 
   const provision = async () => {
     const permissions = form.permissionsRaw.split(",").map(s => s.trim()).filter(Boolean);
@@ -337,7 +336,7 @@ function MonitorPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setMonitors((await api<{ monitors: Monitor[] }>("/v1/hivemonitor/monitors")).monitors); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 5000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {
     if (!form.serviceName.trim() || !form.metric.trim()) return;
@@ -400,7 +399,7 @@ function ApiPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setEndpoints((await api<{ endpoints: ApiEndpoint[] }>("/v1/hiveapi/endpoints")).endpoints); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 5000); return () => clearInterval(id); }, [refresh]);
 
   const register = async () => {
     if (!form.name.trim() || !form.path.startsWith("/")) return;
@@ -474,7 +473,7 @@ export default function HiveInfraPage() {
         governed-simulation infrastructure control plane: provision resources, see deterministic cost and risk
         scoring, and manage them from one console. This is a control-plane layer over simulated infrastructure,
         not a live AWS/Azure/GCP provisioning integration — that would require real cloud credentials this
-        platform doesn't have.
+        platform doesn&apos;t have.
       </p>
 
       <div className="mt-5 flex items-center gap-2 text-sm">

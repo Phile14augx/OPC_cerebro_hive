@@ -1,9 +1,9 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, type HTMLMotionProps } from "framer-motion";
 import { useCerebroMotion } from "../motion/foundation/MotionProvider";
 
-interface AnimatedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface AnimatedButtonProps extends HTMLMotionProps<"button"> {
   variant?: "primary" | "secondary" | "outline" | "ghost";
   size?: "sm" | "md" | "lg";
   children: React.ReactNode;
@@ -27,8 +27,7 @@ export const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButton
           size === "lg" && "text-lg px-10 py-4",
           className
         )}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-        {...props as any}
+        {...props}
         suppressHydrationWarning
       >
         <div 

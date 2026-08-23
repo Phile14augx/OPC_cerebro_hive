@@ -1,13 +1,11 @@
-import { Operation } from "@cerebro/db";
+import { prisma, type Operation, type Prisma } from "@cerebro/db";
 
 export interface IOperationRepository {
   findById(id: string): Promise<Operation | null>;
   findByResource(resourceId: string): Promise<Operation[]>;
-  create(data: Partial<Operation>): Promise<Operation>;
-  update(id: string, data: Partial<Operation>): Promise<Operation>;
+  create(data: Prisma.OperationCreateArgs["data"]): Promise<Operation>;
+  update(id: string, data: Prisma.OperationUpdateArgs["data"]): Promise<Operation>;
 }
-
-import { prisma } from "@cerebro/db";
 
 export class PrismaOperationRepository implements IOperationRepository {
   async findById(id: string): Promise<Operation | null> {
@@ -18,13 +16,11 @@ export class PrismaOperationRepository implements IOperationRepository {
     return prisma.operation.findMany({ where: { resourceId } });
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async create(data: any): Promise<Operation> {
+  async create(data: Prisma.OperationCreateArgs["data"]): Promise<Operation> {
     return prisma.operation.create({ data });
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async update(id: string, data: any): Promise<Operation> {
+  async update(id: string, data: Prisma.OperationUpdateArgs["data"]): Promise<Operation> {
     return prisma.operation.update({ where: { id }, data });
   }
 }

@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Crosshair, Navigation, Activity } from "lucide-react";
+import { Crosshair, Navigation } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";

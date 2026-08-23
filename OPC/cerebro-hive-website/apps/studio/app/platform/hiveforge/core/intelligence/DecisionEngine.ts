@@ -17,8 +17,7 @@ export interface AIDecision {
 export interface IntelligenceAgent {
   name: string;
   domain: string;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  evaluate(contextQuery: any): Promise<AIDecision>;
+  evaluate(contextQuery: unknown): Promise<AIDecision>;
 }
 
 export class DecisionEngine {
@@ -28,8 +27,7 @@ export class DecisionEngine {
     this.agents.set(agent.name, agent);
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async processRequest(category: DecisionCategory, contextQuery: any): Promise<AIDecision[]> {
+  async processRequest(category: DecisionCategory, contextQuery: unknown): Promise<AIDecision[]> {
     const decisions: AIDecision[] = [];
     for (const agent of this.agents.values()) {
       // In reality, we'd route only to relevant agents

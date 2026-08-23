@@ -1,13 +1,12 @@
 "use client";
 
 import React from 'react';
-import { EngineConfig } from '@/lib/data/industries/types';
+import { EngineConfig, Industry } from '@/lib/data/industries/types';
 import { SectionHeading } from '@/components/cerebro/SectionHeading';
 import { motion } from 'framer-motion';
-import { Database, Server, User, Box, BrainCircuit, Activity } from 'lucide-react';
+import { Database, Server, User, Box, BrainCircuit, Activity, type LucideIcon } from 'lucide-react';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, LucideIcon> = {
   client: User,
   gateway: Server,
   database: Database,
@@ -16,19 +15,21 @@ const iconMap: Record<string, any> = {
   system: Box
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-export function ArchitectureViewer({ architecture, config }: { architecture: { nodes: any[], edges: any[] }, config: EngineConfig }) {
+export function ArchitectureViewer({ architecture, config }: { architecture: Industry['architecture'], config: EngineConfig }) {
   if (!architecture || !architecture.nodes || architecture.nodes.length === 0) return null;
 
+  type NodeWithPos = { position?: { x: number, y: number }, data?: { type?: string, status?: string, label?: string }, id?: string };
+  const nodes = architecture.nodes as unknown as NodeWithPos[];
+
   // Let's determine boundaries to make the SVG responsive
-  const minX = Math.min(...architecture.nodes.map(n => n.position.x));
-  const maxX = Math.max(...architecture.nodes.map(n => n.position.x));
-  const minY = Math.min(...architecture.nodes.map(n => n.position.y));
-  const maxY = Math.max(...architecture.nodes.map(n => n.position.y));
+  const minX = Math.min(...nodes.map(n => n.position?.x ?? 0));
+  const maxX = Math.max(...nodes.map(n => n.position?.x ?? 0));
+  const minY = Math.min(...nodes.map(n => n.position?.y ?? 0));
+  const maxY = Math.max(...nodes.map(n => n.position?.y ?? 0));
   
   const width = maxX - minX + 200;
   const height = maxY - minY + 200;
-
+  
   return (
     <section className="section-pad border-t border-border bg-surface-elevated relative z-10 overflow-hidden">
       <div className="container-wide">
@@ -54,10 +55,10 @@ export function ArchitectureViewer({ architecture, config }: { architecture: { n
               
               {/* Dynamic Path based on sorted nodes */}
               {(() => {
-                const sorted = [...architecture.nodes].sort((a, b) => a.position.x - b.position.x);
-                let d = `M ${sorted[0].position.x - minX + 50} ${sorted[0].position.y - minY + 50}`;
+                const sorted = [...nodes].sort((a, b) => (a.position?.x ?? 0) - (b.position?.x ?? 0));
+                let d = `M ${(sorted[0].position?.x ?? 0) - minX + 50} ${(sorted[0].position?.y ?? 0) - minY + 50}`;
                 for (let i = 1; i < sorted.length; i++) {
-                  d += ` L ${sorted[i].position.x - minX + 50} ${sorted[i].position.y - minY + 50}`;
+                  d += ` L ${(sorted[i].position?.x ?? 0) - minX + 50} ${(sorted[i].position?.y ?? 0) - minY + 50}`;
                 }
                 
                 return (
@@ -77,13 +78,13 @@ export function ArchitectureViewer({ architecture, config }: { architecture: { n
             </svg>
 
             {/* Nodes */}
-            {architecture.nodes.map((node, i) => {
-              const Icon = iconMap[node.data.type || 'system'] || Box;
+            {nodes.map((node, i) => {
+              const Icon = iconMap[node.data?.type || 'system'] || Box;
               return (
                 <motion.div
                   key={node.id}
                   className="absolute flex flex-col items-center justify-center gap-3 z-10 w-32"
-                  style={{ left: node.position.x - minX, top: node.position.y - minY }}
+                  style={{ left: (node.position?.x ?? 0) - minX, top: (node.position?.y ?? 0) - minY }}
                   initial={{ opacity: 0.4, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
@@ -94,16 +95,16 @@ export function ArchitectureViewer({ architecture, config }: { architecture: { n
                   >
                     <Icon className="text-text-secondary group-hover:text-primary-accent transition-colors" size={28} style={{ color: config.primaryColor }} />
                     
-                    {node.data.status === 'Active' && (
+                    {node.data?.status === 'Active' && (
                       <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-pulse shadow-lg" style={{ backgroundColor: config.secondaryColor, boxShadow: `0 0 10px ${config.secondaryColor}` }} />
                     )}
-                    {node.data.status === 'Healthy' && (
+                    {node.data?.status === 'Healthy' && (
                       <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full" style={{ backgroundColor: config.accentColor }} />
                     )}
                   </div>
                   <div className="text-center">
-                    <p className="text-xs font-bold text-text-primary">{node.data.label}</p>
-                    <p className="text-[10px] text-text-muted uppercase tracking-wider">{node.data.type}</p>
+                    <p className="text-xs font-bold text-text-primary">{node.data?.label}</p>
+                    <p className="text-[10px] text-text-muted uppercase tracking-wider">{node.data?.type}</p>
                   </div>
                 </motion.div>
               );

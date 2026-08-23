@@ -5,6 +5,7 @@ import { careerDomains, CareerDomain } from "@/lib/content/company/careers";
 import { ArrowRight, Briefcase, Network, Atom, Cpu, Cloud, LayoutGrid, X, CheckCircle2, ChevronRight, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
+import type { OrbColor } from "@/components/cerebro/NeuralOrb/types";
 import { cn } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { analytics } from "@/lib/analytics/AnalyticsAdapter";
@@ -26,6 +27,14 @@ const themeConfig = {
   blue: { border: "border-blue-500/30", hover: "hover:border-blue-500/60", text: "text-blue-500", bg: "bg-blue-500/10" },
   teal: { border: "border-teal-500/30", hover: "hover:border-teal-500/60", text: "text-teal-500", bg: "bg-teal-500/10" },
   orange: { border: "border-orange-500/30", hover: "hover:border-orange-500/60", text: "text-orange-500", bg: "bg-orange-500/10" }
+};
+
+const themeToOrbColor: Record<CareerDomain["theme"], OrbColor> = {
+  cyan: "cyan",
+  purple: "purple",
+  blue: "cyan",
+  teal: "green",
+  orange: "amber",
 };
 
 export const CareersPreview = () => {
@@ -60,8 +69,7 @@ export const CareersPreview = () => {
             </h3>
             
             <p className="text-lg text-text-secondary font-inter mb-10 pl-4 border-l-2 border-primary-accent/50 leading-relaxed">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-              We don't ship demos. We build production AI. If you want to solve the hardest execution problems in enterprise intelligence, we want to talk.
+              We don&apos;t ship demos. We build production AI. If you want to solve the hardest execution problems in enterprise intelligence, we want to talk.
             </p>
 
             {/* How We Work Principles */}
@@ -104,7 +112,7 @@ export const CareersPreview = () => {
           <div className="lg:w-[65%] w-full relative">
             <div className="columns-1 md:columns-2 gap-4 space-y-4">
               {careerDomains.map((domain, index) => {
-                const Icon = (IconMap[domain.iconName] || Briefcase) as IconComponent;
+                const Icon = IconMap[domain.iconName] ?? Briefcase;
                 const theme = themeConfig[domain.theme as keyof typeof themeConfig];
                 const isSelected = activeDomain?.id === domain.id;
 
@@ -140,13 +148,7 @@ export const CareersPreview = () => {
                           <div className={cn("px-2 py-1 rounded-full border text-[9px] font-mono uppercase tracking-widest flex items-center gap-1.5", theme.border, theme.bg, theme.text)}>
                             <NeuralOrb 
                               size="sm" 
-                              color={
-                                domain.theme === "orange" ? "amber" :
-                                domain.theme === "teal" ? "green" :
-                                domain.theme === "blue" ? "cyan" :
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-                                domain.theme as any
-                              } 
+                              color={themeToOrbColor[domain.theme]}
                               state="active" 
                             />
                             {domain.hiringStatus}
@@ -246,8 +248,7 @@ export const CareersPreview = () => {
 
                 {/* What You'll Build */}
                 <section>
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                  <h4 className="text-xs font-space font-bold uppercase tracking-widest text-primary-accent mb-3">What You'll Build</h4>
+                  <h4 className="text-xs font-space font-bold uppercase tracking-widest text-primary-accent mb-3">What You&apos;ll Build</h4>
                   <p className="text-sm text-text-secondary font-inter leading-relaxed bg-[#0a0f18] p-4 rounded-xl border border-border">
                     {activeDomain.impact}
                   </p>
@@ -255,8 +256,7 @@ export const CareersPreview = () => {
 
                 {/* Engineering Problems */}
                 <section>
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                  <h4 className="text-xs font-space font-bold uppercase tracking-widest text-text-muted mb-3">Problems We're Solving</h4>
+                  <h4 className="text-xs font-space font-bold uppercase tracking-widest text-text-muted mb-3">Problems We&apos;re Solving</h4>
                   <ul className="flex flex-col gap-2">
                     {activeDomain.problems.map((problem, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-text-primary">

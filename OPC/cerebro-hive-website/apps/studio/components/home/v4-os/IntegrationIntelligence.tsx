@@ -3,8 +3,6 @@
 import { BrainCircuit } from "lucide-react";
 import { ecosystemIntegrations } from "@/lib/config/ecosystem";
 import { Node } from "@/components/cerebro/visualization/Node";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Edge } from "@/components/cerebro/visualization/Edge";
 
 export function IntegrationIntelligence() {
   const categories = Array.from(new Set(ecosystemIntegrations.map((i) => i.category)));

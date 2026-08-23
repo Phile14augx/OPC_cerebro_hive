@@ -1,7 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
-import { prisma } from '@cerebro/db';
-
+import { prisma } from '@/lib/prisma';
 
 export type TalentAction = 
   | 'CREATE_ASSESSMENT' 
@@ -10,43 +7,102 @@ export type TalentAction =
   | 'VIEW_CANDIDATES'
   | 'MANAGE_RESOURCES';
 
+export interface TalentAuthorizationTarget {
+  resourceType: string;
+  resourceId: string;
+  workspaceId: string;
+  tenantId: string;
+  ownerUserId: string | null;
+}
+
+export interface TalentPermissionTuple {
+  key: string;
+  resource: string;
+  action: string;
+  serialized: string;
+}
+
+export interface TalentAuthorizationContext {
+  userId: string;
+  tenantId: string;
+  workspaceId: string;
+  roleId: string;
+  roleName: string;
+  permissions: readonly string[];
+  resourceType: string;
+  resourceId: string;
+}
+
 export class TalentPolicyEngine {
-  
-  /**
-   * ABAC + RBAC Implementation
-   * Checks if the user holds a valid Recruiter/Admin profile AND has access to the specific Workspace.
-   */
-  async requireWorkspaceAccess(userId: string, workspaceId: string, action: TalentAction): Promise<boolean> {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        organization: {
-          include: {
-            workspaces: {
-              where: { id: workspaceId }
-            }
-          }
+  async authorize(
+    userId: string | undefined, 
+    target: TalentAuthorizationTarget | undefined, 
+    permission: TalentPermissionTuple
+  ): Promise<TalentAuthorizationContext | null> {
+    if (!userId || !target || !target.tenantId || !target.workspaceId) {
+      return null;
+    }
+
+    // Enforce candidate/session ABAC
+    if (target.ownerUserId && target.ownerUserId !== userId) {
+      return null;
+    }
+
+    const tenantMemberModel = (prisma as unknown as Record<string, unknown>).tenantMember as { 
+      findFirst: (args: unknown) => Promise<{
+        tenantId: string;
+        role: {
+          id: string;
+          name: string;
+          permissions: { resource: string; action: string }[];
         }
-      }
+      } | null> 
+    };
+    const member = await tenantMemberModel.findFirst({
+      where: {
+        userId: userId,
+        tenantId: target.tenantId,
+        role: {
+          permissions: {
+            some: {
+              resource: permission.resource,
+              action: permission.action,
+            },
+          },
+        },
+      },
+      select: {
+        tenantId: true,
+        role: {
+          select: {
+            id: true,
+            name: true,
+            permissions: {
+              select: { resource: true, action: true },
+              orderBy: { id: 'asc' },
+            },
+          },
+        },
+      },
     });
 
-    if (!user) throw new Error("Unauthorized: User not found");
-
-    // Must be mapped to an organization that owns this workspace
-    const hasWorkspace = user.organization?.workspaces.length && user.organization.workspaces.length > 0;
-    if (!hasWorkspace) {
-      throw new Error(`Forbidden: User does not have access to workspace ${workspaceId}`);
+    if (!member) {
+      return null;
     }
 
-    // Role-based verification
-    if (user.role === 'USER') {
-      throw new Error(`Forbidden: Role ${user.role} is insufficient for action ${action}`);
-    }
+    const serializedPermissions = member.role.permissions.map(
+      (p: { resource: string; action: string }) => `${p.resource}:${p.action}`
+    );
 
-    // In a real system, we'd also check if they have a RecruiterProfile
-    // const recruiter = await prisma.recruiterProfile.findUnique({ where: { userId }});
-    // if (!recruiter) throw new Error("Forbidden: Must be a registered recruiter");
-
-    return true;
+    return {
+      userId,
+      tenantId: member.tenantId,
+      workspaceId: target.workspaceId,
+      roleId: member.role.id,
+      roleName: member.role.name,
+      permissions: Object.freeze(serializedPermissions),
+      resourceType: target.resourceType,
+      resourceId: target.resourceId,
+    };
   }
 }

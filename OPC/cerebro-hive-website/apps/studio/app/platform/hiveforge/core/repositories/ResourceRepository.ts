@@ -1,14 +1,12 @@
-import { Resource } from "@cerebro/db";
+import { prisma, type Prisma, type Resource } from "@cerebro/db";
 
 export interface IResourceRepository {
   findById(id: string): Promise<Resource | null>;
   findByWorkspace(workspaceId: string): Promise<Resource[]>;
-  create(data: Partial<Resource>): Promise<Resource>;
-  update(id: string, data: Partial<Resource>): Promise<Resource>;
+  create(data: Prisma.ResourceCreateArgs["data"]): Promise<Resource>;
+  update(id: string, data: Prisma.ResourceUpdateArgs["data"]): Promise<Resource>;
   delete(id: string): Promise<void>;
 }
-
-import { prisma } from "@cerebro/db";
 
 export class PrismaResourceRepository implements IResourceRepository {
   async findById(id: string): Promise<Resource | null> {
@@ -19,13 +17,11 @@ export class PrismaResourceRepository implements IResourceRepository {
     return prisma.resource.findMany({ where: { workspaceId } });
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async create(data: any): Promise<Resource> {
+  async create(data: Prisma.ResourceCreateArgs["data"]): Promise<Resource> {
     return prisma.resource.create({ data });
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async update(id: string, data: any): Promise<Resource> {
+  async update(id: string, data: Prisma.ResourceUpdateArgs["data"]): Promise<Resource> {
     return prisma.resource.update({ where: { id }, data });
   }
 

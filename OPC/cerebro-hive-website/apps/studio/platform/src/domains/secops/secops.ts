@@ -2,8 +2,6 @@ import { newId } from "../../kernel/ids/id.js";
 import { Subjects, type EventBus } from "../../kernel/events/events.js";
 import type { RequestContext } from "../../kernel/context/context.js";
 import type { PolicyEngine } from "../../kernel/policy/policy.js";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { PlatformError } from "../../kernel/errors/errors.js";
 
 /**
  * Cerebro SecOps™ — DevSecOps (SAST/SCA/container/secret scanning, SBOM,

@@ -1,7 +1,5 @@
 "use client";
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   ReactFlow,
   useNodesState,
@@ -12,11 +10,8 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { useTheme } from 'next-themes';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { toPng } from 'html-to-image';
 
-import { OrganizationService, OrganizationNodeData } from '@/lib/services/organizationService';
+import { OrganizationService } from '@/lib/services/organizationService';
 import { useElkLayout } from './org-chart/useElkLayout';
 import { CEOExecutiveNode } from './org-chart/CEOExecutiveNode';
 import { DepartmentNode } from './org-chart/DepartmentNode';
@@ -26,6 +21,7 @@ import { InspectorPanel } from './org-chart/InspectorPanel';
 import { OrgNavRail } from './org-chart/OrgNavRail';
 import { OrgStatusBar } from './org-chart/OrgStatusBar';
 import { OrganizationWorkspaceProvider, useOrganizationWorkspace } from './org-chart/OrganizationWorkspaceContext';
+import { isOrganizationNodeData } from './org-chart/organizationNodeGuards';
 
 const nodeTypes = {
   executive: CEOExecutiveNode,
@@ -38,8 +34,6 @@ const edgeTypes = {
 };
 
 const Flow = () => {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const { theme } = useTheme();
   const { fitView, setCenter } = useReactFlow();
   const { getLayoutedElements } = useElkLayout();
   
@@ -69,7 +63,8 @@ const Flow = () => {
 
   // Handle Node Click (Selection + Lazy Expansion)
   const onNodeClick = useCallback(async (_: React.MouseEvent, node: Node) => {
-    const orgData = node.data as unknown as OrganizationNodeData;
+    if (!isOrganizationNodeData(node.data)) return;
+    const orgData = node.data;
     setSelectedNode(orgData);
 
     // If it has children and isn't expanded yet, lazy load them

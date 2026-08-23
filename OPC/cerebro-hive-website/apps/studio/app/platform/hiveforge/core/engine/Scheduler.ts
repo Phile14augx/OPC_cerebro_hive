@@ -13,8 +13,8 @@ export class Scheduler {
   private activeOperations = 0;
   private readonly MAX_CONCURRENCY = 100;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
   async scheduleExecution(graph: ExecutionGraph, options: ScheduleOptions): Promise<string> {
+    void options;
     // Generates a Correlation ID tying this execution across logs and events
     const correlationId = `corr-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     graph.correlationId = correlationId;

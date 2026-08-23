@@ -3,11 +3,9 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Brain, Sparkles, Play, ChevronRight, FolderKanban,
+  Brain, Sparkles, ChevronRight, FolderKanban,
   FileText, Network, GitMerge, Calendar, Users, Target,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  CheckCircle2, Clock, ArrowRight, Loader2, Plus, AlertTriangle,
+  CheckCircle2, Clock, ArrowRight, Loader2, AlertTriangle,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Card } from "../../components/ui/Card";
@@ -15,8 +13,6 @@ import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { StatCard } from "../../components/ui/StatCard";
 import { useForgeActions, useForgeProject } from "@/lib/forge/hooks";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { forgeApi } from "@/lib/forge/api-client";
 import type { ForgePlan } from "@cerebro/workflow";
 
 const planningPhases = [
@@ -41,10 +37,9 @@ function AIPlannerPageInner() {
 
   // Pre-fill prompt from project
   useEffect(() => {
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-    if (project?.prompt && !prompt) setPrompt(project.prompt);
-    if (project?.planJson) setPlan(project.planJson as ForgePlan);
-  }, [project]);
+    if (project?.prompt && !prompt) setTimeout(() => setPrompt(project.prompt as string), 0);
+    if (project?.planJson) setTimeout(() => setPlan(project.planJson as ForgePlan), 0);
+  }, [project, prompt]);
 
   const handlePlan = async () => {
     if (!projectId || !prompt.trim()) return;

@@ -2,8 +2,6 @@
 
 import React from "react";
 import { Code2, Users, FileText, FlaskConical, ExternalLink } from "lucide-react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { withBasePath } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const researchers = [

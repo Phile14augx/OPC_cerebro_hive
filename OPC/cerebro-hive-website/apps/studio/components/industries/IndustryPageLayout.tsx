@@ -1,7 +1,6 @@
 "use client";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Industry } from '@/lib/data/industries/types';
 import { industriesData } from '@/lib/data/industries';
@@ -10,8 +9,6 @@ import { TrackedButton } from '../cerebro/TrackedButton';
 import { cn } from '@/lib/utils';
 import { ArchitectureCanvas } from '../architecture/ArchitectureCanvas';
 import { SectionHeading } from '../cerebro/SectionHeading';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { CheckCircle2, ChevronRight, Activity, Cpu, ShieldCheck } from 'lucide-react';
 
 // Sticky Navigator
 const IndustryNavigator = ({ currentSlug }: { currentSlug: string }) => {

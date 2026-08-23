@@ -1,70 +1,72 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { AuthService } from '@/lib/services/auth.service';
-import { prisma } from '@/lib/prisma';
+import { z } from 'zod';
+import {
+  AuthService,
+  STUDIO_ACCESS_TOKEN_TTL_SECONDS,
+} from '@/lib/services/auth.service';
+
+const loginFormSchema = z.object({
+  email: z.string().trim().toLowerCase().email(),
+  password: z.string().min(1).max(256),
+});
+
+async function setAccessTokenCookie(token: string): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set('access_token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: STUDIO_ACCESS_TOKEN_TTL_SECONDS,
+  });
+}
 
 export async function authenticate(formData: FormData) {
-  const email = formData.get('email')?.toString();
-  const password = formData.get('password')?.toString();
-
-  if (!email || !password) {
-    return { error: 'Please enter both email and password.' };
+  const parsed = loginFormSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
+  if (!parsed.success) {
+    return { error: 'Please enter a valid email and password.' };
   }
 
   try {
-    const token = await AuthService.login(email, password);
-
-    // Set secure HttpOnly cookie with the access token
-    const cookieStore = await cookies();
-    cookieStore.set('access_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 // 1 day
-    });
-
+    const token = await AuthService.login(parsed.data.email, parsed.data.password);
+    await setAccessTokenCookie(token);
     return { success: true };
-    
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  } catch (error: any) {
-    console.error('Authentication Error:', error);
-    return { error: error.message || 'Invalid credentials. Please try again.' };
+  } catch {
+    return { error: 'Invalid credentials.' };
   }
 }
 
 export async function register(formData: FormData) {
-  const email = formData.get('email')?.toString();
-  const password = formData.get('password')?.toString();
-  const fullName = formData.get('fullName')?.toString();
+  const email = formData.get('email');
+  const password = formData.get('password');
+  const fullName = formData.get('fullName');
 
-  if (!email || !password || !fullName) {
+  if (typeof email !== 'string' || typeof password !== 'string' || typeof fullName !== 'string') {
     return { error: 'All fields are required.' };
   }
 
-  if (password.length < 8) {
-    return { error: 'Password must be at least 8 characters long.' };
+  let registration;
+  try {
+    registration = AuthService.validateRegistrationInput(email, password, fullName);
+  } catch {
+    return { error: 'Please provide a valid email, name, and password of at least 8 characters.' };
   }
 
   try {
-    const token = await AuthService.register(email, password, fullName);
-    
-    // Auto-login after registration
-    const cookieStore = await cookies();
-    cookieStore.set('access_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 // 1 day
-    });
-    
+    const token = await AuthService.register(
+      registration.email,
+      registration.password,
+      registration.fullName
+    );
+    await setAccessTokenCookie(token);
     return { success: true };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  } catch (error: any) {
-    console.error('Registration Error:', error);
-    return { error: error.message || 'Registration failed. Please try again.' };
+  } catch {
+    return { error: 'Registration failed.' };
   }
 }
 
@@ -75,24 +77,12 @@ export async function logout() {
 
 export async function getLocalSession() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('access_token');
+  const token = cookieStore.get('access_token')?.value;
   if (!token) return null;
-  
-  try {
-    const payload = await AuthService.verifyToken(token.value);
-    if (!payload || !payload.userId) return null;
-    
-    const user = await prisma.user.findUnique({
-      where: { id: payload.userId },
-      select: { tenantMembers: { take: 1, select: { tenantId: true } } }
-    });
 
-    return {
-      userId: payload.userId,
-      organizationId: user?.tenantMembers[0]?.tenantId || ''
-    };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  } catch (err) {
+  try {
+    return await AuthService.verifyToken(token);
+  } catch {
     return null;
   }
 }

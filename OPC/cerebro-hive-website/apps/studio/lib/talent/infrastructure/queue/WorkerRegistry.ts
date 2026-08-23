@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 import { Job, QueueName } from "./ExecutionQueueService";
 import { DockerExecutionProvider } from "../execution/DockerExecutionProvider";
 
@@ -36,15 +34,12 @@ export class WorkerRegistry {
       await job.updateProgress({ state: 'executing' });
       
       // We also stream logs to the Realtime Service (WebSocket/SSE) here
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-      this.dockerProvider.streamLogs(envId, (chunk) => {
+      this.dockerProvider.streamLogs(envId, () => {
         // e.g. redis.publish(`logs:${job.data.submissionId}`, chunk);
       });
 
-      await this.dockerProvider.execute(envId, ["npm", "test"], {});
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-      const result = await this.dockerProvider.collectResult(envId);
-      
+      await this.dockerProvider.execute(envId, ["npm", "test"]);
+            
       await this.dockerProvider.cleanup(envId);
 
       // Pass off to Evaluation Queue

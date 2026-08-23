@@ -10,9 +10,7 @@ export default function MarketplacePage() {
   const [online, setOnline] = useState<boolean | null>(null);
   const [category, setCategory] = useState<CatalogCategory | null>(null);
   const [installations, setInstallations] = useState<MarketplaceInstallation[]>([]);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const [error, setError] = useState<string | null>(null);
-  const [wizardItem, setWizardItem] = useState<CatalogItem | null>(null);
+  const [error] = useState<string | null>(null);const [wizardItem, setWizardItem] = useState<CatalogItem | null>(null);
 
   const refresh = useCallback(async () => {
     const ok = await checkOnline();
@@ -25,8 +23,7 @@ export default function MarketplacePage() {
     } catch { /* noop */ }
   }, []);
 
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   return (
     <main className="mx-auto max-w-6xl px-6 pb-24 pt-8">

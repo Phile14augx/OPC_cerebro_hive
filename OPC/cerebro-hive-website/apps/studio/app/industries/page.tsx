@@ -1,17 +1,10 @@
 "use client";
 
 import React, { Suspense } from 'react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { motion, AnimatePresence } from 'framer-motion';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { IndustryExplorerProvider, useIndustryExplorer } from '@/components/industries/IndustryExplorerContext';
+import { IndustryExplorerProvider } from '@/components/industries/IndustryExplorerContext';
 import { InteractiveIndustryExplorer } from '@/components/industries/InteractiveIndustryExplorer';
 import { SectionHeading } from '@/components/cerebro/SectionHeading';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { AnimatedButton as Button } from '@/components/cerebro/AnimatedButton';
 import { Grid, Layers, BrainCircuit, Box, Search, ShieldCheck } from 'lucide-react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import Link from 'next/link';
 
 function IndustriesPageContent() {
   return (

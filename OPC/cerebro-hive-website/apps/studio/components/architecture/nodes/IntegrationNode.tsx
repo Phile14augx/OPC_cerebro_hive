@@ -3,9 +3,7 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { Blocks } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export const IntegrationNode = ({ data, isConnectable }: NodeProps) => {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const isBrainMode = data?.isBrainMode;
+export const IntegrationNode = ({ isConnectable }: NodeProps) => {
 
   const integrations = [
     { name: "SAP", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },

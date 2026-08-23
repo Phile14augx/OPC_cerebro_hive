@@ -1,76 +1,115 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
+import { randomUUID } from 'node:crypto';
+import type { Prisma } from '@cerebro/db';
 import { prisma } from '@/lib/prisma';
 import { AuditService } from './audit.service';
-import { Role } from '@cerebro/db';
+
+const OWNER_ROLE_KEY = 'OWNER';
+
+function collisionResistantSlug(value: string): string {
+  const base = value
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 64);
+
+  return `${base || 'tenant'}-${randomUUID()}`;
+}
 
 export class PlatformService {
-  /**
-   * Initialize a new tenant for a newly registered user.
-   * Creates an Organization, a Default Workspace, and assigns the User as OWNER.
-   */
-  static async initializeTenant(userId: string, userName: string) {
-    const slugBase = userName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-    const orgSlug = `${slugBase}-org-${Date.now().toString().slice(-4)}`;
-    
-    // Create Organization
-    const organization = await prisma.organization.create({
+  /** Provision the initial tenant graph with the caller's active transaction client. */
+  static async provisionInitialTenant(
+    tx: Prisma.TransactionClient,
+    userId: string,
+    userName: string
+  ) {
+    const tenantSlug = collisionResistantSlug(userName);
+    const tenant = await tx.tenant.create({
       data: {
         name: `${userName}'s Organization`,
-        slug: orgSlug,
+        slug: tenantSlug,
       },
+      select: { id: true },
     });
 
-    // Create Default Workspace
-    const workspace = await prisma.workspace.create({
+    const ownerRole = await tx.role.findUnique({
+      where: { key: OWNER_ROLE_KEY },
+      select: { id: true },
+    });
+    if (!ownerRole) {
+      throw new Error('The canonical OWNER role is not configured.');
+    }
+
+    await tx.tenantMember.create({
       data: {
-        organizationId: organization.id,
-        name: 'General Workspace',
-        slug: `${orgSlug}-general`,
+        tenantId: tenant.id,
+        userId,
+        roleId: ownerRole.id,
       },
     });
 
-    // Create Default Project
-    await prisma.project.create({
+    const workspace = await tx.workspace.create({
+      data: {
+        tenantId: tenant.id,
+        name: 'General Workspace',
+        slug: `${tenantSlug}-general`,
+        isDefault: true,
+      },
+      select: { id: true },
+    });
+
+    const project = await tx.project.create({
       data: {
         workspaceId: workspace.id,
         name: 'Default Project',
         description: 'Your first project in CerebroHive.',
       },
+      select: { id: true },
     });
 
-    // Assign User to Organization and set Role
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        organizationId: organization.id,
-        role: Role.OWNER,
+    await AuditService.write(
+      {
+        workspaceId: workspace.id,
+        userId,
+        action: 'identity:register',
+        resource: 'tenant',
+        resourceId: tenant.id,
       },
-    });
+      tx
+    );
 
-    await AuditService.log('TENANT_INITIALIZED', `organization:${organization.id}`, userId, {
+    return {
+      tenantId: tenant.id,
       workspaceId: workspace.id,
-    });
-
-    return { organization, workspace };
+      projectId: project.id,
+    };
   }
 
-  /**
-   * Fetch Workspaces for a given organization
-   */
-  static async getWorkspaces(organizationId: string) {
+  static async getWorkspaces(userId: string) {
     return prisma.workspace.findMany({
-      where: { organizationId },
+      where: {
+        tenant: {
+          members: {
+            some: { userId },
+          },
+        },
+      },
       orderBy: { createdAt: 'desc' },
     });
   }
 
-  /**
-   * Fetch Projects for a given workspace
-   */
-  static async getProjects(workspaceId: string) {
+  static async getProjects(userId: string, workspaceId: string) {
     return prisma.project.findMany({
-      where: { workspaceId },
+      where: {
+        workspaceId,
+        workspace: {
+          tenant: {
+            members: {
+              some: { userId },
+            },
+          },
+        },
+      },
       orderBy: { createdAt: 'desc' },
     });
   }

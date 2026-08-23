@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
+
 /**
  * Environment Configuration Validator
  * Fails fast at application startup if critical environment variables are missing.

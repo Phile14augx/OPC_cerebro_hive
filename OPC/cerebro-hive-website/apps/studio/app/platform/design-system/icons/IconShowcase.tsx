@@ -13,8 +13,7 @@ export function IconShowcase() {
   const [strokeWidth, setStrokeWidth] = useState(2);
   const [variant, setVariant] = useState<IconVariant>("duotone");
   const [animation, setAnimation] = useState<IconAnimation>("idle");
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const [bg, setBg] = useState<"light" | "dark" | "glass">("light");
+  const [, setBg] = useState<"light" | "dark" | "glass">("light");
 
   const categories = ["All", ...new Set(Object.values(iconRegistry).map(i => i.category))];
 
@@ -29,13 +28,6 @@ export function IconShowcase() {
       })
       .map(([name, meta]) => ({ name, ...meta }));
   }, [search, categoryFilter]);
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const bgClasses = {
-    light: "bg-white text-slate-900 border-slate-200",
-    dark: "bg-slate-950 text-white border-slate-800",
-    glass: "bg-slate-900/50 backdrop-blur-xl text-white border-white/10"
-  };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -137,9 +129,9 @@ export function IconShowcase() {
       <div className={`p-8 rounded-3xl min-h-[600px] border \${bgClasses[bg]}`}>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-6">
           {filteredIcons.map(meta => {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-            const IconComponent = (Icons as any)[meta.name];
+            const IconComponent = Icons[meta.name as keyof typeof Icons];
             if (!IconComponent) return null;
+            const RenderableIcon = IconComponent as React.ComponentType<Record<string, unknown>>;
 
             return (
               <div 
@@ -150,7 +142,7 @@ export function IconShowcase() {
                   copyToClipboard(`<Icons.${meta.name} size={${size}} variant="${variant}" />`);
                 }}
               >
-                <IconComponent size={size} strokeWidth={strokeWidth} variant={variant} animation={animation} />
+                <RenderableIcon size={size} strokeWidth={strokeWidth} variant={variant} animation={animation} />
                 <span className="text-xs font-medium text-center">{meta.name}</span>
                 
                 {/* Tooltip metadata */}

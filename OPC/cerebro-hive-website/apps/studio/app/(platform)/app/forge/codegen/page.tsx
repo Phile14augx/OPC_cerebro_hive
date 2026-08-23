@@ -1,14 +1,9 @@
 "use client";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import React, { useState, useEffect, useRef, Suspense } from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { motion } from "framer-motion";
+import React, { useState, useRef, Suspense } from "react";
 import {
   FileCode2, Sparkles, Play, ChevronRight, CheckCircle2,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Loader2, Terminal, Clock, Package, Copy, Server, Globe, Smartphone, Monitor,
-  AlertTriangle,
+  Loader2, Terminal, Clock, Package, Copy, AlertTriangle,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Card } from "../../components/ui/Card";

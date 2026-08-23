@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { allResearchData } from '@/lib/content/research';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { ResearchCategory, ResearchDomain } from '@/lib/content/research/types';
 import { PublicationCard } from './PublicationCard';
 import { SectionHeading } from '../cerebro/SectionHeading';
 import { Search, Filter, X } from 'lucide-react';
@@ -18,26 +16,21 @@ export const PublicationGrid = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('type'));
-  const [selectedDomain, setSelectedDomain] = useState<string | null>(searchParams.get('domain'));
+  const searchQuery = searchParams.get('q') ?? '';
+  const selectedCategory = searchParams.get('type');
+  const selectedDomain = searchParams.get('domain');
 
-  // Update URL state when filters change
-  useEffect(() => {
+  const updateFilters = (updates: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString());
-    
-    if (searchQuery) params.set('q', searchQuery);
-    else params.delete('q');
 
-    if (selectedCategory) params.set('type', selectedCategory);
-    else params.delete('type');
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) params.set(key, value);
+      else params.delete(key);
+    });
 
-    if (selectedDomain) params.set('domain', selectedDomain);
-    else params.delete('domain');
-
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-// eslint-disable-next-line react-hooks/exhaustive-deps -- ARCH-LINT: Deferred
-  }, [searchQuery, selectedCategory, selectedDomain, pathname, router]);
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  };
 
   const filteredData = useMemo(() => {
     return allResearchData.filter(pub => {
@@ -71,14 +64,14 @@ export const PublicationGrid = () => {
               type="text"
               placeholder="Search research, topics, authors..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => updateFilters({ q: e.target.value })}
               className="w-full bg-background border border-border rounded-full py-3 pl-12 pr-4 text-sm text-text-primary focus:outline-none focus:border-primary-accent transition-colors"
             />
             {searchQuery && (
               <TrackedButton
                 eventCategory="research"
                 eventLabel="Clear search"
-                onClick={() => setSearchQuery('')}
+                onClick={() => updateFilters({ q: null })}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary"
               >
                 <X size={16} />
@@ -100,7 +93,7 @@ export const PublicationGrid = () => {
                   eventCategory="research"
                   eventLabel="All Domains"
                   eventAction="domain_filter"
-                  onClick={() => setSelectedDomain(null)}
+                  onClick={() => updateFilters({ domain: null })}
                   className={`text-left text-sm py-1.5 px-3 rounded ${!selectedDomain ? 'bg-primary-accent/10 text-primary-accent font-bold' : 'text-text-secondary hover:bg-surface'}`}
                 >
                   All Domains
@@ -111,7 +104,7 @@ export const PublicationGrid = () => {
                     eventCategory="research"
                     eventLabel={domain}
                     eventAction="domain_filter"
-                    onClick={() => setSelectedDomain(domain)}
+                    onClick={() => updateFilters({ domain })}
                     className={`text-left text-sm py-1.5 px-3 rounded ${selectedDomain === domain ? 'bg-primary-accent/10 text-primary-accent font-bold' : 'text-text-secondary hover:bg-surface'}`}
                   >
                     {domain}
@@ -129,7 +122,7 @@ export const PublicationGrid = () => {
                   eventCategory="research"
                   eventLabel="All Types"
                   eventAction="category_filter"
-                  onClick={() => setSelectedCategory(null)}
+                  onClick={() => updateFilters({ type: null })}
                   className={`text-left text-sm py-1.5 px-3 rounded ${!selectedCategory ? 'bg-primary-accent/10 text-primary-accent font-bold' : 'text-text-secondary hover:bg-surface'}`}
                 >
                   All Types
@@ -140,7 +133,7 @@ export const PublicationGrid = () => {
                     eventCategory="research"
                     eventLabel={cat.replace('-', ' ')}
                     eventAction="category_filter"
-                    onClick={() => setSelectedCategory(cat)}
+                    onClick={() => updateFilters({ type: cat })}
                     className={`text-left text-sm py-1.5 px-3 rounded capitalize ${selectedCategory === cat ? 'bg-primary-accent/10 text-primary-accent font-bold' : 'text-text-secondary hover:bg-surface'}`}
                   >
                     {cat.replace('-', ' ')}
@@ -159,9 +152,7 @@ export const PublicationGrid = () => {
                   eventCategory="research"
                   eventLabel="Clear all filters"
                   onClick={() => {
-                    setSearchQuery('');
-                    setSelectedCategory(null);
-                    setSelectedDomain(null);
+                    updateFilters({ q: null, type: null, domain: null });
                   }}
                   className="text-xs font-bold text-primary-accent hover:underline"
                 >
@@ -180,8 +171,7 @@ export const PublicationGrid = () => {
               <div className="w-full py-24 flex flex-col items-center justify-center text-center border border-dashed border-border rounded-xl">
                 <Search size={32} className="text-text-muted mb-4 opacity-50" />
                 <h3 className="text-lg font-space font-bold text-text-primary mb-2">No publications found</h3>
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                <p className="text-sm text-text-secondary max-w-md">Try adjusting your filters or search query to find what you're looking for.</p>
+                <p className="text-sm text-text-secondary max-w-md">Try adjusting your filters or search query to find what you&apos;re looking for.</p>
               </div>
             )}
           </div>

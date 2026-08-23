@@ -51,7 +51,6 @@ export class NatsExecutionEventPublisher implements ExecutionOutboxEventPublishe
   }
 
   async publish(event: ExecutionIntegrationEventLike, context: ExecutionEventContext): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await this.delegate.publish(event as any, context as any);
+    await this.delegate.publish(event, context);
   }
 }

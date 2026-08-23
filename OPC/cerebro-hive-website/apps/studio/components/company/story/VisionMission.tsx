@@ -7,10 +7,8 @@ import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
 import { motionPresets } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  ArrowRight, ChevronRight, User, Target, Code, Rocket, TrendingUp, Clock, BookOpen, Quote,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Globe2, Building2, BarChart3, Coins, Network, GitBranch, ShieldCheck, Cpu
+  User, Target, Code, Rocket, TrendingUp, BookOpen, Quote,
+  Globe2, Building2, BarChart3, Coins
 } from "lucide-react";
 
 // ============================================================================
@@ -37,6 +35,8 @@ const getIcon = (iconName: string) => {
     default: return Target;
   }
 };
+
+const VisionIcon = getIcon(visionMission.vision.presentation.icon);
 
 const frameworkIcons: Record<string, React.ReactNode> = {
   vision: <User size={14} />,
@@ -139,8 +139,7 @@ export const VisionMission = () => {
             <div className="bg-surface-elevated border border-border p-8 rounded-2xl relative overflow-hidden">
               <Quote size={120} className="absolute -top-6 -left-6 text-text-muted -rotate-12" aria-hidden="true" />
               <p className="relative z-10 text-lg font-space italic text-text-primary leading-relaxed">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                "Our goal is not merely to deploy AI models. It is to fundamentally transform how entire enterprise divisions operate, measure, and scale."
+                &ldquo;Our goal is not merely to deploy AI models. It is to fundamentally transform how entire enterprise divisions operate, measure, and scale.&rdquo;
               </p>
             </div>
           </motion.div>
@@ -162,9 +161,7 @@ export const VisionMission = () => {
                     style={{ height: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) }}
                   />
                 </div>
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-                {visionMission.purpose.evidence.framework.map((node, index) => {
+                {visionMission.purpose.evidence.framework.map((node) => {
                   const isActive = activeNode === node.id;
                   
                   return (
@@ -254,8 +251,7 @@ export const VisionMission = () => {
             <div className="lg:col-span-7">
               <div className="flex items-center gap-3 mb-10">
                 <div className="w-12 h-12 rounded-2xl border border-blue-500/20 bg-blue-500/10 flex items-center justify-center">
-// eslint-disable-next-line render -- ARCH-LINT: Deferred
-                  {(() => { const VisionIcon = getIcon(visionMission.vision.presentation.icon); return <VisionIcon size={20} className="text-blue-400" aria-hidden="true" />; })()}
+                  <VisionIcon size={20} className="text-blue-400" aria-hidden="true" />
                 </div>
                 <span className="text-[10px] font-space font-bold uppercase tracking-[0.2em] text-blue-400">Our Vision</span>
               </div>

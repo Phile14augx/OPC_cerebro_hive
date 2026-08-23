@@ -1,7 +1,6 @@
 "use client";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { SearchBar }   from "@/components/platform/SearchBar";
 import { StatusBadge } from "@/components/platform/StatusBadge";
 import { MetricTile }  from "@/components/platform/MetricTile";

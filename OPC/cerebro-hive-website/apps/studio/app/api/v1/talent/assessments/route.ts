@@ -2,37 +2,36 @@ import { NextRequest } from 'next/server';
 import { AssessmentService } from '../../../../../lib/talent/services/AssessmentService';
 import { ApiUtils } from '../../../../../lib/talent/utils/api';
 import { withAuthorization } from '../../../../../lib/talent/auth/middleware';
+import { TalentAuthorizationContext } from '../../../../../lib/talent/auth/policy';
 
 const assessmentService = new AssessmentService();
 
 export async function GET(req: NextRequest) {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  return withAuthorization(req, 'READ_ASSESSMENT', '*', async (req: any, userContext: any) => {
+  const target = { resourceType: 'workspace', resourceId: req.headers.get('x-workspace-id') || '' };
+  return withAuthorization(req, 'READ_ASSESSMENT', 'talent_assessments', async (req, userContext) => {
     try {
+      const context = userContext as TalentAuthorizationContext;
       const searchParams = req.nextUrl.searchParams;
-      // In a real app, workspaceId would be derived from the user's active context.
-      // Mocking for the prototype:
-      const workspaceId = searchParams.get('workspaceId') || 'mock-workspace-id';
       const skip = parseInt(searchParams.get('skip') || '0', 10);
       const take = parseInt(searchParams.get('take') || '10', 10);
       const status = searchParams.get('status') || undefined;
 
-      const result = await assessmentService.listAssessments({ workspaceId, skip, take, status });
+      const result = await assessmentService.listAssessments({ workspaceId: context.workspaceId, skip, take, status });
 
       return ApiUtils.success(result.data, { total: result.total, skip, take });
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    } catch (error: any) {
+    } catch (error: unknown) {
       return ApiUtils.error('Failed to list assessments', 500, error);
     }
-  });
+  }, target);
 }
 
 export async function POST(req: NextRequest) {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  return withAuthorization(req, 'CREATE_ASSESSMENT', '*', async (req: any, userContext: any) => {
+  const target = { resourceType: 'workspace', resourceId: req.headers.get('x-workspace-id') || '' };
+  return withAuthorization(req, 'CREATE_ASSESSMENT', 'talent_assessments', async (req, userContext) => {
     try {
+      const context = userContext as TalentAuthorizationContext;
       const body = await req.json();
-      const { title, workspaceId = 'mock-workspace-id' } = body;
+      const { title } = body;
 
       if (!title) {
         return ApiUtils.badRequest('Title is required');
@@ -42,15 +41,14 @@ export async function POST(req: NextRequest) {
       // In a full implementation, we'd pull it from a AsyncLocalStorage or context.
       
       const assessment = await assessmentService.createDraft(
-        workspaceId,
+        context.workspaceId,
         title,
-        userContext.userId
+        context.userId
       );
 
       return ApiUtils.success(assessment, undefined, 201);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    } catch (error: any) {
+    } catch (error: unknown) {
       return ApiUtils.error('Failed to create assessment', 500, error);
     }
-  });
+  }, target);
 }

@@ -1,10 +1,8 @@
 "use client";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { DigitalTwinConfig, NodeState, TwinNode, TwinConnection, TwinEvent } from "@/lib/data/industries/types";
+import { DigitalTwinConfig, NodeState, TwinNode, TwinEvent } from "@/lib/data/industries/types";
 import { Activity, Database, Server, Bot, Hexagon, Maximize2, Zap, LayoutDashboard } from "lucide-react";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { IntelligentOrb } from "@/components/motion/primitives/IntelligentOrb";
@@ -80,9 +78,6 @@ export function EnterpriseDigitalTwin({ config }: Props) {
   ] as const;
 
   const currentNodes = viewMode === "workflow" ? config.workflow.nodes : config.architecture.nodes;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  const currentConnections = viewMode === "workflow" ? config.workflow.connections : config.architecture.connections;
-  
   const selectedNode = currentNodes?.find(n => n.id === selectedNodeId);
 
   const getIcon = (type: TwinNode['type']) => {

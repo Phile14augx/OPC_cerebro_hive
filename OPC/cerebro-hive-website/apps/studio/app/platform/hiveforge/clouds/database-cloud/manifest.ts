@@ -1,7 +1,5 @@
-import { ExtensionManifest, Plugin, PluginContext } from "../../core/contracts/plugin";
+import { ExtensionManifest, Plugin } from "../../core/contracts/plugin";
 import { ServiceManifest } from "../../core/contracts/service";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { platformRegistry } from "../../core/registry/PlatformRegistry";
 
 export const databaseCloudManifest: ExtensionManifest = {
   schemaVersion: "1.0",
@@ -35,10 +33,8 @@ export const postgresService: ServiceManifest = {
 
 export class DatabaseCloudPlugin implements Plugin {
   readonly manifest = databaseCloudManifest;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  state: any = "installed";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  health: any = "Starting";
+  state: import("../../core/contracts/plugin").PluginLifecycleState = "installed";
+  health: import("../../core/contracts/plugin").PluginHealthState = "Starting";
   
   navigationNodes = [
     {
@@ -59,8 +55,7 @@ export class DatabaseCloudPlugin implements Plugin {
     }
   ];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  async register(context: PluginContext) {
+  async register() {
     // Register the Postgres Service into a (mock) service registry if we had one.
     // We can also just rely on the plugin being registered.
   }

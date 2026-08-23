@@ -1,10 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { motion, useScroll, useSpring, useTransform, AnimatePresence } from "framer-motion";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { SectionHeading } from "@/components/cerebro/SectionHeading";
+import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import { Database, Cloud, LineChart, Sparkles, Bot, BrainCircuit, CheckCircle2, Server, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
@@ -158,8 +155,7 @@ export default function WhyCerebroHive() {
         <div className="text-center max-w-3xl mx-auto mb-20">
            <span className="text-xs uppercase tracking-widest text-primary-accent font-bold mb-4 block">CerebroHive Enterprise Evolution</span>
            <h2 className="text-4xl md:text-5xl font-bold font-space text-text-primary tracking-tighter">The Journey to Autonomy</h2>
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-           <p className="mt-6 text-text-secondary text-lg">We don't just implement AI. We guide organizations through the inevitable evolution from traditional IT to fully self-optimizing enterprises.</p>
+           <p className="mt-6 text-text-secondary text-lg">We don&apos;t just implement AI. We guide organizations through the inevitable evolution from traditional IT to fully self-optimizing enterprises.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative">

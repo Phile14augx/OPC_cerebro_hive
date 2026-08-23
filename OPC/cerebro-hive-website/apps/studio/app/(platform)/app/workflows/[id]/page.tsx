@@ -35,11 +35,10 @@ export default function WorkflowDesignerPage() {
         
         {/* Editor Tabs */}
         <div className="h-10 border-b border-border bg-muted/10 flex items-end px-2 gap-1">
-          {['canvas', 'simulate', 'trace', 'deploy'].map((tab) => (
+          {(['canvas', 'simulate', 'trace', 'deploy'] as const).map((tab) => (
             <div
               key={tab}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-              onClick={() => setActiveTab(tab as any)}
+              onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 text-xs font-medium cursor-pointer rounded-t-lg transition-colors
                 ${activeTab === tab ? 'bg-background border-t border-l border-r border-border text-foreground' : 'text-muted-foreground hover:bg-muted/30'}`}
             >

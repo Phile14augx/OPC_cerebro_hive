@@ -2,24 +2,13 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { ArrowRight, CheckCircle2, Cpu, BrainCircuit, Users, Globe2, Sparkles, Code2, GraduationCap, Heart, Zap, Shield, Coffee, Briefcase, Send, ChevronRight, X, BarChart, Layers, Terminal, Search, XCircle, Loader2, Link2, FileText, Upload } from "lucide-react";
+import { ArrowRight, CheckCircle2, Cpu, BrainCircuit, Users, Globe2, Sparkles, Code2, GraduationCap, Zap, Shield, Briefcase, Send, ChevronRight, X, BarChart, Layers, Terminal, XCircle, Loader2, Link2, FileText, Upload, Heart } from "lucide-react";
 import type { PipelineResult } from "@/lib/hiring/pipeline";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 // Existing Data
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-const cultureValues = [
-  { icon: BrainCircuit, title: "Research-First", desc: "We publish, benchmark, and contribute to the discipline. Every engineer is expected to think, not just build." },
-  { icon: Cpu, title: "Production-Grade", desc: "We ship. Every internal project has real accountability, real SLAs, and real consequences." },
-  { icon: Globe2, title: "Enterprise Ambition", desc: "We work at the scale and complexity that fewer than 1% of engineers ever encounter." },
-  { icon: Users, title: "No-Politics Culture", desc: "Ideas win on merit. Hierarchy exists for accountability, not gatekeeping." },
-  { icon: Shield, title: "High Trust, High Ownership", desc: "You own your domain end-to-end. No hand-holding, no micromanagement." },
-  { icon: Sparkles, title: "Craft Excellence", desc: "We are obsessed with quality. Bad architecture, poor naming, or missing tests are rejected in code review." },
-];
-
 const competencyLevels = [
   { level: "L0", title: "Intern / Trainee", desc: "Learning core skills and internal processes." },
   { level: "L1", title: "Associate Engineer", desc: "Executes well-defined tasks under guidance." },
@@ -402,15 +391,27 @@ const orgStructure = [
   }
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-const benefits = [
-  { icon: Globe2, label: "Remote-First", desc: "Work from anywhere. Results matter, not your timezone." },
-  { icon: Heart, label: "Health Coverage", desc: "Comprehensive medical, dental, and vision for you and your family." },
-  { icon: GraduationCap, label: "Learning Budget", desc: "₹1L+ annual budget for courses, conferences, and certifications." },
-  { icon: Coffee, label: "Equipment Stipend", desc: "Best-in-class hardware. No compromises on your workstation." },
-  { icon: Zap, label: "Fast Trajectory", desc: "Early-stage means rapid growth. Your career moves as fast as you do." },
-  { icon: Sparkles, label: "Research Time", desc: "20% time protected for independent research and open-source." },
-];
+type RoleDetail = {
+  mission?: string;
+  responsibilities?: string[];
+  skills?: string[];
+  technicalSkills?: string[];
+  programming?: string[];
+  tools?: string[];
+  kpis?: string[];
+  certifications?: string[];
+  deliverables?: string[];
+  agenticScenario?: {
+    scenario: string;
+    tasks: string[];
+  };
+};
+
+type Role = {
+  title: string;
+  desc: string;
+  details?: RoleDetail;
+};
 
 export default function CareersPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -419,8 +420,8 @@ export default function CareersPage() {
   const [form, setForm] = useState({ name: "", email: "", role: "", linkedinUrl: "", resumeText: "" });
   const [pipeline, setPipeline] = useState<PipelineResult | null>(null);
   const [activeDept, setActiveDept] = useState(orgStructure[0].department);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  const [selectedRole, setSelectedRole] = useState<any | null>(null);
+
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
   const handleResumeFile = async (file: File) => {
     if (!/\.(txt|md)$/i.test(file.name)) {
@@ -826,8 +827,8 @@ export default function CareersPage() {
             <p className="text-text-secondary max-w-2xl mx-auto text-center">Every role operates on a transparent, standardized proficiency scale to ensure clear expectations, accountability, and a predictable growth trajectory.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-            {competencyLevels.map((c, i) => (
+
+            {competencyLevels.map((c) => (
               <div key={c.level} className="p-6 rounded-2xl bg-background border border-border flex flex-col gap-3 hover:border-primary-accent/40 transition-colors">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary-accent/10 border border-primary-accent/20 text-primary-accent font-space font-bold">
                   {c.level}

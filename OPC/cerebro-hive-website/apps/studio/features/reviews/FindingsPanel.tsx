@@ -1,10 +1,6 @@
 'use client';
 
 import { useFindings } from './hooks/useReviews';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FindingDetailDTO } from '@cerebro/api-client';
 import { AlertTriangle, Info, FileSearch } from 'lucide-react';

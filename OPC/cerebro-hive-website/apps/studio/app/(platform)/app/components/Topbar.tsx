@@ -346,8 +346,8 @@ export function Topbar() {
   useEffect(() => {
     const lastEntry = trail[trail.length - 1];
     document.title = lastEntry ? `${lastEntry.label} · CerebroHive Studio` : "CerebroHive Studio";
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+
+  }, [pathname, trail]);
 
   return (
     <>

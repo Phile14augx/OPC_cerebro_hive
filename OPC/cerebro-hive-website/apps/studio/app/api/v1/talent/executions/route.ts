@@ -6,22 +6,34 @@ import { withAuthorization } from '../../../../../lib/talent/auth/middleware';
 const executionService = new ExecutionService();
 
 export async function POST(req: NextRequest) {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  return withAuthorization(req, 'CREATE_EXECUTION', '*', async (req: any, userContext: any) => {
-    try {
-      const body = await req.json();
-      const { sessionId, language, code } = body;
+  const clonedReq = req.clone();
+  let body: { sessionId?: string; language?: string; code?: string } = {};
+  try {
+    body = await clonedReq.json();
+  } catch {
+    return ApiUtils.badRequest('Invalid JSON body');
+  }
 
-      if (!sessionId || !language || !code) {
-        return ApiUtils.badRequest('sessionId, language, and code are required');
+  const { sessionId } = body;
+  if (!sessionId) {
+    return ApiUtils.badRequest('sessionId is required');
+  }
+
+  const target = { resourceType: 'session', resourceId: sessionId };
+  
+  return withAuthorization(req, 'CREATE_EXECUTION', 'talent_executions', async () => {
+    try {
+      const { language, code } = body;
+
+      if (!language || !code) {
+        return ApiUtils.badRequest('language and code are required');
       }
 
       const job = await executionService.submitExecution(sessionId, language, code);
 
       return ApiUtils.success(job, undefined, 201);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    } catch (error: any) {
+    } catch (error: unknown) {
       return ApiUtils.error('Failed to submit execution job', 500, error);
     }
-  });
+  }, target);
 }

@@ -32,8 +32,11 @@ export class MemoryEventBus implements EventBus {
     if (!this.handlers.has(eventType)) {
       this.handlers.set(eventType, new Set());
     }
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- ARCH-LINT: Deferred
-    this.handlers.get(eventType)!.add(handler as EventHandler);
+    const handlers = this.handlers.get(eventType);
+    if (!handlers) {
+      throw new Error(`Failed to initialize handlers for event type: ${eventType}`);
+    }
+    handlers.add(handler as EventHandler);
   }
 
   unsubscribe<T>(eventType: string, handler: EventHandler<T>): void {

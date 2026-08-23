@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Network, ArrowRight, ShieldCheck, Database, Bot, ChevronRight } from "lucide-react";
+import { Network, ArrowRight, ShieldCheck, Database, Bot, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";
@@ -14,8 +13,7 @@ import { TrackedButton } from "@/components/cerebro/TrackedButton";
 type MapNode = {
   id: string;
   label: string;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  icon?: any;
+  icon?: LucideIcon;
   type: "industry" | "problem" | "service" | "solution" | "layer";
   color?: string;
 };

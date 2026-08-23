@@ -4,11 +4,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
-import { Box, Code, Cpu, Database, Network, Shield, Workflow, PlayCircle, Server, DollarSign, Map, Copy, Zap, User, UserCheck, Activity, BookOpen, Lightbulb, Award } from "lucide-react";
+import { Activity, Award, BookOpen, Box, Code, Copy, Cpu, Database, DollarSign, Lightbulb, Map, Network, PlayCircle, Server, Shield, User, UserCheck, Workflow, Zap, type LucideIcon } from "lucide-react";
 
 const getIcon = (name: string) => {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  const icons: any = {
+  const icons: Record<string, LucideIcon> = {
     Box, Code, Cpu, Database, Network, Shield, Workflow, PlayCircle, Server, DollarSign, Map, Copy, Zap, User, UserCheck, Activity, BookOpen, Lightbulb, Award
   };
   const Icon = icons[name] || Box;

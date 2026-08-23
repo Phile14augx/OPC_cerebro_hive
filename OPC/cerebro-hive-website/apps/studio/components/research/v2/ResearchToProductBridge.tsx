@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { ArrowDown, BrainCircuit, Search, Cpu, Database, Network } from "lucide-react";
+import { ArrowDown, BrainCircuit, Search, Cpu, Database } from "lucide-react";
 
 export const ResearchToProductBridge = () => {
   return (

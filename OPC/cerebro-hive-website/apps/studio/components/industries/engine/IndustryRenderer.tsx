@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useSyncExternalStore } from 'react';
 import { Industry } from '@/lib/data/industries/types';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { motion, AnimatePresence } from 'framer-motion';
 
 // We will import these as we build them
 import { IndustryHero } from './IndustryHero';
@@ -23,13 +21,16 @@ import { TransformationJourney } from './TransformationJourney';
 // import { CaseStudies } from './CaseStudies';
 // import { CTASection } from './CTASection';
 
-export function IndustryRenderer({ industry }: { industry: Industry }) {
-  const [mounted, setMounted] = useState(false);
+const subscribeToMount = () => () => {};
+const getClientMountedSnapshot = () => true;
+const getServerMountedSnapshot = () => false;
 
-  useEffect(() => {
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-    setMounted(true);
-  }, []);
+export function IndustryRenderer({ industry }: { industry: Industry }) {
+  const mounted = useSyncExternalStore(
+    subscribeToMount,
+    getClientMountedSnapshot,
+    getServerMountedSnapshot,
+  );
 
   if (!mounted) return null;
 

@@ -1,15 +1,11 @@
 "use client";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Users, DollarSign, TrendingUp, Megaphone, ShoppingCart, Headset,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Scale, Database, ShieldCheck, BarChart, Calendar, Settings,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  BrainCircuit, Activity, ChevronRight, Play, Server, Clock
+  Users, DollarSign, TrendingUp, Megaphone, Headset,
+  Scale, Database, ShieldCheck, BarChart, Settings,
+  BrainCircuit, Activity, Play, Server, Clock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn, withBasePath } from "@/lib/utils";
@@ -60,8 +56,7 @@ export default function AIAgentShowcase() {
     }, activeWorkflow.duration);
     
     return () => clearInterval(cycle);
-// eslint-disable-next-line react-hooks/exhaustive-deps -- ARCH-LINT: Deferred
-  }, [activeWorkflowIdx]);
+  }, [activeWorkflow.duration, activeWorkflowIdx]);
 
   return (
     <section className="section-pad bg-background relative overflow-hidden min-h-screen font-inter flex flex-col items-center">

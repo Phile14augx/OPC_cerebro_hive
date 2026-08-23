@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { seededRandom } from "../simulator/simulator.js";
-
 export interface ExtractedKnowledge {
   metadata: {
     title: string;

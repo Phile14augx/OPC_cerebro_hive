@@ -6,8 +6,16 @@ import { motion, useInView, animate } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, TrendingUp, Clock, ShieldCheck, Activity } from "lucide-react";
 
 // Number Counter Component
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-function AnimatedCounter({ from = 0, to, duration = 2, delay = 0, suffix = "", prefix = "" }: any) {
+interface AnimatedCounterProps {
+  from?: number;
+  to: number;
+  duration?: number;
+  delay?: number;
+  suffix?: string;
+  prefix?: string;
+}
+
+function AnimatedCounter({ from = 0, to, duration = 2, delay = 0, suffix = "", prefix = "" }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const [displayValue, setDisplayValue] = useState(from);

@@ -1,13 +1,12 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 import { prisma, ExecutionJob, ExecutionStatus } from '@cerebro/db';
 import { DomainEventBus } from '../events/eventBus';
-import { withTransaction } from '../database/transaction';
+import { withTransaction, TransactionClient } from '../database/transaction';
 import { 
   IQueueProvider, 
   ISandboxProvider, 
   IStreamingProvider,
-  ExecutionJobPayload
+  ExecutionJobPayload,
+  ExecutionResult
 } from './providers/interfaces';
 import { MockQueueProvider, MockSandboxProvider, MockStreamingProvider } from './providers/MockProviders';
 
@@ -27,8 +26,7 @@ export class ExecutionService {
    */
   private initializeWorker() {
     queueProvider.registerWorker(async (payload: ExecutionJobPayload) => {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-      const { jobId, sessionId, code, language } = payload;
+      const { jobId, code, language } = payload;
       
       // 1. ALLOCATING
       await this.updateJobStatus(jobId, 'ALLOCATING');
@@ -56,14 +54,13 @@ export class ExecutionService {
         await this.updateJobStatus(jobId, 'COMPLETED');
         streamingProvider.broadcast(jobId, { type: 'result', exitCode: result.exitCode, timestamp: new Date().toISOString() });
         DomainEventBus.publish('ExecutionCompleted', { jobId, exitCode: result.exitCode });
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-      } catch (error: any) {
+      } catch (error: unknown) {
         // 4. FAILED
         await this.updateJobStatus(jobId, 'FAILED');
-        streamingProvider.broadcast(jobId, { type: 'stderr', data: error.toString(), timestamp: new Date().toISOString() });
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        streamingProvider.broadcast(jobId, { type: 'stderr', data: errorMessage, timestamp: new Date().toISOString() });
         streamingProvider.broadcast(jobId, { type: 'result', exitCode: 1, timestamp: new Date().toISOString() });
-        DomainEventBus.publish('ExecutionFailed', { jobId, error: error.toString() });
+        DomainEventBus.publish('ExecutionFailed', { jobId, error: errorMessage });
       } finally {
         DomainEventBus.publish('SandboxDestroyed', { jobId });
         DomainEventBus.publish('WorkerReleased', { jobId });
@@ -77,9 +74,7 @@ export class ExecutionService {
       data: { status }
     });
   }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  private async persistArtifacts(jobId: string, result: any) {
+  private async persistArtifacts(jobId: string, result: ExecutionResult) {
     await prisma.executionArtifact.create({
       data: {
         jobId,
@@ -96,8 +91,7 @@ export class ExecutionService {
    * Called by the Next.js API to submit code for execution
    */
   async submitExecution(sessionId: string, language: string, code: string, traceId?: string): Promise<ExecutionJob> {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    return withTransaction(async (tx: any) => {
+    return withTransaction(async (tx: TransactionClient) => {
       // 1. Create Job Record
       const job = await tx.executionJob.create({
         data: {

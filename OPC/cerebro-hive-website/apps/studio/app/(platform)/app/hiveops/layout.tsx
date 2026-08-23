@@ -5,8 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, GitBranch, Rocket, Shield, DollarSign,
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  Server, GitMerge, ChevronRight,
+  Server, GitMerge,
 } from "lucide-react";
 
 const HIVEOPS_NAV = [

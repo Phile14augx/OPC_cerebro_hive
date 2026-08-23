@@ -33,8 +33,7 @@ function WorkflowsPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setWorkflows(await api<Workflow[]>("/v1/flow/workflows")); } catch { /* noop */ }
   }, [online]);
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 8000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 8000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {
     if (!form.name.trim() || !form.taskName.trim()) return;
@@ -128,7 +127,7 @@ function IntegrationsPanel({ online }: { online: boolean | null }) {
     try { setCatalog(await api<ConnectorDescriptor[]>("/v1/connect/catalog")); } catch { /* noop */ }
     try { setInstances(await api<ConnectorInstance[]>("/v1/connect/instances")); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 8000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 8000); return () => clearInterval(id); }, [refresh]);
 
   const configure = async () => {
     if (!form.name.trim()) return;
@@ -188,7 +187,7 @@ function ApprovalsPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { const q = statusFilter ? `?status=${statusFilter}` : ""; setApprovals(await api<Approval[]>(`/v1/governance/approvals${q}`)); } catch { /* noop */ }
   }, [online, statusFilter]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 6000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 6000); return () => clearInterval(id); }, [refresh]);
 
   const decide = async (id: string, decision: "approved" | "rejected") => {
     setBusyId(id);

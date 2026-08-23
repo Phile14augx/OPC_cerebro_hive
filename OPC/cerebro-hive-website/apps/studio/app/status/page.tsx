@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { CheckCircle2, Activity, Server, Database, Globe2 } from "lucide-react";
 
 export default function StatusPage() {
@@ -10,12 +10,15 @@ export default function StatusPage() {
     { name: "Knowledge Hub (Vector)", status: "Operational", uptime: "100%", icon: Database },
   ];
 
+  const [now] = useState(() => Date.now());
+
   // 90 days of synthetic status history (green dots)
-  const historyDays = Array.from({ length: 90 }).map((_, i) => ({
-// eslint-disable-next-line render -- ARCH-LINT: Deferred
-    date: new Date(Date.now() - (89 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    status: i === 15 ? "Partial Outage" : i === 42 ? "Degraded Performance" : "Operational"
-  }));
+  const historyDays = useMemo(() => {
+    return Array.from({ length: 90 }).map((_, i) => ({
+      date: new Date(now - (89 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      status: i === 15 ? "Partial Outage" : i === 42 ? "Degraded Performance" : "Operational"
+    }));
+  }, [now]);
 
   return (
     <div className="min-h-screen bg-background pt-12 pb-20">

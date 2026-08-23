@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { type ComponentType } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Database, Server, Wrench, Briefcase, Shield } from "lucide-react";
 
@@ -42,8 +42,7 @@ import { BiLogoMicrosoftTeams } from "react-icons/bi";
 
 type Integration = {
   name: string;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  icon: any;
+  icon: ComponentType<{ size?: string | number }>;
   category: string;
   features: string[];
   color: string;

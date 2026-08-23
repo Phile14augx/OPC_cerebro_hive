@@ -20,13 +20,12 @@ export type DomainEventType =
   | "OperationReady"
   | "OperationFailed";
 
-export interface DomainEvent {
+export interface DomainEvent<TPayload = unknown> {
   id: string; // UUID
   correlationId: string;
   type: DomainEventType;
   timestamp: string;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  payload: any;
+  payload: TPayload;
 }
 
 export class EventStore {

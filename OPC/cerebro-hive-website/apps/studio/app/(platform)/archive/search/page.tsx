@@ -63,8 +63,7 @@ export default function SemanticSearchPage() {
             Semantic Enterprise Search
           </h1>
           <p className="text-text-muted text-lg mb-10 max-w-xl text-center">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-            Find exactly what you're looking for using natural language. CerebroArchive searches across documents, chunks, and metadata using Hybrid AI Search.
+            Find exactly what you&apos;re looking for using natural language. CerebroArchive searches across documents, chunks, and metadata using Hybrid AI Search.
           </p>
 
           <form onSubmit={handleSearch} className="w-full max-w-2xl relative">

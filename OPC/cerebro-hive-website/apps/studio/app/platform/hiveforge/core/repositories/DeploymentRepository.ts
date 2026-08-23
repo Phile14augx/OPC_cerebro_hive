@@ -1,25 +1,21 @@
-import { Deployment } from "@cerebro/db";
+import { prisma, type Deployment, type Prisma } from "@cerebro/db";
 
 export interface IDeploymentRepository {
   findById(id: string): Promise<Deployment | null>;
-  create(data: Partial<Deployment>): Promise<Deployment>;
-  update(id: string, data: Partial<Deployment>): Promise<Deployment>;
+  create(data: Prisma.DeploymentCreateArgs["data"]): Promise<Deployment>;
+  update(id: string, data: Prisma.DeploymentUpdateArgs["data"]): Promise<Deployment>;
 }
-
-import { prisma } from "@cerebro/db";
 
 export class PrismaDeploymentRepository implements IDeploymentRepository {
   async findById(id: string): Promise<Deployment | null> {
     return prisma.deployment.findUnique({ where: { id } });
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async create(data: any): Promise<Deployment> {
+  async create(data: Prisma.DeploymentCreateArgs["data"]): Promise<Deployment> {
     return prisma.deployment.create({ data });
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async update(id: string, data: any): Promise<Deployment> {
+  async update(id: string, data: Prisma.DeploymentUpdateArgs["data"]): Promise<Deployment> {
     return prisma.deployment.update({ where: { id }, data });
   }
 }

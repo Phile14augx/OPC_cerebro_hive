@@ -17,8 +17,7 @@ export async function GET() {
     // Ping DB
     await prisma.$queryRaw`SELECT 1`;
     healthCheck.services.database = 'UP';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  } catch (e) {
+  } catch {
     healthCheck.services.database = 'DOWN';
     healthCheck.status = 'DEGRADED';
   }

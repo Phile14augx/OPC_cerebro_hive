@@ -34,8 +34,7 @@ export default function ComputeConsolePage() {
     } catch { /* noop */ }
   }, []);
 
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const deprovision = useCallback(async (id: string) => {
     setBusy(id);

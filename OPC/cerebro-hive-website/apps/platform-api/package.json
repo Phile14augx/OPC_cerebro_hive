@@ -18,6 +18,7 @@
     "@cerebro/core-bus": "workspace:*",
     "@cerebro/db": "workspace:*",
     "@cerebro/domain": "workspace:*",
+    "@cerebro/events": "workspace:^",
     "@cerebro/query": "workspace:*",
     "@cerebro/runtime-contracts": "workspace:*",
     "@cerebro/runtime-core": "workspace:^",

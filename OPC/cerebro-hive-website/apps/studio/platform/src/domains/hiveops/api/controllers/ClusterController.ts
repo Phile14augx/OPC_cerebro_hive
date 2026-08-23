@@ -1,6 +1,10 @@
 import { ClusterService } from "../../application/services/ClusterService";
 import { CreateClusterCommand } from "../../application/commands/CreateClusterCommand";
 
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Internal server error";
+}
+
 export class ClusterController {
   private service: ClusterService;
 
@@ -19,9 +23,8 @@ export class ClusterController {
       
       const result = await this.service.createCluster(command);
       return Response.json(result, { status: 201 });
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-    } catch (error: any) {
-      return Response.json({ error: error.message }, { status: 500 });
+    } catch (error: unknown) {
+      return Response.json({ error: errorMessage(error) }, { status: 500 });
     }
   }
 }

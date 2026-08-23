@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { UserCircle, Briefcase, Calculator, Scale, FileText, Globe, Search, BrainCircuit, Activity, Wrench, Network, LayoutTemplate } from "lucide-react";
+import { UserCircle, Briefcase, Calculator, Scale, BrainCircuit, Activity, Wrench, Network, LayoutTemplate } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 

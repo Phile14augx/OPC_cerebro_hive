@@ -37,13 +37,12 @@ export class ReconciliationEngine {
         });
         
         // Emits corrective actions (mocked)
-        this.emitCorrection(resId, report);
+        this.emitCorrection(resId);
       }
     }
   }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  private emitCorrection(resourceId: string, report: any) {
+  private emitCorrection(resourceId: string) {
     console.log(`[ReconciliationEngine] Emitting corrective action for ${resourceId} based on drift.`);
   }
 }

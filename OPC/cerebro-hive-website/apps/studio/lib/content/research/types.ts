@@ -48,10 +48,8 @@ export interface Citation {
 
 // Minimal placeholder for the React Flow blueprint layout
 export interface ResearchArchitectureData {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  nodes: any[];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  edges: any[];
+  nodes: { id: string; position: { x: number; y: number }; data: Record<string, unknown>; type?: string; [key: string]: unknown }[];
+  edges: { id: string; source: string; target: string; animated?: boolean; [key: string]: unknown }[];
   figureNumber: string;
   version: string;
 }

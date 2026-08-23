@@ -60,8 +60,7 @@ export const WeeklyBrief = () => {
                 <Lightbulb size={14} className="text-primary-accent" /> Business Implications
               </div>
               <p className="text-sm text-text-secondary leading-relaxed mb-4">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-                Chat interfaces rely on human reasoning to drive the tool. Agents absorb the reasoning burden. This means the ROI of AI is no longer bottlenecked by employee adoption rates—it is directly tied to the infrastructure's ability to execute autonomous tasks.
+                Chat interfaces rely on human reasoning to drive the tool. Agents absorb the reasoning burden. This means the ROI of AI is no longer bottlenecked by employee adoption rates—it is directly tied to the infrastructure&apos;s ability to execute autonomous tasks.
               </p>
               <div className="p-4 rounded-lg bg-surface-elevated border border-border">
                 <div className="text-xs text-text-primary font-bold mb-1">Why it matters</div>

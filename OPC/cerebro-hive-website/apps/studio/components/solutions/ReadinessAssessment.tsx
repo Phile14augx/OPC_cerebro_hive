@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { ClipboardCheck, ArrowRight, ShieldAlert, Zap, Server } from "lucide-react";
+import { ClipboardCheck, ShieldAlert, Zap, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
@@ -87,8 +86,7 @@ export function ReadinessAssessment() {
             <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold mb-3 block">Evaluate Your Baseline</span>
             <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Enterprise AI Readiness Assessment</h2>
             <p className="text-text-secondary text-lg mb-8">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-              Take this 2-minute diagnostic to determine your organization's AI maturity level. Receive instant, actionable recommendations for your next phase of transformation.
+              Take this 2-minute diagnostic to determine your organization&apos;s AI maturity level. Receive instant, actionable recommendations for your next phase of transformation.
             </p>
             <ul className="space-y-4">
               <li className="flex items-center gap-3 text-sm text-text-primary font-medium">

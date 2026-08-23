@@ -7,8 +7,8 @@ export interface CostEstimate {
 }
 
 export class PricingService {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async estimate(blueprint: Plugin, config: any): Promise<CostEstimate> {
+  async estimate(blueprint: Plugin, config: unknown): Promise<CostEstimate> {
+    void config;
     // Mock implementation. In reality this would read blueprint.manifest.spec.pricing
     // or call the Provider's costEstimator logic.
     let hourlyCost = 0.05; // Base mock cost

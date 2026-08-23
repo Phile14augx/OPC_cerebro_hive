@@ -1,8 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 // Mocking BullMQ interfaces for the prototype
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-export interface Job<T = any> {
+export interface Job<T = unknown> {
   id: string;
   data: T;
   updateProgress: (progress: number | object) => Promise<void>;
@@ -16,8 +13,7 @@ export class ExecutionQueueService {
    * BullMQ handles retries, delayed jobs, backoff, and concurrency out of the box.
    * This service is invoked by the Next.js API to enqueue jobs asynchronously.
    */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async enqueueSubmission(submissionId: string, payload: any) {
+  async enqueueSubmission(submissionId: string) {
     console.log(`[Queue: execution] Enqueuing Submission ${submissionId}`);
     // await executionQueue.add('process-submission', { submissionId, payload }, {
     //   attempts: 3,

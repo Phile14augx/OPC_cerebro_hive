@@ -35,8 +35,7 @@ export function EnterpriseAIOperatingSystem() {
           <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold mb-3 block">Conceptual Model</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Enterprise AI Operating System</h2>
           <p className="text-text-secondary text-lg">
-// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred
-            We don't build isolated AI features. We architect a unified operating system that turns your enterprise data into autonomous action.
+            We don&apos;t build isolated AI features. We architect a unified operating system that turns your enterprise data into autonomous action.
           </p>
         </div>
 

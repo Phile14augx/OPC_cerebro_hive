@@ -1,8 +1,17 @@
 import { GetDashboardQuery } from "../queries/GetDashboardQuery";
 
+export interface OperationsDashboard {
+  workspaceId: string;
+  infrastructureHealth: number;
+  activeClusters: number;
+  gpuUtilization: number;
+  pipelineSuccess: number;
+  runningModels: number;
+  monthlyCost: number;
+}
+
 export class GetDashboardHandler {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred
-  async handle(query: GetDashboardQuery): Promise<any> {
+  async handle(query: GetDashboardQuery): Promise<OperationsDashboard> {
     // In a real implementation, this would aggregate data from repositories
     return {
       workspaceId: query.workspaceId,

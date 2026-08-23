@@ -4,6 +4,11 @@ import React from 'react';
 import { EngineConfig } from '@/lib/data/industries/types';
 import { motion } from 'framer-motion';
 
+const pseudoRandom = (seed: number) => {
+  const value = Math.sin(seed * 12.9898) * 43758.5453;
+  return value - Math.floor(value);
+};
+
 export function AnimatedIndustryBackground({ config }: { config: EngineConfig }) {
   
   if (config.backgroundAnimation === 'transaction-network') {
@@ -42,12 +47,11 @@ export function AnimatedIndustryBackground({ config }: { config: EngineConfig })
           {[...Array(15)].map((_, i) => (
             <motion.circle
               key={i}
-// eslint-disable-next-line render -- ARCH-LINT: Deferred
-              r={Math.random() * 3 + 1}
+              r={pseudoRandom(i * 5 + 1) * 3 + 1}
               fill={i % 3 === 0 ? config.secondaryColor : config.primaryColor}
               initial={{ 
-                cx: `${Math.random() * 100}%`, 
-                cy: `${Math.random() * 100}%`,
+                cx: `${pseudoRandom(i * 5 + 2) * 100}%`,
+                cy: `${pseudoRandom(i * 5 + 3) * 100}%`,
                 opacity: 0
               }}
               animate={{ 
@@ -55,9 +59,9 @@ export function AnimatedIndustryBackground({ config }: { config: EngineConfig })
                 scale: [1, 1.5, 1]
               }}
               transition={{
-                duration: Math.random() * 3 + 2,
+                duration: pseudoRandom(i * 5 + 4) * 3 + 2,
                 repeat: Infinity,
-                delay: Math.random() * 5
+                delay: pseudoRandom(i * 5 + 5) * 5
               }}
             />
           ))}
@@ -130,21 +134,21 @@ export function AnimatedIndustryBackground({ config }: { config: EngineConfig })
           {[...Array(10)].map((_, i) => (
             <g key={`sensor-${i}`}>
               <circle
-                cx={`${20 + Math.random() * 60}%`}
-                cy={`${20 + Math.random() * 60}%`}
+                cx={`${20 + pseudoRandom(i * 5 + 1) * 60}%`}
+                cy={`${20 + pseudoRandom(i * 5 + 2) * 60}%`}
                 r="4"
                 fill={config.accentColor}
               />
               <motion.circle
-                cx={`${20 + Math.random() * 60}%`}
-                cy={`${20 + Math.random() * 60}%`}
+                cx={`${20 + pseudoRandom(i * 5 + 3) * 60}%`}
+                cy={`${20 + pseudoRandom(i * 5 + 4) * 60}%`}
                 r="4"
                 fill="none"
                 stroke={config.accentColor}
                 strokeWidth="2"
                 initial={{ scale: 1, opacity: 0.8 }}
                 animate={{ scale: 6, opacity: 0 }}
-                transition={{ duration: 2, repeat: Infinity, delay: Math.random() * 2 }}
+                transition={{ duration: 2, repeat: Infinity, delay: pseudoRandom(i * 5 + 5) * 2 }}
               />
             </g>
           ))}

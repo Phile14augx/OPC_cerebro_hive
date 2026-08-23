@@ -59,4 +59,17 @@ describe('compliance audit contracts', () => {
     });
     expect(control.status).toBe('PartiallySatisfied');
   });
+
+  it('does not treat evidence without request IDs as matching approval evidence', async () => {
+    const ledger = new AuditLedger();
+    const evidence = new EvidenceCollector();
+    const control = createAccessControl();
+    const monitor = new ContinuousMonitor(ledger, evidence, [control]);
+
+    await monitor.consumeEvent('AccessApproved', { principalId: 'user-3' });
+    await monitor.consumeEvent('AccessProvisioned', { principalId: 'user-3' });
+
+    expect(monitor.getDeficiencies()).toHaveLength(1);
+    expect(control.status).toBe('PartiallySatisfied');
+  });
 });

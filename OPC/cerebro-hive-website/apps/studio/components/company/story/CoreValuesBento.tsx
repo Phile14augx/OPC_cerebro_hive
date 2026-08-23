@@ -96,23 +96,7 @@ export const CoreValuesBento = () => {
             if (index === 2) colSpanClass = "lg:col-span-1 lg:row-start-1 lg:col-start-3"; // Honesty (move to top right)
             if (index === 3) colSpanClass = "lg:col-span-2"; // Partnership
             if (index === 4) colSpanClass = "lg:col-span-2"; // Innovation
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
             if (index === 5) colSpanClass = "lg:col-span-1"; // Responsible
-            
-            // Reordering array logically to fit CSS Grid naturally without explicit row-start:
-            // If we keep the array order:
-            // 0 (Eng) -> span 2
-            // 2 (Honesty) -> span 1
-            // 1 (Outcome) -> span 1
-            // 3 (Partnership) -> span 2
-            // 4 (Innovation) -> span 1
-            // 5 (Responsible) -> span 2
-            // Let's apply this logic dynamically.
-            
-            let spanClass = "lg:col-span-1";
-            if (index === 0 || index === 3 || index === 5) {
-              spanClass = "lg:col-span-2";
-            }
             
             return (
               <CultureCard 
@@ -122,7 +106,7 @@ export const CoreValuesBento = () => {
                 className={cn(
                   "min-h-[400px] w-full",
                   // Mobile: All span 1. Tablet: All span 1 (or 2 col grid). Desktop: Asymmetric
-                  spanClass
+                  colSpanClass
                 )} 
               />
             );

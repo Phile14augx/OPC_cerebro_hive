@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { usePrompt } from '@/src/hooks/usePrompt';
 import { useLayoutStore } from '@/src/store/useLayoutStore';
@@ -19,14 +19,16 @@ export default function PromptStudioPage() {
   const { activeTab, setActiveTab } = usePromptStudioStore();
 
   const [promptContent, setPromptContent] = useState('');
+  const [loadedPromptId, setLoadedPromptId] = useState<string | null>(null);
 
-  // Sync loaded data to local state
-  useEffect(() => {
-    if (data?.history?.[0]) {
-// eslint-disable-next-line renders -- ARCH-LINT: Deferred
+  // Sync loaded data to local state during render
+  if (data && id !== loadedPromptId) {
+    setLoadedPromptId(id);
+    if (data.history?.[0]) {
       setPromptContent(data.history[0].content);
     }
-  }, [data]);
+  }
+
 
   if (isLoading) {
     return <div className="p-8 text-muted-foreground">Loading IDE...</div>;
@@ -48,10 +50,10 @@ export default function PromptStudioPage() {
         
         {/* Editor Tabs */}
         <div className="h-10 border-b border-border bg-muted/10 flex items-end px-2 gap-1">
-          {['edit', 'test', 'evaluate'].map((tab) => (
+          {(['edit', 'test', 'evaluate'] as const).map((tab) => (
             <div
               key={tab}
-              onClick={() => setActiveTab(tab as any)}
+              onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 text-xs font-medium cursor-pointer rounded-t-lg transition-colors
                 ${activeTab === tab ? 'bg-background border-t border-l border-r border-border text-foreground' : 'text-muted-foreground hover:bg-muted/30'}`}
             >

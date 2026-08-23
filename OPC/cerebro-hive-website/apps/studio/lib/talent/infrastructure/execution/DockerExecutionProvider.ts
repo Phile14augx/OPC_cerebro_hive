@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- ARCH-LINT: Deferred
-// @ts-nocheck
 export interface ExecutionConfig {
   cpuQuota: number;       // e.g. 0.5 (half a core)
   memoryLimitMb: number;  // e.g. 256
@@ -47,9 +45,7 @@ export class DockerExecutionProvider implements IExecutionProvider {
     //   HostConfig: { Memory: config.memoryLimitMb * 1024 * 1024, NetworkMode: 'none', ReadonlyRootfs: config.readOnlyFilesystem } 
     // })
   }
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-  async execute(envId: string, command: string[], artifacts: Record<string, string>): Promise<void> {
+  async execute(envId: string, command: string[]): Promise<void> {
     console.log(`[Docker] Executing ${command.join(' ')} inside ${envId}`);
     // Attach volumes, start container
   }

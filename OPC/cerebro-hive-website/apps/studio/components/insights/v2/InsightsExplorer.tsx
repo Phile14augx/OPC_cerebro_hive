@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred
-import { Filter, ChevronDown, Clock, Maximize2, FileText, ArrowRight } from "lucide-react";
+import { ChevronDown, Clock, Maximize2, FileText, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
