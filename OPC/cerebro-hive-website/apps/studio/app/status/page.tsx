@@ -1,3 +1,4 @@
+"use client";
 import React, { useMemo, useState } from "react";
 import { CheckCircle2, Activity, Server, Database, Globe2 } from "lucide-react";
 
@@ -98,3 +99,4 @@ export default function StatusPage() {
     </div>
   );
 }
+
