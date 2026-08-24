@@ -345,11 +345,11 @@ jobs:
 
       - name: Ruff lint
         working-directory: ${{ matrix.service }}
-        run: ruff check src/ || true
+        run: ruff check src/
 
       - name: Run tests
         working-directory: ${{ matrix.service }}
-        run: pytest src/ -x -q --tb=short || true
+        run: pytest src/ -x -q --tb=short
         env:
           PYTHONPATH: src
 
@@ -378,7 +378,7 @@ jobs:
 
       - name: Run tests
         working-directory: ${{ matrix.service }}
-        run: ./gradlew test --no-daemon || true
+        run: ./gradlew test --no-daemon
 
   # ── CI Gate: all required checks must pass ────────────────────────────────
   ci-gate:
@@ -390,6 +390,7 @@ jobs:
       - build
       - go-services
       - python-services
+      - jvm-services
     if: always()
     steps:
       - name: Check all required jobs passed
