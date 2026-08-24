@@ -130,15 +130,21 @@ jobs:
           NODE_ENV: production
           NEXT_TELEMETRY_DISABLED: 1
 
+      - name: Build root Next.js app
+        run: pnpm exec next build
+        env:
+          NODE_ENV: production
+          NEXT_TELEMETRY_DISABLED: 1
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: |
-            OPC/cerebro-hive-website/apps/studio/.next/**
-            OPC/cerebro-hive-website/apps/forge/.next/**
-            OPC/cerebro-hive-website/apps/platform-api/dist/**
-            OPC/cerebro-hive-website/services/forge-api/dist/**
+            OPC/cerebro-hive-website/.next/**
+            OPC/cerebro-hive-website/apps/*/.next/**
+            OPC/cerebro-hive-website/apps/*/dist/**
+            OPC/cerebro-hive-website/services/*/dist/**
           retention-days: 1
 
   # ── CI Gate ───────────────────────────────────────────────────────────────
