@@ -1,0 +1,165 @@
+name: Semgrep SAST
+
+# Semgrep static analysis — complements CodeQL with a broader ruleset
+# covering OWASP Top 10, secrets, supply chain, and CerebroHive-specific patterns.
+#
+# Runs on:
+#   - Every PR (blocking: findings annotated inline via SARIF)
+#   - Weekly full scan of main (comprehensive ruleset)
+#   - Manual dispatch for on-demand deep scans
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: ["main"]
+  schedule:
+    - cron: "0 4 * * 1"   # Weekly Monday 04:00 UTC full scan
+  workflow_dispatch:
+    inputs:
+      config:
+        description: "Semgrep config to run (default: auto)"
+        required: false
+        default: "auto"
+
+concurrency:
+  group: semgrep-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write   # upload SARIF to GitHub Security tab
+  actions: read
+
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  semgrep:
+    name: Semgrep SAST Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: semgrep/semgrep:latest
+      options: --user root
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history for --diff-depth analysis
+
+      # ── Core SAST scan ───────────────────────────────────────────────────────
+      - name: Semgrep scan (PR diff-aware)
+        if: github.event_name == 'pull_request'
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+        run: |
+          semgrep ci \
+            --sarif \
+            --output /tmp/semgrep.sarif \
+            --config "p/javascript" \
+            --config "p/typescript" \
+            --config "p/react" \
+            --config "p/nodejs" \
+            --config "p/owasp-top-ten" \
+            --config "p/secrets" \
+            --config "p/supply-chain" \
+            --config "p/jwt" \
+            --config "p/sql-injection" \
+            --config "p/xss" \
+            --timeout 300 \
+            --jobs 4 \
+            || true   # Don't fail the step; let the upload + gate decide
+
+      - name: Semgrep scan (full — push / schedule / dispatch)
+        if: github.event_name != 'pull_request'
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+        run: |
+          CONFIG="${{ inputs.config || 'auto' }}"
+          semgrep ci \
+            --sarif \
+            --output /tmp/semgrep.sarif \
+            --config "$CONFIG" \
+            --config "p/javascript" \
+            --config "p/typescript" \
+            --config "p/react" \
+            --config "p/nodejs" \
+            --config "p/owasp-top-ten" \
+            --config "p/secrets" \
+            --config "p/supply-chain" \
+            --config "p/jwt" \
+            --config "p/sql-injection" \
+            --config "p/xss" \
+            --config "p/python" \
+            --config "p/golang" \
+            --config "p/terraform" \
+            --config "p/dockerfile" \
+            --timeout 600 \
+            --jobs 4 \
+            || true
+
+      # ── Upload SARIF to GitHub Security tab ──────────────────────────────────
+      - name: Upload SARIF results
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: /tmp/semgrep.sarif
+          category: semgrep
+
+      # ── Fail on high/critical findings (PR gate) ────────────────────────────
+      - name: Evaluate findings
+        if: always()
+        run: |
+          if [ ! -f /tmp/semgrep.sarif ]; then
+            echo "No SARIF output found — scan may have failed entirely"
+            exit 1
+          fi
+
+          # Count HIGH and CRITICAL findings
+          HIGH=$(python3 -c "
+          import json, sys
+          with open('/tmp/semgrep.sarif') as f:
+              sarif = json.load(f)
+          count = 0
+          for run in sarif.get('runs', []):
+              for result in run.get('results', []):
+                  level = result.get('level', 'note')
+                  # Semgrep maps: error=HIGH/CRITICAL, warning=MEDIUM
+                  if level in ('error',):
+                      count += 1
+          print(count)
+          ")
+
+          echo "High/Critical findings: $HIGH"
+
+          if [ "$HIGH" -gt 0 ]; then
+            echo "::error::Semgrep found $HIGH high/critical severity findings. Review the Security tab and fix before merging."
+            exit 1
+          fi
+
+          echo "✅ No high/critical Semgrep findings"
+
+      # ── Summary ──────────────────────────────────────────────────────────────
+      - name: Post scan summary
+        if: always()
+        run: |
+          if [ -f /tmp/semgrep.sarif ]; then
+            TOTAL=$(python3 -c "
+            import json
+            with open('/tmp/semgrep.sarif') as f:
+                sarif = json.load(f)
+            count = sum(len(r.get('results', [])) for r in sarif.get('runs', []))
+            print(count)
+            ")
+            echo "## Semgrep SAST Results" >> $GITHUB_STEP_SUMMARY
+            echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Total findings | $TOTAL |" >> $GITHUB_STEP_SUMMARY
+            echo "| SARIF uploaded | ✅ |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "View detailed results in the [Security tab](/${{ github.repository }}/security/code-scanning)." >> $GITHUB_STEP_SUMMARY
+          fi

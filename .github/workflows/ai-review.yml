@@ -1,0 +1,311 @@
+name: AI-Powered PR Review
+
+# Posts a structured AI code review on every pull request using Claude.
+# Produces: Risk Score, Architectural Impact, Security Findings,
+# Breaking Changes, and per-file diff commentary.
+#
+# Required secrets:
+#   ANTHROPIC_API_KEY  — Claude API key
+#   GITHUB_TOKEN       — auto-provided by Actions (for PR comment posting)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    # Only run when there's actual code to review
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - "LICENSE"
+      - "docs/**"
+
+concurrency:
+  group: ai-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true   # newer push supersedes old review
+
+permissions:
+  contents: read
+  pull-requests: write       # needed to post/update PR comments
+
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  ai-review:
+    name: Claude AI Code Review
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so we can diff against base
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install @anthropic-ai/sdk@latest
+
+      - name: Gather PR diff
+        id: diff
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          # Cap diff at 8 000 lines to stay within context limits
+          git diff "$BASE_SHA".."$HEAD_SHA" \
+            -- '*.ts' '*.tsx' '*.js' '*.jsx' '*.py' '*.go' '*.rs' \
+               '*.yaml' '*.yml' '*.json' '*.tf' '*.prisma' \
+            | head -8000 > /tmp/pr.diff
+
+          DIFF_SIZE=$(wc -l < /tmp/pr.diff)
+          echo "diff_lines=$DIFF_SIZE" >> $GITHUB_OUTPUT
+          echo "Diff captured: $DIFF_SIZE lines"
+
+      - name: Collect PR context
+        id: context
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+          CHANGED_FILES: ${{ toJson(github.event.pull_request.changed_files) }}
+          ADDITIONS: ${{ github.event.pull_request.additions }}
+          DELETIONS: ${{ github.event.pull_request.deletions }}
+        run: |
+          cat > /tmp/pr_context.json <<EOF
+          {
+            "title": "$PR_TITLE",
+            "body": $(echo "$PR_BODY" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))"),
+            "author": "$PR_AUTHOR",
+            "base_branch": "$BASE_BRANCH",
+            "head_branch": "$HEAD_BRANCH",
+            "changed_files": $CHANGED_FILES,
+            "additions": $ADDITIONS,
+            "deletions": $DELETIONS
+          }
+          EOF
+
+      - name: Run Claude AI Review
+        id: review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cat > /tmp/review.mjs << 'SCRIPT'
+          import Anthropic from "@anthropic-ai/sdk";
+          import fs from "fs";
+
+          const client = new Anthropic();
+          const diff = fs.readFileSync("/tmp/pr.diff", "utf8");
+          const context = JSON.parse(fs.readFileSync("/tmp/pr_context.json", "utf8"));
+
+          const systemPrompt = `You are an expert Staff Engineer conducting a thorough code review for the CerebroHive AI Software Factory monorepo.
+
+          CerebroHive is a multi-tenant AI platform built with:
+          - Next.js 14 App Router (TypeScript, Tailwind CSS)
+          - NestJS microservices (forge-api, platform-api, etc.)
+          - Prisma ORM + PostgreSQL with tenant isolation
+          - pnpm workspaces + Turborepo monorepo
+          - Kubernetes + ArgoCD GitOps deployment
+
+          Your review must be structured, actionable, and concise. Focus on what matters.
+          Format your response as valid JSON matching this exact schema:
+          {
+            "risk_score": number (0-100, where 100 = highest risk),
+            "risk_label": "LOW" | "MEDIUM" | "HIGH" | "CRITICAL",
+            "summary": string (2-3 sentences, what this PR does and its overall quality),
+            "architectural_impact": {
+              "level": "none" | "low" | "medium" | "high",
+              "details": string
+            },
+            "security_findings": [
+              { "severity": "info"|"low"|"medium"|"high"|"critical", "finding": string, "file": string | null }
+            ],
+            "breaking_changes": [
+              { "type": string, "description": string, "migration_required": boolean }
+            ],
+            "key_concerns": [
+              { "category": "performance"|"maintainability"|"correctness"|"testing"|"types"|"other", "concern": string, "suggestion": string }
+            ],
+            "positive_highlights": [string],
+            "test_coverage_assessment": string,
+            "recommendation": "APPROVE" | "REQUEST_CHANGES" | "COMMENT"
+          }`;
+
+          const userPrompt = `Review this pull request:
+
+          **PR:** ${context.title}
+          **Author:** ${context.author}
+          **Branch:** ${context.head_branch} → ${context.base_branch}
+          **Stats:** +${context.additions} / -${context.deletions} across ${context.changed_files} files
+
+          ${context.body ? `**Description:**\n${context.body}\n` : ""}
+
+          **Diff (may be truncated at 8000 lines):**
+          \`\`\`diff
+          ${diff.slice(0, 120000)}
+          \`\`\`
+
+          Provide your structured review as JSON.`;
+
+          const message = await client.messages.create({
+            model: "claude-opus-4-5",
+            max_tokens: 4096,
+            system: systemPrompt,
+            messages: [{ role: "user", content: userPrompt }],
+          });
+
+          const content = message.content[0].type === "text" ? message.content[0].text : "";
+
+          // Extract JSON from response (may be wrapped in markdown code block)
+          const jsonMatch = content.match(/```(?:json)?\n?([\s\S]*?)\n?```/) || [null, content];
+          const reviewJson = jsonMatch[1] || content;
+
+          try {
+            const parsed = JSON.parse(reviewJson.trim());
+            fs.writeFileSync("/tmp/review.json", JSON.stringify(parsed, null, 2));
+            console.log("Review generated successfully");
+            console.log(`Risk: ${parsed.risk_label} (${parsed.risk_score}/100)`);
+            console.log(`Recommendation: ${parsed.recommendation}`);
+          } catch (e) {
+            console.error("Failed to parse JSON:", e.message);
+            // Write raw content as fallback
+            fs.writeFileSync("/tmp/review.json", JSON.stringify({ raw: content, parse_error: e.message }, null, 2));
+          }
+          SCRIPT
+
+          node /tmp/review.mjs
+
+      - name: Format and post PR comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          cat > /tmp/format_comment.py << 'PYTHON'
+          import json, os, sys
+
+          with open("/tmp/review.json") as f:
+              r = json.load(f)
+
+          if "raw" in r:
+              # Fallback: raw text output
+              comment = f"""## 🤖 CerebroHive AI Review
+
+          > ⚠️ Structured parsing failed — showing raw review.
+
+          {r['raw']}
+
+          ---
+          *Powered by Claude · [View run]({os.environ['RUN_URL']})*"""
+          else:
+              # Risk badge
+              risk_emoji = {"LOW": "🟢", "MEDIUM": "🟡", "HIGH": "🔴", "CRITICAL": "🚨"}.get(r.get("risk_label", ""), "⚪")
+              rec_emoji = {"APPROVE": "✅", "REQUEST_CHANGES": "❌", "COMMENT": "💬"}.get(r.get("recommendation", ""), "💬")
+              arch_emoji = {"none": "✅", "low": "🟡", "medium": "🟠", "high": "🔴"}.get(r.get("architectural_impact", {}).get("level", "none"), "ℹ️")
+
+              security = r.get("security_findings", [])
+              breaking = r.get("breaking_changes", [])
+              concerns = r.get("key_concerns", [])
+              highlights = r.get("positive_highlights", [])
+
+              sec_section = ""
+              if security:
+                  lines = []
+                  for s in security:
+                      sev_emoji = {"critical": "🚨", "high": "🔴", "medium": "🟠", "low": "🟡", "info": "ℹ️"}.get(s.get("severity", ""), "•")
+                      loc = f" · `{s['file']}`" if s.get("file") else ""
+                      lines.append(f"  - {sev_emoji} **{s['severity'].upper()}**{loc}: {s['finding']}")
+                  sec_section = "### 🔐 Security Findings\n" + "\n".join(lines)
+              else:
+                  sec_section = "### 🔐 Security Findings\n  - ✅ No security issues found"
+
+              break_section = ""
+              if breaking:
+                  lines = []
+                  for b in breaking:
+                      mig = " · ⚠️ Migration required" if b.get("migration_required") else ""
+                      lines.append(f"  - **{b.get('type', 'change')}**{mig}: {b.get('description', '')}")
+                  break_section = "\n### ⚠️ Breaking Changes\n" + "\n".join(lines)
+
+              concerns_section = ""
+              if concerns:
+                  lines = []
+                  for c in concerns:
+                      cat_emoji = {"performance": "⚡", "maintainability": "🔧", "correctness": "🐛", "testing": "🧪", "types": "📝"}.get(c.get("category", ""), "💡")
+                      lines.append(f"  - {cat_emoji} **{c.get('category', 'issue')}**: {c.get('concern', '')}\n    > 💡 {c.get('suggestion', '')}")
+                  concerns_section = "\n### 💡 Key Concerns\n" + "\n".join(lines)
+
+              highlights_section = ""
+              if highlights:
+                  lines = [f"  - ✨ {h}" for h in highlights]
+                  highlights_section = "\n### ✨ Highlights\n" + "\n".join(lines)
+
+              comment = f"""## 🤖 CerebroHive AI Code Review
+
+          {rec_emoji} **Recommendation: {r.get('recommendation', 'COMMENT')}** · {risk_emoji} Risk Score: **{r.get('risk_score', '?')}/100** ({r.get('risk_label', '?')})
+
+          > {r.get('summary', 'No summary available.')}
+
+          ---
+
+          ### 📐 Architectural Impact
+          {arch_emoji} **{r.get('architectural_impact', {}).get('level', 'unknown').upper()}** — {r.get('architectural_impact', {}).get('details', '')}
+
+          {sec_section}{break_section}{concerns_section}{highlights_section}
+
+          ### 🧪 Test Coverage
+          {r.get('test_coverage_assessment', 'Not assessed.')}
+
+          ---
+          *Powered by Claude Opus · [View run]({os.environ['RUN_URL']})*"""
+
+          with open("/tmp/comment.md", "w") as f:
+              f.write(comment)
+
+          print("Comment formatted successfully")
+          PYTHON
+
+          python3 /tmp/format_comment.py
+
+          # Find existing bot comment and update it (avoid comment spam on re-pushes)
+          COMMENT_ID=$(gh api \
+            "repos/$REPO/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("## 🤖 CerebroHive AI Code Review"))) | .id' \
+            | head -1)
+
+          if [ -n "$COMMENT_ID" ]; then
+            echo "Updating existing comment $COMMENT_ID"
+            gh api \
+              --method PATCH \
+              "repos/$REPO/issues/comments/$COMMENT_ID" \
+              --field body="$(cat /tmp/comment.md)"
+          else
+            echo "Posting new comment"
+            gh pr comment "$PR_NUMBER" \
+              --repo "$REPO" \
+              --body-file /tmp/comment.md
+          fi
+
+      - name: Set PR check status
+        if: always()
+        env:
+          REVIEW_FILE: /tmp/review.json
+        run: |
+          if [ -f "$REVIEW_FILE" ]; then
+            RISK=$(python3 -c "import json; d=json.load(open('$REVIEW_FILE')); print(d.get('risk_score', 0))")
+            LABEL=$(python3 -c "import json; d=json.load(open('$REVIEW_FILE')); print(d.get('risk_label', 'UNKNOWN'))")
+            echo "Final risk: $LABEL ($RISK/100)"
+            # Fail the check on CRITICAL risk (>= 90) to block merge
+            if [ "$RISK" -ge 90 ] 2>/dev/null; then
+              echo "::error::AI Review flagged CRITICAL risk ($RISK/100). Review findings before merging."
+              exit 1
+            fi
+          fi

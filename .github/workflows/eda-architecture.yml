@@ -1,0 +1,88 @@
+name: CerebroEDA Architecture
+
+# Architecture failures block the merge. The whole point of encoding ADRs as
+# rules is that drift becomes a build failure rather than a code-review argument.
+on:
+  pull_request:
+    paths:
+      - 'packages/eda-**'
+      - 'services/eda-**'
+      - 'apps/eda-**'
+      - 'docs/architecture/**'
+      - '.dependency-cruiser*.js'
+      - '.eslintrc.eda.json'
+      - 'tools/arch/**'
+  push:
+    branches: [main]
+
+# Least-privilege token: these workflows only read the tree and report status.
+# Without an explicit block the job inherits the repository default, which is
+# write-all on many orgs.
+permissions:
+  contents: read
+
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  architecture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Structural conformance (layers, ADR refs, matrix coverage)
+        run: pnpm run arch:check
+
+      - name: Import boundaries
+        run: pnpm run arch:boundaries
+
+      - name: Boundary rules actually fire
+        # Guards against vacuous passes. Without this, a typo'd path glob looks
+        # identical to a working rule.
+        run: pnpm run arch:verify-rules
+
+      - name: Typecheck eda workspaces
+        run: pnpm --filter "@cerebro/eda-*" typecheck
+
+      - name: Lint eda workspaces
+        run: pnpm --filter "@cerebro/eda-*" lint
+
+  harness-self-test:
+    # The harness must be proven to fail. A validation harness that always
+    # reports PASS launders an unvalidated assumption into apparent evidence.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Gate A self-test (7 negative controls)
+        run: node tools/arch/gate-a/self-test.mjs
+      - name: Harness case registry loads
+        run: node tools/harness/cli.mjs list
+      - name: Harness invariants (declared fields cannot creep back)
+        run: node tools/harness/self-test.mjs
+      - name: Gate B execution semantics (no cluster required)
+        run: node tools/arch/gate-b/semantics-test.mjs
+
+  signature-corpus:
+    # ADR 0011: signature drift must never be accidental.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Signature stability corpus
+        run: pnpm run corpus:signatures
