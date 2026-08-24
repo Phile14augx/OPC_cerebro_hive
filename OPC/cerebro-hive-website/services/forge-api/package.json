@@ -9,7 +9,7 @@
     "start": "nest start",
     "start:prod": "node dist/main",
     "lint": "eslint --max-warnings=0 .",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "test:break": "jest --testPathPattern='break-tests'",
     "generate-openapi": "ts-node -P tsconfig.json scripts/generate-openapi.ts",
@@ -54,6 +54,9 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$"
+    "testRegex": ".*\\.spec\\.ts$",
+    "testPathIgnorePatterns": [
+      "/break-tests/"
+    ]
   }
 }

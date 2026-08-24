@@ -57,7 +57,7 @@ function ProductChip({ p }: { p: ProductHealth }) {
 /* ── Main page ───────────────────────────────────────────────────────────── */
 export default function DashboardPage() {
   const { role } = useRole();
-  const profile   = ROLE_PROFILES[role];
+  const profile   = ROLE_PROFILES[role, narrativeMutation];
 
   const { data: dash, isLoading: dashLoading } = useQuery({
     queryKey: ['dashboard'],
@@ -70,7 +70,7 @@ export default function DashboardPage() {
   const narrative = narrativeMutation.data?.narrative;
 
   // Refresh narrative when role changes
-  useEffect(() => { narrativeMutation.mutate(role); }, [role]);
+  useEffect(() => { narrativeMutation.mutate(role); }, [role, narrativeMutation]);
 
   const platform   = dash?.platform;
   const alerts     = (dash?.alerts ?? []).filter(a => !a.acknowledged);
