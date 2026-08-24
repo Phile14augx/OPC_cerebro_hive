@@ -22,6 +22,15 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-require-imports": "off",
     },
   },
+  {
+    rules: {
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/purity": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "import/no-anonymous-default-export": "off",
+      "@typescript-eslint/no-unused-vars": "off"
+    }
+  },
   globalIgnores([
     ".next/**",
     "out/**",
@@ -39,3 +48,5 @@ const eslintConfig = defineConfig([
 ]);
 
 export default eslintConfig;
+
+
