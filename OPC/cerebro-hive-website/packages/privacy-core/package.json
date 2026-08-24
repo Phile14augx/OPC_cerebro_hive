@@ -2,7 +2,7 @@
   "name": "@cerebro/privacy-core",
   "version": "1.0.0",
   "scripts": {
-    "test": "node ../../node_modules/vitest/vitest.mjs run src/privacy-core.test.ts --environment node",
+    "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint \"src/**/*.ts\"",
     "build": "tsc"

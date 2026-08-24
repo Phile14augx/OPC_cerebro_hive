@@ -5,13 +5,12 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "node ../../node_modules/vitest/vitest.mjs run src/policy.test.ts --environment node",
+    "test": "vitest run",
     "dev": "tsc --watch",
     "lint": "eslint --max-warnings=0 .",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@cerebro/config": "workspace:*",
     "@types/node": "^20.0.0",

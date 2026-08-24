@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --experimental-strip-types --no-warnings --test src/tenancy/Tenancy.test.ts",
+    "test": "vitest run",
     "lint": "eslint \"src/**/*.ts\"",
     "build": "tsc"
   },
