@@ -16,10 +16,6 @@ on:
       - ".github/actions/website-pnpm-setup/**"
   pull_request:
     branches: ["main", "develop"]
-    paths:
-      - "OPC/cerebro-hive-website/**"
-      - ".github/workflows/website-ci.yml"
-      - ".github/actions/website-pnpm-setup/**"
 
 concurrency:
   group: website-ci-${{ github.ref }}
@@ -160,9 +156,9 @@ jobs:
         working-directory: .
         run: |
           results='${{ toJSON(needs) }}'
-          failed=$(echo "$results" | jq -r 'to_entries[] | select(.value.result != "success") | .key')
+          failed=$(echo "$results" | jq -r 'to_entries[] | select(.value.result != "success" and .value.result != "skipped") | .key')
           if [ -n "$failed" ]; then
-            echo "The following required jobs failed or were skipped:"
+            echo "The following required jobs failed:"
             echo "$failed"
             exit 1
           fi
