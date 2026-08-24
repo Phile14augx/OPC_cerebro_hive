@@ -17,7 +17,7 @@ export default async function agentRoutes(fastify: FastifyInstance, opts: Agents
     '/',
     { schema: { querystring: PaginationQuery } },
     async (request, reply) => {
-      const workspaceId = request.cerebroContext.workspaceId!;
+      const workspaceId = request.cerebroContext.workspaceId as string;
       const { page = 1, limit = 20, sort, search } = request.query as { page?: number | string; limit?: number | string; sort?: string; search?: string };
 
       const skip = (Number(page) - 1) * Number(limit);
@@ -57,7 +57,7 @@ export default async function agentRoutes(fastify: FastifyInstance, opts: Agents
   fastify.get(
     '/:id',
     async (request, reply) => {
-      const workspaceId = request.cerebroContext.workspaceId!;
+      const workspaceId = request.cerebroContext.workspaceId as string;
       const { id } = request.params as { id: string };
 
       const agent = await prisma.agent.findUnique({

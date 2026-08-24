@@ -57,7 +57,7 @@ function ProductChip({ p }: { p: ProductHealth }) {
 /* ── Main page ───────────────────────────────────────────────────────────── */
 export default function DashboardPage() {
   const { role } = useRole();
-  const profile   = ROLE_PROFILES[role, narrativeMutation];
+  const profile   = ROLE_PROFILES[role];
 
   const { data: dash, isLoading: dashLoading } = useQuery({
     queryKey: ['dashboard'],
