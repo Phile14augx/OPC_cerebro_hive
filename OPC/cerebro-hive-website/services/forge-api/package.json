@@ -54,9 +54,6 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "testPathIgnorePatterns": [
-      "/break-tests/"
-    ]
+    "testRegex": ".*\\.spec\\.ts$"
   }
 }

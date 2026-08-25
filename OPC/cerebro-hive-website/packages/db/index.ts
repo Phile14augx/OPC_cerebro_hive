@@ -1,7 +1,7 @@
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from './src/generated/client';
+import { PrismaClient as PC } from './src/generated/client';
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const globalForPrisma = global as unknown as { prisma: PC };
 
 // Prisma 7's generated client uses the WASM query compiler, which requires
 // a driver adapter (no classic binary/library query engine fallback) --
@@ -10,7 +10,7 @@ const globalForPrisma = global as unknown as { prisma: PrismaClient };
 // is unset (e.g. during a build/typecheck pass that never issues a query).
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 
-export const prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
+export const prisma = globalForPrisma.prisma || new PC({ adapter });
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
