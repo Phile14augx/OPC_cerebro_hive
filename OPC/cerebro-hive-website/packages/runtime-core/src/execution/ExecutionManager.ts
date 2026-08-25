@@ -63,8 +63,7 @@ export class ExecutionManager {
 
     // Transition to QUEUED
     ExecutionStateMachine.validateTransition(execution.status, 'QUEUED');
-    await this.store.updateExecution(execution.id, { status: 'QUEUED' }, execution.version, lease.fencingToken);
-
+    
     // Queue for async processing and dual-write event
     const resumeCommand: import('./ExecutionOutbox').OutboxMessage = {
       id: crypto.randomUUID(),
@@ -74,7 +73,21 @@ export class ExecutionManager {
       status: 'PENDING',
       retries: 0
     };
-    await this.store.appendEvents(execution.id, [startEvent], lease.fencingToken, [resumeCommand]);
+    
+    // Atomic Transaction: Fencing check + Status update + Events + Outbox
+    if (this.store.commitTransition) {
+      await this.store.commitTransition({
+        executionId: execution.id,
+        expectedVersion: execution.version,
+        fencingToken: lease.fencingToken,
+        update: { status: 'QUEUED' },
+        events: [startEvent],
+        outboxEntries: [resumeCommand]
+      });
+    } else {
+      await this.store.updateExecution(execution.id, { status: 'QUEUED' }, execution.version, lease.fencingToken);
+      await this.store.appendEvents(execution.id, [startEvent], lease.fencingToken, [resumeCommand]);
+    }
 
     return execution.id;
   }
@@ -100,7 +113,17 @@ export class ExecutionManager {
     // Transition to RUNNING
     if (execution.status !== 'RUNNING') {
       ExecutionStateMachine.validateTransition(execution.status, 'RUNNING');
-      await this.store.updateExecution(executionId, { status: 'RUNNING' }, execution.version, lease.fencingToken);
+      if (this.store.commitTransition) {
+        await this.store.commitTransition({
+          executionId,
+          expectedVersion: execution.version,
+          fencingToken: lease.fencingToken,
+          update: { status: 'RUNNING' },
+          events: [], // No events yet, just marking it running
+        });
+      } else {
+        await this.store.updateExecution(executionId, { status: 'RUNNING' }, execution.version, lease.fencingToken);
+      }
     }
 
     const _state = await this.replayService.replay(executionId);

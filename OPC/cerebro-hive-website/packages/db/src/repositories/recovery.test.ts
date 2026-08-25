@@ -47,7 +47,78 @@ testSuite('Durable Execution Recovery: 12 Scenarios', () => {
   });
 
   test('Scenario 4: Zombie worker fencing (Split-brain)', async () => {
-    expect(true).toBe(true);
+    const tenantId = 'tenant-split-brain';
+    const executionId = '00000000-0000-0000-0000-000000000001';
+    
+    // 1. Worker A owns token 41
+    await store.createExecution({
+      id: executionId,
+      agentId: '00000000-0000-0000-0000-000000000000',
+      agentVersionId: '00000000-0000-0000-0000-000000000000',
+      tenantId,
+      correlationId: executionId,
+      traceId: executionId,
+      status: 'QUEUED',
+      startedAt: new Date()
+    });
+    
+    await prisma.executionWorker.upsert({
+      where: { id: 'worker-A' },
+      update: {}, create: { id: 'worker-A', lastHeartbeatAt: new Date() }
+    });
+    await prisma.executionWorker.upsert({
+      where: { id: 'worker-B' },
+      update: {}, create: { id: 'worker-B', lastHeartbeatAt: new Date() }
+    });
+
+    const leaseA = await leaseManager.acquireLease(executionId, 'worker-A', 30000);
+    // Force fencing token to 41 for this test
+    await prisma.agentExecutionLease.update({
+      where: { executionId },
+      data: { fencingToken: 41n }
+    });
+
+    // Execution becomes RUNNING
+    await store.commitTransition!({
+      executionId,
+      expectedVersion: 1,
+      fencingToken: 41n,
+      update: { status: 'RUNNING' },
+      events: []
+    });
+
+    // Worker killed, lease expires
+    await prisma.agentExecutionLease.update({
+      where: { executionId },
+      data: { expiresAt: new Date(Date.now() - 1000) } // Expire in the past
+    });
+
+    // Worker B acquires token 42
+    const leaseB = await leaseManager.acquireLease(executionId, 'worker-B', 30000);
+    expect(leaseB!.fencingToken).toBe(42n);
+
+    // Worker A attempts late write with 41 -> DATABASE REJECTS IT
+    await expect(
+      store.commitTransition!({
+        executionId,
+        expectedVersion: 2,
+        fencingToken: 41n,
+        update: { status: 'COMPLETED' },
+        events: []
+      })
+    ).rejects.toThrow(/Lease expired or fencing token mismatch/);
+
+    // Worker B replays snapshot -> resumes -> side effect occurs -> reaches terminal state
+    await store.commitTransition!({
+      executionId,
+      expectedVersion: 2,
+      fencingToken: 42n,
+      update: { status: 'COMPLETED' },
+      events: []
+    });
+
+    const finalState = await store.getExecution(executionId);
+    expect(finalState!.status).toBe('COMPLETED');
   });
 
   test('Scenario 5: Lease expiration allows takeover', async () => {

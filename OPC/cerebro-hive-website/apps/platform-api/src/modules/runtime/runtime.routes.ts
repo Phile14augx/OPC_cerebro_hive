@@ -1,10 +1,10 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import { Type } from '@sinclair/typebox';
 import type { ExecutionStatus } from '@cerebro/domain';
-import { ExecutionRuntimeService, PauseNotSupportedError } from './ExecutionRuntimeService';
+import { LegacyRuntimeCompatibilityService, PauseNotSupportedError } from './LegacyRuntimeCompatibilityService';
 
 export interface RuntimeRouteOptions extends FastifyPluginOptions {
-  executionRuntimeService: ExecutionRuntimeService;
+  legacyRuntimeCompatibilityService: LegacyRuntimeCompatibilityService;
 }
 
 /**
@@ -34,7 +34,7 @@ function requireContextValue(
 }
 
 export default async function runtimeRoutes(server: FastifyInstance, opts: RuntimeRouteOptions) {
-  const { executionRuntimeService } = opts;
+  const { legacyRuntimeCompatibilityService } = opts;
 
   // Execute
   server.post(
@@ -76,7 +76,7 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
         });
       }
 
-      const execution = await executionRuntimeService.startAgentExecution({
+      const execution = await legacyRuntimeCompatibilityService.startAgentExecution({
         tenantId: ctx.tenantId,
         workspaceId: ctx.workspaceId,
         userId: ctx.userId,
@@ -97,7 +97,7 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
   );
 
   // Pause — honestly not supported by the current domain model (see
-  // ExecutionRuntimeService.pauseExecution()'s own doc comment).
+  // LegacyRuntimeCompatibilityService.pauseExecution()'s own doc comment).
   server.post(
     '/pause',
     {
@@ -130,7 +130,7 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
     },
     async (request, reply) => {
       const { executionId } = request.body as { executionId: string };
-      const execution = await executionRuntimeService.resumeExecution(executionId);
+      const execution = await legacyRuntimeCompatibilityService.resumeExecution(executionId);
       return reply.send({ executionId: execution.id.toString(), status: execution.status });
     }
   );
@@ -149,7 +149,7 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
     async (request, reply) => {
       const { executionId, reason } = request.body as { executionId: string; reason?: string };
       const ctx = request.cerebroContext;
-      const execution = await executionRuntimeService.cancelExecution(executionId, { actor: ctx.userId, reason });
+      const execution = await legacyRuntimeCompatibilityService.cancelExecution(executionId, { actor: ctx.userId, reason });
       return reply.send({ executionId: execution.id.toString(), status: execution.status });
     }
   );
@@ -171,7 +171,7 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
     async (request, reply) => {
       const { status, limit } = request.query as { status?: string; limit?: number };
       const ctx = request.cerebroContext;
-      const executions = await executionRuntimeService.listExecutions(ctx.tenantId, {
+      const executions = await legacyRuntimeCompatibilityService.listExecutions(ctx.tenantId, {
         status: status as ExecutionStatus | undefined,
         limit,
       });
@@ -194,7 +194,7 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
     },
     async (request, reply) => {
       const { id } = request.params as { id: string };
-      const execution = await executionRuntimeService.getExecution(id);
+      const execution = await legacyRuntimeCompatibilityService.getExecution(id);
       return reply.send({
         id: execution.id.toString(),
         kind: execution.kind,
@@ -235,7 +235,7 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
   );
 }
 
-// Errors thrown by ExecutionRuntimeService (NotFoundError, InvariantViolationError,
+// Errors thrown by LegacyRuntimeCompatibilityService (NotFoundError, InvariantViolationError,
 // AuthorizationError, ConcurrencyError — all real DomainError subclasses)
 // propagate to the app's existing global error handler (bootstrap.ts's
 // setErrorHandler -> ErrorMapper.mapToProblemDetails()), which already maps

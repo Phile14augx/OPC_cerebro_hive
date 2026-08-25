@@ -90,6 +90,71 @@ export class PrismaExecutionStore implements ExecutionStore {
     });
   }
 
+  async commitTransition(transition: {
+    executionId: string;
+    expectedVersion: number;
+    fencingToken: bigint;
+    update: any;
+    events: any[];
+    outboxEntries?: any[];
+  }): Promise<void> {
+    await this.prisma.$transaction(async (tx) => {
+      // 1. Validate unexpired lease + fencing token using DB time
+      const lease = await tx.$queryRaw`
+        SELECT "executionId" 
+        FROM "AgentExecutionLease" 
+        WHERE "executionId" = ${transition.executionId}::uuid
+          AND "fencingToken" = ${transition.fencingToken}
+          AND "expiresAt" > NOW()
+      ` as any[];
+      if (lease.length === 0) {
+        throw new Error('Lease expired or fencing token mismatch');
+      }
+
+      // 2. Conditional execution version update
+      if (Object.keys(transition.update).length > 0) {
+        const updateResult = await tx.agentExecution.updateMany({
+          where: { id: transition.executionId, version: transition.expectedVersion },
+          data: {
+            status: transition.update.status,
+            completedAt: transition.update.completedAt,
+            metadata: transition.update.metadata ?? undefined,
+            version: transition.expectedVersion + 1
+          }
+        });
+        if (updateResult.count === 0) {
+          throw new Error('Execution version mismatch (Optimistic Concurrency Failure)');
+        }
+      }
+
+      // 3. Insert events
+      if (transition.events.length > 0) {
+        await tx.agentExecutionEvent.createMany({
+          data: transition.events.map((ev: any) => ({
+            executionId: transition.executionId,
+            sequence: BigInt(ev.sequence),
+            type: ev.type,
+            payload: ev.payload as any,
+            occurredAt: ev.timestamp
+          }))
+        });
+      }
+
+      // 4. Insert outbox messages
+      if (transition.outboxEntries && transition.outboxEntries.length > 0) {
+        await tx.agentExecutionOutbox.createMany({
+          data: transition.outboxEntries.map((entry: any) => ({
+            executionId: transition.executionId,
+            type: entry.type,
+            payload: entry.payload as any,
+            status: 'PENDING',
+            deduplicationKey: entry.id
+          }))
+        });
+      }
+    });
+  }
+
   async getExecution(id: string): Promise<ExecutionRecord | null> {
     const record = await this.prisma.agentExecution.findUnique({ where: { id } });
     if (!record) return null;
