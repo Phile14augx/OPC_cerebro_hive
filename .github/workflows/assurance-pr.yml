@@ -65,6 +65,12 @@ jobs:
         continue-on-error: true
 
       # ── Run all file/workflow controls (no cluster required) ─────────────────
+      - name: Install dependencies for vitest
+        working-directory: OPC/cerebro-hive-website
+        run: |
+          npm install -g pnpm
+          pnpm install
+
       - name: Run assurance controls (static tier)
         id: run_controls
         run: |
