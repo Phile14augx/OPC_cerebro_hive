@@ -19,6 +19,14 @@ export interface ExecutionRecord<TMetadata extends Record<string, unknown> = Rec
   startedAt: Date;
   completedAt?: Date;
   metadata?: TMetadata;
+  commitTransition?(transition: {
+    executionId: string;
+    expectedVersion: number;
+    fencingToken: bigint;
+    update: Partial<ExecutionRecord<any>>;
+    events: ExecutionEvent<any>[];
+    outboxEntries?: OutboxMessage[];
+  }): Promise<void>;
 }
 
 export interface ExecutionStore {
@@ -58,4 +66,12 @@ export interface ExecutionStore {
 
   /** Saves a provider interaction checkpoint, guarded by the fencing token */
   saveCheckpoint(checkpoint: ExecutionCheckpoint, fencingToken: bigint): Promise<void>;
+  commitTransition?(transition: {
+    executionId: string;
+    expectedVersion: number;
+    fencingToken: bigint;
+    update: Partial<ExecutionRecord<any>>;
+    events: ExecutionEvent<any>[];
+    outboxEntries?: OutboxMessage[];
+  }): Promise<void>;
 }

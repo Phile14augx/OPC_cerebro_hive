@@ -5,12 +5,18 @@ export class PrismaExecutionLeaseManager implements ExecutionLeaseManager {
   constructor(private readonly prisma: PrismaClient) {}
 
   async registerWorker(workerId: string, metadata: unknown): Promise<void> {
-    // Workers might not have a table yet, but we'll fulfill the interface.
-    // Real implementation would upsert into a Worker table.
+    await this.prisma.executionWorker.upsert({
+      where: { id: workerId },
+      update: { lastHeartbeatAt: new Date(), metadata: metadata as any },
+      create: { id: workerId, lastHeartbeatAt: new Date(), metadata: metadata as any }
+    });
   }
 
   async heartbeatWorker(workerId: string): Promise<void> {
-    // Real implementation would update a Worker table's lastHeartbeatAt.
+    await this.prisma.executionWorker.update({
+      where: { id: workerId },
+      data: { lastHeartbeatAt: new Date() }
+    });
   }
 
   async acquireLease(executionId: string, ownerId: string, durationMs: number): Promise<ExecutionLease | null> {
@@ -29,6 +35,7 @@ export class PrismaExecutionLeaseManager implements ExecutionLeaseManager {
         if (existing) {
           if (existing.ownerId === ownerId || existing.expiresAt < now) {
             // Steal or renew
+            const isRenewal = existing.ownerId === ownerId && existing.expiresAt >= now;
             const updated = await tx.agentExecutionLease.update({
               where: {
                 executionId,
@@ -38,7 +45,7 @@ export class PrismaExecutionLeaseManager implements ExecutionLeaseManager {
                 ownerId,
                 expiresAt,
                 version: existing.version + 1,
-                fencingToken: existing.fencingToken + 1n
+                fencingToken: isRenewal ? existing.fencingToken : existing.fencingToken + 1n
               }
             });
             return {
@@ -89,8 +96,7 @@ export class PrismaExecutionLeaseManager implements ExecutionLeaseManager {
         },
         data: {
           expiresAt,
-          version: { increment: 1 },
-          fencingToken: { increment: 1 }
+          version: { increment: 1 }
         }
       });
 
@@ -113,10 +119,13 @@ export class PrismaExecutionLeaseManager implements ExecutionLeaseManager {
   }
 
   async releaseLease(executionId: string, ownerId: string): Promise<void> {
-    await this.prisma.agentExecutionLease.deleteMany({
+    await this.prisma.agentExecutionLease.updateMany({
       where: {
         executionId,
         ownerId
+      },
+      data: {
+        expiresAt: new Date(0) // Expire immediately, keep monotonic fencing
       }
     });
   }
