@@ -97,7 +97,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          cat > /tmp/review.mjs << 'SCRIPT'
+          cat > review.mjs << 'SCRIPT'
           import Anthropic from "@anthropic-ai/sdk";
           import fs from "fs";
 
@@ -180,7 +180,7 @@ jobs:
           }
           SCRIPT
 
-          node /tmp/review.mjs
+          node "$(pwd)/review.mjs"
 
       - name: Format and post PR comment
         env:
