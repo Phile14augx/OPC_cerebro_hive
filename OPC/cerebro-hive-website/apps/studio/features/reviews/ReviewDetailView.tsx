@@ -69,6 +69,7 @@ export function ReviewDetailView({ reviewId }: { reviewId: string }) {
       </div>
 
       {/* Contributors (Horizontal List) */}
+        <h3 className="text-lg font-medium text-white mb-3 mt-6">Contributors</h3>
       {!contributorsLoading && contributors && contributors.length > 0 && (
         <div className="flex gap-4 overflow-x-auto pb-2">
           {contributors.map(c => (

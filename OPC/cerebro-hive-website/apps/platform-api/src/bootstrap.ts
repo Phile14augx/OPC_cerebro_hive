@@ -23,7 +23,8 @@ import { registerToolRuntimeProvider } from './modules/runtime/providers/ToolRun
 import type { AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
 import type { AgentRepository } from '@cerebro/db';
 import type { AIGateway } from '@cerebro/ai-gateway';
-import { ExecutionOrchestrator, InMemoryExecutionRepository } from '@cerebro/domain';
+import { ExecutionOrchestrator } from '@cerebro/domain';
+import { LegacyExecutionCompatibilityAdapter } from './modules/runtime/LegacyExecutionCompatibilityAdapter';
 import { AgentExecutionProvider } from './modules/runtime/AgentExecutionProvider';
 import { ExecutionRuntimeService } from './modules/runtime/ExecutionRuntimeService';
 import { executionsRoutes } from './modules/executions/executions.routes';
@@ -66,7 +67,7 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
   // ('Workflow', 'Tool', 'Evaluation') has a real provider yet, and
   // `runtime.routes.ts` rejects those kinds explicitly rather than silently
   // pretending to execute them.
-  const executionRepository = new InMemoryExecutionRepository();
+  const executionRepository = new LegacyExecutionCompatibilityAdapter(deps.executionKernel, deps.executionStore) as any;
   const agentExecutionProvider = new AgentExecutionProvider(deps.agentRuntimeService, deps.agentRepository);
   const executionOrchestrator = new ExecutionOrchestrator(executionRepository, agentExecutionProvider);
   const executionRuntimeService = new ExecutionRuntimeService(executionOrchestrator, executionRepository);
