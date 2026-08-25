@@ -64,6 +64,7 @@ function FindingCard({ finding, isSelected, onClick }: { finding: FindingDetailD
 
   return (
     <div 
+      data-testid="finding-row"
       onClick={onClick}
       className={cn(
         "p-4 rounded-lg border cursor-pointer transition-all duration-200 group",

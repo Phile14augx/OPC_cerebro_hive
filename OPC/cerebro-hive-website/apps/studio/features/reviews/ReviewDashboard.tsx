@@ -86,6 +86,7 @@ function ReviewCard({ review, onClick }: { review: EngineeringReviewSummaryDTO; 
 
   return (
     <Card 
+      data-testid="review-card"
       className="bg-black border border-gray-800 hover:border-blue-500/50 transition-colors cursor-pointer group"
       onClick={onClick}
     >
