@@ -146,17 +146,3 @@ async fn shutdown_signal() {
     }
 }
 
-mod routes {
-    pub mod health {
-        use axum::Json;
-        use serde_json::{json, Value};
-        pub async fn health() -> Json<Value> { Json(json!({"status":"ok","service":"cerebro-gateway"})) }
-        pub async fn ready()  -> Json<Value> { Json(json!({"status":"ready"})) }
-    }
-    pub mod proxy;
-}
-
-mod mw {
-    pub mod auth;
-    pub mod rate_limit;
-}
