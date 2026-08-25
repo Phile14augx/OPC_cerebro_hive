@@ -4,7 +4,7 @@ import { ExecutionStateMachine } from './ExecutionStateMachine';
 import { ExecutionIdempotencyGuard } from './ExecutionIdempotency';
 import { ExecutionStartedEvent } from '@cerebro/runtime-contracts/src/events/ExecutionEvent';
 import { ExecutionOutbox } from './ExecutionOutbox';
-import { ExecutionLeaseManager, ExecutionLease } from './ExecutionLeaseManager';
+import { ExecutionLeaseManager } from './ExecutionLeaseManager';
 import { LLMProvider, ToolProvider } from '../plugins/CapabilityProvider';
 
 export class ExecutionManager {

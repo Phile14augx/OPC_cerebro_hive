@@ -1,8 +1,7 @@
-﻿import {
-  NotFoundError,
-} from '@cerebro/domain';
+import { NotFoundError } from '@cerebro/domain';
 import { ExecutionManager } from '@cerebro/runtime-core/src/execution/ExecutionManager';
 import { ExecutionStore, ExecutionRecord } from '@cerebro/runtime-core/src/execution/ExecutionStore';
+import { PrismaClient } from '@cerebro/db';
 
 export interface StartAgentExecutionInput {
   readonly tenantId: string;
@@ -17,14 +16,21 @@ export interface StartAgentExecutionInput {
 export class LegacyRuntimeCompatibilityService {
   constructor(
     private readonly manager: ExecutionManager,
-    private readonly store: ExecutionStore
+    private readonly store: ExecutionStore,
+    private readonly prisma: PrismaClient
   ) {}
 
   async startAgentExecution(input: StartAgentExecutionInput) {
+    const version = await this.prisma.agentVersion.findFirst({
+      where: { agentId: input.agentId },
+      orderBy: { createdAt: 'desc' }
+    });
+    const versionId = version ? version.id : "00000000-0000-0000-0000-000000000000";
+
     const executionId = await this.manager.startExecution(
       input.tenantId,
       input.agentId,
-      "v1",
+      versionId,
       input.message
     );
     return this.getExecution(executionId);
@@ -41,7 +47,33 @@ export class LegacyRuntimeCompatibilityService {
 
   async cancelExecution(executionId: string, opts: { actor?: string; reason?: string } = {}) {
     const record = await this.loadOrThrow(executionId);
-    await this.store.updateExecution(executionId, { status: 'CANCELLED' }, record.version, 0n);
+    
+    // Acquire lease temporarily for cancellation
+    const workerId = "legacy-cancellation-worker";
+    await this.prisma.executionWorker.upsert({
+      where: { id: workerId },
+      update: { lastHeartbeatAt: new Date(), metadata: {} },
+      create: { id: workerId, lastHeartbeatAt: new Date(), metadata: {} }
+    });
+    
+    // Using a raw query to steal the lease for cancellation
+    const updated = await this.prisma.$queryRaw`
+      UPDATE "AgentExecutionLease"
+      SET "ownerId" = ${workerId}::uuid,
+          "expiresAt" = NOW() + '1 minute'::interval,
+          "version" = "version" + 1,
+          "fencingToken" = "fencingToken" + 1
+      WHERE "executionId" = ${executionId}::uuid
+      RETURNING "fencingToken"
+    ` as any[];
+
+    if (updated.length === 0) {
+      throw new Error(`Could not acquire lease to cancel execution ${executionId}`);
+    }
+
+    const token = BigInt(updated[0].fencingToken);
+    
+    await this.store.updateExecution(executionId, { status: 'CANCELLED' }, record.version, token);
     return this.getExecution(executionId);
   }
 
@@ -54,10 +86,29 @@ export class LegacyRuntimeCompatibilityService {
     tenantId: string,
     opts: { status?: string; limit?: number } = {}
   ) {
-    // Basic mock list since store doesn't have listByTenant yet, 
-    // or we can just return empty for legacy facade if it's not implemented on the new store.
-    // To implement properly we'd need list on store, but we can return [] for now.
-    return [] as any[];
+    const records = await this.prisma.agentExecution.findMany({
+      where: {
+        tenantId,
+        ...(opts.status ? { status: opts.status } : {})
+      },
+      orderBy: { startedAt: 'desc' },
+      take: opts.limit || 50
+    });
+    
+    return records.map(r => this.mapToLegacy({
+      id: r.id,
+      agentId: r.agentId,
+      agentVersionId: r.agentVersionId,
+      tenantId: r.tenantId,
+      workspaceId: r.workspaceId ?? undefined,
+      correlationId: r.correlationId,
+      traceId: r.traceId,
+      status: r.status as any,
+      version: r.version,
+      startedAt: r.startedAt,
+      completedAt: r.completedAt ?? undefined,
+      metadata: r.metadata as any
+    }));
   }
 
   private async loadOrThrow(executionId: string): Promise<ExecutionRecord<any>> {
