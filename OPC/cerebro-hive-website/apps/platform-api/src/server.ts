@@ -9,7 +9,7 @@ import { createGateway } from '@cerebro/ai-gateway';
 import { CommandBus } from '@cerebro/core-bus';
 import { CreateAgentCommandHandler } from './modules/agents/agents.handlers';
 
-import { PrismaExecutionStore } from '@cerebro/db';
+import { PrismaExecutionStore, PrismaExecutionLeaseManager, PrismaExecutionOutbox } from '@cerebro/db';
 import { ExecutionManager } from '@cerebro/runtime-core/src/execution/ExecutionManager';
 import { ExecutionReplayService } from '@cerebro/runtime-core/src/execution/ExecutionReplayService';
 import { ExecutionIdempotencyGuard } from '@cerebro/runtime-core/src/execution/ExecutionIdempotency';
@@ -91,22 +91,18 @@ async function main() {
   );
   const executionIdempotencyGuard = new ExecutionIdempotencyGuard(executionStore);
   
-  // Dummy Outbox implementation for now (to be replaced by PrismaExecutionOutbox)
-  const dummyOutbox: ExecutionOutbox = {
-    publish: async () => {},
-    fetchPending: async () => [],
-    markSent: async () => {},
-    markFailed: async () => {}
-  };
+    const executionOutbox = new PrismaExecutionOutbox(prisma);
+    const executionLeaseManager = new PrismaExecutionLeaseManager(prisma);
 
-  const executionManager = new ExecutionManager(
-    executionStore,
-    executionReplayService,
-    executionIdempotencyGuard,
-    dummyOutbox,
-    null as never, // llmProvider to be resolved from registry
-    null as never  // toolProvider to be resolved from registry
-  );
+    const executionManager = new ExecutionManager(
+      executionStore,
+      executionReplayService,
+      executionIdempotencyGuard,
+      executionLeaseManager,
+      executionOutbox,
+      null as never, // llmProvider to be resolved from registry
+      null as never  // toolProvider to be resolved from registry
+    );
 
   const commandHandler = new ExecutionCommandHandler(executionManager);
 
