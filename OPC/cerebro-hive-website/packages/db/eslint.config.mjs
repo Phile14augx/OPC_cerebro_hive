@@ -1,7 +1,10 @@
 import baseConfig from '../../eslint.config.mjs';
 
+// Remove the global ignore for packages/** so this package's files are linted
+const filteredBase = baseConfig.filter(cfg => !(cfg.ignores && cfg.ignores.includes('packages/**')));
+
 export default [
-  ...baseConfig,
+  ...filteredBase,
   {
     ignores: ['src/generated/**', 'dist/**']
   },
