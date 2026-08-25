@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import test from 'node:test';
+import { test } from 'vitest';
 import { SkillGraphService } from './SkillGraphService';
 
 test('rejects malformed evaluator evidence before it reaches the skill graph', async () => {

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import test from 'node:test';
+import { test } from 'vitest';
 import { WidgetRegistry } from './widget';
 
 test('WidgetRegistry does not expose a structurally invalid plugin registration', () => {

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import assert from "node:assert/strict";
-import test from "node:test";
+import { test } from "vitest";
 import { AuthenticatedRequestContext } from "../lib/authenticated-request-context";
 
 function request(headers: Record<string, string> = {}) {

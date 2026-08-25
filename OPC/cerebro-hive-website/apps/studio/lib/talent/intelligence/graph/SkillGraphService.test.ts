@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import test from 'node:test';
+import { test } from 'vitest';
 import { SkillGraphService } from './SkillGraphService';
 
 test('fails closed when canonical skill graph persistence is unavailable', async () => {

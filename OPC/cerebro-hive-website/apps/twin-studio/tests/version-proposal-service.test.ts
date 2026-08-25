@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import test from 'node:test';
+import { test } from 'vitest';
 import type { IndustryModelProposal, Scope, TwinDefinition } from '@cerebro/twin-contracts';
 import { generateIndustryModel } from '../modules/industry/deterministic-industry-provider';
 import {
