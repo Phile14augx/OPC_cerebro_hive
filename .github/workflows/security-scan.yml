@@ -1,0 +1,88 @@
+name: SecOps — Secret Scanning (Gitleaks)
+
+# Closes the gap confirmed in MASTER-PLAN-GAP-ASSESSMENT.md: gitleaks
+# previously ran only as a local pre-commit hook (.pre-commit-config.yaml),
+# so a contributor who skipped `pre-commit install` had no secret-scanning
+# safety net at all. This workflow is the CI-enforced counterpart that
+# .pre-commit-config.yaml's own comment already assumed existed.
+#
+# Uses the same .gitleaks.toml rules/allowlist as the local hook, pinned to
+# the same gitleaks version (v8.21.2) so local and CI results can't diverge
+# on tool version alone.
+
+on:
+  push:
+    branches: ["main", "develop", "release/*"]
+  pull_request:
+    branches: ["main", "develop"]
+
+concurrency:
+  group: security-scan-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write # required to upload SARIF to code scanning
+
+env:
+  GITLEAKS_VERSION: "8.21.2" # matches .pre-commit-config.yaml's `rev`
+
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  gitleaks:
+    name: Gitleaks Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history so gitleaks can scan more than just the checked-out
+          # commit — matters most for the first run against an existing
+          # history, and for push events that carry more than one commit.
+          fetch-depth: 0
+
+      - name: Install Gitleaks ${{ env.GITLEAKS_VERSION }} (pinned)
+        run: |
+          curl -sSL -o /tmp/gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          tar -xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
+          chmod +x /tmp/gitleaks
+          /tmp/gitleaks version
+
+      - name: Run Gitleaks (SARIF report, uses .gitleaks.toml)
+        id: gitleaks
+        run: |
+          set +e
+          /tmp/gitleaks detect \
+            --source . \
+            --config .gitleaks.toml \
+            --report-format sarif \
+            --report-path gitleaks-report.sarif \
+            --redact \
+            --verbose
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: Upload Gitleaks SARIF to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: gitleaks-report.sarif
+          category: gitleaks
+
+      - name: Upload Gitleaks report as workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitleaks-report
+          path: gitleaks-report.sarif
+          retention-days: 30
+
+      - name: Fail if verified secrets were detected
+        if: steps.gitleaks.outputs.exit_code != '0'
+        run: |
+          echo "::error::Gitleaks detected one or more secret patterns matching .gitleaks.toml. See the SARIF report (code scanning alerts on this PR, or the gitleaks-report workflow artifact) for detail. Values are redacted in both."
+          exit 1

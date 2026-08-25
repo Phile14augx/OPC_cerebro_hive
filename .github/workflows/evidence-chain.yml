@@ -1,0 +1,686 @@
+name: Evidence Chain — Assurance Register
+
+# Aggregates evidence from all assurance workflows into a single control
+# register, computes CEC score, and publishes the result as a GitHub Pages
+# artifact and Slack digest.
+#
+# This workflow runs:
+#   a) After any assurance workflow completes (workflow_run trigger)
+#   b) Nightly (scheduled) to catch stale/missing evidence
+#   c) Manually (workflow_dispatch) to force a full rebuild
+#
+# Outputs:
+#   control-register.json  — full register with latest evidence per control
+#   cec-score.json         — headline CEC metric
+#   evidence-index.json    — all individual execution records
+#
+# The dashboard workflow (assurance-dashboard.yml) consumes these artifacts.
+
+on:
+  # Trigger after any assurance workflow
+  workflow_run:
+    workflows:
+      - "Runtime Detection Validation"
+      - "Backup Restore Verification"
+      - "SLO Load Test"
+      - "Supply Chain Assurance"
+      - "SLO Burn Validation"
+      - "G1 Overhead Benchmark"
+      - "CI"
+    types: [completed]
+
+  schedule:
+    - cron: "0 6 * * *"    # 06:00 UTC nightly (after restore-verification at 02:00)
+
+  workflow_dispatch:
+    inputs:
+      rebuild_all:
+        description: "Rebuild full register from scratch (ignores cached artifacts)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write       # push evidence-chain branch
+  actions: read         # download workflow artifacts
+  pages: write          # publish dashboard
+  id-token: write       # OIDC
+
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  aggregate-evidence:
+    name: Aggregate evidence + compute CEC
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download evidence artifacts from recent runs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Download the latest artifact matching each evidence key
+            // from the last 7 days of workflow runs
+            const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+            const workflows = await github.rest.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            fs.mkdirSync('evidence-artifacts', { recursive: true });
+
+            for (const workflow of workflows.data.workflows) {
+              const runs = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: workflow.id,
+                per_page: 1,
+                created: `>=${since}`,
+              });
+
+              if (!runs.data.workflow_runs.length) continue;
+
+              const latestRun = runs.data.workflow_runs[0];
+
+              try {
+                const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: latestRun.id,
+                });
+
+                for (const artifact of artifacts.data.artifacts) {
+                  if (artifact.name.startsWith('slo-evidence') ||
+                      artifact.name.startsWith('restore-evidence') ||
+                      artifact.name.startsWith('runtime-detection-evidence') ||
+                      artifact.name.startsWith('supply-chain') ||
+                      artifact.name.startsWith('g1-unit-test') ||
+                      artifact.name.startsWith('g1-overhead')) {
+
+                    const download = await github.rest.actions.downloadArtifact({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      artifact_id: artifact.id,
+                      archive_format: 'zip',
+                    });
+
+                    const artifactPath = `evidence-artifacts/${artifact.name}.zip`;
+                    fs.writeFileSync(artifactPath, Buffer.from(download.data));
+                    console.log(`Downloaded: ${artifact.name} (run #${latestRun.run_number})`);
+                  }
+                }
+              } catch (e) {
+                console.log(`No artifacts for ${workflow.name}: ${e.message}`);
+              }
+            }
+
+      - name: Extract evidence artifacts
+        run: |
+          cd evidence-artifacts
+          for f in *.zip; do
+            [ -f "$f" ] || continue
+            unzip -q -o "$f" -d "${f%.zip}/" 2>/dev/null || true
+          done
+          cd ..
+          echo "Evidence artifacts extracted:"
+          find evidence-artifacts -name "*.json" | head -30
+
+      - name: Build control register
+        id: register
+        run: |
+          python3 - <<'EOF'
+          import json, yaml, os, glob
+          from datetime import datetime, timezone
+
+          # Load control schema
+          with open("infra/assurance/control-register.yaml") as f:
+              schema = yaml.safe_load(f)
+
+          controls = {c['id']: dict(c) for c in schema['controls']}
+
+          # Evidence file patterns → control mappings
+          EVIDENCE_MAP = {
+              # Pattern → (control_id, status_field)
+              'slo-evidence*/slo-evidence.json': [
+                  ('SLO-1', lambda d: 'PASS' if d.get('overall_pass') else 'FAIL'),
+                  ('SLO-2', lambda d: 'PASS' if d.get('overall_pass') else 'FAIL'),
+              ],
+              'restore-evidence*/restore-evidence.json': [
+                  ('DR-1', lambda d: 'PASS' if d.get('services', {}).get('postgres', {}).get('smoke_tests') == 'PASSED' else 'FAIL'),
+                  ('DR-2', lambda d: 'PASS' if d.get('services', {}).get('minio', {}).get('smoke_tests') == 'PASSED' else 'FAIL'),
+                  ('DR-3', lambda d: 'PASS' if d.get('services', {}).get('nats', {}).get('smoke_tests') == 'PASSED' else 'FAIL'),
+              ],
+              'runtime-detection-evidence*/detection-results.json': [
+                  ('DET-1', lambda d: 'PASS' if len(d.get('detected', [])) >= 8 else 'FAIL'),
+                  ('DET-2', lambda d: 'PASS' if len(d.get('detected', [])) >= 8 else 'FAIL'),
+                  ('G1', lambda d: 'PASS' if len(d.get('detected', [])) >= 8 else 'FAIL'),
+              ],
+              'supply-chain*/slo-evidence.json': [],  # placeholder
+          }
+
+          # Also look for individual evidence-entry-*.json files
+          entry_files = glob.glob('evidence-artifacts/**/evidence-entry-*.json', recursive=True)
+          for ef in entry_files:
+              try:
+                  with open(ef) as f:
+                      entry = json.load(f)
+                  ctrl_id = entry.get('control_id')
+                  if ctrl_id and ctrl_id in controls:
+                      controls[ctrl_id].update({
+                          'last_run': entry.get('timestamp'),
+                          'last_status': entry.get('status'),
+                          'last_sha': entry.get('git_sha_short'),
+                          'last_artifact': entry.get('artifact_url', ''),
+                          'last_details': entry.get('details', ''),
+                          'last_run_url': entry.get('run_url', ''),
+                      })
+              except Exception as e:
+                  print(f"Could not parse {ef}: {e}")
+
+          # Parse structured evidence files
+          for pattern, mappings in EVIDENCE_MAP.items():
+              for filepath in glob.glob(f'evidence-artifacts/{pattern}', recursive=True):
+                  try:
+                      with open(filepath) as f:
+                          data = json.load(f)
+                      for ctrl_id, status_fn in mappings:
+                          if ctrl_id in controls:
+                              status = status_fn(data)
+                              # Only update if not already set by a more recent entry file
+                              if not controls[ctrl_id].get('last_run'):
+                                  controls[ctrl_id].update({
+                                      'last_run': data.get('date', datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')),
+                                      'last_status': status,
+                                      'last_sha': 'from-artifact',
+                                      'last_artifact': filepath,
+                                  })
+                  except Exception as e:
+                      print(f"Could not parse {filepath}: {e}")
+
+          # Compute CEC score
+          total_weight = sum(c['cec_weight'] for c in controls.values())
+          passing_weight = sum(
+              c['cec_weight'] for c in controls.values()
+              if c.get('last_status') == 'PASS'
+          )
+          cec_pct = round(passing_weight / total_weight * 100, 1) if total_weight else 0.0
+
+          by_domain = {}
+          for c in controls.values():
+              domain = c['domain']
+              if domain not in by_domain:
+                  by_domain[domain] = {'total': 0, 'passing': 0, 'controls': []}
+              by_domain[domain]['total'] += 1
+              if c.get('last_status') == 'PASS':
+                  by_domain[domain]['passing'] += 1
+              by_domain[domain]['controls'].append(c['id'])
+
+          register = {
+              'schema_version': '1.0',
+              'generated_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+              'repository': os.environ.get('GITHUB_REPOSITORY', 'cerebro-hive/cerebro-hive'),
+              'git_sha': os.environ.get('GITHUB_SHA', 'unknown')[:7],
+              'cec_score_pct': cec_pct,
+              'cec_target_pct': schema['metadata']['cec_target_pct'],
+              'cec_status': 'PASS' if cec_pct >= schema['metadata']['cec_target_pct'] else 'FAIL',
+              'total_controls': len(controls),
+              'passing_controls': sum(1 for c in controls.values() if c.get('last_status') == 'PASS'),
+              'failing_controls': sum(1 for c in controls.values() if c.get('last_status') == 'FAIL'),
+              'unknown_controls': sum(1 for c in controls.values() if not c.get('last_status') or c.get('last_status') == 'UNKNOWN'),
+              'by_domain': by_domain,
+              'controls': list(controls.values()),
+          }
+
+          with open('control-register.json', 'w') as f:
+              json.dump(register, f, indent=2)
+
+          # Write headline CEC score separately (fast to read)
+          cec = {
+              'cec_pct': cec_pct,
+              'target_pct': schema['metadata']['cec_target_pct'],
+              'status': register['cec_status'],
+              'passing': register['passing_controls'],
+              'failing': register['failing_controls'],
+              'unknown': register['unknown_controls'],
+              'total': register['total_controls'],
+              'generated_at': register['generated_at'],
+          }
+          with open('cec-score.json', 'w') as f:
+              json.dump(cec, f, indent=2)
+
+          print(f"\n{'='*50}")
+          print(f"CEC Score: {cec_pct}% (target: {schema['metadata']['cec_target_pct']}%)")
+          print(f"Status:    {'✅ PASS' if register['cec_status'] == 'PASS' else '❌ FAIL'}")
+          print(f"Controls:  {register['passing_controls']}/{register['total_controls']} passing")
+          print(f"\nBy domain:")
+          for domain, stats in by_domain.items():
+              pct = round(stats['passing'] / stats['total'] * 100) if stats['total'] else 0
+              print(f"  {domain}: {stats['passing']}/{stats['total']} ({pct}%)")
+
+          with open(os.environ.get('GITHUB_OUTPUT', '/dev/null'), 'a') as f:
+              f.write(f"cec_pct={cec_pct}\n")
+              f.write(f"cec_status={register['cec_status']}\n")
+              f.write(f"passing={register['passing_controls']}\n")
+              f.write(f"total={register['total_controls']}\n")
+          EOF
+
+      - name: Post CEC score to step summary
+        run: |
+          python3 - <<'EOF'
+          import json, os
+
+          with open('cec-score.json') as f:
+              cec = json.load(f)
+
+          with open('control-register.json') as f:
+              register = json.load(f)
+
+          icon = "✅" if cec['status'] == 'PASS' else "❌"
+          bar_filled = int(cec['cec_pct'] / 5)
+          bar = "█" * bar_filled + "░" * (20 - bar_filled)
+
+          lines = [
+              f"## {icon} Control Evidence Coverage (CEC) — {cec['generated_at'][:10]}",
+              "",
+              f"**CEC Score: {cec['cec_pct']}% / {cec['target_pct']}% target** {icon}",
+              "",
+              f"`{bar}` {cec['cec_pct']}%",
+              "",
+              f"| Metric | Value |",
+              f"|--------|-------|",
+              f"| Passing controls | {cec['passing']} / {cec['total']} |",
+              f"| Failing controls | {cec['failing']} |",
+              f"| Unknown controls | {cec['unknown']} |",
+              f"| CEC status | **{cec['status']}** |",
+              "",
+              "### Coverage by Domain",
+              "",
+              "| Domain | Passing | Total | Coverage |",
+              "|--------|---------|-------|----------|",
+          ]
+
+          for domain, stats in register.get('by_domain', {}).items():
+              pct = round(stats['passing'] / stats['total'] * 100) if stats['total'] else 0
+              icon_d = "✅" if pct >= 80 else ("⚠️" if pct >= 50 else "❌")
+              lines.append(f"| {domain} | {stats['passing']} | {stats['total']} | {icon_d} {pct}% |")
+
+          lines += [
+              "",
+              "### Control Status",
+              "",
+              "| Control | Name | Domain | Status | Last Run | SHA |",
+              "|---------|------|--------|--------|----------|-----|",
+          ]
+
+          for c in register.get('controls', []):
+              status = c.get('last_status', 'UNKNOWN')
+              st_icon = {"PASS": "✅", "FAIL": "❌", "WARN": "⚠️", "SKIP": "⏭️"}.get(status, "❓")
+              last_run = (c.get('last_run') or 'never')[:10]
+              sha = c.get('last_sha', '—')
+              lines.append(f"| `{c['id']}` | {c['name']} | {c['domain']} | {st_icon} {status} | {last_run} | `{sha}` |")
+
+          summary = "\n".join(lines)
+
+          with open(os.environ.get('GITHUB_STEP_SUMMARY', '/dev/null'), 'a') as f:
+              f.write(summary)
+
+          print(summary)
+          EOF
+
+      - name: Upload control register artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: control-register-${{ github.run_number }}
+          path: |
+            control-register.json
+            cec-score.json
+          retention-days: 365
+
+      - name: Commit register to evidence-chain branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Work on the evidence-chain branch
+          git fetch origin evidence-chain 2>/dev/null || true
+          git checkout -B evidence-chain origin/evidence-chain 2>/dev/null \
+            || git checkout -B evidence-chain
+
+          # Copy latest register
+          mkdir -p evidence
+          cp control-register.json evidence/control-register.json
+          cp cec-score.json evidence/cec-score.json
+
+          # Append to history (keep last 90 days)
+          HISTORY_FILE="evidence/cec-history.jsonl"
+          python3 - <<'PYEOF'
+          import json
+          from datetime import datetime, timezone
+
+          with open('cec-score.json') as f:
+              cec = json.load(f)
+
+          history_entry = {
+              'date': cec['generated_at'],
+              'cec_pct': cec['cec_pct'],
+              'passing': cec['passing'],
+              'failing': cec['failing'],
+              'total': cec['total'],
+              'sha': '${{ github.sha }}'[:7],
+          }
+
+          # Load existing history (last 90 entries)
+          try:
+              with open('${HISTORY_FILE}') as f:
+                  history = [json.loads(l) for l in f if l.strip()][-89:]
+          except FileNotFoundError:
+              history = []
+
+          history.append(history_entry)
+
+          with open('${HISTORY_FILE}', 'w') as f:
+              for entry in history:
+                  f.write(json.dumps(entry) + '\n')
+
+          print(f"CEC history: {len(history)} entries")
+          PYEOF
+
+          git add evidence/
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+
+          git commit -m "chore: evidence chain update — CEC ${{ steps.register.outputs.cec_pct }}% [${{ github.sha }}]"
+          git push origin evidence-chain
+
+      # ── P15: Compute explained CEC delta ────────────────────────────────────
+      - name: Compute CEC trend intelligence
+        id: trend
+        run: |
+          python3 - <<'EOF'
+          import json, os
+
+          # Load current CEC
+          with open('cec-score.json') as f:
+              current = json.load(f)
+
+          current_pct = current['cec_pct']
+
+          # Load previous CEC from history (second-to-last entry)
+          delta_pct    = 0.0
+          delta_reason = []
+          prev_controls = {}
+
+          history_path = 'evidence/cec-history.jsonl'   # from evidence-chain branch checkout
+          prev_register_path = 'evidence/control-register.json'
+
+          try:
+              with open(history_path) as f:
+                  history = [json.loads(l) for l in f if l.strip()]
+              if len(history) >= 2:
+                  prev = history[-2]
+                  delta_pct = round(current_pct - prev['cec_pct'], 1)
+          except FileNotFoundError:
+              pass
+
+          # Load current and previous control status to explain the delta
+          with open('control-register.json') as f:
+              cur_reg = json.load(f)
+
+          try:
+              with open(prev_register_path) as f:
+                  prev_reg = json.load(f)
+              prev_controls = {c['id']: c.get('last_status') for c in prev_reg.get('controls',[])}
+          except FileNotFoundError:
+              prev_controls = {}
+
+          # Detect status changes
+          regressions, improvements, new_evidence = [], [], []
+          for c in cur_reg.get('controls', []):
+              cid = c['id']
+              cur_status  = c.get('last_status')
+              prev_status = prev_controls.get(cid)
+              if cur_status == 'PASS' and prev_status != 'PASS':
+                  if prev_status:
+                      improvements.append(cid)
+                  else:
+                      new_evidence.append(cid)
+              elif cur_status in ('FAIL','WARN') and prev_status == 'PASS':
+                  regressions.append(cid)
+
+          # Build human-readable explanation
+          if improvements:
+              delta_reason.append(f"{len(improvements)} control(s) promoted to PASS: {', '.join(improvements)}")
+          if new_evidence:
+              delta_reason.append(f"{len(new_evidence)} new control(s) evidenced: {', '.join(new_evidence)}")
+          if regressions:
+              delta_reason.append(f"⚠️ {len(regressions)} regression(s): {', '.join(regressions)}")
+          if not delta_reason:
+              delta_reason.append("No status changes since last run")
+
+          # Write trend report
+          trend = {
+              'current_cec_pct': current_pct,
+              'delta_pct': delta_pct,
+              'delta_sign': '+' if delta_pct > 0 else ('' if delta_pct == 0 else ''),
+              'improvements': improvements,
+              'regressions': regressions,
+              'new_evidence': new_evidence,
+              'explanation': delta_reason,
+              'generated_at': current['generated_at'],
+          }
+          with open('cec-trend.json', 'w') as f:
+              json.dump(trend, f, indent=2)
+
+          sign = '+' if delta_pct > 0 else ''
+          print(f"\nCEC Trend: {sign}{delta_pct}%")
+          for r in delta_reason:
+              print(f"  • {r}")
+
+          with open(os.environ.get('GITHUB_OUTPUT', '/dev/null'), 'a') as f:
+              f.write(f"delta_pct={sign}{delta_pct}\n")
+              f.write(f"has_regressions={'true' if regressions else 'false'}\n")
+              f.write(f"explanation={'|'.join(delta_reason)}\n")
+          EOF
+
+      - name: Copy trend report to evidence branch
+        run: |
+          cp cec-trend.json evidence/cec-trend.json 2>/dev/null || true
+          git add evidence/cec-trend.json 2>/dev/null || true
+
+      # ── P16: Sign evidence artifacts with cosign keyless ─────────────────
+      - name: Sign evidence artifacts (cosign keyless)
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          # Install cosign if not present
+          if ! command -v cosign &>/dev/null; then
+            curl -sSfL https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64 \
+              -o /usr/local/bin/cosign && chmod +x /usr/local/bin/cosign
+          fi
+
+          FILES="control-register.json cec-score.json cec-trend.json"
+          for FILE in $FILES; do
+            [ -f "$FILE" ] || continue
+            SHA256=$(sha256sum "$FILE" | awk '{print $1}')
+            echo "Signing ${FILE} (sha256: ${SHA256:0:12}...)"
+
+            cosign sign-blob \
+              --yes \
+              --output-signature "${FILE}.sig" \
+              --output-certificate "${FILE}.crt" \
+              "$FILE" 2>/dev/null && {
+              echo "  ✅ ${FILE} signed"
+              # Embed signature reference in the evidence branch
+              cp "${FILE}.sig" "evidence/${FILE}.sig" 2>/dev/null || true
+              cp "${FILE}.crt" "evidence/${FILE}.crt" 2>/dev/null || true
+            } || echo "  ⚠️  signing skipped (OIDC not available)"
+          done
+
+          # Write signature manifest
+          python3 - <<'PYEOF'
+          import json, subprocess, os
+          from datetime import datetime, timezone
+
+          manifest = {
+              'signed_at': datetime.now(timezone.utc).isoformat(),
+              'git_sha': os.environ.get('GITHUB_SHA','unknown'),
+              'run_id': os.environ.get('GITHUB_RUN_ID','unknown'),
+              'artifacts': [],
+          }
+
+          for fname in ['control-register.json', 'cec-score.json', 'cec-trend.json']:
+              if not os.path.exists(fname): continue
+              result = subprocess.run(['sha256sum', fname], capture_output=True, text=True)
+              sha256 = result.stdout.split()[0] if result.returncode == 0 else 'unknown'
+              manifest['artifacts'].append({
+                  'file': fname,
+                  'sha256': sha256,
+                  'sig_file': fname + '.sig' if os.path.exists(fname + '.sig') else None,
+                  'crt_file': fname + '.crt' if os.path.exists(fname + '.crt') else None,
+              })
+
+          with open('evidence/signature-manifest.json', 'w') as f:
+              json.dump(manifest, f, indent=2)
+
+          print(f"✅ Signature manifest written ({len(manifest['artifacts'])} artifacts)")
+          PYEOF
+
+      - name: Commit trend + signatures to evidence-chain branch
+        run: |
+          git add evidence/ 2>/dev/null || true
+          git diff --cached --quiet && echo "No trend/sig changes" && exit 0
+          git commit -m "ci(evidence): trend intel + cosign signatures [skip ci]
+
+          CEC: ${{ steps.register.outputs.cec_pct }}%  Δ${{ steps.trend.outputs.delta_pct }}%
+          Regressions: ${{ steps.trend.outputs.has_regressions }}
+          SHA: ${{ github.sha }}"
+          git push origin evidence-chain
+
+      - name: Upload signed artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-signed-${{ github.run_number }}
+          path: |
+            control-register.json
+            control-register.json.sig
+            control-register.json.crt
+            cec-score.json
+            cec-trend.json
+            evidence/signature-manifest.json
+          retention-days: 365
+
+      - name: Post CEC digest to Slack
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SRE_EVIDENCE_SLACK_WEBHOOK }}
+        run: |
+          python3 - <<'EOF'
+          import json, urllib.request, os
+
+          webhook_url = os.environ.get('SLACK_WEBHOOK_URL', '')
+          if not webhook_url:
+              print("No webhook configured — skipping")
+              exit(0)
+
+          try:
+              with open('cec-score.json') as f:
+                  cec = json.load(f)
+              with open('control-register.json') as f:
+                  register = json.load(f)
+          except Exception as e:
+              print(f"Could not load artifacts: {e}")
+              exit(0)
+
+          # Load trend intelligence if available
+          trend = {}
+          try:
+              with open('cec-trend.json') as f:
+                  trend = json.load(f)
+          except FileNotFoundError:
+              pass
+
+          icon    = "✅" if cec['status'] == 'PASS' else "❌"
+          run_url = f"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          failing = [c['id'] for c in register.get('controls', []) if c.get('last_status') == 'FAIL']
+
+          # Headline text — include delta if we have trend data
+          delta_pct  = trend.get('delta_pct', 0)
+          delta_sign = '+' if delta_pct > 0 else ''
+          delta_str  = f"  {delta_sign}{delta_pct}%" if delta_pct != 0 else ""
+          headline   = f"{icon} *Control Evidence Coverage* — `{cec['cec_pct']}%`{delta_str}"
+
+          blocks = [
+              {
+                  "type": "section",
+                  "text": {
+                      "type": "mrkdwn",
+                      "text": f"{headline}\nTarget: `{cec['target_pct']}%` | Status: *{cec['status']}* | "
+                              f"{cec['passing']}/{cec['total']} passing\n<{run_url}|View run>"
+                  }
+              },
+          ]
+
+          # Trend explanation block (P15)
+          explanations = trend.get('explanation', [])
+          if explanations:
+              bullet_lines = '\n'.join(f"• {r}" for r in explanations)
+              trend_icon   = "📈" if delta_pct > 0 else ("📉" if delta_pct < 0 else "➡️")
+              blocks.append({
+                  "type": "section",
+                  "text": {
+                      "type": "mrkdwn",
+                      "text": f"{trend_icon} *Trend*\n{bullet_lines}"
+                  }
+              })
+
+          # Failing controls — surface regressions immediately
+          if failing:
+              blocks.append({
+                  "type": "section",
+                  "text": {
+                      "type": "mrkdwn",
+                      "text": f"❌ *Failing controls:* {', '.join(f'`{f}`' for f in failing)}"
+                  }
+              })
+
+          # Regressions block
+          regressions = trend.get('regressions', [])
+          if regressions:
+              blocks.append({
+                  "type": "section",
+                  "text": {
+                      "type": "mrkdwn",
+                      "text": f"⚠️ *Regressions this run:* {', '.join(f'`{r}`' for r in regressions)}"
+                  }
+              })
+
+          # Footer
+          blocks.append({
+              "type": "context",
+              "elements": [{
+                  "type": "mrkdwn",
+                  "text": f"SHA: `${{ github.sha[:7] }}` | Run #${{ github.run_number }} | "
+                          f"Signed: {'✅' if os.path.exists('control-register.json.sig') else '—'}"
+              }]
+          })
+
+          payload = {
+              "text": f"{icon} CEC {cec['cec_pct']}%{delta_str} — {cec['status']}",
+              "blocks": blocks,
+          }
+
+          req = urllib.request.Request(
+              webhook_url,
+              data=json.dumps(payload).encode(),
+              headers={"Content-Type": "application/json"},
+          )
+          urllib.request.urlopen(req)
+          print("✅ CEC digest (with trend) posted to Slack")
+          EOF
