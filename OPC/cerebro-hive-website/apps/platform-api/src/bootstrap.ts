@@ -39,6 +39,8 @@ export interface BootstrapDeps {
   toolRegistry: ToolRegistry;
   unitOfWork: PrismaUnitOfWork;
   executionKernel: ExecutionRuntimeKernel;
+  executionManager: any;
+  prisma: any;
   executionStore: ExecutionStore;
   executionReplayService: ExecutionReplayService;
 }
@@ -63,7 +65,7 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
   // to the already-real `AgentRuntimeService`; no other execution kind
   // ('Workflow', 'Tool', 'Evaluation') has a real provider yet, and
   // `runtime.routes.ts` rejects those kinds explicitly rather than silently
-  const legacyRuntimeCompatibilityService = new LegacyRuntimeCompatibilityService(deps.executionKernel as any, deps.executionStore);
+  const legacyRuntimeCompatibilityService = new LegacyRuntimeCompatibilityService(deps.executionManager, deps.executionStore, deps.prisma);
 
   const server = Fastify({ logger: true }).withTypeProvider<TypeBoxTypeProvider>();
 

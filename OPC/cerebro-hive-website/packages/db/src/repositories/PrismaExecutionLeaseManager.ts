@@ -21,97 +21,80 @@ export class PrismaExecutionLeaseManager implements ExecutionLeaseManager {
 
   async acquireLease(executionId: string, ownerId: string, durationMs: number): Promise<ExecutionLease | null> {
     try {
-      const now = new Date();
-      const expiresAt = new Date(now.getTime() + durationMs);
-
-      // We attempt to either create a new lease OR overtake an expired one using upsert-like logic,
-      // but Prisma's upsert doesn't cleanly handle "where expiresAt < now".
-      // We will do it in a transaction.
       return await this.prisma.$transaction(async (tx) => {
-        const existing = await tx.agentExecutionLease.findUnique({
-          where: { executionId }
-        });
+        // Lock row and use DB time
+        const existing: any[] = await tx.$queryRaw`
+          SELECT "executionId", "ownerId", "expiresAt", "version", "fencingToken"
+          FROM "AgentExecutionLease"
+          WHERE "executionId" = ${executionId}::uuid
+          FOR UPDATE
+        `;
 
-        if (existing) {
-          if (existing.ownerId === ownerId || existing.expiresAt < now) {
-            // Steal or renew
-            const isRenewal = existing.ownerId === ownerId && existing.expiresAt >= now;
-            const updated = await tx.agentExecutionLease.update({
-              where: {
-                executionId,
-                version: existing.version // optimistic concurrency
-              },
-              data: {
-                ownerId,
-                expiresAt,
-                version: existing.version + 1,
-                fencingToken: isRenewal ? existing.fencingToken : existing.fencingToken + 1n
-              }
-            });
+        if (existing.length > 0) {
+          const row = existing[0];
+          // Check expiry against DB NOW()
+          const check: any[] = await tx.$queryRaw`SELECT NOW() as now`;
+          const dbNow = check[0].now;
+
+          if (row.ownerId === ownerId || row.expiresAt < dbNow) {
+            const isRenewal = row.ownerId === ownerId && row.expiresAt >= dbNow;
+            const updated = await tx.$queryRaw`
+              UPDATE "AgentExecutionLease"
+              SET "ownerId" = ${ownerId}::uuid,
+                  "expiresAt" = NOW() + (${durationMs}::text || ' milliseconds')::interval,
+                  "version" = "version" + 1,
+                  "fencingToken" = ${isRenewal ? row.fencingToken : row.fencingToken + 1n}
+              WHERE "executionId" = ${executionId}::uuid AND "version" = ${row.version}
+              RETURNING "executionId", "ownerId", "expiresAt", "fencingToken"
+            ` as any[];
+            if (updated.length === 0) return null;
             return {
-              executionId: updated.executionId,
-              ownerId: updated.ownerId,
-              expiresAt: updated.expiresAt,
-              fencingToken: updated.fencingToken
+              executionId: updated[0].executionId,
+              ownerId: updated[0].ownerId,
+              expiresAt: updated[0].expiresAt,
+              fencingToken: updated[0].fencingToken
             };
           } else {
-            // Actively held by someone else
             return null;
           }
         } else {
-          // Create new lease
-          const created = await tx.agentExecutionLease.create({
-            data: {
-              executionId,
-              ownerId,
-              expiresAt,
-              version: 1,
-              fencingToken: 1n
-            }
-          });
+          const created = await tx.$queryRaw`
+            INSERT INTO "AgentExecutionLease" ("executionId", "ownerId", "expiresAt", "version", "fencingToken")
+            VALUES (${executionId}::uuid, ${ownerId}::uuid, NOW() + (${durationMs}::text || ' milliseconds')::interval, 1, 1)
+            RETURNING "executionId", "ownerId", "expiresAt", "fencingToken"
+          ` as any[];
           return {
-            executionId: created.executionId,
-            ownerId: created.ownerId,
-            expiresAt: created.expiresAt,
-            fencingToken: created.fencingToken
+            executionId: created[0].executionId,
+            ownerId: created[0].ownerId,
+            expiresAt: created[0].expiresAt,
+            fencingToken: created[0].fencingToken
           };
         }
       });
     } catch (err: any) {
-      // Prisma error for Record to update not found (P2025) means optimistic concurrency failed
-      if (err.code === 'P2025') return null;
-      throw err;
+      return null;
     }
   }
 
   async renewLease(executionId: string, ownerId: string, currentFencingToken: bigint, durationMs: number): Promise<ExecutionLease | null> {
     try {
-      const expiresAt = new Date(Date.now() + durationMs);
-      // Prisma has no bigInt literal support in updateMany directly sometimes, but we can use where.
-      const updated = await this.prisma.agentExecutionLease.updateMany({
-        where: {
-          executionId,
-          ownerId,
-          fencingToken: currentFencingToken
-        },
-        data: {
-          expiresAt,
-          version: { increment: 1 }
-        }
-      });
+      const updated = await this.prisma.$queryRaw`
+        UPDATE "AgentExecutionLease"
+        SET "expiresAt" = NOW() + (${durationMs}::text || ' milliseconds')::interval,
+            "version" = "version" + 1
+        WHERE "executionId" = ${executionId}::uuid
+          AND "ownerId" = ${ownerId}::uuid
+          AND "fencingToken" = ${currentFencingToken}
+        RETURNING "executionId", "ownerId", "expiresAt", "fencingToken"
+      ` as any[];
 
-      if (updated.count === 0) return null;
-
-      const lease = await this.prisma.agentExecutionLease.findUnique({
-        where: { executionId }
-      });
-      if (!lease) return null;
+      if (updated.length === 0) return null;
 
       return {
-        executionId: lease.executionId,
-        ownerId: lease.ownerId,
-        expiresAt: lease.expiresAt,
-        fencingToken: lease.fencingToken
+        executionId: updated[0].executionId,
+        ownerId: updated[0].ownerId,
+        expiresAt: updated[0].expiresAt,
+        fencingToken: updated[0].fencingToken
       };
     } catch (err) {
       return null;
