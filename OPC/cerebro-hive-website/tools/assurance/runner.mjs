@@ -316,7 +316,7 @@ function runVitest(ctrl, r) {
     return { passed: false, details: `Spec not found: ${r.spec}`, missingFiles: [r.spec] };
   }
   const result = spawnSync(
-    'pnpm', ['exec', 'vitest', 'run', r.spec ?? '', '--reporter=verbose'],
+    'pnpm', ['exec', 'vitest', 'run', spec, '--reporter=verbose'],
     { cwd: join(REPO_ROOT, r.workDir ?? '.'), timeout: r.timeout_ms ?? 120000, encoding: 'utf8' }
   );
   const passed = result.status === 0;
