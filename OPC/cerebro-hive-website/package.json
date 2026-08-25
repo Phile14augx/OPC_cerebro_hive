@@ -49,7 +49,7 @@
     "arch:check": "node tools/arch/check-architecture.mjs",
     "arch:boundaries": "depcruise --config .dependency-cruiser.js packages services apps",
     "arch:verify-rules": "bash tools/arch/verify-boundaries.sh",
-    "corpus:signatures": "vitest run --passWithNoTests tools/arch/corpus",
+    "corpus:signatures": "vitest run tools/arch/corpus",
     "harness": "node tools/harness/cli.mjs",
     "harness:list": "node tools/harness/cli.mjs list",
     "harness:gate": "node tools/harness/cli.mjs gate",

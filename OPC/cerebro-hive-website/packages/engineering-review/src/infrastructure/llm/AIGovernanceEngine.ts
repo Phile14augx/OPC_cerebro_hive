@@ -1,4 +1,4 @@
-import { PromptVersion, ContributorExecutionFailure } from './LLMExecutionService';
+import type { PromptVersion, ContributorExecutionFailure } from './types';
 
 export class AIGovernanceEngine {
   async evaluatePolicy(prompt: PromptVersion): Promise<void> {

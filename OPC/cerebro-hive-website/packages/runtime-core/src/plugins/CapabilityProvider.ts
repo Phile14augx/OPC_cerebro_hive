@@ -1,18 +1,8 @@
 import { ExecutionContext } from '../context/ExecutionContext';
 import { Goal } from '../planning/Goal';
-import { ExecutionPlan } from '../planning/ExecutionPlan';
-
-export type CapabilityType = 
-  | 'LLMProvider' 
-  | 'ToolProvider' 
-  | 'MemoryProvider' 
-  | 'PolicyProvider' 
-  | 'PlannerProvider' 
-  | 'AgentProvider'
-  | 'StorageProvider'
-  | 'EmbeddingProvider'
-  | 'SearchProvider'
-  | 'EvaluationProvider';
+import { CapabilityType } from './types';
+export type { CapabilityType };
+import type { ExecutionPlan } from '../planning/ExecutionPlan';
 
 export interface CapabilityProvider {
   /**
@@ -87,7 +77,7 @@ export interface PolicyProvider extends CapabilityProvider {
 }
 
 export interface EvaluationProvider extends CapabilityProvider {
-  evaluatePlans(plans: ExecutionPlan[], goal: Goal, context: ExecutionContext, policy: import('../planning/EvaluationPolicy').EvaluationPolicy): Promise<import('../planning/PlanningSession').ScoredPlan[]>;
+  evaluatePlans(plans: ExecutionPlan[], goal: Goal, context: ExecutionContext, policy: import('../planning/EvaluationPolicy').EvaluationPolicy): Promise<import('../planning/types').ScoredPlan[]>;
 }
 
 export interface PlannerProvider extends CapabilityProvider {

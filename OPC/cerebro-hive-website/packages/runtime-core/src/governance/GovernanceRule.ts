@@ -1,4 +1,4 @@
-import { ExecutionPlan } from '../planning/ExecutionPlan';
+import type { ExecutionPlan } from '../planning/ExecutionPlan';
 import { GovernanceContextSnapshot } from './GovernanceContextSnapshot';
 
 export type RuleCategory = 'Security' | 'Compliance' | 'Financial' | 'Operational' | 'Organizational';

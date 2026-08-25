@@ -1,4 +1,4 @@
-import { CapabilityType } from '../plugins/CapabilityProvider';
+import type { CapabilityType } from '../plugins/types';
 
 export type NodeStatus = 'Pending' | 'Running' | 'Completed' | 'Failed' | 'Skipped';
 
