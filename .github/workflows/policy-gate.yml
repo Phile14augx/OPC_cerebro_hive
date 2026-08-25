@@ -17,6 +17,11 @@ env:
   CONFTEST_VERSION: "0.51.0"
   OPA_VERSION: "0.63.0"
 
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   # ── Job 1: OPA/Conftest — Terraform plan gates ────────────────────────────
   terraform-policy:

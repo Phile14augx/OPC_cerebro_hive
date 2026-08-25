@@ -20,6 +20,11 @@ permissions:
   contents: write   # needed for --update-spec auto-commit
   pull-requests: write
 
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   openapi-drift:
     name: Check OpenAPI drift

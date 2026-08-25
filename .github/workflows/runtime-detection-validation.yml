@@ -51,6 +51,11 @@ concurrency:
   group: runtime-detection-${{ github.ref }}
   cancel-in-progress: true
 
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   # ── Job 1: Lint Falco rules ───────────────────────────────────────────────
   lint-falco-rules:

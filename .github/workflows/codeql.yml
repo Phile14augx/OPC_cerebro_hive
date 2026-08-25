@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: '28 6 * * 1'
 
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   analyze:
     name: Analyze

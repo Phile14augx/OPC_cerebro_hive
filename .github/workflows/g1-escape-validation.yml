@@ -36,6 +36,11 @@ env:
   AWS_REGION: us-east-1
   NAMESPACE: cerebro-break-tests
 
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   # ── Unit tests (no gVisor required) ─────────────────────────────────────────
   unit-tests:

@@ -12,6 +12,11 @@ on:
 permissions:
   contents: read
 
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   verify:
     runs-on: ubuntu-latest

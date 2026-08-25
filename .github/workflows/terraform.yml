@@ -62,6 +62,11 @@ env:
   TF_IN_AUTOMATION: "true"
   TF_INPUT: "false"
 
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
 jobs:
   # ── Detect changed environments ──────────────────────────────────────────────
   detect-env:
