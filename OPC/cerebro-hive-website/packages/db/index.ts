@@ -1,21 +1,15 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient as PC } from './src/generated/client';
-
 const globalForPrisma = global as unknown as { prisma: PC };
-
 // Prisma 7's generated client uses the WASM query compiler, which requires
 // a driver adapter (no classic binary/library query engine fallback) --
 // see https://pris.ly/d/driver-adapters. The adapter wraps a `pg.Pool` and
 // connects lazily, so constructing it here is safe even when DATABASE_URL
 // is unset (e.g. during a build/typecheck pass that never issues a query).
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-
 export const prisma = globalForPrisma.prisma || new PC({ adapter });
-
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
-
 export * from './src/generated/client';
-
 export * from './src/repositories/context';
 export * from './src/repositories/BaseRepository';
 export * from './src/repositories/TenantRepository';
@@ -36,6 +30,6 @@ export * from './src/repositories/TalentAuthorizationRepository';
 export * from './src/transactions/PrismaUnitOfWork';
 export * from './src/twin-studio/twin-repository';
 export * from './src/auth/talent-permissions';
-
-
-
+export * from './src/repositories/PrismaExecutionLeaseManager';
+export * from './src/repositories/PrismaExecutionOutbox';
+export { Prisma } from './src/generated/client';
