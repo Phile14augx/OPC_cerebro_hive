@@ -1,4 +1,4 @@
-import type { PromptVersion, ContributorExecutionFailure } from './types';
+import { PromptVersion, ContributorExecutionFailure } from './types';
 
 export class AIGovernanceEngine {
   async evaluatePolicy(prompt: PromptVersion): Promise<void> {
