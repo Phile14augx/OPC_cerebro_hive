@@ -13,7 +13,7 @@
     "studio": "prisma studio",
     "lint": "eslint \"src/**/*.ts\"",
     "typecheck": "pnpm generate && tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "pnpm generate && vitest run"
   },
   "dependencies": {
     "@cerebro/twin-contracts": "workspace:*",

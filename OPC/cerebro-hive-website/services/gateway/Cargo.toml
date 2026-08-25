@@ -39,7 +39,7 @@ redis = { version = "0.24", features = ["tokio-comp", "connection-manager"] }
 bb8-redis = "0.15"
 
 # HTTP client (proxy to downstream services)
-reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
 
 # gRPC (calls to C++ ML service)
 tonic = "0.11"
