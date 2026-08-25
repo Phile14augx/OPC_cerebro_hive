@@ -99,17 +99,17 @@ jobs:
         run: |
           if [ -z "${ANTHROPIC_API_KEY}" ]; then
 
-            echo "ANTHROPIC_API_KEY secret is not set. Mocking AI review."
+            echo "ANTHROPIC_API_KEY secret is not set. Using unavailable fixture."
 
             cat > /tmp/review.json << 'MOCK'
 
             {
 
-              "summary": "Mock review because API key is missing.",
+              "summary": "AI_REVIEW_UNAVAILABLE: ANTHROPIC_API_KEY is missing. AI review was not performed.",
 
               "risk_score": 0,
 
-              "risk_label": "LOW",
+              "risk_label": "UNKNOWN",
 
               "architectural_impact": { "level": "none", "details": "N/A" },
 
@@ -121,9 +121,9 @@ jobs:
 
               "positive_highlights": [],
 
-              "test_coverage_assessment": "Mock.",
+              "test_coverage_assessment": "Not assessed.",
 
-              "recommendation": "APPROVE"
+              "recommendation": "COMMENT"
 
             }
 MOCK

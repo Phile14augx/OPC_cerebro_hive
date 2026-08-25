@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Engineering Review End-to-End Journey', () => {
   test('Complete journey: Dashboard -> Review -> Finding -> Evidence', async ({ page }) => {
     // Navigate to dashboard
-    await page.goto('/');
+    await page.goto('/reviews/WFL-MOCK-123');
 
     // Ensure we are redirected to login if unauthenticated (assuming mock auth or ignoring auth for this simple E2E test right now)
     // For this e2e test, we will assume we have a mock token or we bypass login for local testing.
