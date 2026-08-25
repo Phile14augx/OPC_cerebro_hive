@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import assert from "node:assert/strict";
-import { test } from "vitest";
+import test from "node:test";
 import { generateIndustryModel } from "../modules/industry/deterministic-industry-provider";
 import { createVersionRouteController } from "../modules/twin-definition/version-route-controller";
 
