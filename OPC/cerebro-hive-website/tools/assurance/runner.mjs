@@ -320,6 +320,12 @@ function runVitest(ctrl, r) {
     { cwd: join(REPO_ROOT, r.workDir ?? '.'), timeout: r.timeout_ms ?? 120000, encoding: 'utf8' }
   );
   const passed = result.status === 0;
+  if (!passed) {
+    console.log('--- VITEST STDOUT ---');
+    console.log(result.stdout);
+    console.log('--- VITEST STDERR ---');
+    console.error(result.stderr);
+  }
   return { passed, exitCode: result.status, stdout: result.stdout, stderr: result.stderr,
     details: passed ? `Vitest passed: ${r.spec}` : `Vitest failed (exit ${result.status})` };
 }
@@ -330,6 +336,12 @@ function runGoTest(ctrl, r) {
     { cwd: join(REPO_ROOT, r.workDir ?? '.'), timeout: r.timeout_ms ?? 180000, encoding: 'utf8' }
   );
   const passed = result.status === 0;
+  if (!passed) {
+    console.log('--- VITEST STDOUT ---');
+    console.log(result.stdout);
+    console.log('--- VITEST STDERR ---');
+    console.error(result.stderr);
+  }
   return { passed, exitCode: result.status, stdout: result.stdout, stderr: result.stderr,
     details: passed ? `Go tests passed` : `Go tests failed (exit ${result.status})` };
 }
