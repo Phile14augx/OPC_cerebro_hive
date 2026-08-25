@@ -9,8 +9,6 @@ export class ClosedLoopVerifier {
     // Here, we simulate the learning mechanism based on the ExecutionResult success.
 
     const previousScore = runbook.confidenceScore;
-    const historyCount = runbook.executionHistoryCount;
-
     if (result.success) {
       // Increase confidence slightly, asymptote at 0.99
       runbook.confidenceScore = previousScore + ((0.99 - previousScore) * 0.1);

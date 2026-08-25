@@ -52,7 +52,7 @@ export class AgentClient extends BaseClient {
     super(baseUrl, headers);
   }
 
-  async listAgents(params?: { page?: number; limit?: number; search?: string }): Promise<{ data: AgentMetadata[]; meta: any }> {
+  async listAgents(params?: { page?: number; limit?: number; search?: string }): Promise<{ data: AgentMetadata[]; meta: Record<string, unknown> }> {
     const queryParams = new URLSearchParams();
     if (params?.page) queryParams.append('page', params.page.toString());
     if (params?.limit) queryParams.append('limit', params.limit.toString());
@@ -61,7 +61,7 @@ export class AgentClient extends BaseClient {
     const query = queryParams.toString();
     const endpoint = `/api/v1/agents${query ? `?${query}` : ''}`;
     
-    return this.fetchJson<{ data: AgentMetadata[]; meta: any }>(endpoint);
+    return this.fetchJson<{ data: AgentMetadata[]; meta: Record<string, unknown> }>(endpoint);
   }
 
   async getAgent(id: string): Promise<AgentConfiguration | null> {
@@ -69,7 +69,7 @@ export class AgentClient extends BaseClient {
     return res.data;
   }
 
-  async createAgent(data: any): Promise<AgentConfiguration> {
+  async createAgent(data: Record<string, unknown>): Promise<AgentConfiguration> {
     const res = await this.fetchJson<{ success: boolean; data: AgentConfiguration }>('/api/v1/agents', {
       method: 'POST',
       body: JSON.stringify(data)

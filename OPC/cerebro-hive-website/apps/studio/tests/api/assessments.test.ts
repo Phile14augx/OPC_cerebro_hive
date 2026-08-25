@@ -6,14 +6,11 @@
 import { DomainEventBus } from '../../lib/talent/infrastructure/events/eventBus';
 
 describe('Assessment API Vertical Slice', () => {
-  let traceIdToVerify: string;
-  let eventFired = false;
+  const publishedEvents: Array<{ assessmentId: string; action: string; traceId?: string }> = [];
 
   beforeAll(() => {
-    // Mock the domain event bus to catch the published event
-    DomainEventBus.subscribe('AssessmentPublished', (event) => {
-      eventFired = true;
-      expect(event.payload.action).toBe('created');
+    DomainEventBus.subscribe<{ assessmentId: string; action: string }>('AssessmentPublished', (event) => {
+      publishedEvents.push({ ...event.payload, traceId: event.traceId });
     });
   });
 
@@ -38,15 +35,13 @@ describe('Assessment API Vertical Slice', () => {
       traceId: 'uuid-integration-test'
     };
 
-    traceIdToVerify = mockApiResponse.traceId;
-
     expect(mockApiResponse.success).toBe(true);
     expect(mockApiResponse.data.title).toBe(mockRequestPayload.title);
     expect(mockApiResponse.data.status).toBe('draft');
     expect(mockApiResponse.traceId).toBeDefined();
 
-    // Verify side-effects
-    // The actual event firing is tested implicitly via the boolean flag in beforeAll
-    // In actual jest, we wait for async events or use jest.fn() spies
+    const eventPayload = { assessmentId: mockApiResponse.data.id, action: 'created' };
+    DomainEventBus.publish('AssessmentPublished', eventPayload, mockApiResponse.traceId);
+    expect(publishedEvents).toContainEqual({ ...eventPayload, traceId: mockApiResponse.traceId });
   });
 });

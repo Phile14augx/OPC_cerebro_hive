@@ -1,8 +1,8 @@
-import { FederatedIdentity, FederationContext } from '@cerebro/identity-core';
+import { FederationContext } from '@cerebro/identity-core';
 
 export interface TokenValidationResult {
   isValid: boolean;
-  claims: Record<string, any>;
+  claims: Record<string, unknown>;
   federationContext: FederationContext;
 }
 

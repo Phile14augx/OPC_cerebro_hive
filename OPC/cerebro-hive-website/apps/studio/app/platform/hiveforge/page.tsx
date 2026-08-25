@@ -15,7 +15,7 @@ export default function HiveForgePage() {
     try { setCost(await api<CostExplorer>("/v1/hiveforge/billing/cost-explorer")); } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   return (
     <main className="mx-auto max-w-6xl px-6 pb-24 pt-8">

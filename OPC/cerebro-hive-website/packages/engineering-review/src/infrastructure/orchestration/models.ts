@@ -64,7 +64,7 @@ export interface ExecutionBatch {
   readonly cancellationToken?: AbortSignal;
   readonly cancellationPolicy: CancellationPolicy;
   readonly timeline: Record<CoordinatorState, number | undefined>; // Immutable timeline
-  readonly cacheSnapshot?: any; // any for cross-package boundary M26.9 scaffolding
+  readonly cacheSnapshot?: unknown; // unknown for cross-package boundary M26.9 scaffolding
 }
 
 export type AdmissionDecisionType = 'Accepted' | 'Rejected' | 'Deferred';

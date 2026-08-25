@@ -308,7 +308,7 @@ function WorkspaceLauncher() {
             );
           })}
           {filtered.length === 0 && (
-            <p className="col-span-full py-12 text-center text-sm text-text-secondary">No workspaces match "{query}".</p>
+            <p className="col-span-full py-12 text-center text-sm text-text-secondary">No workspaces match &quot;{query}&quot;.</p>
           )}
         </div>
       </div>

@@ -48,8 +48,8 @@ export interface Citation {
 
 // Minimal placeholder for the React Flow blueprint layout
 export interface ResearchArchitectureData {
-  nodes: any[];
-  edges: any[];
+  nodes: { id: string; position: { x: number; y: number }; data: Record<string, unknown>; type?: string; [key: string]: unknown }[];
+  edges: { id: string; source: string; target: string; animated?: boolean; [key: string]: unknown }[];
   figureNumber: string;
   version: string;
 }

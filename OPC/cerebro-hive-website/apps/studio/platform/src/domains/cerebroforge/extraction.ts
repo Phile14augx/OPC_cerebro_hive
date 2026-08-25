@@ -1,5 +1,3 @@
-import { seededRandom } from "../simulator/simulator.js";
-
 export interface ExtractedKnowledge {
   metadata: {
     title: string;

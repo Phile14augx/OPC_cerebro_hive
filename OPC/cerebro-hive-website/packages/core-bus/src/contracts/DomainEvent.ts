@@ -1,6 +1,6 @@
 import { IdentityContext } from '@cerebro/identity-core';
 
-export interface DomainEvent<T = any> {
+export interface DomainEvent<T = unknown> {
   eventId: string;
   eventType: string;
   aggregateId: string;

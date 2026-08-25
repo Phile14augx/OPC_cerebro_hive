@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Database, BrainCircuit, Bot, Building2, Server, ArrowDown, Info } from "lucide-react";
+import { Database, BrainCircuit, Bot, Building2, Server, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";

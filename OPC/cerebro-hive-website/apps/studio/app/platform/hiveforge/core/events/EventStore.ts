@@ -20,12 +20,12 @@ export type DomainEventType =
   | "OperationReady"
   | "OperationFailed";
 
-export interface DomainEvent {
+export interface DomainEvent<TPayload = unknown> {
   id: string; // UUID
   correlationId: string;
   type: DomainEventType;
   timestamp: string;
-  payload: any;
+  payload: TPayload;
 }
 
 export class EventStore {

@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { prisma, AssessmentSession, SessionStatus } from '@cerebro/db';
+import { prisma, AssessmentSession } from '@cerebro/db';
 import { DomainEventBus } from '../infrastructure/events/eventBus';
 import { withTransaction } from '../infrastructure/database/transaction';
 
@@ -55,12 +54,12 @@ export class SessionService {
   /**
    * Appends a batch of raw telemetry events (e.g., keystrokes, focus changes).
    */
-  async recordTelemetry(sessionId: string, sequence: number, events: any[], traceId?: string) {
+  async recordTelemetry(sessionId: string, sequence: number, events: unknown[], traceId?: string) {
     const batch = await prisma.sessionTelemetryBatch.create({
       data: {
         sessionId,
         sequence,
-        events: events as any
+        events: events as unknown as import('@cerebro/db').Prisma.InputJsonValue
       }
     });
 
@@ -78,10 +77,10 @@ export class SessionService {
   /**
    * Updates the aggregated metrics for the session (computed asynchronously).
    */
-  async updateMetrics(sessionId: string, metrics: any) {
+  async updateMetrics(sessionId: string, metrics: unknown) {
     return prisma.assessmentSession.update({
       where: { id: sessionId },
-      data: { metrics: metrics as any }
+      data: { metrics: metrics as unknown as import('@cerebro/db').Prisma.NullableJsonNullValueInput | import('@cerebro/db').Prisma.InputJsonValue }
     });
   }
 

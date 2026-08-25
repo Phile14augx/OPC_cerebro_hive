@@ -1,4 +1,4 @@
-import { ExecutionEvent } from '@cerebro/runtime-contracts/src/events/ExecutionEvent';
+import { __ExecutionEvent } from '@cerebro/runtime-contracts/src/events/__ExecutionEvent';
 import { ExecutionStore } from '../ExecutionStore';
 import { ExecutionProjectionManager } from './ExecutionProjectionManager';
 
@@ -27,11 +27,11 @@ export class RebuildProjectionPipeline {
    * Verifies that the projected state matches the event stream state.
    * Useful for background inconsistency detection.
    */
-  public async verifyProjectionConsistency(executionId: string, currentProjectedState: any): Promise<boolean> {
+  public async verifyProjectionConsistency(executionId: string, currentProjectedState: unknown): Promise<boolean> {
     // In a real system, we'd hydrate an in-memory projection and deep-compare it to currentProjectedState.
     // For now, we simulate the hydration and return a boolean based on parity.
     const events = await this.eventStore.getEvents(executionId);
-    let reconstructedState: any = { totalSteps: 0, status: 'RUNNING' };
+    let reconstructedState: unknown = { totalSteps: 0, status: 'RUNNING' };
 
     for (const event of events) {
       if (event.type === 'StepCompleted') {

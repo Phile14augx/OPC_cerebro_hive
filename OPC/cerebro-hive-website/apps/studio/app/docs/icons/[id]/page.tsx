@@ -91,7 +91,7 @@ export default async function IconDocumentationPage({
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-4">Accessibility</h2>
         <p className="text-text-secondary mb-4">
-          By default, icons are treated as decorative (`role="presentation"`). To make them
+          By default, icons are treated as decorative (`role=&quot;presentation&quot;`). To make them
           semantically meaningful, provide a `label` and optional `description`.
         </p>
         <div className="bg-surface-elevated p-4 rounded-lg overflow-x-auto">

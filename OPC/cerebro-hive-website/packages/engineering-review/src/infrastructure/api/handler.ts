@@ -11,23 +11,34 @@ import {
   ContributorResultSchema 
 } from '@cerebro/api-client/src/schema/review.schema';
 import { z } from 'zod';
-import { trace, context, SpanStatusCode } from '@opentelemetry/api';
+import { trace, SpanStatusCode } from '@opentelemetry/api';
 import { createLogger } from '../logger';
 import crypto from 'crypto';
 
 const tracer = trace.getTracer('cerebro-engineering-review-api');
 
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
 const ddbClient = new DynamoDBClient({});
 const s3Client = new S3Client({});
 
+const reviewTableName = requireEnv('REVIEW_TABLE_NAME');
+const evidenceBucketName = requireEnv('EVIDENCE_BUCKET_NAME');
+
 const reviewRepo = new DynamoDBEngineeringReviewRepository(
   ddbClient,
-  process.env.REVIEW_TABLE_NAME!
+  reviewTableName
 );
 
 const evidenceStore = new S3EvidenceStore(
   s3Client,
-  process.env.EVIDENCE_BUCKET_NAME!
+  evidenceBucketName
 );
 
 function mapToSummary(review: EngineeringReviewReport) {
@@ -48,7 +59,7 @@ function mapToSummary(review: EngineeringReviewReport) {
   return EngineeringReviewSummarySchema.parse(result);
 }
 
-function mapToFinding(finding: any) {
+function mapToFinding(finding: Record<string, unknown>) {
   return FindingDetailSchema.parse({
     id: finding.id,
     severity: finding.severity,
@@ -78,7 +89,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
       if (httpMethod === 'GET') {
       if (resource === '/reviews/{reviewId}') {
-        const id = pathParameters?.reviewId!;
+        const id = pathParameters?.reviewId;
+        if (!id) return { statusCode: 400, body: JSON.stringify({ error: 'reviewId is required' }) };
+        
         const review = await reviewRepo.findById(id);
         if (!review) return { statusCode: 404, body: 'Not Found' };
         
@@ -90,7 +103,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }
 
       if (resource === '/workflows/{workflowId}/reviews') {
-        const workflowId = pathParameters?.workflowId!;
+        const workflowId = pathParameters?.workflowId;
+        if (!workflowId) return { statusCode: 400, body: JSON.stringify({ error: 'workflowId is required' }) };
+        
         const reviews = await reviewRepo.findByWorkflow(workflowId);
         return {
           statusCode: 200,
@@ -100,7 +115,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }
 
       if (resource === '/reviews/{reviewId}/findings') {
-        const id = pathParameters?.reviewId!;
+        const id = pathParameters?.reviewId;
+        if (!id) return { statusCode: 400, body: JSON.stringify({ error: 'reviewId is required' }) };
+        
         const review = await reviewRepo.findById(id);
         if (!review) return { statusCode: 404, body: 'Not Found' };
         
@@ -112,7 +129,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }
 
       if (resource === '/reviews/{reviewId}/contributors') {
-        const id = pathParameters?.reviewId!;
+        const id = pathParameters?.reviewId;
+        if (!id) return { statusCode: 400, body: JSON.stringify({ error: 'reviewId is required' }) };
+        
         const review = await reviewRepo.findById(id);
         if (!review) return { statusCode: 404, body: 'Not Found' };
         
@@ -132,8 +151,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }
 
       if (resource === '/reviews/{reviewId}/evidence/{findingId}') {
-        const reviewId = pathParameters?.reviewId!;
-        const findingId = pathParameters?.findingId!;
+        const reviewId = pathParameters?.reviewId;
+        const findingId = pathParameters?.findingId;
+        if (!reviewId || !findingId) return { statusCode: 400, body: JSON.stringify({ error: 'reviewId and findingId are required' }) };
         
         const review = await reviewRepo.findById(reviewId);
         if (!review) return { statusCode: 404, body: 'Review Not Found' };
@@ -170,7 +190,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({ error: `Unsupported route: ${httpMethod} ${resource}` })
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return {
         statusCode: 500,
@@ -178,9 +198,11 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         body: JSON.stringify({ error: 'Internal API Contract Violation', details: error.errors })
       };
     }
-    logger.error('Unhandled API Error', { error: error.message, stack: error.stack });
-    span.recordException(error);
-    span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    const stack = error instanceof Error ? error.stack : undefined;
+    logger.error('Unhandled API Error', { error: message, stack });
+    span.recordException(error as Error);
+    span.setStatus({ code: SpanStatusCode.ERROR, message: message });
     return { statusCode: 500, body: JSON.stringify({ error: 'Internal Server Error' }) };
   } finally {
     span.end();

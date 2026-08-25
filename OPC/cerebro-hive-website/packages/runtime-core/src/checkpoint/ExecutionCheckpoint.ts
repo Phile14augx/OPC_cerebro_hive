@@ -7,8 +7,8 @@ export interface CheckpointContract {
   currentNode?: string; // Node ID
   completedSteps: string[];
   contextSnapshot: ExecutionContextProps; // Serializable version of the context
-  variables: Record<string, any>;
-  pendingActions: any[];
+  variables: Record<string, unknown>;
+  pendingActions: unknown[];
   eventOffset: number;
   createdAt: Date;
 }

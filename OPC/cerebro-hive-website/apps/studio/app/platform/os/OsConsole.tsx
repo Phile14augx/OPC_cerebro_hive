@@ -38,7 +38,7 @@ export default function OsConsole() {
     } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const run = useCallback(async () => {
     setRunning(true); setError(null); setExecution(null);

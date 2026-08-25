@@ -1,4 +1,4 @@
-import { EnterpriseRisk, RiskRegister } from '../register/RiskRegister';
+import { RiskRegister } from '../register/RiskRegister';
 import { ScoringEngine } from '../scoring/ScoringEngine';
 
 export interface ControlAssessment {

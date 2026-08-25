@@ -343,7 +343,6 @@ export interface LeadIntelligence {
   recommendedServiceRationale: string; createdAt: string;
 }
 
-const FUNDING_POOL: FundingStage[] = ["bootstrapped", "seed", "series-a", "series-b", "series-c-plus", "public"];
 const EMPLOYEE_TREND_POOL: EmployeeTrend[] = ["growing", "stable", "shrinking"];
 const HIRING_SIGNALS = [
   "actively hiring across engineering and data roles",

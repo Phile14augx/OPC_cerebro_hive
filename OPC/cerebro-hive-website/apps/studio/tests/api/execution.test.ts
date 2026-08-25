@@ -4,10 +4,11 @@
  */
 
 import { DomainEventBus } from '../../lib/talent/infrastructure/events/eventBus';
+import type { DomainEventType } from '../../lib/talent/infrastructure/events/eventBus';
 import { ExecutionStatus } from '@cerebro/db';
 
 describe('Execution Engine Vertical Slice', () => {
-  let executionEventsFired: string[] = [];
+  const executionEventsFired: string[] = [];
 
   beforeAll(() => {
     const eventsToTrack = [
@@ -17,23 +18,17 @@ describe('Execution Engine Vertical Slice', () => {
       'ExecutionStarted',
       'ExecutionCompleted',
       'SandboxDestroyed',
-      'WorkerReleased'
-    ];
+      'WorkerReleased',
+    ] satisfies DomainEventType[];
 
     eventsToTrack.forEach(evt => {
-      DomainEventBus.subscribe(evt as any, () => executionEventsFired.push(evt));
+      DomainEventBus.subscribe(evt, () => executionEventsFired.push(evt));
     });
   });
 
   it('should successfully orchestrate a full execution lifecycle', async () => {
     
     // 1. Submit Execution Request
-    const mockRequestPayload = {
-      sessionId: 'session_abc123',
-      language: 'javascript',
-      code: 'console.log("Hello Stage 3!");'
-    };
-
     const mockApiResponse = {
       success: true,
       data: {

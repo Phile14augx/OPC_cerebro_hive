@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
-import { ArrowRight, Globe2, Archive, Code2, Workflow, BarChart2, MessageSquare, Server, Shield, Cpu, Zap, ChevronRight, Database, Cloud, Lock, ShieldCheck, Check } from "lucide-react";
+import { ArrowRight, Globe2, Archive, Code2, Workflow, BarChart2, MessageSquare, Server, Shield, Cpu, Zap, ChevronRight, Database, Cloud, Lock, ShieldCheck, Check, type LucideIcon } from "lucide-react";
 import { EcosystemArchitectureDiagram } from "./EcosystemArchitectureDiagram";
 import { ecosystemTiers } from "@/lib/data/products";
 
-const moduleIcons: Record<string, any> = {
+const moduleIcons: Record<string, LucideIcon> = {
   "cerebro-sphere": Globe2,
   "hivepulse": Cpu,
   "cerebro-archive": Archive,
@@ -20,14 +19,6 @@ const moduleIcons: Record<string, any> = {
   "hive-shield": Shield,
   "cerebro-x": Zap,
 };
-
-const layerTabs = [
-  { key: "all", label: "Full Ecosystem" },
-  { key: "os", label: "OS Layer" },
-  { key: "business", label: "Business Modules" },
-  { key: "enterprise", label: "Platform Services" },
-  { key: "foundation", label: "Foundation" },
-] as const;
 
 const networkEffects = [
   {
@@ -107,15 +98,6 @@ const deploymentModels = [
 ];
 
 export function ProductsEcosystemPage() {
-  const allFeatured = [
-    ...ecosystemTiers.os,
-    ...ecosystemTiers.orchestration,
-    ...ecosystemTiers.intelligence,
-    ...ecosystemTiers.business,
-    ...ecosystemTiers.enterprise,
-    ...ecosystemTiers.platformFoundation,
-  ].filter((p, i, arr) => p && arr.findIndex((x: any) => x?.id === p.id) === i);
-
   return (
     <div className="bg-background min-h-screen selection:bg-primary-accent/30 selection:text-text-primary font-inter">
 
@@ -534,7 +516,7 @@ export function ProductsEcosystemPage() {
               Ready for an Architecture Briefing?
             </h2>
             <p className="text-text-secondary leading-relaxed mb-8">
-              Our enterprise architects work with you to map the CerebroHive platform to your organization's specific needs, data architecture, and compliance requirements.
+              Our enterprise architects work with you to map the CerebroHive platform to your organization&apos;s specific needs, data architecture, and compliance requirements.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <TrackedLink href="/contact" analyticsEvent="cta_book_workshop_click" analyticsCategory="products" analyticsLabel="Book an Architecture Workshop" className="px-8 py-4 bg-primary-accent text-background font-space font-bold text-sm uppercase tracking-widest rounded-xl transition-all hover:-translate-y-1 shadow-elevated flex items-center gap-3 justify-center">

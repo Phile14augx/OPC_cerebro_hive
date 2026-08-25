@@ -8,8 +8,6 @@ export type UserProfile = {
   id: string;
   email: string;
   full_name: string;
-  role: string;
-  organizationId?: string | null;
 };
 
 /**
@@ -33,27 +31,21 @@ export async function getMe(): Promise<{ data?: UserProfile; error?: string }> {
         id: true,
         email: true,
         name: true,
-        tenantMembers: { take: 1, select: { tenantId: true, role: { select: { name: true } } } },
-      }
+      },
     });
 
     if (!user) {
       return { error: 'User not found.' };
     }
 
-    const membership = user.tenantMembers[0];
-
     return {
       data: {
         id: user.id,
         email: user.email,
         full_name: user.name || '',
-        role: membership?.role.name || '',
-        organizationId: membership?.tenantId,
-      }
+      },
     };
-  } catch (err) {
-    console.error('getMe error:', err);
+  } catch {
     return { error: 'Could not fetch user profile.' };
   }
 }

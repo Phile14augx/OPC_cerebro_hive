@@ -4,7 +4,7 @@ import { RequestContext } from '@cerebro/db';
 export interface PublishAgentInput {
   modelId: string;
   instructions: string;
-  tools: any[];
+  tools: unknown[];
 }
 
 export interface IAgentBuilderCapability {
@@ -13,5 +13,5 @@ export interface IAgentBuilderCapability {
     input: PublishAgentInput,
     context: RequestContext,
     idempotencyKey?: string
-  ): Promise<Result<any>>;
+  ): Promise<Result<unknown>>;
 }

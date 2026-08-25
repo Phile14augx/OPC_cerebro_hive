@@ -1,28 +1,28 @@
-
 import { OptimizationRecommendation } from '@cerebro/aiops-sdk';
 import { PlatformEventBus } from '@cerebro/events';
 
 export class OptimizationLoop {
   
   start() {
-    PlatformEventBus.subscribe('telemetry:event' as any, (event: any) => {
-      this.processEvent(event);
+    PlatformEventBus.subscribe('telemetry:event', (_event: unknown) => {
+      this.processEvent(_event);
     });
     console.log('[AIOps] OptimizationLoop subscribed to EventBus. Awaiting telemetry...');
   }
 
-  private processEvent(event: any) {
+  private processEvent(event: unknown) {
     // 1. Aggregation & Feature Extraction (Mocked)
-    if (event.type === 'PROVIDER_FALLBACK') {
+    const e = event as Record<string, unknown>;
+    if (e && e.type === 'PROVIDER_FALLBACK') {
       console.log('[AIOps] Analyzing fallback event...');
       this.detectAnomalies(event);
     }
   }
 
-  private detectAnomalies(event: any) {
+  private detectAnomalies(_event: unknown) {
     // 2. Detection (Simulate detecting a latency spike causing fallbacks)
     console.log('[AIOps] Anomaly Detected: Sustained fallback rate on OpenAI.');
-    PlatformEventBus.publish('telemetry:event' as any, { type: 'ANOMALY_DETECTED', details: { source: 'OpenAI', metric: 'latency' } } as any);
+    PlatformEventBus.publish('telemetry:event', { type: 'ANOMALY_DETECTED', details: { source: 'OpenAI', metric: 'latency' }, timestamp: new Date(), source: 'OptimizationLoop', severity: 'info' });
     
     // 3. Recommendation
     const rec: OptimizationRecommendation = {
@@ -41,12 +41,12 @@ export class OptimizationLoop {
   }
 
   private executeRecommendation(rec: OptimizationRecommendation) {
-    PlatformEventBus.publish('telemetry:event' as any, { type: 'RECOMMENDATION_GENERATED', details: rec } as any);
+    PlatformEventBus.publish('telemetry:event', { type: 'RECOMMENDATION_GENERATED', details: rec, timestamp: new Date(), source: 'OptimizationLoop', severity: 'info' });
     
     // Tiered Autonomy logic
     if (rec.autonomyLevel === 'POLICY_CONSTRAINED') {
       console.log('[AIOps] Executing safe automation (Level 2 Autonomy)...');
-      PlatformEventBus.publish('telemetry:event' as any, { type: 'OPTIMIZATION_APPLIED', details: { action: rec.suggestedAction } } as any);
+      PlatformEventBus.publish('telemetry:event', { type: 'OPTIMIZATION_APPLIED', details: { action: rec.suggestedAction }, timestamp: new Date(), source: 'OptimizationLoop', severity: 'info' });
     } else {
       console.log('[AIOps] Recommendation requires human approval (Level 3 Autonomy). Queueing...');
     }

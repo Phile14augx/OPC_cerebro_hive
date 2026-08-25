@@ -8,8 +8,7 @@ import {
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { Card } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
-import { Badge } from "../../../components/ui/Badge";
-import { StatCard } from "../../../components/ui/StatCard";
+
 
 export default function CandidateReport({ params }: { params: { id: string } }) {
   // TalentOS's Prisma-backed AssessmentService/SubmissionService are not yet wired to a

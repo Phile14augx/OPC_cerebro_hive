@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { prisma } from '@cerebro/db';
+import { prisma, Prisma } from '@cerebro/db';
 import { PaginationQuery } from '../common/pagination';
 import { requirePermission } from '../../middleware/AuthMiddleware';
 
@@ -10,17 +10,17 @@ export default async function workflowsRoutes(fastify: FastifyInstance) {
     { schema: { querystring: PaginationQuery } },
     async (request, reply) => {
       const workspaceId = request.cerebroContext.workspaceId;
-      const { page = 1, limit = 20, sort, search } = request.query as any;
+      const { page = 1, limit = 20, sort, search } = request.query as { page?: number | string; limit?: number | string; sort?: string; search?: string };
 
       const skip = (Number(page) - 1) * Number(limit);
       const take = Number(limit);
 
-      const where: any = { workspaceId };
+      const where: Prisma.WorkflowWhereInput = { workspaceId };
       if (search) {
         where.name = { contains: search, mode: 'insensitive' };
       }
 
-      let orderBy: any = { createdAt: 'desc' };
+      let orderBy: Prisma.WorkflowOrderByWithRelationInput = { createdAt: 'desc' };
       if (sort) {
         if (sort.startsWith('-')) orderBy = { [sort.substring(1)]: 'desc' };
         else orderBy = { [sort]: 'asc' };

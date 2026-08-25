@@ -11,7 +11,7 @@ export default function EngineeringCulture() {
         <div className="mb-16 max-w-2xl">
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Our Engineering Culture</h2>
           <p className="text-lg text-text-secondary font-inter">
-            We don't offer generic perks. We offer the hardest problems in enterprise AI and the autonomy to solve them.
+            We don&apos;t offer generic perks. We offer the hardest problems in enterprise AI and the autonomy to solve them.
           </p>
         </div>
 
@@ -25,7 +25,7 @@ export default function EngineeringCulture() {
               <h3 className="text-xl font-space font-bold text-text-primary">How We Build</h3>
             </div>
             <p className="text-sm text-text-secondary leading-relaxed mb-4">
-              We deploy to production daily. Engineers own the full lifecycle from architecture to monitoring. If it isn't automated, it's a bug.
+              We deploy to production daily. Engineers own the full lifecycle from architecture to monitoring. If it isn&apos;t automated, it&apos;s a bug.
             </p>
             <ul className="space-y-2">
               <li className="text-xs font-bold text-text-primary flex items-center gap-2"><span className="text-[#7B61FF]">•</span> CI/CD as a religion</li>
@@ -41,7 +41,7 @@ export default function EngineeringCulture() {
               <h3 className="text-xl font-space font-bold text-text-primary">How We Research</h3>
             </div>
             <p className="text-sm text-text-secondary leading-relaxed mb-4">
-              Research isn't siloed. Every researcher works directly with platform engineers to ensure models can scale reliably.
+              Research isn&apos;t siloed. Every researcher works directly with platform engineers to ensure models can scale reliably.
             </p>
             <ul className="space-y-2">
               <li className="text-xs font-bold text-text-primary flex items-center gap-2"><span className="text-accent-secondary">•</span> Applied ML Labs</li>

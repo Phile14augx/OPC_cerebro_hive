@@ -3,8 +3,7 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { ServerCrash, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export const GatewayNode = ({ data, isConnectable }: NodeProps) => {
-  const isBrainMode = data?.isBrainMode;
+export const GatewayNode = ({ isConnectable }: NodeProps) => {
 
   return (
     <motion.div 

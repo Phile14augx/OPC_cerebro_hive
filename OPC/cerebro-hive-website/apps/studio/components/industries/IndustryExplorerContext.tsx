@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useSyncExternalStore } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 interface IndustryExplorerState {
@@ -21,6 +21,14 @@ interface IndustryExplorerState {
 
 const IndustryExplorerContext = createContext<IndustryExplorerState | undefined>(undefined);
 
+const subscribeToReducedMotion = (onStoreChange: () => void) => {
+  const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  mediaQuery.addEventListener('change', onStoreChange);
+  return () => mediaQuery.removeEventListener('change', onStoreChange);
+};
+
+const getReducedMotionSnapshot = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export function IndustryExplorerProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,19 +37,15 @@ export function IndustryExplorerProvider({ children }: { children: React.ReactNo
   const [activeIndustry, setActiveIndustryState] = useState<string | null>(urlIndustry || 'healthcare');
   const [hoveredIndustry, setHoveredIndustry] = useState<string | null>(null);
   const [selectedCapability, setSelectedCapability] = useState<string | null>(null);
-  const [selectedSolution, setSelectedSolution] = useState<string | null>(null);
-  const [backgroundTheme, setBackgroundTheme] = useState<string>('default');
+  const [selectedSolution] = useState<string | null>(null);
+  const [backgroundTheme] = useState<string>('default');
   const [animationState, setAnimationState] = useState<'idle' | 'transitioning' | 'active'>('idle');
   const [globeRotation, setGlobeRotation] = useState<number>(0);
-  const [reducedMotion, setReducedMotion] = useState<boolean>(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReducedMotion(mediaQuery.matches);
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
+  const reducedMotion = useSyncExternalStore(
+    subscribeToReducedMotion,
+    getReducedMotionSnapshot,
+    () => false,
+  );
 
   const setActiveIndustry = (id: string | null) => {
     if (id === activeIndustry) return;

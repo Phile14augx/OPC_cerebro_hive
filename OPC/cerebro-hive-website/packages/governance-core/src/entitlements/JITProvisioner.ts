@@ -1,5 +1,5 @@
-import { ApprovalEngine, AccessRequest } from '../requests/ApprovalEngine';
-import { Entitlement } from './Entitlement';
+import { ApprovalEngine } from '../requests/ApprovalEngine';
+
 
 export class JITProvisioner {
   constructor(private approvalEngine: ApprovalEngine) {}

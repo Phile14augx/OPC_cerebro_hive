@@ -18,6 +18,28 @@ interface ReadinessGate {
   detail: string;
 }
 
+interface ReadinessResult {
+  errors?: string[];
+  warnings?: string[];
+  violations?: string[];
+  feasible?: boolean;
+  detail?: string;
+  estimatedCostUsd?: number;
+  budgetLimitUsd?: number;
+  unsafeCapabilities?: string[];
+  gpuContentionRisk?: 'Low' | 'High';
+  expectedProviderLatencyMs?: number;
+}
+
+interface ReadinessCheck {
+  name: string;
+  source: string;
+  toolName: string;
+  fn: () => Promise<ReadinessResult>;
+  evaluate: (result: ReadinessResult) => GateStatus;
+  detail: (result: ReadinessResult) => string;
+}
+
 export class ReadinessReportGenerator {
   static async check(
     workflowId: string,
@@ -27,36 +49,36 @@ export class ReadinessReportGenerator {
     const gates: ReadinessGate[] = [];
     const evidence: EvidenceItem[] = [];
 
-    const checks = [
+    const checks: ReadinessCheck[] = [
       { name: 'Type Correctness', source: 'SemanticCompiler', toolName: 'SemanticCompiler.validate',
         fn: async () => ({ errors: [], warnings: [] }),
-        evaluate: (r: any) => r.errors.length === 0 ? 'PASS' : 'FAIL',
-        detail: (r: any) => r.errors.length === 0 ? 'No type errors' : r.errors.join('; ') },
+        evaluate: (r) => (r.errors?.length ?? 0) === 0 ? 'PASS' : 'FAIL',
+        detail: (r) => (r.errors?.length ?? 0) === 0 ? 'No type errors' : r.errors!.join('; ') },
 
       { name: 'Policy Compliance', source: 'EnterprisePolicyEngine', toolName: 'EnterprisePolicyEngine.evaluate',
         fn: async () => ({ violations: [] }),
-        evaluate: (r: any) => r.violations.length === 0 ? 'PASS' : 'FAIL',
-        detail: (r: any) => r.violations.length === 0 ? 'All policies satisfied' : r.violations.join('; ') },
+        evaluate: (r) => (r.violations?.length ?? 0) === 0 ? 'PASS' : 'FAIL',
+        detail: (r) => (r.violations?.length ?? 0) === 0 ? 'All policies satisfied' : r.violations!.join('; ') },
 
       { name: 'Resource Admission', source: 'AdmissionController', toolName: 'AdmissionController.precheck',
         fn: async () => ({ feasible: true, detail: 'GPU VRAM available; token budget within limits' }),
-        evaluate: (r: any) => r.feasible ? 'PASS' : 'FAIL',
-        detail: (r: any) => r.detail },
+        evaluate: (r) => r.feasible ? 'PASS' : 'FAIL',
+        detail: (r) => r.detail ?? 'No admission detail provided' },
 
       { name: 'Cost Within Budget', source: 'CostEstimator + PolicyEngine', toolName: 'CostEstimator.estimate',
         fn: async () => ({ estimatedCostUsd: 0.012, budgetLimitUsd: 0.05 }),
-        evaluate: (r: any) => r.estimatedCostUsd <= r.budgetLimitUsd ? 'PASS' : 'FAIL',
-        detail: (r: any) => `Est. $${r.estimatedCostUsd} vs limit $${r.budgetLimitUsd}` },
+        evaluate: (r) => (r.estimatedCostUsd ?? Infinity) <= (r.budgetLimitUsd ?? -Infinity) ? 'PASS' : 'FAIL',
+        detail: (r) => `Est. $${r.estimatedCostUsd ?? 'unknown'} vs limit $${r.budgetLimitUsd ?? 'unknown'}` },
 
       { name: 'Replay Safety', source: 'EffectRecorder', toolName: 'EffectRecorder.auditCapabilities',
         fn: async () => ({ unsafeCapabilities: [] }),
-        evaluate: (r: any) => r.unsafeCapabilities.length === 0 ? 'PASS' : 'WARN',
-        detail: (r: any) => r.unsafeCapabilities.length === 0 ? 'All capabilities declared replay-safe' : `Unsafe: ${r.unsafeCapabilities.join(', ')}` },
+        evaluate: (r) => (r.unsafeCapabilities?.length ?? 0) === 0 ? 'PASS' : 'WARN',
+        detail: (r) => (r.unsafeCapabilities?.length ?? 0) === 0 ? 'All capabilities declared replay-safe' : `Unsafe: ${r.unsafeCapabilities!.join(', ')}` },
 
       { name: 'SLA Feasibility', source: 'ForecastingEngine', toolName: 'ForecastingEngine.forecastConstraints',
         fn: async () => ({ gpuContentionRisk: 'Low', expectedProviderLatencyMs: 850 }),
-        evaluate: (r: any) => r.gpuContentionRisk !== 'High' ? 'PASS' : 'WARN',
-        detail: (r: any) => `GPU contention: ${r.gpuContentionRisk}. Forecasted latency: ${r.expectedProviderLatencyMs}ms` },
+        evaluate: (r) => r.gpuContentionRisk !== 'High' ? 'PASS' : 'WARN',
+        detail: (r) => `GPU contention: ${r.gpuContentionRisk ?? 'unknown'}. Forecasted latency: ${r.expectedProviderLatencyMs ?? 'unknown'}ms` },
     ];
 
     for (const check of checks) {

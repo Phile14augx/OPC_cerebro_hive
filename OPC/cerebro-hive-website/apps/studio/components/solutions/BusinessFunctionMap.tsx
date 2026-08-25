@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Building2, Briefcase, Calculator, Shield, Users, ShoppingCart, Truck, Factory, ArrowRight, BrainCircuit, Activity } from "lucide-react";
+import { Calculator, Shield, Users, ShoppingCart, Truck, Factory, ArrowRight, BrainCircuit, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 

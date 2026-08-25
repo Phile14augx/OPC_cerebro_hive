@@ -2,7 +2,6 @@
 
 import React from "react";
 import { ArrowRight, Clock, User, Bookmark } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 const featured = {

@@ -16,5 +16,5 @@ export interface AIGovernanceEvent {
   eventType: AIGovernanceEventType;
   assetId: string;
   timestamp: Date;
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
 }

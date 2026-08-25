@@ -40,12 +40,14 @@ export class StreamingService {
   subscribe(executionId: string, orgId: string, res: Response): () => void {
     const client: SSEClient = { executionId, orgId, res, connectedAt: new Date() };
 
-    if (!this.clients.has(executionId)) {
-      this.clients.set(executionId, new Set());
+    let clients = this.clients.get(executionId);
+    if (!clients) {
+      clients = new Set();
+      this.clients.set(executionId, clients);
     }
-    this.clients.get(executionId)!.add(client);
+    clients.add(client);
 
-    this.logger.debug(`SSE client connected: ${executionId} (total: ${this.clients.get(executionId)!.size})`);
+    this.logger.debug(`SSE client connected: ${executionId} (total: ${clients.size})`);
 
     // Send initial connection event
     this.sendToClient(client, { event: "connected", data: { executionId, timestamp: new Date().toISOString() } });

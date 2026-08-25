@@ -7,7 +7,8 @@ export interface CostEstimate {
 }
 
 export class PricingService {
-  async estimate(blueprint: Plugin, config: any): Promise<CostEstimate> {
+  async estimate(blueprint: Plugin, config: unknown): Promise<CostEstimate> {
+    void config;
     // Mock implementation. In reality this would read blueprint.manifest.spec.pricing
     // or call the Provider's costEstimator logic.
     let hourlyCost = 0.05; // Base mock cost

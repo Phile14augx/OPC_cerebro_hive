@@ -58,7 +58,7 @@ export default function OriginStory() {
         <div className="mb-16 max-w-2xl">
           <h2 className="text-sm font-bold tracking-widest uppercase text-text-muted mb-4">Origin Story</h2>
           <h3 className="text-3xl md:text-5xl font-space font-bold text-text-primary leading-tight">
-            We didn't set out to build another AI company. We set out to solve a systems engineering problem.
+            We didn&apos;t set out to build another AI company. We set out to solve a systems engineering problem.
           </h3>
         </div>
 

@@ -8,7 +8,7 @@ export class DynamicAppRouter {
     private compiler: CompilerPipeline
   ) {}
 
-  async invokeApp(appId: string, payload: any) {
+  async invokeApp(appId: string, _payload: unknown) {
     console.log(`[AppRouter] POST /api/apps/${appId}/invoke received`);
     
     const version = this.registry.getPublishedVersion(appId);
@@ -17,7 +17,7 @@ export class DynamicAppRouter {
     console.log(`[AppRouter] Loaded immutable version ${version.versionId}`);
     
     // Compile on the fly, or load pre-compiled DAG
-    const dag = this.compiler.compile(version.graph);
+    const _dag = this.compiler.compile(version.graph);
     
     console.log(`[AppRouter] Dispatching DAG to shared HiveSwarm Runtime...`);
     return { status: 'Dispatched to HiveSwarm', executionId: `exec-${Date.now()}` };

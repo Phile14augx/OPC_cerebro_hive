@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Building2, Calculator, Users, Briefcase, Cog, Package, Scale, Cpu, BrainCircuit, Target, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { Building2, Calculator, Users, Briefcase, Cog, Package, Scale, BrainCircuit, ArrowRight } from "lucide-react";
 import { cn, withBasePath } from "@/lib/utils";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
@@ -17,21 +17,10 @@ const departments = [
   { id: "legal", label: "Legal", icon: Scale, desc: "Contract analysis, automated compliance checking, and risk monitoring." },
 ];
 
-const platformNodes = [
-  { id: "knowledge", label: "Knowledge Hub", icon: BrainCircuit, color: "text-accent-primary" },
-  { id: "agents", label: "AgentOS", icon: Cpu, color: "text-accent-secondary" },
-  { id: "automation", label: "Automation Studio", icon: Cog, color: "text-primary-accent" },
-  { id: "erp", label: "Quantiva ERP", icon: Database, color: "text-warning" },
-];
-
-import { Database } from "lucide-react";
-
 export const PlatformHero = () => {
   const [activeDept, setActiveDept] = useState<string>("finance");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const interval = setInterval(() => {
       setActiveDept((prev) => {
         const currentIndex = departments.findIndex((d) => d.id === prev);
@@ -43,8 +32,6 @@ export const PlatformHero = () => {
   }, []);
 
   const activeDeptData = departments.find(d => d.id === activeDept) || departments[0];
-
-  if (!mounted) return <section className="min-h-screen pt-32 pb-20 border-b border-border bg-background" />;
 
   return (
     <section className="relative min-h-[90vh] pt-32 pb-20 border-b border-border bg-background flex flex-col justify-center">

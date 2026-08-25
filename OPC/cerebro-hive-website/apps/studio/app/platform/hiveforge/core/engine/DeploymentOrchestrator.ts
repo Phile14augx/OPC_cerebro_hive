@@ -3,11 +3,10 @@ import { policyEngine } from "./PolicyEngine";
 import { executionPlanner } from "./planner/ExecutionPlanner";
 import { platformRegistry } from "../registry/PlatformRegistry";
 import { pricingService } from "../services/PricingService";
-import { operationRepository } from "../repositories/OperationRepository";
 
 export class DeploymentOrchestrator {
   
-  async startOrchestration(operationId: string, blueprintId: string, config: any) {
+  async startOrchestration(operationId: string, blueprintId: string, config: unknown): Promise<void> {
     try {
       // 1. Queued -> Validating
       await workflowEngine.transition(operationId, "Validating");
@@ -34,7 +33,6 @@ export class DeploymentOrchestrator {
       // 2. Validating -> Planning
       await workflowEngine.transition(operationId, "Planning");
       // DAG is already built above for policy, we reuse it or rebuild.
-      const executionGraph = prePlanGraph;
 
       // 3. Planning -> Allocating
       await workflowEngine.transition(operationId, "Allocating");
@@ -45,7 +43,8 @@ export class DeploymentOrchestrator {
 
     } catch (error) {
       console.error(`[DeploymentOrchestrator] Failed orchestration for operation ${operationId}`, error);
-      await workflowEngine.transition(operationId, "Failed", { error: (error as Error).message });
+      const message = error instanceof Error ? error.message : String(error);
+      await workflowEngine.transition(operationId, "Failed", { error: message });
     }
   }
 }

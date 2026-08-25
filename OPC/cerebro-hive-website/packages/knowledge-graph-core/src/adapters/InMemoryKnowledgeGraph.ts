@@ -16,7 +16,7 @@ export class InMemoryKnowledgeGraph implements KnowledgeGraphPort {
     if (!this.incoming.has(node.id)) this.incoming.set(node.id, []);
   }
 
-  async updateNode(id: string, properties: Record<string, any>): Promise<void> {
+  async updateNode(id: string, properties: Record<string, unknown>): Promise<void> {
     const node = this.nodes.get(id);
     if (!node) throw new Error(`Node ${id} not found`);
     node.properties = { ...node.properties, ...properties };

@@ -14,7 +14,7 @@ export interface GraphNode {
   id: string; // Globally unique resolved ID
   domain: EntityDomain;
   type: string; // e.g. 'Person', 'Agent', 'Project'
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
   metadata: GraphMetadata;
 }
 

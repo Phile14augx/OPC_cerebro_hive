@@ -4,7 +4,7 @@ export interface TelemetryRecord {
   principalId: string;
   eventType: string; // e.g. Login, PolicyDeny, CredentialIssued
   severity: 'Info' | 'Warning' | 'Critical';
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export interface TelemetryStore {

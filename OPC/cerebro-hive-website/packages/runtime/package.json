@@ -8,7 +8,9 @@
     "build": "tsc",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "dev": "tsc -w",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
     "@cerebro/contracts": "workspace:*",

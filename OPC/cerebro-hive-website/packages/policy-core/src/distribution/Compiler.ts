@@ -23,7 +23,7 @@ export class PolicyCompiler {
   compile(bundle: PolicyBundle, resolvedPolicies: PolicyRule[]): OptimizedPolicyBundle {
     const actionIndex: Record<string, string[]> = {};
     const resourceIndex: Record<string, string[]> = {};
-    const compiledRules: any = {};
+    const compiledRules: Record<string, Omit<PolicyRule, 'description' | 'lifecycleState' | 'createdBy' | 'updatedBy' | 'exceptions' | 'metadata'>> = {};
 
     // Sort by priority descending before indexing so engine encounters highest priority first
     const sortedPolicies = [...resolvedPolicies].sort((a, b) => b.priority - a.priority);

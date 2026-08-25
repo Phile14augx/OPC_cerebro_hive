@@ -12,11 +12,22 @@ const inputCls = "rounded-md border border-border bg-surface-elevated/40 px-2.5 
 function ObservabilityPanel({ online }: { online: boolean | null }) {
   const [overview, setOverview] = useState<ObservatoryOverview | null>(null);
 
-  const refresh = useCallback(async () => {
-    if (!online || !KEY) return;
-    try { setOverview(await api<ObservatoryOverview>("/v1/observatory/overview")); } catch { /* noop */ }
+  const fetchOverview = useCallback(async () => {
+    if (!online || !KEY) return null;
+    return await api<ObservatoryOverview>("/v1/observatory/overview").catch(() => null);
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+
+  useEffect(() => {
+    let active = true;
+    const run = async () => {
+      const data = await fetchOverview();
+      if (active && data) setOverview(data);
+    };
+    void run();
+    const id = setInterval(() => void run(), 5000);
+    return () => { active = false; clearInterval(id); };
+  }, [fetchOverview]);
+
 
   if (!overview) return <p className="mt-6 text-sm text-text-secondary">{online ? "Loading observability data…" : "Waiting for platform…"}</p>;
 
@@ -62,19 +73,41 @@ function RouterPanel({ online }: { online: boolean | null }) {
   const [busy, setBusy] = useState(false);
   const [lastDecision, setLastDecision] = useState<RoutingDecision | null>(null);
 
-  const refresh = useCallback(async () => {
-    if (!online || !KEY) return;
-    try { setCatalog((await api<{ models: ModelProfile[] }>("/v1/router/catalog")).models); } catch { /* noop */ }
-    try { setHistory((await api<{ decisions: RoutingDecision[] }>("/v1/router/history")).decisions); } catch { /* noop */ }
+  const fetchRouterData = useCallback(async () => {
+    if (!online || !KEY) return null;
+    try {
+      const cat = await api<{ models: ModelProfile[] }>("/v1/router/catalog").catch(() => null);
+      const hist = await api<{ decisions: RoutingDecision[] }>("/v1/router/history").catch(() => null);
+      return { models: cat?.models || null, decisions: hist?.decisions || null };
+    } catch { return null; }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 8000); return () => clearInterval(id); }, [refresh]);
+
+  useEffect(() => {
+    let active = true;
+    const run = async () => {
+      const data = await fetchRouterData();
+      if (active && data) {
+        if (data.models) setCatalog(data.models);
+        if (data.decisions) setHistory(data.decisions);
+      }
+    };
+    void run();
+    const id = setInterval(() => void run(), 8000);
+    return () => { active = false; clearInterval(id); };
+  }, [fetchRouterData]);
+
 
   const route = async () => {
     if (!text.trim() || !online) return;
     setBusy(true);
-    try { setLastDecision(await api<RoutingDecision>("/v1/router/route", { method: "POST", body: JSON.stringify({ text }) })); await refresh(); }
-    catch { /* noop */ } finally { setBusy(false); }
+    try { 
+      setLastDecision(await api<RoutingDecision>("/v1/router/route", { method: "POST", body: JSON.stringify({ text }) })); 
+      const data = await fetchRouterData();
+      if (data?.models) setCatalog(data.models);
+      if (data?.decisions) setHistory(data.decisions);
+    } catch { /* noop */ } finally { setBusy(false); }
   };
+
 
   return (
     <div className="mt-6 space-y-6">

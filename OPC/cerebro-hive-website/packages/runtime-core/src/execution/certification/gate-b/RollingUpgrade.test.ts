@@ -29,7 +29,7 @@ class WorkerV2Registry extends ReducerRegistry {
 }
 
 class MockStore {
-  public events: ExecutionEvent<any>[] = [];
+  public events: ExecutionEvent<unknown>[] = [];
   
   async getEvents(id: string, after?: bigint) {
     if (after) return this.events.filter(e => e.sequence > after);
@@ -41,11 +41,11 @@ class MockStore {
 describe('Gate B - Rolling Upgrade Certification', () => {
 
   it('should survive an in-flight execution upgrading from Worker v1 to Worker v2', async () => {
-    const store = new MockStore() as any;
+    const store = new MockStore() as unknown;
     const registryV1 = new WorkerV1Registry();
-    const replayServiceV1 = new ExecutionReplayService(store, registryV1, { upcastEvent: e => e } as any);
+    const replayServiceV1 = new ExecutionReplayService(store, registryV1, { upcastEvent: e => e } as unknown);
     const registryV2 = new WorkerV2Registry();
-    const replayServiceV2 = new ExecutionReplayService(store, registryV2, { upcastEvent: e => e } as any);
+    const replayServiceV2 = new ExecutionReplayService(store, registryV2, { upcastEvent: e => e } as unknown);
 
     const execId = 'upgrade-1';
 

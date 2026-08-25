@@ -19,7 +19,7 @@ describe('Replay Determinism', () => {
       { type: 'EventA', payload: { value: 10 } },
       { type: 'EventB', payload: { value: 20 } },
       { type: 'EventC', payload: { value: 30 } }
-    ] as any[];
+    ] as unknown[];
 
     // Deterministic Context Mock
     const createSeededContext = (seed: number): ReplayContext => {

@@ -28,29 +28,9 @@ export class DashboardTelemetryConsumer {
 
   private async handleEvent(envelope: HiveEventEnvelope): Promise<void> {
     const { tenantId } = envelope.metadata;
-    const event = envelope.event as any;
-    const eventType = event.eventType;
-    const executionId = event.aggregateId;
+    const executionId = envelope.event.aggregateId;
 
     if (!tenantId || !executionId) return;
-
-    // Map DomainEvent type to Status string
-    let status = 'UNKNOWN';
-    let startedAt = undefined;
-    let completedAt = undefined;
-
-    if (eventType === 'ExecutionCreatedEvent') {
-      status = 'QUEUED';
-    } else if (eventType === 'ExecutionStartedEvent') {
-      status = 'RUNNING';
-      startedAt = new Date();
-    } else if (eventType === 'ExecutionCompletedEvent') {
-      status = 'COMPLETED';
-      completedAt = new Date();
-    } else if (eventType === 'ExecutionFailedEvent') {
-      status = 'FAILED';
-      completedAt = new Date();
-    }
 
     // try {
     //   // Upsert the telemetry row

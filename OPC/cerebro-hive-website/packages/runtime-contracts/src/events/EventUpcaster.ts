@@ -1,7 +1,7 @@
 /**
  * Defines a contract for migrating an old event payload to a newer version during replay.
  */
-export interface EventUpcaster<TOldPayload = any, TNewPayload = any> {
+export interface EventUpcaster<TOldPayload = unknown, TNewPayload = unknown> {
   /**
    * The version of the event schema this upcaster expects.
    */

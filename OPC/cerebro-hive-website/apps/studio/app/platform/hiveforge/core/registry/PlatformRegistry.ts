@@ -1,4 +1,4 @@
-import { Plugin, PluginContext, ExtensionManifest, ActionDefinition, NavigationNode } from "../contracts/plugin";
+import { Plugin, ExtensionManifest, ActionDefinition, NavigationNode } from "../contracts/plugin";
 import { eventBus } from "../events/EventBus";
 
 export interface PlatformRegistryContext {

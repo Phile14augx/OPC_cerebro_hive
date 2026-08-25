@@ -26,7 +26,7 @@ export function ExecutiveResources() {
           <span className="text-[10px] uppercase tracking-widest text-primary-accent font-bold mb-3 block">Executive Resources</span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Strategic Downloads</h2>
           <p className="text-text-secondary text-lg">
-            Arm your executive team with the frameworks and methodologies we use to transform the world's leading enterprises.
+            Arm your executive team with the frameworks and methodologies we use to transform the world&apos;s leading enterprises.
           </p>
         </div>
 

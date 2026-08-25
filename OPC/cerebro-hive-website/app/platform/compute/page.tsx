@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Cpu, List, Zap } from "lucide-react";
+import { ArrowLeft, List, Zap } from "lucide-react";
 import { api, checkOnline, type RunOut } from "./lib";
 
 type Tab = "submit" | "runs";
@@ -90,7 +90,7 @@ function RunsPanel({ online }: { online: boolean | null }) {
     try { setRuns(await api<RunOut[]>("/runtime/runs")); } catch { /* noop */ }
   }, [online]);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(refresh, 6000); return () => clearInterval(id); }, [refresh]);
 
   return (

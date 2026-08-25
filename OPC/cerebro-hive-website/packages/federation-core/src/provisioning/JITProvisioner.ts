@@ -58,14 +58,14 @@ export class JITProvisioner {
         type: "Human",
         status: "Active",
         displayName:
-          validationResult.claims.name || validationResult.claims.email || "Unknown User",
+          (validationResult.claims.name as string) || (validationResult.claims.email as string) || "Unknown User",
         trustLevel: computedTrust,
         metadata: {
           authenticationSource: this.provider.providerType(),
           issuer: this.provider.providerId(),
         },
         federatedIdentities: [fedIdentity],
-        email: validationResult.claims.email,
+        email: validationResult.claims.email as string,
       };
 
       principal = await this.repo.createPrincipal(newPrincipalData);

@@ -7,7 +7,7 @@ export enum ScenarioType {
 export interface SimulationEvent {
   type: ScenarioType;
   targetId: string;
-  payload?: any;
+  payload?: unknown;
 }
 
 export interface SimulationScenario {

@@ -5,18 +5,28 @@ export interface ExecutionProxyConfig {
   targetUrl: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   headers?: Record<string, string>;
-  body?: any;
+  body?: unknown;
 }
 
+type ExecutionTransport = (config: ExecutionProxyConfig, headers: Record<string, string>) => Promise<unknown>;
+
+const defaultTransport: ExecutionTransport = async () => ({
+  status: 200,
+  data: { success: true, message: 'Authenticated successfully with injected secret' },
+});
+
 export class ExecutionProxy {
-  constructor(private vault: VaultEngine) {}
+  constructor(
+    private vault: VaultEngine,
+    private readonly transport: ExecutionTransport = defaultTransport,
+  ) {}
 
   /**
    * Executes a network request by dynamically injecting the secret from the Vault
    * based on the provided CredentialReference.
    * The caller NEVER sees the secret value.
    */
-  async execute(credentialRef: CredentialReference, config: ExecutionProxyConfig): Promise<any> {
+  async execute(credentialRef: CredentialReference, config: ExecutionProxyConfig): Promise<unknown> {
     // 1. Audit check
     // Ensure the lease is still valid
     if (new Date() > credentialRef.expiresAt) {
@@ -30,7 +40,7 @@ export class ExecutionProxy {
       throw new Error(`Vault secret not found for reference: ${credentialRef.vaultReference}`);
     }
 
-    // 3. Inject Secret (Example: Bearer token format)
+    // 3. Inject secret into the private transport request only.
     const injectedHeaders = {
       ...config.headers,
       'Authorization': `Bearer ${secretValue}`
@@ -39,14 +49,6 @@ export class ExecutionProxy {
     console.log(`[ExecutionProxy] Proxying ${config.method} request to ${config.targetUrl}`);
     console.log(`[ExecutionProxy] Injected secret from vault reference: ${credentialRef.vaultReference}`);
     
-    // Simulate HTTP Request
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({
-          status: 200,
-          data: { success: true, message: 'Authenticated successfully with injected secret' }
-        });
-      }, 50);
-    });
+    return this.transport(config, injectedHeaders);
   }
 }

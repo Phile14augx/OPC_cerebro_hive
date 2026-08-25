@@ -103,11 +103,6 @@ export async function cerebrocyberMiddleware(
     userAgent: request.headers.get("user-agent") || undefined,
   };
 
-  // Check if path skips auth (health checks, public endpoints)
-  const skipAuth = CEREBROCYBER_CONFIG.skipAuthForPaths.some(
-    (prefix) => path.startsWith(prefix) || path === prefix
-  );
-
   // === 1. RATE LIMITING ===
   const rateLimitKey = `${clientIP}:${path}`;
   const rateLimitResult = checkRateLimit(

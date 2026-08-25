@@ -6,9 +6,11 @@ import { withAuthorization } from '../../../../../../../lib/talent/auth/middlewa
 const sessionService = new SessionService();
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  return withAuthorization(req, 'UPDATE_SESSION', '*', async (req: any, userContext: any) => {
+  const { id: sessionId } = await params;
+  const target = { resourceType: 'session', resourceId: sessionId };
+
+  return withAuthorization(req, 'UPDATE_SESSION', 'talent_sessions', async (req) => {
     try {
-      const { id: sessionId } = await params;
       const body = await req.json();
       const { sequence, events } = body;
 
@@ -19,8 +21,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       const batch = await sessionService.recordTelemetry(sessionId, sequence, events);
 
       return ApiUtils.success({ batchId: batch.id });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return ApiUtils.error('Failed to record telemetry', 500, error);
     }
-  });
+  }, target);
 }

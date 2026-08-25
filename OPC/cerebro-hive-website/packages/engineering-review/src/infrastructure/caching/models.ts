@@ -1,4 +1,4 @@
-import { ArtifactReference, AnalyzerResult } from '../analyzers/models';
+import { AnalyzerResult } from '../analyzers/models';
 
 export interface ArtifactFingerprint {
   readonly algorithm: string;

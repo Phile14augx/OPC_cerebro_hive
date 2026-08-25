@@ -10,7 +10,7 @@ export interface SecurityCommand {
   id: string;
   type: SecurityCommandType;
   targetId: string; // The Principal, Lease, or Session ID
-  context: Record<string, any>;
+  context: Record<string, unknown>;
   issuedAt: Date;
 }
 

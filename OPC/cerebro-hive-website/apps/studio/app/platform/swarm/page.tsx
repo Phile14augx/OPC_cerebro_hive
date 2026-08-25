@@ -93,7 +93,7 @@ export default function CerebroSwarmPage() {
     } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const submit = useCallback(async () => {
     if (!objective.trim()) return;

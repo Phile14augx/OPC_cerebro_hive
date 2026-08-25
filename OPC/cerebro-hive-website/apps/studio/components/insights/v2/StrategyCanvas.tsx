@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FileDown, CheckCircle2, Bot, Layers, Network, DollarSign, Target } from "lucide-react";
+import { FileDown, Bot, Layers, Network, DollarSign, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 

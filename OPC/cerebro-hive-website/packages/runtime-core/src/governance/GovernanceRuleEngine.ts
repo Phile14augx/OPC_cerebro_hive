@@ -1,6 +1,6 @@
 import { ExecutionPlan } from '../planning/ExecutionPlan';
 import { GovernanceContextSnapshot } from './GovernanceContextSnapshot';
-import { GovernanceRule, RuleResult, RuleAST, RuleStage, RuleExpansion, EventTimelineRecord, DecisionReason } from './GovernanceRule';
+import { GovernanceRule, RuleResult, RuleAST, RuleStage, RuleExpansion, EventTimelineRecord } from './GovernanceRule';
 import { Goal } from '../planning/Goal';
 import { GovernanceGraphValidator } from './GovernanceGraphValidator';
 
@@ -228,7 +228,7 @@ export class GovernanceRuleEngine {
             resultsMap.set(rule.id, res);
             results.push(res);
 
-          } catch (err: any) {
+          } catch (err: unknown) {
             const completedAt = new Date();
             const res: RuleResult = {
               ruleId: rule.id,
@@ -329,8 +329,8 @@ export class GovernanceRuleEngine {
         for (const dep of rule.dependsOn) {
           const depId = typeof dep === 'string' ? dep : dep.ruleId;
           if (graph.has(depId)) {
-            graph.get(depId)!.push(rule.id);
-            inDegree.set(rule.id, inDegree.get(rule.id)! + 1);
+            graph.get(depId)?.push(rule.id);
+            inDegree.set(rule.id, (inDegree.get(rule.id) || 0) + 1);
           }
         }
       }
@@ -346,13 +346,14 @@ export class GovernanceRuleEngine {
     }
 
     while (queue.length > 0) {
-      const currentTier = queue.map(id => ruleMap.get(id)!);
+      const currentTier = queue.map(id => ruleMap.get(id)).filter((r): r is GovernanceRule => r !== undefined);
       tiers.push(currentTier);
 
       const nextQueue: string[] = [];
       for (const id of queue) {
-        for (const neighbor of graph.get(id)!) {
-          inDegree.set(neighbor, inDegree.get(neighbor)! - 1);
+        const neighbors = graph.get(id) || [];
+        for (const neighbor of neighbors) {
+          inDegree.set(neighbor, (inDegree.get(neighbor) || 0) - 1);
           if (inDegree.get(neighbor) === 0) {
             nextQueue.push(neighbor);
           }
@@ -406,7 +407,7 @@ export class GovernanceRuleEngine {
     return { passed: false, reason: 'Unsupported AST operator' };
   }
 
-  private resolveFieldValue(field: string, plan: ExecutionPlan, goal: Goal, snapshot: GovernanceContextSnapshot): any {
+  private resolveFieldValue(field: string, plan: ExecutionPlan, goal: Goal, snapshot: GovernanceContextSnapshot): unknown {
     if (field === 'goal.intent') return goal.intent;
     if (field === 'snapshot.isWeekend') return snapshot.isWeekend;
     if (field === 'snapshot.hourOfDay') return snapshot.hourOfDay;

@@ -308,7 +308,7 @@ export default function ScenariosPage() {
         {!current && !scenLoading && (
           <div className="lg:col-span-2 flex items-center justify-center">
             <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-              Create a scenario to see Claude's analysis here.
+              Create a scenario to see Claude&apos;s analysis here.
             </p>
           </div>
         )}

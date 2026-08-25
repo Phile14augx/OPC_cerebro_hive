@@ -45,8 +45,7 @@ export class TemporalService implements OnModuleInit, OnModuleDestroy {
 
   async startWorkflow(
     workflowType: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    opts: Record<string, any>,
+    opts: Record<string, unknown>,
   ): Promise<WorkflowHandle> {
     return this.getClient().workflow.start(workflowType as never, {
       ...opts,

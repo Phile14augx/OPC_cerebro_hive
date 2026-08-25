@@ -32,7 +32,7 @@ export class ExecutionApplicationService {
 
     await this.uow.execute(async (tx) => {
       // 1. Load Aggregate
-      const execution = await this.executionRepo.load(id, tx as any);
+      const execution = await this.executionRepo.load(id, tx);
       if (!execution) {
         throw new Error(`Execution not found: ${executionId}`);
       }
@@ -43,10 +43,10 @@ export class ExecutionApplicationService {
       const event = execution.transitionTo(targetStatus, options);
 
       // 3. Persist Aggregate
-      await this.executionRepo.save(execution, expectedVersion, tx as any);
+      await this.executionRepo.save(execution, expectedVersion, tx);
 
       // 4. Persist Outbox Event
-      await this.outboxPublisher.publish(event, context, tx as any);
+      await this.outboxPublisher.publish(event, context, tx);
     });
   }
 }

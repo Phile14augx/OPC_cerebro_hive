@@ -213,7 +213,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     init();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); 
 
   // ── Proactive token refresh (1 min before expiry) ───────────────────────────
 

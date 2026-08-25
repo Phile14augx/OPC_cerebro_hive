@@ -17,7 +17,7 @@ export default function MLOpsPage() {
     try { setModelVersions((await api<{ versions: ModelVersion[] }>("/v1/mlops/models")).versions); } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   return (
     <PillarShell slug="mlops" online={online}>

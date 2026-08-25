@@ -25,7 +25,7 @@ export default function ActionsPage() {
     } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const executeAction = useCallback(async (kind: string, approved?: boolean) => {
     setBusy(kind);

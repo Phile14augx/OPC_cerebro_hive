@@ -4,8 +4,8 @@ export interface MappingRule {
   sourceClaim: string;
   operation: 'copy' | 'map' | 'static';
   targetClaim: string;
-  valueMap?: Record<string, any>; // Used if operation is 'map'
-  staticValue?: any; // Used if operation is 'static'
+  valueMap?: Record<string, unknown>; // Used if operation is 'map'
+  staticValue?: unknown; // Used if operation is 'static'
 }
 
 export interface MappingProfile {
@@ -15,8 +15,8 @@ export interface MappingProfile {
 }
 
 export class ClaimsMapper {
-  map(externalClaims: Record<string, any>, profile: MappingProfile): IdentityClaims {
-    const internalClaims: any = {};
+  map(externalClaims: Record<string, unknown>, profile: MappingProfile): IdentityClaims {
+    const internalClaims: Record<string, unknown> = {};
 
     for (const rule of profile.rules) {
       if (rule.operation === 'copy') {
@@ -30,13 +30,13 @@ export class ClaimsMapper {
           // E.g. sourceClaim 'groups', sourceValue might be an array
           if (Array.isArray(sourceValue)) {
             for (const item of sourceValue) {
-              if (rule.valueMap[item]) {
+              if (typeof item === 'string' && rule.valueMap[item]) {
                 internalClaims[rule.targetClaim] = rule.valueMap[item];
                 break; // Just taking the first match for simplicity
               }
             }
           } else {
-            if (rule.valueMap[sourceValue]) {
+            if (typeof sourceValue === 'string' && rule.valueMap[sourceValue]) {
               internalClaims[rule.targetClaim] = rule.valueMap[sourceValue];
             }
           }
@@ -46,6 +46,6 @@ export class ClaimsMapper {
       }
     }
 
-    return internalClaims as IdentityClaims;
+    return internalClaims as unknown as IdentityClaims;
   }
 }

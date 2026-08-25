@@ -1,6 +1,6 @@
 "use client";
 import { BookOpen, Compass, GraduationCap, Award, ArrowRight, Zap, HelpCircle, Clock, CheckCircle, Star, Users, Code, BarChart2, Shield, Brain, Layers, Database, Cpu, FileCode } from "lucide-react";
-import Link from "next/link";
+
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { analytics } from "@/lib/analytics/AnalyticsAdapter";
@@ -152,7 +152,7 @@ export default function AcademyPage() {
             CerebroHive <span className="gradient-text-blue-violet">Academy</span>
           </h1>
           <p style={{ fontFamily: "Exo 2, sans-serif", fontSize: "1.1rem", color: "var(--text-muted)", maxWidth: "600px", lineHeight: 1.7 }}>
-            10 specialized courses. 4 bootcamp formats. India's most comprehensive AI certification ecosystem — built for practitioners, not spectators.
+            10 specialized courses. 4 bootcamp formats. India&apos;s most comprehensive AI certification ecosystem — built for practitioners, not spectators.
           </p>
         </div>
       </section>

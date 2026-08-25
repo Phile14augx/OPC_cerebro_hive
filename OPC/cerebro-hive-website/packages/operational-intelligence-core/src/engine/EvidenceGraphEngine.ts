@@ -1,5 +1,5 @@
-import { KnowledgeGraphPort, SemanticNode, RelationshipType } from '../../../knowledge-graph-core/src/index';
-import { ExecutionRecord, ExecutionStatus } from '../domain/ExecutionRecord';
+import { KnowledgeGraphPort, SemanticNode } from '../../../knowledge-graph-core/src/index';
+import { ExecutionRecord } from '../domain/ExecutionRecord';
 import { IncidentRecord } from '../domain/IncidentRecord';
 
 export class EvidenceGraphEngine {

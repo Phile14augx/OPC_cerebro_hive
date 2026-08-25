@@ -6,14 +6,16 @@ import { withAuthorization } from '../../../../../../../lib/talent/auth/middlewa
 const sessionService = new SessionService();
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  return withAuthorization(req, 'SUBMIT_SESSION', '*', async (req: any, userContext: any) => {
+  const { id: sessionId } = await params;
+  const target = { resourceType: 'session', resourceId: sessionId };
+
+  return withAuthorization(req, 'SUBMIT_SESSION', 'talent_sessions', async () => {
     try {
-      const { id: sessionId } = await params;
       const session = await sessionService.submitSession(sessionId);
 
       return ApiUtils.success(session);
-    } catch (error: any) {
+    } catch (error: unknown) {
       return ApiUtils.error('Failed to submit session', 500, error);
     }
-  });
+  }, target);
 }

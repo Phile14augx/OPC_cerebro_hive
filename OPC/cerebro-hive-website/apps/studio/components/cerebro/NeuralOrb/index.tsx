@@ -72,6 +72,7 @@ export const NeuralOrb = ({
       onMouseLeave={() => interactive && setIsHovered(false)}
       onClick={onClick}
       role={onClick ? "button" : undefined}
+      data-variant={variant}
     >
 
       {/* ── Layer 1: Ambient Halo (breathing glow) ─────────────────── */}

@@ -40,8 +40,8 @@ export const AgentOSLiveRuntime = () => {
   const [runCount, setRunCount] = useState(0);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSessionId(getSessionId());
+
+    setTimeout(() => setSessionId(getSessionId()), 0);
   }, []);
 
   const handleRun = async (taskOverride?: string) => {

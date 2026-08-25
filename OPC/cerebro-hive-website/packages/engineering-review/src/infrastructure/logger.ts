@@ -1,5 +1,5 @@
 export function createLogger(correlationId: string) {
-  const log = (level: 'info' | 'warn' | 'error', message: string, data?: Record<string, any>) => {
+  const log = (level: 'info' | 'warn' | 'error', message: string, data?: Record<string, unknown>) => {
     const logEntry = {
       timestamp: new Date().toISOString(),
       level,
@@ -11,8 +11,8 @@ export function createLogger(correlationId: string) {
   };
 
   return {
-    info: (msg: string, data?: Record<string, any>) => log('info', msg, data),
-    warn: (msg: string, data?: Record<string, any>) => log('warn', msg, data),
-    error: (msg: string, data?: Record<string, any>) => log('error', msg, data),
+    info: (msg: string, data?: Record<string, unknown>) => log('info', msg, data),
+    warn: (msg: string, data?: Record<string, unknown>) => log('warn', msg, data),
+    error: (msg: string, data?: Record<string, unknown>) => log('error', msg, data),
   };
 }

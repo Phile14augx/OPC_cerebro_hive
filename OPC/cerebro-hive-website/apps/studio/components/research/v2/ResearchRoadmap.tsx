@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CheckCircle2, CircleDashed, ArrowRight } from "lucide-react";
+import { CheckCircle2, CircleDashed } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const phases = [

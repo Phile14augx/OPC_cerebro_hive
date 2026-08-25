@@ -1,4 +1,4 @@
-import { PolicyEngine, PolicyDecision } from '../engine/PolicyEngine';
+import { PolicyEngine } from '../engine/PolicyEngine';
 import { PolicyRule } from '../models/PolicyRule';
 import { IdentityContext } from '@cerebro/identity-core';
 import { ResourceDescriptor } from '../models/ResourceDescriptor';

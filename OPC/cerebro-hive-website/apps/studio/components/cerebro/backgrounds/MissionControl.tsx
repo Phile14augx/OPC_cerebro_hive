@@ -2,6 +2,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useCerebroMotion } from "../../motion/foundation/MotionProvider";
 
+const energyNodes = Array.from({ length: 20 }, (_, index) => ({
+  top: `${(index * 37 + 13) % 100}%`,
+  left: `${(index * 61 + 29) % 100}%`,
+  duration: 3 + (index % 5),
+  delay: (index % 7) / 3,
+}));
+
 /**
  * CerebroMotion™: Mission Control Background (Dark Theme)
  * Cinematic, immersive, high-energy, cybernetic.
@@ -36,22 +43,19 @@ export function MissionControl() {
       />
       
       {/* Energy Nodes / Stars */}
-      {Array.from({ length: 20 }).map((_, i) => (
+      {energyNodes.map((node, index) => (
         <motion.div
-          key={i}
+          key={index}
           className="absolute w-1 h-1 bg-primary-accent rounded-full shadow-[0_0_10px_rgba(0,245,122,0.8)]"
-          style={{
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-          }}
+          style={{ top: node.top, left: node.left }}
           animate={{
             opacity: [0.2, 1, 0.2],
             scale: [1, 1.5, 1],
           }}
           transition={{
-            duration: 3 + Math.random() * 4,
+            duration: node.duration,
             repeat: Infinity,
-            delay: Math.random() * 2,
+            delay: node.delay,
             ease: "easeInOut",
           }}
         />

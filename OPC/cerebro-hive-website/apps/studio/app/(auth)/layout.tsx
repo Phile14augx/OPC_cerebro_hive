@@ -71,7 +71,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           
           <h2 className="text-3xl font-semibold mb-4 text-white">Unlock Enterprise AI</h2>
           <p className="text-muted text-lg leading-relaxed">
-            Ingest thousands of research papers, extract semantic knowledge graphs, and query your institution's data with pinpoint accuracy.
+            Ingest thousands of research papers, extract semantic knowledge graphs, and query your institution&apos;s data with pinpoint accuracy.
           </p>
         </div>
       </div>

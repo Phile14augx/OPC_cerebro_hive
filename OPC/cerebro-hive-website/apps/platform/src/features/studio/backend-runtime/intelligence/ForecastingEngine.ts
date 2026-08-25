@@ -8,7 +8,9 @@ export interface ForecastResult {
 
 export class ForecastingEngine {
   // Analyzes EWMA and historical trends to predict future state before execution
-  static forecastConstraints(workflowId: string, historicalData: any): ForecastResult {
+  static forecastConstraints(workflowId: string, historicalData: unknown): ForecastResult {
+    void workflowId;
+    void historicalData;
     return {
       expectedQueueSaturationMs: 120,
       expectedProviderLatencyMs: 850,

@@ -1,6 +1,6 @@
 
 export class TrendEngine {
-  async computeTemporalQualityScores(orgKey: number, timeRange: any) {
+  async computeTemporalQualityScores(_orgKey: number, _timeRange: unknown) {
     // Aggregates Security, Architecture, Reliability scores over time with RLS applied
     return {
       securityScoreTrend: [],
@@ -9,7 +9,7 @@ export class TrendEngine {
     };
   }
 
-  async computeContributorEfficacy(contributorKey: number) {
+  async getContributorEfficacy(_contributorKey: string) {
     return {
       averageDurationMs: 450,
       findingDensity: 2.3,

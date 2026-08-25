@@ -4,12 +4,12 @@ import { SemanticEdge } from '../domain/SemanticEdge';
 export interface GraphQuery {
   matchNodeKind?: string;
   matchLabels?: string[];
-  matchProperties?: Record<string, any>;
+  matchProperties?: Record<string, unknown>;
 }
 
 export interface KnowledgeGraphPort {
   addNode(node: SemanticNode): Promise<void>;
-  updateNode(id: string, properties: Record<string, any>): Promise<void>;
+  updateNode(id: string, properties: Record<string, unknown>): Promise<void>;
   getNode(id: string): Promise<SemanticNode | undefined>;
   
   addEdge(edge: SemanticEdge): Promise<void>;

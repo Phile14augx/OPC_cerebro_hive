@@ -69,7 +69,7 @@ function headers() {
   };
 }
 
-export default function () {
+export default function aiGatewayScenario() {
   const model  = randomItem(MODELS);
   const prompt = randomItem(PROMPTS);
 

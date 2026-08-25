@@ -3,15 +3,15 @@ import { ExecutionSnapshot } from '../../../runtime-contracts/src/snapshots/Exec
 import { ExecutionState } from './ExecutionStateMachine';
 import { ExecutionCheckpoint } from './ExecutionCheckpoint';
 
-export interface ExecutionOutboxEntry {
+export interface ExecutionOutboxEntry<TPayload = unknown> {
   id: string;
   type: string;
-  payload: any;
+  payload: TPayload;
   dispatched: boolean;
   createdAt: Date;
 }
 
-export interface ExecutionRecord {
+export interface ExecutionRecord<TMetadata extends Record<string, unknown> = Record<string, unknown>> {
   id: string;
   agentId: string;
   agentVersionId: string;
@@ -19,7 +19,7 @@ export interface ExecutionRecord {
   version: number; // Optimistic concurrency version
   startedAt: Date;
   completedAt?: Date;
-  metadata?: Record<string, any>;
+  metadata?: TMetadata;
 }
 
 export interface ExecutionStore {
@@ -43,13 +43,13 @@ export interface ExecutionStore {
   /** Appends a sequence of events. Throws if a sequence number conflict occurs, or if fencingToken is invalid. */
   appendEvents(
     executionId: string, 
-    events: ExecutionEvent<any>[], 
+    events: ExecutionEvent<unknown>[], 
     fencingToken: bigint,
     outboxEntries?: ExecutionOutboxEntry[]
   ): Promise<void>;
 
   /** Retrieves all events for an execution strictly ordered by sequence. */
-  getEvents(executionId: string, afterSequence?: bigint): Promise<ExecutionEvent<any>[]>;
+  getEvents(executionId: string, afterSequence?: bigint): Promise<ExecutionEvent<unknown>[]>;
 
   /** Stores a state snapshot, guarded by the fencing token */
   saveSnapshot(snapshot: ExecutionSnapshot, fencingToken: bigint, hash: string): Promise<void>;

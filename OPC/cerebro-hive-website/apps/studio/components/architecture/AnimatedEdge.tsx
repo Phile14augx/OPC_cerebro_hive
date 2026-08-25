@@ -1,9 +1,7 @@
 import React from 'react';
 import { BaseEdge, EdgeProps, getBezierPath } from '@xyflow/react';
-import { cn } from '@/lib/utils';
 
 export const AnimatedEdge = ({
-  id,
   sourceX,
   sourceY,
   targetX,

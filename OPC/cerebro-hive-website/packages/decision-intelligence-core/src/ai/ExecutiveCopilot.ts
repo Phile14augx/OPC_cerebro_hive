@@ -15,10 +15,10 @@ we have simulated and optimized the proposed scenarios.
 
 🏆 RECOMMENDED STRATEGY: '${top.name}'
    Optimization Score: ${top.optimizationScore?.toFixed(2)}
-   - Compliance: ${(top.metrics?.ComplianceScore! * 100).toFixed(0)}%
-   - Availability: ${(top.metrics?.AvailabilityScore! * 100).toFixed(0)}%
-   - Cost Profile (Lower is better): ${(top.metrics?.CostScore! * 100).toFixed(0)}%
-   - Blast Radius Risk (Lower is better): ${(top.metrics?.BlastRadiusScore! * 100).toFixed(0)}%
+   - Compliance: ${((top.metrics?.ComplianceScore ?? 0) * 100).toFixed(0)}%
+   - Availability: ${((top.metrics?.AvailabilityScore ?? 0) * 100).toFixed(0)}%
+   - Cost Profile (Lower is better): ${((top.metrics?.CostScore ?? 0) * 100).toFixed(0)}%
+   - Blast Radius Risk (Lower is better): ${((top.metrics?.BlastRadiusScore ?? 0) * 100).toFixed(0)}%
 
 `;
 
@@ -27,9 +27,9 @@ we have simulated and optimized the proposed scenarios.
       for (const alt of alternates) {
         summary += `   - '${alt.name}' (Score: ${alt.optimizationScore?.toFixed(2)})\n`;
         // Highlighting trade-offs
-        if (alt.metrics!.CostScore < top.metrics!.CostScore) {
+        if ((alt.metrics?.CostScore ?? 0) < (top.metrics?.CostScore ?? 0)) {
           summary += `     * Trade-off: This option is cheaper, but sacrifices Compliance or Availability.\n`;
-        } else if (alt.metrics!.AvailabilityScore > top.metrics!.AvailabilityScore) {
+        } else if ((alt.metrics?.AvailabilityScore ?? 0) > (top.metrics?.AvailabilityScore ?? 0)) {
           summary += `     * Trade-off: This option has higher availability, but carries significantly higher costs.\n`;
         } else {
           summary += `     * Trade-off: Mathematically inferior across the weighted objectives.\n`;

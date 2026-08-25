@@ -68,8 +68,8 @@ export default function CoursesPage() {
     const saved = localStorage.getItem("cerebro_enrolled_courses");
     if (saved) {
       try {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setEnrolledSlugs(JSON.parse(saved));
+
+        setTimeout(() => setEnrolledSlugs(JSON.parse(saved)), 0);
       } catch (e) {
         console.error(e);
       }

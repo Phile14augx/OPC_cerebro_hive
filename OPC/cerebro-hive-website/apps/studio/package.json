@@ -9,6 +9,7 @@
     "lint": "eslint",
     "analyze": "cross-env ANALYZE=true next build --webpack",
     "test:e2e": "playwright test",
+    "test": "vitest run",
     "audit:enterprise": "tsx ../../scripts/audit/audit-interactions.ts && tsx ../../scripts/audit/audit-routes.ts && tsx ../../scripts/audit/audit-assets.ts && tsx ../../scripts/audit/audit-accessibility.ts && tsx ../../scripts/audit/audit-seo.ts && tsx ../../scripts/audit/audit-analytics.ts && tsx ../../scripts/audit/audit-design-system.ts && tsx ../../scripts/audit/generate-dashboard.ts",
     "typecheck": "tsc --noEmit"
   },
@@ -80,7 +81,8 @@
     "tailwindcss": "^4",
     "ts-morph": "^28.0.0",
     "tsx": "^4.23.9",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^6.1.1"
   },
   "overrides": {
     "postcss": ">=8.5.10",

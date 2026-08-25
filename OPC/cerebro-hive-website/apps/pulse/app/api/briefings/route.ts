@@ -7,7 +7,7 @@ import type { Prisma } from '@cerebro/db';
 import { prisma } from '@/shared/lib/db';
 import { generateBriefing } from '@/shared/lib/claude-client';
 import { computeEnterpriseHealth } from '@/shared/lib/health-score';
-import { cacheGet, cacheSet, TTL } from '@/shared/lib/redis';
+import { cacheDelete, cacheGet, cacheSet, TTL } from '@/shared/lib/redis';
 import type { Briefing, BriefingType } from '@/shared/lib/types';
 
 export const runtime = 'nodejs';
@@ -139,8 +139,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<{ briefing: B
     });
 
     // Bust list cache
-    const { redis } = await import('@/shared/lib/redis');
-    await redis.del(LIST_CACHE);
+    await cacheDelete(LIST_CACHE);
 
     const briefing: Briefing = {
       id: saved.id,

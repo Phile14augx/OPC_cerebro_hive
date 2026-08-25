@@ -1,9 +1,12 @@
 {
-  "name": "@cerebro/aiops-sdk",
-  "version": "0.1.0",
-  "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit"
-  },
-  "private": true,
-  "main": "src/index.ts"
+    "name":  "@cerebro/aiops-sdk",
+    "version":  "0.1.0",
+    "scripts":  {
+                    "build":  "tsc",
+                    "typecheck":  "tsc -p tsconfig.json --noEmit",
+                    "lint":  "eslint --max-warnings=0 .",
+                    "test":  "vitest run"
+                },
+    "private":  true,
+    "main":  "src/index.ts"
 }

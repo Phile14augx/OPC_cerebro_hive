@@ -46,7 +46,7 @@ export class ExecutionCoordinator {
 
   async cancelAll(): Promise<void> {
     this.stateMachine.transitionTo('Cancelled');
-    const sessions = this.registry.getAllActive();
+    const _sessions = this.registry.getAllActive();
     // For each session, invoke cancellation token or force termination
   }
 }

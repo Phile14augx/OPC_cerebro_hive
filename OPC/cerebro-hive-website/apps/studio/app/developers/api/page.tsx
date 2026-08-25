@@ -110,7 +110,7 @@ export default function ApiReferencePage() {
                 </div>
                 <div className="p-4 font-mono text-[12px] text-gray-300 overflow-x-auto whitespace-pre">
 <span className="text-blue-400">curl</span> https://api.cerebro-hive.com/v1/agents \<br/>
-  -H <span className="text-yellow-300">"Authorization: Bearer ch_live_xxx"</span>
+  -H <span className="text-yellow-300">&quot;Authorization: Bearer ch_live_xxx&quot;</span>
                 </div>
               </div>
               
@@ -154,9 +154,9 @@ export default function ApiReferencePage() {
                 </div>
                 <div className="p-4 font-mono text-[12px] text-gray-300 overflow-x-auto whitespace-pre">
 <span className="text-blue-400">curl</span> -X POST https://api.cerebro-hive.com/v1/workflows/trigger \<br/>
-  -H <span className="text-yellow-300">"Authorization: Bearer ch_live_xxx"</span> \<br/>
-  -H <span className="text-yellow-300">"Content-Type: application/json"</span> \<br/>
-  -d <span className="text-yellow-300">'{`{"workflow_id":"wf_123", "input":{"doc_id":"555"}}`}'</span>
+  -H <span className="text-yellow-300">&quot;Authorization: Bearer ch_live_xxx&quot;</span> \<br/>
+  -H <span className="text-yellow-300">&quot;Content-Type: application/json&quot;</span> \<br/>
+  -d <span className="text-yellow-300">&apos;{`{"workflow_id":"wf_123", "input":{"doc_id":"555"}}`}&apos;</span>
                 </div>
               </div>
             </div>

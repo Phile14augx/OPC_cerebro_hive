@@ -7,7 +7,7 @@ export class SequentialPlanner implements PlannerProvider {
   public async initialize(): Promise<void> {}
   public async dispose(): Promise<void> {}
 
-  public async createPlan(goal: Goal, context: ExecutionContext): Promise<ExecutionPlan> {
+  public async createPlan(goal: Goal, __context: ExecutionContext): Promise<ExecutionPlan> {
     // A simplistic linear decomposition for CRUD/basic tasks
     const node1: ExecutionNode = {
       id: 'seq-1',

@@ -11,7 +11,7 @@ export interface CapabilityDefinition {
   version: string;
   type: 'planner' | 'retriever' | 'tool' | 'memory' | 'model' | 'evaluator';
   provider: string; // e.g. "openai", "langgraph", "native"
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ToolDefinition {
@@ -19,7 +19,7 @@ export interface ToolDefinition {
   name: string;
   description: string;
   version: string;
-  schema: Record<string, any>; // JSON schema of tool arguments
+  schema: Record<string, unknown>; // JSON schema of tool arguments
   capabilityRef?: string; // Reference to a specific capability
 }
 
@@ -27,7 +27,7 @@ export interface MemoryDefinition {
   id: string;
   type: 'episodic' | 'semantic' | 'procedural' | 'knowledge_graph' | 'vector';
   ttl?: number; // Time to live (ephemeral or persistent if undefined)
-  schema?: Record<string, any>;
+  schema?: Record<string, unknown>;
 }
 
 export interface NodeDefinition {
@@ -35,7 +35,7 @@ export interface NodeDefinition {
   type: 'agent' | 'tool' | 'router' | 'memory' | 'evaluator' | 'custom';
   name: string;
   capabilities: CapabilityDefinition[];
-  configuration?: Record<string, any>;
+  configuration?: Record<string, unknown>;
 }
 
 export interface AgentDefinition {

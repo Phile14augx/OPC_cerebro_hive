@@ -7,7 +7,7 @@ export interface Principal {
   status: PrincipalStatus;
   trustLevel: number; // 1-100
   displayName: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   federatedIdentities?: FederatedIdentity[];
 }
 
@@ -16,7 +16,7 @@ export interface FederatedIdentity {
   subject: string;
   linkedAt: Date;
   lastAuthenticatedAt: Date;
-  externalClaims: Record<string, any>;
+  externalClaims: Record<string, unknown>;
 }
 
 export interface HumanPrincipal extends Principal {

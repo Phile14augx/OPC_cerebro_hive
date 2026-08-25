@@ -13,7 +13,7 @@ export class DigitalTwinEngine implements KnowledgeGraphPort {
     this.overlayNodes.set(node.id, node);
   }
 
-  async updateNode(id: string, properties: Record<string, any>): Promise<void> {
+  async updateNode(id: string, properties: Record<string, unknown>): Promise<void> {
     let node = this.overlayNodes.get(id);
     if (!node) {
       const canonical = await this.canonicalGraph.getNode(id);

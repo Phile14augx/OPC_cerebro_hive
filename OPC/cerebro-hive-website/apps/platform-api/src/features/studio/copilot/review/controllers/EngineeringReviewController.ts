@@ -1,12 +1,11 @@
-
 import { Request, Response } from 'express';
 
 export class EngineeringReviewController {
   
   // GET /api/v1/workflows/:workflowId/reviews
   async getReviewsForWorkflow(req: Request, res: Response) {
-    const { workflowId } = req.params;
-    const { cursor, limit = 25 } = req.query;
+    const { workflowId: _workflowId } = req.params;
+    const { cursor: _cursor, limit: _limit = 25 } = req.query;
     // Cursor-based pagination logic here
     res.json({
       data: [], // EngineeringReviewSummaryDTO[]
@@ -16,7 +15,7 @@ export class EngineeringReviewController {
 
   // GET /api/v1/reviews/:reviewId
   async getReviewDetails(req: Request, res: Response) {
-    const { reviewId } = req.params;
+    const { reviewId: _reviewId } = req.params;
     res.json({
       summary: {},
       statistics: {},
@@ -28,14 +27,14 @@ export class EngineeringReviewController {
 
   // POST /api/v1/reviews/:reviewId/freshness/check
   async checkFreshness(req: Request, res: Response) {
-    const { reviewId } = req.params;
+    const { reviewId: _reviewId } = req.params;
     // Forces live evaluation
     res.json({ status: 'CURRENT' });
   }
 
   // GET /api/v1/reviews/:reviewId/evidence/:findingId
   async getLazyEvidence(req: Request, res: Response) {
-    const { reviewId, findingId } = req.params;
+    const { reviewId: _reviewId, findingId } = req.params;
     // Lazy hierarchical evidence loading
     res.json({
       findingId,

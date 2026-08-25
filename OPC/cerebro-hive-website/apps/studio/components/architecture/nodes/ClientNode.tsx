@@ -3,8 +3,7 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { MonitorSmartphone } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export const ClientNode = ({ data, isConnectable }: NodeProps) => {
-  const isBrainMode = data?.isBrainMode;
+export const ClientNode = ({ isConnectable }: NodeProps) => {
 
   return (
     <motion.div 

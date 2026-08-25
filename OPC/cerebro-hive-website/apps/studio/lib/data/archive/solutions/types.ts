@@ -100,12 +100,12 @@ export interface Solution {
   workflowSteps: WorkflowStep[];
   
   architecture: {
-    nodes: any[];
-    edges: any[];
+    nodes: Record<string, unknown>[];
+    edges: Record<string, unknown>[];
   };
   workflows: {
-    nodes: any[];
-    edges: any[];
+    nodes: Record<string, unknown>[];
+    edges: Record<string, unknown>[];
   };
   
   agents: AIAgent[];

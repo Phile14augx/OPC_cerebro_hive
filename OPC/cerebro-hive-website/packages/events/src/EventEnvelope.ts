@@ -1,4 +1,4 @@
-export interface EventEnvelope<T = any> {
+export interface EventEnvelope<T = unknown> {
   eventId: string;
   eventType: string;
   eventVersion: string;
@@ -10,5 +10,5 @@ export interface EventEnvelope<T = any> {
   tenantId?: string;
   occurredAt: string; // ISO 8601 string
   payload: T;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }

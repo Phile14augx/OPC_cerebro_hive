@@ -1,5 +1,5 @@
-﻿import React from 'react';
-import { Handle, Position, EdgeProps, getSmoothStepPath, getBezierPath } from '@xyflow/react';
+import React from 'react';
+import { EdgeProps, getBezierPath } from '@xyflow/react';
 
 const themeColors: Record<string, string> = {
   executive: '#F59E0B', // amber-500
@@ -57,6 +57,7 @@ export const AnimatedNeuralEdge = ({
         strokeOpacity={0.4}
         fill="none"
         markerEnd={markerEnd}
+        style={style}
       />
       
       {/* 3. Animated Pulse/Particle */}

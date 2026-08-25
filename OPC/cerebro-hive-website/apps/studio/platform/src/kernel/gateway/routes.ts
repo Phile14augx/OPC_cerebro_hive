@@ -4,7 +4,6 @@ import type { Platform } from "../../app/container.js";
 import type { RequestContext } from "../context/context.js";
 import { PlatformError } from "../errors/errors.js";
 import { selectStrategy } from "../../domains/reasoning/reasoning.js";
-import { Subjects } from "../events/events.js";
 
 function ctx(req: FastifyRequest): RequestContext {
   if (!req.ctx) throw new PlatformError("unauthorized", "no request context");

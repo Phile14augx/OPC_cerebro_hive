@@ -53,7 +53,7 @@ export class SafetyEvaluator implements IEvaluator {
 export class HallucinationEvaluator implements IEvaluator {
   id = 'core.hallucination';
   
-  async evaluate(request: EvaluationRequest): Promise<EvaluationResult> {
+  async evaluate(_request: EvaluationRequest): Promise<EvaluationResult> {
     // Scaffold: Check grounding against knowledge base context
     return {
       evaluatorId: this.id,

@@ -1,7 +1,7 @@
 export class MaximumToolsSpecification {
   constructor(private maxTools: number = 50) {}
 
-  isSatisfiedBy(tools: any[]): boolean {
+  isSatisfiedBy(tools: readonly unknown[]): boolean {
     return tools.length <= this.maxTools;
   }
 }

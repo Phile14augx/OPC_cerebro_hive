@@ -1,5 +1,5 @@
 import { BiaRegistry, BusinessService, BusinessImpactAnalysis } from './bia/BusinessImpactAnalysis';
-import { DependencyGraph, OperationalNode } from './dependency/DependencyGraph';
+import { DependencyGraph } from './dependency/DependencyGraph';
 import { ResilienceAnalyzer } from './analyzer/ResilienceAnalyzer';
 import { ResiliencePlanner, ResilienceExercise } from './planning/ResiliencePlanning';
 import { CrisisManager, CrisisEvent } from './crisis/CrisisEvent';

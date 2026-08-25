@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Search, ChevronRight, X } from "lucide-react";
+import { Search, ChevronRight } from "lucide-react";
 import { Modal } from "./Modal";
 import { platformNavigation } from "../../navigation";
 import { useRouter } from "next/navigation";
-import { cn } from "./utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 export interface CommandPaletteProps {
@@ -19,7 +18,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
   // Reset search when opened
   useEffect(() => {
-    if (isOpen) setSearchQuery("");
+    if (isOpen) setTimeout(() => setSearchQuery(""), 0);
   }, [isOpen]);
 
   // Flatten and filter navigation items based on search query

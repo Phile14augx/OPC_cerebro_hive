@@ -12,7 +12,7 @@ export class BudgetManager {
 }
 
 export class CostEstimator {
-  estimate(dag: any) {
+  estimate(_dag: unknown) {
     console.log('[CostEstimator] Estimating Tokens, Duration, and GPU limits...');
     return 15.50; // $15.50 estimated
   }

@@ -450,7 +450,7 @@ export function generateAIReadinessPDF(
   doc.text("3. STRATEGIC RECOMMENDATIONS & DIRECTIVES", 20, 47);
 
   let directiveY = 54;
-  dimScores.forEach((dim, idx) => {
+  dimScores.forEach((dim) => {
     // Outer card
     doc.setDrawColor(241, 245, 249);
     doc.setFillColor(255, 255, 255);

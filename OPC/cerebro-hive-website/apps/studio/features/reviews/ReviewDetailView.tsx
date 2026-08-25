@@ -48,7 +48,7 @@ export function ReviewDetailView({ reviewId }: { reviewId: string }) {
               <h1 className="text-2xl font-space font-semibold text-white mb-2 flex items-center gap-3">
                 Review v{review.reviewVersion}
                 {review.verdict && (
-                  <Badge variant={review.verdict.outcome === 'pass' ? 'success' : 'warning' as any}>
+                  <Badge variant={review.verdict.outcome === 'pass' ? 'default' : 'secondary'}>
                     {review.verdict.outcome.toUpperCase()}
                   </Badge>
                 )}

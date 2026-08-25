@@ -8,8 +8,8 @@ export interface MigrationStep {
 
 export interface MigrationProvider {
   nodeType: string;
-  canAutoMigrate: (node: any, step: MigrationStep) => boolean;
-  apply: (node: any, step: MigrationStep) => any;
+  canAutoMigrate: (node: StudioNode, step: MigrationStep) => boolean;
+  apply: (node: StudioNode, step: MigrationStep) => StudioNode;
 }
 
 export class MigrationEngine {

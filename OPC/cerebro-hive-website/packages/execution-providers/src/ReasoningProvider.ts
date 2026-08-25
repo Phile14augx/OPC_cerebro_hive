@@ -1,7 +1,18 @@
 
+export interface ReasoningNode {
+  id: string;
+  metadata?: {
+    strategy?: string;
+  };
+}
+
+export interface ReasoningContext {
+  [key: string]: unknown;
+}
+
 // Mock representation of HiveSwarm calling the standalone Reasoning Service
 export class ReasoningProvider {
-  async execute(node: any, context: any) {
+  async execute(node: ReasoningNode, _context: ReasoningContext) {
     console.log(`[ReasoningProvider] Delegating task ${node.id} to ReasoningService...`);
     
     // Simulating the network call to reasoning-service

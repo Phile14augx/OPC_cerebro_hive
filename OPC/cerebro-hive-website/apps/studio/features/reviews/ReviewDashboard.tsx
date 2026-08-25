@@ -1,13 +1,15 @@
 'use client';
 
 import { useReviewsByWorkflow } from './hooks/useReviews';
+import type { ComponentProps } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EngineeringReviewSummaryDTO } from '@cerebro/api-client';
 import { AlertCircle, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+
+type BadgeVariant = NonNullable<ComponentProps<typeof Badge>['variant']>;
 
 export function ReviewDashboard({
   workflowId,
@@ -73,11 +75,11 @@ function ReviewCard({ review, onClick }: { review: EngineeringReviewSummaryDTO; 
     }
   };
 
-  const getVerdictBadgeVariant = (outcome?: string) => {
+  const getVerdictBadgeVariant = (outcome?: string): BadgeVariant => {
     switch (outcome) {
-      case 'pass': return 'success';
+      case 'pass': return 'default';
       case 'fail': return 'destructive';
-      case 'needs-attention': return 'warning';
+      case 'needs-attention': return 'secondary';
       default: return 'secondary';
     }
   };
@@ -93,7 +95,7 @@ function ReviewCard({ review, onClick }: { review: EngineeringReviewSummaryDTO; 
           Review v{review.reviewVersion}
         </CardTitle>
         {review.verdict && (
-          <Badge variant={getVerdictBadgeVariant(review.verdict.outcome) as any}>
+          <Badge variant={getVerdictBadgeVariant(review.verdict.outcome)}>
             {review.verdict.outcome.toUpperCase()}
           </Badge>
         )}

@@ -38,14 +38,14 @@
 
 // ── gVisor availability guard ──────────────────────────────────────────────────
 const GVISOR_AVAILABLE = process.env.GVISOR_AVAILABLE === 'true';
-const describeGVisor = GVISOR_AVAILABLE ? describe : describe.skip;
+const describeGVisor = describe;
 
 // ── Runtime detection availability guard ─────────────────────────────────────
 // Detection tests require Falco gRPC endpoint and Tetragon log to be reachable.
 // These are available only when running inside the cluster (via g1-escape-job.yaml).
 const DETECTION_AVAILABLE =
   !!process.env.FALCO_GRPC_ENDPOINT || !!process.env.TETRAGON_LOG_PATH;
-const describeDetection = DETECTION_AVAILABLE ? describe : describe.skip;
+const describeDetection = describe;
 
 // ── Syscall policy definitions (from RuntimeClass config) ─────────────────────
 // These map to gVisor's sentry syscall handlers. Any syscall not in this

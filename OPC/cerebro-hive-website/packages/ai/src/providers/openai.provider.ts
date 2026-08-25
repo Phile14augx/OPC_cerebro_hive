@@ -2,7 +2,7 @@
 // OpenAI Provider — wraps @ai-sdk/openai
 // =============================================================================
 import { createOpenAI } from '@ai-sdk/openai';
-import { generateText, streamText } from 'ai';
+import { generateText, streamText, type CoreMessage } from 'ai';
 import type {
   AIService, AIServiceConfig, AIGenerateRequest,
   AIGenerateResult, AIStreamChunk,
@@ -17,11 +17,11 @@ export class OpenAIProvider implements AIService {
     this.client = createOpenAI({ apiKey: config.apiKey ?? process.env.OPENAI_API_KEY });
   }
 
-  private buildMessages(req: AIGenerateRequest) {
-    const msgs: Array<{ role: string; content: string }> = [];
+  private buildMessages(req: AIGenerateRequest): CoreMessage[] {
+    const msgs: CoreMessage[] = [];
     if (req.systemPrompt) msgs.push({ role: 'system', content: req.systemPrompt });
     msgs.push(...req.messages);
-    return msgs as any;
+    return msgs;
   }
 
   async generateText(req: AIGenerateRequest): Promise<AIGenerateResult> {
