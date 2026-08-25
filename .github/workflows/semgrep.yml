@@ -149,12 +149,12 @@ jobs:
         run: |
           if [ -f /tmp/semgrep.sarif ]; then
             TOTAL=$(python3 -c "
-            import json
-            with open('/tmp/semgrep.sarif') as f:
-                sarif = json.load(f)
-            count = sum(len(r.get('results', [])) for r in sarif.get('runs', []))
-            print(count)
-            ")
+import json
+with open('/tmp/semgrep.sarif') as f:
+    sarif = json.load(f)
+count = sum(len(r.get('results', [])) for r in sarif.get('runs', []))
+print(count)
+")
             echo "## Semgrep SAST Results" >> $GITHUB_STEP_SUMMARY
             echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
             echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
