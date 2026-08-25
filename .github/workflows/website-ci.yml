@@ -71,6 +71,9 @@ jobs:
       - name: Lint (Turborepo)
         run: pnpm turbo lint --color
 
+      - name: Architecture package boundaries
+        run: pnpm arch:boundaries
+
       - name: Typecheck (Turborepo)
         run: pnpm turbo typecheck --color
 
