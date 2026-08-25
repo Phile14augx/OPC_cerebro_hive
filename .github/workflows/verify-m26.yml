@@ -50,11 +50,11 @@ jobs:
 
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
-        working-directory: apps/studio
+        working-directory: OPC/cerebro-hive-website/apps/studio
 
       - name: Run E2E Tests (Mocked)
         run: pnpm exec playwright test --config=playwright.config.ts
-        working-directory: apps/studio
+        working-directory: OPC/cerebro-hive-website/apps/studio
         env:
           NEXT_PUBLIC_API_URL: http://localhost:8080/v1 # Placeholder for mock server
 
