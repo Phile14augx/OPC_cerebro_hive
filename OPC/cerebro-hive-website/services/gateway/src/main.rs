@@ -13,7 +13,8 @@ use tracing::info;
 mod auth;
 mod config;
 mod error;
-mod middleware as mw;
+mod middleware;
+use crate::middleware as mw;
 mod routes;
 mod state;
 
