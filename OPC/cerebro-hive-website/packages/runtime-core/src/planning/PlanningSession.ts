@@ -1,6 +1,4 @@
 import { Goal } from './Goal';
-import { ExecutionPlan } from './ExecutionPlan';
-import { PlanScore } from './PlanScore';
 import { EvaluationPolicy, PolicyDecisionRecord } from './EvaluationPolicy';
 
 import { ScoredPlan } from './types';
