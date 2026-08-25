@@ -5,6 +5,5 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     environment: 'jsdom',
-    include: ['components/research/PublicationGrid.test.tsx'],
   },
 });
