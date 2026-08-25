@@ -106,6 +106,7 @@ export class PrismaExecutionStore implements ExecutionStore {
         WHERE "executionId" = ${transition.executionId}::uuid
           AND "fencingToken" = ${transition.fencingToken}
           AND "expiresAt" > NOW()
+        FOR UPDATE
       ` as any[];
       if (lease.length === 0) {
         throw new Error('Lease expired or fencing token mismatch');
@@ -183,9 +184,16 @@ export class PrismaExecutionStore implements ExecutionStore {
   ): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
       // 1. Verify fencing token
-      const lease = await tx.agentExecutionLease.findUnique({ where: { executionId } });
-      if (!lease || lease.fencingToken !== fencingToken) {
-        throw new Error(`Fencing token mismatch for execution ${executionId}.`);
+      const lease = await tx.$queryRaw`
+        SELECT "executionId" 
+        FROM "AgentExecutionLease" 
+        WHERE "executionId" = ${executionId}::uuid
+          AND "fencingToken" = ${fencingToken}
+          AND "expiresAt" > NOW()
+        FOR UPDATE
+      ` as any[];
+      if (lease.length === 0) {
+        throw new Error(`Fencing token mismatch or expired lease for execution ${executionId}.`);
       }
 
       // 2. Insert Events
@@ -248,9 +256,16 @@ export class PrismaExecutionStore implements ExecutionStore {
 
   async saveSnapshot(snapshot: ExecutionSnapshot, fencingToken: bigint, hash: string): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
-      const lease = await tx.agentExecutionLease.findUnique({ where: { executionId: snapshot.executionId } });
-      if (!lease || lease.fencingToken !== fencingToken) {
-        throw new Error(`Fencing token mismatch for execution ${snapshot.executionId}.`);
+      const lease = await tx.$queryRaw`
+        SELECT "executionId" 
+        FROM "AgentExecutionLease" 
+        WHERE "executionId" = ${snapshot.executionId}::uuid
+          AND "fencingToken" = ${fencingToken}
+          AND "expiresAt" > NOW()
+        FOR UPDATE
+      ` as any[];
+      if (lease.length === 0) {
+        throw new Error(`Fencing token mismatch or expired lease for execution ${snapshot.executionId}.`);
       }
 
       await tx.agentExecutionSnapshot.create({
@@ -289,9 +304,16 @@ export class PrismaExecutionStore implements ExecutionStore {
 
   async saveCheckpoint(checkpoint: ExecutionCheckpoint, fencingToken: bigint): Promise<void> {
     await this.prisma.$transaction(async (tx) => {
-      const lease = await tx.agentExecutionLease.findUnique({ where: { executionId: checkpoint.executionId } });
-      if (!lease || lease.fencingToken !== fencingToken) {
-        throw new Error(`Fencing token mismatch for execution ${checkpoint.executionId}.`);
+      const lease = await tx.$queryRaw`
+        SELECT "executionId" 
+        FROM "AgentExecutionLease" 
+        WHERE "executionId" = ${checkpoint.executionId}::uuid
+          AND "fencingToken" = ${fencingToken}
+          AND "expiresAt" > NOW()
+        FOR UPDATE
+      ` as any[];
+      if (lease.length === 0) {
+        throw new Error(`Fencing token mismatch or expired lease for execution ${checkpoint.executionId}.`);
       }
 
       await tx.agentExecutionCheckpoint.create({

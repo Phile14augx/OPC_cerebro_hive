@@ -125,6 +125,8 @@ async function main() {
     toolRegistry,
     unitOfWork: uow,
     executionKernel,
+    executionManager,
+    prisma,
     executionStore,
     executionReplayService,
   });
