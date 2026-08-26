@@ -16,17 +16,18 @@
     "test": "pnpm generate && vitest run"
   },
   "dependencies": {
+    "@cerebro/runtime-contracts": "workspace:*",
+    "@cerebro/runtime-core": "workspace:*",
     "@cerebro/twin-contracts": "workspace:*",
     "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0",
     "@prisma/client-runtime-utils": "^7.9.0",
     "@prisma/config": "^7.9.0",
-    "pg": "^8.22.0",
-    "@cerebro/runtime-core": "workspace:*",
-    "@cerebro/runtime-contracts": "workspace:*"
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
+    "@types/pg": "^8.11.0",
     "prisma": "^7.9.0",
     "tsx": "^4.7.1",
     "typescript": "^5.0.0"
