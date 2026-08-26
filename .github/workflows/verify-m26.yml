@@ -6,12 +6,8 @@ on:
   pull_request:
     branches: [main]
 
-# Least-privilege token: these workflows only read the tree and report status.
-# Without an explicit block the job inherits the repository default, which is
-# write-all on many orgs.
 permissions:
   contents: read
-
 
 defaults:
   run:
@@ -20,6 +16,22 @@ defaults:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://root:root@localhost:5432/cerebro
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: cerebro
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U root -d cerebro"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout Code
@@ -41,6 +53,12 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Migrate Database
+        run: |
+          pnpm prisma generate
+          pnpm prisma migrate deploy
+        working-directory: OPC/cerebro-hive-website/packages/db
 
       - name: Lint and Test Packages
         run: pnpm run test --filter=./packages/*
