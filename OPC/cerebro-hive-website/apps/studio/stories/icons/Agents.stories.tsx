@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Robot } from '../../components/cerebro/icons/agents';
+import { Robot as RobotIcon } from '../../components/cerebro/icons/agents';
 
 const meta: Meta = {
   title: 'Icons/Agents',
@@ -37,7 +37,7 @@ export default meta;
 
 
 export const Robot: StoryObj = {
-  render: (args) => <Robot {...args} />,
+  render: (args) => <RobotIcon {...args} />,
   args: {
     size: 64,
     variant: 'duotone',

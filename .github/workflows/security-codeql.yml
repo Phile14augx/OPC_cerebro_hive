@@ -116,6 +116,7 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm install --frozen-lockfile
+          cd packages/db && pnpm prisma generate && cd ../..
           pnpm build
         working-directory: OPC/cerebro-hive-website
 
