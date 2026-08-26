@@ -1,0 +1,85 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+    paths:
+      - "services/studio/**"
+      - "services/forge/**"
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lighthouse:
+    name: Lighthouse Audit (${{ matrix.app }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      matrix:
+        app:
+          - name:  studio
+            port:  3000
+            urls:
+              - /
+              - /dashboard
+              - /workflows
+          - name:  forge
+            port:  3001
+            urls:
+              - /
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build ${{ matrix.app.name }}
+        run: pnpm --filter=${{ matrix.app.name }} build
+        env:
+          NODE_ENV:                    production
+          NEXT_PUBLIC_API_URL:         http://localhost:4000
+          NEXT_PUBLIC_FORGE_URL:       http://localhost:3001
+          NEXT_PUBLIC_AUTH_URL:        http://localhost:8080
+          NEXT_PUBLIC_KEYCLOAK_REALM:  cerebro-hive
+          NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: cerebro-platform
+
+      - name: Start ${{ matrix.app.name }}
+        run: pnpm --filter=${{ matrix.app.name }} start &
+        env:
+          PORT: ${{ matrix.app.port }}
+
+      - name: Wait for server
+        run: |
+          timeout 60 bash -c 'until curl -sf http://localhost:${{ matrix.app.port }}; do sleep 2; done'
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls:          ${{ join(matrix.app.urls, '\n') }}
+          uploadArtifacts: true
+          temporaryPublicStorage: false
+          configPath: .lighthouserc.json
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name:            lighthouse-${{ matrix.app.name }}-${{ github.sha }}
+          path:            .lighthouseci/
+          retention-days: 30

@@ -1,0 +1,659 @@
+name: HealOps — Self-Healing CI
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Self-Healing CI Pipeline
+#
+# When a CI run fails, this workflow:
+#   1. Fetches the failed job logs via GitHub API
+#   2. Classifies the error type by pattern matching
+#   3. Runs the appropriate auto-fixer
+#   4. Commits the fix and pushes (if something changed)
+#   5. Triggers a new CI run
+#   6. Repeats up to MAX_HEAL_CYCLES times
+#   7. On permanent failure: opens a detailed incident issue with root cause
+#
+# Fixable error classes:
+#   lint         → eslint --fix + prettier --write
+#   format       → prettier --write
+#   typecheck    → tsc diagnostics + eslint --fix (subset fixable)
+#   deps         → pnpm install --frozen-lockfile fix / go mod tidy / pip sync
+#   build-cache  → clear .next cache, clear Turborepo cache, rebuild
+#   go-fmt       → gofmt -w + go mod tidy
+#   python-lint  → ruff check --fix + ruff format
+#   argocd       → force-sync with --prune --replace
+#   transient    → re-run with no code change (network blips, runner OOM, etc.)
+#   unfixable    → escalate to human
+# ──────────────────────────────────────────────────────────────────────────────
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+  workflow_dispatch:
+    inputs:
+      failed_run_id:
+        description: "ID of the failed CI run to heal"
+        required: true
+      cycle:
+        description: "Current heal cycle number (1–5)"
+        required: false
+        default: "1"
+      branch:
+        description: "Branch to heal"
+        required: false
+        default: "main"
+
+concurrency:
+  group: self-heal-${{ github.event.workflow_run.head_branch || inputs.branch }}
+  cancel-in-progress: true   # Only one healer per branch at a time
+
+permissions:
+  contents: write      # commit and push fixes
+  actions: write       # re-trigger CI
+  pull-requests: write
+  issues: write
+
+env:
+  PNPM_VERSION: "9"
+  NODE_VERSION: "22"
+  MAX_HEAL_CYCLES: "5"
+  BOT_NAME: "CerebroHive HealBot"
+  BOT_EMAIL: "healbot@cerebrohive.com"
+
+jobs:
+  heal:
+    name: "Heal Cycle ${{ inputs.cycle || '1' }}"
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'failure') ||
+      github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Resolve run metadata
+        id: meta
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let runId, branch, headSha, cycle;
+
+            if (context.eventName === 'workflow_dispatch') {
+              runId   = parseInt('${{ inputs.failed_run_id }}');
+              branch  = '${{ inputs.branch }}' || 'main';
+              cycle   = parseInt('${{ inputs.cycle }}' || '1');
+              const r = await github.rest.actions.getWorkflowRun({
+                owner: context.repo.owner, repo: context.repo.repo, run_id: runId,
+              });
+              headSha = r.data.head_sha;
+            } else {
+              runId   = context.payload.workflow_run.id;
+              branch  = context.payload.workflow_run.head_branch;
+              headSha = context.payload.workflow_run.head_sha;
+              cycle   = 1;  // watchdog will increment
+            }
+
+            const maxCycles = parseInt(process.env.MAX_HEAL_CYCLES);
+            core.setOutput('run_id',       runId);
+            core.setOutput('branch',       branch);
+            core.setOutput('head_sha',     headSha);
+            core.setOutput('cycle',        cycle);
+            core.setOutput('can_heal',     cycle <= maxCycles ? 'true' : 'false');
+            console.log(`HealOps: cycle ${cycle}/${maxCycles} for run ${runId} on ${branch}`);
+
+      - name: Skip if max cycles reached
+        if: steps.meta.outputs.can_heal == 'false'
+        run: |
+          echo "Max heal cycles (${MAX_HEAL_CYCLES}) reached. Escalating to humans."
+          exit 0
+
+      # ── Fetch failed job logs ───────────────────────────────────────────────
+      - name: Fetch failed job logs
+        id: fetch-logs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runId = parseInt('${{ steps.meta.outputs.run_id }}');
+
+            // Get all jobs for this run
+            const { data: jobs } = await github.rest.actions.listJobsForWorkflowRun({
+              owner:  context.repo.owner,
+              repo:   context.repo.repo,
+              run_id: runId,
+              filter: 'latest',
+            });
+
+            // Collect failed jobs
+            const failedJobs = jobs.jobs.filter(j => j.conclusion === 'failure');
+            console.log(`Failed jobs: ${failedJobs.map(j => j.name).join(', ')}`);
+
+            // Fetch logs for each failed job
+            let allLogs = '';
+            const jobSummaries = [];
+
+            for (const job of failedJobs.slice(0, 5)) {
+              try {
+                const logsResp = await github.rest.actions.downloadJobLogsForWorkflowRun({
+                  owner:  context.repo.owner,
+                  repo:   context.repo.repo,
+                  job_id: job.id,
+                });
+                const jobLog = logsResp.data.toString().slice(-20000); // last 20KB
+                allLogs += `\n\n=== JOB: ${job.name} ===\n${jobLog}`;
+                jobSummaries.push({ name: job.name, id: job.id });
+              } catch (e) {
+                console.log(`Could not fetch logs for ${job.name}: ${e.message}`);
+              }
+            }
+
+            // Write logs to file for subsequent steps
+            const fs = require('fs');
+            fs.writeFileSync('/tmp/failed-logs.txt', allLogs);
+
+            core.setOutput('failed_jobs',  JSON.stringify(jobSummaries));
+            core.setOutput('has_failures', failedJobs.length > 0 ? 'true' : 'false');
+
+      # ── Classify error type ─────────────────────────────────────────────────
+      - name: Classify error type
+        id: classify
+        run: |
+          LOGS=$(cat /tmp/failed-logs.txt 2>/dev/null || echo "")
+
+          classify() {
+            # Priority order: most specific first
+
+            # Formatting
+            if echo "$LOGS" | grep -qiE "(prettier|Formatting check failed|Code style)"; then
+              echo "format"; return
+            fi
+
+            # ESLint / lint
+            if echo "$LOGS" | grep -qiE "(ESLint|eslint error|Linting failed|no-unused-vars|@typescript-eslint|react-hooks/|import/order)"; then
+              echo "lint"; return
+            fi
+
+            # TypeScript errors
+            if echo "$LOGS" | grep -qiE "(TS[0-9]{4}|Type error|error TS|TypeScript compilation|typecheck failed)"; then
+              echo "typecheck"; return
+            fi
+
+            # Dependency / module resolution
+            if echo "$LOGS" | grep -qiE "(Cannot find module|Module not found|Failed to resolve|ENOENT.*node_modules|pnpm install|frozen-lockfile|peer dep)"; then
+              echo "deps"; return
+            fi
+
+            # Build cache / corrupted build
+            if echo "$LOGS" | grep -qiE "(ENOENT.*\.next|cache.*corrupt|Turbo.*cache|Build output.*not found|standalone.*not found)"; then
+              echo "build-cache"; return
+            fi
+
+            # Go issues
+            if echo "$LOGS" | grep -qiE "(go: .*not found|go mod|go vet|gofmt|undefined: |imported and not used)"; then
+              echo "go-fix"; return
+            fi
+
+            # Python issues
+            if echo "$LOGS" | grep -qiE "(ruff|flake8|black|isort|SyntaxError|ImportError|ModuleNotFoundError)"; then
+              echo "python-fix"; return
+            fi
+
+            # JVM / Gradle
+            if echo "$LOGS" | grep -qiE "(BUILD FAILED|Gradle|Could not resolve.*gradle|compilation.*error)"; then
+              echo "jvm-fix"; return
+            fi
+
+            # ArgoCD sync
+            if echo "$LOGS" | grep -qiE "(ComparisonError|OutOfSync|ImagePullBackOff|CrashLoopBackOff|Progressing.*timeout|argocd.*failed)"; then
+              echo "argocd"; return
+            fi
+
+            # Transient failures (network, runner OOM, timeout)
+            if echo "$LOGS" | grep -qiE "(ECONNRESET|ETIMEDOUT|socket hang up|Network timeout|runner.*lost|OOMKilled|killed.*signal 9|Segmentation fault)"; then
+              echo "transient"; return
+            fi
+
+            # Unknown
+            echo "unknown"
+          }
+
+          ERROR_TYPE=$(classify)
+          echo "error_type=${ERROR_TYPE}" >> "$GITHUB_OUTPUT"
+          echo "🔍 Classified error type: ${ERROR_TYPE}"
+
+          # Extract specific error messages for the commit message
+          ERROR_EXCERPT=$(echo "$LOGS" | grep -iE "(error:|Error:|FAILED|✖|×)" | head -5 | tr '\n' ' ' | cut -c1-200)
+          echo "error_excerpt=${ERROR_EXCERPT}" >> "$GITHUB_OUTPUT"
+
+      # ── Checkout the failing branch ─────────────────────────────────────────
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.meta.outputs.branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure git bot identity
+        run: |
+          git config user.name  "${{ env.BOT_NAME }}"
+          git config user.email "${{ env.BOT_EMAIL }}"
+
+      # ── Setup runtimes (only what's needed per error type) ──────────────────
+      - uses: pnpm/action-setup@v4
+        if: contains('lint format typecheck deps build-cache', steps.classify.outputs.error_type)
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        if: contains('lint format typecheck deps build-cache', steps.classify.outputs.error_type)
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - uses: actions/setup-go@v5
+        if: steps.classify.outputs.error_type == 'go-fix'
+        with:
+          go-version: "1.23"
+
+      - uses: actions/setup-python@v5
+        if: steps.classify.outputs.error_type == 'python-fix'
+        with:
+          python-version: "3.11"
+
+      # ── Install Node deps (shared by lint/format/typecheck/deps fixers) ─────
+      - name: Install Node dependencies
+        if: contains('lint format typecheck deps build-cache', steps.classify.outputs.error_type)
+        run: pnpm install --no-frozen-lockfile
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # AUTO-FIXERS
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      # ── Fixer: lint ──────────────────────────────────────────────────────────
+      - name: "Fix: ESLint auto-fixable errors"
+        if: steps.classify.outputs.error_type == 'lint'
+        run: |
+          echo "Running ESLint --fix across all packages..."
+          pnpm turbo lint -- --fix --max-warnings=0 2>&1 || true
+
+          echo "Running Prettier to clean up formatting..."
+          pnpm prettier --write \
+            "**/*.{ts,tsx,js,jsx,json,md,yaml,yml}" \
+            --ignore-path .prettierignore \
+            2>&1 || true
+
+          echo "Re-running lint to confirm fix..."
+          pnpm turbo lint 2>&1 | tee /tmp/lint-after.log || true
+
+          REMAINING=$(grep -c "error" /tmp/lint-after.log || echo "0")
+          echo "Remaining lint errors: ${REMAINING}"
+          echo "fix_applied=lint" >> "$GITHUB_ENV"
+
+      # ── Fixer: format ────────────────────────────────────────────────────────
+      - name: "Fix: Prettier formatting"
+        if: steps.classify.outputs.error_type == 'format'
+        run: |
+          echo "Running Prettier --write on all files..."
+          pnpm prettier --write \
+            "**/*.{ts,tsx,js,jsx,json,md,yaml,yml}" \
+            --ignore-path .prettierignore
+          echo "fix_applied=format" >> "$GITHUB_ENV"
+
+      # ── Fixer: typecheck ─────────────────────────────────────────────────────
+      - name: "Fix: TypeScript errors (auto-fixable subset)"
+        if: steps.classify.outputs.error_type == 'typecheck'
+        run: |
+          # Run ESLint fix first — catches many TS-reported issues
+          pnpm turbo lint -- --fix 2>&1 || true
+
+          # Prettier pass (some TS errors are actually formatting)
+          pnpm prettier --write "**/*.{ts,tsx}" --ignore-path .prettierignore 2>&1 || true
+
+          # Re-run typecheck to see what's left
+          pnpm turbo typecheck 2>&1 | tee /tmp/typecheck-after.log || true
+
+          # Extract remaining errors and write a diagnostic comment
+          ERRORS=$(grep -E "error TS[0-9]+" /tmp/typecheck-after.log | head -20 || echo "")
+          if [ -n "$ERRORS" ]; then
+            echo "⚠️  Remaining TypeScript errors after auto-fix:"
+            echo "$ERRORS"
+            echo "ts_errors_remain=true" >> "$GITHUB_ENV"
+          else
+            echo "✅ All TypeScript errors resolved by auto-fix"
+          fi
+
+          echo "fix_applied=typecheck" >> "$GITHUB_ENV"
+
+      # ── Fixer: deps ──────────────────────────────────────────────────────────
+      - name: "Fix: Dependency resolution"
+        if: steps.classify.outputs.error_type == 'deps'
+        run: |
+          echo "Regenerating lockfile..."
+          # Remove frozen lockfile constraint and regenerate
+          pnpm install 2>&1 | tee /tmp/install-log.txt
+
+          # Check if lockfile changed
+          if git diff --quiet pnpm-lock.yaml; then
+            echo "No lockfile changes — trying cache clear..."
+            pnpm store prune 2>&1 || true
+            rm -rf node_modules .pnpm-store 2>/dev/null || true
+            pnpm install 2>&1 || true
+          else
+            echo "✅ Lockfile updated"
+          fi
+
+          echo "fix_applied=deps" >> "$GITHUB_ENV"
+
+      # ── Fixer: build-cache ───────────────────────────────────────────────────
+      - name: "Fix: Corrupted build cache"
+        if: steps.classify.outputs.error_type == 'build-cache'
+        run: |
+          echo "Clearing all build caches..."
+          # Turbo cache
+          pnpm turbo clean 2>&1 || true
+          # Next.js .next dirs
+          find . -name ".next" -type d -not -path "*/node_modules/*" -exec rm -rf {} + 2>/dev/null || true
+          # tsbuildinfo
+          find . -name "*.tsbuildinfo" -not -path "*/node_modules/*" -delete 2>/dev/null || true
+          # dist dirs
+          find apps services -name "dist" -type d -not -path "*/node_modules/*" -exec rm -rf {} + 2>/dev/null || true
+
+          echo "✅ Build cache cleared. Fresh build will run on next CI."
+          echo "fix_applied=build-cache" >> "$GITHUB_ENV"
+
+          # Touch a cache-bust file so git has a diff to commit
+          echo "# Cache cleared by HealBot on $(date -u)" >> .turbo/cache-bust.txt || \
+          echo "$(date -u)" > .healbot-cache-bust
+
+      # ── Fixer: go-fix ────────────────────────────────────────────────────────
+      - name: "Fix: Go formatting and dependencies"
+        if: steps.classify.outputs.error_type == 'go-fix'
+        run: |
+          echo "Running gofmt on all Go services..."
+          find services -name "*.go" -not -path "*/vendor/*" | xargs gofmt -w 2>&1 || true
+
+          echo "Running go mod tidy on all Go services..."
+          for gomod in $(find services -name "go.mod" -not -path "*/vendor/*"); do
+            dir=$(dirname "$gomod")
+            echo "  → go mod tidy in ${dir}"
+            (cd "$dir" && go mod tidy 2>&1) || true
+          done
+
+          echo "fix_applied=go-fix" >> "$GITHUB_ENV"
+
+      # ── Fixer: python-fix ────────────────────────────────────────────────────
+      - name: "Fix: Python lint and formatting"
+        if: steps.classify.outputs.error_type == 'python-fix'
+        run: |
+          pip install ruff --quiet --break-system-packages 2>/dev/null || pip install ruff --quiet
+
+          echo "Running ruff --fix on all Python services..."
+          find services -name "*.py" -not -path "*/__pycache__/*" | xargs ruff check --fix 2>&1 || true
+
+          echo "Running ruff format..."
+          find services -name "*.py" -not -path "*/__pycache__/*" | xargs ruff format 2>&1 || true
+
+          echo "fix_applied=python-fix" >> "$GITHUB_ENV"
+
+      # ── Fixer: jvm-fix ───────────────────────────────────────────────────────
+      - name: "Fix: JVM / Gradle issues"
+        if: steps.classify.outputs.error_type == 'jvm-fix'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Run Gradle fixes
+        if: steps.classify.outputs.error_type == 'jvm-fix'
+        run: |
+          for gradlew in $(find services -name "gradlew" -type f); do
+            dir=$(dirname "$gradlew")
+            echo "  → Gradle dependencies in ${dir}"
+            (cd "$dir" && ./gradlew dependencies --refresh-dependencies --no-daemon 2>&1) || true
+          done
+          echo "fix_applied=jvm-fix" >> "$GITHUB_ENV"
+
+      # ── Fixer: transient ─────────────────────────────────────────────────────
+      - name: "Fix: Transient failure (no code change needed)"
+        if: steps.classify.outputs.error_type == 'transient'
+        run: |
+          echo "Transient failure detected (network blip, runner OOM, etc.)"
+          echo "No code changes needed — will re-trigger CI directly."
+          echo "fix_applied=transient" >> "$GITHUB_ENV"
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # COMMIT & PUSH (if code changed)
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      - name: Commit and push auto-fixes
+        id: commit
+        run: |
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No file changes from auto-fix."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            CYCLE="${{ steps.meta.outputs.cycle }}"
+            FIX_TYPE="${{ steps.classify.outputs.error_type }}"
+            EXCERPT="${{ steps.classify.outputs.error_excerpt }}"
+            EXCERPT="${EXCERPT:0:120}"
+
+            COMMIT_MSG="fix(healbot): auto-fix ${FIX_TYPE} errors [heal-cycle-${CYCLE}]
+
+            HealBot auto-fix on cycle ${CYCLE}/${MAX_HEAL_CYCLES}
+            Error type: ${FIX_TYPE}
+            Original error: ${EXCERPT}
+            Triggered by: https://github.com/${{ github.repository }}/actions/runs/${{ steps.meta.outputs.run_id }}
+
+            [skip-healbot]"
+
+            git commit -m "$COMMIT_MSG"
+            git push origin "${{ steps.meta.outputs.branch }}"
+
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Pushed auto-fix commit to ${{ steps.meta.outputs.branch }}"
+          fi
+
+      # ── Re-trigger CI for transient (no code change) ────────────────────────
+      - name: Re-trigger CI (transient — no commit)
+        if: >
+          steps.classify.outputs.error_type == 'transient' &&
+          steps.commit.outputs.changed == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runId = parseInt('${{ steps.meta.outputs.run_id }}');
+            await github.rest.actions.reRunWorkflowFailedJobs({
+              owner:  context.repo.owner,
+              repo:   context.repo.repo,
+              run_id: runId,
+            });
+            console.log(`Re-triggered failed jobs for run ${runId} (transient retry)`);
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # ESCALATION — open detailed incident issue when all cycles fail
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      - name: Escalate — open incident issue on max cycles or unfixable error
+        if: >
+          steps.meta.outputs.can_heal == 'false' ||
+          steps.classify.outputs.error_type == 'unknown'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const cycle      = '${{ steps.meta.outputs.cycle }}';
+            const errorType  = '${{ steps.classify.outputs.error_type }}';
+            const branch     = '${{ steps.meta.outputs.branch }}';
+            const headSha    = '${{ steps.meta.outputs.head_sha }}'.slice(0, 7);
+            const runId      = '${{ steps.meta.outputs.run_id }}';
+            const maxCycles  = process.env.MAX_HEAL_CYCLES;
+            const runUrl     = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId}`;
+
+            const fs   = require('fs');
+            const logs = fs.existsSync('/tmp/failed-logs.txt')
+              ? fs.readFileSync('/tmp/failed-logs.txt', 'utf8')
+                  .split('\n')
+                  .filter(l => /error|Error|FAIL|✖|×/i.test(l))
+                  .slice(0, 40)
+                  .join('\n')
+              : 'Log extraction failed';
+
+            const { data: issue } = await github.rest.issues.create({
+              owner:  context.repo.owner,
+              repo:   context.repo.repo,
+              title:  `🚨 [HealBot Escalation] \`${errorType}\` error on \`${branch}\` — ${cycle} heal cycles failed`,
+              labels: ['healbot-escalation', 'needs-human', 'ci-failure'],
+              body:   `## HealBot Escalation Report
+
+            **Branch:** \`${branch}\`
+            **SHA:** \`${headSha}\`
+            **Error class:** \`${errorType}\`
+            **Heal cycles attempted:** ${cycle}/${maxCycles}
+            **Original failing run:** [${runId}](${runUrl})
+
+            ## What HealBot tried
+            HealBot ran **${cycle} automated fix cycle(s)** for error type \`${errorType}\`.
+            Each cycle: fetched logs → classified error → ran auto-fixer → committed → pushed → waited for CI.
+            All cycles exhausted without achieving a green build.
+
+            ## Error log excerpt (filtered)
+            \`\`\`
+            ${logs.slice(0, 3000)}
+            \`\`\`
+
+            ## Suggested manual fixes by error class
+
+            ### If \`typecheck\` / \`lint\`
+            \`\`\`bash
+            pnpm install
+            pnpm turbo typecheck 2>&1 | head -50   # see remaining TS errors
+            pnpm turbo lint -- --fix
+            \`\`\`
+
+            ### If \`deps\`
+            \`\`\`bash
+            rm -rf node_modules pnpm-lock.yaml
+            pnpm install
+            git add pnpm-lock.yaml && git commit -m "fix(deps): regenerate lockfile"
+            \`\`\`
+
+            ### If \`build-cache\`
+            \`\`\`bash
+            pnpm turbo clean
+            find . -name ".next" -exec rm -rf {} +
+            pnpm build
+            \`\`\`
+
+            ### If \`go-fix\`
+            \`\`\`bash
+            cd services/<failing-service>
+            go mod tidy && gofmt -w .
+            go build ./...
+            \`\`\`
+
+            ## Actions
+            - [ ] Read the log excerpt above and identify root cause
+            - [ ] Apply manual fix and push
+            - [ ] Close this issue once CI is green
+            - [ ] If this error class recurs, update \`.github/workflows/self-heal.yml\` with a new fixer
+
+            ---
+            *Auto-generated by [HealBot](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/workflows/self-heal.yml)*`,
+            });
+
+            console.log(`Opened escalation issue #${issue.number}`);
+            core.setFailed(`HealBot escalated after ${cycle} cycles. Issue: #${issue.number}`);
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # CLEANUP — purge all failed/cancelled heal-cycle runs on success
+      # Runs after a fix was committed. The next CI will be green; at that
+      # point cleanup-runs.yml handles the broader purge. But we also delete
+      # the failed HealBot runs right here so they don't linger.
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      - name: Purge failed HealBot runs for this branch
+        # Only purge when we actually produced a fix (not when escalating)
+        if: >
+          steps.commit.outputs.changed == 'true' ||
+          steps.classify.outputs.error_type == 'transient'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = '${{ steps.meta.outputs.branch }}';
+
+            // IDs to always keep: the original failing CI run + this healer run
+            const keepIds = new Set([
+              parseInt('${{ steps.meta.outputs.run_id }}'),
+              context.runId,
+            ]);
+
+            const DELETE_CONCLUSIONS = new Set([
+              'failure', 'cancelled', 'timed_out', 'action_required',
+            ]);
+
+            // Workflows to clean on this branch after a successful heal
+            const workflowFiles = [
+              'self-heal.yml',
+              'deploy-watchdog.yml',
+              'ci.yml',
+            ];
+
+            let deleted = 0;
+
+            for (const wfFile of workflowFiles) {
+              // Resolve workflow ID
+              const { data: wfs } = await github.rest.actions.listRepoWorkflows({
+                owner: context.repo.owner,
+                repo:  context.repo.repo,
+              });
+              const wf = wfs.workflows.find(w => w.path.endsWith(wfFile));
+              if (!wf) continue;
+
+              let page = 1;
+              while (true) {
+                const { data } = await github.rest.actions.listWorkflowRuns({
+                  owner:       context.repo.owner,
+                  repo:        context.repo.repo,
+                  workflow_id: wf.id,
+                  branch,
+                  per_page:    100,
+                  page,
+                });
+
+                if (!data.workflow_runs.length) break;
+
+                for (const run of data.workflow_runs) {
+                  if (keepIds.has(run.id))         continue; // keep the original + self
+                  if (run.status !== 'completed')   continue; // never touch in-progress
+                  if (!DELETE_CONCLUSIONS.has(run.conclusion)) continue; // keep successes
+
+                  try {
+                    await github.rest.actions.deleteWorkflowRun({
+                      owner:  context.repo.owner,
+                      repo:   context.repo.repo,
+                      run_id: run.id,
+                    });
+                    console.log(`🗑️  Deleted ${wfFile} #${run.run_number} (${run.conclusion})`);
+                    deleted++;
+                    await new Promise(r => setTimeout(r, 80)); // avoid rate limit
+                  } catch (e) {
+                    console.log(`Could not delete run ${run.id}: ${e.message}`);
+                  }
+                }
+
+                if (data.workflow_runs.length < 100) break;
+                page++;
+              }
+            }
+
+            console.log(`\n✅ HealBot cleanup: deleted ${deleted} failed runs on branch "${branch}"`);
+
+      # ── Summary ─────────────────────────────────────────────────────────────
+      - name: Write job summary
+        if: always()
+        run: |
+          echo "## 🤖 HealBot Summary — Cycle ${{ steps.meta.outputs.cycle }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Branch | \`${{ steps.meta.outputs.branch }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Error class | \`${{ steps.classify.outputs.error_type }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code changed | ${{ steps.commit.outputs.changed || 'false' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Cycle | ${{ steps.meta.outputs.cycle }}/${{ env.MAX_HEAL_CYCLES }} |" >> $GITHUB_STEP_SUMMARY

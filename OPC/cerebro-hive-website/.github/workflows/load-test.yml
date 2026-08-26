@@ -1,0 +1,90 @@
+name: Load Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: k6 scenario
+        required: true
+        default: baseline
+        type: choice
+        options: [baseline, stress, spike, soak]
+      environment:
+        description: Target environment
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
+  schedule:
+    # Nightly baseline run against staging
+    - cron: "0 3 * * *"
+
+permissions:
+  contents: read
+  issues:   write
+
+jobs:
+  load-test:
+    name: k6 Load Test (${{ github.event.inputs.scenario || 'baseline' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+        with:
+          k6-version: "0.54.0"
+
+      - name: Run platform-api load test
+        run: |
+          k6 run \
+            --env ENV=${{ github.event.inputs.environment || 'staging' }} \
+            --env BASE_URL=https://api-${{ github.event.inputs.environment || 'staging' }}.cerebro-hive.io \
+            --env API_TOKEN=${{ secrets.LOAD_TEST_API_TOKEN }} \
+            --env SCENARIO=${{ github.event.inputs.scenario || 'baseline' }} \
+            --out json=results-platform-api.json \
+            --out experimental-prometheus-rw=${{ secrets.PROMETHEUS_RW_URL }} \
+            tests/load/k6/platform-api.js
+        continue-on-error: true
+
+      - name: Run ai-gateway load test
+        if: github.event.inputs.scenario != 'soak'
+        run: |
+          k6 run \
+            --env BASE_URL=https://ai-gateway-${{ github.event.inputs.environment || 'staging' }}.cerebro-hive.io \
+            --env API_TOKEN=${{ secrets.LOAD_TEST_API_TOKEN }} \
+            --out json=results-ai-gateway.json \
+            tests/load/k6/ai-gateway.js
+        continue-on-error: true
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-results-${{ github.run_id }}
+          path: results-*.json
+
+      - name: Parse and comment results
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs');
+            try {
+              const raw = fs.readFileSync('results-platform-api.json', 'utf8');
+              const lines = raw.trim().split('\n').map(l => JSON.parse(l));
+              const summary = lines.find(l => l.type === 'summary');
+              if (summary) {
+                const p95 = summary.data?.metrics?.http_req_duration?.values?.['p(95)'];
+                const errRate = summary.data?.metrics?.cerebro_error_rate?.values?.rate;
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner:        context.repo.owner,
+                  repo:         context.repo.repo,
+                  body: `## Load Test Results\n\n| Metric | Value |\n|--------|-------|\n| P95 Latency | ${p95?.toFixed(0) ?? 'N/A'}ms |\n| Error Rate | ${(errRate * 100)?.toFixed(3) ?? 'N/A'}% |\n`,
+                });
+              }
+            } catch (e) {
+              console.log('Could not parse results:', e.message);
+            }

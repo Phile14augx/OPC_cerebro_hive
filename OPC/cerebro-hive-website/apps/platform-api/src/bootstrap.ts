@@ -23,9 +23,7 @@ import { registerToolRuntimeProvider } from './modules/runtime/providers/ToolRun
 import type { AgentRuntimeService, ToolRuntime, ToolRegistry } from '@cerebro/agent-builder-capability';
 import type { AgentRepository } from '@cerebro/db';
 import type { AIGateway } from '@cerebro/ai-gateway';
-import { ExecutionOrchestrator, InMemoryExecutionRepository } from '@cerebro/domain';
-import { AgentExecutionProvider } from './modules/runtime/AgentExecutionProvider';
-import { ExecutionRuntimeService } from './modules/runtime/ExecutionRuntimeService';
+import { LegacyRuntimeCompatibilityService } from './modules/runtime/LegacyRuntimeCompatibilityService';
 import { executionsRoutes } from './modules/executions/executions.routes';
 import type { ExecutionRuntimeKernel } from '@cerebro/runtime-core/src/execution/kernel/ExecutionRuntimeKernel';
 import type { ExecutionStore } from '@cerebro/runtime-core/src/execution/ExecutionStore';
@@ -41,6 +39,8 @@ export interface BootstrapDeps {
   toolRegistry: ToolRegistry;
   unitOfWork: PrismaUnitOfWork;
   executionKernel: ExecutionRuntimeKernel;
+  executionManager: any;
+  prisma: any;
   executionStore: ExecutionStore;
   executionReplayService: ExecutionReplayService;
 }
@@ -65,11 +65,7 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
   // to the already-real `AgentRuntimeService`; no other execution kind
   // ('Workflow', 'Tool', 'Evaluation') has a real provider yet, and
   // `runtime.routes.ts` rejects those kinds explicitly rather than silently
-  // pretending to execute them.
-  const executionRepository = new InMemoryExecutionRepository();
-  const agentExecutionProvider = new AgentExecutionProvider(deps.agentRuntimeService, deps.agentRepository);
-  const executionOrchestrator = new ExecutionOrchestrator(executionRepository, agentExecutionProvider);
-  const executionRuntimeService = new ExecutionRuntimeService(executionOrchestrator, executionRepository);
+  const legacyRuntimeCompatibilityService = new LegacyRuntimeCompatibilityService(deps.executionManager, deps.executionStore, deps.prisma);
 
   const server = Fastify({ logger: true }).withTypeProvider<TypeBoxTypeProvider>();
 
@@ -128,7 +124,7 @@ export async function bootstrap(bus: CommandBus, deps: BootstrapDeps) {
     protectedApi.register(agentRoutes, { prefix: '/api/v1/agents', agentRepository: deps.agentRepository });
     protectedApi.register(workflowsRoutes, { prefix: '/api/v1/workflows' });
     protectedApi.register(telemetryRoutes, { prefix: '/api/v1/telemetry' });
-    protectedApi.register(runtimeRoutes, { prefix: '/api/v1/runtime', executionRuntimeService });
+    protectedApi.register(runtimeRoutes, { prefix: '/api/v1/runtime', legacyRuntimeCompatibilityService });
     protectedApi.register(executionsRoutes, { 
       prefix: '/api/v1/executions',
       executionKernel: deps.executionKernel,
