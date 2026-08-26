@@ -13,7 +13,6 @@ import { PrismaExecutionStore, PrismaExecutionLeaseManager, PrismaExecutionOutbo
 import { ExecutionManager } from '@cerebro/runtime-core/src/execution/ExecutionManager';
 import { ExecutionReplayService } from '@cerebro/runtime-core/src/execution/ExecutionReplayService';
 import { ExecutionIdempotencyGuard } from '@cerebro/runtime-core/src/execution/ExecutionIdempotency';
-import { ExecutionOutbox } from '@cerebro/runtime-core/src/execution/ExecutionOutbox';
 import { ReducerRegistry } from '@cerebro/runtime-core/src/registry/ReducerRegistry';
 import { ExecutionEventRegistry } from '@cerebro/runtime-core/src/registry/ExecutionEventRegistry';
 

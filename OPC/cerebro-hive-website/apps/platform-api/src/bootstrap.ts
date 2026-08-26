@@ -39,8 +39,8 @@ export interface BootstrapDeps {
   toolRegistry: ToolRegistry;
   unitOfWork: PrismaUnitOfWork;
   executionKernel: ExecutionRuntimeKernel;
-  executionManager: any;
-  prisma: any;
+  executionManager: import("@cerebro/runtime-core/src/execution/ExecutionManager").ExecutionManager;
+  prisma: import("@cerebro/db").PrismaClient;
   executionStore: ExecutionStore;
   executionReplayService: ExecutionReplayService;
 }

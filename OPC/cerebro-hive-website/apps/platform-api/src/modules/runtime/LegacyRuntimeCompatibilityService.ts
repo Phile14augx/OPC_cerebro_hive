@@ -45,7 +45,7 @@ export class LegacyRuntimeCompatibilityService {
     return this.getExecution(executionId);
   }
 
-  async cancelExecution(executionId: string, opts: { actor?: string; reason?: string } = {}) {
+  async cancelExecution(executionId: string, _opts: { actor?: string; reason?: string } = {}) {
     const record = await this.loadOrThrow(executionId);
     
     // Acquire lease temporarily for cancellation
@@ -65,7 +65,7 @@ export class LegacyRuntimeCompatibilityService {
           "fencingToken" = "fencingToken" + 1
       WHERE "executionId" = ${executionId}::uuid
       RETURNING "fencingToken"
-    ` as any[];
+    ` as unknown[];
 
     if (updated.length === 0) {
       throw new Error(`Could not acquire lease to cancel execution ${executionId}`);
@@ -103,15 +103,15 @@ export class LegacyRuntimeCompatibilityService {
       workspaceId: r.workspaceId ?? undefined,
       correlationId: r.correlationId,
       traceId: r.traceId,
-      status: r.status as any,
+      status: r.status as unknown as import('@cerebro/runtime-core/src/execution/ExecutionStateMachine').ExecutionState,
       version: r.version,
       startedAt: r.startedAt,
       completedAt: r.completedAt ?? undefined,
-      metadata: r.metadata as any
+      metadata: r.metadata as Record<string, unknown>
     }));
   }
 
-  private async loadOrThrow(executionId: string): Promise<ExecutionRecord<any>> {
+  private async loadOrThrow(executionId: string): Promise<ExecutionRecord<Record<string, unknown>>> {
     const record = await this.store.getExecution(executionId);
     if (!record) {
       throw new NotFoundError(`Execution ${executionId} not found.`);
@@ -119,7 +119,7 @@ export class LegacyRuntimeCompatibilityService {
     return record;
   }
 
-  private mapToLegacy(record: ExecutionRecord<any>) {
+  private mapToLegacy(record: ExecutionRecord<Record<string, unknown>>) {
     return {
       id: record.id,
       kind: 'Agent',

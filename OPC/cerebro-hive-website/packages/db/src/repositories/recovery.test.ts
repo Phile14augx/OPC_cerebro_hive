@@ -60,6 +60,7 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
 
     await leaseManager.registerWorker('worker-recovery', {});
     await leaseManager.registerWorker('worker-recovery-2', {});
+    await leaseManager.registerWorker('runtime-core-worker', {});
   });
 
   afterAll(async () => {
@@ -72,6 +73,9 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
     if (status !== 'QUEUED') {
       await prisma.agentExecution.update({ where: { id: eid }, data: { status } });
     }
+    
+    // Release the lease acquired by runtime-core-worker during seedExecution so tests can acquire it immediately
+    await leaseManager.releaseLease(eid, 'runtime-core-worker');
     return eid;
   }
 
@@ -91,7 +95,7 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
     // Write an outbox message but pretend the worker died before dispatch
     await store.commitTransition({
       executionId: eid,
-      expectedVersion: 1,
+      expectedVersion: 2,
       fencingToken: lease!.fencingToken,
       update: { status: 'RUNNING' },
       events: [],
@@ -122,7 +126,7 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
     const leaseA = await leaseManager.acquireLease(eid, 'worker-recovery', 30000);
     
     await store.commitTransition({
-      executionId: eid, expectedVersion: 1, fencingToken: leaseA!.fencingToken,
+      executionId: eid, expectedVersion: 2, fencingToken: leaseA!.fencingToken,
       update: { status: 'RUNNING' }, events: []
     });
 
@@ -139,7 +143,7 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
         executionId: eid, expectedVersion: 2, fencingToken: leaseA!.fencingToken,
         update: { status: 'COMPLETED' }, events: []
       })
-    ).rejects.toThrow(/Fencing token mismatch or expired lease/);
+    ).rejects.toThrow(/Lease expired or fencing token mismatch/);
   });
 
   test('Scenario 5: Lease expiration allows takeover', async () => {
@@ -161,7 +165,7 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
 
     await expect(
       store.commitTransition({
-        executionId: eid, expectedVersion: 1, fencingToken: lease!.fencingToken,
+        executionId: eid, expectedVersion: 2, fencingToken: lease!.fencingToken,
         update: { status: 'COMPLETED' }, events: []
       })
     ).rejects.toThrow(/Optimistic Concurrency Failure/);
@@ -172,14 +176,14 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
     const lease = await leaseManager.acquireLease(eid, 'worker-recovery', 30000);
     
     await store.commitTransition({
-      executionId: eid, expectedVersion: 1, fencingToken: lease!.fencingToken,
-      update: {}, events: [{ sequence: 1n, type: 'TestEvent', timestamp: new Date(), payload: {} }]
+      executionId: eid, expectedVersion: 2, fencingToken: lease!.fencingToken,
+      update: {}, events: [{ sequence: 2n, type: 'TestEvent', timestamp: new Date(), payload: {} }]
     });
 
     await expect(
       store.commitTransition({
-        executionId: eid, expectedVersion: 1, fencingToken: lease!.fencingToken,
-        update: {}, events: [{ sequence: 1n, type: 'TestEvent', timestamp: new Date(), payload: {} }]
+        executionId: eid, expectedVersion: 2, fencingToken: lease!.fencingToken,
+        update: {}, events: [{ sequence: 2n, type: 'TestEvent', timestamp: new Date(), payload: {} }]
       })
     ).rejects.toThrow(); // Prisma unique constraint violation on sequence
   });
@@ -189,7 +193,7 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
     const lease = await leaseManager.acquireLease(eid, 'worker-recovery', 30000);
     
     await store.commitTransition({
-      executionId: eid, expectedVersion: 1, fencingToken: lease!.fencingToken,
+      executionId: eid, expectedVersion: 2, fencingToken: lease!.fencingToken,
       update: { status: 'COMPLETED' }, events: [],
       outboxEntries: [{ type: 'NOTIFY', payload: {}, id: 'outbox-8' }]
     });
@@ -207,13 +211,13 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
     const lease = await leaseManager.acquireLease(eid, 'worker-recovery', 30000);
     
     await store.commitTransition({
-      executionId: eid, expectedVersion: 1, fencingToken: lease!.fencingToken,
-      update: {}, events: [{ sequence: 1n, type: 'TestEvent', timestamp: new Date(), payload: { val: 42 } }]
+      executionId: eid, expectedVersion: 2, fencingToken: lease!.fencingToken,
+      update: {}, events: [{ sequence: 2n, type: 'TestEvent', timestamp: new Date(), payload: { val: 42 } }]
     });
 
     const events = await store.getEvents(eid);
-    expect(events.length).toBe(1);
-    expect((events[0].payload as any).val).toBe(42);
+    expect(events.length).toBe(2);
+    expect((events[1].payload as any).val).toBe(42);
   });
 
   test('Scenario 10: Snapshot restoration limits replay time', async () => {
@@ -221,7 +225,7 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
     const lease = await leaseManager.acquireLease(eid, 'worker-recovery', 30000);
     
     await store.saveSnapshot({
-      id: 'snap-1', executionId: eid, sequence: 10n, state: { workingMemory: {}, messages: [], context: {}, activeToolCalls: [] }, createdAt: new Date(), aggregateVersion: 10, tenantId: tenantId
+      id: crypto.randomUUID(), executionId: eid, sequence: 10n, state: { workingMemory: {}, messages: [], context: {}, activeToolCalls: [] }, createdAt: new Date(), aggregateVersion: 10, tenantId: tenantId
     }, lease!.fencingToken, 'hash');
 
     const snap = await store.getLatestSnapshot(eid);
@@ -235,14 +239,14 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
     // Since expectedSequence is checked in ExecutionManager logic or IdempotencyGuard
     // The store itself relies on unique constraints on event sequence.
     await store.commitTransition({
-      executionId: eid, expectedVersion: 1, fencingToken: lease!.fencingToken,
-      update: {}, events: [{ sequence: 1n, type: 'Event1', timestamp: new Date(), payload: {} }]
+      executionId: eid, expectedVersion: 2, fencingToken: lease!.fencingToken,
+      update: {}, events: [{ sequence: 2n, type: 'Event1', timestamp: new Date(), payload: {} }]
     });
     // Another resume for sequence 1 will fail unique constraint at store level
     await expect(
       store.commitTransition({
-        executionId: eid, expectedVersion: 1, fencingToken: lease!.fencingToken,
-        update: {}, events: [{ sequence: 1n, type: 'Event2', timestamp: new Date(), payload: {} }]
+        executionId: eid, expectedVersion: 2, fencingToken: lease!.fencingToken,
+        update: {}, events: [{ sequence: 2n, type: 'Event2', timestamp: new Date(), payload: {} }]
       })
     ).rejects.toThrow();
   });

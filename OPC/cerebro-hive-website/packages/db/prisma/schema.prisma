@@ -1732,7 +1732,7 @@ enum AuditSeverity {
 }
 
 model Organization {
-  id           String    @id @default(dbgenerated("('org_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  id           String    @id @default(dbgenerated("('org_'::text || replace((uuid_generate_v4())::text, '-'::text, ''::text))"))
   name         String
   slug         String    @unique
   logoUrl      String?
@@ -1787,7 +1787,7 @@ model Invitation {
 }
 
 model KnowledgeDocument {
-  id           String         @id @default(dbgenerated("('doc_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  id           String         @id @default(dbgenerated("('doc_'::text || replace((uuid_generate_v4())::text, '-'::text, ''::text))"))
   collectionId String
   orgId        String
   title        String

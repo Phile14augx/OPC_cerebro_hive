@@ -40,7 +40,7 @@ export class PrismaExecutionLeaseManager implements ExecutionLeaseManager {
             const isRenewal = row.ownerId === ownerId && row.expiresAt >= dbNow;
             const updated = await tx.$queryRaw`
               UPDATE "AgentExecutionLease"
-              SET "ownerId" = ${ownerId}::uuid,
+              SET "ownerId" = ${ownerId},
                   "expiresAt" = NOW() + (${durationMs}::text || ' milliseconds')::interval,
                   "version" = "version" + 1,
                   "fencingToken" = ${isRenewal ? row.fencingToken : row.fencingToken + 1n}
@@ -60,7 +60,7 @@ export class PrismaExecutionLeaseManager implements ExecutionLeaseManager {
         } else {
           const created = await tx.$queryRaw`
             INSERT INTO "AgentExecutionLease" ("executionId", "ownerId", "expiresAt", "version", "fencingToken")
-            VALUES (${executionId}::uuid, ${ownerId}::uuid, NOW() + (${durationMs}::text || ' milliseconds')::interval, 1, 1)
+            VALUES (${executionId}::uuid, ${ownerId}, NOW() + (${durationMs}::text || ' milliseconds')::interval, 1, 1)
             RETURNING "executionId", "ownerId", "expiresAt", "fencingToken"
           ` as any[];
           return {
@@ -83,7 +83,7 @@ export class PrismaExecutionLeaseManager implements ExecutionLeaseManager {
         SET "expiresAt" = NOW() + (${durationMs}::text || ' milliseconds')::interval,
             "version" = "version" + 1
         WHERE "executionId" = ${executionId}::uuid
-          AND "ownerId" = ${ownerId}::uuid
+          AND "ownerId" = ${ownerId}
           AND "fencingToken" = ${currentFencingToken}
         RETURNING "executionId", "ownerId", "expiresAt", "fencingToken"
       ` as any[];

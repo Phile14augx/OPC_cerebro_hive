@@ -23,8 +23,8 @@ export interface ExecutionRecord<TMetadata extends Record<string, unknown> = Rec
     executionId: string;
     expectedVersion: number;
     fencingToken: bigint;
-    update: Partial<ExecutionRecord<any>>;
-    events: ExecutionEvent<any>[];
+    update: Partial<ExecutionRecord<Record<string, unknown>>>;
+    events: ExecutionEvent<unknown>[];
     outboxEntries?: OutboxMessage[];
   }): Promise<void>;
 }
@@ -70,8 +70,8 @@ export interface ExecutionStore {
     executionId: string;
     expectedVersion: number;
     fencingToken: bigint;
-    update: Partial<ExecutionRecord<any>>;
-    events: ExecutionEvent<any>[];
+    update: Partial<ExecutionRecord<Record<string, unknown>>>;
+    events: ExecutionEvent<unknown>[];
     outboxEntries?: OutboxMessage[];
   }): Promise<void>;
 }
