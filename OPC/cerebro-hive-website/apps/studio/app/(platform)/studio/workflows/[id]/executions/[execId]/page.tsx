@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useExecution, useExecutionStream } from "@/lib/platform/hooks";
 import { platformApi } from "@/lib/platform/api-client";
@@ -152,6 +152,8 @@ function RawLog({ entries }: { entries: LogEntry[] }) {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
+const eventTsMap = new WeakMap<object, number>();
+
 export default function ExecutionViewerPage() {
   const router              = useRouter();
   const { id: workflowId, execId } = useParams<{ id: string; execId: string }>();
@@ -164,11 +166,18 @@ export default function ExecutionViewerPage() {
   );
 
   // Merge SSE events into log entries with timestamps
-  const logEntries: LogEntry[] = events.map(e => ({
-    ts:    Date.now(),
-    event: e.event,
-    data:  e.data,
-  }));
+  const logEntries: LogEntry[] = useMemo(() => events.map(e => {
+    let ts = eventTsMap.get(e);
+    if (!ts) {
+      ts = 0;
+      eventTsMap.set(e, ts);
+    }
+    return {
+      ts,
+      event: e.event,
+      data: e.data,
+    };
+  }), [events]);
 
   const isTerminal   = execution && ["COMPLETED", "FAILED", "CANCELLED"].includes(execution.status);
   const isLive       = !isTerminal && connected;

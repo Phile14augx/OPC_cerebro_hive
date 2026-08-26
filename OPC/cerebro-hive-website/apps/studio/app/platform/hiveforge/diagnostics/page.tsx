@@ -1,18 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { platformRegistry } from "../core/registry/PlatformRegistry";
 import { Plugin } from "../core/contracts/plugin";
 import { CapabilityGrid } from "../../../../components/platform/hiveforge/CapabilityGrid";
 
 export default function DiagnosticsPage() {
-  const [plugins, setPlugins] = useState<Plugin[]>([]);
-  const [snapshot, setSnapshot] = useState<string>("");
-
-  useEffect(() => {
-    setPlugins(platformRegistry.getAll());
-    setSnapshot(platformRegistry.exportSnapshot());
-  }, []);
+  const [plugins] = useState<Plugin[]>(() => platformRegistry.getAll());
+  const [snapshot] = useState<string>(() => platformRegistry.exportSnapshot());
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">

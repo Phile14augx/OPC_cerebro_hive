@@ -7,7 +7,7 @@ export class TrustCalculator {
   calculateTrust(
     federationContext: FederationContext,
     mappedClaims: IdentityClaims,
-    externalClaims: Record<string, any>
+    externalClaims: Record<string, unknown>
   ): number {
     let score = 50; // Baseline
 

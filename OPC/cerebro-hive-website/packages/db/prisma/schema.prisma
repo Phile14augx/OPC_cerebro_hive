@@ -114,11 +114,12 @@ model Workspace {
   slug      String  @unique
   isDefault Boolean @default(false)
 
-  agents    Agent[]
-  workflows Workflow[]
-  projects  Project[]
-  apiKeys   APIKey[]
-  auditLogs AuditLog[]
+  agents      Agent[]
+  workflows   Workflow[]
+  projects    Project[]
+  apiKeys     APIKey[]
+  auditLogs   AuditLog[]
+  assessments Assessment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -132,9 +133,12 @@ model User {
   name      String?
   avatarUrl String?
 
-  tenantMembers TenantMember[]
-  sessions      Session[]
-  auditLogs     AuditLog[]
+  tenantMembers             TenantMember[]
+  sessions                  Session[]
+  auditLogs                 AuditLog[]
+  passwordCredential        PasswordCredential?
+  candidateProfile          CandidateProfile?
+  assessmentVersionsCreated AssessmentVersion[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -160,6 +164,7 @@ model TenantMember {
 
 model Role {
   id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key         String? @unique
   name        String
   description String?
 
@@ -177,6 +182,129 @@ model Permission {
   resource String
 
   @@unique([roleId, action, resource])
+}
+
+model PasswordCredential {
+  userId            String   @id @db.Uuid
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  passwordHash      String
+  passwordChangedAt DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model CandidateProfile {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @unique @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills    String[]
+  resumeUrl String?
+
+  sessions AssessmentSession[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Assessment {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String    @db.Uuid
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      String    @default("draft")
+  tags        String[]
+
+  versions AssessmentVersion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workspaceId])
+}
+
+model AssessmentVersion {
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assessmentId    String     @db.Uuid
+  assessment      Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  versionNumber   Int
+  manifestHash    String     @unique
+  schemaPayload   Json
+  manifestPayload Json
+  createdByUserId String?    @db.Uuid
+  createdByUser   User?      @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  sessions AssessmentSession[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([assessmentId, versionNumber])
+  @@index([assessmentId])
+}
+
+model AssessmentSession {
+  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  candidateId         String            @db.Uuid
+  candidate           CandidateProfile  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  assessmentVersionId String            @db.Uuid
+  assessmentVersion   AssessmentVersion @relation(fields: [assessmentVersionId], references: [id], onDelete: Cascade)
+  status              SessionStatus     @default(INITIALIZED)
+  startedAt           DateTime?
+  endedAt             DateTime?
+  metrics             Json?
+
+  telemetryBatches SessionTelemetryBatch[]
+  executionJobs    ExecutionJob[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([candidateId])
+  @@index([assessmentVersionId])
+}
+
+model SessionTelemetryBatch {
+  id        String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId String            @db.Uuid
+  session   AssessmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sequence  Int
+  events    Json
+  createdAt DateTime          @default(now())
+
+  @@unique([sessionId, sequence])
+  @@index([sessionId])
+}
+
+model ExecutionJob {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId      String            @db.Uuid
+  session        AssessmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  status         ExecutionStatus   @default(QUEUED)
+  language       String
+  code           String
+  runtimeVersion String?
+  containerImage String?
+
+  artifacts ExecutionArtifact[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sessionId])
+}
+
+model ExecutionArtifact {
+  id              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  jobId           String       @db.Uuid
+  job             ExecutionJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  stdout          String?
+  stderr          String?
+  exitCode        Int?
+  queueWaitMs     Int?
+  startupTimeMs   Int?
+  executionTimeMs Int?
+  memoryUsedBytes Int?
+  createdAt       DateTime     @default(now())
 }
 
 model APIKey {
@@ -410,7 +538,13 @@ model AgentExecution {
   traceId  String
   metadata Json?
 
-  version Int @default(1) // Optimistic concurrency control
+  tenantId      String  @db.Uuid
+  workspaceId   String? @db.Uuid
+  correlationId String
+
+  version Int @default(1)
+
+  // Optimistic concurrency control
 
   steps       AgentExecutionStep[]
   events      AgentExecutionEvent[]
@@ -420,6 +554,14 @@ model AgentExecution {
   checkpoints AgentExecutionCheckpoint[]
   outbox      AgentExecutionOutbox[]
   inbox       AgentExecutionInbox[]
+
+  @@index([agentId])
+  @@index([traceId])
+  @@index([status])
+  @@index([tenantId, status])
+  @@index([tenantId, workspaceId])
+  @@index([tenantId, startedAt])
+  @@index([correlationId])
 }
 
 model AgentExecutionStep {
@@ -486,7 +628,12 @@ model AgentExecutionLease {
 
   ownerId   String // ID of the distributed worker holding the lease
   expiresAt DateTime
-  version   Int      @default(1) // Optimistic concurrency for lease renewal
+  version   Int      @default(1)
+
+  fencingToken      BigInt           @default(1)
+  // Optimistic concurrency for lease renewal
+  executionWorker   ExecutionWorker? @relation(fields: [executionWorkerId], references: [id])
+  executionWorkerId String?
 }
 
 model AgentExecutionCheckpoint {
@@ -517,8 +664,13 @@ model AgentExecutionOutbox {
   retries     Int       @default(0)
   nextRetryAt DateTime?
 
+  lastError        String? @db.Text
+  deduplicationKey String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([executionId, deduplicationKey])
 }
 
 model AgentExecutionInbox {
@@ -1516,13 +1668,28 @@ enum WorkflowStatus {
   DEPRECATED
 }
 
+enum SessionStatus {
+  INITIALIZED
+  READY
+  ACTIVE
+  PAUSED
+  RESUMED
+  SUBMITTED
+  EXPIRED
+  TERMINATED
+}
+
 enum ExecutionStatus {
   QUEUED
+  ALLOCATING
+  STARTING
   RUNNING
+  STREAMING
   WAITING_FOR_HUMAN
   COMPLETED
   FAILED
   TIMEOUT
+  TIMED_OUT
   CANCELLED
 }
 
@@ -1565,7 +1732,7 @@ enum AuditSeverity {
 }
 
 model Organization {
-  id           String    @id @default(dbgenerated("('org_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  id           String    @id @default(dbgenerated("('org_'::text || replace((uuid_generate_v4())::text, '-'::text, ''::text))"))
   name         String
   slug         String    @unique
   logoUrl      String?
@@ -1620,7 +1787,7 @@ model Invitation {
 }
 
 model KnowledgeDocument {
-  id           String         @id @default(dbgenerated("('doc_' || replace(uuid_generate_v4()::text, '-', ''))"))
+  id           String         @id @default(dbgenerated("('doc_'::text || replace((uuid_generate_v4())::text, '-'::text, ''::text))"))
   collectionId String
   orgId        String
   title        String
@@ -1987,4 +2154,19 @@ model ArchiveSearchQuery {
   createdAt   DateTime @default(now())
 
   @@index([tenantId, createdAt])
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 9/10: CANONICAL PLATFORM EXECUTION (ADR-039)
+// -----------------------------------------------------------------------------
+
+model ExecutionWorker {
+  id              String   @id
+  metadata        Json?
+  registeredAt    DateTime @default(now())
+  lastHeartbeatAt DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  leases AgentExecutionLease[]
 }

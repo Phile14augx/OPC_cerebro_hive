@@ -11,7 +11,7 @@ class MockRegistry extends ReducerRegistry {
 }
 
 class MockStore {
-  public events: ExecutionEvent<any>[] = [];
+  public events: ExecutionEvent<unknown>[] = [];
   async getEvents(id: string, after?: bigint) { return this.events; }
   async getLatestSnapshot() { return null; }
 }
@@ -19,8 +19,8 @@ class MockStore {
 describe('Gate C - Security & Tenant Isolation Certification', () => {
 
   it('should enforce tenant isolation during replay', async () => {
-    const store = new MockStore() as any;
-    const replayService = new ExecutionReplayService(store, new MockRegistry(), { upcastEvent: e => e } as any);
+    const store = new MockStore() as unknown;
+    const replayService = new ExecutionReplayService(store, new MockRegistry(), { upcastEvent: e => e } as unknown);
     const execId = 'secure-1';
 
     // Mix events from two tenants

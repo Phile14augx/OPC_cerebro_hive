@@ -28,6 +28,8 @@ export interface ExecutionMetrics {
   totalTokens: number;
   totalCostUsd: number;
   nodeMetrics: Record<string, NodeMetrics>;
+  finish(): void;
+  snapshot(): Readonly<ExecutionMetrics>;
 }
 
 export class DefaultExecutionMetrics implements ExecutionMetrics {

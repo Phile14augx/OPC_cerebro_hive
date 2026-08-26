@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { LineChart, BarChart, ArrowRight, Target, Activity } from "lucide-react";
+import { ArrowRight, Target, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const opinions = [

@@ -26,8 +26,7 @@ export class BaseProvider {
    * @param {string} prompt
    * @returns {[string, string[]]}
    */
-  // eslint-disable-next-line no-unused-vars
-  buildCommand(prompt) {
+  buildCommand(_prompt) {
     throw new Error(`${this.name} must implement buildCommand()`);
   }
 

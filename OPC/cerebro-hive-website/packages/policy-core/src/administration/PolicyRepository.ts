@@ -6,7 +6,7 @@ export interface PolicyRepository {
   savePolicyVersion(policy: PolicyRule): Promise<void>;
   getPolicyVersion(policyId: string, version: string): Promise<PolicyRule | undefined>;
   getLatestActivePolicy(policyId: string): Promise<PolicyRule | undefined>;
-  updatePolicyState(policyId: string, version: string, newState: string): Promise<void>;
+  updatePolicyState(policyId: string, version: string, newState: PolicyRule['lifecycleState']): Promise<void>;
   
   // Bundle Methods
   saveBundleVersion(bundle: PolicyBundle): Promise<void>;
@@ -36,7 +36,7 @@ export class MemoryPolicyRepository implements PolicyRepository {
     return matches.sort((a, b) => b.version.localeCompare(a.version))[0];
   }
 
-  async updatePolicyState(policyId: string, version: string, newState: any): Promise<void> {
+  async updatePolicyState(policyId: string, version: string, newState: PolicyRule['lifecycleState']): Promise<void> {
     const policy = await this.getPolicyVersion(policyId, version);
     if (policy) {
       policy.lifecycleState = newState;

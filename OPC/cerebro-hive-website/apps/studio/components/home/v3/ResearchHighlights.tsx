@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { BookOpen, ArrowDown, Bot, Database, Target, ArrowRight } from "lucide-react";
+import { BookOpen, ArrowDown, Bot, Target, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/cerebro/primitives/Section";
 import { PageContainer } from "@/components/cerebro/primitives/PageContainer";

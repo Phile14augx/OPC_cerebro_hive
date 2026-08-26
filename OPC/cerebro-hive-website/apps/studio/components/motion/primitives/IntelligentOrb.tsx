@@ -68,7 +68,7 @@ export function IntelligentOrb({
       case "completed":
         return {
           animate: { scale: [0.9, 1.1, 1], boxShadow: `0 0 15px ${color}` },
-          transition: { duration: 0.5, ease: motionTokens.easing.spring as any }
+          transition: { duration: 0.5, ease: motionTokens.easing.spring }
         };
       case "monitoring":
         return {

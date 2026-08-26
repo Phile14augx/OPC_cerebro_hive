@@ -7,8 +7,10 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint --max-warnings=0 .",
     "dev": "tsc -w",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "vitest run"
   },
   "dependencies": {
     "@cerebro/contracts": "workspace:*",

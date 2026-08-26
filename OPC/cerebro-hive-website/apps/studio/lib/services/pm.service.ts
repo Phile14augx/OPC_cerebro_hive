@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { decomposeEpic } from '@/lib/agents/pm-agent/provider';
 import { PmRepository } from '@/lib/repositories/pm.repository';
 import { AuditService } from '@/lib/services/audit.service';
@@ -25,18 +24,32 @@ export class PmService {
       const epic = await PmRepository.createEpicFromDecomposition(projectId, title, body, decomposition);
 
       // 3. Log Audit Event
-      await AuditService.log('pm_agent.epic_decomposed', `Epic:${epic.id}`, userId, {
-        projectId,
-        requestId,
-        riskLevel: decomposition.riskLevel,
-        storyPoints: decomposition.storyPoints,
+      await AuditService.write({
+        workspaceId: projectId,
+        userId,
+        action: 'pm_agent.epic_decomposed',
+        resource: 'Epic',
+        resourceId: epic.id,
+        metadata: {
+          projectId,
+          requestId,
+          riskLevel: decomposition.riskLevel,
+          storyPoints: decomposition.storyPoints,
+        }
       });
 
       return epic;
     } catch (error) {
-      await AuditService.log('pm_agent.epic_decomposition_failed', `Project:${projectId}`, userId, {
-        requestId,
-        error: error instanceof Error ? error.message : 'Unknown error',
+      await AuditService.write({
+        workspaceId: projectId,
+        userId,
+        action: 'pm_agent.epic_decomposition_failed',
+        resource: 'Project',
+        resourceId: projectId,
+        metadata: {
+          requestId,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        }
       });
       throw error;
     }

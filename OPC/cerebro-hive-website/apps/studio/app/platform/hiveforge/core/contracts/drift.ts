@@ -15,8 +15,8 @@ export interface DriftReport {
   
   differences: {
     path: string;
-    expected: any;
-    actual: any;
+    expected: unknown;
+    actual: unknown;
   }[];
 }
 

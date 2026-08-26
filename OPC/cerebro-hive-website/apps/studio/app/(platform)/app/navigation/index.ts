@@ -1,7 +1,7 @@
 import {
-  Home, Rocket, BrainCircuit, Box, Server, Database,
+  Rocket, BrainCircuit, Box, Server, Database,
   ShieldCheck, Zap, FlaskConical, GraduationCap,
-  Briefcase, MessageSquare, Settings,
+  Briefcase, MessageSquare,
   LayoutDashboard, Building2, FolderKanban, Users,
   Bot, GitMerge, Gamepad2, Network, Library, BookOpen, DatabaseZap,
   ShoppingCart, LayoutTemplate, Layers, Factory, Code2,
@@ -15,8 +15,8 @@ import {
   Sparkles, HelpCircle, Ticket, Users2, ActivitySquare, Target,
   // CerebroForge icons
   Hammer, Brain, PenTool, Smartphone, Globe, Monitor, MessageCircle,
-  FlaskConical as Flask, TestTube2, Truck, GitBranch, ScanSearch,
-  FileCode2, Cpu, Layers3, TerminalSquare, Webhook, Boxes,
+  TestTube2, Truck, GitBranch, ScanSearch,
+  FileCode2, Layers3, Webhook,
   // HiveOps
   DollarSign,
   type LucideIcon

@@ -3,7 +3,7 @@ import { EngineeringReviewReport } from '../../domain/aggregates/EngineeringRevi
 import { ReviewVerdict } from '../../domain/value-objects/ReviewVerdict';
 import { ReviewEvaluationStarted } from '../../domain/events/DomainEvents';
 import { ConfidenceAggregationEngine } from '../../domain/services/ConfidenceAggregationEngine';
-import type { IReviewContributor } from '../../infrastructure/ports/IReviewContributor';
+import type { ContributorResult, IReviewContributor } from '../../infrastructure/ports/IReviewContributor';
 import type { IEngineeringReviewRepository } from '../../infrastructure/ports/IEngineeringReviewRepository';
 
 export class EngineeringReviewOrchestrator {
@@ -26,15 +26,14 @@ export class EngineeringReviewOrchestrator {
 
     // 4. Execute contributors (Concurrent)
     const results = await Promise.all(this.contributors.map(c => 
-      c.execute(snapshotId, changeset).catch(err => ({
-        findings: [], evidence: [], executionMetadata: { error: err.message },
+      c.execute(snapshotId, changeset).catch((error: unknown): ContributorResult => ({
+        findings: [], evidence: [], executionMetadata: { error: error instanceof Error ? error.message : String(error) },
         durationMs: 0, confidence: 0, status: 'FAILED'
-      } as any))
+      }))
     ));
 
     // 5. Aggregate findings & 6. Policy evaluation
     const allFindings = results.flatMap(r => r.findings);
-    const allEvidence = results.flatMap(r => r.evidence); // Handled by EvidenceStore in real impl
 
     // 7. Confidence aggregation
     const confidence = ConfidenceAggregationEngine.compute(allFindings);

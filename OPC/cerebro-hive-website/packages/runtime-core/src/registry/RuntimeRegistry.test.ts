@@ -5,7 +5,7 @@ import type { LLMProvider, LLMMessage } from '../plugins/CapabilityProvider';
 
 class DummyLLM implements LLMProvider {
   constructor(private readonly label: string) {}
-  async invokeModel(_messages: LLMMessage[], _context: any): Promise<string> {
+  async invokeModel(_messages: LLMMessage[], _context: unknown): Promise<string> {
     return this.label;
   }
 }

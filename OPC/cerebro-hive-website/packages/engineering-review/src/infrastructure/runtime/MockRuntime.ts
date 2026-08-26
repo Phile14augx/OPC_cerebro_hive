@@ -26,8 +26,8 @@ class MockSession implements SandboxSession {
 
   getLogStream(): ILogStream {
     return {
-      onData: (cb) => { cb('Mock log output'); },
-      onError: (cb) => { }
+      onLog: (_cb: (msg: string) => void) => { _cb('Mock log output'); },
+      onError: (_cb) => { }
     };
   }
 

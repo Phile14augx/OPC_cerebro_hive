@@ -5,10 +5,10 @@ import { ExecutionEvent } from '../../../../runtime-contracts/src/events/Executi
 
 // Mock Execution Store that simulates optimistic concurrency and transactions
 class MockExecutionStore implements ExecutionStore {
-  public executions = new Map<string, { expectedVersion: number; fencingToken: bigint; events: ExecutionEvent<any>[]; outbox: any[] }>();
-  public snapshots = new Map<string, { sequence: bigint; state: any; hash: string }>();
+  public executions = new Map<string, { expectedVersion: number; fencingToken: bigint; events: ExecutionEvent<unknown>[]; outbox: unknown[] }>();
+  public snapshots = new Map<string, { sequence: bigint; state: unknown; hash: string }>();
 
-  async getEvents(executionId: string, fromSequence?: bigint): Promise<ExecutionEvent<any>[]> {
+  async getEvents(executionId: string, fromSequence?: bigint): Promise<ExecutionEvent<unknown>[]> {
     const exec = this.executions.get(executionId);
     if (!exec) return [];
     if (fromSequence) {
@@ -17,7 +17,7 @@ class MockExecutionStore implements ExecutionStore {
     return exec.events;
   }
 
-  async appendEvents(executionId: string, expectedVersion: number, events: ExecutionEvent<any>[], fencingToken: bigint, outboxEntries?: any[]): Promise<void> {
+  async appendEvents(executionId: string, expectedVersion: number, events: ExecutionEvent<unknown>[], fencingToken: bigint, outboxEntries?: unknown[]): Promise<void> {
     const exec = this.executions.get(executionId) || { expectedVersion: -1, fencingToken: 0n, events: [], outbox: [] };
     
     // Simulate Fencing Token Rejection (Lease Expiration)
@@ -39,11 +39,11 @@ class MockExecutionStore implements ExecutionStore {
     this.executions.set(executionId, exec);
   }
 
-  async saveSnapshot(executionId: string, sequence: bigint, state: any, fencingToken: bigint, hash: string): Promise<void> {
+  async saveSnapshot(executionId: string, sequence: bigint, state: unknown, fencingToken: bigint, hash: string): Promise<void> {
     this.snapshots.set(executionId, { sequence, state, hash });
   }
 
-  async getLatestSnapshot(executionId: string): Promise<any> {
+  async getLatestSnapshot(executionId: string): Promise<unknown> {
     return this.snapshots.get(executionId) || null;
   }
 
@@ -58,7 +58,7 @@ describe('Worker Crash & Reliability Simulation', () => {
     const execId = 'exec-crash-1';
     
     // Worker A appends an event but crashes BEFORE dispatching outbox or updating read models
-    await store.appendEvents(execId, -1, [{ sequence: 1n, type: 'LLMCompleted', payload: {} }] as any, 10n);
+    await store.appendEvents(execId, -1, [{ sequence: 1n, type: 'LLMCompleted', payload: {} }] as unknown, 10n);
     
     // Worker B picks up the execution later
     const events = await store.getEvents(execId);
@@ -75,7 +75,7 @@ describe('Worker Crash & Reliability Simulation', () => {
     
     // Worker A commits both Event and Outbox entry in a single transaction, then crashes
     const outboxMsg = { id: 'msg-1', dispatched: false };
-    await store.appendEvents(execId, -1, [{ sequence: 1n, type: 'ToolRequested' }] as any, 10n, [outboxMsg]);
+    await store.appendEvents(execId, -1, [{ sequence: 1n, type: 'ToolRequested' }] as unknown, 10n, [outboxMsg]);
 
     // Worker B steals lease and drains outbox
     const execData = store.executions.get(execId)!;
@@ -92,14 +92,14 @@ describe('Worker Crash & Reliability Simulation', () => {
     const execId = 'exec-lease-1';
     
     // Worker A gets lease token 10n
-    await store.appendEvents(execId, -1, [{ sequence: 1n, type: 'Started' }] as any, 10n);
+    await store.appendEvents(execId, -1, [{ sequence: 1n, type: 'Started' }] as unknown, 10n);
 
     // Worker A hangs. Lease expires. Worker B steals lease, gets token 20n
-    await store.appendEvents(execId, 0, [{ sequence: 2n, type: 'Ping' }] as any, 20n);
+    await store.appendEvents(execId, 0, [{ sequence: 2n, type: 'Ping' }] as unknown, 20n);
 
     // Worker A wakes up and tries to write with stale token 10n
     await expect(
-      store.appendEvents(execId, 1, [{ sequence: 3n, type: 'LateWrite' }] as any, 10n)
+      store.appendEvents(execId, 1, [{ sequence: 3n, type: 'LateWrite' }] as unknown, 10n)
     ).rejects.toThrow('Stale fencing token');
   });
 
@@ -112,7 +112,7 @@ describe('Worker Crash & Reliability Simulation', () => {
       { sequence: 1n, type: 'E1' },
       { sequence: 2n, type: 'E2' },
       { sequence: 3n, type: 'E3' }
-    ] as any, 10n);
+    ] as unknown, 10n);
 
     // Save corrupted snapshot (wrong hash)
     await store.saveSnapshot(execId, 3n, { corrupted: true }, 10n, 'bad-hash');

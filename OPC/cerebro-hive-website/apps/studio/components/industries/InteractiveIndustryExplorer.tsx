@@ -2,11 +2,10 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { industriesData, getAllCategories, getIndustriesByTier } from '@/lib/data/industries';
+import { industriesData, getAllCategories } from '@/lib/data/industries';
 import { Search, ChevronRight, ChevronDown, Hexagon, BrainCircuit } from 'lucide-react';
 import { TrackedLink } from '@/components/cerebro/TrackedLink';
 import { TrackedButton } from '@/components/cerebro/TrackedButton';
-import { AnimatedConnector } from '../motion/primitives/AnimatedConnector';
 import { IntelligentOrb } from '../motion/primitives/IntelligentOrb';
 
 export function InteractiveIndustryExplorer() {

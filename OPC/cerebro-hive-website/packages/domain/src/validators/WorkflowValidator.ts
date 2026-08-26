@@ -1,9 +1,13 @@
-import { ValidDagSpecification } from '../specifications/WorkflowSpecifications';
+import {
+  ValidDagSpecification,
+  WorkflowEdge,
+  WorkflowNode,
+} from '../specifications/WorkflowSpecifications';
 
 export class WorkflowValidator {
   private validDagSpec = new ValidDagSpecification();
 
-  validatePublish(nodes: any[], edges: any[]) {
+  validatePublish(nodes: readonly WorkflowNode[], edges: readonly WorkflowEdge[]) {
     const errors: string[] = [];
     if (!nodes || nodes.length === 0) errors.push("Workflow must contain at least one node.");
     if (!this.validDagSpec.isSatisfiedBy(nodes, edges)) errors.push("Workflow contains invalid edges with missing nodes.");

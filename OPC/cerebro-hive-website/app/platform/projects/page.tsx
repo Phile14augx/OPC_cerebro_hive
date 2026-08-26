@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Layers, AlertTriangle, BarChart2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 type Tab = "projects" | "risks" | "resources";
 type Health = "on_track" | "at_risk" | "delayed";

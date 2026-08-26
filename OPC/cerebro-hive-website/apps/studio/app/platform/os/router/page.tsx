@@ -23,7 +23,7 @@ export default function RouterPage() {
     try { setCatalog((await api<{ models: ModelProfile[] }>("/v1/router/catalog")).models); } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const routeText = useCallback(async () => {
     setBusy(true); setError(null);

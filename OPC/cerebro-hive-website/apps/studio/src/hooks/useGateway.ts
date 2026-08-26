@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { GatewayClient } from '@cerebro/sdk';
 import { usePlaygroundStore } from '../store/usePlaygroundStore';
 import { v4 as uuidv4 } from 'uuid';
+import { parseCompletionMetadata } from './gatewayMetadata';
 
 const gatewayClient = new GatewayClient('http://localhost:3000');
 
@@ -35,9 +36,10 @@ export function useGatewayStream() {
       for await (const chunk of stream) {
         if (cancelRef.current) break;
         store.updateLastMessage(chunk.text);
-        if (chunk.isDone && chunk.metadata) {
-          store.setEvaluation(chunk.metadata.evaluations);
-          store.setTokenUsage(chunk.metadata.tokens);
+        const metadata = chunk.isDone ? parseCompletionMetadata(chunk.metadata) : undefined;
+        if (metadata) {
+          store.setEvaluation(metadata.evaluations);
+          store.setTokenUsage(metadata.tokens);
         }
       }
     } catch (err) {

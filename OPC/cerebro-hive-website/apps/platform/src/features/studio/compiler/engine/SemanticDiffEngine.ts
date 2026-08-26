@@ -1,11 +1,11 @@
 
 import { WorkflowVersion, WorkflowDiff } from '../lifecycle/WorkflowVersion';
-import { CompilationArtifacts } from './CompilationContext';
 import { DependencyGraph } from '../cache/DependencyGraph';
 
 export class SemanticDiffEngine {
   
   static computeDiff(v1: WorkflowVersion, v2: WorkflowVersion, v2DepGraph: DependencyGraph): WorkflowDiff {
+    void v2DepGraph;
     const nodes1 = new Set(v1.graph.nodes.map(n => n.id));
     const nodes2 = new Set(v2.graph.nodes.map(n => n.id));
 

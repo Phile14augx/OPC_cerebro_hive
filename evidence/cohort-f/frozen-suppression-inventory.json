@@ -1,0 +1,380 @@
+[
+    {
+        "line":  55,
+        "id":  "W0.2-SUP-001",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/agents/[id]/page.tsx"
+    },
+    {
+        "line":  38,
+        "id":  "W0.2-SUP-002",
+        "original_directive":  "// eslint-disable-next-line renders -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/architect/page.tsx"
+    },
+    {
+        "line":  3,
+        "id":  "W0.2-SUP-003",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/codegen/page.tsx"
+    },
+    {
+        "line":  5,
+        "id":  "W0.2-SUP-004",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/codegen/page.tsx"
+    },
+    {
+        "line":  9,
+        "id":  "W0.2-SUP-005",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/codegen/page.tsx"
+    },
+    {
+        "line":  7,
+        "id":  "W0.2-SUP-006",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/deploy/page.tsx"
+    },
+    {
+        "line":  9,
+        "id":  "W0.2-SUP-007",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/deploy/page.tsx"
+    },
+    {
+        "line":  11,
+        "id":  "W0.2-SUP-008",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/deploy/page.tsx"
+    },
+    {
+        "line":  61,
+        "id":  "W0.2-SUP-009",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/deploy/page.tsx"
+    },
+    {
+        "line":  63,
+        "id":  "W0.2-SUP-010",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/deploy/page.tsx"
+    },
+    {
+        "line":  65,
+        "id":  "W0.2-SUP-011",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/deploy/page.tsx"
+    },
+    {
+        "line":  6,
+        "id":  "W0.2-SUP-012",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/planner/page.tsx"
+    },
+    {
+        "line":  9,
+        "id":  "W0.2-SUP-013",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/planner/page.tsx"
+    },
+    {
+        "line":  18,
+        "id":  "W0.2-SUP-014",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/planner/page.tsx"
+    },
+    {
+        "line":  44,
+        "id":  "W0.2-SUP-015",
+        "original_directive":  "// eslint-disable-next-line renders -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/planner/page.tsx"
+    },
+    {
+        "line":  51,
+        "id":  "W0.2-SUP-016",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/requirements/page.tsx"
+    },
+    {
+        "line":  71,
+        "id":  "W0.2-SUP-017",
+        "original_directive":  "// eslint-disable-next-line renders -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/requirements/page.tsx"
+    },
+    {
+        "line":  9,
+        "id":  "W0.2-SUP-018",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/review/page.tsx"
+    },
+    {
+        "line":  15,
+        "id":  "W0.2-SUP-019",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/review/page.tsx"
+    },
+    {
+        "line":  8,
+        "id":  "W0.2-SUP-020",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/testing/page.tsx"
+    },
+    {
+        "line":  10,
+        "id":  "W0.2-SUP-021",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/forge/testing/page.tsx"
+    },
+    {
+        "line":  8,
+        "id":  "W0.2-SUP-022",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/hiveops/layout.tsx"
+    },
+    {
+        "line":  2,
+        "id":  "W0.2-SUP-023",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/navigation/index.ts"
+    },
+    {
+        "line":  5,
+        "id":  "W0.2-SUP-024",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/navigation/index.ts"
+    },
+    {
+        "line":  20,
+        "id":  "W0.2-SUP-025",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/navigation/index.ts"
+    },
+    {
+        "line":  22,
+        "id":  "W0.2-SUP-026",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/navigation/index.ts"
+    },
+    {
+        "line":  5,
+        "id":  "W0.2-SUP-027",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/assessments/[id]/page.tsx"
+    },
+    {
+        "line":  7,
+        "id":  "W0.2-SUP-028",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/assessments/[id]/page.tsx"
+    },
+    {
+        "line":  12,
+        "id":  "W0.2-SUP-029",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/assessments/[id]/page.tsx"
+    },
+    {
+        "line":  221,
+        "id":  "W0.2-SUP-030",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/assessments/[id]/page.tsx"
+    },
+    {
+        "line":  6,
+        "id":  "W0.2-SUP-031",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/builder/page.tsx"
+    },
+    {
+        "line":  8,
+        "id":  "W0.2-SUP-032",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/builder/page.tsx"
+    },
+    {
+        "line":  25,
+        "id":  "W0.2-SUP-033",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/builder/page.tsx"
+    },
+    {
+        "line":  92,
+        "id":  "W0.2-SUP-034",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/builder/page.tsx"
+    },
+    {
+        "line":  192,
+        "id":  "W0.2-SUP-035",
+        "original_directive":  "// eslint-disable-next-line react/jsx-no-comment-textnodes -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/builder/page.tsx"
+    },
+    {
+        "line":  11,
+        "id":  "W0.2-SUP-036",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/candidates/[id]/page.tsx"
+    },
+    {
+        "line":  13,
+        "id":  "W0.2-SUP-037",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/candidates/[id]/page.tsx"
+    },
+    {
+        "line":  5,
+        "id":  "W0.2-SUP-038",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/page.tsx"
+    },
+    {
+        "line":  7,
+        "id":  "W0.2-SUP-039",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/talent/page.tsx"
+    },
+    {
+        "line":  41,
+        "id":  "W0.2-SUP-040",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/workflows/[id]/page.tsx"
+    },
+    {
+        "line":  2,
+        "id":  "W0.2-SUP-041",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/layout.tsx"
+    },
+    {
+        "line":  4,
+        "id":  "W0.2-SUP-042",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/layout.tsx"
+    },
+    {
+        "line":  6,
+        "id":  "W0.2-SUP-043",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/page.tsx"
+    },
+    {
+        "line":  8,
+        "id":  "W0.2-SUP-044",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/page.tsx"
+    },
+    {
+        "line":  129,
+        "id":  "W0.2-SUP-045",
+        "original_directive":  "// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/app/page.tsx"
+    },
+    {
+        "line":  5,
+        "id":  "W0.2-SUP-046",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/archive/documents/page.tsx"
+    },
+    {
+        "line":  4,
+        "id":  "W0.2-SUP-047",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/archive/prompts/page.tsx"
+    },
+    {
+        "line":  10,
+        "id":  "W0.2-SUP-048",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/archive/prompts/page.tsx"
+    },
+    {
+        "line":  66,
+        "id":  "W0.2-SUP-049",
+        "original_directive":  "// eslint-disable-next-line react/no-unescaped-entities -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/archive/search/page.tsx"
+    },
+    {
+        "line":  3,
+        "id":  "W0.2-SUP-050",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/studio/components/EventStream.tsx"
+    },
+    {
+        "line":  7,
+        "id":  "W0.2-SUP-051",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/studio/components/EventStream.tsx"
+    },
+    {
+        "line":  9,
+        "id":  "W0.2-SUP-052",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/studio/evaluation/page.tsx"
+    },
+    {
+        "line":  4,
+        "id":  "W0.2-SUP-053",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/studio/events/page.tsx"
+    },
+    {
+        "line":  3,
+        "id":  "W0.2-SUP-054",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/studio/knowledge/page.tsx"
+    },
+    {
+        "line":  9,
+        "id":  "W0.2-SUP-055",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/studio/prompts/page.tsx"
+    },
+    {
+        "line":  62,
+        "id":  "W0.2-SUP-056",
+        "original_directive":  "// eslint-disable-next-line renders -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/studio/settings/page.tsx"
+    },
+    {
+        "line":  3,
+        "id":  "W0.2-SUP-057",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/studio/traces/page.tsx"
+    },
+    {
+        "line":  168,
+        "id":  "W0.2-SUP-058",
+        "original_directive":  "// eslint-disable-next-line render -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/(platform)/studio/workflows/[id]/executions/[execId]/page.tsx"
+    },
+    {
+        "line":  23,
+        "id":  "W0.2-SUP-059",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/api/v1/hiveforge/catalog/route.ts"
+    },
+    {
+        "line":  10,
+        "id":  "W0.2-SUP-060",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/api/v1/hiveforge/deployments/route.ts"
+    },
+    {
+        "line":  6,
+        "id":  "W0.2-SUP-061",
+        "original_directive":  "// eslint-disable-next-line @typescript-eslint/no-unused-vars -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/api/webhooks/github/route.ts"
+    },
+    {
+        "line":  19,
+        "id":  "W0.2-SUP-062",
+        "original_directive":  "// eslint-disable-next-line renders -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/platform/x/page.tsx"
+    },
+    {
+        "line":  26,
+        "id":  "W0.2-SUP-063",
+        "original_directive":  "// eslint-disable-next-line renders -- ARCH-LINT: Deferred",
+        "file":  "apps/studio/app/prompts/[id]/page.tsx"
+    }
+]

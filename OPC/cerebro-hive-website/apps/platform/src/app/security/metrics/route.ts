@@ -1,6 +1,6 @@
 /**
  * Security Metrics & Health Endpoint
- * 
+ *
  * Month 1 Implementation: Week 4 - Observability, Logging & Content Sprint
  * Part of: Prometheus and Grafana dashboard setup
  */
@@ -140,11 +140,11 @@ export async function POST(request: NextRequest) {
     }));
 
     return NextResponse.json({ status: "accepted" }, { status: 202 });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Invalid JSON" },
       { status: 400 }
     );
   }
 }
-
+

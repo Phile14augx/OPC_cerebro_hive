@@ -1,4 +1,4 @@
-import { Entitlement } from '../entitlements/Entitlement';
+
 
 export interface SoDRule {
   id: string;

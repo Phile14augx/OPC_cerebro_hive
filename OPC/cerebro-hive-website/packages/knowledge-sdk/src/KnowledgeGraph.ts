@@ -1,5 +1,5 @@
 
-export interface GraphEntity { id: string; label: string; properties: Record<string, any>; }
+export interface GraphEntity { id: string; label: string; properties: Record<string, unknown>; }
 export interface GraphRelationship { source: string; target: string; type: string; weight: number; }
 
 export interface KnowledgeGraph {

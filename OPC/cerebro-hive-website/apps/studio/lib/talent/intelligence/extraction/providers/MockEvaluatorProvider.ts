@@ -1,29 +1,28 @@
-// @ts-nocheck
 import { IAIEvaluatorProvider, EvaluatorContext, EvaluatedCapability } from './interfaces';
 
 export class MockEvaluatorProvider implements IAIEvaluatorProvider {
   async evaluate(context: EvaluatorContext): Promise<{ evaluatorVersion: string; capabilities: EvaluatedCapability[] }> {
-    const { executionArtifacts } = context;
+    const artifacts = context.executionArtifacts as { exitCode?: number, executionTimeMs?: number, memoryUsedBytes?: number } | undefined;
     
     // Deterministic Mock Logic mapping raw execution data to Skill Scores
     
     // Base score based on whether the code compiled/ran successfully
-    const success = executionArtifacts?.exitCode === 0;
+    const success = artifacts?.exitCode === 0;
     const baseScore = success ? 75 : 30;
     
     // Time efficiency signal
-    const timeMs = executionArtifacts?.executionTimeMs || 1000;
+    const timeMs = artifacts?.executionTimeMs || 1000;
     const timeBonus = timeMs < 500 ? 10 : 0;
     
     // Memory efficiency signal
-    const memory = executionArtifacts?.memoryUsedBytes || 0;
+    const memory = artifacts?.memoryUsedBytes || 0;
     const memoryBonus = memory < 1024 * 1024 * 15 ? 10 : 0;
 
     const finalScore = Math.min(100, baseScore + timeBonus + memoryBonus);
 
     const problemSolvingReasoning = success 
       ? `Execution completed successfully in ${timeMs}ms with optimized memory (${Math.round(memory/1024/1024)}MB).` 
-      : `Execution failed with exit code ${executionArtifacts?.exitCode}.`;
+      : `Execution failed with exit code ${artifacts?.exitCode}.`;
 
     return {
       evaluatorVersion: 'MockEvaluator_v1.0.0',

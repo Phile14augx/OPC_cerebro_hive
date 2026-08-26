@@ -1,6 +1,5 @@
-import { ExtensionManifest, Plugin, PluginContext } from "../../core/contracts/plugin";
+import { ExtensionManifest, Plugin } from "../../core/contracts/plugin";
 import { ServiceManifest } from "../../core/contracts/service";
-import { platformRegistry } from "../../core/registry/PlatformRegistry";
 
 export const databaseCloudManifest: ExtensionManifest = {
   schemaVersion: "1.0",
@@ -34,8 +33,8 @@ export const postgresService: ServiceManifest = {
 
 export class DatabaseCloudPlugin implements Plugin {
   readonly manifest = databaseCloudManifest;
-  state: any = "installed";
-  health: any = "Starting";
+  state: import("../../core/contracts/plugin").PluginLifecycleState = "installed";
+  health: import("../../core/contracts/plugin").PluginHealthState = "Starting";
   
   navigationNodes = [
     {
@@ -56,7 +55,7 @@ export class DatabaseCloudPlugin implements Plugin {
     }
   ];
 
-  async register(context: PluginContext) {
+  async register() {
     // Register the Postgres Service into a (mock) service registry if we had one.
     // We can also just rely on the plugin being registered.
   }

@@ -18,7 +18,7 @@ class MockRegistry extends ReducerRegistry {
 
 // Dummy Store
 class MockStore {
-  public events: ExecutionEvent<any>[] = [];
+  public events: ExecutionEvent<unknown>[] = [];
   
   async getEvents(id: string, after?: bigint) {
     if (after) return this.events.filter(e => e.sequence > after);
@@ -32,9 +32,9 @@ class MockStore {
 describe('Gate A - Long-Running Workflow Certification', () => {
 
   it('should maintain memory stability over a massive 10,000 event continuous execution (Simulated 1 Week)', async () => {
-    const store = new MockStore() as any;
+    const store = new MockStore() as unknown;
     const registry = new MockRegistry();
-    const replayService = new ExecutionReplayService(store, registry, { upcastEvent: e => e } as any);
+    const replayService = new ExecutionReplayService(store, registry, { upcastEvent: e => e } as unknown);
 
     const execId = 'long-running-1';
     

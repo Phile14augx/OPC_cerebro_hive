@@ -4,7 +4,6 @@
 //          provider call → cost tracking → metrics → OTel spans
 // =============================================================================
 
-import { randomUUID } from 'crypto';
 import type { AIProvider } from './providers/base.provider';
 import { AnthropicProvider } from './providers/anthropic.provider';
 import { OpenAIProvider } from './providers/openai.provider';
@@ -22,11 +21,21 @@ import {
 } from './types';
 
 // Lazy-import telemetry so gateway can be used without OTel configured
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let telemetry: any;
+interface TelemetryBridge {
+  recordAIRequest(attributes: Record<string, unknown>): void;
+  withAISpan<T>(
+    operation: () => Promise<T>,
+    attributes: Record<string, unknown>,
+    resultAttributes: (result: T) => Record<string, unknown>
+  ): Promise<T>;
+  getAIMetrics(): {
+    activeStreams: { add(value: number, attributes: Record<string, string>): void };
+  };
+}
+
+let telemetry: TelemetryBridge | undefined;
 try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  telemetry = require('@cerebro/telemetry');
+  telemetry = require('@cerebro/telemetry') as TelemetryBridge;
 } catch {
   // telemetry not available — run silent
 }
@@ -85,7 +94,6 @@ export class AIGateway {
       // 1. Check cache
       if (this.config.enableCaching && !request.stream) {
         const cacheKey = ResponseCache.buildKey(request);
-        const ttl = request.cacheTTL ?? this.config.cacheTTL;
         const cached = this.cache.get(cacheKey);
         if (cached) {
           telemetry?.recordAIRequest({
@@ -144,7 +152,10 @@ export class AIGateway {
 
     this.enforceRateLimit(provider.name as ProviderName, request.organizationId);
 
-    const breaker = this.breakers.get(provider.name as ProviderName)!;
+    const breaker = this.breakers.get(provider.name as ProviderName);
+    if (!breaker) {
+      throw new GatewayError(`Provider ${provider.name} is not configured`, GATEWAY_ERRORS.NO_PROVIDER);
+    }
     if (!breaker.isAvailable()) {
       throw new GatewayError(`Provider ${provider.name} circuit open`, GATEWAY_ERRORS.CIRCUIT_OPEN, provider.name as ProviderName);
     }
@@ -192,7 +203,7 @@ export class AIGateway {
 
   getHealth() {
     return {
-      providers: Array.from(this.providers.entries()).map(([name, p]) => ({
+      providers: Array.from(this.providers.keys()).map((name) => ({
         name,
         circuitState: this.breakers.get(name)?.currentState ?? 'UNKNOWN',
       })),
@@ -216,13 +227,13 @@ export class AIGateway {
 
     let lastError: Error | undefined;
     for (const provider of ordered) {
-      const breaker = this.breakers.get(provider.name as ProviderName)!;
+      const breaker = this.breakers.get(provider.name as ProviderName);
+      if (!breaker) continue;
       if (!breaker.isAvailable()) continue;
 
       try {
         this.enforceRateLimit(provider.name as ProviderName, request.organizationId);
 
-        const start = Date.now();
         const response = await provider.complete(request);
         breaker.recordSuccess();
 

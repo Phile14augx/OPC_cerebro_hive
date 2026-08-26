@@ -34,7 +34,8 @@ export class DispositionManager {
     const schedule = this.lifecycleEngine.getSchedule(record.scheduleId);
     if (!schedule) return;
 
-    const approvals = this.pendingApprovals.get(recordId)!;
+    const approvals = this.pendingApprovals.get(recordId);
+    if (!approvals) return;
     approvals.add(approverId);
     console.log(`[DispositionManager] ✅ Approver ${approverId} approved disposition for Record ${recordId}`);
 

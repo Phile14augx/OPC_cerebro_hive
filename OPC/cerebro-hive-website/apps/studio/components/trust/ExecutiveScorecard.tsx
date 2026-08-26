@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useExecutiveStore } from '@/src/store/trust/useExecutiveStore';
-import { Shield, ShieldCheck, Activity, Scale, Server, FileText, Bell, AlertTriangle } from 'lucide-react';
+import { Shield, ShieldCheck, Activity, Scale, Server, FileText } from 'lucide-react';
 
 export function ExecutiveScorecard() {
   const { metrics, isLoading } = useExecutiveStore();

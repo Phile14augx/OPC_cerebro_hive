@@ -4,7 +4,7 @@
  * Loaded via vitest.config.ts `setupFiles`
  */
 
-import { beforeAll, afterAll } from "vitest";
+import { beforeAll } from "vitest";
 
 // Verify required env vars before any test runs
 beforeAll(() => {

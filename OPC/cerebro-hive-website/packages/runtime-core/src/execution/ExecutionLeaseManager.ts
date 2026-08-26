@@ -16,7 +16,7 @@ export interface ExecutionLeaseManager {
   /**
    * Registers a worker in the system, returning a workerId.
    */
-  registerWorker(workerId: string, metadata: any): Promise<void>;
+  registerWorker(workerId: string, metadata: unknown): Promise<void>;
 
   /**
    * Heartbeats a worker to prevent its leases from being reclaimed.

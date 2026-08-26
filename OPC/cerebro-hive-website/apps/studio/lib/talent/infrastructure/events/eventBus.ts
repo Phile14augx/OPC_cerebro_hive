@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { EventEmitter } from 'events';
 import { Logger } from '../observability/logger';
 
@@ -23,8 +22,7 @@ export type DomainEventType =
   | 'ExecutionFailed'
   | 'SandboxDestroyed'
   | 'WorkerReleased';
-
-export interface DomainEvent<T = any> {
+export interface DomainEvent<T = unknown> {
   type: DomainEventType;
   payload: T;
   timestamp: string;

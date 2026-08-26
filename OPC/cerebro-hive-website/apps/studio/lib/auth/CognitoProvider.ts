@@ -35,7 +35,7 @@ export class CognitoProvider implements IdentityProvider {
         email: user.signInDetails?.loginId || '',
         accessToken: session.tokens.accessToken.toString()
       };
-    } catch (err) {
+    } catch {
       return null;
     }
   }

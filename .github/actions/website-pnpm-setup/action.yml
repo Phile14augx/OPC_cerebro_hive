@@ -1,0 +1,30 @@
+name: Website pnpm setup
+description: Install pnpm, Node 22, and the Cerebro website workspace dependencies using the frozen lockfile.
+
+inputs:
+  node-version:
+    description: Node version
+    required: false
+    default: "22"
+
+runs:
+  using: composite
+  steps:
+    # packageManager in OPC/cerebro-hive-website/package.json is the source of
+    # truth (pnpm@9.15.0). Do not also pass "version: 9" — pnpm/action-setup
+    # treats that as a conflict with packageManager.
+    - uses: pnpm/action-setup@v4
+      with:
+        run_install: false
+        package_json_file: OPC/cerebro-hive-website/package.json
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+        cache-dependency-path: OPC/cerebro-hive-website/pnpm-lock.yaml
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: OPC/cerebro-hive-website
+      run: pnpm install --frozen-lockfile

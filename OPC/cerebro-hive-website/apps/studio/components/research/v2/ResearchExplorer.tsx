@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Filter, ChevronDown, Download, FileText, Database, Code2, ShieldCheck } from "lucide-react";
+import { Filter, FileText, Database, Code2, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";

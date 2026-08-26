@@ -3,7 +3,7 @@
 export interface IRNode {
   id: string;
   operation: string;
-  inputs: Record<string, any>;
+  inputs: Record<string, unknown>;
   dependencies: string[];
 }
 

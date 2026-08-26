@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { GitCommit, ArrowDown } from "lucide-react";
 
 const timeline = [
   { year: "2024", research: "First Enterprise RAG Framework", product: "Knowledge Hub Alpha" },

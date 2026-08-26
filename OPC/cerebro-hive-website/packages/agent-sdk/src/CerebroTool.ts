@@ -14,5 +14,5 @@ export interface CerebroTool {
    * @param args The arguments matching the tool's JSON schema.
    * @returns The result of the tool execution.
    */
-  execute(args: Record<string, any>): Promise<any>;
+  execute(args: Record<string, unknown>): Promise<unknown>;
 }

@@ -12,7 +12,7 @@ export class ToolRuntime {
    * anywhere that has a different context shape (e.g. runtime-core's
    * ExecutionContext, via ToolRuntimeToolProvider).
    */
-  async executeTool(name: string, args: any, context: unknown): Promise<any> {
+  async executeTool(name: string, args: unknown, context: unknown): Promise<unknown> {
     const metadata = this.registry.getMetadata(name);
     if (!metadata) {
       throw new Error(`Tool ${name} not found in registry`);
@@ -33,10 +33,10 @@ export class ToolRuntime {
     }
   }
 
-  private async executeSync(metadata: any, executor: any, args: any, context: unknown): Promise<any> {
+  private async executeSync(metadata: unknown, executor: unknown, args: unknown, context: unknown): Promise<unknown> {
     // In a real system, enforce timeoutMs here
     try {
-      const result = await executor.execute(args, context);
+      const result = await (executor as { execute(args: unknown, context: unknown): Promise<unknown> }).execute(args, context);
       // Telemetry success
       return result;
     } catch (e) {
@@ -45,7 +45,7 @@ export class ToolRuntime {
     }
   }
 
-  private async executeAsync(metadata: any, executor: any, args: any, context: unknown): Promise<any> {
+  private async executeAsync(_metadata: unknown, _executor: unknown, _args: unknown, _context: unknown): Promise<unknown> {
     // In an async execution, we would typically submit a job to a queue or temporal workflow,
     // and return a job ID immediately. The LLM would see the job ID, and when the job completes,
     // an event would wake up the conversation.

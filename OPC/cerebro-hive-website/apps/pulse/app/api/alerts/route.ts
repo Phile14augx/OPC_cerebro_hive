@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/shared/lib/db';
 import { mapAlertRow, mapIncidentRow } from '@/shared/lib/alert-mapper';
 import { enrichAlertActions } from '@/shared/lib/claude-client';
-import { cacheGet, cacheSet, TTL } from '@/shared/lib/redis';
+import { cacheDelete, cacheGet, cacheSet, TTL } from '@/shared/lib/redis';
 import type { StrategicAlert } from '@/shared/lib/types';
 
 export const runtime = 'nodejs';
@@ -87,8 +87,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // Bust cache
-    const { redis } = await import('@/shared/lib/redis');
-    await redis.del(CACHE_KEY);
+    await cacheDelete(CACHE_KEY);
 
     return NextResponse.json({ success: true, id: body.id });
   } catch (err) {

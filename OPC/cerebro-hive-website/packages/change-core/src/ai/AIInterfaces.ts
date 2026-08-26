@@ -7,7 +7,7 @@ export interface IAIRiskAdvisor {
 }
 
 export interface IAIImpactSummarizer {
-  generateImpactSummary(change: ChangeRequest, dependencies: any[]): Promise<string>;
+  generateImpactSummary(change: ChangeRequest, dependencies: unknown[]): Promise<string>;
 }
 
 export interface IAICabAssistant {

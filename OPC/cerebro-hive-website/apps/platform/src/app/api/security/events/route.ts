@@ -30,7 +30,6 @@ const apiRateLimitStore = new Map<string, { count: number; resetTime: number }>(
 const MAX_EVENTS = 10000;
 
 export async function POST(request: NextRequest) {
-  const startTime = Date.now();
   const requestId = randomUUID();
   const clientIP =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -131,7 +130,6 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const startTime = Date.now();
   const requestId = randomUUID();
   const clientIP =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||

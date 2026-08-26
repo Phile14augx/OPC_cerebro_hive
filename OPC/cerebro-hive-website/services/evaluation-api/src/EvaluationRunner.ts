@@ -25,15 +25,15 @@ export class EvaluationRunner {
     };
   }
 
-  private runDeterministicTier(dataset: EvaluationDataset): EvaluationMetric {
+  private runDeterministicTier(_dataset: EvaluationDataset): EvaluationMetric {
     return { name: 'JSON Schema Compliance', category: 'Quality', score: 1.0, reasoning: 'Exact match.' };
   }
 
-  private runStatisticalTier(dataset: EvaluationDataset): EvaluationMetric {
+  private runStatisticalTier(_dataset: EvaluationDataset): EvaluationMetric {
     return { name: 'Retrieval Precision', category: 'Knowledge', score: 0.85, reasoning: 'High cosine similarity.' };
   }
 
-  private async runLLMJudgeTier(dataset: EvaluationDataset): Promise<EvaluationMetric> {
+  private async runLLMJudgeTier(_dataset: EvaluationDataset): Promise<EvaluationMetric> {
     return { name: 'Hallucination Rate (Inv)', category: 'Quality', score: 0.92, reasoning: 'LLM Judge verified groundedness.' };
   }
 }

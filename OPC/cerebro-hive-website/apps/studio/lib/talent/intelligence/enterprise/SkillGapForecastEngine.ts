@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { prisma } from '@cerebro/db';
+
 
 
 export class SkillGapForecastEngine {

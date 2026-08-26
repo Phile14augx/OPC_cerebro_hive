@@ -2,9 +2,9 @@ import React from 'react';
 import { SidebarProps } from './Sidebar.types';
 import { sidebarStyles } from './Sidebar.styles';
 
-export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(({ className, children, ...props }, ref) => {
+export const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(({ className, children, ...props }, ref) => {
   return (
-    <div ref={ref as any} className={sidebarStyles({ className })} {...props}>
+    <div ref={ref} className={sidebarStyles({ className })} {...props}>
       {children}
     </div>
   );

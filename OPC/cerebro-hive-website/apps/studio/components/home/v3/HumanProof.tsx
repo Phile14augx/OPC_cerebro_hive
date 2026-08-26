@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Users, Building, Target, Zap, CheckCircle2, Bot, Layers, ArrowRight } from "lucide-react";
+import { Users, Building, Target, CheckCircle2, Bot, Layers, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/cerebro/primitives/Section";

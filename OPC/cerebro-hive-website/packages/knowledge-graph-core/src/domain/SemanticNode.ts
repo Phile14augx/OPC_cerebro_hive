@@ -6,7 +6,7 @@ export interface SemanticNode {
   
   labels: string[]; // Secondary tags e.g., ['MissionCritical', 'Regulated']
   
-  properties: Record<string, any>; // Versioned properties
+  properties: Record<string, unknown>; // Versioned properties
   
   version: number;
   

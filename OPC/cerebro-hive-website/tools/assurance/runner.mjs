@@ -61,6 +61,12 @@ if (flags.selfTest) {
 
 // ── Descriptor loading ────────────────────────────────────────────────────────
 
+
+function resolvePath(p) {
+  if (p.startsWith('.github/')) return join(REPO_ROOT, '../..', p);
+  return join(REPO_ROOT, p);
+}
+
 function loadAllDescriptors() {
   const files = readdirSync(DESCRIPTORS_DIR).filter(f => f.endsWith('.json'));
   const controls = [];
@@ -242,11 +248,11 @@ async function runnerExecute(ctrl) {
 function runFileCheck(ctrl, r) {
   const missingFiles = [];
   for (const check of r.checks ?? []) {
-    if (check.file && !existsSync(join(REPO_ROOT, check.file))) {
+    if (check.file && !existsSync(resolvePath(check.file))) {
       if (check.required !== false) missingFiles.push(check.file);
     }
     if (check.pattern && check.file) {
-      const file = join(REPO_ROOT, check.file);
+      const file = resolvePath(check.file);
       if (existsSync(file)) {
         const content = readFileSync(file, 'utf8');
         const matches = (content.match(new RegExp(check.pattern, 'gm')) ?? []).length;
@@ -264,7 +270,7 @@ function runFileCheck(ctrl, r) {
 
 function runMultiFileCheck(ctrl, r) {
   for (const f of r.files ?? []) {
-    if (f.required && !existsSync(join(REPO_ROOT, f.file))) {
+    if (f.required && !existsSync(resolvePath(f.file))) {
       return { passed: false, details: `Required file not found: ${f.file}`, missingFiles: [f.file] };
     }
   }
@@ -272,7 +278,7 @@ function runMultiFileCheck(ctrl, r) {
 }
 
 function runWorkflowCheck(ctrl, r) {
-  const wfPath = join(REPO_ROOT, r.workflow);
+  const wfPath = resolvePath(r.workflow);
   if (!existsSync(wfPath)) {
     return { passed: false, details: `Workflow not found: ${r.workflow}`, missingFiles: [r.workflow] };
   }
@@ -287,7 +293,7 @@ function runWorkflowCheck(ctrl, r) {
 }
 
 function runNodeScript(ctrl, r) {
-  const scriptPath = join(REPO_ROOT, r.script);
+  const scriptPath = resolvePath(r.script);
   if (!existsSync(scriptPath)) {
     return { passed: false, details: `Script not found: ${r.script}`, missingFiles: [r.script] };
   }
@@ -310,10 +316,16 @@ function runVitest(ctrl, r) {
     return { passed: false, details: `Spec not found: ${r.spec}`, missingFiles: [r.spec] };
   }
   const result = spawnSync(
-    'pnpm', ['exec', 'vitest', 'run', r.spec ?? '', '--reporter=verbose'],
+    'pnpm', ['exec', 'vitest', 'run', spec, '--reporter=verbose'],
     { cwd: join(REPO_ROOT, r.workDir ?? '.'), timeout: r.timeout_ms ?? 120000, encoding: 'utf8' }
   );
   const passed = result.status === 0;
+  if (!passed) {
+    console.log('--- VITEST STDOUT ---');
+    console.log(result.stdout);
+    console.log('--- VITEST STDERR ---');
+    console.error(result.stderr);
+  }
   return { passed, exitCode: result.status, stdout: result.stdout, stderr: result.stderr,
     details: passed ? `Vitest passed: ${r.spec}` : `Vitest failed (exit ${result.status})` };
 }
@@ -324,6 +336,12 @@ function runGoTest(ctrl, r) {
     { cwd: join(REPO_ROOT, r.workDir ?? '.'), timeout: r.timeout_ms ?? 180000, encoding: 'utf8' }
   );
   const passed = result.status === 0;
+  if (!passed) {
+    console.log('--- VITEST STDOUT ---');
+    console.log(result.stdout);
+    console.log('--- VITEST STDERR ---');
+    console.error(result.stderr);
+  }
   return { passed, exitCode: result.status, stdout: result.stdout, stderr: result.stderr,
     details: passed ? `Go tests passed` : `Go tests failed (exit ${result.status})` };
 }

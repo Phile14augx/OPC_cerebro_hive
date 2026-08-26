@@ -109,7 +109,7 @@ totalTests = sum of all testCounts; passingTests = sum of all passingCounts.`;
 
     const artifactsToSave = allArtifacts.length > 0 ? allArtifacts : defaultArtifacts;
 
-    const p = this.prisma as any;
+    const p = this.prisma;
     await p.$transaction([
       p.project.update({
         where: { id: projectId },

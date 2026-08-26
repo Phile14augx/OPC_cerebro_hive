@@ -5,12 +5,12 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "test": "vitest run",
     "dev": "tsc --watch",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "eslint --max-warnings=0 .",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@cerebro/config": "workspace:*",
     "@types/node": "^20.0.0",

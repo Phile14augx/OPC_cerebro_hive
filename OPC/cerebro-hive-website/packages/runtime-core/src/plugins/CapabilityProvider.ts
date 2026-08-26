@@ -1,18 +1,8 @@
 import { ExecutionContext } from '../context/ExecutionContext';
 import { Goal } from '../planning/Goal';
-import { ExecutionPlan } from '../planning/ExecutionPlan';
-
-export type CapabilityType = 
-  | 'LLMProvider' 
-  | 'ToolProvider' 
-  | 'MemoryProvider' 
-  | 'PolicyProvider' 
-  | 'PlannerProvider' 
-  | 'AgentProvider'
-  | 'StorageProvider'
-  | 'EmbeddingProvider'
-  | 'SearchProvider'
-  | 'EvaluationProvider';
+import { CapabilityType } from './types';
+export type { CapabilityType };
+import type { ExecutionPlan } from '../planning/ExecutionPlan';
 
 export interface CapabilityProvider {
   /**
@@ -38,7 +28,7 @@ export interface LLMMessage {
 export interface LLMToolDefinition {
   name: string;
   description: string;
-  inputSchema: Record<string, any>;
+  inputSchema: Record<string, unknown>;
 }
 
 /** A tool call returned by the model. */
@@ -73,13 +63,13 @@ export interface LLMProvider extends CapabilityProvider {
 }
 
 export interface ToolProvider extends CapabilityProvider {
-  invokeTool(toolName: string, args: Record<string, any>, context: ExecutionContext): Promise<any>;
+  invokeTool(toolName: string, args: Record<string, unknown>, context: ExecutionContext): Promise<unknown>;
   listAvailableTools(context: ExecutionContext): Promise<string[]>;
 }
 
 export interface MemoryProvider extends CapabilityProvider {
-  store(key: string, value: any, context: ExecutionContext): Promise<void>;
-  retrieve(key: string, context: ExecutionContext): Promise<any>;
+  store(key: string, value: unknown, context: ExecutionContext): Promise<void>;
+  retrieve(key: string, context: ExecutionContext): Promise<unknown>;
 }
 
 export interface PolicyProvider extends CapabilityProvider {
@@ -87,7 +77,7 @@ export interface PolicyProvider extends CapabilityProvider {
 }
 
 export interface EvaluationProvider extends CapabilityProvider {
-  evaluatePlans(plans: ExecutionPlan[], goal: Goal, context: ExecutionContext, policy: import('../planning/EvaluationPolicy').EvaluationPolicy): Promise<import('../planning/PlanningSession').ScoredPlan[]>;
+  evaluatePlans(plans: ExecutionPlan[], goal: Goal, context: ExecutionContext, policy: import('../planning/EvaluationPolicy').EvaluationPolicy): Promise<import('../planning/types').ScoredPlan[]>;
 }
 
 export interface PlannerProvider extends CapabilityProvider {
@@ -95,5 +85,5 @@ export interface PlannerProvider extends CapabilityProvider {
 }
 
 export interface AgentProvider extends CapabilityProvider {
-  executeTask(task: string, context: ExecutionContext): Promise<any>;
+  executeTask(task: string, context: ExecutionContext): Promise<unknown>;
 }

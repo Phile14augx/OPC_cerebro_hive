@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
-  Sparkles, Play, RefreshCw, Plus, ArrowRight, ArrowLeft, Download, Check, AlertTriangle,
-  ShieldAlert, Mail, FileText, Database, UserCheck, CheckCircle2, DollarSign, Award, Clock,
-  ArrowUpRight, Zap, Code, ShieldCheck, BookOpen, Layers, Bot, Workflow, HelpCircle, ChevronRight
+  Sparkles, Play, ArrowLeft, AlertTriangle, ShieldAlert, Mail, Database, UserCheck, DollarSign, Award,
+  ShieldCheck, BookOpen, Layers, Bot, Workflow, type LucideIcon
 } from "lucide-react";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
@@ -14,7 +13,7 @@ interface SandboxItem {
   title: string;
   subtitle: string;
   desc: string;
-  icon: React.ComponentType<any>;
+  icon: LucideIcon;
   color: string;
   bullets: string[];
 }
@@ -548,7 +547,7 @@ Billing Audit Node`;
               Interactive Product Trials
             </h2>
             <p className="font-exo" style={{ fontSize: "0.875rem", color: "var(--text-muted)", marginTop: "4px" }}>
-              Explore hands-on interactive simulations of CerebroHive's software products, consulting tools, and business solutions.
+              Explore hands-on interactive simulations of CerebroHive&apos;s software products, consulting tools, and business solutions.
             </p>
           </div>
 

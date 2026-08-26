@@ -1,5 +1,5 @@
 export abstract class BaseWorker<TPayload> {
-  constructor(protected subject: string, protected natsConnection: any) {}
+  constructor(protected subject: string, protected natsConnection: unknown) {}
 
   abstract handle(payload: TPayload, headers?: Record<string, string>): Promise<void>;
 

@@ -3,23 +3,30 @@ import { ExecutionSnapshot } from '../../../runtime-contracts/src/snapshots/Exec
 import { ExecutionState } from './ExecutionStateMachine';
 import { ExecutionCheckpoint } from './ExecutionCheckpoint';
 
-export interface ExecutionOutboxEntry {
-  id: string;
-  type: string;
-  payload: any;
-  dispatched: boolean;
-  createdAt: Date;
-}
+import { OutboxMessage } from './ExecutionOutbox';
 
-export interface ExecutionRecord {
+export interface ExecutionRecord<TMetadata extends Record<string, unknown> = Record<string, unknown>> {
   id: string;
   agentId: string;
   agentVersionId: string;
+  tenantId: string;
+  workspaceId?: string;
+  correlationId: string;
+  traceId: string;
+
   status: ExecutionState;
   version: number; // Optimistic concurrency version
   startedAt: Date;
   completedAt?: Date;
-  metadata?: Record<string, any>;
+  metadata?: TMetadata;
+  commitTransition?(transition: {
+    executionId: string;
+    expectedVersion: number;
+    fencingToken: bigint;
+    update: Partial<ExecutionRecord<Record<string, unknown>>>;
+    events: ExecutionEvent<unknown>[];
+    outboxEntries?: OutboxMessage[];
+  }): Promise<void>;
 }
 
 export interface ExecutionStore {
@@ -43,13 +50,13 @@ export interface ExecutionStore {
   /** Appends a sequence of events. Throws if a sequence number conflict occurs, or if fencingToken is invalid. */
   appendEvents(
     executionId: string, 
-    events: ExecutionEvent<any>[], 
+    events: ExecutionEvent<unknown>[], 
     fencingToken: bigint,
-    outboxEntries?: ExecutionOutboxEntry[]
+    outboxEntries?: OutboxMessage[]
   ): Promise<void>;
 
   /** Retrieves all events for an execution strictly ordered by sequence. */
-  getEvents(executionId: string, afterSequence?: bigint): Promise<ExecutionEvent<any>[]>;
+  getEvents(executionId: string, afterSequence?: bigint): Promise<ExecutionEvent<unknown>[]>;
 
   /** Stores a state snapshot, guarded by the fencing token */
   saveSnapshot(snapshot: ExecutionSnapshot, fencingToken: bigint, hash: string): Promise<void>;
@@ -59,4 +66,12 @@ export interface ExecutionStore {
 
   /** Saves a provider interaction checkpoint, guarded by the fencing token */
   saveCheckpoint(checkpoint: ExecutionCheckpoint, fencingToken: bigint): Promise<void>;
+  commitTransition?(transition: {
+    executionId: string;
+    expectedVersion: number;
+    fencingToken: bigint;
+    update: Partial<ExecutionRecord<Record<string, unknown>>>;
+    events: ExecutionEvent<unknown>[];
+    outboxEntries?: OutboxMessage[];
+  }): Promise<void>;
 }

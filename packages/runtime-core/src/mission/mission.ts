@@ -301,8 +301,7 @@ export class InMemoryMissionRepository implements MissionRepository {
     // Apply patch fields.
     for (const [key, value] of Object.entries(patch) as Array<[keyof typeof patch, unknown]>) {
       if (value !== undefined) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (mission as any)[key] = value;
+        Reflect.set(mission, key, value);
       }
     }
 

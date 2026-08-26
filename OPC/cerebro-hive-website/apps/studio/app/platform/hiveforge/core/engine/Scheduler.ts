@@ -14,6 +14,7 @@ export class Scheduler {
   private readonly MAX_CONCURRENCY = 100;
 
   async scheduleExecution(graph: ExecutionGraph, options: ScheduleOptions): Promise<string> {
+    void options;
     // Generates a Correlation ID tying this execution across logs and events
     const correlationId = `corr-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     graph.correlationId = correlationId;

@@ -3,7 +3,6 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Download } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 

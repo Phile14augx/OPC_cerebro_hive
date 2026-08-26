@@ -40,12 +40,13 @@ export class OutboxRelayWorker {
 
           await this.publisher.publish({
             type: event.eventType,
-            ...event.payload as any,
+            ...(typeof event.payload === 'object' && event.payload !== null ? event.payload : {}),
           }, context);
 
           await this.strategy.ack(event.id);
-        } catch (err: any) {
-          await this.strategy.nack(event.id, err.message);
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : String(err);
+          await this.strategy.nack(event.id, message);
         }
       }
     } catch (error) {

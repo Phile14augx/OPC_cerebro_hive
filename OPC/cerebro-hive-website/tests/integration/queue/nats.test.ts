@@ -115,8 +115,7 @@ describe("Publish and consume messages", () => {
       break;
     }
 
-    // Either we consumed remaining msgs or we nak'd the bad one
-    expect(true).toBe(true); // test passes if no exception thrown
+    expect(nakCalled).toBe(true);
   });
 });
 

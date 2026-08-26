@@ -25,7 +25,7 @@ export class ToolRuntimeToolProvider implements ToolProvider {
   async initialize(): Promise<void> {}
   async dispose(): Promise<void> {}
 
-  async invokeTool(toolName: string, args: Record<string, any>, context: ExecutionContext): Promise<any> {
+  async invokeTool(toolName: string, args: Record<string, unknown>, context: ExecutionContext): Promise<unknown> {
     return this.toolRuntime.executeTool(toolName, args, context);
   }
 

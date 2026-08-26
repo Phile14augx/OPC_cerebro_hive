@@ -25,7 +25,7 @@ describe('MetaPlanner — candidate generation and selection', () => {
         () => new ReActPlanner()
       )
     );
-    // Required: any goal without optimizationLevel: 'Fast' generates candidates from
+    // Required: unknown goal without optimizationLevel: 'Fast' generates candidates from
     // both planners, which means MetaPlanner always resolves an EvaluationProvider to
     // score and pick between them (see MetaPlanner.createPlan). The original version of
     // this file never registered this capability, which is why it failed at runtime with

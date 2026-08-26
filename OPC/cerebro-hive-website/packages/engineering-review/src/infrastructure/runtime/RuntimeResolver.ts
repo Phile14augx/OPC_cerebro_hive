@@ -8,7 +8,7 @@ export class RuntimeResolver {
     this.availableRuntimes.push(runtime);
   }
 
-  resolve(analyzerCapability: IAnalyzerCapability): ISandboxRuntime {
+  resolve(_analyzerCapability: IAnalyzerCapability): ISandboxRuntime {
     // For M26.7 stubbing, just return the first available that matches capabilities
     // Future: more complex matching based on `analyzerCapability.resourceRequirements` vs `runtime.capabilities`
     if (this.availableRuntimes.length === 0) {

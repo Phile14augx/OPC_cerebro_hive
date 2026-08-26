@@ -20,7 +20,7 @@ export default function DevOpsPage() {
     try { setPipelineRuns((await api<{ runs: PipelineRun[] }>("/v1/devops/pipelines")).runs); } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const runPipeline = useCallback(async () => {
     setBusy(true);

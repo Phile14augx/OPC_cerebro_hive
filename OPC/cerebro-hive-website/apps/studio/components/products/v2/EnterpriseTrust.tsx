@@ -2,7 +2,6 @@
 
 import React from "react";
 import { ShieldCheck, Lock, Eye, Building2, UserCheck, Scale, FileCheck, ShieldAlert, Cpu, Workflow } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 const technicalTrust = [
   { label: "Role-Based Access (RBAC)", icon: UserCheck },
@@ -39,7 +38,7 @@ export const EnterpriseTrust = () => {
           </span>
           <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-4">Enterprise Grade by Default</h2>
           <p className="text-text-secondary max-w-2xl mx-auto font-inter text-center">
-            We don't compromise on security. CerebroOS provides dual-layer trust, ensuring both technical infrastructure and business processes meet the highest regulatory standards.
+            We don&apos;t compromise on security. CerebroOS provides dual-layer trust, ensuring both technical infrastructure and business processes meet the highest regulatory standards.
           </p>
         </div>
 

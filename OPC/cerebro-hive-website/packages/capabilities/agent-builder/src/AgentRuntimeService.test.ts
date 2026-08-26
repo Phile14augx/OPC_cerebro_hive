@@ -43,7 +43,7 @@ describe('AgentRuntimeService', () => {
     registerFakeLLM(() => 'hello from fake llm');
     const service = new AgentRuntimeService();
 
-    const result = await service.execute(baseContext(), 'hi there');
+    const result = await service.execute(baseContext(), 'hi there') as { status: string; messages: { role: string; content: string }[] };
 
     expect(result.status).toBe('completed');
     const lastMessage = result.messages[result.messages.length - 1];

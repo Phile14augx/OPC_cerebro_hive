@@ -29,7 +29,7 @@ export class CodegenService {
 
     projectGraph.advancePhase(projectId, 'implementation');
 
-    const p = this.prisma as any;
+    const p = this.prisma;
     await p.project.update({
       where: { id: projectId },
       data: { forgePhase: 'implementation', forgeStatus: 'generating' },
@@ -69,7 +69,7 @@ export class CodegenService {
           projectGraph.updateFileStatus(projectId, filePath, 'done', content);
 
           // Persist artifact
-          const p = this.prisma as any;
+          const p = this.prisma;
           await p.generatedArtifact.upsert({
             where: { projectId_filePath: { projectId, filePath } },
             create: {

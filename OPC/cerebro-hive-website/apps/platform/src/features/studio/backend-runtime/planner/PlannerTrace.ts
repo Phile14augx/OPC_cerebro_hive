@@ -3,7 +3,7 @@ export interface TraceNode {
   stage: string; // e.g. "Validation", "Fusion", "Parallelization", "Admission"
   decision: string;
   explanation: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export class PlannerTrace {

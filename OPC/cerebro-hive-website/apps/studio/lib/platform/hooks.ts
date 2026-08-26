@@ -10,7 +10,7 @@ import { platformApi } from "./api-client";
 import type {
   Workflow, WorkflowExecution, Agent, AgentRun,
   KnowledgeCollection, KnowledgeDocument, AIUsageSummary, Me, AdminStats,
-  Prompt, PromptVersion, EvalRun, EvalDataset, TempoSearchResult, ModelEntry, NatsEvent,
+  Prompt, EvalRun, EvalDataset, TempoSearchResult, ModelEntry, NatsEvent,
   PaginatedResponse,
 } from "./api-client";
 
@@ -58,7 +58,7 @@ function usePaginatedFetch<T>(
     }
   }, [limit]);
 
-  useEffect(() => { void load(1); }, [load, ...deps]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { void load(1); }, [load, ...deps]);
 
   const nextPage = useCallback(() => {
     if (state.hasMore && !state.loading) void load(state.page + 1);
@@ -125,7 +125,7 @@ export function useWorkflow(id: string) {
     }
   }, [id]);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
   return { workflow, loading, error, refresh };
 }
 
@@ -164,7 +164,7 @@ export function useExecution(execId: string) {
   }, [execId]);
 
   useEffect(() => {
-    void refresh();
+    setTimeout(() => void refresh(), 0);
     // Poll active executions every 3 seconds
     intervalRef.current = setInterval(() => void refresh(), 3000);
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
@@ -231,7 +231,7 @@ export function useAgent(id: string) {
     }
   }, [id]);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
   return { agent, loading, error, refresh };
 }
 
@@ -283,9 +283,9 @@ export function useAIUsage(params: {
     } finally {
       setLoading(false);
     }
-  }, [params.from, params.to, params.modelId, params.provider]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [params.from, params.to, params.modelId, params.provider]);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
   return { usage, loading, error, refresh };
 }
 
@@ -348,11 +348,11 @@ export function useExecutionStream(executionId: string | null) {
       evt => es.addEventListener(evt, genericHandler),
     );
 
-    es.onerror = () => setConnected(false);
+    es.onerror = () => setTimeout(() => setConnected(false), 0);
 
     return () => {
       es.close();
-      setConnected(false);
+      setTimeout(() => setConnected(false), 0);
     };
   }, [executionId]);
 
@@ -388,7 +388,7 @@ export function usePrompt(id: string | null) {
     }
   }, [id]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => { const t = setTimeout(() => void load(), 0); return () => clearTimeout(t); }, [load]);
 
   return { prompt, loading, error, refresh: load };
 }
@@ -420,7 +420,7 @@ export function useEvalDatasets() {
     }
   }, []);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => { const t = setTimeout(() => void load(), 0); return () => clearTimeout(t); }, [load]);
 
   return { datasets, loading, error, refresh: load };
 }
@@ -443,9 +443,9 @@ export function useTraces(params: { q?: string; serviceName?: string; limit?: nu
     } finally {
       setLoading(false);
     }
-  }, [params.q, params.serviceName, params.limit]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [params.q, params.serviceName, params.limit]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => { const t = setTimeout(() => void load(), 0); return () => clearTimeout(t); }, [load]);
 
   return { result, loading, error, refresh: load };
 }
@@ -468,9 +468,9 @@ export function useModels(params: { provider?: string; status?: string; capabili
     } finally {
       setLoading(false);
     }
-  }, [params.provider, params.status, params.capability]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [params.provider, params.status, params.capability]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => { const t = setTimeout(() => void load(), 0); return () => clearTimeout(t); }, [load]);
 
   return { models, loading, error, refresh: load };
 }
@@ -491,7 +491,7 @@ export function useEventStream(params: { domain?: string; search?: string; pause
     if (params.paused) {
       esRef.current?.close();
       esRef.current = null;
-      setConnected(false);
+      setTimeout(() => setConnected(false), 0);
       return;
     }
 
@@ -521,7 +521,7 @@ export function useEventStream(params: { domain?: string; search?: string; pause
     es.onmessage = handler; // catch-all fallback
 
     es.onerror = () => {
-      setConnected(false);
+      setTimeout(() => setConnected(false), 0);
       setError("SSE connection lost — retrying…");
     };
 
@@ -529,7 +529,7 @@ export function useEventStream(params: { domain?: string; search?: string; pause
       es.close();
       DOMAINS.forEach(d => es.removeEventListener(d, handler));
       esRef.current = null;
-      setConnected(false);
+      setTimeout(() => setConnected(false), 0);
     };
   }, [params.paused, params.domain, params.search]);
 

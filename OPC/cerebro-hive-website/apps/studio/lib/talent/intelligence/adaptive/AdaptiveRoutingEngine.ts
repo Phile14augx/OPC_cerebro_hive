@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AssessmentSchema, AssessmentSection } from '../../types';
 
 export interface AdaptiveRoutingContext {

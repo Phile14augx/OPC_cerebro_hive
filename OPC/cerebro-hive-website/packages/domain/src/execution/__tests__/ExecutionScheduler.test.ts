@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { Execution } from '../Execution';
 import { ExecutionStatus } from '../ExecutionStatus';
 import { InMemoryExecutionRepository } from '../InMemoryExecutionRepository';
 import { InMemoryExecutionScheduleQueue } from '../ExecutionScheduleQueue';
@@ -7,7 +6,7 @@ import { InMemoryExecutionLeaseStore } from '../ExecutionLease';
 import { ExecutionScheduler } from '../ExecutionScheduler';
 import { ExecutionOrchestrator, ExecutionProviderPort, ExecutionProviderResult } from '../ExecutionOrchestrator';
 import { Clock } from '../Clock';
-import { MaxAttemptsRetryPolicy, NeverRetryPolicy } from '../ExecutionRetryPolicy';
+import { MaxAttemptsRetryPolicy } from '../ExecutionRetryPolicy';
 
 const baseInput = {
   kind: 'Agent' as const,
@@ -103,13 +102,15 @@ describe('ExecutionScheduler — scheduleTimeoutCheck (proactive timeout)', () =
     await scheduler.tick();
     // Not due yet — still WAITING.
     const stillWaiting = await repo.load(execution.id);
-    expect(stillWaiting!.status).toBe(ExecutionStatus.Waiting);
+    if (!stillWaiting) throw new Error('Expected the waiting execution to remain persisted.');
+    expect(stillWaiting.status).toBe(ExecutionStatus.Waiting);
 
     clock.advance(5_000);
     await scheduler.tick();
 
     const resumed = await repo.load(execution.id);
-    expect(resumed!.status).toBe(ExecutionStatus.Completed);
+    if (!resumed) throw new Error('Expected the resumed execution to remain persisted.');
+    expect(resumed.status).toBe(ExecutionStatus.Completed);
   });
 
   it('is a no-op if the Execution already reached a terminal status by the time the check runs', async () => {
@@ -127,7 +128,8 @@ describe('ExecutionScheduler — scheduleTimeoutCheck (proactive timeout)', () =
     await expect(scheduler.tick()).resolves.not.toThrow();
 
     const stillCompleted = await repo.load(execution.id);
-    expect(stillCompleted!.status).toBe(ExecutionStatus.Completed);
+    if (!stillCompleted) throw new Error('Expected the completed execution to remain persisted.');
+    expect(stillCompleted.status).toBe(ExecutionStatus.Completed);
   });
 });
 

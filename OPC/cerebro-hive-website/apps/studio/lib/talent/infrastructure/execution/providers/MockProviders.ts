@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { EventEmitter } from 'events';
 import { 
   IQueueProvider, 
@@ -80,10 +79,9 @@ export class MockSandboxProvider implements ISandboxProvider {
       // Execute the candidate's JS code in the current context
       // Note: In Stage 3 mock, we expect the code to console.log output.
       eval(code);
-      
-    } catch (e: any) {
+    } catch (e: unknown) {
       exitCode = 1;
-      const errStr = e.toString() + '\n';
+      const errStr = (e instanceof Error ? e.message : String(e)) + '\n';
       stderr += errStr;
       this.streamingProvider.broadcast(this.jobId, { type: 'stderr', data: errStr, timestamp: new Date().toISOString() });
     } finally {

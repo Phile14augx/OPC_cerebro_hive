@@ -1,8 +1,8 @@
 import { DigitalTwinEngine } from '../engine/DigitalTwinEngine';
 import { FailurePropagator } from '../engine/FailurePropagator';
-import { KnowledgeGraphPort, SemanticNode } from '../../../knowledge-graph-core/src/index';
+import { KnowledgeGraphPort } from '../../../knowledge-graph-core/src/index';
 import { SimulationResult } from '../domain/SimulationResult';
-import { ScenarioType } from '../domain/SimulationScenario';
+
 
 export class SimulationAnalyst {
   constructor(private readonly canonicalGraph: KnowledgeGraphPort) {}

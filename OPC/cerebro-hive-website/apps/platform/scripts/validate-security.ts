@@ -134,9 +134,6 @@ async function testHSTSPrecondition() {
   // Verify the header would be set correctly in production mode
   // by checking the next.config.ts header definitions
   
-  // In production, HSTS should include preload and includeSubDomains
-  const expectedHSTS = "max-age=63072000; includeSubDomains; preload";
-  
   // This test verifies the configuration is in place
   // Actual HSTS behavior is controlled by NODE_ENV in next.config.ts
   console.log("  ✅ HSTS configuration present (controlled by NODE_ENV in production)");

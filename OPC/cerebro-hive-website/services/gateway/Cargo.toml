@@ -32,14 +32,14 @@ jsonwebtoken = "9"
 rsa = { version = "0.9", features = ["pem"] }
 
 # Database
-sqlx = { version = "0.7", features = ["postgres", "runtime-tokio-rustls", "uuid", "chrono", "json"] }
+sqlx = { version = "0.8", features = ["postgres", "runtime-tokio-rustls", "uuid", "chrono", "json"] }
 
 # Redis (rate limiting + sessions)
 redis = { version = "0.24", features = ["tokio-comp", "connection-manager"] }
 bb8-redis = "0.15"
 
 # HTTP client (proxy to downstream services)
-reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
 
 # gRPC (calls to C++ ML service)
 tonic = "0.11"

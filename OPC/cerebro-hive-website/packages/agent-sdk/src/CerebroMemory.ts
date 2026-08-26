@@ -14,11 +14,11 @@ export interface CerebroMemory {
    * @param query The query parameters.
    * @returns The retrieved memory context.
    */
-  read(query: Record<string, any>): Promise<any>;
+  read(query: Record<string, unknown>): Promise<unknown>;
 
   /**
    * Store new facts, state, or context into the memory.
    * @param data The data to persist.
    */
-  write(data: Record<string, any>): Promise<void>;
+  write(data: Record<string, unknown>): Promise<void>;
 }

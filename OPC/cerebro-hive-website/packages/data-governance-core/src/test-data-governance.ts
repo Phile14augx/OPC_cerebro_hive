@@ -13,7 +13,7 @@ async function runDataGovernanceTest() {
   const catalog = new Map<string, Dataset>();
   const lineageGraph = new LineageGraph();
   const propagator = new ClassificationPropagator(lineageGraph, catalog);
-  const stewardship = new StewardshipManager();
+  const _stewardship = new StewardshipManager();
   const schemaRegistry = new SchemaRegistry();
   const qualityManager = new QualityManager();
   const glossary = new BusinessGlossary();

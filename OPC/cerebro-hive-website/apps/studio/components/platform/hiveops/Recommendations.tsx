@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Sparkles, TrendingDown, Clock, ArrowRight } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface Recommendation {
   id: string;
@@ -10,7 +11,7 @@ interface Recommendation {
   value: string;
   description: string;
   type: "savings" | "capacity" | "anomaly";
-  icon: any;
+  icon: LucideIcon;
 }
 
 const recommendations: Recommendation[] = [

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Settings2, ArrowRight, BrainCircuit, ShieldCheck, Download, Calendar, Users, BarChart3, ChevronRight, Activity } from "lucide-react";
+import { Settings2, ArrowRight, BrainCircuit, ShieldCheck, Download, Calendar, Users, BarChart3, ChevronRight } from "lucide-react";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const industries = ["Financial Services", "Healthcare", "Manufacturing", "Technology", "Retail"];

@@ -9,7 +9,7 @@ export interface Diagnostic {
 }
 
 export interface CompilerResult {
-  schema: any | null;
+  schema: unknown | null;
   diagnostics: Diagnostic[];
   statistics: { nodeCount: number; edgeCount: number; estimatedCost: number };
 }

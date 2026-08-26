@@ -1,10 +1,11 @@
 import { create } from 'zustand';
+import type { CompletionMetadata, EvaluationScores, TokenUsage } from '../hooks/gatewayMetadata';
 
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
-  metadata?: any;
+  metadata?: CompletionMetadata;
 }
 
 interface PlaygroundState {
@@ -23,8 +24,8 @@ interface PlaygroundState {
   // Chat State
   messages: ChatMessage[];
   isStreaming: boolean;
-  evaluation: any | null;
-  tokenUsage: any | null;
+  evaluation: EvaluationScores | null;
+  tokenUsage: TokenUsage | null;
   
   // Actions
   setSystemPrompt: (prompt: string) => void;
@@ -32,10 +33,10 @@ interface PlaygroundState {
   setMemoryToggle: (key: 'useWorkingMemory' | 'useConversationMemory' | 'useSemanticMemory', value: boolean) => void;
   
   addMessage: (message: ChatMessage) => void;
-  updateLastMessage: (content: string, metadata?: any) => void;
+  updateLastMessage: (content: string, metadata?: CompletionMetadata) => void;
   setIsStreaming: (isStreaming: boolean) => void;
-  setEvaluation: (evaluation: any) => void;
-  setTokenUsage: (usage: any) => void;
+  setEvaluation: (evaluation: EvaluationScores) => void;
+  setTokenUsage: (usage: TokenUsage) => void;
   clearChat: () => void;
 }
 

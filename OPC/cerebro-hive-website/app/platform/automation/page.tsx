@@ -72,7 +72,7 @@ function CreatePanel({ online, onCreated }: { online: boolean | null; onCreated:
   );
 }
 
-function RunsPanel({ online }: { online: boolean | null }) {
+function RunsPanel() {
   const [runs, setRuns] = useState<WorkflowOut[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -155,7 +155,7 @@ export default function HiveAutomationPage() {
         ))}
       </div>
       {tab === "create" && <CreatePanel online={online} onCreated={() => setTick(t => t + 1)} />}
-      {tab === "runs" && <RunsPanel online={online} />}
+      {tab === "runs" && <RunsPanel />}
     </main>
   );
 }

@@ -1,9 +1,7 @@
-﻿"use client";
+"use client";
 
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, Download, Maximize2, ZoomIn, ZoomOut, Target } from 'lucide-react';
-import { OrganizationNodeData, OrganizationService } from '@/lib/services/organizationService';
+import { X, ExternalLink, Download, Maximize2, ZoomIn, ZoomOut } from 'lucide-react';
 import { useOrganizationWorkspace } from './OrganizationWorkspaceContext';
 import { useReactFlow, MiniMap, Panel } from '@xyflow/react';
 import { cn } from '@/lib/utils';
@@ -57,7 +55,7 @@ export const InspectorPanel = () => {
                     <Image src={node.avatar} alt="Avatar" fill className="object-cover" />
                   </div>
                   <div className="text-[10px] text-text-muted italic leading-relaxed">
-                    "Leading the {node.title} division towards our enterprise objectives."
+                    &ldquo;Leading the {node.title} division towards our enterprise objectives.&rdquo;
                   </div>
                 </div>
               )}

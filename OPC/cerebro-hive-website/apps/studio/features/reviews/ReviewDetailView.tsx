@@ -48,7 +48,7 @@ export function ReviewDetailView({ reviewId }: { reviewId: string }) {
               <h1 className="text-2xl font-space font-semibold text-white mb-2 flex items-center gap-3">
                 Review v{review.reviewVersion}
                 {review.verdict && (
-                  <Badge variant={review.verdict.outcome === 'pass' ? 'success' : 'warning' as any}>
+                  <Badge variant={review.verdict.outcome === 'pass' ? 'default' : 'secondary'}>
                     {review.verdict.outcome.toUpperCase()}
                   </Badge>
                 )}
@@ -69,6 +69,7 @@ export function ReviewDetailView({ reviewId }: { reviewId: string }) {
       </div>
 
       {/* Contributors (Horizontal List) */}
+        <h3 className="text-lg font-medium text-white mb-3 mt-6">Contributors</h3>
       {!contributorsLoading && contributors && contributors.length > 0 && (
         <div className="flex gap-4 overflow-x-auto pb-2">
           {contributors.map(c => (

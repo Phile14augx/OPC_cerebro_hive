@@ -1,4 +1,4 @@
-import { AgentRepository, RequestContext, IdempotencyRepository } from '@cerebro/db';
+import { AgentRepository, RequestContext, IdempotencyRepository, PrismaTransactionClient } from '@cerebro/db';
 import { UnitOfWork } from '../transactions/UnitOfWork';
 import { OutboxPublisher } from '../events/OutboxPublisher';
 import { AuditLogger } from '../audit/AuditLogger';
@@ -8,7 +8,7 @@ import { DomainEvent } from '../events/DomainEvent';
 import { Result } from '../dto/Result';
 import { AuthorizationError, ValidationError, DuplicateCommandError } from '../errors/DomainError';
 
-export class AgentPublishedEvent extends DomainEvent {
+export class AgentPublishedEvent extends DomainEvent<undefined> {
   constructor(
     public readonly agentId: string,
     public readonly version: number,
@@ -16,7 +16,7 @@ export class AgentPublishedEvent extends DomainEvent {
     workspaceId: string,
     userId?: string
   ) {
-    super('Agent', agentId, tenantId, workspaceId, userId);
+    super('Agent', agentId, tenantId, workspaceId, userId, undefined, undefined, undefined);
   }
 }
 
@@ -33,10 +33,10 @@ export class AgentApplicationService {
 
   async publishVersion(
     agentId: string, 
-    input: { modelId: string; instructions: string; tools: any[]; config?: any },
+    input: { modelId: string; instructions: string; tools: unknown[]; config?: unknown },
     context: RequestContext,
     idempotencyKey?: string
-  ): Promise<Result<any>> {
+  ): Promise<Result<unknown>> {
     // 1. Policy check
     const decision = await this.policyEngine.evaluate('CanPublishAgent', context, { agentId });
     if (!decision.allowed) {
@@ -46,26 +46,30 @@ export class AgentApplicationService {
     // 2. Validation
     try {
       this.validator.validatePublish(agentId, input.modelId, input.instructions, input.tools);
-    } catch (e: any) {
-      return Result.fail(new ValidationError(e.message));
+    } catch (error: unknown) {
+      return Result.fail(new ValidationError(error instanceof Error ? error.message : String(error)));
     }
 
     // 3. Execute Transaction
     return this.uow.execute(async (tx) => {
       // 3a. Idempotency Check
       if (idempotencyKey) {
-        const existing = await this.idempotencyRepo.findRecord(idempotencyKey, { context, tx: tx as any });
+        const dbTx = tx as unknown as PrismaTransactionClient;
+        const existing = await this.idempotencyRepo.findRecord(idempotencyKey, { context, tx: dbTx });
         if (existing) {
           if (existing.status === 'completed') {
             return Result.ok(existing.responseHash ? JSON.parse(existing.responseHash) : null);
           }
           return Result.fail(new DuplicateCommandError('Operation is currently in progress or failed.'));
         }
-        await this.idempotencyRepo.createRecord({ operation: 'publishAgentVersion', requestHash: idempotencyKey }, { context, tx: tx as any });
+        await this.idempotencyRepo.createRecord({ operation: 'publishAgentVersion', requestHash: idempotencyKey }, { context, tx: dbTx });
       }
 
       // 3b. Save entity
-      const newVersion = await this.agentRepo.publishVersion(agentId, input, { context, tx: tx as any });
+      const newVersion = await this.agentRepo.publishVersion(agentId, input, {
+        context,
+        tx: tx as unknown as PrismaTransactionClient,
+      });
 
       // 3c. Save audit log
       await this.auditLogger.logAction(
@@ -78,11 +82,15 @@ export class AgentApplicationService {
       );
 
       // 3d. Save outbox event
+      const workspaceId = context.workspaceId;
+      if (!workspaceId) {
+        throw new Error('RequestContext must provide a workspaceId to access this repository.');
+      }
       const event = new AgentPublishedEvent(
         agentId, 
         newVersion.version, 
         context.tenantId, 
-        context.workspaceId!, 
+        workspaceId,
         context.userId
       );
       await this.outboxPublisher.publish(event, context, tx);

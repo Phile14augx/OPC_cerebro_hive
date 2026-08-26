@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 
 export default function CompanyCTA() {

@@ -11,6 +11,8 @@ export interface AggregatedStats {
 export class ExecutionIntelligenceStore {
   // Aggregates by Capability, Worker, Workflow, Tenant, Region, Model, Node Type, Graph Pattern
   async getStatsForWorker(capabilityId: string, workerId: string): Promise<AggregatedStats> {
+    void capabilityId;
+    void workerId;
     return {
       p95LatencyMs: 1400,
       failureRate: 0.002,

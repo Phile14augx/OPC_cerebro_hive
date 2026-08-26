@@ -7,14 +7,14 @@ export interface GatewayRequest {
   maxTokens?: number;
   topP?: number;
   memoryContext?: string;
-  tools?: any[];
+  tools?: unknown[];
 }
 
 export interface StreamChunk {
   id: string;
   text: string;
   isDone: boolean;
-  metadata?: any;
+  metadata?: unknown;
 }
 
 export class GatewayClient {
@@ -53,7 +53,7 @@ export class GatewayClient {
     }
   }
 
-  async evaluatePrompt(request: any) {
+  async evaluatePrompt(_request: unknown) {
     return {
       safety: 0.99,
       grounding: 0.95,

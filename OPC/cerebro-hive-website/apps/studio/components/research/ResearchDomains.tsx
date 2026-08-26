@@ -3,9 +3,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SectionHeading } from '../cerebro/SectionHeading';
-import { ArrowRight, BookOpen, BrainCircuit, Code, Database, Globe, Network, Shield, Cpu, Binary, Cloud, Workflow, Eye, Lightbulb, Target, Zap } from 'lucide-react';
+import { BookOpen, BrainCircuit, Code, Database, Globe, Network, Shield, Cpu, Binary, Cloud, Workflow, Eye, Lightbulb, Target, Zap } from 'lucide-react';
 import { TrackedLink } from '../cerebro/TrackedLink';
-import { cn } from '@/lib/utils';
 import { allResearchData } from '@/lib/content/research';
 import { ResearchDomain } from '@/lib/content/research/types';
 import { LucideIcon } from 'lucide-react';
@@ -54,7 +53,7 @@ export const ResearchDomains = () => {
         />
         
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 mt-16">
-          {domainsList.map((domain, i) => {
+          {domainsList.map((domain) => {
             const count = getCount(domain.name);
             const latest = getLatest(domain.name);
             const isHovered = hoveredDomain === domain.name;

@@ -1,0 +1,74 @@
+name: CerebroEDA Gate C — Tenant Isolation
+
+# Gate C is the one gate whose infrastructure CI can provision, so it runs on
+# every PR rather than waiting for special hardware. A cross-tenant breach is
+# company-ending for a customer; the feedback loop should be minutes.
+
+on:
+  pull_request:
+    paths:
+      - 'packages/eda-tenancy/**'
+      - 'packages/eda-domain/**'
+      - 'tools/arch/gate-c/**'
+      - 'tools/harness/**'
+      - 'db/**'
+  push:
+    branches: [main]
+  schedule:
+    # Weekly, so drift in a dependency or Postgres minor version surfaces even
+    # when nobody has touched the tenancy code.
+    - cron: '0 4 * * 1'
+
+# Least-privilege token: these workflows only read the tree and report status.
+# Without an explicit block the job inherits the repository default, which is
+# write-all on many orgs.
+permissions:
+  contents: read
+
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  isolation:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: gate_c
+          POSTGRES_DB: gate_c
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+        ports: ['5432:5432']
+    env:
+      DATABASE_URL: postgres://postgres:gate_c@localhost:5432/gate_c
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Harness self-test (no infrastructure)
+        run: node tools/arch/gate-c/self-test.mjs
+
+      - name: Negative controls — probes must FAIL against broken schemas
+        # Runs BEFORE the real probes. If a probe cannot detect a deliberately
+        # broken policy, its later pass means nothing, and we should find that
+        # out before reading the green result.
+        run: node tools/arch/gate-c/verify-controls.mjs
+
+      - name: Adversarial probes against correct schema
+        run: node tools/arch/gate-c/run-gate-c.mjs --markdown docs/architecture/measurements/gate-c-latest.md
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-c-evidence
+          path: docs/architecture/measurements/gate-c-latest.md

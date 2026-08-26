@@ -71,4 +71,4 @@ export interface FrameworkAdapter {
 }
 
 // Adapter Factory
-export type AdapterFactory = (config: any) => FrameworkAdapter;
+export type AdapterFactory = (config: unknown) => FrameworkAdapter;

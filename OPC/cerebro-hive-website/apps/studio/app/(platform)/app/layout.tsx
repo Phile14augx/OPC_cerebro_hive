@@ -1,6 +1,4 @@
 import React from "react";
-import { Sidebar } from "./components/Sidebar";
-import { Topbar } from "./components/Topbar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

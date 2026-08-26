@@ -24,7 +24,7 @@ export class PluginRegistry {
     this.runtimeRegistry.register(descriptor);
   }
 
-  public registerReducer(eventType: string, reducer: DeterministicReducer<any, any>): void {
+  public registerReducer(eventType: string, reducer: DeterministicReducer<unknown, unknown>): void {
     if (this.isFrozen) throw new Error('Cannot register reducer: Registry frozen.');
     this.reducerRegistry.register(eventType, reducer);
   }
@@ -34,7 +34,7 @@ export class PluginRegistry {
     this.eventRegistry.registerUpcaster(upcaster);
   }
 
-  public registerEvent(registration: any): void {
+  public registerEvent(registration: unknown): void {
     if (this.isFrozen) throw new Error('Cannot register event: Registry frozen.');
     this.eventRegistry.registerEvent(registration);
   }

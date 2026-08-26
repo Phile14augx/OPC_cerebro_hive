@@ -154,7 +154,7 @@ export class FlowService {
 
   private async advance(ctx: RequestContext, run: WorkflowRun, wf: Workflow): Promise<WorkflowRun> {
     const byId = new Map(wf.definition.nodes.map(n => [n.id, n]));
-    let frontier = run.state.completed.length
+    const frontier = run.state.completed.length
       ? run.state.completed.flatMap(id => byId.get(id)?.next ?? []).filter(id => !run.state.completed.includes(id))
       : [wf.definition.entry];
 

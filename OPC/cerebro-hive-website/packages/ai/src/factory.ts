@@ -15,8 +15,12 @@ export function createAIService(config: AIServiceConfig): AIService {
     case 'mock':
       return new MockProvider();
     default:
-      throw new Error(`Unknown AI provider: ${(config as any).provider}`);
+      return unreachableProvider(config.provider);
   }
+}
+
+function unreachableProvider(provider: never): never {
+  throw new Error(`Unknown AI provider: ${String(provider)}`);
 }
 
 /** Convenience: create from environment variables */

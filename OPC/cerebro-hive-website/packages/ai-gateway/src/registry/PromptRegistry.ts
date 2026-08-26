@@ -5,11 +5,20 @@ export interface PromptVersionDTO {
   content: string;
   variables: string[];
   status: 'draft' | 'review' | 'approved' | 'published' | 'deprecated' | 'archived';
-  evaluationScores: any;
+  evaluationScores: unknown;
+}
+
+interface PromptRegistryDatabase {
+  promptTemplate: {
+    findUnique(args: Record<string, unknown>): Promise<{ versions: unknown[] } | null>;
+  };
+  promptVersion: {
+    findUnique(args: { where: { id: string } }): Promise<unknown>;
+  };
 }
 
 export class PromptRegistry {
-  constructor(private db: any) {}
+  constructor(private db: PromptRegistryDatabase) {}
 
   async getPublishedVersion(templateName: string): Promise<PromptVersionDTO | null> {
     const template = await this.db.promptTemplate.findUnique({

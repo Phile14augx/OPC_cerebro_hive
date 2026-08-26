@@ -56,7 +56,7 @@ actors with permissions, database entities, API contracts, and user stories.`;
       })),
     ];
 
-    const p = this.prisma as any;
+    const p = this.prisma;
     await p.$transaction([
       p.project.update({
         where: { id: projectId },

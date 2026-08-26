@@ -1,0 +1,89 @@
+name: M26.4 Verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Least-privilege token: these workflows only read the tree and report status.
+# Without an explicit block the job inherits the repository default, which is
+# write-all on many orgs.
+permissions:
+  contents: read
+
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: cerebro
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: "postgresql://root:password@localhost:5432/cerebro?schema=public"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Prisma migrations
+        run: |
+          cd packages/db
+          pnpm prisma generate
+          pnpm prisma migrate deploy
+
+      - name: Lint and Test Packages
+        run: pnpm run test --filter=./packages/*
+
+      - name: Generate OpenAPI
+        run: pnpm dlx tsx packages/api-client/src/schema/generate-openapi.ts
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+        working-directory: OPC/cerebro-hive-website/apps/studio
+
+      - name: Run E2E Tests (Mocked)
+        run: pnpm exec playwright test --config=playwright.config.ts
+        working-directory: OPC/cerebro-hive-website/apps/studio
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8080/v1 # Placeholder for mock server
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: apps/studio/playwright-report/
+          retention-days: 30

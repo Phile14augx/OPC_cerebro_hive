@@ -2,11 +2,11 @@ import { describe, it, expect, vi } from 'vitest';
 import { AIGatewayLLMProvider, computeHealthFromGateway } from './AIGatewayProviders';
 import type { AIGateway } from '@cerebro/ai-gateway';
 
-function fakeContext(overrides: { model?: string; tokens?: number } = {}): any {
+function fakeContext(overrides: { model?: string; tokens?: number } = {}) {
   return {
     modelSelection: { provider: 'auto', model: overrides.model ?? 'claude-sonnet-4-6' },
     budget: { tokens: overrides.tokens ?? 512 },
-  };
+  } as never;
 }
 
 describe('AIGatewayLLMProvider', () => {

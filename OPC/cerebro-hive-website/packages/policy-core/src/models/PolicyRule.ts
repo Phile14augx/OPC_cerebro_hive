@@ -12,20 +12,20 @@ export interface PolicyObligation {
   id: string;
   stage: ExecutionStage;
   action: string;
-  parameters?: Record<string, any>;
+  parameters?: Record<string, unknown>;
 }
 
 export interface PolicyAdvice {
   id: string;
   category: AdviceCategory;
   message: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface PolicyCondition {
   field: string;
   operator: string;
-  value: any;
+  value: unknown;
 }
 
 export interface PolicyRule {
@@ -47,7 +47,7 @@ export interface PolicyRule {
   obligations?: PolicyObligation[];
   advice?: PolicyAdvice[];
   
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdBy: string;
   updatedBy?: string;
   expiresAt?: Date;

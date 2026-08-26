@@ -1,5 +1,5 @@
 use anyhow::Result;
-use axum::{middleware, Router, routing::any};
+use axum::{middleware as axum_middleware, Router, routing::any};
 use std::{net::SocketAddr, sync::Arc};
 use tokio::net::TcpListener;
 use tower_http::{
@@ -13,7 +13,8 @@ use tracing::info;
 mod auth;
 mod config;
 mod error;
-mod middleware as mw;
+mod middleware;
+use crate::middleware as mw;
 mod routes;
 mod state;
 
@@ -66,7 +67,7 @@ async fn main() -> Result<()> {
         .nest("/api/v1/knowledge", proxy_router(state.clone(), platform_ts.clone()))
         .nest("/api/v1/forge",     proxy_router(state.clone(), forge_ts))
         // Require JWT on all /api/v1/* routes
-        .layer(middleware::from_fn_with_state(
+        .layer(axum_middleware::from_fn_with_state(
             state.clone(),
             mw::auth::require_auth,
         ));
@@ -81,7 +82,7 @@ async fn main() -> Result<()> {
                 .layer(TraceLayer::new_for_http())
                 .layer(CompressionLayer::new())
                 .layer(cors)
-                .layer(middleware::from_fn_with_state(
+                .layer(axum_middleware::from_fn_with_state(
                     state.clone(),
                     mw::rate_limit::rate_limit,
                 )),
@@ -145,17 +146,3 @@ async fn shutdown_signal() {
     }
 }
 
-mod routes {
-    pub mod health {
-        use axum::Json;
-        use serde_json::{json, Value};
-        pub async fn health() -> Json<Value> { Json(json!({"status":"ok","service":"cerebro-gateway"})) }
-        pub async fn ready()  -> Json<Value> { Json(json!({"status":"ready"})) }
-    }
-    pub mod proxy;
-}
-
-mod mw {
-    pub mod auth;
-    pub mod rate_limit;
-}

@@ -11,7 +11,7 @@ export function ProofOfImpact() {
             Proven Enterprise Impact
           </h2>
           <p className="text-xl text-text-muted">
-            We don't just build models; we engineer measurable business outcomes.
+            We don&apos;t just build models; we engineer measurable business outcomes.
           </p>
         </div>
 

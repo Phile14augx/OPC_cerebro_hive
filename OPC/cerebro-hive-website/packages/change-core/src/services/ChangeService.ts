@@ -15,7 +15,7 @@ export class ChangeService {
     private readonly resilienceProvider: ResilienceProvider
   ) {}
 
-  private emitEvent(eventType: ChangeEventType, change: ChangeRequest, payload: any = {}) {
+  private emitEvent(eventType: ChangeEventType, change: ChangeRequest, payload: Record<string, unknown> = {}) {
     this.events.push({
       eventId: `evt-${Date.now()}`,
       eventType,

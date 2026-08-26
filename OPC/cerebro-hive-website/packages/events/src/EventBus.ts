@@ -3,7 +3,7 @@ import mitt from 'mitt';
 import { PlatformEventMap } from './EventTypes';
 
 // Hidden implementation detail
-const emitter = mitt<any>();
+const emitter = mitt<PlatformEventMap>();
 
 export class PlatformEventBus {
   static publish<K extends keyof PlatformEventMap>(type: K, event: PlatformEventMap[K]) {

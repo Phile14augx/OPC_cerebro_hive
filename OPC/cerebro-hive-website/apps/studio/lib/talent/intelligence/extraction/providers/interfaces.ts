@@ -1,4 +1,3 @@
-// @ts-nocheck
 export interface EvaluatedCapability {
   capabilityId: string;
   score: number;
@@ -7,8 +6,8 @@ export interface EvaluatedCapability {
 }
 
 export interface EvaluatorContext {
-  executionArtifacts: any;
-  telemetryMetrics: any;
+executionArtifacts: unknown;
+telemetryMetrics: unknown;
 }
 
 export interface IAIEvaluatorProvider {

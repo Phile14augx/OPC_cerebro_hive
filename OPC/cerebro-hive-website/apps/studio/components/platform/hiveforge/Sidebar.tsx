@@ -1,16 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { platformRegistry } from "../../../app/platform/hiveforge/core/registry/PlatformRegistry";
+import { eventBus } from "../../../app/platform/hiveforge/core/events/EventBus";
 import { NavigationNode } from "../../../app/platform/hiveforge/core/contracts/plugin";
 
-export function Sidebar() {
-  const [nodes, setNodes] = useState<NavigationNode[]>([]);
+const emptyNavigationNodes: NavigationNode[] = [];
 
-  useEffect(() => {
-    // Fetch generated navigation from metadata
-    setNodes(platformRegistry.getNavigationNodes().sort((a, b) => a.priority - b.priority));
-  }, []);
+let navigationNodesSnapshot = platformRegistry
+  .getNavigationNodes()
+  .sort((first, second) => first.priority - second.priority);
+
+const getNavigationNodesSnapshot = () => navigationNodesSnapshot;
+
+const refreshNavigationNodesSnapshot = () => {
+  navigationNodesSnapshot = platformRegistry
+    .getNavigationNodes()
+    .sort((first, second) => first.priority - second.priority);
+};
+
+const subscribeToNavigationNodes = (notify: () => void) => {
+  const unsubscribe = eventBus.subscribe(
+    "ResourceLifecycle",
+    "PluginRegistered",
+    () => {
+      refreshNavigationNodesSnapshot();
+      notify();
+    },
+  );
+
+  refreshNavigationNodesSnapshot();
+  notify();
+
+  return unsubscribe;
+};
+
+export function Sidebar() {
+  const nodes = useSyncExternalStore(
+    subscribeToNavigationNodes,
+    getNavigationNodesSnapshot,
+    () => emptyNavigationNodes,
+  );
 
   const renderNodesByLocation = (location: string) => {
     return nodes

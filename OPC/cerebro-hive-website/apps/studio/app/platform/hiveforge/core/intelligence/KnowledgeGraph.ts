@@ -14,7 +14,7 @@ export interface KnowledgeEdgeMetadata {
   timestamp: string;
   severity?: "info" | "warning" | "critical";
   contextId?: string; // e.g., an Event ID or Correlation ID
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface KnowledgeEdge {
@@ -28,7 +28,7 @@ export interface KnowledgeEdge {
 export interface KnowledgeNode {
   id: string;
   type: KnowledgeNodeType;
-  metadata: any;
+  metadata: Record<string, unknown>;
 }
 
 export class KnowledgeGraph {

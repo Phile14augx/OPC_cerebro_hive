@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowRight, PlayCircle, BookOpen, Clock, Tag } from "lucide-react";
+import { ArrowRight, PlayCircle, BookOpen, Clock } from "lucide-react";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { cn } from "@/lib/utils";
 

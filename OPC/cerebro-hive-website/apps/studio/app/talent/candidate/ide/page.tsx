@@ -22,7 +22,7 @@ const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
 export default function CandidateCloudIDE() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [code, setCode] = useState('// Write your solution here\n\nfunction solve() {\n  \n}');
-  const [telemetryBatch, setTelemetryBatch] = useState<any[]>([]);
+  const [telemetryBatch, setTelemetryBatch] = useState<unknown[]>([]);
   const batchSequence = useRef(0);
 
   // 1. Initialize the Session
@@ -148,9 +148,9 @@ export default function CandidateCloudIDE() {
         setIsExecuting(false);
         eventSource.close();
       };
-
-    } catch (e: any) {
-      setTerminalOutput(prev => [...prev, `[ERROR] ${e.message}`]);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setTerminalOutput(prev => [...prev, `[ERROR] ${msg}`]);
       setIsExecuting(false);
     }
   };

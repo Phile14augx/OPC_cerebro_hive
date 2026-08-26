@@ -73,8 +73,9 @@ export class S3EvidenceStore {
 
       const bodyString = await this.streamToString(result.Body as Readable);
       return JSON.parse(bodyString);
-    } catch (err: any) {
-      if (err.name === 'NoSuchKey') return undefined;
+    } catch (err: unknown) {
+      const e = err as { name?: string };
+      if (e.name === 'NoSuchKey') return undefined;
       throw err;
     }
   }
@@ -94,8 +95,9 @@ export class S3EvidenceStore {
         })
       );
       return true;
-    } catch (err: any) {
-      if (err.name === 'NotFound' || err.$metadata?.httpStatusCode === 404) {
+    } catch (err: unknown) {
+      const e = err as { name?: string; $metadata?: { httpStatusCode?: number } };
+      if (e.name === 'NotFound' || e.$metadata?.httpStatusCode === 404) {
         return false;
       }
       throw err;

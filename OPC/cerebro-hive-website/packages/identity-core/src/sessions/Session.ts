@@ -6,7 +6,7 @@ export interface Session {
   principalId: string;
   startedAt: Date;
   expiresAt?: Date;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface SessionStore {
