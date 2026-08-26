@@ -51,6 +51,8 @@ regexes = [
   '''sk-EXAMPLE''',
   '''test_password''',
   '''supersecretpassword123''',   # docker-compose dev default
+  '''postgresql://root:password@localhost:5432/cerebro\?schema=public''',
+  '''postgresql://root:password@postgres:5432/cerebro\?schema=public''',
 ]
 paths = [
   '''\.codex-task8-verification/''',

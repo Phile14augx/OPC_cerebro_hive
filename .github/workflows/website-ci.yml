@@ -122,6 +122,12 @@ jobs:
         working-directory: OPC/cerebro-hive-website/apps/studio/platform
         run: npm install --ignore-scripts
 
+      - name: Run Prisma migrations
+        working-directory: OPC/cerebro-hive-website/packages/db
+        run: |
+          pnpm prisma generate
+          pnpm prisma migrate deploy
+
       # W0.2 validates that package test scripts are real contracts. Execute
       # those declared contracts directly; do not inject runner-specific
       # coverage/reporting flags into heterogeneous workspace packages.
