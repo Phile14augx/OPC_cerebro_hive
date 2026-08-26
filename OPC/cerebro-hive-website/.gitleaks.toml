@@ -51,7 +51,6 @@ regexes = [
   '''sk-EXAMPLE''',
   '''test_password''',
   '''supersecretpassword123''',   # docker-compose dev default
-  '''postgresql://(stub:stub|test:test|root:root)@localhost:\d+/[\w_]+''',
 ]
 paths = [
   '''\.codex-task8-verification/''',

@@ -1,0 +1,8 @@
+﻿# Suppress known safe localhost PostgreSQL fixture DSNs
+[allowlist]
+commits = [
+  "7373c1fd8fa036cc17ea2eb81905dcb2b3ec658e",
+  "f7522c53e03ad4065deee4a71d89f67f17b18882",
+  "0ca0ac64a09c5d776bbdf8ac0bddd9fd075add8c",
+  "9dc69e651e403a50d84d616c4396732f0e8bc1c7"
+]
