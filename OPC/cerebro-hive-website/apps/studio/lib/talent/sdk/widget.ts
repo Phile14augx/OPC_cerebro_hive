@@ -63,6 +63,9 @@ class Registry {
 private widgets: Map<string, IWidgetSDK<unknown, unknown, unknown>> = new Map();
 
 register(widget: IWidgetSDK<unknown, unknown, unknown>) {
+    if (!widget || !widget.metadata || typeof widget.metadata.type !== 'string' || !widget.Renderer || !widget.ConfigUI || !widget.validateConfig || !widget.compile || !widget.executionHooks || !widget.evaluationHooks || !widget.telemetry) {
+      return;
+    }
     if (this.widgets.has(widget.metadata.type)) {
       console.warn(`Widget ${widget.metadata.type} is already registered. Overwriting.`);
     }

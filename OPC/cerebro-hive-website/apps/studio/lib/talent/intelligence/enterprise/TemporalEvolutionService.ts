@@ -13,7 +13,7 @@ export class TemporalEvolutionService {
     // Aggregate all evidence up to right now
         
     // BUG FIX (W0.2-SUP-138/139): prisma.skillProfileSnapshot is missing from DB schema
-    throw new Error("ERR_SCHEMA_MISSING: skillProfileSnapshot schema is unavailable.");
+    throw new Error("ERR_SCHEMA_MISSING: skillEvidence schema is unavailable.");
   }
 
   /**
