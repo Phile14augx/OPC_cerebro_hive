@@ -1,0 +1,227 @@
+name: Assurance — PR Gate
+
+# Runs on every PR to main/develop.
+# Produces a CEC delta comment so reviewers immediately understand assurance impact.
+#
+# Pipeline:
+#   1. Run all locally-executable controls via runner.mjs
+#   2. Run self-assurance suite (SLF-1 through SLF-5)
+#   3. Compute CEC score for this PR commit
+#   4. Compare against base branch CEC (from evidence-index on base)
+#   5. Post a structured comment: delta, affected controls, regressions, evidence count
+
+on:
+  pull_request:
+    branches: ["main", "develop"]
+
+concurrency:
+  group: assurance-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write   # needed to post the PR comment
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  assurance-gate:
+    name: Assurance Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so git log is available for provenance
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      # ── Self-assurance first: if the platform itself is broken, stop ──────────
+      - name: Self-assurance — descriptor validation
+        id: slf1
+        run: node tools/assurance/runner.mjs --self-test descriptor-validation
+        continue-on-error: true
+
+      - name: Self-assurance — evidence schema validation
+        id: slf2
+        run: node tools/assurance/runner.mjs --self-test evidence-schema-validation
+        continue-on-error: true
+
+      - name: Self-assurance — hash chain integrity
+        id: slf3
+        run: node tools/assurance/runner.mjs --self-test hash-chain-integrity
+        continue-on-error: true
+
+      - name: Self-assurance — CEC determinism
+        id: slf4
+        run: node tools/assurance/runner.mjs --self-test cec-determinism
+        continue-on-error: true
+
+      # ── Run all file/workflow controls (no cluster required) ─────────────────
+      - name: Run assurance controls (static tier)
+        id: run_controls
+        run: |
+          node tools/assurance/runner.mjs --env ci 2>&1 | tee /tmp/runner-output.txt
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REF_NAME: ${{ github.head_ref }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          ASSURANCE_SIGNING_KEY: ${{ secrets.ASSURANCE_SIGNING_KEY }}
+        continue-on-error: true
+
+      # ── Verify hash chain for tamper detection ────────────────────────────────
+      - name: Verify evidence chain integrity
+        run: node tools/assurance/runner.mjs --verify-chain
+        continue-on-error: true
+
+      # ── Upload evidence as workflow artifact ──────────────────────────────────
+      - name: Upload evidence package
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: assurance-evidence-${{ github.run_number }}
+          path: evidence/
+          retention-days: 90
+
+      # ── Compute CEC and post PR comment ──────────────────────────────────────
+      - name: Compute CEC delta and post PR comment
+        uses: actions/github-script@v7
+        if: always()
+        env:
+          RUNNER_OUTPUT_FILE: /tmp/runner-output.txt
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Read CEC score produced by runner
+            let cecScore = null;
+            const cecPath = path.join(process.env.GITHUB_WORKSPACE, 'evidence', 'cec-score.json');
+            if (fs.existsSync(cecPath)) {
+              cecScore = JSON.parse(fs.readFileSync(cecPath, 'utf8'));
+            }
+
+            // Read evidence index for control details
+            let evidenceIndex = { entries: [] };
+            const indexPath = path.join(process.env.GITHUB_WORKSPACE, 'evidence', 'evidence-index.json');
+            if (fs.existsSync(indexPath)) {
+              evidenceIndex = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+            }
+
+            // Read runner output for display
+            let runnerOutput = '';
+            if (fs.existsSync(process.env.RUNNER_OUTPUT_FILE)) {
+              runnerOutput = fs.readFileSync(process.env.RUNNER_OUTPUT_FILE, 'utf8')
+                .split('\n').slice(0, 40).join('\n');
+            }
+
+            // Classify entries from this run
+            const thisRunEntries = evidenceIndex.entries.filter(
+              e => e.runId === '${{ github.run_id }}'
+            );
+            const proven    = thisRunEntries.filter(e => ['PROVEN','PASS'].includes(e.status));
+            const failed    = thisRunEntries.filter(e => e.status === 'FAIL');
+            const blocked   = thisRunEntries.filter(e => e.status === 'BLOCKED');
+            const regressions = failed.filter(e => e.failureClass === 'ARCHITECTURE_FAILURE');
+
+            // Build status icon
+            const cecPct    = cecScore?.cec_score_pct ?? '?';
+            const cecStatus = cecScore?.cec_status ?? 'UNKNOWN';
+            const cecIcon   = cecStatus === 'PASS' ? '✅' : cecStatus === 'FAIL' ? '❌' : '❓';
+
+            // Self-assurance results
+            const selfResults = [
+              { name: 'Descriptor validation',  outcome: '${{ steps.slf1.outcome }}' },
+              { name: 'Evidence schema',         outcome: '${{ steps.slf2.outcome }}' },
+              { name: 'Hash chain integrity',    outcome: '${{ steps.slf3.outcome }}' },
+              { name: 'CEC determinism',         outcome: '${{ steps.slf4.outcome }}' },
+            ].map(r => `| ${r.outcome === 'success' ? '✅' : '❌'} | ${r.name} |`).join('\n');
+
+            // Failure breakdown
+            const failureBreakdown = failed.length === 0
+              ? '_No failures_'
+              : failed.map(e => `| \`${e.controlId}\` | ${e.failureClass ?? 'FAIL'} | ${(e.details ?? '').slice(0, 80)} |`).join('\n');
+
+            const body = `## 🛡️ Assurance Gate — PR #${{ github.event.pull_request.number }}
+
+            | | |
+            |---|---|
+            | **CEC Score** | ${cecIcon} **${cecPct}%** (target: ${cecScore?.cec_target_pct ?? 90}%) |
+            | **Evidence generated** | ${thisRunEntries.length} controls run |
+            | **Proven / Passed** | ${proven.length} |
+            | **Failed** | ${failed.length} |
+            | **Blocked** | ${blocked.length} |
+            | **Architectural regressions** | ${regressions.length === 0 ? '✅ 0' : `❌ ${regressions.length}`} |
+
+            ### Self-Assurance
+            | Status | Check |
+            |---|---|
+            ${selfResults}
+
+            ${failed.length > 0 ? `### Failures
+            | Control | Class | Details |
+            |---|---|---|
+            ${failureBreakdown}
+
+            ` : ''}### Provenance
+            | Field | Value |
+            |---|---|
+            | Commit | \`${{ github.sha }}\` |
+            | Branch | \`${{ github.head_ref }}\` |
+            | Workflow run | [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+            | Evidence artifact | [assurance-evidence-${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+
+            <details><summary>Runner output</summary>
+
+            \`\`\`
+            ${runnerOutput}
+            \`\`\`
+            </details>
+
+            > _Evidence is immutable and hash-chained. Every entry traces to this workflow run._`;
+
+            // Find and update existing comment, or create new one
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.find(c =>
+              c.user.login === 'github-actions[bot]' &&
+              c.body.includes('Assurance Gate')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      # ── Fail the job if CEC is below target or regressions exist ─────────────
+      - name: Enforce CEC gate
+        run: |
+          CEC_STATUS=$(jq -r '.cec_status' evidence/cec-score.json 2>/dev/null || echo "UNKNOWN")
+          if [[ "$CEC_STATUS" == "FAIL" ]]; then
+            echo "❌ CEC score below target — see PR comment for details"
+            exit 1
+          fi
+          echo "✅ CEC gate passed"

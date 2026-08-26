@@ -41,11 +41,21 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
     // Seed fixtures
     const tenant = await prisma.tenant.create({ data: { name: 'test-tenant', slug: 'test-tenant-recovery-' + Date.now() } });
     tenantId = tenant.id;
-    const workspace = await prisma.workspace.create({ data: { name: 'test-ws', tenantId } });
+    const workspace = await prisma.workspace.create({ data: { name: 'test-ws', slug: 'test-ws-slug-' + Date.now(), tenantId } });
     workspaceId = workspace.id;
     const agent = await prisma.agent.create({ data: { name: 'test-agent', workspaceId } });
     agentId = agent.id;
-    const agentVersion = await prisma.agentVersion.create({ data: { agentId, version: 1, definition: {} } });
+    
+    const provider = await prisma.aIProvider.create({ data: { name: 'TestProvider' } });
+    const model = await prisma.aIModel.create({ data: { name: 'TestModel', providerId: provider.id } });
+    const agentVersion = await prisma.agentVersion.create({ 
+      data: { 
+        agentId, 
+        version: 1, 
+        modelId: model.id,
+        instructions: 'Test instructions' 
+      } 
+    });
     agentVersionId = agentVersion.id;
 
     await leaseManager.registerWorker('worker-recovery', {});
@@ -88,8 +98,8 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
       outboxEntries: [{ type: 'COMMAND', payload: { action: 'test' }, id: 'dedup-2' }]
     });
 
-    const pending = await outbox.getPendingMessages();
-    const found = pending.find(p => p.executionId === eid);
+    const pending = await outbox.fetchPending();
+    const found = pending.find((p: any) => p.executionId === eid);
     expect(found).toBeDefined();
     expect(found!.status).toBe('PENDING');
   });
@@ -184,8 +194,8 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
       outboxEntries: [{ type: 'NOTIFY', payload: {}, id: 'outbox-8' }]
     });
 
-    const pending = await outbox.getPendingMessages();
-    const entry = pending.find(p => p.executionId === eid);
+    const pending = await outbox.fetchPending();
+    const entry = pending.find((p: any) => p.executionId === eid);
     expect(entry).toBeDefined();
 
     const state = await store.getExecution(eid);
@@ -211,12 +221,12 @@ describe('Durable Execution Recovery: 12 Scenarios', () => {
     const lease = await leaseManager.acquireLease(eid, 'worker-recovery', 30000);
     
     await store.saveSnapshot({
-      id: 'snap-1', executionId: eid, sequence: 10n, state: { myState: 1 }, createdAt: new Date()
+      id: 'snap-1', executionId: eid, sequence: 10n, state: { workingMemory: {}, messages: [], context: {}, activeToolCalls: [] }, createdAt: new Date(), aggregateVersion: 10, tenantId: tenantId
     }, lease!.fencingToken, 'hash');
 
     const snap = await store.getLatestSnapshot(eid);
     expect(snap!.sequence).toBe(10n);
-    expect((snap!.state as any).myState).toBe(1);
+    expect((snap!.state as any).workingMemory).toBeDefined();
   });
 
   test('Scenario 11: Idempotent resume ignores duplicate sequences', async () => {

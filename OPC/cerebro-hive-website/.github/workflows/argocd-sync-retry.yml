@@ -1,0 +1,274 @@
+name: DeployOps — ArgoCD Sync Retry Loop
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ArgoCD Sync Retry Loop
+#
+# Syncs an ArgoCD application and polls until it's healthy.
+# If sync fails, retries with exponential backoff until MAX_RETRIES.
+# On permanent failure: opens GitHub issue + posts Slack alert.
+#
+# Usage (called from release-train.yml or manually):
+#   workflow_dispatch:
+#     inputs:
+#       app_name: "cerebro-hive-staging"
+#       revision: "main"
+#       max_retries: "5"
+# ──────────────────────────────────────────────────────────────────────────────
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: "ArgoCD application name"
+        required: true
+        type: string
+      revision:
+        description: "Git revision to sync (branch, tag, SHA)"
+        required: false
+        default: "HEAD"
+        type: string
+      max_retries:
+        description: "Maximum number of sync attempts"
+        required: false
+        default: "5"
+        type: string
+      health_timeout:
+        description: "Seconds to wait for health after each sync"
+        required: false
+        default: "300"
+        type: string
+    outputs:
+      result:
+        description: "sync-succeeded or sync-failed"
+        value: ${{ jobs.sync-loop.outputs.result }}
+      final_attempt:
+        description: "Which attempt number succeeded (or failed)"
+        value: ${{ jobs.sync-loop.outputs.final_attempt }}
+
+  workflow_dispatch:
+    inputs:
+      app_name:
+        description: "ArgoCD application name"
+        required: true
+        default: "cerebro-hive-staging"
+      revision:
+        description: "Git revision to sync"
+        required: false
+        default: "HEAD"
+      max_retries:
+        description: "Maximum retry attempts"
+        required: false
+        default: "5"
+      health_timeout:
+        description: "Health check timeout (seconds)"
+        required: false
+        default: "300"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync-loop:
+    name: Sync Loop — ${{ inputs.app_name }}
+    runs-on: ubuntu-latest
+    outputs:
+      result:        ${{ steps.outcome.outputs.result }}
+      final_attempt: ${{ steps.outcome.outputs.final_attempt }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ArgoCD CLI
+        run: |
+          curl -sSL -o /usr/local/bin/argocd \
+            https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x /usr/local/bin/argocd
+          argocd version --client
+
+      - name: Login to ArgoCD
+        run: |
+          argocd login "${{ vars.ARGOCD_SERVER || 'argocd.cerebrohive.com' }}" \
+            --auth-token "${{ secrets.ARGOCD_TOKEN }}" \
+            --grpc-web \
+            --insecure
+
+      # ── Retry loop — bash while loop with exponential backoff ───────────────
+      - name: ArgoCD sync with retry loop
+        id: sync-loop
+        env:
+          APP_NAME:       ${{ inputs.app_name }}
+          REVISION:       ${{ inputs.revision }}
+          MAX_RETRIES:    ${{ inputs.max_retries || '5' }}
+          HEALTH_TIMEOUT: ${{ inputs.health_timeout || '300' }}
+        run: |
+          attempt=1
+          succeeded=false
+
+          while [ "$attempt" -le "$MAX_RETRIES" ]; do
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "🔄 Sync attempt ${attempt}/${MAX_RETRIES} for ${APP_NAME}"
+            echo "   Revision: ${REVISION}"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+            # Exponential backoff before each retry (skip for first attempt)
+            if [ "$attempt" -gt 1 ]; then
+              BACKOFF=$(( (attempt - 1) * (attempt - 1) * 15 ))
+              echo "⏳ Waiting ${BACKOFF}s before retry (exponential backoff)..."
+              sleep "$BACKOFF"
+            fi
+
+            # Terminate any stuck sync before starting fresh
+            argocd app terminate-op "$APP_NAME" 2>/dev/null || true
+            sleep 3
+
+            # Trigger sync
+            echo "▶ Triggering sync..."
+            if argocd app sync "$APP_NAME" \
+                --revision "$REVISION" \
+                --prune \
+                --timeout 60 \
+                --force \
+                2>&1 | tee /tmp/sync-output-${attempt}.log; then
+              echo "✅ Sync command accepted"
+            else
+              SYNC_EXIT=$?
+              echo "⚠️  Sync command exited with code ${SYNC_EXIT}"
+              # Don't abort — the app might still converge; poll health below
+            fi
+
+            # Poll for health (up to HEALTH_TIMEOUT seconds)
+            echo "⏳ Polling health for ${HEALTH_TIMEOUT}s..."
+            ELAPSED=0
+            POLL_INTERVAL=10
+            HEALTH_RESULT="unknown"
+
+            while [ "$ELAPSED" -lt "$HEALTH_TIMEOUT" ]; do
+              APP_STATUS=$(argocd app get "$APP_NAME" -o json 2>/dev/null)
+              SYNC_STATUS=$(echo "$APP_STATUS" | jq -r '.status.sync.status // "Unknown"')
+              HEALTH_STATUS=$(echo "$APP_STATUS" | jq -r '.status.health.status // "Unknown"')
+
+              echo "   [${ELAPSED}s] Sync: ${SYNC_STATUS} | Health: ${HEALTH_STATUS}"
+
+              if [ "$HEALTH_STATUS" = "Healthy" ] && [ "$SYNC_STATUS" = "Synced" ]; then
+                HEALTH_RESULT="healthy"
+                break
+              fi
+
+              if [ "$HEALTH_STATUS" = "Degraded" ]; then
+                echo "💔 App is Degraded — failing fast to trigger retry"
+                HEALTH_RESULT="degraded"
+                break
+              fi
+
+              sleep "$POLL_INTERVAL"
+              ELAPSED=$(( ELAPSED + POLL_INTERVAL ))
+            done
+
+            if [ "$HEALTH_RESULT" = "healthy" ]; then
+              echo ""
+              echo "🎉 SUCCESS: ${APP_NAME} is Healthy and Synced on attempt ${attempt}!"
+              echo "attempt=${attempt}" >> "$GITHUB_OUTPUT"
+              echo "succeeded=true"    >> "$GITHUB_OUTPUT"
+              succeeded=true
+              break
+            else
+              echo ""
+              echo "❌ Attempt ${attempt} failed (result: ${HEALTH_RESULT})"
+
+              # Capture degraded resources for diagnostics
+              argocd app get "$APP_NAME" --hard-refresh 2>/dev/null | tail -40 \
+                > /tmp/argocd-status-${attempt}.log || true
+
+              if [ "$attempt" -lt "$MAX_RETRIES" ]; then
+                echo "🔁 Will retry ($(( MAX_RETRIES - attempt )) attempts remaining)..."
+              else
+                echo "☠️  All ${MAX_RETRIES} attempts exhausted."
+                echo "attempt=${attempt}" >> "$GITHUB_OUTPUT"
+                echo "succeeded=false"   >> "$GITHUB_OUTPUT"
+              fi
+            fi
+
+            attempt=$(( attempt + 1 ))
+          done
+
+          # Write final status for later steps
+          if [ "$succeeded" = "true" ]; then
+            echo "SYNC_RESULT=succeeded" >> "$GITHUB_ENV"
+          else
+            echo "SYNC_RESULT=failed" >> "$GITHUB_ENV"
+          fi
+
+      - name: Upload sync logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: argocd-sync-logs-${{ inputs.app_name }}
+          path: /tmp/sync-output-*.log
+          retention-days: 7
+
+      - name: Upload ArgoCD status dumps
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: argocd-status-dumps-${{ inputs.app_name }}
+          path: /tmp/argocd-status-*.log
+          retention-days: 7
+
+      # ── Set job output ──────────────────────────────────────────────────────
+      - name: Set outcome output
+        id: outcome
+        run: |
+          if [ "$SYNC_RESULT" = "succeeded" ]; then
+            echo "result=sync-succeeded" >> "$GITHUB_OUTPUT"
+          else
+            echo "result=sync-failed"    >> "$GITHUB_OUTPUT"
+          fi
+          echo "final_attempt=${{ steps.sync-loop.outputs.attempt }}" >> "$GITHUB_OUTPUT"
+
+      # ── Open incident issue on total failure ────────────────────────────────
+      - name: Open incident issue on total failure
+        if: env.SYNC_RESULT == 'failed'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const appName    = '${{ inputs.app_name }}';
+            const maxRetries = '${{ inputs.max_retries || 5 }}';
+            const runUrl     = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            const { data: issue } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              title: `🚨 [Deploy Incident] ArgoCD sync failed for \`${appName}\` after ${maxRetries} retries`,
+              labels: ['deployment-incident', 'needs-human', 'high-priority'],
+              body: `## ArgoCD Sync Failure — Max Retries Exceeded
+
+            **Application:** \`${appName}\`
+            **Max retries:** ${maxRetries}
+            **Workflow run:** ${runUrl}
+
+            ## What happened
+            The ArgoCD sync retry loop attempted to sync \`${appName}\` ${maxRetries} times with exponential backoff. All attempts resulted in a Degraded or unsynced state.
+
+            ## Immediate actions
+            - [ ] Open [ArgoCD UI](https://argocd.cerebrohive.com/applications/${appName}) and inspect resource tree
+            - [ ] Check [Grafana](https://grafana.cerebrohive.com) for pod/container errors
+            - [ ] Run: \`argocd app logs ${appName} --tail 100\`
+            - [ ] If production: \`argocd app rollback cerebro-hive-production\`
+
+            ## Manual retry
+            \`\`\`bash
+            # Manually sync once root cause is fixed
+            argocd app sync ${appName} --prune --force
+
+            # Or trigger this workflow again:
+            gh workflow run argocd-sync-retry.yml \\
+              -f app_name=${appName} \\
+              -f max_retries=3
+            \`\`\`
+
+            ---
+            *Auto-generated by [argocd-sync-retry](${runUrl})*`,
+            });
+
+            core.setFailed(`ArgoCD sync for ${appName} failed after ${maxRetries} retries. Incident: #${issue.number}`);

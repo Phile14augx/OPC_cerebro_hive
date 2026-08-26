@@ -1,0 +1,486 @@
+name: SLO Load Test
+
+# Validates CerebroHive SLO targets under sustained load at three user tiers.
+#
+# SLO Targets (from infra/k6/slo-load-test.js):
+#   API Availability  ≥ 99.95%   (http_req_failed rate < 0.0005)
+#   P95 Latency       < 250 ms   (forge-api endpoints)
+#   P99 Latency       < 750 ms
+#   Error Rate        < 0.1%
+#   AI Job Completion ≥ 99%
+#   Auth P95          < 100 ms
+#   Streaming TTFB P95 < 5000 ms
+#
+# Tier schedule:
+#   Tier 10:   runs weekly (every Sunday)
+#   Tier 100:  runs monthly (first Sunday)
+#   Tier 1000: runs quarterly (first Sunday of Jan, Apr, Jul, Oct)
+#
+# Evidence produced:
+#   - slo-results-tier{N}.json  (per-tier pass/fail + metric values)
+#   - slo-summary.md            (human-readable posted to step summary)
+#   - Prometheus metrics (via remote write to monitoring stack)
+#   - Slack notification to #sre-evidence
+
+on:
+  schedule:
+    # Tier 10: weekly, Sunday 03:00 UTC
+    - cron: "0 3 * * 0"
+
+  workflow_dispatch:
+    inputs:
+      tier:
+        description: "VU tier to run (10, 100, or 1000)"
+        required: true
+        type: choice
+        options: ["10", "100", "1000"]
+        default: "10"
+      base_url:
+        description: "API base URL"
+        required: false
+        default: "https://api-staging.cerebro-hive.io"
+      duration_override:
+        description: "Override sustain duration (e.g. '2m' for quick validation)"
+        required: false
+        default: ""
+
+concurrency:
+  group: slo-load-test
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  # ── Determine which tiers to run ──────────────────────────────────────────
+  resolve-tiers:
+    name: Resolve test tiers
+    runs-on: ubuntu-latest
+    outputs:
+      tiers: ${{ steps.tiers.outputs.tiers }}
+      base_url: ${{ steps.tiers.outputs.base_url }}
+
+    steps:
+      - name: Resolve tiers and base URL
+        id: tiers
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TIERS='["${{ inputs.tier }}"]'
+            BASE_URL="${{ inputs.base_url }}"
+          else
+            # Determine tier based on date
+            DOW=$(date +%u)   # 7 = Sunday
+            DOM=$(date +%d)   # Day of month
+            MON=$(date +%m)   # Month
+
+            TIERS='["10"]'    # Always run tier 10 on Sundays
+
+            # First Sunday of month → also run tier 100
+            if [ "${DOM}" -le 7 ]; then
+              TIERS='["10","100"]'
+            fi
+
+            # First Sunday of Jan, Apr, Jul, Oct → also run tier 1000
+            if [ "${DOM}" -le 7 ] && echo "01 04 07 10" | grep -qw "${MON}"; then
+              TIERS='["10","100","1000"]'
+            fi
+
+            BASE_URL="https://api-staging.cerebro-hive.io"
+          fi
+
+          echo "tiers=${TIERS}" >> $GITHUB_OUTPUT
+          echo "base_url=${BASE_URL}" >> $GITHUB_OUTPUT
+          echo "Running tiers: ${TIERS} against ${BASE_URL}"
+
+  # ── Pre-flight: verify staging is healthy ─────────────────────────────────
+  preflight:
+    name: Pre-flight health check
+    runs-on: ubuntu-latest
+    needs: resolve-tiers
+
+    steps:
+      - name: Check API health
+        run: |
+          BASE_URL="${{ needs.resolve-tiers.outputs.base_url }}"
+
+          echo "Checking ${BASE_URL}/health..."
+          HTTP_STATUS=$(curl -sf -o /dev/null -w "%{http_code}" "${BASE_URL}/health" || echo "000")
+
+          if [ "${HTTP_STATUS}" != "200" ]; then
+            echo "::error::Pre-flight failed — ${BASE_URL}/health returned ${HTTP_STATUS}"
+            exit 1
+          fi
+
+          echo "✅ Pre-flight passed (HTTP ${HTTP_STATUS})"
+
+      - name: Check no critical alerts firing
+        run: |
+          # If Alertmanager is reachable, ensure no critical alerts are active
+          AM_URL="${{ secrets.ALERTMANAGER_URL }}"
+          if [ -z "${AM_URL}" ]; then
+            echo "No Alertmanager URL configured — skipping"
+            exit 0
+          fi
+
+          CRITICAL=$(curl -sf "${AM_URL}/api/v2/alerts?filter=severity=critical&active=true" \
+            | python3 -c "import json,sys; alerts=json.load(sys.stdin); print(len(alerts))" \
+            || echo "0")
+
+          if [ "${CRITICAL}" -gt 0 ]; then
+            echo "::error::${CRITICAL} critical alerts firing — aborting load test"
+            exit 1
+          fi
+
+          echo "✅ No critical alerts firing"
+
+  # ── Run load test per tier ────────────────────────────────────────────────
+  load-test:
+    name: k6 SLO test — Tier ${{ matrix.tier }}
+    runs-on: ubuntu-latest
+    needs: [resolve-tiers, preflight]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        tier: ${{ fromJson(needs.resolve-tiers.outputs.tiers) }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install k6
+        run: |
+          curl -s https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" \
+            | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update -qq
+          sudo apt-get install -y k6
+          k6 version
+
+      - name: Run k6 SLO load test — Tier ${{ matrix.tier }}
+        id: k6run
+        env:
+          TIER: ${{ matrix.tier }}
+          BASE_URL: ${{ needs.resolve-tiers.outputs.base_url }}
+          API_TOKEN: ${{ secrets.SLO_TEST_API_TOKEN }}
+          WORKSPACE_ID: ${{ secrets.SLO_TEST_WORKSPACE_ID }}
+          ENV: staging
+          # If Prometheus remote write is configured
+          K6_PROMETHEUS_RW_SERVER_URL: ${{ secrets.PROMETHEUS_REMOTE_WRITE_URL }}
+          K6_PROMETHEUS_RW_USERNAME: ${{ secrets.PROMETHEUS_RW_USER }}
+          K6_PROMETHEUS_RW_PASSWORD: ${{ secrets.PROMETHEUS_RW_PASSWORD }}
+          K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM: "true"
+        run: |
+          # Build k6 output flags
+          OUTPUT_FLAGS="--out json=slo-results-tier${{ matrix.tier }}.json"
+
+          # Add Prometheus remote write if configured
+          if [ -n "${K6_PROMETHEUS_RW_SERVER_URL}" ]; then
+            OUTPUT_FLAGS="${OUTPUT_FLAGS} --out experimental-prometheus-rw"
+          fi
+
+          # Duration override for quick validation runs
+          DURATION_OVERRIDE="${{ inputs.duration_override }}"
+
+          k6 run \
+            ${OUTPUT_FLAGS} \
+            --summary-export=slo-summary-tier${{ matrix.tier }}.json \
+            --env TIER="${TIER}" \
+            --env BASE_URL="${BASE_URL}" \
+            --env API_TOKEN="${API_TOKEN}" \
+            --env WORKSPACE_ID="${WORKSPACE_ID}" \
+            --env ENV="${ENV}" \
+            infra/k6/slo-load-test.js \
+            2>&1 | tee k6-output-tier${{ matrix.tier }}.txt
+
+          # Capture exit code (k6 exits non-zero if thresholds fail)
+          K6_EXIT=${PIPESTATUS[0]}
+          echo "k6_exit=${K6_EXIT}" >> $GITHUB_OUTPUT
+
+          if [ "${K6_EXIT}" -ne 0 ]; then
+            echo "::warning::k6 thresholds failed for Tier ${{ matrix.tier }} — SLO breach detected"
+          else
+            echo "✅ Tier ${{ matrix.tier }}: All SLO thresholds passed"
+          fi
+
+          exit ${K6_EXIT}
+
+      - name: Parse k6 results
+        if: always()
+        id: parse
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+
+          TIER = "${{ matrix.tier }}"
+          summary_file = f"slo-summary-tier{TIER}.json"
+
+          try:
+              with open(summary_file) as f:
+                  summary = json.load(f)
+          except FileNotFoundError:
+              print(f"No summary file found: {summary_file}")
+              sys.exit(0)
+
+          metrics = summary.get('metrics', {})
+
+          def metric_val(name, stat='p(95)'):
+              m = metrics.get(name, {})
+              return m.get('values', {}).get(stat, 'N/A')
+
+          print(f"\n{'='*60}")
+          print(f"SLO Results — Tier {TIER}")
+          print(f"{'='*60}")
+          print(f"  Total requests:       {metric_val('http_reqs', 'count')}")
+          print(f"  Request rate:         {metric_val('http_reqs', 'rate'):.2f} req/s" if isinstance(metric_val('http_reqs', 'rate'), float) else f"  Request rate: {metric_val('http_reqs', 'rate')}")
+          print(f"  Error rate:           {metric_val('http_req_failed', 'rate')}")
+          print(f"  P50 latency:          {metric_val('http_req_duration', 'p(50)')} ms")
+          print(f"  P95 latency:          {metric_val('http_req_duration', 'p(95)')} ms")
+          print(f"  P99 latency:          {metric_val('http_req_duration', 'p(99)')} ms")
+          print(f"  Streaming TTFB P95:   {metric_val('cerebro_streaming_ttfb', 'p(95)')} ms")
+          print(f"  AI job success rate:  {metric_val('cerebro_ai_job_success_rate', 'rate')}")
+
+          # Threshold results
+          print(f"\nThreshold Results:")
+          all_pass = True
+          for name, data in metrics.items():
+              thresholds = data.get('thresholds', {})
+              for expr, result in thresholds.items():
+                  ok = result.get('ok', False)
+                  mark = '✅' if ok else '❌'
+                  print(f"  {mark} {name}[{expr}]")
+                  if not ok:
+                      all_pass = False
+
+          print(f"\nOverall: {'✅ PASS' if all_pass else '❌ FAIL'}")
+          EOF
+
+      - name: Post to GitHub step summary
+        if: always()
+        run: |
+          python3 - <<'PYEOF'
+          import json, os
+
+          TIER = "${{ matrix.tier }}"
+          K6_EXIT = "${{ steps.k6run.outputs.k6_exit }}"
+          status_icon = "✅" if K6_EXIT == "0" else "❌"
+          status_text = "PASS" if K6_EXIT == "0" else "FAIL (SLO breach)"
+
+          summary_file = f"slo-summary-tier{TIER}.json"
+          try:
+              with open(summary_file) as f:
+                  data = json.load(f)
+              metrics = data.get('metrics', {})
+
+              def v(name, stat='p(95)'):
+                  m = metrics.get(name, {})
+                  val = m.get('values', {}).get(stat, 'N/A')
+                  if isinstance(val, float):
+                      return f"{val:.2f}"
+                  return str(val)
+
+              summary = f"""## {status_icon} SLO Load Test — Tier {TIER} VUs
+
+          **Status:** {status_text}
+
+          | SLO | Target | Actual | Status |
+          |-----|--------|--------|--------|
+          | API Availability | ≥ 99.95% | {100 - float(v('http_req_failed', 'rate') or 0) * 100:.3f}% | {'✅' if K6_EXIT == '0' else '❌'} |
+          | P95 Latency | < 250 ms | {v('http_req_duration', 'p(95)')} ms | {'✅' if K6_EXIT == '0' else '⚠️'} |
+          | P99 Latency | < 750 ms | {v('http_req_duration', 'p(99)')} ms | {'✅' if K6_EXIT == '0' else '⚠️'} |
+          | AI Job Success | ≥ 99% | {v('cerebro_ai_job_success_rate', 'rate')} | {'✅' if K6_EXIT == '0' else '⚠️'} |
+          | Streaming TTFB P95 | < 5000 ms | {v('cerebro_streaming_ttfb', 'p(95)')} ms | {'✅' if K6_EXIT == '0' else '⚠️'} |
+
+          **Throughput:** {v('http_reqs', 'rate')} req/s | **Total requests:** {v('http_reqs', 'count')}
+          """
+          except Exception as e:
+              summary = f"## {status_icon} SLO Load Test — Tier {TIER}\n\nCould not parse results: {e}"
+
+          with open(os.environ.get('GITHUB_STEP_SUMMARY', '/dev/null'), 'a') as f:
+              f.write(summary)
+
+          print(summary)
+          PYEOF
+
+      - name: Upload k6 results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: slo-results-tier${{ matrix.tier }}-${{ github.run_number }}
+          path: |
+            slo-results-tier${{ matrix.tier }}.json
+            slo-summary-tier${{ matrix.tier }}.json
+            k6-output-tier${{ matrix.tier }}.txt
+          retention-days: 365   # Keep for 1 year (SLO trend analysis)
+
+  # ── Evidence report + Slack notification ─────────────────────────────────
+  evidence-report:
+    name: SLO evidence report
+    runs-on: ubuntu-latest
+    needs: [resolve-tiers, load-test]
+    if: always()
+
+    steps:
+      - name: Download all results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: slo-results-tier*
+          merge-multiple: true
+        continue-on-error: true
+
+      - name: Build consolidated SLO report
+        id: report
+        run: |
+          python3 - <<'EOF'
+          import json, os, glob
+          from datetime import datetime, timezone
+
+          tiers = json.loads('${{ needs.resolve-tiers.outputs.tiers }}')
+          overall_pass = True
+          tier_results = {}
+
+          for tier in tiers:
+              summary_file = f"slo-summary-tier{tier}.json"
+              if os.path.exists(summary_file):
+                  with open(summary_file) as f:
+                      data = json.load(f)
+                  metrics = data.get('metrics', {})
+
+                  def v(name, stat='p(95)'):
+                      m = metrics.get(name, {})
+                      val = m.get('values', {}).get(stat, None)
+                      if isinstance(val, float):
+                          return round(val, 2)
+                      return val
+
+                  # Check all thresholds
+                  all_pass = all(
+                      result.get('ok', False)
+                      for m in metrics.values()
+                      for result in m.get('thresholds', {}).values()
+                  )
+
+                  tier_results[tier] = {
+                      'pass': all_pass,
+                      'p95_latency_ms': v('http_req_duration', 'p(95)'),
+                      'p99_latency_ms': v('http_req_duration', 'p(99)'),
+                      'error_rate': v('http_req_failed', 'rate'),
+                      'request_rate': v('http_reqs', 'rate'),
+                      'total_requests': v('http_reqs', 'count'),
+                      'ai_success_rate': v('cerebro_ai_job_success_rate', 'rate'),
+                      'streaming_ttfb_p95': v('cerebro_streaming_ttfb', 'p(95)'),
+                  }
+                  if not all_pass:
+                      overall_pass = False
+              else:
+                  tier_results[tier] = {'pass': False, 'error': 'No results file'}
+                  overall_pass = False
+
+          report = {
+              'date': datetime.now(timezone.utc).strftime('%Y-%m-%d'),
+              'run_id': '${{ github.run_id }}',
+              'run_number': '${{ github.run_number }}',
+              'overall_pass': overall_pass,
+              'tiers': tier_results,
+              'slo_targets': {
+                  'availability_pct': 99.95,
+                  'p95_latency_ms': 250,
+                  'p99_latency_ms': 750,
+                  'error_rate_pct': 0.1,
+                  'ai_job_success_pct': 99,
+                  'streaming_ttfb_ms': 5000,
+              },
+          }
+
+          with open('slo-evidence.json', 'w') as f:
+              json.dump(report, f, indent=2)
+
+          print(json.dumps(report, indent=2))
+
+          with open(os.environ.get('GITHUB_OUTPUT', '/dev/null'), 'a') as f:
+              f.write(f"overall_pass={'true' if overall_pass else 'false'}\n")
+          EOF
+
+      - name: Upload consolidated evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: slo-evidence-${{ github.run_number }}
+          path: slo-evidence.json
+          retention-days: 365
+
+      - name: Post to Slack #sre-evidence
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SRE_EVIDENCE_SLACK_WEBHOOK }}
+        run: |
+          python3 - <<'EOF'
+          import json, urllib.request, os
+
+          webhook_url = os.environ.get('SLACK_WEBHOOK_URL', '')
+          if not webhook_url:
+              print("No Slack webhook — skipping")
+              exit(0)
+
+          try:
+              with open('slo-evidence.json') as f:
+                  report = json.load(f)
+          except:
+              print("No evidence file — skipping Slack notification")
+              exit(0)
+
+          overall = report.get('overall_pass', False)
+          icon = "✅" if overall else "❌"
+          date = report.get('date', 'unknown')
+          run_url = f"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          # Build tier summary
+          tier_lines = []
+          for tier, results in report.get('tiers', {}).items():
+              pass_mark = "✅" if results.get('pass') else "❌"
+              p95 = results.get('p95_latency_ms', 'N/A')
+              rate = results.get('request_rate', 'N/A')
+              tier_lines.append(f"{pass_mark} Tier {tier}: P95={p95}ms, {rate} req/s")
+
+          tier_summary = "\n".join(tier_lines)
+
+          payload = {
+              "text": f"{icon} *SLO Load Test — {date}* — {'PASS' if overall else 'FAIL'}",
+              "blocks": [
+                  {
+                      "type": "section",
+                      "text": {
+                          "type": "mrkdwn",
+                          "text": (
+                              f"{icon} *SLO Load Test*\n"
+                              f"Date: `{date}`\n"
+                              f"Status: *{'PASS' if overall else 'FAIL'}*\n"
+                              f"\n{tier_summary}\n"
+                              f"\nRun: <{run_url}|#{os.environ.get('GITHUB_RUN_NUMBER', '?')}>"
+                          )
+                      }
+                  },
+                  {
+                      "type": "section",
+                      "fields": [
+                          {"type": "mrkdwn", "text": f"*Availability target:*\n≥ 99.95%"},
+                          {"type": "mrkdwn", "text": f"*P95 latency target:*\n< 250 ms"},
+                          {"type": "mrkdwn", "text": f"*AI job success target:*\n≥ 99%"},
+                          {"type": "mrkdwn", "text": f"*Streaming TTFB target:*\n< 5000 ms"},
+                      ]
+                  }
+              ]
+          }
+
+          req = urllib.request.Request(
+              webhook_url,
+              data=json.dumps(payload).encode(),
+              headers={"Content-Type": "application/json"},
+          )
+          urllib.request.urlopen(req)
+          print("✅ Posted SLO results to Slack")
+          EOF
+
+      - name: Fail if SLO breach
+        if: steps.report.outputs.overall_pass == 'false'
+        run: |
+          echo "::error::SLO thresholds failed — see slo-evidence.json for details"
+          exit 1
