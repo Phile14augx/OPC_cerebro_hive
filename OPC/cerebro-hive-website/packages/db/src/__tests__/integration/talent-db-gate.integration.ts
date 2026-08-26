@@ -8,6 +8,7 @@
  */
 
 import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 import { PrismaClient } from '../../generated/client';
 import { TalentAuthorizationRepository } from '../../repositories/TalentAuthorizationRepository';
 
@@ -39,7 +40,8 @@ async function rejectsWithPattern(fn: () => Promise<unknown>, pattern: RegExp): 
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL! });
+  const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });
   const ts = Date.now();
 
