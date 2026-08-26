@@ -1,8 +1,6 @@
 'use client';
 
 import { useFindings } from './hooks/useReviews';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FindingDetailDTO } from '@cerebro/api-client';
 import { AlertTriangle, Info, FileSearch } from 'lucide-react';
@@ -66,6 +64,7 @@ function FindingCard({ finding, isSelected, onClick }: { finding: FindingDetailD
 
   return (
     <div 
+      data-testid="finding-row"
       onClick={onClick}
       className={cn(
         "p-4 rounded-lg border cursor-pointer transition-all duration-200 group",

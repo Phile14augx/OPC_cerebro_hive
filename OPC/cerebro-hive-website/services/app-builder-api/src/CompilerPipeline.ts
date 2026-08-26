@@ -2,7 +2,7 @@
 import { ApplicationGraph } from './VisualSchema';
 import { IRGraph } from './IRModels';
 // Mocking TaskDAG from SwarmSDK
-export interface TaskDAG { id: string; nodes: any[]; edges: any[]; }
+export interface TaskDAG { id: string; nodes: unknown[]; edges: unknown[]; }
 
 export class CompilerPipeline {
   
@@ -18,11 +18,11 @@ export class CompilerPipeline {
     return dag;
   }
 
-  private semanticValidation(graph: ApplicationGraph) {
+  private semanticValidation(_graph: ApplicationGraph) {
     console.log('[Compiler] 2. Semantic Validation (Detecting cycles, orphaned nodes...)');
   }
 
-  private visualToIR(graph: ApplicationGraph): IRGraph {
+  private visualToIR(_graph: ApplicationGraph): IRGraph {
     console.log('[Compiler] 3. Lowering Visual Graph to Intermediate Representation (IR)');
     return { nodes: [] };
   }
@@ -32,7 +32,7 @@ export class CompilerPipeline {
     return ir;
   }
 
-  private irToHiveDag(ir: IRGraph): TaskDAG {
+  private irToHiveDag(_ir: IRGraph): TaskDAG {
     console.log('[Compiler] 5. Compiling IR into HiveSwarm TaskDAG');
     return { id: 'dag-1', nodes: [], edges: [] };
   }

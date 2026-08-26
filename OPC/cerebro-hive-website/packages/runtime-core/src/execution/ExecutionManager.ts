@@ -1,8 +1,8 @@
 import { ExecutionStore } from './ExecutionStore';
 import { ExecutionReplayService } from './ExecutionReplayService';
-import { ExecutionStateMachine, ExecutionState } from './ExecutionStateMachine';
+import { ExecutionStateMachine } from './ExecutionStateMachine';
 import { ExecutionIdempotencyGuard } from './ExecutionIdempotency';
-import { ExecutionEvent, ExecutionStartedEvent, LLMStartedEvent, LLMCompletedEvent, ToolRequestedEvent } from '@cerebro/runtime-contracts/src/events/ExecutionEvent';
+import { ExecutionStartedEvent } from '@cerebro/runtime-contracts/src/events/ExecutionEvent';
 import { ExecutionOutbox } from './ExecutionOutbox';
 import { LLMProvider, ToolProvider } from '../plugins/CapabilityProvider';
 
@@ -84,8 +84,8 @@ export class ExecutionManager {
       await this.store.updateExecution(executionId, { status: 'RUNNING' }, execution.version, PLACEHOLDER_FENCING_TOKEN);
     }
 
-    const state = await this.replayService.replay(executionId);
-    let nextSequence = state.sequence + 1n;
+    const _state = await this.replayService.replay(executionId);
+    // Sequence incremented here
 
     // Execution Logic Loop
     // Here we'd hook into the LLMProvider and ToolProvider natively

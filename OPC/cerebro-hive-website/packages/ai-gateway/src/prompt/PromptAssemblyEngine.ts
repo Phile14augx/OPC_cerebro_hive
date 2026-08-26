@@ -4,15 +4,15 @@ export interface AssemblyContext {
   policies: string[];
   memoryContext: string[];
   knowledgeContext: string[];
-  conversationHistory: any[];
-  toolDefinitions: any[];
+  conversationHistory: Array<{ role: string; content: string }>;
+  toolDefinitions: unknown[];
   executionConstraints: string[];
   userPrompt: string;
 }
 
 export class PromptAssemblyEngine {
-  assemble(context: AssemblyContext): any[] {
-    const messages = [];
+  assemble(context: AssemblyContext): Array<{ role: string; content: string }> {
+    const messages: Array<{ role: string; content: string }> = [];
 
     // 1. Build System Message (Composable Stages)
     let systemContent = `${context.systemPrompt}\n\n`;

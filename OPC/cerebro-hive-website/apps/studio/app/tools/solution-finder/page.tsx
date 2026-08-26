@@ -10,8 +10,7 @@ interface LeadData {
   email: string;
   company: string;
 }
-
-function generateRoadmapReport(
+export function generateRoadmapReport(
   leadInfo: { name: string; email: string; company: string },
   industry: string,
   teamSize: string,

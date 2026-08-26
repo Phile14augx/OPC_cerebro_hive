@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { URD } from "../../../app/platform/hiveforge/core/contracts/resource";
-
 export function Topbar() {
-  const [activeResource, setActiveResource] = useState<URD | null>(null);
-
   // Dynamic Graph-Aware Breadcrumbs
   const breadcrumbs = [
     "CerebroHive Corp", // Org
     "Data Platform",    // Workspace
     "Production",       // Env
-    activeResource ? activeResource.type : "Dashboard"
+    "Dashboard",
   ];
 
   return (

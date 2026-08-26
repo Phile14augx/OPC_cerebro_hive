@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useIndustryExplorer } from './IndustryExplorerContext';
 import { industriesData } from '@/lib/data/industries';
 import { 
@@ -74,7 +74,7 @@ const AICore = () => {
 };
 
 export function InteractiveIndustryGlobe() {
-  const { activeIndustry, hoveredIndustry, setActiveIndustry, setHoveredIndustry, reducedMotion } = useIndustryExplorer();
+  const { activeIndustry, hoveredIndustry, setHoveredIndustry, reducedMotion } = useIndustryExplorer();
   const router = useRouter();
 
   // Distribute industries on multiple orbital rings

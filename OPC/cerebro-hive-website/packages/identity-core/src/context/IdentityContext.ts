@@ -30,7 +30,7 @@ export interface FederationContext {
   authenticationMethod: string;
   authenticationTime: Date;
   tokenId: string;
-  issuerMetadata?: Record<string, any>;
+  issuerMetadata?: Record<string, unknown>;
   assuranceLevel: 'Low' | 'Medium' | 'High';
 }
 

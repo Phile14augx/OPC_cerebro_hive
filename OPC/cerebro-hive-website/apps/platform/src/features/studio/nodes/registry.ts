@@ -1,15 +1,16 @@
 
 import { StudioNode } from '../graph/GraphModel';
 import { Diagnostic } from '../compiler/CompilerErrors';
+import type { ComponentType, FC } from 'react';
 
 export interface NodeDefinition {
   type: string;
   displayName: string;
-  icon: any; // Lucide icon component
-  component: React.FC<{ node: StudioNode }>;
+  icon: ComponentType<{ className?: string }>;
+  component: FC<{ node: StudioNode }>;
   validator: (node: StudioNode) => Diagnostic[];
-  compiler: (node: StudioNode) => any;
-  simulator: (node: StudioNode) => Promise<any>;
+  compiler: (node: StudioNode) => unknown;
+  simulator: (node: StudioNode) => Promise<unknown>;
 }
 
 const registry = new Map<string, NodeDefinition>();

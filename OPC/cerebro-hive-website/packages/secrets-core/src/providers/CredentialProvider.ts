@@ -28,7 +28,7 @@ export class ApiKeyProvider implements CredentialProvider {
     return { value, expiresAt };
   }
 
-  async revoke(value: string): Promise<void> {
+  async revoke(_value: string): Promise<void> {
     // For API keys, revocation might just involve deleting from Vault (handled by Manager)
     // Or if integrated with a gateway, pushing a blocklist event.
   }

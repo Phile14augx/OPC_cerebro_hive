@@ -30,11 +30,16 @@ export class NatsIntegrationEventPublisher implements IIntegrationEventPublisher
       await this.connect();
     }
 
+    const js = this.js;
+    if (!js) {
+      throw new Error('JetStream client failed to initialize');
+    }
+
     const envelope: EventEnvelope = {
       eventId: crypto.randomUUID(),
       eventType: event.type,
       eventVersion: '1.0',
-      aggregateId: (event as any).aggregateId || 'unknown',
+      aggregateId: 'aggregateId' in event && typeof event.aggregateId === 'string' ? event.aggregateId : 'unknown',
       correlationId: context.correlationId,
       traceId: context.traceId,
       tenantId: context.tenantId,
@@ -46,6 +51,6 @@ export class NatsIntegrationEventPublisher implements IIntegrationEventPublisher
     const subject = `events.${event.type}`;
     const data = this.sc.encode(JSON.stringify(envelope));
 
-    await this.js!.publish(subject, data);
+    await js.publish(subject, data);
   }
 }

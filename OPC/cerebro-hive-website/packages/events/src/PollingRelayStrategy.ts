@@ -1,10 +1,10 @@
-import { RelayStrategy } from './RelayStrategy';
-import { OutboxRepository, RequestContext } from '@cerebro/db';
+import { RelayStrategy, RelayEvent } from './RelayStrategy';
+import { OutboxRepository } from '@cerebro/db';
 
 export class PollingRelayStrategy implements RelayStrategy {
   constructor(private readonly outboxRepo: OutboxRepository) {}
 
-  async readEvents(limit: number): Promise<any[]> {
+  async readEvents(limit: number): Promise<RelayEvent[]> {
     return this.outboxRepo.getPendingEvents(limit, { context: { tenantId: 'SYSTEM' } });
   }
 

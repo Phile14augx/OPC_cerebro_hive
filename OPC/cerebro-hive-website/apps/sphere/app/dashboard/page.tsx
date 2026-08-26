@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   SphereCard, SphereCardHeader, SphereCardBody,
@@ -41,7 +41,6 @@ function relTime(iso: string) {
 
 /* ── Product mini-chip ────────────────────────────────────────────────────── */
 function ProductChip({ p }: { p: ProductHealth }) {
-  const color = STATUS_COLOR[p.status];
   return (
     <div
       className="sphere-card interactive"
@@ -71,7 +70,7 @@ export default function DashboardPage() {
   const narrative = narrativeMutation.data?.narrative;
 
   // Refresh narrative when role changes
-  useEffect(() => { narrativeMutation.mutate(role); }, [role]);// eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { narrativeMutation.mutate(role); }, [role, narrativeMutation]);
 
   const platform   = dash?.platform;
   const alerts     = (dash?.alerts ?? []).filter(a => !a.acknowledged);

@@ -2,15 +2,20 @@
  * Resource Graph Service & Topology API
  */
 
-import { InventoryResource } from "../../contracts/inventory";
-
 export type GraphNodeType = "Organization" | "Workspace" | "Project" | "Deployment" | "Resource" | "Policy";
 export type GraphEdgeType = "depends_on" | "owned_by" | "deployed_to" | "secured_by" | "monitored_by";
+
+export interface GraphNodeMetadata {
+  name: string;
+  provider: string;
+  state: string;
+  [key: string]: unknown;
+}
 
 export interface GraphNode {
   id: string;
   type: GraphNodeType;
-  metadata: any; // Could be InventoryResource for 'Resource' types
+  metadata: GraphNodeMetadata;
 }
 
 export interface GraphEdge {
@@ -47,12 +52,16 @@ export class ResourceGraphService {
 
   getDependents(resourceId: string): GraphNode[] {
     const dependentEdges = this.edges.filter(e => e.targetId === resourceId && e.type === "depends_on");
-    return dependentEdges.map(e => this.nodes.get(e.sourceId)).filter(Boolean) as GraphNode[];
+    return dependentEdges
+      .map(e => this.nodes.get(e.sourceId))
+      .filter((node): node is GraphNode => node !== undefined);
   }
   
   getDependencies(resourceId: string): GraphNode[] {
     const dependencyEdges = this.edges.filter(e => e.sourceId === resourceId && e.type === "depends_on");
-    return dependencyEdges.map(e => this.nodes.get(e.targetId)).filter(Boolean) as GraphNode[];
+    return dependencyEdges
+      .map(e => this.nodes.get(e.targetId))
+      .filter((node): node is GraphNode => node !== undefined);
   }
 }
 

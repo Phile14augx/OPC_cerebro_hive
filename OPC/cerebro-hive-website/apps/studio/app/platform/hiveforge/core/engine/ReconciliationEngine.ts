@@ -37,12 +37,12 @@ export class ReconciliationEngine {
         });
         
         // Emits corrective actions (mocked)
-        this.emitCorrection(resId, report);
+        this.emitCorrection(resId);
       }
     }
   }
 
-  private emitCorrection(resourceId: string, report: any) {
+  private emitCorrection(resourceId: string) {
     console.log(`[ReconciliationEngine] Emitting corrective action for ${resourceId} based on drift.`);
   }
 }

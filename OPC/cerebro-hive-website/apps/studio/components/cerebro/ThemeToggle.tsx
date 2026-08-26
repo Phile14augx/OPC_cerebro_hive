@@ -1,18 +1,18 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { Sun, Moon, Laptop } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false,
+  );
 
   // Use resolved theme (or "dark" default when not yet mounted)
   const activeTheme = mounted ? (theme ?? "dark") : "dark";

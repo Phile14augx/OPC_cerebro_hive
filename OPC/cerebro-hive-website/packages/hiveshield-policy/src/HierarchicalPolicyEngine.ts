@@ -96,7 +96,7 @@ export class HierarchicalPolicyEngine {
     // hierarchy always has 4 entries (PolicyHierarchy is a fixed-length
     // tuple), so mostRestrictive is always assigned by this point.
     const winner = mostRestrictive as PolicyDecision;
-    const winningLevel = hierarchy.find(h => perLevelDecisions[h.level] === winner)!.level;
+    const winningLevel = hierarchy.find(h => perLevelDecisions[h.level] === winner)?.level ?? 'Unknown';
 
     return this.buildResult(
       winner,

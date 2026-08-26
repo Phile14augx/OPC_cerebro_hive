@@ -22,7 +22,7 @@ export default function ResearchPage() {
     try { setPromptVersions((await api<{ versions: PromptVersion[] }>("/v1/research/prompts")).versions); } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const registerPromptVersion = useCallback(async () => {
     setBusy(true);

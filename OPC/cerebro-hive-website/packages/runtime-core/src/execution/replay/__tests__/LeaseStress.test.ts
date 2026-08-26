@@ -6,7 +6,7 @@ class MockLeaseStore implements ExecutionLeaseManager {
   private leases = new Map<string, ExecutionLease>();
   private nextFencingToken = 1n;
 
-  async registerWorker(workerId: string, metadata: any): Promise<void> {}
+  async registerWorker(workerId: string, metadata: unknown): Promise<void> {}
   async heartbeatWorker(workerId: string): Promise<void> {}
 
   async acquireLease(executionId: string, ownerId: string, durationMs: number): Promise<ExecutionLease | null> {

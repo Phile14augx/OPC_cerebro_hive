@@ -23,6 +23,10 @@
    removing the duplicate is.
    ============================================================ */
 html {
+  --font-space: "Trebuchet MS", "Segoe UI", sans-serif;
+  --font-inter: Inter, "Segoe UI", Arial, sans-serif;
+  --font-plex: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  --font-jetbrains: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

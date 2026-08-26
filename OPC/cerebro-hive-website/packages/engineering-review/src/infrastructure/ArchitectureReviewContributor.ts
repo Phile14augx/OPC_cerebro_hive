@@ -1,7 +1,8 @@
 import { newEvidenceReferenceId, newFindingId } from '../ids';
 import { createEvidenceReference, createReviewFinding, Confidence, Severity } from '../valueObjects';
 import { ContributorResult, IReviewContributor, ReviewContext } from '../ports/IReviewContributor';
-import { LLMExecutionService, PromptVersion, StructuredResponse } from './llm/LLMExecutionService';
+import { LLMExecutionService } from './llm/LLMExecutionService';
+import { PromptVersion, StructuredResponse } from './llm/types';
 
 export class ArchitectureReviewContributor implements IReviewContributor {
   readonly contributorId = 'architecture-review';

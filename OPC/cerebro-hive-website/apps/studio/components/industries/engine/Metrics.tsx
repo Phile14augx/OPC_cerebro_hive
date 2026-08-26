@@ -1,17 +1,17 @@
 "use client";
 
 import React from 'react';
-import { EngineConfig } from '@/lib/data/industries/types';
+import { EngineConfig, Industry } from '@/lib/data/industries/types';
 import { motion } from 'framer-motion';
 
-export function Metrics({ overview, config }: { overview: any, config: EngineConfig }) {
+export function Metrics({ overview, config }: { overview: Industry['overview'], config: EngineConfig }) {
   if (!overview?.statistics || overview.statistics.length === 0) return null;
 
   return (
     <section className="section-pad border-t border-b border-border bg-surface-elevated relative z-10">
       <div className="container-wide">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-          {overview.statistics.map((stat: any, i: number) => (
+          {overview.statistics.map((stat, i) => (
             <motion.div 
               key={i}
               initial={{ opacity: 0.4, y: 20 }}

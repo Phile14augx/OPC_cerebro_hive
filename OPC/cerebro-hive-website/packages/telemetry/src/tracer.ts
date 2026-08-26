@@ -5,6 +5,7 @@
 // =============================================================================
 
 import { NodeSDK } from '@opentelemetry/sdk-node';
+import type { NodeSDKConfiguration } from '@opentelemetry/sdk-node';
 import {
   BatchSpanProcessor,
   ConsoleSpanExporter,
@@ -65,18 +66,17 @@ export function initTelemetry(config: TelemetryConfig): NodeSDK {
   // Metric exporter
   const metricExporter = new OTLPMetricExporter({ url: otlpEndpoint });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sdk = new NodeSDK({
     resource,
     spanProcessor: new BatchSpanProcessor(traceExporter, {
       maxQueueSize: 2048,
       maxExportBatchSize: 512,
       scheduledDelayMillis: 5000,
-    }) as any,
+    }) as unknown as NodeSDKConfiguration['spanProcessor'],
     metricReader: new PeriodicExportingMetricReader({
-      exporter: metricExporter as any,
+      exporter: metricExporter,
       exportIntervalMillis: 10_000,
-    }) as any,
+    }) as unknown as NodeSDKConfiguration['metricReader'],
     textMapPropagator: new CompositePropagator({
       propagators: [
         new W3CTraceContextPropagator(),
@@ -89,7 +89,7 @@ export function initTelemetry(config: TelemetryConfig): NodeSDK {
         '@opentelemetry/instrumentation-http': {
           requestHook: (span, request) => {
             // Suppress noisy health-check spans
-            const url = 'url' in request ? (request as any).url : '';
+            const url = 'url' in request && typeof request.url === 'string' ? request.url : '';
             if (url?.includes('/health') || url?.includes('/metrics')) {
               span.updateName('health_check');
             }

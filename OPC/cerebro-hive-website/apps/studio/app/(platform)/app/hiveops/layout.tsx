@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, GitBranch, Rocket, Shield, DollarSign,
-  Server, GitMerge, ChevronRight,
+  Server, GitMerge,
 } from "lucide-react";
 
 const HIVEOPS_NAV = [

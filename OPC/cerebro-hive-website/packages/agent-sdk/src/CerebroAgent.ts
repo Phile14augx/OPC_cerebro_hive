@@ -20,7 +20,7 @@ export interface CerebroAgent {
    * @param input The input parameters or initial state for the execution.
    * @returns A promise resolving to the final output state.
    */
-  execute(input: Record<string, any>): Promise<Record<string, any>>;
+  execute(input: Record<string, unknown>): Promise<Record<string, unknown>>;
 
   /**
    * Stop an ongoing execution.

@@ -14,8 +14,8 @@ export class LangGraphAdapter implements FrameworkAdapter {
   readonly framework = 'langgraph';
   
   private agents: Map<string, AgentConfig> = new Map();
-  private tools: Map<string, any> = new Map();
-  private memories: Map<string, any> = new Map();
+  private tools: Map<string, unknown> = new Map();
+  private memories: Map<string, unknown> = new Map();
 
   async createAgent(config: AgentConfig): Promise<AgentState> {
     // Validate configuration
@@ -67,7 +67,7 @@ export class LangGraphAdapter implements FrameworkAdapter {
     }
   }
 
-  async stop(agentId: string): Promise<void> {
+  async stop(_agentId: string): Promise<void> {
     // Cancel any running executions
     // TODO: Implement cancellation
   }
@@ -86,7 +86,7 @@ export class LangGraphAdapter implements FrameworkAdapter {
     };
   }
 
-  async registerTool(toolId: string): Promise<void> {
+  async registerTool(_toolId: string): Promise<void> {
     // TODO: Register tool with LangGraph
     // This will map CerebroTool to LangChain tool
   }
@@ -95,7 +95,7 @@ export class LangGraphAdapter implements FrameworkAdapter {
     this.tools.delete(toolId);
   }
 
-  async connectMemory(memoryKey: string): Promise<void> {
+  async connectMemory(_memoryKey: string): Promise<void> {
     // TODO: Connect to LangChain memory
     // This will map CerebroMemory to LangChain memory
   }

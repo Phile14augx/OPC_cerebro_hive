@@ -16,11 +16,12 @@ export class GraphIngestionService {
     };
   }
 
-  async handleAssetRegistered(assetId: string, type: string, properties: any) {
+  async handleAssetRegistered(assetId: string, type: string, properties: Record<string, unknown>) {
+    const labels = Array.isArray(properties.labels) ? (properties.labels as string[]) : [];
     const node: SemanticNode = {
       id: assetId,
       kind: type,
-      labels: properties.labels || [],
+      labels,
       properties,
       version: 1,
       provenance: this.createProvenance('asset-core')

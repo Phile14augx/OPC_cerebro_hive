@@ -4,7 +4,7 @@ import { ExecutionRuntimeKernel } from '../../kernel/ExecutionRuntimeKernel';
 import { ExecutionCommand } from '@cerebro/runtime-contracts/src/commands/ExecutionCommand';
 
 describe('AgentExecutionSaga', () => {
-  let mockKernel: any;
+  let mockKernel: unknown;
   let saga: AgentExecutionSaga;
 
   beforeEach(() => {
@@ -15,7 +15,7 @@ describe('AgentExecutionSaga', () => {
   });
 
   it('should dispatch commands directly to the kernel (Coordination only)', async () => {
-    const cmd = { type: 'StartExecutionCommand' } as any;
+    const cmd = { type: 'StartExecutionCommand' } as unknown;
     await saga.dispatch(cmd);
     expect(mockKernel.dispatchCommand).toHaveBeenCalledWith(cmd);
   });

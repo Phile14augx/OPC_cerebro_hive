@@ -13,7 +13,7 @@ export async function executionsRoutes(
   deps: ExecutionsRoutesDeps
 ) {
   fastify.post('/', async (request, reply) => {
-    const { agentId, agentVersionId, input } = request.body as any;
+    const { agentId, agentVersionId, input } = request.body as { agentId: string; agentVersionId: string; input: string };
     if (!agentId || !agentVersionId || !input) {
       return reply.code(400).send({ error: 'Missing required fields' });
     }
@@ -36,7 +36,7 @@ export async function executionsRoutes(
   });
 
   fastify.get('/:id', async (request, reply) => {
-    const { id } = request.params as any;
+    const { id } = request.params as { id: string };
     const execution = await deps.executionStore.getExecution(id);
     if (!execution) {
       return reply.code(404).send({ error: 'Execution not found' });
@@ -45,8 +45,8 @@ export async function executionsRoutes(
   });
 
   fastify.post('/:id/resume', async (request, reply) => {
-    const { id } = request.params as any;
-    const { expectedSequence } = request.body as any;
+    const { id } = request.params as { id: string };
+    const { expectedSequence } = request.body as { expectedSequence?: number };
 
     if (expectedSequence === undefined) {
       return reply.code(400).send({ error: 'Missing expectedSequence for idempotent resume' });
@@ -66,19 +66,20 @@ export async function executionsRoutes(
     try {
       await deps.executionKernel.dispatchCommand(command);
       return reply.send({ success: true, status: 'resumed' });
-    } catch (err: any) {
-      if (err.name === 'ValidationError') {
-        return reply.code(400).send({ error: err.message });
+    } catch (err: unknown) {
+      const e = err as Error;
+      if (e.name === 'ValidationError') {
+        return reply.code(400).send({ error: e.message });
       }
-      if (err.message.includes('Idempotency')) {
-        return reply.code(409).send({ error: err.message });
+      if (e.message.includes('Idempotency')) {
+        return reply.code(409).send({ error: e.message });
       }
-      return reply.code(500).send({ error: err.message });
+      return reply.code(500).send({ error: e.message });
     }
   });
 
   fastify.post('/:id/cancel', async (request, reply) => {
-    const { id } = request.params as any;
+    const { id } = request.params as { id: string };
     
     const command: CancelExecutionCommand = {
       id: crypto.randomUUID(),
@@ -95,16 +96,17 @@ export async function executionsRoutes(
     try {
       await deps.executionKernel.dispatchCommand(command);
       return reply.send({ success: true, status: 'CANCELLED' });
-    } catch (err: any) {
-      if (err.name === 'ValidationError') {
-        return reply.code(400).send({ error: err.message });
+    } catch (err: unknown) {
+      const e = err as Error;
+      if (e.name === 'ValidationError') {
+        return reply.code(400).send({ error: e.message });
       }
-      return reply.code(500).send({ error: err.message });
+      return reply.code(500).send({ error: e.message });
     }
   });
 
   fastify.get('/:id/events', async (request, reply) => {
-    const { id } = request.params as any;
+    const { id } = request.params as { id: string };
     const events = await deps.executionStore.getEvents(id);
     // Convert bigint sequences to string for JSON serialization
     const serialized = events.map(e => ({
@@ -115,7 +117,7 @@ export async function executionsRoutes(
   });
 
   fastify.get('/:id/snapshot', async (request, reply) => {
-    const { id } = request.params as any;
+    const { id } = request.params as { id: string };
     const snapshot = await deps.executionStore.getLatestSnapshot(id);
     if (!snapshot) {
       return reply.code(404).send({ error: 'Snapshot not found' });

@@ -12,9 +12,9 @@ describe('Time Travel Evidence', () => {
       { sequence: 2n, type: 'ToolCompleted', payload: { toolCallId: 'tool-1', result: 'Data1' } },
       { sequence: 3n, type: 'LLMCompleted', payload: { content: 'Msg2', toolCalls: [{ id: 'tool-2', name: 'search' }] } },
       { sequence: 4n, type: 'ToolCompleted', payload: { toolCallId: 'tool-2', result: 'Data2' } }
-    ] as any[];
+    ] as unknown[];
 
-    const store: any = {
+    const store: unknown = {
       getLatestSnapshot: async () => null,
       getEvents: async () => mockEvents
     };
@@ -28,7 +28,7 @@ describe('Time Travel Evidence', () => {
         return (state, event) => ({
           ...state,
           messages: [...state.messages, { role: 'assistant', content: event.payload.content }],
-          activeToolCalls: [...state.activeToolCalls, ...event.payload.toolCalls.map((t: any) => t.id)]
+          activeToolCalls: [...state.activeToolCalls, ...event.payload.toolCalls.map((t: unknown) => t.id)]
         });
       }
       if (type === 'ToolCompleted') {

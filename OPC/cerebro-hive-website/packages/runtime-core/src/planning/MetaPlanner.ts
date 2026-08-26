@@ -4,7 +4,7 @@ import { Goal } from './Goal';
 import { ExecutionPlan } from './ExecutionPlan';
 import { RuntimeRegistry } from '../registry/RuntimeRegistry';
 import { EvaluationProvider } from '../plugins/CapabilityProvider';
-import { PlanningSession, ScoredPlan } from './PlanningSession';
+import { PlanningSession } from './PlanningSession';
 import { PolicyResolver } from './PolicyResolver';
 import { PolicyDecisionRecord } from './EvaluationPolicy';
 
@@ -68,7 +68,7 @@ export class MetaPlanner implements PlannerProvider {
     };
 
     // Optional: Log the Planning Session
-    const session: PlanningSession = {
+    const _session: PlanningSession = {
       id: `session-${Date.now()}`,
       goalId: goal.id,
       goal,

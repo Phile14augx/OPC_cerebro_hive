@@ -20,5 +20,5 @@ export interface ChangeEvent {
   eventType: ChangeEventType;
   changeRequestId: string;
   timestamp: Date;
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
 }

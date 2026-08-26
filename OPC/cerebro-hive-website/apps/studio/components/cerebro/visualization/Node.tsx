@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
-import { motionTokens, visualTokens } from "@/lib/design-system/tokens";
+import { motionTokens } from "@/lib/design-system/tokens";
 
 interface NodeProps {
   icon: ReactNode;

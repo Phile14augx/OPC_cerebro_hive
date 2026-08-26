@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { FastifyInstance } from 'fastify';
 import { prisma } from '@cerebro/db';
 import { PaginationQuery } from '../common/pagination';

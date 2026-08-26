@@ -1,7 +1,13 @@
 import React from 'react';
-import { Handle, Position } from '@xyflow/react';
+import { Handle, Position, type NodeProps } from '@xyflow/react';
 import { cn } from '@/lib/utils';
-import { Database, Server, Cpu, Bot, User, Cloud, Activity, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { Database, Server, Cpu, Bot, User, Cloud } from 'lucide-react';
+
+export type ArchitectureNodeData = {
+  label?: string;
+  type?: string;
+  status?: string;
+};
 
 const iconMap: Record<string, React.ReactNode> = {
   gateway: <Server size={16} />,
@@ -13,9 +19,10 @@ const iconMap: Record<string, React.ReactNode> = {
   system: <Server size={16} />
 };
 
-export const ArchitectureNode = ({ data }: { data: any }) => {
-  const type = data.type || 'system';
-  const status = data.status || 'Active';
+export const ArchitectureNode = ({ data }: NodeProps) => {
+  const type = typeof data.type === 'string' ? data.type : 'system';
+  const status = typeof data.status === 'string' ? data.status : 'Active';
+  const label = typeof data.label === 'string' ? data.label : 'System';
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -37,7 +44,7 @@ export const ArchitectureNode = ({ data }: { data: any }) => {
       </div>
 
       <div className="flex flex-col">
-        <span className="text-sm font-bold text-text-primary whitespace-nowrap">{data.label}</span>
+        <span className="text-sm font-bold text-text-primary whitespace-nowrap">{label}</span>
         <span className="text-[10px] uppercase tracking-widest text-text-muted font-space">{type}</span>
       </div>
 

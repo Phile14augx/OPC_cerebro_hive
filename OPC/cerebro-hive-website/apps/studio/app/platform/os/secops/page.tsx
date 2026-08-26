@@ -22,7 +22,7 @@ export default function SecOpsPage() {
     try { setScans((await api<{ scans: ScanRun[] }>("/v1/secops/scans")).scans); } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const runScan = useCallback(async () => {
     setBusy("scan");

@@ -3,12 +3,13 @@ import { ExecutionStore } from './ExecutionStore';
 import { ReducerRegistry } from '../registry/ReducerRegistry';
 import { ExecutionEventRegistry } from '../registry/ExecutionEventRegistry';
 import { ReplayContext } from '@cerebro/runtime-contracts/src/replay/DeterministicReplayContract';
+import { LLMMessage } from '../plugins/CapabilityProvider';
 
 export interface ReplayedState {
   sequence: bigint;
-  workingMemory: Record<string, any>;
-  messages: Array<any>;
-  context: Record<string, any>;
+  workingMemory: Record<string, unknown>;
+  messages: LLMMessage[];
+  context: Record<string, unknown>;
   activeToolCalls: string[];
 }
 
@@ -20,7 +21,7 @@ export interface TimeTravelOptions {
 }
 
 export interface StateDiff {
-  addedMessages: Array<any>;
+  addedMessages: LLMMessage[];
   removedActiveTools: string[];
   newActiveTools: string[];
 }
@@ -28,7 +29,7 @@ export interface StateDiff {
 export class ExecutionReplayService {
   constructor(
     private readonly store: ExecutionStore,
-    private readonly reducerRegistry: ReducerRegistry,
+    private readonly reducerRegistry: ReducerRegistry<ReplayedState, ExecutionEvent<unknown>>,
     private readonly eventRegistry: ExecutionEventRegistry
   ) {}
 
@@ -61,7 +62,7 @@ export class ExecutionReplayService {
         state = {
           sequence: snapshot.sequence,
           workingMemory: snapshot.state.workingMemory,
-          messages: snapshot.state.messages,
+          messages: snapshot.state.messages as LLMMessage[],
           context: snapshot.state.context,
           activeToolCalls: snapshot.state.activeToolCalls,
         };
@@ -118,7 +119,7 @@ export class ExecutionReplayService {
     };
   }
 
-  private applyEvent(state: ReplayedState, event: ExecutionEvent<any>, options?: TimeTravelOptions): void {
+  private applyEvent(state: ReplayedState, event: ExecutionEvent<unknown>, options?: TimeTravelOptions): void {
     // 1. Upcast the event payload lazily
     const upcastedEvent = this.eventRegistry.upcastEvent(event);
 
@@ -145,8 +146,8 @@ export class ExecutionReplayService {
     };
 
     // 4. Apply reducer
-    const oldStateStr = options?.trace ? JSON.stringify(state) : null;
-    const newState = reducer(state as any, upcastedEvent, context);
+    const _oldStateStr = options?.trace ? JSON.stringify(state) : null;
+    const newState = reducer(state, upcastedEvent, context);
     Object.assign(state, newState);
 
     if (options?.trace) {

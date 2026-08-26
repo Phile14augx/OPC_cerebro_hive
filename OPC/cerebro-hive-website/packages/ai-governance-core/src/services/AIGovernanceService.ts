@@ -15,7 +15,7 @@ export class AIGovernanceService {
     private readonly policyProvider: PolicyProvider
   ) {}
 
-  private emitEvent(eventType: AIGovernanceEventType, assetId: string, payload: any = {}) {
+  private emitEvent(eventType: AIGovernanceEventType, assetId: string, payload: Record<string, unknown> = {}) {
     this.events.push({
       eventId: `evt-${Date.now()}`,
       eventType,

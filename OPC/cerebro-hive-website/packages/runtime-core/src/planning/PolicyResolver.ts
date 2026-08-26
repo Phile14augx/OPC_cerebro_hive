@@ -56,7 +56,7 @@ export class PolicyResolver {
       // The user recommended hierarchical weighted composition: e.g. Tenant x3, Workspace x2, Goal x1
       // For simplicity in this iteration, we do a weighted average where later policies have higher multiplier.
       const multiplier = index + 1;
-      const w = policy.customWeights || DefaultEvaluationPolicies.Balanced.customWeights!;
+      const w = policy.customWeights || DefaultEvaluationPolicies.Balanced.customWeights || { cost: 0.2, latency: 0.2, risk: 0.2, compliance: 0.2, successProbability: 0.2 };
       
       compositeWeights.cost += (w.cost || 0) * multiplier;
       compositeWeights.latency += (w.latency || 0) * multiplier;
@@ -107,7 +107,8 @@ export class PolicyResolver {
     const sum = Object.values(compositeWeights).reduce((a, b) => a + b, 0);
     if (sum > 0) {
       Object.keys(compositeWeights).forEach(k => {
-        (compositeWeights as any)[k] = (compositeWeights as any)[k] / sum;
+        const key = k as keyof EvaluationWeights;
+        compositeWeights[key] = (compositeWeights[key] || 0) / sum;
       });
     }
 

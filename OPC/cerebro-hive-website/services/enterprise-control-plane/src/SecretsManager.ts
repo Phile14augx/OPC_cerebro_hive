@@ -20,7 +20,7 @@ export class HashiCorpVaultProvider implements SecretProvider {
 export class SecretsManager {
   constructor(private provider: SecretProvider) {}
   
-  async injectJustInTime(payload: any): Promise<any> {
+  async injectJustInTime(payload: unknown): Promise<unknown> {
     console.log('[SecretsManager] Scanning payload for secret references {{secrets.*}}');
     console.log('[SecretsManager] Dynamically resolving secrets IN MEMORY ONLY.');
     // Simulated injection

@@ -27,7 +27,7 @@ export interface ProjectionMetrics {
 export interface ExecutionProjectionStore {
   saveExecutionSummary(summary: ExecutionSummary): Promise<void>;
   getExecutionSummary(executionId: string): Promise<ExecutionSummary | null>;
-  listExecutionSummaries(filters?: any): Promise<ExecutionSummary[]>;
+  listExecutionSummaries(filters?: unknown): Promise<ExecutionSummary[]>;
   
   // Metrics
   getProjectionMetrics(): Promise<ProjectionMetrics>;

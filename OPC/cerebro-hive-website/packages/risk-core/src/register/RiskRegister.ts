@@ -1,5 +1,5 @@
 import { RiskCategory } from '../taxonomy/RiskTaxonomy';
-import { NumericScore, ScoringEngine, RiskRating } from '../scoring/ScoringEngine';
+import { NumericScore, ScoringEngine } from '../scoring/ScoringEngine';
 
 export type RiskTreatmentType = 'Mitigate' | 'Accept' | 'Transfer' | 'Avoid';
 

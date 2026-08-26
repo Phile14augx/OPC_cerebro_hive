@@ -2,8 +2,8 @@ import { Client, Connection } from '@temporalio/client';
 import { AgentDAGWorkflow } from './AgentDAGWorkflow';
 
 export interface IWorkflowEngine {
-  startWorkflow(templateId: string, input: any): Promise<string>;
-  getWorkflowStatus(executionId: string): Promise<any>;
+  startWorkflow(templateId: string, input: unknown): Promise<string>;
+  getWorkflowStatus(executionId: string): Promise<unknown>;
   cancelWorkflow(executionId: string): Promise<void>;
 }
 
@@ -16,7 +16,7 @@ export class TemporalWorkflowEngine implements IWorkflowEngine {
     );
   }
 
-  async startWorkflow(templateId: string, input: any): Promise<string> {
+  async startWorkflow(templateId: string, input: unknown): Promise<string> {
     const executionId = `exec-${Math.random().toString(36).substring(7)}`;
     const client = await this.clientPromise;
     
@@ -29,7 +29,7 @@ export class TemporalWorkflowEngine implements IWorkflowEngine {
     return executionId;
   }
 
-  async getWorkflowStatus(executionId: string): Promise<any> {
+  async getWorkflowStatus(executionId: string): Promise<unknown> {
     const client = await this.clientPromise;
     const handle = client.workflow.getHandle(executionId);
     const desc = await handle.describe();

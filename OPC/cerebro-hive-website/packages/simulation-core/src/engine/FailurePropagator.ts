@@ -1,5 +1,5 @@
 import { DigitalTwinEngine } from './DigitalTwinEngine';
-import { SemanticNode, GraphAlgorithms, NodeKind, RelationshipType } from '../../../knowledge-graph-core/src/index';
+import { SemanticNode, GraphAlgorithms, NodeKind } from '../../../knowledge-graph-core/src/index';
 
 export class FailurePropagator {
   private algorithms: GraphAlgorithms;

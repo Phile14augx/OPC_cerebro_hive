@@ -4,11 +4,11 @@ export interface RiskAssessment {
 }
 
 export interface RiskProvider {
-  evaluateRisk(changeRequestId: string, payload: any): Promise<RiskAssessment>;
+  evaluateRisk(changeRequestId: string, payload: unknown): Promise<RiskAssessment>;
 }
 
 export class MockRiskProvider implements RiskProvider {
-  async evaluateRisk(changeRequestId: string, payload: any): Promise<RiskAssessment> {
+  async evaluateRisk(_changeRequestId: string, _payload: unknown): Promise<RiskAssessment> {
     return {
       baseScore: 45,
       factors: ['MissionCritical Asset', '2 Dependencies']

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
-import { Activity, Bot, FileText, Zap, BarChart3, Clock, DollarSign, Database } from "lucide-react";
+import { motion } from "framer-motion";
+import { Activity, Bot, FileText, BarChart3, DollarSign, Database } from "lucide-react";
 
 const AnimatedCounter = ({ value, prefix = "", suffix = "" }: { value: number, prefix?: string, suffix?: string }) => {
   return (
@@ -11,6 +11,16 @@ const AnimatedCounter = ({ value, prefix = "", suffix = "" }: { value: number, p
     </span>
   );
 };
+
+const chartBars = Array.from({ length: 24 }, (_, index) => {
+  const height = 20 + ((index * 17) % 61);
+
+  return {
+    height,
+    targetHeight: height + ((index * 7) % 21) - 10,
+    duration: 3 + (index % 3),
+  };
+});
 
 export const PlatformDashboardPreview = () => {
   const [metrics, setMetrics] = useState({
@@ -21,11 +31,7 @@ export const PlatformDashboardPreview = () => {
     tasks: 45
   });
 
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
-    
     // Simulate live platform activity
     const interval = setInterval(() => {
       setMetrics(prev => ({
@@ -39,8 +45,6 @@ export const PlatformDashboardPreview = () => {
 
     return () => clearInterval(interval);
   }, []);
-
-  if (!mounted) return <section className="py-24 border-b border-border bg-background" />;
 
   return (
     <section className="py-24 border-b border-border bg-background relative overflow-hidden">
@@ -151,15 +155,14 @@ export const PlatformDashboardPreview = () => {
                 <span className="text-xs uppercase font-bold tracking-widest">Task Throughput (Last 24h)</span>
               </div>
               {/* Simulated bars */}
-              {[...Array(24)].map((_, i) => {
-                const height = 20 + Math.random() * 60;
+              {chartBars.map(({ height, targetHeight, duration }, i) => {
                 return (
                   <motion.div 
                     key={i}
                     className="w-full bg-primary-accent/20 rounded-t-sm"
                     initial={{ height: `${height}%` }}
-                    animate={{ height: [`${height}%`, `${height + (Math.random() * 20 - 10)}%`, `${height}%`] }}
-                    transition={{ duration: 3 + Math.random() * 2, repeat: Infinity }}
+                    animate={{ height: [`${height}%`, `${targetHeight}%`, `${height}%`] }}
+                    transition={{ duration, repeat: Infinity }}
                   >
                     <div className="w-full bg-primary-accent/80 rounded-t-sm h-1" />
                   </motion.div>

@@ -15,7 +15,7 @@ class MockRegistry extends ReducerRegistry {
 }
 
 class MockStore {
-  public events: ExecutionEvent<any>[] = [];
+  public events: ExecutionEvent<unknown>[] = [];
   async getEvents(id: string, after?: bigint) { return this.events; }
   async getLatestSnapshot() { return null; }
 }
@@ -23,8 +23,8 @@ class MockStore {
 describe('Gate C - Capacity & Performance Certification', () => {
 
   it('should meet the SLA for high-throughput pure replay (>=500 events/sec)', async () => {
-    const store = new MockStore() as any;
-    const replayService = new ExecutionReplayService(store, new MockRegistry(), { upcastEvent: e => e } as any);
+    const store = new MockStore() as unknown;
+    const replayService = new ExecutionReplayService(store, new MockRegistry(), { upcastEvent: e => e } as unknown);
     const execId = 'perf-1';
 
     // Generate 50,000 events

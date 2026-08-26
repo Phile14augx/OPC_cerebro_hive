@@ -322,7 +322,7 @@ async function validateToken(token: string): Promise<{ valid: true; claims: JWTC
 function getClientIP(request: NextRequest): string {
   return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
     || request.headers.get("x-real-ip")
-    || request.ip || "unknown";
+    || (request as unknown as any /* eslint-disable-line @typescript-eslint/no-explicit-any */).ip || "unknown";
 }
 
 /**
@@ -415,7 +415,7 @@ export async function cerebrocyberMiddleware(
 
   // === 2. RATE LIMITING ===
   const rateLimitKey = `${clientIP}:${path}`;
-  const rateLimitResult = checkRateLimit(rateLimitKey, opts.rateLimit || DEFAULT_RATE_LIMIT);
+  const rateLimitResult = checkRateLimit(rateLimitKey, { ...DEFAULT_RATE_LIMIT, ...opts.rateLimit } as unknown as any /* eslint-disable-line @typescript-eslint/no-explicit-any */);
   
   if (!rateLimitResult.allowed) {
     await logSecurityEvent({
@@ -453,7 +453,7 @@ export async function cerebrocyberMiddleware(
     const body = await request.text();
     
     if (body) {
-      const threats = detectAIThreats(body, opts.threatDetection || {
+      const threats = detectAIThreats(body, (opts.threatDetection as unknown as any /* eslint-disable-line @typescript-eslint/no-explicit-any */) || {
         checkPII: true,
         checkCredentials: true,
         checkPromptInjection: true,

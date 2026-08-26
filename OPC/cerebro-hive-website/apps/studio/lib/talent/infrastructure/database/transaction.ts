@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { PrismaClient, Prisma, prisma } from '@cerebro/db';
 
 export type TransactionClient = Omit<

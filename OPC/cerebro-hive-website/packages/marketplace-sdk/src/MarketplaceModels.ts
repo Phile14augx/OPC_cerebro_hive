@@ -17,5 +17,5 @@ export interface MarketplaceAsset {
   version: VersionInfo;
   status: AssetLifecycleStatus;
   dependencies: string[]; // List of other asset IDs
-  manifest: any; // The actual content/definition
+  manifest: unknown; // The actual content/definition
 }

@@ -5,9 +5,8 @@
 import { RuntimePlugin } from './RuntimePlugin';
 import { StudioNode } from '../../graph/GraphModel';
 import { ExecutionContext } from '../execution/ExecutionContext';
-import { ExecutionResult, ok } from '../execution/ExecutionResult';
+import { ExecutionResult } from '../execution/ExecutionResult';
 import { TypedValue } from '../routing/ExecutionPortStore';
-import { Types } from '../../compiler/types/TypeSystem';
 
 export class CachePlugin implements RuntimePlugin {
   readonly id = 'core.cache';

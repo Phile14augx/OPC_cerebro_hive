@@ -1,4 +1,4 @@
-import { TrendIntelligenceEngine, TrendLifecycle } from "./trend.js";
+import { TrendIntelligenceEngine } from "./trend.js";
 
 // ---------------------------------------------------------------------------------------------
 // Trend Forecast Engine

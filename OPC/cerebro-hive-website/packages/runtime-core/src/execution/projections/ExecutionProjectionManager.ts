@@ -7,7 +7,7 @@ import { ExecutionProjectionStore, ExecutionSummary } from './ExecutionProjectio
 export class ExecutionProjectionManager {
   constructor(private readonly store: ExecutionProjectionStore) {}
 
-  public async handleEvent(executionId: string, event: ExecutionEvent<any>): Promise<void> {
+  public async handleEvent(executionId: string, event: ExecutionEvent<unknown>): Promise<void> {
     switch (event.type) {
       case 'ExecutionStarted':
         await this.handleExecutionStarted(executionId, event);
@@ -22,13 +22,13 @@ export class ExecutionProjectionManager {
     }
   }
 
-  public async rebuildFromStream(executionId: string, events: ExecutionEvent<any>[]): Promise<void> {
+  public async rebuildFromStream(executionId: string, events: ExecutionEvent<unknown>[]): Promise<void> {
     for (const event of events) {
       await this.handleEvent(executionId, event);
     }
   }
 
-  private async handleExecutionStarted(executionId: string, event: ExecutionEvent<any>): Promise<void> {
+  private async handleExecutionStarted(executionId: string, event: ExecutionEvent<unknown>): Promise<void> {
     const summary: ExecutionSummary = {
       executionId,
       agentId: event.payload.agentId || 'unknown',
@@ -44,7 +44,7 @@ export class ExecutionProjectionManager {
     await this.store.saveExecutionSummary(summary);
   }
 
-  private async handleStepCompleted(executionId: string, event: ExecutionEvent<any>): Promise<void> {
+  private async handleStepCompleted(executionId: string, _event: ExecutionEvent<unknown>): Promise<void> {
     const summary = await this.store.getExecutionSummary(executionId);
     if (summary) {
       summary.totalSteps += 1;
@@ -53,7 +53,7 @@ export class ExecutionProjectionManager {
     }
   }
 
-  private async handleExecutionTerminal(executionId: string, event: ExecutionEvent<any>): Promise<void> {
+  private async handleExecutionTerminal(executionId: string, event: ExecutionEvent<unknown>): Promise<void> {
     const summary = await this.store.getExecutionSummary(executionId);
     if (summary) {
       summary.status = event.type === 'ExecutionCompleted' ? 'COMPLETED' : 'FAILED';

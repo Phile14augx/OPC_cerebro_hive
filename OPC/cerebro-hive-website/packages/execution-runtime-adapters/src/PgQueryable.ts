@@ -9,7 +9,7 @@
  * needing `pg`'s types at all in the adapters' own signatures.
  */
 export interface PgQueryResult {
-  readonly rows: readonly any[];
+  readonly rows: readonly Record<string, unknown>[];
 }
 
 export interface PgQueryable {

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowDown, BrainCircuit, Search, Cpu, Database, Network } from "lucide-react";
+import { ArrowDown, BrainCircuit, Search, Cpu, Database } from "lucide-react";
 
 export const ResearchToProductBridge = () => {
   return (

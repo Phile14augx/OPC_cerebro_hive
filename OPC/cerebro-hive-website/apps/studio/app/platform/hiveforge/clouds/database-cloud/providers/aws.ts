@@ -46,7 +46,7 @@ export class MockAWSProvider implements ProviderContract {
     return path.startsWith("databases"); 
   }
 
-  async estimateCost(blueprintId: string, spec: unknown): Promise<{ currency: string; amount: number }> {
+  async estimateCost(): Promise<{ currency: string; amount: number }> {
     return { currency: "USD", amount: 150 };
   }
 }

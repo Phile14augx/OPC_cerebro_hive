@@ -32,14 +32,29 @@ function ApprovalsPanel({ online }: { online: boolean | null }) {
   const [statusFilter, setStatusFilter] = useState<ApprovalStatus | "">("");
   const [busyId, setBusyId] = useState<string | null>(null);
 
-  const refresh = useCallback(async () => {
-    if (!online || !KEY) return;
+  const fetchApprovals = useCallback(async () => {
+    if (!online || !KEY) return null;
     try {
       const q = statusFilter ? `?status=${statusFilter}` : "";
-      setApprovals(await api<Approval[]>(`/v1/governance/approvals${q}`));
-    } catch { /* noop */ }
+      return await api<Approval[]>(`/v1/governance/approvals${q}`);
+    } catch { return null; }
   }, [online, statusFilter]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+
+  const refresh = useCallback(async () => {
+    const data = await fetchApprovals();
+    if (data) setApprovals(data);
+  }, [fetchApprovals]);
+
+  useEffect(() => {
+    let active = true;
+    const init = async () => {
+      const data = await fetchApprovals();
+      if (active && data) setApprovals(data);
+    };
+    void init();
+    const id = setInterval(() => { void init(); }, 5000);
+    return () => { active = false; clearInterval(id); };
+  }, [fetchApprovals]);
 
   const decide = async (id: string, decision: "approved" | "rejected") => {
     setBusyId(id);
@@ -98,7 +113,7 @@ function CompliancePanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setPosture(await api<CompliancePosture>("/v1/governance/compliance")); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+  useEffect(() => { const init = async () => { await refresh(); }; void init(); const id = setInterval(() => { void init(); }, 5000); return () => clearInterval(id); }, [refresh]);
 
   return (
     <div className="mt-6 space-y-6">
@@ -130,11 +145,26 @@ function GrantsPanel({ online }: { online: boolean | null }) {
   const [form, setForm] = useState({ agentId: "", tool: "", allow: true });
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async () => {
-    if (!online || !KEY) return;
-    try { setGrants((await api<{ grants: ToolGrant[] }>("/v1/zerotrust/grants")).grants); } catch { /* noop */ }
+  const fetchGrants = useCallback(async () => {
+    if (!online || !KEY) return null;
+    try { return (await api<{ grants: ToolGrant[] }>("/v1/zerotrust/grants")).grants; } catch { return null; }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+
+  const refresh = useCallback(async () => {
+    const data = await fetchGrants();
+    if (data) setGrants(data);
+  }, [fetchGrants]);
+
+  useEffect(() => {
+    let active = true;
+    const init = async () => {
+      const data = await fetchGrants();
+      if (active && data) setGrants(data);
+    };
+    void init();
+    const id = setInterval(() => { void init(); }, 5000);
+    return () => { active = false; clearInterval(id); };
+  }, [fetchGrants]);
 
   const create = async () => {
     if (!form.agentId.trim() || !form.tool.trim()) return;
@@ -179,11 +209,26 @@ function McpPanel({ online }: { online: boolean | null }) {
   const [form, setForm] = useState({ name: "", url: "", riskTier: "medium" as RiskTier, capabilitiesRaw: "" });
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async () => {
-    if (!online || !KEY) return;
-    try { setServers((await api<{ servers: McpServerRegistration[] }>("/v1/zerotrust/mcp-servers")).servers); } catch { /* noop */ }
+  const fetchServers = useCallback(async () => {
+    if (!online || !KEY) return null;
+    try { return (await api<{ servers: McpServerRegistration[] }>("/v1/zerotrust/mcp-servers")).servers; } catch { return null; }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+
+  const refresh = useCallback(async () => {
+    const data = await fetchServers();
+    if (data) setServers(data);
+  }, [fetchServers]);
+
+  useEffect(() => {
+    let active = true;
+    const init = async () => {
+      const data = await fetchServers();
+      if (active && data) setServers(data);
+    };
+    void init();
+    const id = setInterval(() => { void init(); }, 5000);
+    return () => { active = false; clearInterval(id); };
+  }, [fetchServers]);
 
   const register = async () => {
     if (!form.name.trim() || !form.url.trim()) return;
@@ -251,11 +296,26 @@ function TokensPanel({ online }: { online: boolean | null }) {
   const [form, setForm] = useState({ agentId: "", toolsRaw: "", ttlMinutes: 15 });
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async () => {
-    if (!online || !KEY) return;
-    try { setTokens((await api<{ tokens: CapabilityToken[] }>("/v1/zerotrust/tokens")).tokens); } catch { /* noop */ }
+  const fetchTokens = useCallback(async () => {
+    if (!online || !KEY) return null;
+    try { return (await api<{ tokens: CapabilityToken[] }>("/v1/zerotrust/tokens")).tokens; } catch { return null; }
   }, [online]);
-  useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
+
+  const refresh = useCallback(async () => {
+    const data = await fetchTokens();
+    if (data) setTokens(data);
+  }, [fetchTokens]);
+
+  useEffect(() => {
+    let active = true;
+    const init = async () => {
+      const data = await fetchTokens();
+      if (active && data) setTokens(data);
+    };
+    void init();
+    const id = setInterval(() => { void init(); }, 5000);
+    return () => { active = false; clearInterval(id); };
+  }, [fetchTokens]);
 
   const issue = async () => {
     const tools = form.toolsRaw.split(",").map(s => s.trim()).filter(Boolean);
@@ -268,13 +328,15 @@ function TokensPanel({ online }: { online: boolean | null }) {
     } catch { /* noop */ } finally { setBusy(false); }
   };
 
-  const isExpired = (t: CapabilityToken) => new Date(t.expiresAt).getTime() < Date.now();
+  const [now] = useState(() => Date.now());
+
+  const isExpired = (t: CapabilityToken) => new Date(t.expiresAt).getTime() < now;
 
   return (
     <div className="mt-6 space-y-6">
       <section className="rounded-xl border border-border bg-surface/40 p-4">
         <h2 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">Issue capability token</h2>
-        <p className="mt-1 text-xs text-text-secondary">Short-lived, scoped token bounding an agent's blast radius even if its reasoning is compromised.</p>
+        <p className="mt-1 text-xs text-text-secondary">Short-lived, scoped token bounding an agent&apos;s blast radius even if its reasoning is compromised.</p>
         <div className="mt-3 grid gap-3 sm:grid-cols-4">
           <Field label="Agent ID"><input className={inputCls} value={form.agentId} onChange={e => setForm(f => ({ ...f, agentId: e.target.value }))} placeholder="agent-support-01" /></Field>
           <Field label="Tools (comma-sep)"><input className={inputCls} value={form.toolsRaw} onChange={e => setForm(f => ({ ...f, toolsRaw: e.target.value }))} placeholder="send_email, read_crm" /></Field>
@@ -329,7 +391,7 @@ export default function HiveShieldPage() {
       <p className="mt-5 text-xs font-semibold uppercase tracking-[0.3em] text-primary-accent">HiveShield™</p>
       <h1 className="mt-2 text-3xl font-bold text-text-primary md:text-4xl">Governance, approvals, and Zero Trust agent security in one console</h1>
       <p className="mt-3 max-w-2xl text-text-secondary">
-        HiveShield is the security and governance control plane over CerebroHive's existing Governance and
+        HiveShield is the security and governance control plane over CerebroHive&apos;s existing Governance and
         Zero Trust domains: approval workflows, compliance control mappings, deny-by-default tool grants,
         MCP server risk review, and short-lived capability tokens — all backed by the same live policy engine
         and audit trail every other product on the platform uses.

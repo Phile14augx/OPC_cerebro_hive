@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useSyncExternalStore, ReactNode } from 'react';
 
 export type ScrollStage = "disconnected" | "core" | "services" | "connections" | "orchestration" | "autonomous";
 export type NetworkMode = "idle" | "hover" | "transition" | "active";
@@ -25,6 +25,15 @@ export interface ServiceAnimationState {
 
 const ServiceAnimationContext = createContext<ServiceAnimationState | undefined>(undefined);
 
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
+const subscribeToReducedMotion = (notify: () => void) => {
+  const mediaQuery = window.matchMedia(reducedMotionQuery);
+  mediaQuery.addEventListener("change", notify);
+  return () => mediaQuery.removeEventListener("change", notify);
+};
+const getReducedMotionSnapshot = () => window.matchMedia(reducedMotionQuery).matches;
+const getServerReducedMotionSnapshot = () => false;
+
 export const ServiceAnimationProvider = ({ children }: { children: ReactNode }) => {
   const [activeService, setActiveService] = useState<string | null>(null);
   const [hoveredService, setHoveredService] = useState<string | null>(null);
@@ -33,15 +42,11 @@ export const ServiceAnimationProvider = ({ children }: { children: ReactNode }) 
   const [cursorPosition, setCursorPosition] = useState({ x: -100, y: -100 });
   const [backgroundColor, setBackgroundColor] = useState<string>("transparent");
 
-  // Reduced motion preference
-  const [reducedMotion, setReducedMotion] = useState(false);
-  React.useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mediaQuery.matches);
-    const listener = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mediaQuery.addEventListener("change", listener);
-    return () => mediaQuery.removeEventListener("change", listener);
-  }, []);
+  const reducedMotion = useSyncExternalStore(
+    subscribeToReducedMotion,
+    getReducedMotionSnapshot,
+    getServerReducedMotionSnapshot,
+  );
 
   return (
     <ServiceAnimationContext.Provider

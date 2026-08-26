@@ -12,7 +12,7 @@ export interface LedgerEntry {
   entryHash: string;
   schemaVersion: string;
   retentionClass: RetentionClass;
-  payload: any; // The raw payload, stored alongside but verified via hash
+  payload: unknown; // The raw payload, stored alongside but verified via hash
 }
 
 export class AuditLedger {
@@ -22,7 +22,7 @@ export class AuditLedger {
   /**
    * Appends an event to the immutable ledger.
    */
-  async append(actor: string, eventType: string, payload: any, retention: RetentionClass = 'Audit_7Years'): Promise<LedgerEntry> {
+  async append(actor: string, eventType: string, payload: unknown, retention: RetentionClass = 'Audit_7Years'): Promise<LedgerEntry> {
     const previousHash = this.chain.length > 0 ? this.chain[this.chain.length - 1].entryHash : this.genesisHash;
     const payloadStr = JSON.stringify(payload);
     const payloadHash = createHash('sha256').update(payloadStr).digest('hex');

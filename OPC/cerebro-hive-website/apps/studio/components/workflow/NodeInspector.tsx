@@ -8,7 +8,7 @@ export function NodeInspector({ workflowId }: { workflowId: string }) {
 
   if (!selectedNodeId) {
     return (
-      <div className="flex flex-col h-full bg-muted/5 border-l border-border w-80 p-6">
+      <div className="flex flex-col h-full bg-muted/5 border-l border-border w-80 p-6" data-workflow-id={workflowId}>
         <h2 className="text-lg font-semibold border-b border-border pb-2 mb-4">Node Inspector</h2>
         <div className="text-sm text-muted-foreground">Select a node on the canvas to configure it.</div>
       </div>
@@ -16,7 +16,7 @@ export function NodeInspector({ workflowId }: { workflowId: string }) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-muted/5 border-l border-border w-80">
+    <div className="flex flex-col h-full bg-muted/5 border-l border-border w-80" data-workflow-id={workflowId}>
       <div className="h-8 border-b border-border flex items-center px-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground shrink-0 bg-muted/10">
         Node: {selectedNodeId}
       </div>

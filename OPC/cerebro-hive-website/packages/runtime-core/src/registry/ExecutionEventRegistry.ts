@@ -4,9 +4,9 @@ import { EventUpcaster } from '@cerebro/runtime-contracts/src/events/EventUpcast
 export interface EventRegistration {
   type: string;
   schemaVersion: number;
-  validator?: (payload: any) => void;
-  serializer?: (payload: any) => string;
-  deserializer?: (raw: string) => any;
+  validator?: (payload: Record<string, unknown>) => void;
+  serializer?: (payload: Record<string, unknown>) => string;
+  deserializer?: (raw: string) => unknown;
 }
 
 export class ExecutionEventRegistry {
@@ -35,10 +35,11 @@ export class ExecutionEventRegistry {
    */
   public registerUpcaster(upcaster: EventUpcaster): void {
     if (this.isFrozen) throw new Error('Cannot register upcasters after runtime has started.');
-    if (!this.upcasters.has(upcaster.eventType)) {
-      this.upcasters.set(upcaster.eventType, new Map());
+    let versionMap = this.upcasters.get(upcaster.eventType);
+    if (!versionMap) {
+      versionMap = new Map();
+      this.upcasters.set(upcaster.eventType, versionMap);
     }
-    const versionMap = this.upcasters.get(upcaster.eventType)!;
     if (versionMap.has(upcaster.fromVersion)) {
       throw new Error(`Upcaster already registered for ${upcaster.eventType} from version ${upcaster.fromVersion}`);
     }
@@ -49,7 +50,7 @@ export class ExecutionEventRegistry {
    * Upcasts an event payload to the latest registered schema version by traversing the upcaster chain.
    * This is executed lazily by the ReplayService before handing the event to the Reducer.
    */
-  public upcastEvent(event: ExecutionEvent): ExecutionEvent {
+  public upcastEvent(event: ExecutionEvent<unknown>): ExecutionEvent<unknown> {
     let currentVersion = event.schemaVersion || 1;
     let currentPayload = event.payload;
 

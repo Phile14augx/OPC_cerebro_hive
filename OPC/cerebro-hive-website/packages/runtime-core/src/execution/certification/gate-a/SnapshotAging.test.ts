@@ -16,7 +16,7 @@ class MockRegistry extends ReducerRegistry {
 }
 
 class MockStore {
-  public events: ExecutionEvent<any>[] = [];
+  public events: ExecutionEvent<unknown>[] = [];
   public snapshot: ExecutionSnapshot | null = null;
   
   async getEvents(id: string, after?: bigint) {
@@ -31,9 +31,9 @@ class MockStore {
 describe('Gate A - Snapshot Aging Certification', () => {
 
   it('should restore and replay cleanly from a 180-day-old snapshot', async () => {
-    const store = new MockStore() as any;
+    const store = new MockStore() as unknown;
     const registry = new MockRegistry();
-    const replayService = new ExecutionReplayService(store, registry, { upcastEvent: e => e } as any);
+    const replayService = new ExecutionReplayService(store, registry, { upcastEvent: e => e } as unknown);
 
     const execId = 'aging-1';
 

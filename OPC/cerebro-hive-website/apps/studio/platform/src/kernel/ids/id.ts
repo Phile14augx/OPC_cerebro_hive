@@ -6,7 +6,7 @@ let seq = 0;
 
 /** ULID-compatible sortable identifier (time-ordered, no deps). */
 export function newId(prefix?: string): string {
-  let now = Date.now();
+  const now = Date.now();
   if (now === lastTime) seq += 1; else { lastTime = now; seq = 0; }
   let time = now;
   let timePart = "";

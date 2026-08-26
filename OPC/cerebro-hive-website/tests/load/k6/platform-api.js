@@ -27,8 +27,6 @@ const ENV         = __ENV.ENV       ?? "staging";
 const BASE_URL    = __ENV.BASE_URL  ?? `https://api-${ENV}.cerebro-hive.io`;
 const API_TOKEN   = __ENV.API_TOKEN ?? "";  // Set via CI secret
 
-const SCENARIOS = __ENV.SCENARIO ?? "baseline";
-
 // ── Scenarios ──────────────────────────────────────────────────────────────────
 export const options = {
   scenarios: {
@@ -94,12 +92,6 @@ export const options = {
 };
 
 // ── Test data ─────────────────────────────────────────────────────────────────
-const TEST_ORG_IDS = [
-  "org_load_test_01",
-  "org_load_test_02",
-  "org_load_test_03",
-];
-
 // ── Default headers ───────────────────────────────────────────────────────────
 function headers(extra = {}) {
   return {
@@ -112,16 +104,14 @@ function headers(extra = {}) {
 
 // ── Scenarios ─────────────────────────────────────────────────────────────────
 
-export default function () {
-  const orgId = randomItem(TEST_ORG_IDS);
-
+export default function platformApiScenario() {
   // Distribute traffic across user journeys
   const roll = Math.random();
-  if (roll < 0.30)      workflowJourney(orgId);
-  else if (roll < 0.55) agentJourney(orgId);
-  else if (roll < 0.75) knowledgeJourney(orgId);
+  if (roll < 0.30)      workflowJourney();
+  else if (roll < 0.55) agentJourney();
+  else if (roll < 0.75) knowledgeJourney();
   else if (roll < 0.90) authJourney();
-  else                   billingJourney(orgId);
+  else                   billingJourney();
 
   sleep(randomIntBetween(1, 3));
 }
@@ -148,7 +138,7 @@ function authJourney() {
 }
 
 // ── Workflow journey ──────────────────────────────────────────────────────────
-function workflowJourney(orgId) {
+function workflowJourney() {
   group("workflows", () => {
     // List workflows
     let start = Date.now();
@@ -207,7 +197,7 @@ function workflowJourney(orgId) {
 }
 
 // ── Agent journey ─────────────────────────────────────────────────────────────
-function agentJourney(orgId) {
+function agentJourney() {
   group("agents", () => {
     let start = Date.now();
     let res = http.get(`${BASE_URL}/v1/agents?page=1&limit=10`, {
@@ -237,7 +227,7 @@ function agentJourney(orgId) {
 }
 
 // ── Knowledge journey ─────────────────────────────────────────────────────────
-function knowledgeJourney(orgId) {
+function knowledgeJourney() {
   group("knowledge", () => {
     const res = http.get(`${BASE_URL}/v1/knowledge/collections`, {
       headers: headers(),
@@ -251,7 +241,7 @@ function knowledgeJourney(orgId) {
 }
 
 // ── Billing journey ───────────────────────────────────────────────────────────
-function billingJourney(orgId) {
+function billingJourney() {
   group("billing", () => {
     const res = http.get(`${BASE_URL}/v1/ai/usage?from=2026-07-01T00:00:00Z`, {
       headers: headers(),

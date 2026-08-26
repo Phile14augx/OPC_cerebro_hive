@@ -133,8 +133,8 @@ export const AgentOSBackendConsole = ({ adminSecret }: { adminSecret?: string })
   }, [apiBase, adminSecret]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    bootstrap();
+
+    setTimeout(() => { void bootstrap(); }, 0);
   }, [bootstrap]);
 
   const fetchTraces = useCallback(

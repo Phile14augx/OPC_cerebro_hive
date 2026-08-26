@@ -29,9 +29,9 @@ export function EvidenceViewer({ reviewId, findingId }: { reviewId: string; find
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="evidence-viewer">
       {evidenceList.map((evidence, idx) => (
-        <Card key={evidence.id || idx} className="bg-black border-gray-800 overflow-hidden">
+        <Card data-testid="evidence-item" key={evidence.id || idx} className="bg-black border-gray-800 overflow-hidden">
           <CardHeader className="bg-gray-900/50 border-b border-gray-800 pb-3">
             <div className="flex items-start justify-between">
               <div>

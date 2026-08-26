@@ -2,7 +2,7 @@ export interface InboxMessage {
   readonly eventId: string;
   readonly executionId: string;
   readonly type: string;
-  readonly payload: Record<string, any>;
+  readonly payload: Record<string, unknown>;
   readonly status: 'PROCESSED' | 'FAILED';
 }
 
@@ -12,7 +12,7 @@ export interface ExecutionInbox {
    * Ensures idempotency: if the `eventId` has already been processed, this 
    * will either return `false` or throw an IdempotencyError, preventing duplicate processing.
    */
-  receive(eventId: string, executionId: string, type: string, payload: Record<string, any>): Promise<boolean>;
+  receive(eventId: string, executionId: string, type: string, payload: Record<string, unknown>): Promise<boolean>;
 
   /**
    * Marks a received event as failed, optionally allowing it to be retried later.

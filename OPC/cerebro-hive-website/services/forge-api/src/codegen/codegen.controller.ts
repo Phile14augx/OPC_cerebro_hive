@@ -27,7 +27,8 @@ export class CodegenController {
       for await (const event of this.codegenService.generateCode(id)) {
         res.write(`data: ${JSON.stringify(event)}\n\n`);
         // Flush per-chunk so the client sees real-time output
-        if (typeof (res as any).flush === 'function') (res as any).flush();
+        const flushableResponse = res as Response & { flush?: () => void };
+        if (typeof flushableResponse.flush === 'function') flushableResponse.flush();
         if (event.type === 'done' || event.type === 'error') break;
       }
     } catch (err: unknown) {

@@ -11,7 +11,11 @@ export class GraphAlgorithms {
     const impactedNodes: SemanticNode[] = [];
 
     while (queue.length > 0) {
-      const { id, depth } = queue.shift()!;
+      const next = queue.shift();
+      if (!next) {
+        throw new Error('Graph traversal queue invariant violated');
+      }
+      const { id, depth } = next;
       
       if (!visited.has(id)) {
         visited.add(id);
@@ -50,7 +54,11 @@ export class GraphAlgorithms {
     const dependencies: SemanticNode[] = [];
 
     while (queue.length > 0) {
-      const { id, depth } = queue.shift()!;
+      const next = queue.shift();
+      if (!next) {
+        throw new Error('Graph traversal queue invariant violated');
+      }
+      const { id, depth } = next;
       
       if (!visited.has(id)) {
         visited.add(id);

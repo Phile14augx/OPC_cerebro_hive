@@ -30,7 +30,7 @@ export class PortfolioSimulator {
     const hasViolations = aiMissionCriticalStatus.violations.length > 0;
     
     // Simplistic heuristic for simulation outcomes
-    const isLocal = scenario.proposedInjections.some(n => n.properties.name?.includes('Local'));
+    const isLocal = scenario.proposedInjections.some(n => (n.properties.name as string)?.includes('Local'));
     
     scenario.metrics = {
       AvailabilityScore: isLocal ? 0.95 : 0.85, 

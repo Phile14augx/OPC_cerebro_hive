@@ -1,5 +1,5 @@
 import React from "react";
-import { Activity, ShieldCheck, TrendingUp, ChevronRight, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Activity, ShieldCheck, TrendingUp, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Card } from "./ui/Card";
 import { Button } from "./ui/Button";
 
@@ -17,7 +17,7 @@ export function RightPanel() {
             <div className="flex-1">
               <h4 className="text-sm font-bold text-text-primary">Optimization Available</h4>
               <p className="text-xs text-text-secondary mt-1 leading-relaxed">
-                Your "Sales Copilot" agent has a 12% higher token usage than average. We recommend switching to Claude 3.5 Haiku to reduce costs.
+                Your &quot;Sales Copilot&quot; agent has a 12% higher token usage than average. We recommend switching to Claude 3.5 Haiku to reduce costs.
               </p>
               <Button variant="link" size="sm" className="px-0 h-auto mt-2 text-purple-400">View Recommendation</Button>
             </div>

@@ -3,7 +3,6 @@
  * Server-Sent Events — streams live health score updates every 30 seconds.
  * Client subscribes once; receives push notifications on score changes.
  */
-import { NextResponse } from 'next/server';
 import { computeEnterpriseHealth } from '@/shared/lib/health-score';
 
 export const runtime = 'nodejs';

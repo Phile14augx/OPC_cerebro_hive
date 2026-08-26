@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AIProviderRegistry } from '../../infrastructure/ai/IAICapabilityProvider';
 
 const aiRegistry = new AIProviderRegistry();
@@ -50,8 +49,8 @@ export class WorkforceCopilotService {
       confidenceScore: 0.95
     };
   }
-
   async recommendCandidatesForProject(projectId: string, limit: number) {
+    void limit;
     console.log(`[Workforce Copilot] Recommending candidates for project ${projectId}`);
     return [
       {

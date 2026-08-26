@@ -29,7 +29,7 @@ class WorkerV4Registry extends ReducerRegistry {
 }
 
 class MockStore {
-  public events: ExecutionEvent<any>[] = [];
+  public events: ExecutionEvent<unknown>[] = [];
   
   async getEvents(id: string, after?: bigint) {
     if (after) return this.events.filter(e => e.sequence > after);
@@ -41,9 +41,9 @@ class MockStore {
 describe('Gate B - Mixed-Version Cluster Certification', () => {
 
   it('should tolerate Worker v3 and Worker v4 processing the same stream', async () => {
-    const store = new MockStore() as any;
-    const replayServiceV3 = new ExecutionReplayService(store, new WorkerV3Registry(), { upcastEvent: e => e } as any);
-    const replayServiceV4 = new ExecutionReplayService(store, new WorkerV4Registry(), { upcastEvent: e => e } as any);
+    const store = new MockStore() as unknown;
+    const replayServiceV3 = new ExecutionReplayService(store, new WorkerV3Registry(), { upcastEvent: e => e } as unknown);
+    const replayServiceV4 = new ExecutionReplayService(store, new WorkerV4Registry(), { upcastEvent: e => e } as unknown);
 
     const execId = 'mixed-cluster-1';
 

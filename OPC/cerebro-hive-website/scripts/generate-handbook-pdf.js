@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
+
 /*
  * Builds the internal CerebroHive handbook from the repository's Markdown
  * sources. Run: node scripts/generate-handbook-pdf.js

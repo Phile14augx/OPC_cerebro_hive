@@ -2,13 +2,15 @@ import { IProvisioningProvider, ProviderMetrics } from "../contracts/provider";
 import { Plugin } from "../contracts/plugin";
 
 export class MockCloudProvider implements IProvisioningProvider {
-  async create(resourceId: string, type: string, config: any): Promise<any> {
+  async create(resourceId: string, type: string, config: unknown): Promise<{ status: string; internalId: string }> {
+    void config;
     console.log(`[MockCloudProvider] Creating ${type} resource ${resourceId}...`);
     await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate delay
     return { status: "running", internalId: `mock-id-${Date.now()}` };
   }
 
-  async update(resourceId: string, type: string, config: any): Promise<any> {
+  async update(resourceId: string, type: string, config: unknown): Promise<{ status: string }> {
+    void config;
     console.log(`[MockCloudProvider] Updating ${type} resource ${resourceId}...`);
     return { status: "updated" };
   }
@@ -18,6 +20,7 @@ export class MockCloudProvider implements IProvisioningProvider {
   }
 
   async metrics(resourceId: string): Promise<ProviderMetrics> {
+    void resourceId;
     return {
       cpuUsagePercent: Math.random() * 100,
       memoryUsageBytes: 1024 * 1024 * 512,

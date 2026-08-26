@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Shield, FileText, AlertTriangle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 type Tab = "posture" | "frameworks" | "evidence";
 type Status = "compliant" | "partial" | "gap" | "not_applicable";

@@ -1,6 +1,6 @@
 import { DomainEvent } from './DomainEvent';
 
-export type EventHandler<T = any> = (event: DomainEvent<T>) => Promise<void> | void;
+export type EventHandler<T = unknown> = (event: DomainEvent<T>) => Promise<void> | void;
 
 export interface EventBus {
   publish<T>(event: DomainEvent<T>): Promise<void>;

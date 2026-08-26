@@ -1,5 +1,5 @@
 
-import { CompilerPass, PassResult, CompilationContext, Symbol } from '../engine/CompilationContext';
+import { CompilerPass, PassResult, CompilationContext } from '../engine/CompilationContext';
 import { Types } from '../types/TypeSystem';
 
 export const TypeInferencePass: CompilerPass = {

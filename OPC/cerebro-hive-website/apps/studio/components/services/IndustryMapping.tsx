@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Building, Stethoscope, Briefcase, ShoppingBag, Factory, Shield, Cpu, Zap, ArrowRight } from "lucide-react";
+import { Stethoscope, Briefcase, ShoppingBag, Factory, Shield, Cpu, ArrowRight } from "lucide-react";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { cn } from "@/lib/utils";
 import { Section } from "@/components/cerebro/primitives/Section";

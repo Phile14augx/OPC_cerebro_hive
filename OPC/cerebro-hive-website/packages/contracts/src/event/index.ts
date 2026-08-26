@@ -7,7 +7,7 @@ export interface EventDefinition {
   type: 'AgentStarted' | 'NodeStarted' | 'ToolCalled' | 'ModelInvoked' | 'MemoryRead' | 'MemoryWrite' | 'NodeCompleted' | 'AgentCompleted' | string;
   timestamp: string;
   source: string; // The origin of the event (e.g., node ID, tool ID)
-  payload: Record<string, any>; // Event-specific data
+  payload: Record<string, unknown>; // Event-specific data
   metadata?: {
     traceId?: string;
     spanId?: string;

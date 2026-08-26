@@ -31,6 +31,15 @@ interface RuntimeMessage {
   toolCallId?: string;
 }
 
+function isAcceptedAsyncToolResult(value: unknown): value is { status: 'accepted'; jobId: string } {
+  return typeof value === 'object'
+    && value !== null
+    && 'status' in value
+    && 'jobId' in value
+    && value.status === 'accepted'
+    && typeof value.jobId === 'string';
+}
+
 export class AgentRuntimeService {
   private limits: RuntimeExecutionLimits;
 
@@ -49,7 +58,7 @@ export class AgentRuntimeService {
    * 3. The loop continues until the model produces a final answer or
    *    execution limits are hit.
    */
-  async execute(context: AgentExecutionContext, userInput: string, systemPrompt?: string): Promise<any> {
+  async execute(context: AgentExecutionContext, userInput: string, systemPrompt?: string): Promise<unknown> {
     // 1. Safety Layer
     this.validateSafety(userInput);
 
@@ -60,7 +69,7 @@ export class AgentRuntimeService {
 
     const messages: RuntimeMessage[] = [
       ...(systemPrompt ? [{ role: 'system' as const, content: systemPrompt }] : []),
-      ...context.memory.conversationHistory,
+      ...(context.memory.conversationHistory as RuntimeMessage[]),
       { role: 'user' as const, content: userInput },
     ];
 
@@ -104,7 +113,7 @@ export class AgentRuntimeService {
           // Tool approval hook — extensible for policy-gated execution
           await this.beforeToolExecution(toolCall, context);
 
-          let toolArgs: Record<string, any>;
+          let toolArgs: Record<string, unknown>;
           try {
             toolArgs = JSON.parse(toolCall.arguments);
           } catch {
@@ -120,8 +129,8 @@ export class AgentRuntimeService {
               toolCallId: toolCall.id,
             });
 
-            // If async tool, suspend the execution
-            if (toolResult?.status === 'accepted' && toolResult?.jobId) {
+            // If async tool, suspend the execution.
+            if (isAcceptedAsyncToolResult(toolResult)) {
               return {
                 status: 'suspended',
                 reason: 'waiting_for_async_tool',
@@ -129,12 +138,12 @@ export class AgentRuntimeService {
                 messages,
               };
             }
-          } catch (err: any) {
+          } catch (err: unknown) {
             // Tool errors are fed back to the model as error results
             // so it can recover gracefully
             messages.push({
               role: 'tool',
-              content: JSON.stringify({ error: err.message ?? 'Tool execution failed' }),
+              content: JSON.stringify({ error: (err instanceof Error ? err.message : String(err)) ?? 'Tool execution failed' }),
               toolCallId: toolCall.id,
             });
           }

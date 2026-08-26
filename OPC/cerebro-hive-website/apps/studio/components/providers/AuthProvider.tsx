@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // const session = await getSession();
         // setUser(session.user);
         // setWorkspace(session.workspace);
-      } catch (e) {
+      } catch {
         console.error("Session missing or expired");
       } finally {
         setIsLoading(false);

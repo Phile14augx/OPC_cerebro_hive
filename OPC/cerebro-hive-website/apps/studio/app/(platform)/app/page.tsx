@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { 
-  Building2, Sparkles, Bot, Workflow, BookOpen, 
-  DatabaseZap, ShoppingCart, ArrowRight, Play, MoreVertical, Plus, CheckCircle2
+  Sparkles, Bot, Workflow, BookOpen, 
+  DatabaseZap, ShoppingCart, Play, MoreVertical, CheckCircle2
 } from "lucide-react";
 import { Card } from "./components/ui/Card";
 import { Badge } from "./components/ui/Badge";
@@ -124,7 +124,7 @@ export default function DashboardHome() {
             <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
               <div className="w-2 h-2 mt-1.5 sm:mt-0 rounded-full bg-blue-500 animate-pulse shrink-0" />
               <p className="text-sm text-text-primary">
-                <span className="font-bold text-blue-400">Context aware:</span> You uploaded 12 PDFs yesterday to 'HR Docs'. Would you like to create a Knowledge Base from them?
+                <span className="font-bold text-blue-400">Context aware:</span> You uploaded 12 PDFs yesterday to &apos;HR Docs&apos;. Would you like to create a Knowledge Base from them?
               </p>
             </div>
             <Button onClick={() => analytics.track({ eventName: 'click', category: 'dashboard', label: 'Create Knowledge Base' })} size="sm" variant="secondary" className="border-blue-500/30 hover:bg-blue-500/20 text-blue-400 shrink-0 w-full sm:w-auto">

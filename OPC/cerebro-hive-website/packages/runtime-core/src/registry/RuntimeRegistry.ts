@@ -13,7 +13,7 @@ export class RuntimeRegistry {
   private static instance: RuntimeRegistry;
   
   // Organized by CapabilityType -> Provider Name -> Descriptor
-  private registry: Map<CapabilityType, Map<string, CapabilityDescriptor<any>>> = new Map();
+  private registry: Map<CapabilityType, Map<string, CapabilityDescriptor<CapabilityProvider>>> = new Map();
 
   private constructor() {}
 
@@ -29,11 +29,11 @@ export class RuntimeRegistry {
    */
   public register<T extends CapabilityProvider>(descriptor: CapabilityDescriptor<T>): void {
     const { capability, name } = descriptor.metadata;
-    if (!this.registry.has(capability)) {
-      this.registry.set(capability, new Map());
+    let capabilityMap = this.registry.get(capability);
+    if (!capabilityMap) {
+      capabilityMap = new Map();
+      this.registry.set(capability, capabilityMap);
     }
-    
-    const capabilityMap = this.registry.get(capability)!;
     if (capabilityMap.has(name)) {
       throw new Error(`Provider ${name} for capability ${capability} is already registered.`);
     }
@@ -48,7 +48,8 @@ export class RuntimeRegistry {
     const capabilityMap = this.registry.get(capability);
     if (!capabilityMap || !capabilityMap.has(name)) return;
 
-    const descriptor = capabilityMap.get(name)!;
+    const descriptor = capabilityMap.get(name);
+    if (!descriptor) return;
     await descriptor.unload();
     capabilityMap.delete(name);
   }
@@ -88,7 +89,8 @@ export class RuntimeRegistry {
     if (options.features && options.features.length > 0) {
       descriptors = descriptors.filter(d => {
         const supported = d.metadata.supportedFeatures || [];
-        return options.features!.every(f => supported.includes(f));
+        const feats = options.features || [];
+        return feats.every(f => supported.includes(f));
       });
     }
 
@@ -106,8 +108,8 @@ export class RuntimeRegistry {
   /**
    * Lists all registered capability descriptors.
    */
-  public listCapabilities(): CapabilityDescriptor<any>[] {
-    const all: CapabilityDescriptor<any>[] = [];
+  public listCapabilities(): CapabilityDescriptor<CapabilityProvider>[] {
+    const all: CapabilityDescriptor<CapabilityProvider>[] = [];
     for (const map of this.registry.values()) {
       all.push(...Array.from(map.values()));
     }

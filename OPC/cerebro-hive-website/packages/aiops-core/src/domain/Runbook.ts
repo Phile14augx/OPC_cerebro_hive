@@ -4,7 +4,7 @@ export interface Runbook {
   version: string;
   owner: string;
   provider: string; // e.g., 'AWSSystemsManager', 'AnsibleTower', 'Mock'
-  payloadTemplate: any;
+  payloadTemplate: Record<string, unknown>;
   confidenceScore: number; // Continuously updated by ClosedLoopVerifier
   executionHistoryCount: number;
 }

@@ -6,6 +6,7 @@ import { RuntimePlugin } from './RuntimePlugin';
 import { StudioNode } from '../../graph/GraphModel';
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionResult } from '../execution/ExecutionResult';
+import type { NodeMetrics } from '../execution/ExecutionMetrics';
 
 export class MetricsPlugin implements RuntimePlugin {
   readonly id = 'core.metrics';
@@ -17,7 +18,8 @@ export class MetricsPlugin implements RuntimePlugin {
   }
 
   afterNode(node: StudioNode, result: ExecutionResult, context: ExecutionContext): void {
-    context.metrics.recordNodeEnd(node.id, result.status as any, {
+    const status: NodeMetrics['status'] = result.status === 'streaming' ? 'running' : result.status;
+    context.metrics.recordNodeEnd(node.id, status, {
       tokenUsage: result.tokenUsage,
       costUsd: result.costUsd,
     });
@@ -28,6 +30,6 @@ export class MetricsPlugin implements RuntimePlugin {
   }
 
   afterExecution(context: ExecutionContext): void {
-    (context.metrics as any).finish?.();
+    context.metrics.finish();
   }
 }

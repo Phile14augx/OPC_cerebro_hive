@@ -1,7 +1,4 @@
-import { HiveEventBus } from '@cerebro/domain-model';
-import { HiveEventSubscriber, HiveEventHandler } from '@cerebro/domain-model';
-import { HiveEventPublisher } from '@cerebro/domain-model';
-import { HiveEventEnvelope } from '@cerebro/domain-model';
+import { HiveEventBus, HiveEventHandler, HiveEventEnvelope } from '@cerebro/domain-model';
 
 /**
  * A lightweight, in-memory implementation of the HiveEventBus contract.
@@ -13,10 +10,9 @@ export class InMemoryHiveEventBus implements HiveEventBus {
   private handlers = new Map<string, Set<HiveEventHandler>>();
 
   subscribe(eventType: string, handler: HiveEventHandler): void {
-    if (!this.handlers.has(eventType)) {
-      this.handlers.set(eventType, new Set());
-    }
-    this.handlers.get(eventType)!.add(handler);
+    const eventHandlers = this.handlers.get(eventType) ?? new Set<HiveEventHandler>();
+    this.handlers.set(eventType, eventHandlers);
+    eventHandlers.add(handler);
   }
 
   unsubscribe(eventType: string, handler: HiveEventHandler): void {
@@ -27,8 +23,10 @@ export class InMemoryHiveEventBus implements HiveEventBus {
   }
 
   async publish(envelope: HiveEventEnvelope): Promise<void> {
-    // The type property exists on HiveDomainEvent. If not, fallback to constructor name.
-    const eventType = (envelope.event as any).type || envelope.event.constructor.name;
+    const event = envelope.event as typeof envelope.event & { readonly type?: unknown };
+    const eventType = typeof event.type === 'string' && event.type
+      ? event.type
+      : event.constructor.name;
     const eventHandlers = this.handlers.get(eventType);
 
     if (eventHandlers) {

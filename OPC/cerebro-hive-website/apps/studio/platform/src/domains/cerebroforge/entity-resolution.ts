@@ -1,6 +1,3 @@
-import { seededRandom } from "../simulator/simulator.js";
-import { newId } from "../../kernel/ids/id.js";
-
 export type EntityType = 
   | "Paper" | "Repository" | "Dataset" | "Model" | "Algorithm" | "Architecture" 
   | "Training Method" | "Evaluation Metric" | "Framework" | "Language" 

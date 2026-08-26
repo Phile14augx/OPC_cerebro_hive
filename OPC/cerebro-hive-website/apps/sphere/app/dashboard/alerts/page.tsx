@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { SphereCard, SphereCardHeader, SphereCardBody, SeverityBadge, Skeleton } from '../../../shared/ui/SphereCard';
+import { SphereCard, SphereCardBody, SeverityBadge, Skeleton } from '../../../shared/ui/SphereCard';
 import type { DashboardData, AlertSeverity } from '../../../shared/lib/types';
 
 async function fetchDashboard(): Promise<DashboardData> {

@@ -1,0 +1,15 @@
+{
+  "closure_commit": "67edd7edbe69ad26cf9aa6550bc97ac1b6e308a6",
+  "branch": "fix/w0-2-github-visible-ci",
+  "timestamp": "2026-08-24T01:38:33+05:30",
+  "evidence_files": [
+    "w0.2_classifier_output.json",
+    "agent_v_independent_validation.md",
+    "w0.2_final_recertification.md",
+    "w0.2_final_recensus.md",
+    "talent_db_gate_evidence.txt",
+    "frozen-suppression-inventory.json",
+    "frozen-lint-inventory.json",
+    "schema_debt_ledger.txt"
+  ]
+}

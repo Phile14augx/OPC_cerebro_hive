@@ -24,7 +24,7 @@ export class ApiError extends Error {
  * Returns DTOs and translates HTTP errors into ApiError.
  */
 export class EngineeringReviewClient {
-  constructor(private readonly config: ApiClientConfig) {
+  constructor(public readonly config: ApiClientConfig) {
     // Ensure baseUrl doesn't end with a slash for consistent URL construction
     this.config.baseUrl = config.baseUrl.replace(/\/$/, '');
   }
@@ -63,8 +63,8 @@ export class EngineeringReviewClient {
       }
 
       return await response.json() as T;
-    } catch (err: any) {
-      if (err.name === 'AbortError') {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') {
         throw new ApiError(408, 'Request timed out');
       }
       throw err;

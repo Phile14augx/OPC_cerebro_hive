@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef, Suspense } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef, Suspense } from "react";
 import {
   FileCode2, Sparkles, Play, ChevronRight, CheckCircle2,
-  Loader2, Terminal, Clock, Package, Copy, Server, Globe, Smartphone, Monitor,
-  AlertTriangle,
+  Loader2, Terminal, Clock, Package, Copy, AlertTriangle,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Card } from "../../components/ui/Card";

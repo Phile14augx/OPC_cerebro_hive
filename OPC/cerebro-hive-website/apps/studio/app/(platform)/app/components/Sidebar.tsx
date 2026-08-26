@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { platformNavigation, forgeNavigation, aiNavigation, automationNavigation } from "../navigation";
 import {
-  Building2, ChevronDown, ChevronRight, Pin, PanelLeftClose, PanelLeft, Star, Hammer, X
+  Building2, ChevronDown, PanelLeftClose, PanelLeft, Star, Hammer, X
 } from "lucide-react";
 import { cn } from "./ui/utils";
 import { useSidebar } from "./SidebarContext";

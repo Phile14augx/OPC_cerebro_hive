@@ -5,7 +5,6 @@
  */
 
 import type { TaskStatus } from "./task.js";
-import type { RunStatus } from "./dag.js";
 import type { AgentState } from "./agent.js";
 import type { AgentHealth } from "./health.js";
 import type { TaskOutput } from "./task.js";

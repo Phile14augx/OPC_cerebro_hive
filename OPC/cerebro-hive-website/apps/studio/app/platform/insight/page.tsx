@@ -77,14 +77,15 @@ function LineWidget({ widget, metrics }: { widget: Widget; metrics: Record<strin
 function PieWidget({ widget, metrics }: { widget: Widget; metrics: Record<string, Metric> }) {
   const parts = widget.metricKeys.map(k => metrics[k]).filter((m): m is Metric => !!m);
   const total = parts.reduce((s, m) => s + Math.max(m.value, 0), 0) || 1;
-  let acc = 0;
+
   const colors = ["#7c5cff", "#3ec6ff", "#ffb020", "#34d399", "#f472b6"];
-  const stops = parts.map((m, i) => {
+  const stops = parts.reduce((accStops, m, i) => {
     const pct = (Math.max(m.value, 0) / total) * 100;
-    const stop = `${colors[i % colors.length]} ${acc}% ${acc + pct}%`;
-    acc += pct;
-    return stop;
-  });
+    const lastAcc = accStops.length > 0 ? accStops[accStops.length - 1].acc : 0;
+    const stopStr = colors[i % colors.length] + " " + lastAcc + "% " + (lastAcc + pct) + "%";
+    accStops.push({ acc: lastAcc + pct, str: stopStr });
+    return accStops;
+  }, [] as {acc: number, str: string}[]).map(s => s.str);
   return (
     <div className="rounded-xl border border-border bg-surface/40 p-4">
       <div className="text-sm font-semibold text-text-primary">{widget.title}</div>
@@ -158,7 +159,7 @@ export default function CerebroInsightPage() {
     } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const runRefresh = useCallback(async () => {
     setRefreshing(true);

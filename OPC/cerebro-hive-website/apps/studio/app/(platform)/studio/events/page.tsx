@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { MetricTile } from "@/components/platform/MetricTile";
 import { SearchBar }  from "@/components/platform/SearchBar";
 import { useEventStream } from "@/lib/platform/hooks";
 import type { NatsEvent } from "@/lib/platform/api-client";

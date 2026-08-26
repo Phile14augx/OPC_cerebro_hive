@@ -72,13 +72,13 @@ export class PostgresExecutionLeaseStore implements ExecutionLeaseStore {
         `SELECT owner, expires_at FROM execution_leases WHERE execution_id = $1`,
         [key]
       );
-      const row = existing.rows[0];
+      const row = existing.rows[0] as { owner: string; expires_at: string } | undefined;
       throw new ConflictError(
         `Execution ${key} is already leased by "${row?.owner}" until ${row?.expires_at}.`
       );
     }
 
-    const row = result.rows[0];
+    const row = result.rows[0] as { owner: string; expires_at: string };
     return { executionId, owner: row.owner, expiresAt: new Date(row.expires_at) };
   }
 
@@ -98,7 +98,7 @@ export class PostgresExecutionLeaseStore implements ExecutionLeaseStore {
       throw new ConflictError(`"${owner}" does not currently hold a valid lease on Execution ${key} to renew.`);
     }
 
-    const row = result.rows[0];
+    const row = result.rows[0] as { owner: string; expires_at: string };
     return { executionId, owner: row.owner, expiresAt: new Date(row.expires_at) };
   }
 
@@ -119,7 +119,7 @@ export class PostgresExecutionLeaseStore implements ExecutionLeaseStore {
     if (result.rows.length === 0) {
       return undefined;
     }
-    const row = result.rows[0];
+    const row = result.rows[0] as { owner: string; expires_at: string };
     return { executionId, owner: row.owner, expiresAt: new Date(row.expires_at) };
   }
 }

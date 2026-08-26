@@ -5,8 +5,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   TestTube2, Sparkles, Play, CheckCircle2, XCircle,
-  Clock, Loader2, Shield, Zap, Activity, AlertCircle,
-  ChevronRight, Download, RefreshCw, AlertTriangle,
+  Loader2, Shield, Activity, AlertCircle,
+  ChevronRight, Download, AlertTriangle,
 } from "lucide-react";
 import { Card } from "../../components/ui/Card";
 import { Badge } from "../../components/ui/Badge";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 
 export type PerformanceTier = "high" | "medium" | "low";
 export type MotionMode = "full" | "reduced" | "static";
@@ -10,28 +10,53 @@ export interface MotionCapabilities {
   motionMode: MotionMode;
 }
 
+interface NetworkInformationLike {
+  effectiveType?: string;
+  saveData?: boolean;
+}
+
+const defaultCapabilities: MotionCapabilities = {
+  performanceTier: "high",
+  motionMode: "full",
+};
+
+function isNavigatorWithConnection(navigatorValue: Navigator): navigatorValue is Navigator & { connection?: NetworkInformationLike } {
+  return "connection" in navigatorValue;
+}
+
+function subscribeToReducedMotion(onStoreChange: () => void) {
+  const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mediaQuery.addEventListener("change", onStoreChange);
+  return () => mediaQuery.removeEventListener("change", onStoreChange);
+}
+
+function getPrefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function subscribeToHydration() {
+  return () => undefined;
+}
+
 /**
  * Hook to detect device capabilities and user preferences
  * for degrading motion complexity gracefully.
  */
 export function useMotionCapabilities(): MotionCapabilities {
-  const [capabilities, setCapabilities] = useState<MotionCapabilities>({
-    performanceTier: "high",
-    motionMode: "full"
-  });
+  const isHydrated = useSyncExternalStore(subscribeToHydration, () => true, () => false);
+  const prefersReducedMotion = useSyncExternalStore(subscribeToReducedMotion, getPrefersReducedMotion, () => false);
 
-  useEffect(() => {
-    // Detect prefers-reduced-motion
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const isReduced = mediaQuery.matches;
+  return useMemo(() => {
+    if (!isHydrated) {
+      return defaultCapabilities;
+    }
 
-    // Detect connection speed (NetworkInformation API if available)
-    const nav = navigator as any;
-    const isSlowConnection = nav.connection && (nav.connection.saveData || nav.connection.effectiveType === "2g" || nav.connection.effectiveType === "3g");
-
-    // Hardware concurrency as a rough proxy for CPU power
+    const connection = isNavigatorWithConnection(navigator) ? navigator.connection : undefined;
+    const isSlowConnection = Boolean(
+      connection?.saveData || connection?.effectiveType === "2g" || connection?.effectiveType === "3g",
+    );
     const cores = navigator.hardwareConcurrency || 4;
-    
+
     let tier: PerformanceTier = "high";
     if (cores <= 2 || isSlowConnection) {
       tier = "low";
@@ -40,24 +65,12 @@ export function useMotionCapabilities(): MotionCapabilities {
     }
 
     let mode: MotionMode = "full";
-    if (isReduced) {
+    if (prefersReducedMotion) {
       mode = "static";
     } else if (tier === "low") {
       mode = "reduced";
     }
 
-    setCapabilities({ performanceTier: tier, motionMode: mode });
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      setCapabilities(prev => ({
-        ...prev,
-        motionMode: e.matches ? "static" : (prev.performanceTier === "low" ? "reduced" : "full")
-      }));
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
-
-  return capabilities;
+    return { performanceTier: tier, motionMode: mode };
+  }, [isHydrated, prefersReducedMotion]);
 }

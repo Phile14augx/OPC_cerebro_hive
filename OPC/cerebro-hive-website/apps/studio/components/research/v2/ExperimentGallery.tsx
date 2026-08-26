@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { FlaskConical, Target, Layers, Database, Activity, AlertTriangle, ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const experiments = [
@@ -21,7 +19,7 @@ const experiments = [
 ];
 
 export const ExperimentGallery = () => {
-  const [activeExp, setActiveExp] = useState(experiments[0]);
+  const [activeExp] = useState(experiments[0]);
 
   return (
     <section className="py-24 border-b border-border bg-background">

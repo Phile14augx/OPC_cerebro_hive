@@ -17,8 +17,12 @@ export class ProviderTestHarness {
         await fn();
         checks.push({ name, passed: true });
         passedChecks++;
-      } catch (err: any) {
-        checks.push({ name, passed: false, error: err.message });
+      } catch (error) {
+        checks.push({
+          name,
+          passed: false,
+          error: error instanceof Error ? error.message : String(error),
+        });
       }
     };
 

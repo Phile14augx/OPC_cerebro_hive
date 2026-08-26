@@ -1,15 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { resourceGraphService, TopologyData, GraphNode, GraphEdge } from "../core/engine/graph/ResourceGraphService";
 import { TopologyVisualizer } from "../../../../components/platform/hiveforge/TopologyVisualizer";
 
 export default function InventoryPage() {
-  const [topology, setTopology] = useState<TopologyData>({ nodes: [], edges: [] });
   const [filter, setFilter] = useState("All");
-
-  useEffect(() => {
-    // Seed some mock data into the Resource Graph for visualization
+  const [topology] = useState<TopologyData>(() => {
     const mockApp: GraphNode = { id: "res-app-1", type: "Deployment", metadata: { name: "Hive API", provider: "aws.ecs", state: "Running" } };
     const mockDb: GraphNode = { id: "res-db-1", type: "Resource", metadata: { name: "Primary Database", provider: "aws.rds", state: "Running" } };
     const mockCache: GraphNode = { id: "res-cache-1", type: "Resource", metadata: { name: "Session Cache", provider: "azure.redis", state: "Running" } };
@@ -24,8 +21,8 @@ export default function InventoryPage() {
     resourceGraphService.addEdge(edge1);
     resourceGraphService.addEdge(edge2);
 
-    setTopology(resourceGraphService.getTopology());
-  }, []);
+    return resourceGraphService.getTopology();
+  });
 
   const nodes = topology.nodes.filter(n => filter === "All" || (n.metadata && n.metadata.provider.includes(filter.toLowerCase())));
 

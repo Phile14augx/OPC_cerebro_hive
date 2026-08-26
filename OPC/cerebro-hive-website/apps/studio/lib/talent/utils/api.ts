@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { NextResponse } from 'next/server';
 import { Logger } from '../infrastructure/observability/logger';
 const apiLogger = new Logger('API_Handler');
@@ -7,19 +6,19 @@ export interface ApiResponse<T> {
   success: boolean;
   data?: T;
   error?: string;
-  meta?: any;
+  meta?: unknown;
   traceId: string;
 }
 
 export class ApiUtils {
   
-  static success<T>(data: T, meta?: any, status: number = 200) {
+  static success<T>(data: T, meta?: unknown, status: number = 200) {
     const traceId = crypto.randomUUID();
     apiLogger.info(`API Success [${status}]`, { traceId, meta });
     return NextResponse.json({ success: true, data, meta, traceId }, { status });
   }
 
-  static error(message: string, status: number = 500, error?: any) {
+  static error(message: string, status: number = 500, error?: unknown) {
     const traceId = crypto.randomUUID();
     apiLogger.error(`API Error [${status}]: ${message}`, error, { traceId });
     return NextResponse.json({ success: false, error: message, traceId }, { status });

@@ -11,7 +11,7 @@ export interface CapabilityMetadata {
   dependencies: string[];
   tags: string[];
   lifecycle: 'Experimental' | 'Beta' | 'GA';
-  configuration: Record<string, any>;
+  configuration: Record<string, unknown>;
 }
 
 export class CapabilityRegistry {

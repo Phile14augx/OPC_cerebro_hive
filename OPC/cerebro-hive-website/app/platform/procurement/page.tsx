@@ -3,8 +3,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 type Tab = "vendors" | "contracts" | "risk";
-const inputCls = "rounded-md border border-border bg-surface-elevated/40 px-2.5 py-1.5 text-sm text-text-primary w-full";
-const btnPrimary = "rounded-md border border-primary-accent px-3 py-1.5 text-xs font-semibold text-primary-accent disabled:opacity-40";
 const VENDORS = [
   { name: "CloudBase Inc", category: "Infrastructure", spend: 480000, riskScore: 22, status: "preferred", contracts: 2 },
   { name: "DataVault Ltd", category: "Storage", spend: 120000, riskScore: 41, status: "approved", contracts: 1 },

@@ -31,7 +31,7 @@ export default function Web3Page() {
     } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const lookupAccount = useCallback(async () => {
     setBusy(true);

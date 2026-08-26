@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
 

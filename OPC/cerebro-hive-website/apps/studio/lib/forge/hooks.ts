@@ -23,7 +23,7 @@ export function useForgeProjects(organizationId?: string) {
     }
   }, [organizationId]);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   return { projects, loading, error, refresh };
 }
@@ -48,7 +48,7 @@ export function useForgeProject(id: string) {
     }
   }, [id]);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   return { project, loading, error, refresh };
 }

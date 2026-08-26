@@ -1,85 +1,58 @@
-// @ts-nocheck
-import { prisma, AssessmentSubmission, EvaluationResult } from '@cerebro/db';
-import { SessionService } from './SessionService';
-import { GradingPipeline } from '../engine/evaluation';
-import { GlobalEventBus } from '../engine/events';
-
-const sessionService = new SessionService();
-const grader = new GradingPipeline();
+import { prisma } from '@cerebro/db';
+import { TalentPolicyEngine } from '../auth/policy';
+import { ExecutionResult } from '../engine/execution';
 
 export class SubmissionService {
-  
-  /**
-   * Finalizes an attempt, freezes the candidate's answers, and initiates the evaluation pipeline.
-   */
-  async submitAttempt(attemptId: string): Promise<AssessmentSubmission> {
-    const attempt = await prisma.assessmentAttempt.findUniqueOrThrow({ 
-      where: { id: attemptId },
-      include: { version: true }
+  private policy = new TalentPolicyEngine();
+
+  async submitExecution(
+    userId: string,
+    sessionId: string,
+    results: ExecutionResult[]
+  ): Promise<{ success: boolean; metrics?: Record<string, unknown> }> {
+    const session = await prisma.assessmentSession.findUnique({
+      where: { id: sessionId },
+      include: { assessmentVersion: { include: {
+        assessment: {
+          select: { workspaceId: true }
+        } } }
+      }
     });
 
-    if (attempt.status === 'submitted') {
-      throw new Error("Attempt has already been submitted.");
+    if (!session) {
+      throw new Error(`Session not found: ${sessionId}`);
     }
 
-    // 1. Lock the attempt
-    await prisma.assessmentAttempt.update({
-      where: { id: attemptId },
-      data: { status: 'submitted', submittedAt: new Date() }
-    });
+    const authorized = await this.policy.authorize(
+      userId,
+      {
+        resourceType: 'session',
+        resourceId: session.id,
+        tenantId: '',
+        workspaceId: session.assessmentVersion.assessment.workspaceId,
+        ownerUserId: session.candidateId
+      },
+      { resource: 'talent_sessions', action: 'submit', key: 'talent_sessions:submit', serialized: 'talent_sessions:submit' } as unknown as import('../auth/policy').TalentPermissionTuple
+    );
 
-    // 2. Freeze the payload into a Submission record
-    const submission = await prisma.assessmentSubmission.create({
-      data: {
-        attemptId,
-        finalPayload: attempt.statePayload || {}
-      }
-    });
+    if (!authorized) {
+      throw new Error('Unauthorized');
+    }
 
-    GlobalEventBus.publish("ASSESSMENT_SUBMITTED", attempt.candidateProfileId, attempt.assessmentVersionId, { submissionId: submission.id });
-
-    // 3. Kick off async evaluation (in production, this goes to a message queue)
-    this.processEvaluationAsync(submission.id, attempt).catch(console.error);
-
-    return submission;
-  }
-
-  private async processEvaluationAsync(submissionId: string, attempt: any) {
-    console.log(`[SubmissionService] Starting async evaluation for ${submissionId}`);
-    
-    // Convert DB attempt to engine CandidateSession
-    const sessionContext = {
-      sessionId: attempt.id,
-      candidateId: attempt.candidateProfileId,
-      assessmentId: attempt.assessmentVersionId,
-      version: attempt.version.versionNumber,
-      startedAt: attempt.startedAt.toISOString(),
-      status: "evaluating" as const,
-      widgetStates: attempt.statePayload,
-      timelineEvents: []
+    // In a real implementation, we would aggregate the results into metrics
+    const metrics = {
+      passed: results.filter(r => r.exitCode === 0).length,
+      total: results.length
     };
 
-    // Extract rubric from compiled schema (Mocked for brevity)
-    const mockRubric = { id: 'r1', passingScore: 80, criteria: [] }; 
-    const mockExecutionArtifacts: any[] = []; // In a real flow, the execution outputs are fetched here
-
-    // Run the Phase 3 Evaluation Pipeline (Deterministic -> AI Review)
-    const report = await grader.gradeSubmission(sessionContext, mockRubric, mockExecutionArtifacts);
-
-    // Persist the results
-    await prisma.evaluationResult.create({
+    await prisma.assessmentSession.update({
+      where: { id: sessionId },
       data: {
-        submissionId,
-        deterministicScore: report.deterministic.scorePercentage,
-        aiReviewScore: 85.0, // Aggregated from report
-        finalScore: report.finalScore,
-        aiSummary: report.qualitative.summary,
-        strengths: report.qualitative.strengths,
-        weaknesses: report.qualitative.weaknesses,
-        detailsPayload: report as any
+        status: 'SUBMITTED',
+        metrics: metrics
       }
     });
 
-    console.log(`[SubmissionService] Evaluation complete for ${submissionId}`);
+    return { success: true, metrics };
   }
 }

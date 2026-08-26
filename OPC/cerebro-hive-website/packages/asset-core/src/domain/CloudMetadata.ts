@@ -5,5 +5,5 @@ export interface CloudMetadata {
   accountId?: string; // AWS Account ID, Azure Subscription ID, GCP Project ID
   resourceType?: string; // e.g., 'AWS::RDS::DBInstance'
   resourceName?: string;
-  providerMetadata?: Record<string, any>; // Extensible provider-specific fields (e.g., storageClass)
+  providerMetadata?: Record<string, unknown>; // Extensible provider-specific fields (e.g., storageClass)
 }

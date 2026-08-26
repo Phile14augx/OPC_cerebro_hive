@@ -7,7 +7,7 @@ import type { Prisma } from '@cerebro/db';
 import { prisma } from '@/shared/lib/db';
 import { analyseScenario } from '@/shared/lib/claude-client';
 import { computeEnterpriseHealth } from '@/shared/lib/health-score';
-import { cacheGet, cacheSet, TTL } from '@/shared/lib/redis';
+import { cacheDelete, cacheGet, cacheSet, TTL } from '@/shared/lib/redis';
 import type { Scenario } from '@/shared/lib/types';
 
 export const runtime = 'nodejs';
@@ -102,8 +102,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<{ scenario: S
     });
 
     // Bust list cache
-    const { redis } = await import('@/shared/lib/redis');
-    await redis.del(LIST_CACHE);
+    await cacheDelete(LIST_CACHE);
 
     const scenario: Scenario = {
       id: saved.id,

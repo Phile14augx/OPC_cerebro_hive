@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { SkillGraphService } from '../graph/SkillGraphService';
 import { AIProviderRegistry } from '../../infrastructure/ai/IAICapabilityProvider';
 
@@ -34,7 +33,7 @@ export class RecruiterCopilotService {
 
     console.log(`[Copilot] Requesting evidence-backed reasoning from AI...`);
     // Simulated AI Reasoning Output
-    const aiReasoningOutput = await reasoner.executeCapability({
+    await reasoner.executeCapability({
       prompt: `Act as an expert technical recruiter. Based on the following Evidence Graph, generate a hiring recommendation...`,
       code: contextStr,
       rubricId: 'copilot-default'

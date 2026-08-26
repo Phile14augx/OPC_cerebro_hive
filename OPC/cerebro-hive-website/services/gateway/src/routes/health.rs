@@ -1,4 +1,4 @@
-use axum::{Json, Router, routing::get};
+﻿use axum::{Json, Router, routing::get};
 use serde_json::{json, Value};
 
 pub fn router() -> Router {
@@ -7,10 +7,10 @@ pub fn router() -> Router {
         .route("/ready", get(ready))
 }
 
-async fn health() -> Json<Value> {
+pub async fn health() -> Json<Value> {
     Json(json!({ "status": "ok", "service": "cerebro-gateway" }))
 }
 
-async fn ready() -> Json<Value> {
+pub async fn ready() -> Json<Value> {
     Json(json!({ "status": "ready" }))
 }

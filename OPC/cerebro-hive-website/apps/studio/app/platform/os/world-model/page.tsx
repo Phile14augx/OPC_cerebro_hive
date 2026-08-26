@@ -17,7 +17,7 @@ export default function WorldModelPage() {
     try { setGraph(await api<WorldGraph>("/v1/world/graph")); } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   return (
     <PillarShell slug="world-model" online={online}>

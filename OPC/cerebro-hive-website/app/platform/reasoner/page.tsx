@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Brain, Shield, Users } from "lucide-react";
 import { API, KEY } from "@/lib/platform-api";

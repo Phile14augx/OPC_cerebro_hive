@@ -59,7 +59,7 @@ function ApiKeysPanel() {
     finally { setLoading(false); }
   }, []);
 
-  useEffect(() => { void fetchKeys(); }, [fetchKeys]);
+  useEffect(() => { setTimeout(() => { void fetchKeys(); }, 0); }, [fetchKeys]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,7 +113,7 @@ function ApiKeysPanel() {
             Key created: <span className="text-white">{newKey.name}</span>
           </p>
           <p className="mb-3 text-xs text-neutral-500">
-            This is the only time you'll see this key. Copy it now.
+            This is the only time you&apos;ll see this key. Copy it now.
           </p>
           <div className="flex items-center gap-2">
             <code className="flex-1 overflow-x-auto rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2 font-mono text-xs text-emerald-400">
@@ -128,7 +128,7 @@ function ApiKeysPanel() {
             </button>
           </div>
           <button onClick={() => setNewKey(null)} className="mt-3 text-xs text-neutral-500 underline hover:no-underline">
-            I've saved it
+            I&apos;ve saved it
           </button>
         </div>
       )}
@@ -232,7 +232,7 @@ function AIProvidersPanel() {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    setSaved(true);
+    setTimeout(() => setSaved(true), 0);
     setTimeout(() => setSaved(false), 2500);
   };
 
@@ -241,7 +241,7 @@ function AIProvidersPanel() {
       <div>
         <h2 className="text-base font-semibold text-white">AI Provider Keys</h2>
         <p className="mt-0.5 text-xs text-neutral-500">
-          Keys are encrypted at rest and never logged. They're used by the AI Gateway.
+          Keys are encrypted at rest and never logged. They&apos;re used by the AI Gateway.
         </p>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -270,7 +270,7 @@ function OrganizationPanel() {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    setSaved(true);
+    setTimeout(() => setSaved(true), 0);
     setTimeout(() => setSaved(false), 2000);
   };
 

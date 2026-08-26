@@ -22,7 +22,7 @@ export class CriticalPathAnalyzer implements IAnalyzer<CriticalPathReport> {
       if (res.metadata?.resolvedDependencies) {
         for (const dep of res.metadata.resolvedDependencies) {
           if (rules.has(dep)) {
-            graph.get(dep)!.push(res.ruleId);
+            graph.get(dep)?.push(res.ruleId);
             inDegree.set(res.ruleId, (inDegree.get(res.ruleId) || 0) + 1);
           }
         }
@@ -37,10 +37,12 @@ export class CriticalPathAnalyzer implements IAnalyzer<CriticalPathReport> {
 
     const topo: string[] = [];
     while (queue.length > 0) {
-      const node = queue.shift()!;
+      const node = queue.shift();
+      if (!node) break;
       topo.push(node);
-      for (const neighbor of graph.get(node)!) {
-        inDegree.set(neighbor, inDegree.get(neighbor)! - 1);
+      const neighbors = graph.get(node) || [];
+      for (const neighbor of neighbors) {
+        inDegree.set(neighbor, (inDegree.get(neighbor) || 0) - 1);
         if (inDegree.get(neighbor) === 0) queue.push(neighbor);
       }
     }
@@ -50,13 +52,14 @@ export class CriticalPathAnalyzer implements IAnalyzer<CriticalPathReport> {
     const parent = new Map<string, string>();
     
     for (const node of topo) {
-      if (!dist.has(node)) dist.set(node, ruleDurations.get(node)!);
+      if (!dist.has(node)) dist.set(node, ruleDurations.get(node) || 0);
       
-      const currentDist = dist.get(node)!;
+      const currentDist = dist.get(node) || 0;
       
-      for (const neighbor of graph.get(node)!) {
-        const altDist = currentDist + ruleDurations.get(neighbor)!;
-        if (!dist.has(neighbor) || altDist > dist.get(neighbor)!) {
+      const neighbors = graph.get(node) || [];
+      for (const neighbor of neighbors) {
+        const altDist = currentDist + (ruleDurations.get(neighbor) || 0);
+        if (!dist.has(neighbor) || altDist > (dist.get(neighbor) || 0)) {
           dist.set(neighbor, altDist);
           parent.set(neighbor, node);
         }

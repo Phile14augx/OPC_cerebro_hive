@@ -62,7 +62,7 @@ export interface AnalyzerExecutionRequest {
   readonly executionId: string;
   readonly targetArtifacts: readonly ArtifactReference[];
   readonly limits: ExecutionLimits;
-  readonly context: Record<string, any>;
+  readonly context: Record<string, unknown>;
   readonly cancellationToken?: AbortSignal;
 }
 

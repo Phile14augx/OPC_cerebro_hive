@@ -74,8 +74,8 @@ export function WorkflowCanvas({ config }: { config: WorkflowConfiguration }) {
     animated: true,
   })), [config]);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
   return (
     <div className="flex-1 h-full relative">

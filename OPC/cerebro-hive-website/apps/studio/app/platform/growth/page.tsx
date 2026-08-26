@@ -51,7 +51,7 @@ function ContentStudioPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setSets((await api<{ contentSets: ContentSet[] }>("/v1/cerebrogrowth/content")).contentSets); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const generate = useCallback(async () => {
     if (!sourceTitle.trim() || !sourceExcerpt.trim()) return;
@@ -206,7 +206,7 @@ function CrmPanel({ online }: { online: boolean | null }) {
       setLeads(l.leads); setProposals(p.proposals);
     } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const createLead = useCallback(async () => {
     if (!form.contactName.trim() || !form.email.trim() || !form.companyName.trim()) return;
@@ -360,7 +360,7 @@ function SalesCopilotPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setBriefs((await api<{ briefs: SalesBrief[] }>("/v1/cerebrogrowth/briefs")).briefs); } catch { /* noop */ }
   }, [online]);
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const generate = useCallback(async () => {
     if (!companyName.trim()) return;

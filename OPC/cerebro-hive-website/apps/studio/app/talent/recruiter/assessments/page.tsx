@@ -10,28 +10,45 @@ export default function AssessmentStudio() {
   const [error, setError] = useState('');
   const [lastTraceId, setLastTraceId] = useState('');
 
-  useEffect(() => {
-    fetchAssessments();
-  }, []);
+
+  const fetchAssessmentsData = async () => {
+    try {
+      const res = await fetch('/api/v1/talent/assessments');
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e instanceof Error ? e.message : String(e) };
+    }
+  };
 
   const fetchAssessments = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch('/api/v1/talent/assessments');
-      const json = await res.json();
-      
+    setLoading(true);
+    const json = await fetchAssessmentsData();
+    if (json.success) {
+      setAssessments(json.data);
+      setLastTraceId(json.traceId);
+    } else {
+      setError(json.error || 'Failed to fetch assessments');
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    let active = true;
+    const init = async () => {
+      const json = await fetchAssessmentsData();
+      if (!active) return;
       if (json.success) {
         setAssessments(json.data);
         setLastTraceId(json.traceId);
       } else {
         setError(json.error || 'Failed to fetch assessments');
       }
-    } catch (e: any) {
-      setError(e.message);
-    } finally {
       setLoading(false);
-    }
-  };
+    };
+    void init();
+    return () => { active = false; };
+  }, []);
+
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,8 +71,8 @@ export default function AssessmentStudio() {
       } else {
         setError(json.error || 'Failed to create assessment');
       }
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : String(e));
     }
   };
 
@@ -117,7 +134,7 @@ export default function AssessmentStudio() {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
-              {assessments.map((a: any) => (
+              {assessments.map((a: { id: string; title: string; status: string }) => (
                 <div key={a.id} className="bg-[#151515] p-5 rounded-xl border border-[#222] hover:border-[#444] transition-all flex justify-between items-center group">
                   <div>
                     <h3 className="font-medium text-lg text-gray-200">{a.title}</h3>
