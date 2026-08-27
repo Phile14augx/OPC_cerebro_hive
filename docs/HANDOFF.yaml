@@ -1,0 +1,28 @@
+product: P46
+name: "Nexarch MLOps Control Plane"
+branch: "product/p46-mlops-control-plane"
+candidate_sha: "a8094651aae7c63f1e9402bb0c63cfaf613176c8"
+status: L1_COMPLETE
+maturity:
+  before: L0
+  after: L1
+verification:
+  architecture_review: PENDING
+  kernel_review: PENDING
+  security_review: PENDING
+  qa_certification: PENDING
+dependencies:
+  consumed:
+    - P47
+    - P41
+    - P49
+  provides:
+    - MLOpsTrackingAPI
+    - ModelRegistryAPI
+    - PipelineTriggerAPI
+shared_changes_requested:
+  - none
+known_risks:
+  - "MLflow API compatibility might require extensive testing for edge cases."
+  - "High write throughput during distributed training could bottleneck PostgreSQL."
+next: [ chief-architecture-agent ]

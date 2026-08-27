@@ -1,0 +1,23 @@
+product: P46
+consumes:
+  - product: P47
+    interface: DriftEventStream
+    version: "^1.0"
+  - product: P41
+    interface: GovernanceApprovalAPI
+    version: "^2.1"
+  - product: P49
+    interface: EdgeDeploymentAPI
+    version: "^1.0"
+provides:
+  - name: MLOpsTrackingAPI
+    version: "1.0.0"
+  - name: ModelRegistryAPI
+    version: "1.0.0"
+  - name: PipelineTriggerAPI
+    version: "1.0.0"
+npm_packages: []
+infra:
+  - PostgreSQL_DB
+  - S3_Bucket_Artifacts
+  - NATS_Stream
