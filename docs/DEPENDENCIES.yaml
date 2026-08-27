@@ -1,0 +1,12 @@
+﻿product: P47
+consumes:
+  - product: P46
+    interface: ModelRegistryAPI
+    version: "^1.0"
+provides:
+  - name: ModelObservabilityAPI
+    version: "1.0.0"
+npm_packages: []
+infra:
+  - ClickHouse
+  - OpenTelemetry Collector
