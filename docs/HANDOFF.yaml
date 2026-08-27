@@ -1,7 +1,7 @@
 product: P47
 name: "Nexarch Model Observability"
 branch: "product/p47-model-observability"
-candidate_sha: "8f33f3867819ea98c4c3273d1f7050a67d32cb5b"
+candidate_sha: "35bfd8f31c1360cef1c43db9f50690f101b88648"
 status: L3_COMPLETE
 maturity:
   before: L2
