@@ -1,7 +1,7 @@
 product: P01
 name: "Nexarch Data Fabric"
 branch: "product/p01-data-fabric"
-candidate_sha: "PENDING"
+candidate_sha: "b46177fce74c2a246ba4959bb0944fc29bb175da"
 status: L1_COMPLETE
 maturity:
   before: L0
