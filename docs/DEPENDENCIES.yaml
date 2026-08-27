@@ -1,8 +1,5 @@
 product: P46
 consumes:
-  - product: P47
-    interface: DriftEventStream
-    version: "^1.0"
   - product: P41
     interface: GovernanceApprovalAPI
     version: "^2.1"
@@ -15,6 +12,8 @@ provides:
   - name: ModelRegistryAPI
     version: "1.0.0"
   - name: PipelineTriggerAPI
+    version: "1.0.0"
+  - name: RetrainingWebhookAPI
     version: "1.0.0"
 npm_packages: []
 infra:
