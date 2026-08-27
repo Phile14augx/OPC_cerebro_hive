@@ -1,11 +1,11 @@
 product: P04
 name: "Nexarch Knowledge Graph"
 branch: "product/p04-knowledge-graph"
-candidate_sha: "18610093d9f2e06ced9c4288cb4ad7932706580f"
-status: L1_CERTIFIED
+candidate_sha: "671338475fa2910a949955bef568e6855544230e"
+status: L2_COMPLETE
 maturity:
-  before: L0
-  after: L1
+  before: L1
+  after: L2
 verification:
   architecture_review: PENDING
   kernel_review: PENDING
