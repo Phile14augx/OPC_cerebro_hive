@@ -1,0 +1,23 @@
+product: P44
+name: "Nexarch Privacy Intelligence"
+branch: "product/p44-privacy-intelligence"
+candidate_sha: "PENDING"
+status: L1_COMPLETE
+maturity:
+  before: L0
+  after: L1
+verification:
+  architecture_review: PENDING
+  kernel_review: PENDING
+  security_review: PENDING
+  qa_certification: PENDING
+dependencies:
+  consumed:
+    - P41
+    - P01
+  provides:
+    - PrivacyIntelligenceAPI
+shared_changes_requested:
+  - none
+known_risks: []
+next: [ chief-architecture-agent ]
