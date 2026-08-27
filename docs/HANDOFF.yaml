@@ -1,0 +1,25 @@
+product: P04
+name: "Nexarch Knowledge Graph"
+branch: "product/p04-knowledge-graph"
+candidate_sha: "PENDING"
+status: L1_COMPLETE
+maturity:
+  before: L0
+  after: L1
+verification:
+  architecture_review: PENDING
+  kernel_review: PENDING
+  security_review: PENDING
+  qa_certification: PENDING
+dependencies:
+  consumed:
+    - P01
+    - P03
+  provides:
+    - KnowledgeGraphQueryAPI
+    - OntologyManagementAPI
+shared_changes_requested:
+  - none
+known_risks:
+  - "Apache AGE performance at scale with extremely dense super-nodes."
+next: [ chief-architecture-agent ]
