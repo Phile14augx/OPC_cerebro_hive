@@ -1,0 +1,22 @@
+describe('Vector Intelligence Integration', () => {
+  it('TODO: should integrate with P01 Data Fabric ingest connectors (POST /v1/ingest/connectors)', () => {});
+  it('TODO: should integrate with P01 transform jobs (POST /v1/transform/jobs)', () => {});
+  it('TODO: should integrate with P01 query (POST /v1/query)', () => {});
+  it('TODO: should handle p01.data.ingested event', () => {});
+  it('TODO: should handle p01.pipeline.completed event', () => {});
+  it('TODO: should handle p01.schema.updated event', () => {});
+  it('TODO: should call P44 anonymize (POST /v1/privacy/anonymize)', () => {});
+  it('TODO: should call P44 detect-pii (POST /v1/privacy/detect-pii)', () => {});
+  it('TODO: should call P44 federation-rounds (POST /v1/fl/federation-rounds)', () => {});
+  it('TODO: should call P44 consent check (GET /v1/consent/check)', () => {});
+  it('TODO: should call P46 mlflow runs create (POST /api/2.0/mlflow/runs/create)', () => {});
+  it('TODO: should call P46 models versions transition (POST /v1/models/versions/transition)', () => {});
+  it('TODO: should call P46 pipelines trigger (POST /v1/pipelines/trigger)', () => {});
+  it('TODO: should call P47 telemetry traces (POST /v1/telemetry/traces)', () => {});
+  it('TODO: should call P47 hallucination feedback (POST /api/v1/observability/hallucination/feedback)', () => {});
+  it('TODO: should call P47 metrics (GET /api/v1/observability/metrics/{model_id})', () => {});
+  it('TODO: should call P48 datasets (POST /api/v1/datasets)', () => {});
+  it('TODO: should call P48 evaluations (POST /api/v1/evaluations)', () => {});
+  it('TODO: should call P48 get evaluation (GET /api/v1/evaluations/{id})', () => {});
+  it('TODO: should call P48 adversarial jobs (POST /api/v1/adversarial/jobs)', () => {});
+});

@@ -1,11 +1,11 @@
 product: P03
 name: "Nexarch Vector Intelligence"
 branch: "product/p03-vector-intelligence"
-candidate_sha: "805a94441e0ead93c1d32ddd48156da2c2f5879f"
-status: L2_COMPLETE
+candidate_sha: "af0485770b507d879c17374d359fea23c262ba17"
+status: L3_COMPLETE
 maturity:
   before: L0
-  after: L2
+  after: L3
 verification:
   architecture_review: PENDING
   kernel_review: PENDING
@@ -19,7 +19,7 @@ dependencies:
     - HybridSearchAPI
     - RerankingAPI
 shared_changes_requested:
-  - none
+  - Add jest, ts-jest, and @types/jest to root package.json devDependencies
 known_risks:
   - Large variations in index build times for HNSW on massive multi-tenant spikes.
 next: [ chief-architecture-agent ]
