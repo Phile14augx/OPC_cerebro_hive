@@ -1,7 +1,7 @@
 product: P41
 name: "Nexarch AI Governance"
 branch: "product/p41-ai-governance"
-candidate_sha: "259880a065f7bb6ddd1999f303ae05f2dc8e9b27"
+candidate_sha: "e7494cb5153ff4e3525848ee01cf2504012b99ee"
 status: L1_COMPLETE
 maturity:
   before: L0
@@ -12,8 +12,7 @@ verification:
   security_review: PENDING
   qa_certification: PENDING
 dependencies:
-  consumed:
-    - P44
+  consumed: []
   provides:
     - AIGovernanceAPI
 shared_changes_requested:

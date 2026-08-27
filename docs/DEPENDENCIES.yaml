@@ -1,8 +1,5 @@
 product: P41
-consumes:
-  - product: P44
-    interface: PrivacyIntelligenceAPI
-    version: "^1.0"
+consumes: []
 provides:
   - name: AIGovernanceAPI
     version: "1.0.0"
