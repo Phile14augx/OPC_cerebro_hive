@@ -1,11 +1,11 @@
 product: P47
 name: "Nexarch Model Observability"
 branch: "product/p47-model-observability"
-candidate_sha: "26046d4194b0f95b486a7b5a4963ee4d26ab14c4"
-status: L2_COMPLETE
+candidate_sha: "8f33f3867819ea98c4c3273d1f7050a67d32cb5b"
+status: L3_COMPLETE
 maturity:
-  before: L1
-  after: L2
+  before: L2
+  after: L3
 verification:
   architecture_review: PENDING
   kernel_review: PENDING
@@ -19,4 +19,4 @@ dependencies:
 shared_changes_requested:
   - none
 known_risks: []
-next: [ chief-architecture-agent ]
+next: [ qa-agent ]

@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { DriftService } from './drift.service';
+import { DriftDetectionService } from './drift.service';
+import { AlertModule } from '../alert/alert.module';
 
 @Module({
-  providers: [DriftService],
-  exports: [DriftService]
+  imports: [AlertModule],
+  providers: [DriftDetectionService],
+  exports: [DriftDetectionService],
 })
 export class DriftModule {}
