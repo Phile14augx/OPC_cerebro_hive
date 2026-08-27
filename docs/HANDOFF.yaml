@@ -2,7 +2,7 @@ product: P02
 name: "Nexarch Feature Intelligence"
 branch: "product/p02-feature-intelligence"
 candidate_sha: "f7aa81d990a21166c93bf846b00edd04573e46cb"
-status: L1_COMPLETE
+status: L1_CERTIFIED
 maturity:
   before: L0
   after: L1
@@ -10,7 +10,7 @@ verification:
   architecture_review: PENDING
   kernel_review: PENDING
   security_review: PENDING
-  qa_certification: PENDING
+  qa_certification: PASS
 dependencies:
   consumed:
     - P01
