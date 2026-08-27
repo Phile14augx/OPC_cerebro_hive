@@ -3,26 +3,27 @@
 ## Core Entities
 
 ### ModelBaseline
-- id: UUID
-- model_id: String
-- eature_stats: JSON (mean, variance, distribution references)
-- created_at: DateTime
+- id: UUID [Internal]
+- model_id: String [Internal]
+- eature_stats: JSON (mean, variance, distribution references) [Confidential]
+- created_at: DateTime [Internal]
 
 ### TraceSpan
-- 	race_id: UUID
-- span_id: UUID
-- parent_span_id: UUID (optional)
-- model_id: String
-- prompt_tokens: Int
-- completion_tokens: Int
-- latency_ms: Float
+- 	race_id: UUID [Internal]
+- span_id: UUID [Internal]
+- parent_span_id: UUID (optional) [Internal]
+- model_id: String [Internal]
+- prompt_tokens: Int [Internal]
+- completion_tokens: Int [Internal]
+- latency_ms: Float [Internal]
+- inference_payload: JSON [Restricted]
 
 ### AlertRule
-- id: UUID
-- model_id: String
-- metric: String (e.g., "latency", "psi")
-- 	hreshold: Float
-- operator: Enum (GT, LT, EQ)
+- id: UUID [Internal]
+- model_id: String [Internal]
+- metric: String (e.g., "latency", "psi") [Internal]
+- 	hreshold: Float [Internal]
+- operator: Enum (GT, LT, EQ) [Internal]
 
 ## Retention Policies
 - Raw traces: 7 days
@@ -30,6 +31,8 @@
 - Aggregated metrics (1h resolution): 1 year
 - Drift events: 5 years
 
-## Privacy Classification
-- Telemetry metadata (tokens, latency): Internal
-- Inference payloads (prompts/responses): Confidential/Restricted (may require PII masking before storage)
+## Privacy Classification Details
+- Public: None
+- Internal: Telemetry metadata (tokens, latency, UUIDs, thresholds)
+- Confidential: Feature statistics and aggregated model baselines
+- Restricted: Raw inference payloads (prompts/responses) - MUST undergo PII masking before storage
