@@ -4,8 +4,41 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
-  "type": "commonjs"
+  "type": "commonjs",
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": ".",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "diagnostics": false
+        }
+      ]
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!@nestjs)"
+    ],
+    "collectCoverageFrom": [
+      "src/adversarial/adversarial.service.ts",
+      "src/benchmarks/benchmark.service.ts",
+      "src/evaluations/evaluation.service.ts"
+    ],
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "^12.0.1",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.12"
+  }
 }
