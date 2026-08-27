@@ -1,7 +1,7 @@
 product: P48
 name: "Nexarch Evaluation Lab"
 branch: "product/p48-evaluation-lab"
-candidate_sha: "568c50143b356e5155d303ed81d8d8c560fb6623"
+candidate_sha: "c2788477504ebbca940775a0b0a4c79353a4256a"
 status: L3_COMPLETE
 maturity:
   before: L0
