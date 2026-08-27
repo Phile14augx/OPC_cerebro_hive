@@ -7,9 +7,16 @@ export interface Span {
   timestamp: Date;
 }
 
+export interface HallucinationFeedback {
+  modelId: string;
+  traceId: string;
+  hallucinated: boolean;
+}
+
 @Injectable()
 export class TelemetryService {
   public spans: Span[] = [];
+  public feedback: HallucinationFeedback[] = [];
 
   async ingestTraces(payload: any): Promise<void> {
     if (payload && Array.isArray(payload.spans)) {
@@ -31,8 +38,8 @@ export class TelemetryService {
     }
   }
 
-  async hallucinationFeedback(payload: any): Promise<void> {
-    // Scaffold for Hallucination Feedback
+  async hallucinationFeedback(payload: HallucinationFeedback): Promise<void> {
+    this.feedback.push(payload);
   }
 
   async getMetrics(modelId: string, timeWindowMs: number = 3600000): Promise<any> {

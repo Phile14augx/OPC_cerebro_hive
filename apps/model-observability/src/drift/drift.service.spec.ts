@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DriftDetectionService } from './drift.service';
 import { AlertService } from '../alert/alert.service';
 
@@ -48,7 +49,11 @@ describe('DriftDetectionService', () => {
     expect(alertService.alerts[0].value).toBe(0.3);
   });
 
-  it('should have createBaseline method', async () => {
-    await expect(service.createBaseline('m1', {})).resolves.toBeUndefined();
+  it('stores a baseline by model id', async () => {
+    const featureStats = { input_feature: { mean: 3.5 } };
+
+    await service.createBaseline('m1', featureStats);
+
+    expect(service.baselines.get('m1')).toEqual(featureStats);
   });
 });

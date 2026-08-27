@@ -15,10 +15,14 @@ describe('Drift Detection Integration', () => {
     const reference = [0.2, 0.3, 0.3, 0.2];
     const current = [0.4, 0.2, 0.2, 0.2];
     const psi = service.computePSI(reference, current);
-    expect(psi).toBeDefined();
+    expect(psi).toBeGreaterThan(0.25);
     
     const result = await service.detectDrift('model-1', reference, current);
-    expect(result.psi).toBeDefined();
-    expect(['stable', 'warning', 'critical']).toContain(result.classification);
+    expect(result).toEqual({
+      modelId: 'model-1',
+      psi,
+      classification: 'critical'
+    });
+    expect(alertService.alerts).toHaveLength(1);
   });
 });

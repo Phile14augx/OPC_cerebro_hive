@@ -8,8 +8,11 @@ describe('Telemetry Integration', () => {
   it('should ingest telemetry data', async () => {
     await service.ingestTraces({ modelId: 'model-1', latencyMs: 120, timestamp: new Date().toISOString() });
     const metrics = await service.getMetrics('model-1');
-    expect(metrics).toBeDefined();
-    expect(metrics.latency_p50).toBeDefined();
-    expect(metrics.status).toBe('HEALTHY');
+    expect(metrics).toEqual({
+      latency_p50: 120,
+      latency_p95: 120,
+      latency_p99: 120,
+      status: 'HEALTHY'
+    });
   });
 });

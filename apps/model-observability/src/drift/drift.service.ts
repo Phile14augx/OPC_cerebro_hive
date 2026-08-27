@@ -3,6 +3,8 @@ import { AlertService } from '../alert/alert.service';
 
 @Injectable()
 export class DriftDetectionService {
+  public baselines = new Map<string, unknown>();
+
   constructor(private readonly alertService: AlertService) {}
 
   public computePSI(reference: number[], current: number[], buckets: number = 10): number {
@@ -60,7 +62,7 @@ export class DriftDetectionService {
     };
   }
 
-  async createBaseline(modelId: string, featureStats: any): Promise<void> {
-    // Scaffold
+  async createBaseline(modelId: string, featureStats: unknown): Promise<void> {
+    this.baselines.set(modelId, featureStats);
   }
 }

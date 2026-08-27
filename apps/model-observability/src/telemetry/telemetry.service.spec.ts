@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TelemetryService } from './telemetry.service';
 
 describe('TelemetryService', () => {
@@ -55,7 +56,11 @@ describe('TelemetryService', () => {
     expect(metrics.status).toBe('NO_DATA');
   });
 
-  it('should have a hallucinationFeedback method', async () => {
-    await expect(service.hallucinationFeedback({})).resolves.toBeUndefined();
+  it('stores hallucination feedback for later analysis', async () => {
+    const feedback = { modelId: 'm1', traceId: 't1', hallucinated: true };
+
+    await service.hallucinationFeedback(feedback);
+
+    expect(service.feedback).toEqual([feedback]);
   });
 });

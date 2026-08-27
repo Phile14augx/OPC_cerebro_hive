@@ -7,9 +7,13 @@ describe('Alert Integration', () => {
 
   it('should emit alert', async () => {
     const alert = await service.createDriftAlert('model-1', 0.4, 0.25, 'input_feature');
-    expect(alert).toBeDefined();
-    expect(alert.modelId).toBe('model-1');
-    expect(alert.value).toBe(0.4);
+    expect(alert).toMatchObject({
+      modelId: 'model-1',
+      metric: 'PSI',
+      value: 0.4,
+      threshold: 0.25,
+      featureName: 'input_feature'
+    });
     expect(service.alerts).toContain(alert);
   });
 });

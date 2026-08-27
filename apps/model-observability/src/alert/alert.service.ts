@@ -10,9 +10,15 @@ export interface DriftAlert {
   featureName: string;
 }
 
+export interface ObservabilityEvent {
+  subject: 'observability.drift.detected';
+  payload: DriftAlert;
+}
+
 @Injectable()
 export class AlertService {
   public alerts: DriftAlert[] = [];
+  public events: ObservabilityEvent[] = [];
 
   async createDriftAlert(modelId: string, psiValue: number, threshold: number, featureName: string): Promise<DriftAlert> {
     const alert: DriftAlert = {
@@ -30,8 +36,7 @@ export class AlertService {
     return alert;
   }
 
-  private emitEvent(subject: string, payload: any) {
-    // In a real app this would use an event bus or message queue
-    console.log(`Event emitted: ${subject}`, payload);
+  private emitEvent(subject: ObservabilityEvent['subject'], payload: DriftAlert): void {
+    this.events.push({ subject, payload });
   }
 }
