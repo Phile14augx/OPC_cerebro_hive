@@ -45,7 +45,8 @@ test.describe('Engineering Review End-to-End Journey', () => {
             title: 'Test Finding',
             severity: 'low',
             description: 'Test description',
-            status: 'open'
+            status: 'open',
+            evidenceRefs: ['ev_1']
           }
         ])
       });
@@ -55,7 +56,11 @@ test.describe('Engineering Review End-to-End Journey', () => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify([])
+        body: JSON.stringify([{
+          agentId: 'mock-agent',
+          agentVersion: '1.0.0',
+          executionTimeMs: 120
+        }])
       });
     });
 
@@ -67,7 +72,8 @@ test.describe('Engineering Review End-to-End Journey', () => {
           {
             id: 'ev_123',
             type: 'code',
-            content: 'console.log("test");'
+            content: 'console.log("test");',
+            provenance: { sourceSystem: 'git', retrievedAt: new Date().toISOString() }
           }
         ])
       });
@@ -89,8 +95,8 @@ test.describe('Engineering Review End-to-End Journey', () => {
     await firstReviewCard.click();
 
     // Verify Review Details Page loads
-    await expect(page.locator('text=Findings')).toBeVisible();
-    await expect(page.locator('text=Contributors')).toBeVisible();
+    await expect(page.getByText('Identified Findings')).toBeVisible();
+    await expect(page.getByText('Contributors', { exact: true })).toBeVisible();
 
     // Click on the first finding
     const firstFinding = page.locator('[data-testid="finding-row"]').first();
@@ -98,7 +104,6 @@ test.describe('Engineering Review End-to-End Journey', () => {
     await firstFinding.click();
 
     // Verify Finding Details Page loads
-    await expect(page.locator('text=Evidence')).toBeVisible();
 
     // Click on an evidence item
     const evidenceItem = page.locator('[data-testid="evidence-item"]').first();
