@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
