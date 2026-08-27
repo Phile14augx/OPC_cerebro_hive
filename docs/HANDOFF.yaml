@@ -2,7 +2,7 @@ product: P03
 name: "Nexarch Vector Intelligence"
 branch: "product/p03-vector-intelligence"
 candidate_sha: "5f1eeede60a429dc7ece299e707ec1c99422827a"
-status: L1_COMPLETE
+status: L1_CERTIFIED
 maturity:
   before: L0
   after: L1
@@ -10,7 +10,7 @@ verification:
   architecture_review: PENDING
   kernel_review: PENDING
   security_review: PENDING
-  qa_certification: PENDING
+  qa_certification: PASS
 dependencies:
   consumed:
     - P02
