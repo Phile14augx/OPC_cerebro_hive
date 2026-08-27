@@ -1,0 +1,23 @@
+product: P41
+name: "Nexarch AI Governance"
+branch: "product/p41-ai-governance"
+candidate_sha: "259880a065f7bb6ddd1999f303ae05f2dc8e9b27"
+status: L1_COMPLETE
+maturity:
+  before: L0
+  after: L1
+verification:
+  architecture_review: PENDING
+  kernel_review: PENDING
+  security_review: PENDING
+  qa_certification: PENDING
+dependencies:
+  consumed:
+    - P44
+  provides:
+    - AIGovernanceAPI
+shared_changes_requested:
+  - none
+known_risks:
+  - "OPA policy evaluation latency may impact critical path for high-frequency agent actions."
+next: [ chief-architecture-agent ]
