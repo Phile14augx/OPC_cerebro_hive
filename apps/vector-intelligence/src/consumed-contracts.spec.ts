@@ -1,7 +1,7 @@
 declare let describe: any; declare let it: any; declare let expect: any; declare let beforeEach: any; declare let jest: any;
 describe('Consumed Contracts', () => {
   it('should exercise all consumed contracts', async () => {
-    const fetchMock = jest.fn().mockResolvedValue({ ok: true, json: async () => ({}) });
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) });
     global.fetch = fetchMock;
 
     const endpoints = [

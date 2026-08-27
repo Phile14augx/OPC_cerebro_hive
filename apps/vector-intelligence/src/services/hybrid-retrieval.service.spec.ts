@@ -9,12 +9,12 @@ describe('HybridRetrievalService', () => {
   let vectorStoreService: VectorStoreService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [HybridRetrievalService, VectorStoreService],
-    }).compile();
+    vectorStoreService = new VectorStoreService();
+service = new HybridRetrievalService(vectorStoreService);
 
-    service = module.get<HybridRetrievalService>(HybridRetrievalService);
-    vectorStoreService = module.get<VectorStoreService>(VectorStoreService);
+
+
+
   });
 
   it('should search using dense and sparse and RRF', async () => {
