@@ -1,11 +1,11 @@
 product: P46
 name: "Nexarch MLOps Control Plane"
 branch: "product/p46-mlops-control-plane"
-candidate_sha: "23101f1ca4a80820ae63a15c56f3d83c009162bd"
-status: L2_COMPLETE
+candidate_sha: "395c44938d8de59c34f0a684c0c86dc54d1c327d"
+status: L3_COMPLETE
 maturity:
   before: L1
-  after: L2
+  after: L3
 verification:
   architecture_review: PENDING
   kernel_review: PENDING
@@ -21,7 +21,7 @@ dependencies:
     - ModelRegistryAPI
     - PipelineTriggerAPI
 shared_changes_requested:
-  - none
+  - "Add vitest and @nestjs/testing to root dependencies for unit tests."
 known_risks:
   - "MLflow API compatibility might require extensive testing for edge cases."
   - "High write throughput during distributed training could bottleneck PostgreSQL."

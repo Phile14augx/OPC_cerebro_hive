@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MlflowController } from './mlflow.controller';
-import { MlflowService } from './mlflow.service';
+import { ExperimentService } from './experiment.service';
+import { ModelRegistryService } from './model-registry.service';
 
 @Module({
   controllers: [MlflowController],
-  providers: [MlflowService],
+  providers: [ExperimentService, ModelRegistryService],
+  exports: [ExperimentService, ModelRegistryService],
 })
 export class MlflowModule {}
