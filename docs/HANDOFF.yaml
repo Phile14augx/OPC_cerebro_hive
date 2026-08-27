@@ -2,7 +2,7 @@ product: P46
 name: "Nexarch MLOps Control Plane"
 branch: "product/p46-mlops-control-plane"
 candidate_sha: "23101f1ca4a80820ae63a15c56f3d83c009162bd"
-status: L1_COMPLETE
+status: L1_CERTIFIED
 maturity:
   before: L0
   after: L1
@@ -10,7 +10,7 @@ verification:
   architecture_review: PENDING
   kernel_review: PENDING
   security_review: PENDING
-  qa_certification: PENDING
+  qa_certification: PASS
 dependencies:
   consumed:
     - P47
