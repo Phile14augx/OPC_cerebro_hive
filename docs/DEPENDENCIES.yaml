@@ -1,0 +1,22 @@
+product: P03
+consumes:
+  - product: P02
+    interface: FeatureGenerationAPI
+    version: "^1.0"
+  - product: Auth
+    interface: IAMService
+    version: "^2.0"
+provides:
+  - name: VectorStorageAPI
+    version: "1.0.0"
+  - name: HybridSearchAPI
+    version: "1.0.0"
+  - name: RerankingAPI
+    version: "1.0.0"
+npm_packages:
+  - "@qdrant/js-client-rest"
+  - "pg-vector"
+infra:
+  - "PostgreSQL 15+ with pgvector extension"
+  - "Qdrant Cluster (optional, for scale-out tier)"
+  - "Redis (for vector caching)"
