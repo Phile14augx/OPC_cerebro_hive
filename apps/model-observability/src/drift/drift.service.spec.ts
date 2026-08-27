@@ -33,14 +33,14 @@ describe('DriftDetectionService', () => {
   });
 
   it('should classify as warning when 0.1 <= PSI <= 0.25', async () => {
-    jest.spyOn(service, 'computePSI').mockReturnValue(0.15);
+    vi.spyOn(service, 'computePSI').mockReturnValue(0.15);
     const result = await service.detectDrift('m1', [1], [2]);
     expect(result.classification).toBe('warning');
     expect(alertService.alerts.length).toBe(0);
   });
 
   it('should classify as critical when PSI > 0.25 and alert', async () => {
-    jest.spyOn(service, 'computePSI').mockReturnValue(0.3);
+    vi.spyOn(service, 'computePSI').mockReturnValue(0.3);
     const result = await service.detectDrift('m1', [1], [2]);
     expect(result.classification).toBe('critical');
     expect(alertService.alerts.length).toBe(1);

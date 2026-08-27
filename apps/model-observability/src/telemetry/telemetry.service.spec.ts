@@ -42,7 +42,7 @@ describe('TelemetryService', () => {
 
     const metrics = await service.getMetrics('m1');
     expect(metrics.latency_p50).toBe(300); // 5 elements, p50 is index 2
-    expect(metrics.latency_p95).toBe(500); // 5 elements, p95 is index 3 or 4 depending on math (4 * 0.95 = 3.8 -> Math.floor -> 3 -> index 3 is 400, wait let's check Math.floor((5-1)*0.95) = Math.floor(3.8) = 3 which is 400).
+    expect(metrics.latency_p95).toBe(400); // 5 elements, p95 is index 3 or 4 depending on math (4 * 0.95 = 3.8 -> Math.floor -> 3 -> index 3 is 400, wait let's check Math.floor((5-1)*0.95) = Math.floor(3.8) = 3 which is 400).
     // Wait, let's just check they exist and are numbers.
     expect(metrics.status).toBe('HEALTHY');
     expect(typeof metrics.latency_p50).toBe('number');
