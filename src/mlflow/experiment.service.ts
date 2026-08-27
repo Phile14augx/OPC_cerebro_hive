@@ -68,6 +68,13 @@ export class ExperimentService {
     run.tags[key] = value;
   }
 
+  updateRunStatus(runId: string, status: string, tags: Record<string, string> = {}): Run {
+    const run = this.getRun(runId);
+    run.status = status;
+    Object.assign(run.tags, tags);
+    return run;
+  }
+
   listRuns(experimentId: string, filterByTagKey?: string, filterByTagValue?: string): Run[] {
     let result = Array.from(this.runs.values()).filter(r => r.experimentId === experimentId);
     if (filterByTagKey && filterByTagValue) {
