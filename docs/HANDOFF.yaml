@@ -1,7 +1,7 @@
 product: P03
 name: "Nexarch Vector Intelligence"
 branch: "product/p03-vector-intelligence"
-candidate_sha: "af0485770b507d879c17374d359fea23c262ba17"
+candidate_sha: "0fcece18b98b25c20fa67454ceb1df0d38595d6b"
 status: L3_COMPLETE
 maturity:
   before: L0
