@@ -40,4 +40,20 @@ describe('RerankingService', () => {
     expect(res.results.length).toBe(1);
     expect(res.results[0].relevance_score).toBe(0);
   });
+
+  it('should prefer an exact match and never overcount duplicate terms', async () => {
+    const res = await service.rerankCandidates({
+      query_text: 'cat dog',
+      candidates: [
+        { id: 'verbose', text: 'cat cat dog mouse' },
+        { id: 'exact', text: 'cat dog' },
+      ],
+      top_n: 2,
+    });
+
+    expect(res.results).toEqual([
+      { id: 'exact', relevance_score: 1 },
+      { id: 'verbose', relevance_score: 1 },
+    ]);
+  });
 });

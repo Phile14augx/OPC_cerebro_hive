@@ -9,7 +9,7 @@ export class RerankingService {
   }
 
   async rerankCandidates(dto: RerankDto): Promise<RerankResponseDto> {
-    const queryTerms = this.tokenize(dto.query_text);
+    const queryTerms = Array.from(new Set(this.tokenize(dto.query_text)));
     if (queryTerms.length === 0) {
       return {
         results: dto.candidates
@@ -18,26 +18,36 @@ export class RerankingService {
       };
     }
 
-    const queryTermSet = new Set(queryTerms);
-    const results: RerankResultItemDto[] = [];
+    const rankedResults: Array<{
+      result: RerankResultItemDto;
+      exactMatch: boolean;
+      precision: number;
+      inputOrder: number;
+    }> = [];
 
-    for (const candidate of dto.candidates) {
-      const candidateTerms = this.tokenize(candidate.text);
-      let matchCount = 0;
-      for (const term of candidateTerms) {
-        if (queryTermSet.has(term)) {
-          matchCount++;
-        }
-      }
-      
+    dto.candidates.forEach((candidate, inputOrder) => {
+      const candidateTerms = Array.from(new Set(this.tokenize(candidate.text)));
+      const matchCount = queryTerms.filter(term => candidateTerms.includes(term)).length;
       const relevance_score = matchCount / queryTerms.length;
-      results.push({
-        id: candidate.id,
-        relevance_score
+      rankedResults.push({
+        result: { id: candidate.id, relevance_score },
+        exactMatch:
+          candidateTerms.length === queryTerms.length &&
+          candidateTerms.every((term, index) => term === queryTerms[index]),
+        precision: candidateTerms.length === 0 ? 0 : matchCount / candidateTerms.length,
+        inputOrder
       });
-    }
+    });
 
-    results.sort((a, b) => b.relevance_score - a.relevance_score);
-    return { results: results.slice(0, dto.top_n) };
+    rankedResults.sort((a, b) =>
+      b.result.relevance_score - a.result.relevance_score ||
+      Number(b.exactMatch) - Number(a.exactMatch) ||
+      b.precision - a.precision ||
+      a.inputOrder - b.inputOrder
+    );
+
+    return {
+      results: rankedResults.slice(0, dto.top_n).map(({ result }) => result)
+    };
   }
 }
