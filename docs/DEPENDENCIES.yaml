@@ -1,8 +1,5 @@
 product: P01
-consumes:
-  - product: P47
-    interface: ObservabilityTelemetryAPI
-    version: "^1.0"
+consumes: []
 provides:
   - name: FederatedQueryAPI
     version: "1.0.0"

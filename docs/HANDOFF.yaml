@@ -12,8 +12,7 @@ verification:
   security_review: PENDING
   qa_certification: PENDING
 dependencies:
-  consumed:
-    - P47
+  consumed: []
   provides:
     - FederatedQueryAPI
     - IngestionManagementAPI
