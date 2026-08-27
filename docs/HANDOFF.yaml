@@ -13,7 +13,6 @@ verification:
   qa_certification: PENDING
 dependencies:
   consumed:
-    - P41
     - P01
   provides:
     - PrivacyIntelligenceAPI

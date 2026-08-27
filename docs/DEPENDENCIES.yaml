@@ -1,8 +1,5 @@
 product: P44
 consumes:
-  - product: P41
-    interface: GovernanceEnforcementAPI
-    version: "^1.0"
   - product: P01
     interface: DataIngestionAPI
     version: "^1.0"
