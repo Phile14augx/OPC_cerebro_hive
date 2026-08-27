@@ -1,11 +1,11 @@
 product: P48
 name: "Nexarch Evaluation Lab"
 branch: "product/p48-evaluation-lab"
-candidate_sha: "77ea77b5a5403deb14e51a5e15ca19178dc0acf0"
-status: L1_CERTIFIED
+candidate_sha: "8f250b4010c6b5d77af356cee007a42a442ec3e0"
+status: L2_COMPLETE
 maturity:
   before: L0
-  after: L1
+  after: L2
 verification:
   architecture_review: PENDING
   kernel_review: PENDING
@@ -19,7 +19,7 @@ dependencies:
   provides:
     - P48_EVAL_API
 shared_changes_requested:
-  - none
+  - "Install @nestjs/common, @nestjs/core, @nestjs/platform-express, prisma, @prisma/client in root or apps/evaluation-lab"
 known_risks:
   - LLM-as-a-judge bias may skew automated evaluations; requires robust HITL calibration.
   - High inference cost for running comprehensive evaluation suites against proprietary models.
