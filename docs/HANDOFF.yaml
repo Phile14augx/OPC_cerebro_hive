@@ -1,7 +1,7 @@
-product: P44
+﻿product: P44
 name: "Nexarch Privacy Intelligence"
 branch: "product/p44-privacy-intelligence"
-candidate_sha: "01b11c1f879ad5a8162a07736656c8a834392df6"
+candidate_sha: "70bfa8738ad85b118328df34ebe0af35c95cb6a8"
 status: L3_COMPLETE
 maturity:
   before: L1
