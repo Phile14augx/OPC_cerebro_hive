@@ -1,11 +1,11 @@
 product: P44
 name: "Nexarch Privacy Intelligence"
 branch: "product/p44-privacy-intelligence"
-candidate_sha: "c9c800650c54150497e0a123bc5f7031b7535072"
-status: L2_COMPLETE
+candidate_sha: "01b11c1f879ad5a8162a07736656c8a834392df6"
+status: L3_COMPLETE
 maturity:
   before: L1
-  after: L2
+  after: L3
 verification:
   architecture_review: PENDING
   kernel_review: PENDING
