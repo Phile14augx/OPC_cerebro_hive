@@ -14,13 +14,13 @@ describe('Privacy Intelligence Integration', () => {
       budgetService.consumeBudget('ds-1', 1.0, 0);
       expect(budgetService.checkBudgetExceeded('ds-1')).toBe(false);
     });
-    
+
     it('should prevent query execution if privacy budget is exceeded', () => {
       const budgetService = new PrivacyBudgetService();
       const dpService = new DifferentialPrivacyService();
       budgetService.initialiseBudget('ds-2', 1.0, 1e-5);
       budgetService.consumeBudget('ds-2', 1.0, 0);
-      
+
       expect(() => {
          if (budgetService.checkBudgetExceeded('ds-2')) {
            throw new BadRequestException('Privacy budget exceeded');
@@ -41,7 +41,7 @@ describe('Privacy Intelligence Integration', () => {
     it('should block data processing if active consent is missing', () => {
       const consentService = new ConsentLedgerService();
       const activeConsents = consentService.getActiveConsents('user-2');
-      
+
       expect(() => {
         if (activeConsents.length === 0) {
           throw new Error('No active consent');
@@ -62,7 +62,7 @@ describe('Privacy Intelligence Integration', () => {
       const mockEmitter: BudgetEventEmitter = { emit: vi.fn() };
       const budgetService = new PrivacyBudgetService(mockEmitter);
       budgetService.initialiseBudget('ds-3', 1.0, 1e-5);
-      
+
       budgetService.consumeBudget('ds-3', 1.0, 0);
       expect(mockEmitter.emit).toHaveBeenCalledWith('governance.privacy.budget.consumed', { subjectId: 'ds-3', exceeded: true });
     });
