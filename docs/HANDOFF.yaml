@@ -1,7 +1,7 @@
 product: P41
 name: Nexarch AI Governance
 branch: product/p41-ai-governance
-candidate_sha: 575b7196d7397c203b9d6f0cad5b7a25a343d869
+candidate_sha: "f6b7036c4bdacf564eb128f31a3c80ba922f3c12"
 status: L3_COMPLETE
 maturity:
   before: L1
@@ -22,3 +22,4 @@ known_risks:
   actions.
 next:
 - chief-architecture-agent
+
