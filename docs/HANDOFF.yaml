@@ -1,7 +1,7 @@
 product: P03
 name: "Nexarch Vector Intelligence"
 branch: "product/p03-vector-intelligence"
-candidate_sha: "0fcece18b98b25c20fa67454ceb1df0d38595d6b"
+candidate_sha: "9e652dddaa736e4412bade7fa187fcd92d8d8cb0"
 status: L3_COMPLETE
 maturity:
   before: L0
@@ -23,3 +23,4 @@ shared_changes_requested:
 known_risks:
   - Large variations in index build times for HNSW on massive multi-tenant spikes.
 next: [ chief-architecture-agent ]
+
