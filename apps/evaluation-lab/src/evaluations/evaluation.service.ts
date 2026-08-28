@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 
 export interface EvalRunConfig {
   taskType: string;
@@ -13,27 +13,145 @@ export interface MetricResult {
   recall: number;
 }
 
+export type EvaluationLifecycleState =
+  | 'REGISTERED'
+  | 'AUTHORIZED'
+  | 'INFERENCE_COMPLETED'
+  | 'EVALUATED'
+  | 'BENCHMARKED'
+  | 'COMPLETED'
+  | 'FAILED';
+
+export interface EvaluationFailure {
+  stage: string;
+  code: string;
+  message: string;
+}
+
+export interface BenchmarkOutcome {
+  pass: boolean;
+  reason: string;
+}
+
 export interface EvalResult {
   evaluation_id: string;
   config: EvalRunConfig;
-  status: string;
-  metrics: Record<string, number>;
+  status: EvaluationLifecycleState;
+  tenantId?: string;
+  traceId?: string;
+  inferenceOutputs?: string[];
+  metrics?: Record<string, number>;
+  benchmark?: BenchmarkOutcome;
+  failure?: EvaluationFailure;
+  shadowOf?: string;
 }
 
 @Injectable()
 export class EvaluationService {
   private runs: Map<string, EvalResult> = new Map();
 
+  private clone(run: EvalResult): EvalResult {
+    return structuredClone ? structuredClone(run) : JSON.parse(JSON.stringify(run));
+  }
+
+  private assertState(run: EvalResult, expected: EvaluationLifecycleState) {
+    if (run.status !== expected) {
+      throw new ConflictException(`Invalid state transition: ${run.status} -> ... Expected ${expected}`);
+    }
+  }
+
   createEvalRun(config: EvalRunConfig): EvalResult {
     const evaluation_id = 'ev_' + Math.random().toString(36).substring(7);
     const result: EvalResult = {
       evaluation_id,
       config,
-      status: 'CREATED',
-      metrics: {},
+      status: 'REGISTERED',
     };
-    this.runs.set(evaluation_id, result);
-    return result;
+    this.runs.set(evaluation_id, this.clone(result));
+    return this.clone(result);
+  }
+
+  createShadowRun(primaryEvaluationId: string, config: EvalRunConfig): EvalResult {
+    const evaluation_id = 'ev_' + Math.random().toString(36).substring(7);
+    const result: EvalResult = {
+      evaluation_id,
+      config,
+      status: 'REGISTERED',
+      shadowOf: primaryEvaluationId,
+    };
+    this.runs.set(evaluation_id, this.clone(result));
+    return this.clone(result);
+  }
+
+  authorizeEvalRun(evaluation_id: string, tenantId: string, traceId: string): EvalResult {
+    const run = this.runs.get(evaluation_id);
+    if (!run) throw new NotFoundException();
+    this.assertState(run, 'REGISTERED');
+    
+    run.status = 'AUTHORIZED';
+    run.tenantId = tenantId;
+    run.traceId = traceId;
+    return this.clone(run);
+  }
+
+  recordInferenceCompleted(evaluation_id: string, outputs: string[]): EvalResult {
+    const run = this.runs.get(evaluation_id);
+    if (!run) throw new NotFoundException();
+    this.assertState(run, 'AUTHORIZED');
+    
+    run.status = 'INFERENCE_COMPLETED';
+    run.inferenceOutputs = outputs;
+    return this.clone(run);
+  }
+
+  recordEvaluation(evaluation_id: string, metrics: Record<string, number>): EvalResult {
+    const run = this.runs.get(evaluation_id);
+    if (!run) throw new NotFoundException();
+    this.assertState(run, 'INFERENCE_COMPLETED');
+    
+    run.status = 'EVALUATED';
+    run.metrics = metrics;
+    return this.clone(run);
+  }
+
+  recordBenchmark(evaluation_id: string, benchmark: BenchmarkOutcome): EvalResult {
+    const run = this.runs.get(evaluation_id);
+    if (!run) throw new NotFoundException();
+    this.assertState(run, 'EVALUATED');
+    
+    run.status = 'BENCHMARKED';
+    run.benchmark = benchmark;
+    return this.clone(run);
+  }
+
+  completeEvalRun(evaluation_id: string): EvalResult {
+    const run = this.runs.get(evaluation_id);
+    if (!run) throw new NotFoundException();
+    
+    if (run.status === 'COMPLETED' || run.status === 'FAILED') {
+      return this.clone(run);
+    }
+    
+    this.assertState(run, 'BENCHMARKED');
+    run.status = 'COMPLETED';
+    return this.clone(run);
+  }
+
+  failEvalRun(evaluation_id: string, currentStage: string, error: any): EvalResult {
+    const run = this.runs.get(evaluation_id);
+    if (!run) throw new NotFoundException();
+    
+    if (run.status === 'COMPLETED' || run.status === 'FAILED') {
+      return this.clone(run);
+    }
+    
+    run.status = 'FAILED';
+    run.failure = {
+      stage: currentStage,
+      code: error?.name || 'Error',
+      message: error?.message || 'Unknown error'
+    };
+    return this.clone(run);
   }
 
   executeMetricComputation(predictions: string[], groundTruth: string[]): MetricResult {
@@ -70,22 +188,10 @@ export class EvaluationService {
     return { accuracy, precision, recall };
   }
 
-  completeEvalRun(evaluation_id: string, metrics: Record<string, number>): EvalResult {
-    const run = this.runs.get(evaluation_id);
-    if (!run) {
-      throw new NotFoundException(`Evaluation ${evaluation_id} not found`);
-    }
-    run.status = 'COMPLETED';
-    run.metrics = metrics;
-    return run;
-  }
-
   findOne(id: string): EvalResult {
     const run = this.runs.get(id);
-    if (!run) {
-      throw new NotFoundException(`Evaluation ${id} not found`);
-    }
-    return run;
+    if (!run) throw new NotFoundException();
+    return this.clone(run);
   }
 
   create(evalDto: any) {
@@ -96,7 +202,7 @@ export class EvaluationService {
     });
     return {
       evaluation_id: run.evaluation_id,
-      status: 'QUEUED',
+      status: 'QUEUED', // Required by external contract for now? Wait, spec says nothing about create(), keep it for backwards compatibility if any
     };
   }
 }
