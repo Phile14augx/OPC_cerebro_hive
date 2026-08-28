@@ -18,6 +18,6 @@ describe('QueryLayerService', () => {
 
   it('should execute cypher via storage layer', async () => {
     const res = await service.queryGraph('MATCH (n) RETURN n', {});
-    expect(res.metrics).toBeDefined();
+    expect(typeof res.metrics.nodesScanned).toBe('number');
   });
 });

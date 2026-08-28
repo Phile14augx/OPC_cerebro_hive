@@ -12,14 +12,10 @@ describe('GraphStorageService', () => {
     service = module.get<GraphStorageService>(GraphStorageService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-
   it('should connect and execute cypher', async () => {
     await service.connect();
     const result = await service.executeCypher('MATCH (n) RETURN n', {});
-    expect(result.metrics).toBeDefined();
+    expect(typeof result.metrics.nodesScanned).toBe('number');
   });
 
   it('should insert and retrieve a node', async () => {
