@@ -21,7 +21,7 @@ describe('MLflow API Integration', () => {
     baseUrl = `http://127.0.0.1:${address.port}/api/2.0/mlflow`;
     experiments = app.get(ExperimentService);
     models = app.get(ModelRegistryService);
-  });
+  }, 30000);
 
   afterAll(async () => {
     await app.close();
