@@ -1,11 +1,11 @@
 product: P48
 name: "Nexarch Evaluation Lab"
-branch: "product/p48-evaluation-lab"
-candidate_sha: "818b74c38c3a1569cbf8553a3b5304267722e7a9"
-status: L3_COMPLETE
+branch: "integration/p48-l4"
+candidate_sha: "f1070d9d11ed03f7c2ca5ef9c8f19021bd316dac"
+status: READY_FOR_QA
 maturity:
-  before: L0
-  after: L3
+  before: L3
+  after: L4
 verification:
   architecture_review: PENDING
   kernel_review: PENDING
@@ -24,6 +24,3 @@ known_risks:
   - LLM-as-a-judge bias may skew automated evaluations; requires robust HITL calibration.
   - High inference cost for running comprehensive evaluation suites against proprietary models.
 next: [ chief-architecture-agent ]
-
-
-
