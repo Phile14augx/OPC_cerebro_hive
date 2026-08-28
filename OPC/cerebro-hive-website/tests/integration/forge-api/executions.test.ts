@@ -148,7 +148,10 @@ describe("GET /v1/stream/executions/:id — SSE stream", () => {
     });
 
     // Either events arrived or stream closed cleanly
-    expect(true).toBe(true);
+    expect(errors).toHaveLength(0);
+    if (events.length > 0) {
+      expect(typeof events[0]).toBe('string');
+    }
   });
 
   it("returns 404 for non-existent execution", async () => {
@@ -223,3 +226,4 @@ describe("POST /v1/executions/:id/retry", () => {
     expect([200, 202, 404, 405]).toContain(res.status);
   });
 });
+
