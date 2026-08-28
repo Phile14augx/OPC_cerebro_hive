@@ -4,7 +4,7 @@ repository: cerebro-hive
 worktree: D:\CEREBRO_PRODUCT_WORKTREES\p02-feature-intelligence
 branch: product/p02-feature-intelligence
 
-status: READY_FOR_QA
+status: READY_FOR_CODEX_QA
 maturity:
   before: L2
   after: L3

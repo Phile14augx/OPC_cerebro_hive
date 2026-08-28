@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Headers, BadRequestException } from '@nestjs/common';
 import { FeatureStoreService } from './feature-store.service';
 import { GetOnlineFeaturesDto, GenerateOfflineDatasetDto, RegisterFeatureViewDto } from './dto/feature-store.dto';
 
@@ -7,17 +7,29 @@ export class FeatureStoreController {
   constructor(private readonly featureStoreService: FeatureStoreService) {}
 
   @Post('serve/features')
-  getOnlineFeatures(@Body() dto: GetOnlineFeaturesDto) {
-    return this.featureStoreService.getOnlineFeatures(dto);
+  getOnlineFeatures(
+    @Headers('x-tenant-id') tenantId: string,
+    @Body() dto: GetOnlineFeaturesDto,
+  ) {
+    if (!tenantId) throw new BadRequestException('Tenant ID is required');
+    return this.featureStoreService.getOnlineFeatures(tenantId, dto);
   }
 
   @Post('offline/datasets')
-  generateOfflineDataset(@Body() dto: GenerateOfflineDatasetDto) {
-    return this.featureStoreService.generateOfflineDataset(dto);
+  generateOfflineDataset(
+    @Headers('x-tenant-id') tenantId: string,
+    @Body() dto: GenerateOfflineDatasetDto,
+  ) {
+    if (!tenantId) throw new BadRequestException('Tenant ID is required');
+    return this.featureStoreService.generateOfflineDataset(tenantId, dto);
   }
 
   @Post('registry/feature-views')
-  registerFeatureView(@Body() dto: RegisterFeatureViewDto) {
-    return this.featureStoreService.registerFeatureView(dto);
+  registerFeatureView(
+    @Headers('x-tenant-id') tenantId: string,
+    @Body() dto: RegisterFeatureViewDto,
+  ) {
+    if (!tenantId) throw new BadRequestException('Tenant ID is required');
+    return this.featureStoreService.registerFeatureView(tenantId, dto);
   }
 }
