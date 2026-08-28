@@ -10,6 +10,9 @@ import {
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
+if (typeof PrismaClient !== 'function') {
+  throw new Error('Generated PrismaClient is unavailable; run the DB generate contract before seeding');
+}
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
