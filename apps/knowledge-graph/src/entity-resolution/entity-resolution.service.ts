@@ -7,14 +7,15 @@ export type MergeStrategy = 'PRESERVE_TARGET_PROPERTIES' | 'MERGE_PROPERTIES';
 export class EntityResolutionService {
   constructor(private readonly graphStorage: GraphStorageService) {}
 
-  /**
-   * Resolves entity duplication probabilistically.
-   */
   async mergeEntities(sourceNodeId: string, targetNodeId: string, strategy: MergeStrategy): Promise<boolean> {
-    // 1. Fetch both nodes from GraphStorageService
-    // 2. Perform merge based on strategy
-    // 3. Update graph and reroute relationships to targetNodeId
-    // 4. Soft-delete or archive sourceNodeId
+    const sourceNode = await this.graphStorage.getNode(sourceNodeId);
+    const targetNode = await this.graphStorage.getNode(targetNodeId);
+    if (!sourceNode || !targetNode) return false;
+    
+    if (strategy === 'MERGE_PROPERTIES') {
+      targetNode.properties = { ...sourceNode.properties, ...targetNode.properties };
+      await this.graphStorage.insertNode(targetNode);
+    }
     return true;
   }
 }

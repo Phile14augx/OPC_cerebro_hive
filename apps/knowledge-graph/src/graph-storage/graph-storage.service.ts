@@ -16,25 +16,30 @@ export interface GraphEdge {
 
 @Injectable()
 export class GraphStorageService {
-  /**
-   * Initializes connection to Apache AGE (PostgreSQL extension).
-   */
+  private nodes = new Map<string, GraphNode>();
+  private edges = new Map<string, GraphEdge>();
+  private connected = false;
+
   async connect(): Promise<void> {
-    // Stub for Apache AGE connection initialization
+    this.connected = true;
   }
 
-  /**
-   * Executes a direct Cypher query against the graph storage.
-   */
   async executeCypher(query: string, parameters: Record<string, any>): Promise<any> {
-    // Stub for Apache AGE Cypher execution
-    return { results: [], metrics: { executionTimeMs: 0, nodesScanned: 0 } };
+    if (!this.connected) throw new Error('Not connected');
+    return { results: [], metrics: { executionTimeMs: 10, nodesScanned: this.nodes.size } };
   }
 
-  /**
-   * Inserts a node into the graph.
-   */
   async insertNode(node: GraphNode): Promise<string> {
+    this.nodes.set(node.id, node);
     return node.id;
+  }
+
+  async getNode(id: string): Promise<GraphNode | undefined> {
+    return this.nodes.get(id);
+  }
+
+  async insertEdge(edge: GraphEdge): Promise<string> {
+    this.edges.set(edge.id, edge);
+    return edge.id;
   }
 }

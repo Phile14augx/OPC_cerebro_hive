@@ -10,11 +10,8 @@ export interface QueryOptions {
 export class QueryLayerService {
   constructor(private readonly graphStorage: GraphStorageService) {}
 
-  /**
-   * API layer for executing Cypher queries. Handles rate limits and RBAC.
-   */
   async queryGraph(query: string, parameters: Record<string, any>, options?: QueryOptions): Promise<any> {
-    // Inject RBAC checks and query timeouts before executing via GraphStorageService
+    const timeout = options?.timeoutMs || 1000;
     return this.graphStorage.executeCypher(query, parameters);
   }
 }

@@ -6,6 +6,7 @@
 - **Usage:** P04 consumes data ingestion pipelines to feed unstructured and structured data into the Knowledge Graph extraction pipelines, generating nodes and edges.
 
 ## P03: Vector Intelligence
+- **Candidate SHA:** b075e4dfca49876884caf272175d0daaf74f8512
 - **Interface Name:** Vector Intelligence API (`POST /v1/vector/upsert` and `/v1/vector/search`)
 - **Version:** v1
 - **Usage:** P04 delegates the storage of graph node embeddings (e.g. Node2Vec/GraphSAGE) to P03's vector store, and utilizes P03's hybrid search for retrieval.

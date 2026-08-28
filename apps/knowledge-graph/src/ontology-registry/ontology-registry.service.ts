@@ -7,9 +7,6 @@ export interface EntitySchema {
 
 @Injectable()
 export class OntologyRegistryService {
-  /**
-   * Retrieves the currently active enterprise ontology schema.
-   */
   async getActiveOntology(): Promise<{ entities: EntitySchema[], relationships: string[] }> {
     return {
       entities: [
@@ -20,10 +17,13 @@ export class OntologyRegistryService {
     };
   }
 
-  /**
-   * Validates a node against the active ontology.
-   */
   async validateNode(label: string, properties: Record<string, any>): Promise<boolean> {
+    const ontology = await this.getActiveOntology();
+    const schema = ontology.entities.find(e => e.label === label);
+    if (!schema) return false;
+    for (const key of Object.keys(properties)) {
+      if (!schema.fields[key]) return false;
+    }
     return true;
   }
 }
