@@ -1,10 +1,10 @@
 export class SDKError extends Error {
   constructor(
     public status: number,
-    public problem: any,
+    public problem: Record<string, unknown> | null,
     message?: string
   ) {
-    super(message || problem.detail || 'SDK Error');
+    super(message || (problem && typeof problem === "object" && "detail" in problem ? String(problem.detail) : undefined) || 'SDK Error');
     this.name = 'SDKError';
   }
 }

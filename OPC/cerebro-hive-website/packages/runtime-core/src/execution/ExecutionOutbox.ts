@@ -2,7 +2,7 @@ export interface OutboxMessage {
   readonly id: string;
   readonly executionId: string;
   readonly type: string;
-  readonly payload: Record<string, any>;
+  readonly payload: Record<string, unknown>;
   readonly status: 'PENDING' | 'SENT' | 'FAILED';
   readonly retries: number;
   readonly nextRetryAt?: Date;
@@ -10,7 +10,7 @@ export interface OutboxMessage {
 
 export interface ExecutionOutbox {
   /** Enqueues a message for reliable delivery to external systems (e.g. workers, webhooks) */
-  publish(executionId: string, type: string, payload: Record<string, any>): Promise<void>;
+  publish(executionId: string, type: string, payload: Record<string, unknown>): Promise<void>;
 
   /** Retrieves pending messages for processing */
   fetchPending(limit?: number): Promise<OutboxMessage[]>;

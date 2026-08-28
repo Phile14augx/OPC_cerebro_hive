@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import { PackagedProduct } from "@/lib/data/types";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
-import { Terminal, Code2, ShieldCheck, Box } from "lucide-react";
+import { Code2, ShieldCheck, Box } from "lucide-react";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
 import { AnimatedButton } from "@/components/cerebro/AnimatedButton";
 
@@ -91,7 +90,7 @@ export const ProductDeveloperExperience = ({ product }: { product: PackagedProdu
             <div className="text-text-primary"><span className="text-[#00E5FF]">npm</span> install @cerebrohive/{product.slug}-sdk</div>
             <br />
             <div className="text-text-muted mb-4"># 2. Authenticate and Connect</div>
-            <div className="text-[#FF8A00]">import</div> <div className="text-text-primary inline">{"{ Client }"}</div> <div className="text-[#FF8A00]">from</div> <div className="text-[#00F57A]">'@cerebrohive/{product.slug}-sdk'</div>;
+            <div className="text-[#FF8A00]">import</div> <div className="text-text-primary inline">{"{ Client }"}</div> <div className="text-[#FF8A00]">from</div> <div className="text-[#00F57A]">{`'@cerebrohive/${product.slug}-sdk'`}</div>;
             <br /><br />
             <div className="text-[#FF8A00]">const</div> <div className="text-text-primary inline">client = </div><div className="text-[#FF8A00]">new</div> <div className="text-[#00E5FF]">Client</div>{"({"}
             <br />

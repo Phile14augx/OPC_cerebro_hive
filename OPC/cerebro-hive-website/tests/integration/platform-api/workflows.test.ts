@@ -9,7 +9,7 @@
  * Run: pnpm test:integration
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { PrismaClient } from "@cerebro/db";
 import { SignJWT } from "jose";
 
@@ -219,7 +219,7 @@ describe("Workflow CRUD", () => {
 });
 
 describe("Workflow search + filtering", () => {
-  let wfIds: string[] = [];
+  const wfIds: string[] = [];
 
   beforeAll(async () => {
     // Create a batch for filter testing

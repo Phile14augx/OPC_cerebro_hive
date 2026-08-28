@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Code2, Users, FileText, FlaskConical, ExternalLink } from "lucide-react";
-import { withBasePath } from "@/lib/utils";
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
 const researchers = [

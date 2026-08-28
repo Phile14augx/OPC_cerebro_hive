@@ -1,9 +1,87 @@
-import { PrismaClient } from '@cerebro/db';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+import { PrismaClient } from '../src/generated/client';
+import {
+  TALENT_PERMISSION_TUPLES,
+  TALENT_PERMISSIONS_BY_ROLE,
+  TALENT_ROLE_KEYS,
+  type TalentRoleKey,
+} from '../src/auth/talent-permissions';
 
-const prisma = new PrismaClient();
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 async function main() {
-  console.log('Seeding Database...');
+  const adapter = new PrismaPg(pool);
+  if (typeof PrismaClient !== 'function') {
+    throw new Error('Generated PrismaClient is unavailable; run the DB generate contract before seeding');
+  }
+  const prisma = new PrismaClient({ adapter });
+
+  try {
+    console.log('Seeding Database...');
+
+  const canonicalRoles: ReadonlyArray<{
+    key: TalentRoleKey;
+    name: string;
+    description: string;
+  }> = [
+    { key: TALENT_ROLE_KEYS.OWNER, name: 'Owner', description: 'Tenant owner' },
+    { key: TALENT_ROLE_KEYS.ADMIN, name: 'Admin', description: 'Administrator' },
+    { key: TALENT_ROLE_KEYS.RECRUITER, name: 'Recruiter', description: 'Talent recruiter' },
+    { key: TALENT_ROLE_KEYS.CANDIDATE, name: 'Candidate', description: 'Talent candidate' },
+  ];
+  const roleIds = new Map<TalentRoleKey, string>();
+
+  await prisma.$transaction(async tx => {
+    for (const definition of canonicalRoles) {
+      const role = await tx.role.upsert({
+        where: { key: definition.key },
+        update: {
+          name: definition.name,
+          description: definition.description,
+        },
+        create: definition,
+      });
+      roleIds.set(definition.key, role.id);
+    }
+
+    const talentResources = [
+      ...new Set(TALENT_PERMISSION_TUPLES.map(({ resource }) => resource)),
+    ];
+    await tx.permission.deleteMany({
+      where: { resource: { in: talentResources } },
+    });
+
+    for (const definition of canonicalRoles) {
+      const roleId = roleIds.get(definition.key);
+      if (!roleId) {
+        throw new Error(`Canonical role ${definition.key} was not persisted`);
+      }
+
+      for (const permission of TALENT_PERMISSIONS_BY_ROLE[definition.key]) {
+        await tx.permission.upsert({
+          where: {
+            roleId_action_resource: {
+              roleId,
+              action: permission.action,
+              resource: permission.resource,
+            },
+          },
+          update: {},
+          create: {
+            roleId,
+            action: permission.action,
+            resource: permission.resource,
+          },
+        });
+      }
+    }
+  });
+
+  const adminRoleId = roleIds.get(TALENT_ROLE_KEYS.ADMIN);
+  if (!adminRoleId) {
+    throw new Error('Canonical ADMIN role was not persisted');
+  }
 
   // 1. Tenant & User
   const tenant = await prisma.tenant.upsert({
@@ -15,6 +93,7 @@ async function main() {
       billingPlan: 'enterprise'
     }
   });
+  if (!tenant) throw new Error('No tenant');
 
   const user = await prisma.user.upsert({
     where: { email: 'admin@acme.corp' },
@@ -24,18 +103,14 @@ async function main() {
       name: 'System Admin'
     }
   });
-
-  const role = await prisma.role.create({
-    data: { name: 'Admin', description: 'Administrator Role' }
-  });
+  if (!user) throw new Error('No user');
 
   // Ensure user is in tenant
-  const existingMember = await prisma.tenantMember.findFirst({ where: { tenantId: tenant.id, userId: user.id }});
-  if (!existingMember) {
-    await prisma.tenantMember.create({
-      data: { tenantId: tenant.id, userId: user.id, roleId: role.id }
-    });
-  }
+  await prisma.tenantMember.upsert({
+    where: { tenantId_userId: { tenantId: tenant.id, userId: user.id } },
+    update: { roleId: adminRoleId },
+    create: { tenantId: tenant.id, userId: user.id, roleId: adminRoleId },
+  });
 
   // 2. Workspace
   const workspace = await prisma.workspace.upsert({
@@ -47,6 +122,7 @@ async function main() {
       tenantId: tenant.id
     }
   });
+  if (!workspace) throw new Error('No workspace');
 
   console.log(`Tenant: ${tenant.id}`);
   console.log(`Workspace: ${workspace.id}`);
@@ -60,6 +136,7 @@ async function main() {
       forgeStatus: 'completed'
     }
   });
+  if (!project) throw new Error('No project');
 
   // 4. Agents (with explicit IDs if possible, or let it generate)
   const agent1 = await prisma.agent.create({
@@ -169,28 +246,28 @@ async function main() {
   await prisma.agentExecution.create({
     data: {
       agentId: agent1.id,
+      agentVersionId: av1.id,
       status: 'SUCCESS',
+      provider: 'anthropic',
+      model: 'claude-3-5-sonnet',
       startedAt: new Date(Date.now() - 50000),
       completedAt: new Date(Date.now() - 10000),
-      metrics: {
-        traceId: 'tr-abc-124',
-        durationMs: 4200,
-        tokens: { prompt: 1500, completion: 300, total: 1800 },
-        costUsd: 0.015,
-        model: 'claude-3-5-sonnet',
-        provider: 'anthropic'
-      }
+      durationMs: 4200,
+      inputTokens: 1500,
+      outputTokens: 300,
+      costUsd: 0.015,
+      traceId: 'tr-abc-124',
     }
   });
 
-  console.log('Seeding Completed successfully!');
+    console.log('Seeding Completed successfully!');
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
 main()
   .catch(e => {
     console.error(e);
     process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
   });

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { User } from '../types';
-import { IAuthProvider } from '../interfaces';
 
 const MOCK_USER: User = {
   id: 'usr_mock_123',

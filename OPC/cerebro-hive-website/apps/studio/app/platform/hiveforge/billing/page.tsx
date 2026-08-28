@@ -22,7 +22,7 @@ export default function BillingPage() {
     } catch { /* noop */ }
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   const generateInvoice = useCallback(async () => {
     setBusy(true);

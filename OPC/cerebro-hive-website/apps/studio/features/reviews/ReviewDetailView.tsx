@@ -48,7 +48,7 @@ export function ReviewDetailView({ reviewId }: { reviewId: string }) {
               <h1 className="text-2xl font-space font-semibold text-white mb-2 flex items-center gap-3">
                 Review v{review.reviewVersion}
                 {review.verdict && (
-                  <Badge variant={review.verdict.outcome === 'pass' ? 'success' : 'warning' as any}>
+                  <Badge variant={review.verdict.outcome === 'pass' ? 'default' : 'secondary'}>
                     {review.verdict.outcome.toUpperCase()}
                   </Badge>
                 )}
@@ -70,7 +70,9 @@ export function ReviewDetailView({ reviewId }: { reviewId: string }) {
 
       {/* Contributors (Horizontal List) */}
       {!contributorsLoading && contributors && contributors.length > 0 && (
-        <div className="flex gap-4 overflow-x-auto pb-2">
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider">Contributors</h3>
+          <div className="flex gap-4 overflow-x-auto pb-2">
           {contributors.map(c => (
             <div key={c.agentId} className="flex-shrink-0 flex items-center gap-3 bg-gray-900/40 border border-gray-800 rounded-lg p-3 px-4">
               <Bot className="h-5 w-5 text-purple-400" />
@@ -83,6 +85,7 @@ export function ReviewDetailView({ reviewId }: { reviewId: string }) {
               </Badge>
             </div>
           ))}
+          </div>
         </div>
       )}
 

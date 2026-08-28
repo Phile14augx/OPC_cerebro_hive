@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { 
-  X, Send, Network, Cpu, LineChart, FileText, Download, Briefcase, Zap, 
-  Bot, Box, BrainCircuit, Activity, Lock, Database, Play, Cloud, Shield, Share2
+  X, Send, Network, LineChart, FileText, Download, Briefcase,
+  Bot, Box, BrainCircuit, Activity, Lock, Database, Cloud, Share2, type LucideIcon
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ import { TrackedButton } from "@/components/cerebro/TrackedButton";
 import { analytics } from "@/lib/analytics/AnalyticsAdapter";
 
 type Sender = "user" | "bot" | "system";
+type ChatTab = "architecture" | "workflow" | "security" | "deployment";
 
 interface Message {
   id: string;
@@ -18,7 +19,7 @@ interface Message {
   text: string;
   timestamp: string;
   isGenerating?: boolean;
-  actions?: { label: string; icon: any; action: string }[];
+  actions?: { label: string; icon: LucideIcon; action: string }[];
   businessImpact?: {
     roi: string;
     timeline: string;
@@ -43,26 +44,30 @@ const suggestedPrompts = [
   { id: "roi", text: "📈 ROI Estimator" }
 ];
 
+const tabs: Array<{ id: ChatTab; label: string }> = [
+  { id: "architecture", label: "Architecture" },
+  { id: "workflow", label: "Workflow" },
+  { id: "deployment", label: "Deployment" },
+  { id: "security", label: "Security" },
+];
+
+const timestamp = () => new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+const createMessageId = () => crypto.randomUUID();
+
 export default function CerebroChat() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => [{
+    id: "initial-message",
+    sender: "bot",
+    text: "System initialized. What enterprise challenge are you solving today?",
+    timestamp: timestamp(),
+  }]);
   const [input, setInput] = useState("");
-  const [activeTab, setActiveTab] = useState<"architecture" | "workflow" | "security" | "deployment">("architecture");
+  const [activeTab, setActiveTab] = useState<ChatTab>("architecture");
   const [generationStage, setGenerationStage] = useState<string | null>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMessages([
-      { 
-        id: "1", 
-        sender: "bot", 
-        text: "System initialized. What enterprise challenge are you solving today?", 
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-      }
-    ]);
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -71,10 +76,7 @@ export default function CerebroChat() {
   const handleSend = (text: string) => {
     if (!text.trim()) return;
     
-    // Command Mode parsing
-    const isCommand = text.startsWith("/");
-    
-    const userMsg: Message = { id: Date.now().toString(), sender: "user", text, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+    const userMsg: Message = { id: createMessageId(), sender: "user", text, timestamp: timestamp() };
     setMessages(prev => [...prev, userMsg]);
     setInput("");
 
@@ -91,7 +93,7 @@ export default function CerebroChat() {
     ];
     
     let currentStage = 0;
-    const botMsgId = (Date.now() + 1).toString();
+    const botMsgId = createMessageId();
     
     setMessages(prev => [...prev, { id: botMsgId, sender: "bot", text: "", timestamp: "", isGenerating: true }]);
 
@@ -419,17 +421,12 @@ export default function CerebroChat() {
                 
                 {/* Tabs */}
                 <div className="flex items-center gap-6 px-6 pt-6 border-b border-border dark:border-border-subtle">
-                   {[
-                     { id: "architecture", label: "Architecture" },
-                     { id: "workflow", label: "Workflow" },
-                     { id: "deployment", label: "Deployment" },
-                     { id: "security", label: "Security" }
-                   ].map(tab => (
+                    {tabs.map(tab => (
                      <TrackedButton
                        key={tab.id}
                        eventCategory="cerebro-chat"
                        eventLabel={tab.label}
-                       onClick={() => setActiveTab(tab.id as any)}
+                        onClick={() => setActiveTab(tab.id)}
                        className={cn(
                          "pb-3 text-[10px] uppercase tracking-widest font-bold transition-colors relative",
                          activeTab === tab.id ? "text-primary-accent" : "text-text-muted hover:text-text-secondary"

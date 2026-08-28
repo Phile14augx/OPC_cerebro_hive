@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Job, QueueName } from "./ExecutionQueueService";
 import { DockerExecutionProvider } from "../execution/DockerExecutionProvider";
 
@@ -35,13 +34,12 @@ export class WorkerRegistry {
       await job.updateProgress({ state: 'executing' });
       
       // We also stream logs to the Realtime Service (WebSocket/SSE) here
-      this.dockerProvider.streamLogs(envId, (chunk) => {
+      this.dockerProvider.streamLogs(envId, () => {
         // e.g. redis.publish(`logs:${job.data.submissionId}`, chunk);
       });
 
-      await this.dockerProvider.execute(envId, ["npm", "test"], {});
-      const result = await this.dockerProvider.collectResult(envId);
-      
+      await this.dockerProvider.execute(envId, ["npm", "test"]);
+            
       await this.dockerProvider.cleanup(envId);
 
       // Pass off to Evaluation Queue

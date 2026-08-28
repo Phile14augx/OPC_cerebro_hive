@@ -10,7 +10,7 @@ export interface AuditEvidence {
   classification: 'Confidential' | 'Internal' | 'Public';
   retentionPolicy: RetentionClass;
   storageLocation: string; // e.g. 's3://cerebro-audit/evidence/...'
-  payload: any;
+  payload: unknown;
 }
 
 export class EvidenceCollector {
@@ -19,7 +19,7 @@ export class EvidenceCollector {
   /**
    * Seals a platform event into a formal AuditEvidence artifact mapped to a control.
    */
-  async collectEvidence(controlId: string, sourceEvent: string, payload: any): Promise<AuditEvidence> {
+  async collectEvidence(controlId: string, sourceEvent: string, payload: unknown): Promise<AuditEvidence> {
     const payloadStr = JSON.stringify(payload);
     const checksum = createHash('sha256').update(payloadStr).digest('hex');
 

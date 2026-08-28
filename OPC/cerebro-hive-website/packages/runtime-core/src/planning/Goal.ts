@@ -1,7 +1,7 @@
 export interface Goal {
   id: string;
   intent: string;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
   constraints?: GoalConstraint[];
   successCriteria?: string[];
   priority?: number;
@@ -15,7 +15,7 @@ export type OptimizationLevel = 'Fast' | 'Balanced' | 'Optimal';
 
 export interface GoalConstraint {
   type: 'Region' | 'Latency' | 'Cost' | 'Compliance' | 'Model' | 'Custom';
-  value: any;
+  value: unknown;
   required: boolean;
 }
 

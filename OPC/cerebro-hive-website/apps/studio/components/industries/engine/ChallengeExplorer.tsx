@@ -17,10 +17,11 @@ import {
   ArrowRight,
   BrainCircuit,
   Database,
-  Cpu
+  Cpu,
+  type LucideIcon
 } from 'lucide-react';
 
-const categoryConfig: Record<string, { color: string, icon: any }> = {
+const categoryConfig: Record<string, { color: string, icon: LucideIcon }> = {
   Fraud: { color: "#EF4444", icon: ShieldAlert },
   Compliance: { color: "#3B82F6", icon: ShieldCheck },
   Customer: { color: "#8B5CF6", icon: Users },

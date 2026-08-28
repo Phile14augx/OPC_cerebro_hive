@@ -241,9 +241,7 @@ export async function insertItem<K extends keyof DatabaseSchema>(
     id: item.id || `ID-${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
     createdAt: item.createdAt || new Date().toISOString()
   } as DatabaseSchema[K][number];
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (db[collectionName] as any[]).push(newItem);
+  (db[collectionName] as Array<typeof newItem>).push(newItem);
   await saveDb(db);
   return newItem;
 }
@@ -254,15 +252,14 @@ export async function updateItem<K extends keyof DatabaseSchema>(
   updates: Partial<DatabaseSchema[K][number]>
 ): Promise<DatabaseSchema[K][number] | null> {
   const db = await getDb();
-  const index = (db[collectionName] as any[]).findIndex((item) => item.id === id);
+  const index = (db[collectionName] as Array<{ id: string }>).findIndex((item) => item.id === id);
   if (index === -1) return null;
 
   const updatedItem = {
     ...db[collectionName][index],
     ...updates
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (db[collectionName] as any[])[index] = updatedItem;
+  (db[collectionName] as Array<typeof updatedItem>)[index] = updatedItem;
   await saveDb(db);
   return updatedItem;
 }
@@ -273,8 +270,7 @@ export async function deleteItem<K extends keyof DatabaseSchema>(
 ): Promise<boolean> {
   const db = await getDb();
   const initialLength = db[collectionName].length;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (db[collectionName] as any[]) = (db[collectionName] as any[]).filter((item) => item.id !== id);
+  db[collectionName] = (db[collectionName] as Array<{ id: string }>).filter((item) => item.id !== id) as DatabaseSchema[K];
   if (db[collectionName].length === initialLength) return false;
   await saveDb(db);
   return true;

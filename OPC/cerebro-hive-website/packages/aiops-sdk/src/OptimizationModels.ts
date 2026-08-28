@@ -11,6 +11,6 @@ export interface OptimizationRecommendation {
   evidence: string[];
   expectedBenefit: string;
   potentialRisk: string;
-  suggestedAction: any;
+  suggestedAction: Record<string, unknown>;
   autonomyLevel: AutonomyLevel;
 }

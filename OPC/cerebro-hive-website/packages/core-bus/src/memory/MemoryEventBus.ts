@@ -3,7 +3,7 @@ import { DomainEvent } from '../contracts/DomainEvent';
 
 export class MemoryEventBus implements EventBus {
   private handlers: Map<string, Set<EventHandler>> = new Map();
-  private responders: Map<string, (payload: any) => Promise<any>> = new Map();
+  private responders: Map<string, (payload: unknown) => Promise<unknown>> = new Map();
   private middlewares: Array<(event: DomainEvent, next: () => Promise<void>) => Promise<void>> = [];
 
   async publish<T>(event: DomainEvent<T>): Promise<void> {
@@ -32,7 +32,11 @@ export class MemoryEventBus implements EventBus {
     if (!this.handlers.has(eventType)) {
       this.handlers.set(eventType, new Set());
     }
-    this.handlers.get(eventType)!.add(handler as EventHandler);
+    const handlers = this.handlers.get(eventType);
+    if (!handlers) {
+      throw new Error(`Failed to initialize handlers for event type: ${eventType}`);
+    }
+    handlers.add(handler as EventHandler);
   }
 
   unsubscribe<T>(eventType: string, handler: EventHandler<T>): void {
@@ -55,14 +59,14 @@ export class MemoryEventBus implements EventBus {
     if (!responder) {
       throw new Error(`No responder registered for event request: ${eventType}`);
     }
-    return await responder(payload);
+    return await responder(payload) as Res;
   }
 
   respond<Req, Res>(eventType: string, handler: (payload: Req) => Promise<Res>): void {
     if (this.responders.has(eventType)) {
       throw new Error(`Responder already registered for: ${eventType}`);
     }
-    this.responders.set(eventType, handler);
+    this.responders.set(eventType, handler as unknown as (payload: unknown) => Promise<unknown>);
   }
 
   middleware(fn: (event: DomainEvent, next: () => Promise<void>) => Promise<void>): void {

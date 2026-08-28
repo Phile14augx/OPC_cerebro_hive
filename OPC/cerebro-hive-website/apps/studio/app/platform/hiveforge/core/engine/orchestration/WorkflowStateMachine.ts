@@ -1,5 +1,5 @@
 import { operationRepository } from "../../repositories/OperationRepository";
-import { eventStore } from "../../events/EventStore";
+import { eventStore, type DomainEventType } from "../../events/EventStore";
 import { Operation } from "@cerebro/db";
 
 export type WorkflowState = 
@@ -14,9 +14,22 @@ export type WorkflowState =
   | "Ready"
   | "Failed";
 
+const OPERATION_EVENT_TYPES: Record<WorkflowState, DomainEventType> = {
+  Pending: "OperationPending",
+  Queued: "OperationQueued",
+  Validating: "OperationValidating",
+  Planning: "OperationPlanning",
+  Allocating: "OperationAllocating",
+  Provisioning: "OperationProvisioning",
+  Configuring: "OperationConfiguring",
+  Verifying: "OperationVerifying",
+  Ready: "OperationReady",
+  Failed: "OperationFailed",
+};
+
 export class WorkflowStateMachine {
   
-  async transition(operationId: string, newState: WorkflowState, payload?: any): Promise<Operation> {
+  async transition(operationId: string, newState: WorkflowState, payload?: unknown): Promise<Operation> {
     const operation = await operationRepository.findById(operationId);
     if (!operation) throw new Error(`Operation ${operationId} not found`);
 
@@ -43,11 +56,10 @@ export class WorkflowStateMachine {
     const updated = await operationRepository.update(operationId, { status: newState });
 
     // Emit Domain Event
-    const eventType = `Operation${newState}`;
     eventStore.append({
       id: crypto.randomUUID(),
       correlationId: operationId,
-      type: eventType as any,
+      type: OPERATION_EVENT_TYPES[newState],
       timestamp: new Date().toISOString(),
       payload: payload || {}
     });

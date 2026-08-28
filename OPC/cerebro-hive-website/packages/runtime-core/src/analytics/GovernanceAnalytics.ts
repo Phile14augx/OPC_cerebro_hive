@@ -1,4 +1,4 @@
-import { RuleResult, EventTimelineRecord } from '../governance/GovernanceRule';
+import { RuleResult } from '../governance/GovernanceRule';
 import { TimelineAnalytics } from './TimelineAnalyzer';
 
 export interface GovernanceAnalyticsReport {

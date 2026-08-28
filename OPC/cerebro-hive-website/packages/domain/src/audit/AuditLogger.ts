@@ -1,4 +1,4 @@
-import { AuditRepository, RequestContext } from '@cerebro/db';
+import { AuditRepository, RequestContext, PrismaTransactionClient } from '@cerebro/db';
 import { ITransactionContext } from '../transactions/UnitOfWork';
 
 export class AuditLogger {
@@ -8,13 +8,13 @@ export class AuditLogger {
     action: string,
     resource: string,
     resourceId: string | undefined,
-    metadata: any,
+    metadata: unknown,
     context: RequestContext,
     tx?: ITransactionContext
   ): Promise<void> {
     await this.auditRepository.log(
       { action, resource, resourceId, metadata },
-      { context, tx: tx as any }
+      { context, tx: tx as unknown as PrismaTransactionClient }
     );
   }
 }

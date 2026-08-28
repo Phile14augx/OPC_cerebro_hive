@@ -18,11 +18,14 @@
       },
       "breakTest": {
         "type": "spec-mutation",
-        "description": "Comment out one escape-blocking assertion → suite must fail",
+        "description": "Comment out one escape-blocking assertion \u2192 suite must fail",
         "expectedFailurePattern": "AssertionError|expected.*not.*to.*be"
       },
       "automation": ".github/workflows/runtime-detection-validation.yml",
-      "adrs": ["ADR-010", "ADR-011"],
+      "adrs": [
+        "ADR-010",
+        "ADR-011"
+      ],
       "slo_link": null
     },
     {
@@ -33,20 +36,21 @@
       "cec_weight": 2,
       "dependsOn": [],
       "runner": {
-        "type": "go-test",
-        "pattern": "./...",
+        "type": "vitest",
+        "spec": "services/forge-api/src/break-tests/g2-concurrency.spec.ts",
         "workDir": "services/forge-api",
-        "flags": ["-race", "-count=3", "-timeout=120s"],
         "minimumEvidenceKind": "integration-test",
         "timeout_ms": 180000
       },
       "breakTest": {
         "type": "race-injection",
-        "description": "Remove mutex around store write → go test -race must report DATA RACE",
+        "description": "Remove mutex around store write \u2192 go test -race must report DATA RACE",
         "expectedFailurePattern": "DATA RACE"
       },
       "automation": ".github/workflows/ci.yml",
-      "adrs": ["ADR-012"],
+      "adrs": [
+        "ADR-012"
+      ],
       "slo_link": null
     },
     {
@@ -55,25 +59,41 @@
       "description": "13 Falco rules covering all 8 attack categories. 10/10 break test techniques produce detectable Falco events within 30s.",
       "lifecycle": "Implemented",
       "cec_weight": 3,
-      "dependsOn": ["G1"],
+      "dependsOn": [
+        "G1"
+      ],
       "runner": {
         "type": "file-check",
         "checks": [
-          { "file": "infra/falco/falco-rules.yaml", "required": true },
-          { "pattern": "^- rule:", "minCount": 13 },
-          { "pattern": "priority: CRITICAL", "minCount": 5 },
-          { "pattern": "^- rule: CEREBRO_", "minCount": 13 }
+          {
+            "file": "infra/falco/falco-rules.yaml",
+            "required": true
+          },
+          {
+            "pattern": "^- rule:",
+            "minCount": 13
+          },
+          {
+            "pattern": "priority: CRITICAL",
+            "minCount": 5
+          },
+          {
+            "pattern": "^- rule: CEREBRO_",
+            "minCount": 13
+          }
         ],
         "minimumEvidenceKind": "static-analysis",
         "timeout_ms": 5000
       },
       "breakTest": {
         "type": "rule-deletion",
-        "description": "Delete one CEREBRO_ rule → rule count check must fail",
+        "description": "Delete one CEREBRO_ rule \u2192 rule count check must fail",
         "expectedFailurePattern": "below minimums"
       },
       "automation": ".github/workflows/runtime-detection-validation.yml",
-      "adrs": ["ADR-013"],
+      "adrs": [
+        "ADR-013"
+      ],
       "slo_link": null
     },
     {
@@ -82,24 +102,37 @@
       "description": "9 Tetragon TracingPolicies. 6 high-risk techniques trigger SIGKILL before the syscall completes.",
       "lifecycle": "Implemented",
       "cec_weight": 3,
-      "dependsOn": ["G1"],
+      "dependsOn": [
+        "G1"
+      ],
       "runner": {
         "type": "file-check",
         "checks": [
-          { "file": "infra/tetragon/tracing-policies.yaml", "required": true },
-          { "pattern": "^kind: TracingPolicy", "minCount": 9 },
-          { "pattern": "action: Sigkill", "minCount": 6 }
+          {
+            "file": "infra/tetragon/tracing-policies.yaml",
+            "required": true
+          },
+          {
+            "pattern": "^kind: TracingPolicy",
+            "minCount": 9
+          },
+          {
+            "pattern": "action: Sigkill",
+            "minCount": 6
+          }
         ],
         "minimumEvidenceKind": "static-analysis",
         "timeout_ms": 5000
       },
       "breakTest": {
         "type": "policy-deletion",
-        "description": "Delete one TracingPolicy entry → policy count check must fail",
+        "description": "Delete one TracingPolicy entry \u2192 policy count check must fail",
         "expectedFailurePattern": "below minimums"
       },
       "automation": ".github/workflows/runtime-detection-validation.yml",
-      "adrs": ["ADR-013"],
+      "adrs": [
+        "ADR-013"
+      ],
       "slo_link": null
     },
     {
@@ -112,18 +145,24 @@
       "runner": {
         "type": "file-check",
         "checks": [
-          { "globPattern": "infra/**/*.yaml", "contentPattern": "ClusterPolicy", "minMatchingFiles": 1 }
+          {
+            "globPattern": "infra/**/*.yaml",
+            "contentPattern": "ClusterPolicy",
+            "minMatchingFiles": 1
+          }
         ],
         "minimumEvidenceKind": "static-analysis",
         "timeout_ms": 5000
       },
       "breakTest": {
         "type": "policy-removal",
-        "description": "Remove ClusterPolicy kind from manifest → check must find 0 matching files",
+        "description": "Remove ClusterPolicy kind from manifest \u2192 check must find 0 matching files",
         "expectedFailurePattern": "No Kyverno ClusterPolicy"
       },
       "automation": ".github/workflows/supply-chain.yml",
-      "adrs": ["ADR-014"],
+      "adrs": [
+        "ADR-014"
+      ],
       "slo_link": null
     },
     {
@@ -141,11 +180,13 @@
       },
       "breakTest": {
         "type": "workflow-removal",
-        "description": "Delete openapi-drift.yml → workflow-check must report ARCHITECTURE_FAILURE",
+        "description": "Delete openapi-drift.yml \u2192 workflow-check must report ARCHITECTURE_FAILURE",
         "expectedFailurePattern": "workflow not found"
       },
       "automation": ".github/workflows/openapi-drift.yml",
-      "adrs": ["ADR-015"],
+      "adrs": [
+        "ADR-015"
+      ],
       "slo_link": null
     }
   ]

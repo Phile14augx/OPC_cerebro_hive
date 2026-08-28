@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import {
-  FileText, Search, Plus, Filter,
+  Search, Plus, Filter,
   MoreVertical, File, Download, Trash2,
   RefreshCcw, FolderOpen, ArrowUpRight
 } from "lucide-react";

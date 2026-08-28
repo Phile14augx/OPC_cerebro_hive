@@ -6,13 +6,27 @@ import { withAuthorization } from '../../../../../lib/talent/auth/middleware';
 const sessionService = new SessionService();
 
 export async function POST(req: NextRequest) {
-  return withAuthorization(req, 'CREATE_SESSION', '*', async (req: any, userContext: any) => {
-    try {
-      const body = await req.json();
-      const { candidateId, assessmentVersionId } = body;
+  const clonedReq = req.clone();
+  let body: { candidateId?: string; assessmentVersionId?: string } = {};
+  try {
+    body = await clonedReq.json();
+  } catch {
+    return ApiUtils.badRequest('Invalid JSON body');
+  }
 
-      if (!candidateId || !assessmentVersionId) {
-        return ApiUtils.badRequest('candidateId and assessmentVersionId are required');
+  const { assessmentVersionId } = body;
+  if (!assessmentVersionId) {
+    return ApiUtils.badRequest('assessmentVersionId is required');
+  }
+
+  const target = { resourceType: 'assessment_version', resourceId: assessmentVersionId };
+
+  return withAuthorization(req, 'CREATE_SESSION', 'talent_sessions', async () => {
+    try {
+      const { candidateId } = body;
+
+      if (!candidateId) {
+        return ApiUtils.badRequest('candidateId is required');
       }
 
       // Normally traceId is extracted from context; here ApiUtils attaches a fresh one on response.
@@ -21,8 +35,8 @@ export async function POST(req: NextRequest) {
       const session = await sessionService.initializeSession(candidateId, assessmentVersionId);
 
       return ApiUtils.success(session, undefined, 201);
-    } catch (error: any) {
+    } catch (error: unknown) {
       return ApiUtils.error('Failed to initialize session', 500, error);
     }
-  });
+  }, target);
 }

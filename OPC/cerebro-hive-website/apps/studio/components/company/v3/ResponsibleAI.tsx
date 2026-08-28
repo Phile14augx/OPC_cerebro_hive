@@ -13,7 +13,7 @@ export default function ResponsibleAI() {
           <div className="flex-1">
             <h2 className="text-3xl md:text-5xl font-space font-bold text-text-primary mb-6">Trust is not a feature. It is the foundation.</h2>
             <p className="text-lg text-text-secondary leading-relaxed font-inter mb-8">
-              Enterprise buyers don't just need AI to be smart—they need it to be accountable. Our Responsible AI framework ensures that every deployment adheres to strict security, privacy, and governance protocols.
+              Enterprise buyers don&apos;t just need AI to be smart—they need it to be accountable. Our Responsible AI framework ensures that every deployment adheres to strict security, privacy, and governance protocols.
             </p>
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between p-4 border border-border rounded-xl bg-surface">

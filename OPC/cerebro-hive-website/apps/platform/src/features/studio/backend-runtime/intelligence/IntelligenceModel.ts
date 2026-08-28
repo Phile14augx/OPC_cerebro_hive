@@ -3,7 +3,7 @@ export interface IntelligenceModel {
   version: string;
   status: 'Draft' | 'Shadow' | 'Active' | 'Deprecated';
   weights: Record<string, number>; // Weights for multi-objective optimization (Latency vs Cost)
-  routingHeuristics: any;
+  routingHeuristics: Record<string, unknown>;
 }
 
 export class ModelRegistry {

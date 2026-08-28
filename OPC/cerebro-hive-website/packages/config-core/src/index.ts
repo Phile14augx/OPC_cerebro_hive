@@ -1,5 +1,5 @@
 export interface ConfigLoader {
-  load(): Record<string, any>;
+  load(): Record<string, unknown>;
   get<T>(key: string): T;
   has(key: string): boolean;
 }
@@ -35,7 +35,7 @@ export class ConfigManager {
     this.loader = loader || new EnvironmentConfigLoader();
   }
 
-  load(): Record<string, any> {
+  load(): Record<string, unknown> {
     return this.loader.load();
   }
 

@@ -8,7 +8,7 @@ export interface IdentityProvider {
   /**
    * Initializes the provider (e.g., configuring Amplify)
    */
-  initialize(config: any): void;
+  initialize(config: Record<string, unknown>): void;
 
   /**
    * Gets the current session if the user is authenticated.

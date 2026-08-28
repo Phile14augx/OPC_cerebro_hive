@@ -44,7 +44,7 @@ const events = [
 export default function CommunityPage() {
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -77,8 +77,8 @@ export interface IResourceDriver<TConfig = unknown, TState = unknown> {
 }
 
 export interface IProvisioningProvider {
-  create(resourceId: string, type: string, config: any): Promise<any>;
-  update(resourceId: string, type: string, config: any): Promise<any>;
+  create(resourceId: string, type: string, config: unknown): Promise<unknown>;
+  update(resourceId: string, type: string, config: unknown): Promise<unknown>;
   delete(resourceId: string, type: string): Promise<void>;
   
   snapshot?(resourceId: string): Promise<string>;

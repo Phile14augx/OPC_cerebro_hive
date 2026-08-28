@@ -12,8 +12,8 @@ export interface AgentExecutionContext {
   modelId: string;
 
   memory: {
-    workingMemory: Record<string, any>;
-    conversationHistory: any[];
+    workingMemory: Record<string, unknown>;
+    conversationHistory: unknown[];
     longTermMemoryContext?: string[];
   };
 
@@ -22,7 +22,7 @@ export interface AgentExecutionContext {
     description: string;
     version: string;
     executionMode: 'sync' | 'async';
-    schema: Record<string, any>;
+    schema: Record<string, unknown>;
   }[];
 
   tokenBudget: {

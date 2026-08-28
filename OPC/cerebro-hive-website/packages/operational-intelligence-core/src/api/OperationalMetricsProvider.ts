@@ -14,7 +14,7 @@ export class OperationalMetricsProvider {
     return this.batchEngine.recalculateVector(runbookId);
   }
 
-  public getIncidentHistoryForAsset(assetId: string) {
+  public getIncidentHistoryForAsset(_assetId: string) {
     // Queries the Evidence Graph for past incidents related to an asset
     // Left as an exercise for the reader in this prototype
     return [];

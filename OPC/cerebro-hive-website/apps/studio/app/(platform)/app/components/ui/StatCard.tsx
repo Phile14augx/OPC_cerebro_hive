@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowUpRight, AlertCircle, LucideIcon } from "lucide-react";
-import { Card, CardContent } from "./Card";
+import { Card } from "./Card";
 import { cn } from "./utils";
 
 export interface StatCardProps {

@@ -51,6 +51,6 @@ export class NatsExecutionEventPublisher implements ExecutionOutboxEventPublishe
   }
 
   async publish(event: ExecutionIntegrationEventLike, context: ExecutionEventContext): Promise<void> {
-    await this.delegate.publish(event as any, context as any);
+    await this.delegate.publish(event, context);
   }
 }

@@ -25,5 +25,5 @@ export interface ConfigurationItem {
   updatedAt: Date;
   
   cloudMetadata?: CloudMetadata;
-  customAttributes?: Record<string, any>; // For extensible attributes
+  customAttributes?: Record<string, unknown>; // For extensible attributes
 }

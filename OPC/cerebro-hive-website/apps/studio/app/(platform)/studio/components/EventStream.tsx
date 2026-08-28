@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function EventStream() {
-  const [events, setEvents] = useState([
+  const [events] = useState([
     { id: 1, type: "cognitive.observe.started", time: "10:42:01", status: "success" },
     { id: 2, type: "cognitive.retrieve.started", time: "10:42:02", status: "success" },
     { id: 3, type: "cognitive.plan.started", time: "10:42:03", status: "success" },

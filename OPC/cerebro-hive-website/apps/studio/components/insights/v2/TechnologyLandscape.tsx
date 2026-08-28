@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Network, Database, BrainCircuit, Bot, Building2, ArrowDown } from "lucide-react";
+import { Database, BrainCircuit, Bot, Building2, ArrowDown } from "lucide-react";
 
 const landscape = [
   {

@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint \"src/**/*.ts\"",
+    "build": "tsc",
+    "test": "vitest run"
   },
   "dependencies": {
     "@cerebro/core-bus": "workspace:*",

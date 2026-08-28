@@ -1,0 +1,233 @@
+name: RBAC Verification (RBAC-1)
+
+on:
+  # Run nightly — catches drift from out-of-band kubectl changes
+  schedule:
+    - cron: '0 3 * * *'   # 03:00 UTC daily
+
+  # Run whenever RBAC specs or the verifier script change
+  push:
+    branches: [main]
+    paths:
+      - infra/rbac/**
+      - .github/workflows/rbac-verification.yml
+
+  pull_request:
+    paths:
+      - infra/rbac/**
+
+  workflow_dispatch:
+    inputs:
+      namespaces:
+        description: 'Namespaces to verify (comma-separated)'
+        required: false
+        default: 'cerebro-prod,cerebro-staging'
+      emit_evidence:
+        description: 'Emit evidence to register'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write   # to commit updated baseline + evidence
+  id-token: write   # for OIDC kubeconfig and cosign keyless
+
+env:
+  EVIDENCE_DIR: evidence
+  ASSURANCE_ENV: staging
+
+
+defaults:
+  run:
+    working-directory: OPC/cerebro-hive-website
+
+jobs:
+  # ── Lint: validate spec files before touching the cluster ─────────────────
+  lint:
+    name: Lint RBAC specs
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate expected-roles.yaml
+        run: |
+          python3 - <<'EOF'
+          import yaml, sys
+          try:
+              with open('infra/rbac/expected-roles.yaml') as f:
+                  spec = yaml.safe_load(f)
+              assert 'service_accounts' in spec, "missing service_accounts"
+              assert 'forbidden_roles' in spec, "missing forbidden_roles"
+              print(f"✅ expected-roles.yaml valid — {len(spec['service_accounts'])} SAs defined")
+          except Exception as e:
+              print(f"❌ {e}")
+              sys.exit(1)
+          EOF
+
+      - name: Validate rbac-baseline.json
+        run: |
+          python3 -c "
+          import json, sys
+          with open('infra/rbac/rbac-baseline.json') as f:
+              b = json.load(f)
+          assert 'policy_hash' in b, 'missing policy_hash'
+          print(f'✅ baseline valid — hash: {b[\"policy_hash\"][:16]}...')
+          "
+
+      - name: Check verify-rbac.sh is executable
+        run: |
+          chmod +x infra/rbac/verify-rbac.sh
+          bash -n infra/rbac/verify-rbac.sh
+          echo "✅ verify-rbac.sh syntax valid"
+
+  # ── Verify: run against live cluster ─────────────────────────────────────
+  verify:
+    name: Verify RBAC posture
+    runs-on: ubuntu-latest
+    needs: lint
+    environment: staging
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'run-rbac-verify')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Configure cluster access
+        run: |
+          # Write kubeconfig from secret
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+          kubectl cluster-info --request-timeout=10s
+
+      - name: Run RBAC verification
+        id: verify
+        env:
+          RBAC_NAMESPACES: ${{ github.event.inputs.namespaces || 'cerebro-prod,cerebro-staging' }}
+          ASSURANCE_ENV: staging
+        run: |
+          chmod +x infra/rbac/verify-rbac.sh
+          mkdir -p evidence
+
+          EMIT_FLAG=""
+          if [[ "${{ github.event.inputs.emit_evidence }}" != "false" ]]; then
+            EMIT_FLAG="--emit-evidence"
+          fi
+
+          bash infra/rbac/verify-rbac.sh \
+            --namespaces "${RBAC_NAMESPACES}" \
+            --baseline   infra/rbac/rbac-baseline.json \
+            $EMIT_FLAG \
+            --evidence-out evidence/rbac-evidence.json
+
+      - name: Read evidence summary
+        if: always()
+        id: evidence
+        run: |
+          if [[ -f evidence/rbac-evidence.json ]]; then
+            STATUS=$(jq -r '.status' evidence/rbac-evidence.json)
+            HASH=$(jq -r '.policy_hash' evidence/rbac-evidence.json | head -c 16)
+            VIOLATIONS=$(jq -r '.violation_count' evidence/rbac-evidence.json)
+            PRINCIPALS=$(jq -r '.principals_evaluated | length' evidence/rbac-evidence.json)
+            echo "status=${STATUS}"    >> $GITHUB_OUTPUT
+            echo "hash=${HASH}"        >> $GITHUB_OUTPUT
+            echo "violations=${VIOLATIONS}" >> $GITHUB_OUTPUT
+            echo "principals=${PRINCIPALS}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Step summary
+        if: always()
+        run: |
+          STATUS="${{ steps.evidence.outputs.status || 'UNKNOWN' }}"
+          ICON=$( [[ "$STATUS" == "PASS" ]] && echo "✅" || echo "❌" )
+          cat >> $GITHUB_STEP_SUMMARY <<EOF
+          ## ${ICON} RBAC-1 Verification
+
+          | Field | Value |
+          |---|---|
+          | Status | **${STATUS}** |
+          | Policy Hash | \`${{ steps.evidence.outputs.hash }}...\` |
+          | Violations | ${{ steps.evidence.outputs.violations }} |
+          | Principals Evaluated | ${{ steps.evidence.outputs.principals }} |
+          | SHA | \`${{ github.sha }}\` |
+          EOF
+
+      - name: Upload evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rbac-evidence-${{ github.run_number }}
+          path: |
+            evidence/rbac-evidence.json
+            infra/rbac/rbac-baseline.json
+          retention-days: 365
+
+      # ── Commit updated baseline back to main ──────────────────────────────
+      - name: Commit updated baseline
+        if: steps.verify.outcome == 'success' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name  "cerebro-assurance[bot]"
+          git config user.email "assurance@cerebro-hive.io"
+          git add infra/rbac/rbac-baseline.json evidence/ 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "ci(rbac): update RBAC-1 baseline and evidence [skip ci]
+
+            Policy hash: $(jq -r '.policy_hash' infra/rbac/rbac-baseline.json)
+            SHA: ${{ github.sha }}
+            Run: ${{ github.run_id }}"
+            git push
+          fi
+
+      - name: Post to Slack
+        if: always() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_EVIDENCE_WEBHOOK }}
+        run: |
+          STATUS="${{ steps.evidence.outputs.status || 'UNKNOWN' }}"
+          VIOLATIONS="${{ steps.evidence.outputs.violations || '?' }}"
+          ICON=$( [[ "$STATUS" == "PASS" ]] && echo "✅" || echo "🚨" )
+          COLOR=$( [[ "$STATUS" == "PASS" ]] && echo "good" || echo "danger" )
+
+          curl -fsSL -X POST "$SLACK_WEBHOOK_URL" \
+            -H 'Content-Type: application/json' \
+            -d "{
+              \"attachments\": [{
+                \"color\": \"$COLOR\",
+                \"text\": \"${ICON} *RBAC-1 Verification* — ${STATUS}\\nViolations: ${VIOLATIONS} | Policy hash: \`${{ steps.evidence.outputs.hash }}...\`\\nSHA: \`${{ github.sha }}\` | <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>\"
+              }]
+            }"
+
+  # ── PR mode: static analysis only (no cluster) ────────────────────────────
+  static-analysis:
+    name: Static RBAC analysis (PR)
+    runs-on: ubuntu-latest
+    needs: lint
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Diff expected-roles.yaml
+        run: |
+          git fetch origin main --depth=1
+          if git diff origin/main -- infra/rbac/expected-roles.yaml | grep -q '^[+-]'; then
+            echo "::warning::RBAC spec changed — ensure cluster verification runs before merge"
+            git diff origin/main -- infra/rbac/expected-roles.yaml
+          else
+            echo "✅ No RBAC spec changes"
+          fi
+
+      - name: Check for new wildcard grants in diff
+        run: |
+          git fetch origin main --depth=1
+          WILDCARDS=$(git diff origin/main -- infra/rbac/ | grep '^\+' | grep -E '"?\*"?' | grep -v '^---' || true)
+          if [[ -n "$WILDCARDS" ]]; then
+            echo "::error::New wildcard permission introduced in this PR:"
+            echo "$WILDCARDS"
+            exit 1
+          fi
+          echo "✅ No new wildcard grants in diff"

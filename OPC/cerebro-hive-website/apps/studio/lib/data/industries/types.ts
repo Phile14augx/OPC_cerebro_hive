@@ -1,5 +1,3 @@
-import { LucideIcon } from "lucide-react";
-
 export interface IndustrySEO {
   title: string;
   description: string;
@@ -154,13 +152,13 @@ export interface Industry {
   opportunityMatrix: MatrixItem[]; // Used for SolutionExplorer
   
   architecture: {
-    nodes: any[];
-    edges: any[];
+    nodes: { id: string; position: { x: number; y: number }; data: Record<string, unknown>; [key: string]: unknown }[];
+    edges: { id: string; source: string; target: string; [key: string]: unknown }[];
   };
   
   workflows?: {
-    nodes: any[];
-    edges: any[];
+    nodes: { id: string; position: { x: number; y: number }; data: Record<string, unknown>; [key: string]: unknown }[];
+    edges: { id: string; source: string; target: string; [key: string]: unknown }[];
   };
   
   agents: AI_Agent[];

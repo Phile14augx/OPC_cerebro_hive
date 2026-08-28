@@ -448,7 +448,7 @@ export default function TopBar() {
   // useEffect, which would call setState synchronously in the effect body
   // and trigger a redundant extra render.
   const [openForPathname, setOpenForPathname] = useState(pathname);
-  const [notifCount, setNotifCount] = useState(
+  const [notifCount] = useState(
     SEED_NOTIFICATIONS.filter((n) => !n.read).length
   );
   const { user } = useAuth();

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { MissionControl } from "./backgrounds/MissionControl";
 import { ExecutiveBlueprint } from "./backgrounds/ExecutiveBlueprint";
@@ -17,11 +17,11 @@ interface BackgroundEngineProps {
  */
 export function BackgroundEngine({ type = "hero" }: BackgroundEngineProps) {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false,
+  );
 
   if (!mounted) {
     return <div className="absolute inset-0 z-0 bg-background pointer-events-none" />;
@@ -30,7 +30,10 @@ export function BackgroundEngine({ type = "hero" }: BackgroundEngineProps) {
   const isLight = resolvedTheme === "light";
 
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none bg-background overflow-hidden">
+    <div
+      className="absolute inset-0 z-0 pointer-events-none bg-background overflow-hidden"
+      data-background-type={type}
+    >
       {isLight ? <ExecutiveBlueprint /> : <MissionControl />}
       
       {/* Universal Noise Overlay for texture */}

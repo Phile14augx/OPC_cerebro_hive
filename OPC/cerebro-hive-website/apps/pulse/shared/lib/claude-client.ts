@@ -6,10 +6,9 @@
  *   - Scenario analysis
  */
 import Anthropic from '@anthropic-ai/sdk';
-import type { Briefing, BriefingType, StrategicAlert, Scenario } from './types';
+import type { Briefing, BriefingType, Scenario } from './types';
 
 declare global {
-  // eslint-disable-next-line no-var
   var __anthropic: Anthropic | undefined;
 }
 

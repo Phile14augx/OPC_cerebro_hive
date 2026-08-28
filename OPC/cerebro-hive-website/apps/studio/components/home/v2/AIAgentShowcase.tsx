@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { 
-  Users, DollarSign, TrendingUp, Megaphone, ShoppingCart, Headset,
-  Scale, Database, ShieldCheck, BarChart, Calendar, Settings,
-  BrainCircuit, Activity, ChevronRight, Play, Server, Clock
+  Users, DollarSign, TrendingUp, Megaphone, Headset,
+  Scale, Database, ShieldCheck, BarChart, Settings,
+  BrainCircuit, Activity, Play, Server, Clock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn, withBasePath } from "@/lib/utils";
@@ -56,7 +56,7 @@ export default function AIAgentShowcase() {
     }, activeWorkflow.duration);
     
     return () => clearInterval(cycle);
-  }, [activeWorkflowIdx]);
+  }, [activeWorkflow.duration, activeWorkflowIdx]);
 
   return (
     <section className="section-pad bg-background relative overflow-hidden min-h-screen font-inter flex flex-col items-center">

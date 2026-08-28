@@ -9,16 +9,25 @@ export interface AIModelDTO {
   status: 'active' | 'deprecated';
 }
 
+interface AIModelStore {
+  findUnique(args: { where: { id: string } }): Promise<AIModelDTO | null>;
+  findMany(args: { where: { status: string } }): Promise<AIModelDTO[]>;
+}
+
+interface ModelRegistryDatabase {
+  aIModel: AIModelStore;
+}
+
 export class ModelRegistry {
-  constructor(private db: any) {}
+  constructor(private db: ModelRegistryDatabase) {}
 
   async getModel(id: string): Promise<AIModelDTO | null> {
     const model = await this.db.aIModel.findUnique({ where: { id } });
     if (!model) return null;
-    return model as AIModelDTO;
+    return model;
   }
 
-  async findBestModel(requirements: { capabilities?: string[], maxCost?: number }): Promise<AIModelDTO | null> {
+  async findBestModel(_requirements: { capabilities?: string[], maxCost?: number }): Promise<AIModelDTO | null> {
     // Scaffold: Logic to query and sort models
     const models = await this.db.aIModel.findMany({
       where: { status: 'active' }

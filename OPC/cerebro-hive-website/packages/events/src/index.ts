@@ -21,3 +21,4 @@ export * from './RelayStrategy';
 export * from './PollingRelayStrategy';
 export * from './OutboxRelayWorker';
 export * from './NatsPublisher';
+export * from './workers/BaseWorker';

@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import { Terminal, Code2, Zap, ArrowRight, ShieldCheck, Database, FileJson, Blocks } from "lucide-react";
+import { Zap, ArrowRight, ShieldCheck, Database, FileJson, Blocks } from "lucide-react";
 import { JsonLd } from "@/components/discovery";
 import { buildTechArticleSchema } from "@/lib/discovery";
 import { TrackedLink } from "@/components/cerebro/TrackedLink";
@@ -32,7 +32,7 @@ export default function DevelopersPage() {
           Developer Platform
         </h1>
         <p className="text-lg text-text-secondary max-w-2xl">
-          Build the future of autonomous enterprise operations. Integrate CerebroHive's AI agents, data pipelines, and ERP systems directly into your applications.
+          Build the future of autonomous enterprise operations. Integrate CerebroHive&apos;s AI agents, data pipelines, and ERP systems directly into your applications.
         </p>
       </div>
 

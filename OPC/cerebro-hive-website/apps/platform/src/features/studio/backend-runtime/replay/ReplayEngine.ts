@@ -1,9 +1,7 @@
 
-import { VirtualEffectLayer } from './EffectRecorder';
-
 export interface ReplaySnapshot {
-  timeline: any; // ExecutionTimeline
-  context: any; // ExecutionContext
+  timeline: unknown; // ExecutionTimeline
+  context: unknown; // ExecutionContext
   environmentVariables: Record<string, string>;
   featureFlags: Record<string, boolean>;
   secretsSnapshotHash: string;

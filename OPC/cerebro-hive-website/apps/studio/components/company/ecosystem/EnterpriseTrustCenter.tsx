@@ -1,8 +1,7 @@
 "use client";
-
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Shield, Lock, Activity, Hexagon, CheckCircle, Scale, ArrowRight, Server, GitMerge, FileCheck } from "lucide-react";
+import React from "react";
+import { motion } from "framer-motion";
+import { ShieldCheck, Shield, Lock, Activity, Hexagon, CheckCircle, Scale } from "lucide-react";
 import { trustCenter } from "@/lib/content/company/trustCenter";
 import { cn } from "@/lib/utils";
 

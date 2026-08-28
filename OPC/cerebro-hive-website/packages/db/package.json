@@ -5,28 +5,29 @@
   "main": "dist/db/index.js",
   "types": "dist/db/index.d.ts",
   "scripts": {
-    "build": "tsc && node -e \"require('fs').cpSync('src/generated/client','dist/db/src/generated/client',{recursive:true})\"",
+    "build": "pnpm generate && tsc && node -e \"require('fs').cpSync('src/generated/client','dist/db/src/generated/client',{recursive:true})\"",
     "generate": "prisma generate",
     "validate:schema": "prisma validate",
     "push": "prisma db push",
     "migrate:dev": "prisma migrate dev",
     "studio": "prisma studio",
-    "lint": "eslint \"**/*.ts*\"",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "tsx --test src/**/*.test.ts"
+    "lint": "eslint \"src/**/*.ts\"",
+    "typecheck": "pnpm generate && tsc -p tsconfig.json --noEmit",
+    "test": "pnpm generate && vitest run"
   },
   "dependencies": {
+    "@cerebro/runtime-contracts": "workspace:*",
+    "@cerebro/runtime-core": "workspace:*",
     "@cerebro/twin-contracts": "workspace:*",
     "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0",
     "@prisma/client-runtime-utils": "^7.9.0",
     "@prisma/config": "^7.9.0",
-    "pg": "^8.22.0",
-    "@cerebro/runtime-core": "workspace:*",
-    "@cerebro/runtime-contracts": "workspace:*"
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
+    "@types/pg": "^8.11.0",
     "prisma": "^7.9.0",
     "tsx": "^4.7.1",
     "typescript": "^5.0.0"

@@ -9,9 +9,10 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "build": "tsc --noEmit",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint --max-warnings=0 .",
     "auth:linkedin": "tsx src/auth/linkedin-oauth.ts",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.0",

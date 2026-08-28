@@ -4,10 +4,10 @@ import { RequestContext } from '@cerebro/db';
 import { IAgentBuilderCapability } from '@cerebro/capability-contracts';
 import { CreateAgentCommand } from './agents.commands';
 
-export class CreateAgentCommandHandler implements ICommandHandler<CreateAgentCommand, any> {
+export class CreateAgentCommandHandler implements ICommandHandler<CreateAgentCommand, unknown> {
   constructor(private readonly agentBuilder: IAgentBuilderCapability) {}
 
-  async handle(command: CreateAgentCommand, context: RequestContext): Promise<Result<any>> {
+  async handle(command: CreateAgentCommand, context: RequestContext): Promise<Result<unknown>> {
     return this.agentBuilder.buildAndPublishAgent(
       command.agentId,
       command.payload,

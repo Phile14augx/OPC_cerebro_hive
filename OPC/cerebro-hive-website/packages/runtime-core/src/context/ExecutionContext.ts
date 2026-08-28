@@ -3,7 +3,7 @@ export interface ExecutionContextProps {
   workspaceId: string;
   tenantId: string;
   userId: string;
-  variables: Record<string, any>;
+  variables: Record<string, unknown>;
   secretRefs: Record<string, string>; // References, not raw secrets
   policies: string[]; // List of active policy IDs/slugs
   knowledgeSnapshotId?: string;
@@ -22,7 +22,7 @@ export class ExecutionContext {
   public readonly workspaceId: string;
   public readonly tenantId: string;
   public readonly userId: string;
-  public readonly variables: Readonly<Record<string, any>>;
+  public readonly variables: Readonly<Record<string, unknown>>;
   public readonly secretRefs: Readonly<Record<string, string>>;
   public readonly policies: ReadonlyArray<string>;
   public readonly knowledgeSnapshotId?: string;

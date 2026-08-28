@@ -1,11 +1,10 @@
-// @ts-nocheck
 /**
  * AI as an abstract Capability.
  * The core platform never asks for "OpenAI" or "Anthropic".
  * It asks for a "Reviewer" or a "Summarizer".
  */
 export interface AICapability {
-  executeCapability(context: any): Promise<any>;
+  executeCapability(context: unknown): Promise<unknown>;
 }
 
 export interface ReviewCapability extends AICapability {
@@ -33,7 +32,7 @@ export class OpenAIProvider implements IAIProvider {
   getCapability<T extends AICapability>(capabilityName: string): T {
     if (capabilityName === "Reviewer") {
       return {
-        async executeCapability(context: any) {
+        async executeCapability() {
           console.log(`[OpenAI: Reviewer] Evaluating against rubric...`);
           return { score: 92, feedback: "Excellent architecture, good use of SOLID principles." };
         }

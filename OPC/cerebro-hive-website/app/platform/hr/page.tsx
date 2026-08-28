@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Users, TrendingUp, Shield } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 type Tab = "employees" | "attrition" | "compliance";
 

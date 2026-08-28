@@ -6,7 +6,8 @@ import { WorkforceCopilotService } from '../../../../../lib/talent/intelligence/
 const copilotService = new WorkforceCopilotService();
 
 export async function GET(req: NextRequest) {
-  return withAuthorization(req, 'READ_COPILOT_INSIGHTS', '*', async (req: any, userContext: any) => {
+  const target = { resourceType: 'workspace', resourceId: req.headers.get('x-workspace-id') || '' };
+  return withAuthorization(req, 'READ_COPILOT_INSIGHTS', 'talent_copilot', async (req) => {
     try {
       const searchParams = req.nextUrl.searchParams;
       // Provide a mock project/role ID or take from query
@@ -16,8 +17,8 @@ export async function GET(req: NextRequest) {
       const recommendations = await copilotService.recommendCandidatesForProject(projectId, 5);
 
       return ApiUtils.success(recommendations);
-    } catch (error: any) {
+    } catch (error: unknown) {
       return ApiUtils.error('Failed to retrieve copilot insights', 500, error);
     }
-  });
+  }, target);
 }

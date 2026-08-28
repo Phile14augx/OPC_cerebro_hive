@@ -1,4 +1,4 @@
-import { ExecutionCommand } from '@cerebro/runtime-contracts/src/commands/ExecutionCommand';
+// removed
 
 export class ValidationError extends Error {
   constructor(message: string) {
@@ -7,45 +7,69 @@ export class ValidationError extends Error {
   }
 }
 
-export interface ExecutionCommandValidator<T extends ExecutionCommand> {
-  validate(command: T): void;
+export interface StartExecutionPayload {
+  agentId: string;
+  agentVersionId: string;
+  input: string;
 }
 
-export class StartExecutionValidator implements ExecutionCommandValidator<ExecutionCommand> {
-  validate(command: ExecutionCommand): void {
-    const payload = command.payload as any;
-    if (!payload.agentId || typeof payload.agentId !== 'string') {
-      throw new ValidationError('StartExecutionCommand requires a valid agentId string');
-    }
-    if (!payload.agentVersionId || typeof payload.agentVersionId !== 'string') {
-      throw new ValidationError('StartExecutionCommand requires a valid agentVersionId string');
-    }
-    if (!payload.input || typeof payload.input !== 'string') {
-      throw new ValidationError('StartExecutionCommand requires a valid input string');
-    }
-    if (!command.tenantId) {
-      throw new ValidationError('StartExecutionCommand requires a tenantId');
-    }
-  }
+export interface ResumeExecutionPayload {
+  expectedSequence: bigint;
 }
 
-export class ResumeExecutionValidator implements ExecutionCommandValidator<ExecutionCommand> {
-  validate(command: ExecutionCommand): void {
-    const payload = command.payload as any;
-    if (payload.expectedSequence === undefined || typeof payload.expectedSequence !== 'bigint') {
-      throw new ValidationError('ResumeExecutionCommand requires an expectedSequence (bigint)');
-    }
-    if (!command.executionId) {
-      throw new ValidationError('ResumeExecutionCommand requires an executionId');
-    }
-  }
+export interface CancelExecutionPayload {
+  reason: string;
 }
 
-export class CancelExecutionValidator implements ExecutionCommandValidator<ExecutionCommand> {
-  validate(command: ExecutionCommand): void {
-    const payload = command.payload as any;
-    if (!payload.reason || typeof payload.reason !== 'string') {
-      throw new ValidationError('CancelExecutionCommand requires a reason');
-    }
+function requireRecord(payload: unknown): Record<string, unknown> {
+  if (typeof payload !== "object" || payload === null || Array.isArray(payload)) {
+    throw new ValidationError("Command requires an object payload");
   }
+  return payload as Record<string, unknown>;
+}
+
+export function parseStartExecutionPayload(payload: unknown): StartExecutionPayload {
+  const rec = requireRecord(payload);
+
+  if (
+    typeof rec.agentId !== "string" ||
+    typeof rec.agentVersionId !== "string" ||
+    typeof rec.input !== "string"
+  ) {
+    throw new ValidationError("Invalid StartExecutionCommand payload");
+  }
+
+  return {
+    agentId: rec.agentId,
+    agentVersionId: rec.agentVersionId,
+    input: rec.input,
+  };
+}
+
+export function parseResumeExecutionPayload(payload: unknown): ResumeExecutionPayload {
+  const rec = requireRecord(payload);
+
+  if (
+    typeof rec.expectedSequence !== "bigint"
+  ) {
+    throw new ValidationError("Invalid ResumeExecutionCommand payload");
+  }
+
+  return {
+    expectedSequence: rec.expectedSequence,
+  };
+}
+
+export function parseCancelExecutionPayload(payload: unknown): CancelExecutionPayload {
+  const rec = requireRecord(payload);
+
+  if (
+    typeof rec.reason !== "string"
+  ) {
+    throw new ValidationError("Invalid CancelExecutionCommand payload");
+  }
+
+  return {
+    reason: rec.reason,
+  };
 }

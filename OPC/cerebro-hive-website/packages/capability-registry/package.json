@@ -8,8 +8,9 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "lint": "eslint \"src/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\""
+    "lint": "eslint --max-warnings=0 .",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "zod": "^3.22.4"

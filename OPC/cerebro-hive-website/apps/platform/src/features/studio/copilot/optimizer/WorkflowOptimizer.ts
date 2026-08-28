@@ -32,7 +32,7 @@ export class WorkflowOptimizer {
       }),
     });
 
-    const evidence: EvidenceItem[] = simulationResult.recommendations.map((r: any) => ({
+    const evidence: EvidenceItem[] = simulationResult.recommendations.map((r) => ({
       source: `SimulationRun#${simulationResult.simulationRunId}`,
       excerpt: `"${r.label}": cost -${(r.predictedCostReduction * 100).toFixed(0)}%, latency ${r.predictedLatencyChange > 0 ? '+' : ''}${(r.predictedLatencyChange * 100).toFixed(1)}%. Evidence: ${r.evidenceSize} executions. Confidence: ${(r.confidence * 100).toFixed(0)}%`,
       artifactRef: simulationResult.simulationRunId,

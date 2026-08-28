@@ -13,7 +13,7 @@ export const auditQueue = new Queue('audit-queue', { connection: redisConnection
 /**
  * Standardized job publisher
  */
-export async function enqueueJob(queue: Queue, jobName: string, data: any, options = {}) {
+export async function enqueueJob(queue: Queue, jobName: string, data: unknown, options = {}) {
   try {
     const job = await queue.add(jobName, data, {
       attempts: 3,

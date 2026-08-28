@@ -16,7 +16,7 @@ function ObservabilityPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setOverview(await api<ObservatoryOverview>("/v1/observatory/overview")); } catch { /* noop */ }
   }, [online]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   if (!overview) return <p className="mt-6 text-sm text-text-secondary">{online ? "Loading observability data…" : "Waiting for platform…"}</p>;
@@ -68,7 +68,7 @@ function RouterPanel({ online }: { online: boolean | null }) {
     try { setCatalog((await api<{ models: ModelProfile[] }>("/v1/router/catalog")).models); } catch { /* noop */ }
     try { setHistory((await api<{ decisions: RoutingDecision[] }>("/v1/router/history")).decisions); } catch { /* noop */ }
   }, [online]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 8000); return () => clearInterval(id); }, [refresh]);
 
   const route = async () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Activity, Clock, ShieldCheck, Cpu, Briefcase, FileText, Globe2 } from "lucide-react";
+import { Activity, Clock, ShieldCheck, Cpu, Briefcase, FileText, Globe2, type LucideProps } from "lucide-react";
 
 const readinessIndex = [
   { metric: "AI Adoption", score: 76, color: "bg-[#00E5FF]" },
@@ -20,8 +20,8 @@ const dashboardStats = [
 ];
 
 // Helper icons since I didn't import all above
-function TrendingUpIcon(props: any) { return <Activity {...props} />; }
-function BookOpenIcon(props: any) { return <FileText {...props} />; }
+function TrendingUpIcon(props: LucideProps) { return <Activity {...props} />; }
+function BookOpenIcon(props: LucideProps) { return <FileText {...props} />; }
 
 export const ExecutiveDashboard = () => {
   return (

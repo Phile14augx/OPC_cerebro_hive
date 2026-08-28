@@ -1,11 +1,10 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
-import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { cn, withBasePath } from "@/lib/utils";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Brain, Bot, Code2, Cloud, ShieldCheck, Database, LayoutDashboard, Zap, TrendingUp, Users, Rocket, CloudLightning, Lock, BarChart, FileLineChart, ArrowRight } from "lucide-react";
+import { Brain, Bot, Code2, Cloud, ShieldCheck, Database, LayoutDashboard, Zap, TrendingUp, Users, Rocket, CloudLightning, Lock, BarChart, ArrowRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 

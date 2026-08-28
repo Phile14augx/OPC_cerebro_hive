@@ -281,8 +281,9 @@ describe('9g-6 — Complete lifecycle coverage', () => {
     const retried = await succeedingOrchestrator.retryIfEligible(original, { attempt: 1 });
 
     expect(retried).toBeDefined();
-    expect(retried!.status).toBe(ExecutionStatus.Completed);
-    expect(original.childExecutionIds.map((id) => id.toString())).toContain(retried!.id.toString());
+    if (!retried) throw new Error('Expected an eligible retry execution.');
+    expect(retried.status).toBe(ExecutionStatus.Completed);
+    expect(original.childExecutionIds.map((id) => id.toString())).toContain(retried.id.toString());
   });
 
   it('retry exhaustion: retryIfEligible declines once attempt reaches maxAttempts', async () => {
@@ -391,7 +392,7 @@ describe('9g-6 — Complete lifecycle coverage', () => {
   it('event ordering: events are relayed to the consumer in the exact order they were produced', async () => {
     let orchestrator!: ExecutionOrchestrator;
     const provider: ExecutionProviderPort = {
-      execute: async (execution) => ({ outcome: 'waiting', reason: 'pause' }),
+      execute: async (_execution) => ({ outcome: 'waiting', reason: 'pause' }),
     };
     const pipeline = buildPipeline(provider);
     orchestrator = pipeline.orchestrator;

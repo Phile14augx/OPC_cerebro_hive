@@ -1,6 +1,5 @@
 import { DAGPlanner, ExecutionGraph } from "./graph";
 import { Plugin } from "../../contracts/plugin";
-import { workflowEngine } from "../orchestration/WorkflowStateMachine";
 import { provisioningQueue } from "../worker/InMemoryQueue";
 
 export class ExecutionPlanner {
@@ -11,7 +10,7 @@ export class ExecutionPlanner {
    * In a real implementation, this would parse the Blueprint's schema/template
    * and break it down into atomic tasks (e.g., Network, Storage, Compute).
    */
-  async createExecutionGraph(operationId: string, blueprint: Plugin, config: any): Promise<ExecutionGraph> {
+  async createExecutionGraph(operationId: string, blueprint: Plugin, config: unknown): Promise<ExecutionGraph> {
     const graph = this.dagPlanner.planExecution(blueprint);
     // Hardcode a simple DAG for demonstration: Network -> Compute
     graph.tasks.set("task-1", {

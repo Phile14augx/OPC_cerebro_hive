@@ -2,8 +2,8 @@
 
 import React from "react";
 import { 
-  Users, Bot, Target, FileStack, TrendingUp, CheckCircle2, 
-  ChevronRight, Calendar, Search, Filter, MoreVertical, Star
+  Users, Bot, Target, FileStack, CheckCircle2, 
+  ChevronRight, Calendar, Search, Filter
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { analytics } from "@/lib/analytics/AnalyticsAdapter";

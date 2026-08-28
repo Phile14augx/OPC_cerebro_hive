@@ -23,6 +23,16 @@ export interface RuntimeRouteOptions extends FastifyPluginOptions {
  * since that's the already-proven-working pattern this app's other
  * dependency-injected route modules use.
  */
+function requireContextValue(
+  value: string | undefined,
+  field: string,
+): string {
+  if (!value) {
+    throw new Error(`Request context invariant violated: ${field} is missing`);
+  }
+  return value;
+}
+
 export default async function runtimeRoutes(server: FastifyInstance, opts: RuntimeRouteOptions) {
   const { executionRuntimeService } = opts;
 
@@ -73,8 +83,8 @@ export default async function runtimeRoutes(server: FastifyInstance, opts: Runti
         // traceId/correlationId are typed optional on RequestContext (some
         // routes don't need them), but requestContextHook unconditionally
         // sets both on every request -- see RequestContextMiddleware.ts.
-        traceId: ctx.traceId!,
-        correlationId: ctx.correlationId!,
+        traceId: requireContextValue(ctx.traceId, 'traceId'),
+        correlationId: requireContextValue(ctx.correlationId, 'correlationId'),
         agentId: id,
         message,
       });

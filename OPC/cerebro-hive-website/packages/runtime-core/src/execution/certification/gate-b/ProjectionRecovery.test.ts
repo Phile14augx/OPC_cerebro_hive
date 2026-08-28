@@ -12,7 +12,7 @@ class MockEventStore implements ExecutionStore {
     status: 'COMPLETED',
     version: 1,
     startedAt: new Date()
-  } as any as ExecutionRecord;
+  } as unknown as ExecutionRecord;
 
   async getExecution(id: string) { return this.execution; }
   async getEvents(id: string) { return []; }
@@ -26,13 +26,13 @@ class MockEventStore implements ExecutionStore {
 
 class MockProjectionStore implements ExecutionProjectionStore {
   public projection: ExecutionReadModel | null = null;
-  public summary: any = null;
+  public summary: unknown = null;
   
   async saveProjection(proj: ExecutionReadModel) { this.projection = proj; }
   async getProjection(id: string) { return this.projection; }
   async deleteProjection(id: string) { this.projection = null; }
   async updateMetrics() {}
-  async saveExecutionSummary(sum: any) { this.summary = sum; }
+  async saveExecutionSummary(sum: unknown) { this.summary = sum; }
   async getExecutionSummary(id: string) { return this.summary; }
 }
 
@@ -51,7 +51,7 @@ describe('Gate B - Projection Recovery Certification', () => {
       payload: { agentId: 'agent-1' },
       timestamp: new Date(),
       tenantId: 't1'
-    } as any);
+    } as unknown);
 
     let proj = await projectionStore.getExecutionSummary('proj-exec-1');
     expect(proj).not.toBeNull();

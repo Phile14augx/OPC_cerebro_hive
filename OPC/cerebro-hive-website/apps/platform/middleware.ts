@@ -54,56 +54,6 @@ const SECURITY_CONFIG = {
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
 // ============================================================================
-// AI THREAT DETECTION PATTERNS
-// ============================================================================
-
-const PROMPT_INJECTION_PATTERNS: RegExp[] = [
-  /ignore\s+(all\s+)?(previous\s+)?(instructions?|messages?)/i,
-  /system\s*:\s*/i,
-  /jailbreak/i,
-  /bypass\s+(all\s+)?.*filter/i,
-  /\\.*?\\.*?\\.*?"/i,
-  /<\/?(script|iframe|object|embed)[^>]*>/i,
-  /\[.*?\]/i,
-  /\b(on\s+(halt|stop|quit|pause|exit)\b)/i,
-  /pretend\s+you\s+(are|act\s+as)/i,
-  /role\s*:\s*"/i,
-  /dan\s*[:]\s*mode/i,
-  /do\s+anything\s+(now|else)/i,
-  /you\s+(are\s+)?a\s+(language\s+model|AI|assistant)/i,
-  /new\s+(instruction|prompt|response)/i,
-];
-
-const PII_PATTERNS: Record<string, RegExp> = {
-  email: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,
-  ssn: /\b\d{3}-\d{2}-\d{4}\b/g,
-  creditCard:
-    /\b(?:(?:4\d{3}|5[1-5]\d{2}|2[12]\d{2}|3[46]\d{2}|3[79]\d{2})\d{12}|(?:4\d{3}|5[1-5]\d{2}|2[12]\d{2}|3[46]\d{2}|3[79]\d{2})\d{15})\b/g,
-  phone: /\b(?:\+?1[-.\s]?)?\(?([2-9][0-8][0-9])\)?[-.\s]?([2-9][0-9])[-.\s]?([0-9]{4})\b/g,
-  ipAddress: /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g,
-};
-
-const SENSITIVE_KEYWORDS = [
-  "password",
-  "passwd",
-  "pwd",
-  "secret",
-  "api_key",
-  "apikey",
-  "token",
-  "credential",
-  "private_key",
-  "privatekey",
-  "access_key",
-  "secret_key",
-  "admin",
-  "root_password",
-  "master_key",
-  "vault",
-  "encryption_key",
-];
-
-// ============================================================================
 // MAIN MIDDLEWARE
 // ============================================================================
 
@@ -115,11 +65,6 @@ export default async function middleware(request: NextRequest) {
     request.headers.get("x-real-ip") ||
     "unknown";
   const path = request.nextUrl.pathname;
-
-  // Check if path skips auth
-  const skipAuth = SECURITY_CONFIG.SKIP_AUTH_PATHS.some(
-    (prefix) => path.startsWith(prefix) || path === prefix
-  );
 
   // === 1. RATE LIMITING ===
   const rateLimitKey = `${clientIP}:${path}`;

@@ -3,7 +3,7 @@ import { ExecutionCommand } from '../commands/ExecutionCommand';
 export interface SagaStepContext {
   readonly executionId: string;
   readonly currentState: string;
-  readonly payload: Record<string, any>;
+  readonly payload: Record<string, unknown>;
 }
 
 export interface ExecutionSaga {

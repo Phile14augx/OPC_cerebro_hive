@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { partners } from "@/lib/content/company/partners";
-import { Database, Cloud, Network } from "lucide-react";
+import { Database, Network } from "lucide-react";
 
 export const EcosystemGrid = () => {
   return (
@@ -14,7 +14,7 @@ export const EcosystemGrid = () => {
             Technologies We Build With
           </h2>
           <p className="text-lg text-text-secondary font-inter">
-            We are vendor-agnostic but highly opinionated. We partner with and build upon the industry's most robust enterprise data and AI platforms.
+            We are vendor-agnostic but highly opinionated. We partner with and build upon the industry&apos;s most robust enterprise data and AI platforms.
           </p>
         </div>
 

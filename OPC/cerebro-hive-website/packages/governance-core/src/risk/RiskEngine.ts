@@ -15,7 +15,7 @@ export interface TelemetryEvent {
   principalId: string;
   sessionId?: string;
   leaseId?: string;
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
 }
 
 export class RiskEngine {

@@ -44,8 +44,12 @@ async function runGovernanceTest() {
       ['ent-auditor'], // User currently has Auditor
       'Need admin access for emergency fix'
     );
-  } catch (err: any) {
-    console.error(`[Governance] Blocked by SoD: ${err.message}`);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(`[Governance] Blocked by SoD: ${err.message}`);
+    } else {
+      console.error(`[Governance] Blocked by SoD: Unknown error`);
+    }
   }
 
   // 5. Test Successful JIT Request

@@ -52,18 +52,18 @@ async function runSecOpsTest() {
     actions: [
       {
         commandType: 'CollectEvidence',
-        targetExtractor: (c) => c.id,
-        contextExtractor: (c) => ({})
+        targetExtractor: (_c) => _c.id,
+        contextExtractor: (_c) => ({})
       },
       {
         commandType: 'RevokeLease',
-        targetExtractor: (c) => c.principals[0],
-        contextExtractor: (c) => ({ reason: 'Auto-Containment' })
+        targetExtractor: (_c) => _c.principals[0],
+        contextExtractor: (_c) => ({ reason: 'Auto-Containment' })
       },
       {
         commandType: 'DisablePrincipal',
-        targetExtractor: (c) => c.principals[0],
-        contextExtractor: (c) => ({ reason: 'Auto-Containment' })
+        targetExtractor: (_c) => _c.principals[0],
+        contextExtractor: (_c) => ({ reason: 'Auto-Containment' })
       }
     ]
   };

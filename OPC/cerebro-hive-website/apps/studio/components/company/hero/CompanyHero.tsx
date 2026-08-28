@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Globe2 } from "lucide-react";
-import { withBasePath } from "@/lib/utils";
 import dynamic from 'next/dynamic';
 import { TrackedButton } from "@/components/cerebro/TrackedButton";
 
@@ -12,30 +11,34 @@ const BackgroundEngine = dynamic(
   { ssr: false }
 );
 
+const particles = Array.from({ length: 20 }, (_, index) => ({
+  id: index,
+  x: (index * 37) % 100,
+  y: (index * 61) % 100,
+  targetY: (index * 83 + 17) % 100,
+  scale: 0.5 + ((index * 29) % 150) / 100,
+  duration: 20 + ((index * 17) % 20),
+}));
+
 // Floating Particles
 const Particles = () => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) return null;
-
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(20)].map((_, i) => (
+      {particles.map((particle) => (
         <motion.div
-          key={i}
+          key={particle.id}
           className="absolute w-1 h-1 bg-surface rounded-full opacity-20"
           initial={{
-            x: Math.random() * 100 + "%",
-            y: Math.random() * 100 + "%",
-            scale: Math.random() * 2,
+            x: `${particle.x}%`,
+            y: `${particle.y}%`,
+            scale: particle.scale,
           }}
           animate={{
-            y: [null, `${Math.random() * 100}%`],
+            y: [null, `${particle.targetY}%`],
             opacity: [0.1, 0.4, 0.1],
           }}
           transition={{
-            duration: Math.random() * 20 + 20,
+            duration: particle.duration,
             repeat: Infinity,
             ease: "linear",
           }}
@@ -107,6 +110,7 @@ export const CompanyHero = () => {
     >
       {/* Immersive Theme-Aware Ambient Background */}
       <BackgroundEngine type="hero" />
+      <Particles />
 
       <div className="container-wide relative z-10 grid lg:grid-cols-2 gap-12 items-center h-full">
         {/* Left: Content */}
@@ -131,7 +135,7 @@ export const CompanyHero = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-text-secondary font-inter leading-[1.8] mb-10 max-w-[60ch]">
-            CerebroHive is the definitive AI-native enterprise transformation partner. We close the gap between an executive's AI vision and a working system in production.
+            CerebroHive is the definitive AI-native enterprise transformation partner. We close the gap between an executive&apos;s AI vision and a working system in production.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">

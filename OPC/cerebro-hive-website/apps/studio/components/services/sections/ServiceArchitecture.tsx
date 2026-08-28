@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import { EnterpriseService } from "@/lib/data/types";
 import { SectionHeading } from "@/components/cerebro/SectionHeading";
 import { products } from "@/lib/data/products";
@@ -37,7 +36,7 @@ export const ServiceArchitecture = ({ service }: { service: EnterpriseService })
                 <h3 className="text-xl font-space font-bold text-text-primary">Packaged Applications</h3>
               </div>
               <div className="flex flex-col gap-4">
-                {usedProducts.map((prod, i) => (
+                {usedProducts.map((prod) => (
                   <TrackedLink
                     key={prod.id}
                     href={`/products/${prod.slug}`}
@@ -66,7 +65,7 @@ export const ServiceArchitecture = ({ service }: { service: EnterpriseService })
                 <h3 className="text-xl font-space font-bold text-text-primary">Core Platform Capabilities</h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {usedCapabilities.map((cap, i) => (
+                {usedCapabilities.map((cap) => (
                   <TrackedLink
                     key={cap.id}
                     href={`/platform/${cap.slug}`}

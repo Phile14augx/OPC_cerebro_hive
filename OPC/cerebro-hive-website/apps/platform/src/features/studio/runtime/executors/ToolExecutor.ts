@@ -19,6 +19,7 @@ export class ToolExecutor implements RuntimeExecutor {
   canHandle(node: StudioNode): boolean { return TOOL_TYPES.includes(node.type); }
 
   async execute(node: StudioNode, context: ExecutionContext, _inputs: Record<string, TypedValue>): Promise<ExecutionResult> {
+    void _inputs;
     context.logger(`[ToolExecutor] Stub executing node type "${node.type}" — full implementation in M25`);
     return ok(
       { stub: true, nodeType: node.type },

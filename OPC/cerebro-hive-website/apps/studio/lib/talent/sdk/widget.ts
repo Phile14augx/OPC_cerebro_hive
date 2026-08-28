@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Widget SDK: The universal contract for all Talent OS Assessment Widgets
  */
@@ -6,16 +5,16 @@
 // 1. Telemetry and Analytics Hooks
 export interface WidgetTelemetry {
   events: {
-    onStart?: (context: any) => void;
-    onInput?: (data: any) => void;
-    onCompile?: (data: any) => void;
+onStart?: (context: unknown) => void;
+onInput?: (data: unknown) => void;
+onCompile?: (data: unknown) => void;
     onError?: (error: Error) => void;
-    onComplete?: (result: any) => void;
+onComplete?: (result: unknown) => void;
   };
 }
 
 // 2. The Universal Widget SDK Interface
-export interface IWidgetSDK<TConfig = any, TState = any, TResult = any> {
+export interface IWidgetSDK<TConfig = unknown, TState = unknown, TResult = unknown> {
   // Core Metadata
   metadata: {
     type: string;
@@ -42,13 +41,13 @@ export interface IWidgetSDK<TConfig = any, TState = any, TResult = any> {
 
   // Compilation & Validation
   validateConfig: (config: TConfig) => { valid: boolean; errors: string[] };
-  compile: (config: TConfig, resolveResource: (id: string) => any) => Promise<TConfig>;
+compile: (config: TConfig, resolveResource: (id: string) => unknown) => Promise<TConfig>;
 
   // Execution & Scoring Hooks
   executionHooks: {
-    prepareEnvironment: (config: TConfig) => Promise<any>;
-    execute: (state: TState, envContext: any) => Promise<TResult>;
-    cleanup: (envContext: any) => Promise<void>;
+prepareEnvironment: (config: TConfig) => Promise<unknown>;
+execute: (state: TState, envContext: unknown) => Promise<TResult>;
+cleanup: (envContext: unknown) => Promise<void>;
   };
 
   evaluationHooks: {
@@ -61,20 +60,23 @@ export interface IWidgetSDK<TConfig = any, TState = any, TResult = any> {
 
 // 3. Dynamic Widget Registry
 class Registry {
-  private widgets: Map<string, IWidgetSDK<any, any, any>> = new Map();
+private widgets: Map<string, IWidgetSDK<unknown, unknown, unknown>> = new Map();
 
-  register(widget: IWidgetSDK<any, any, any>) {
+register(widget: IWidgetSDK<unknown, unknown, unknown>) {
+    if (!widget || !widget.metadata || typeof widget.metadata.type !== 'string' || !widget.Renderer || !widget.ConfigUI || !widget.validateConfig || !widget.compile || !widget.executionHooks || !widget.evaluationHooks || !widget.telemetry) {
+      return;
+    }
     if (this.widgets.has(widget.metadata.type)) {
       console.warn(`Widget ${widget.metadata.type} is already registered. Overwriting.`);
     }
     this.widgets.set(widget.metadata.type, widget);
   }
 
-  get(type: string): IWidgetSDK<any, any, any> | undefined {
+get(type: string): IWidgetSDK<unknown, unknown, unknown> | undefined {
     return this.widgets.get(type);
   }
 
-  getAll(): IWidgetSDK<any, any, any>[] {
+getAll(): IWidgetSDK<unknown, unknown, unknown>[] {
     return Array.from(this.widgets.values());
   }
 }

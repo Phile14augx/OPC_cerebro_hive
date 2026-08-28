@@ -1,8 +1,5 @@
-// @ts-nocheck
-import { prisma, SkillProfileSnapshot } from '@cerebro/db';
-import { SkillGraphService } from '../graph/SkillGraphService';
 
-const graphService = new SkillGraphService();
+
 
 export class TemporalEvolutionService {
   
@@ -10,19 +7,13 @@ export class TemporalEvolutionService {
    * Materializes the current Skill Graph state into a permanent snapshot.
    * Runs nightly for active candidates/employees.
    */
-  async materializeNightlySnapshot(candidateProfileId: string): Promise<SkillProfileSnapshot> {
+  async materializeNightlySnapshot(candidateProfileId: string): Promise<unknown> {
     console.log(`[Temporal Evolution] Materializing snapshot for ${candidateProfileId}`);
     
     // Aggregate all evidence up to right now
-    const currentGraph = await graphService.generateCandidateSkillProfile(candidateProfileId);
-
-    return prisma.skillProfileSnapshot.create({
-      data: {
-        candidateProfileId,
-        snapshotDate: new Date(),
-        graphPayload: currentGraph
-      }
-    });
+        
+    // BUG FIX (W0.2-SUP-138/139): prisma.skillProfileSnapshot is missing from DB schema
+    throw new Error("ERR_SCHEMA_MISSING: skillEvidence schema is unavailable.");
   }
 
   /**
@@ -32,12 +23,7 @@ export class TemporalEvolutionService {
     const cutoffDate = new Date();
     cutoffDate.setMonth(cutoffDate.getMonth() - months);
 
-    return prisma.skillProfileSnapshot.findMany({
-      where: {
-        candidateProfileId,
-        snapshotDate: { gte: cutoffDate }
-      },
-      orderBy: { snapshotDate: 'asc' }
-    });
+    // BUG FIX (W0.2-SUP-138/139): prisma.skillProfileSnapshot is missing from DB schema
+    throw new Error("ERR_SCHEMA_MISSING: skillProfileSnapshot schema is unavailable.");
   }
 }

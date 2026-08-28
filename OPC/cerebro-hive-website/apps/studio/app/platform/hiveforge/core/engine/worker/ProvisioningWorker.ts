@@ -1,4 +1,4 @@
-import { provisioningQueue, Job } from "./InMemoryQueue";
+import { provisioningQueue } from "./InMemoryQueue";
 import { workflowEngine } from "../orchestration/WorkflowStateMachine";
 import { platformRegistry } from "../../registry/PlatformRegistry";
 
@@ -6,7 +6,7 @@ export class ProvisioningWorker {
   
   start() {
     console.log("[ProvisioningWorker] Starting worker...");
-    provisioningQueue.process(async (job: Job) => {
+    provisioningQueue.process(async (job) => {
       console.log(`[ProvisioningWorker] Processing job ${job.name} (ID: ${job.id})`);
       
       const { operationId, providerId, resourceType, action, payload } = job.data;
@@ -34,7 +34,8 @@ export class ProvisioningWorker {
 
       } catch (error) {
         console.error(`[ProvisioningWorker] Job ${job.id} failed during execution.`, error);
-        await workflowEngine.transition(operationId, "Failed", { error: (error as Error).message });
+        const message = error instanceof Error ? error.message : String(error);
+        await workflowEngine.transition(operationId, "Failed", { error: message });
         throw error; // Re-throw to trigger InMemoryQueue retries
       }
     });

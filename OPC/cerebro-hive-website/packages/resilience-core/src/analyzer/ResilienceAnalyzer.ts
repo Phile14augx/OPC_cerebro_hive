@@ -1,4 +1,4 @@
-import { DependencyGraph, OperationalNode } from '../dependency/DependencyGraph';
+import { DependencyGraph } from '../dependency/DependencyGraph';
 import { BiaRegistry } from '../bia/BusinessImpactAnalysis';
 
 export class ResilienceAnalyzer {

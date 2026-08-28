@@ -45,9 +45,9 @@ async function main() {
     }
 
     console.log('\n--- Test Completed successfully! SDK is fully wired. ---');
-  } catch (error: any) {
-    console.error('\nAPI Request Failed:', error.message);
-    if (error.problem) console.error('Problem Details:', error.problem);
+  } catch (error: unknown) {
+    console.error('\nAPI Request Failed:', error instanceof Error ? error.message : String(error));
+    if (error && typeof error === 'object' && 'problem' in error) console.error('Problem Details:', (error as Record<string, unknown>).problem);
   }
 }
 

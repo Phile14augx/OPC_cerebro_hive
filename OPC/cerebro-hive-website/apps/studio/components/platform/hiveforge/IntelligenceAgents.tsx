@@ -12,10 +12,12 @@ export function IntelligenceAgents() {
     const fetchContext = async () => {
       try {
         const decision = await intelligenceService.recommendOptimization("workspace-1");
-        // We simulate that the decision engine returned a response. 
-        // We'll mock a display here since decision engine logic is mocked.
-        setRecommendation("Optimization: Downgrade 'res-db-1' in eu-west-1 to save $45/mo. Confidence: 92%.");
-      } catch (err) {
+        setRecommendation(
+          decision
+            ? `Optimization: ${decision.explanation} Confidence: ${Math.round(decision.confidenceScore * 100)}%.`
+            : "AI Agent ready. No active optimizations.",
+        );
+      } catch {
         setRecommendation("AI Agent ready. No active optimizations.");
       }
     };

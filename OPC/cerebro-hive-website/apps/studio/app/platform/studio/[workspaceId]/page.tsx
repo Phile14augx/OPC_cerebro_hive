@@ -48,7 +48,7 @@ export default function WorkspaceIdePage() {
     } catch { /* noop */ }
   }, [workspaceId]);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => { const t = setTimeout(() => void refresh(), 0); return () => clearTimeout(t); }, [refresh]);
 
   return (
     <main className="mx-auto max-w-6xl px-6 pb-24 pt-8">
@@ -260,7 +260,7 @@ function FlowsTab({ workspaceId, flows, prompts, agents, online, refresh }: { wo
     <div className="space-y-6">
       <div className="rounded-xl border border-border bg-surface/40 p-5">
         <h3 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">New flow</h3>
-        <p className="mt-1 text-xs text-text-secondary">Chain prompts and agents in order — each step's output feeds the next.</p>
+        <p className="mt-1 text-xs text-text-secondary">Chain prompts and agents in order — each step&apos;s output feeds the next.</p>
         <div className="mt-3 space-y-2">
           <input value={name} onChange={e => setName(e.target.value)} placeholder="Flow name" className="w-full rounded-lg border border-border bg-surface-elevated px-3 py-2 text-sm text-text-primary" />
           <div className="flex flex-wrap gap-2">

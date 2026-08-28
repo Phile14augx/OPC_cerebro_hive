@@ -39,7 +39,7 @@ function ApprovalsPanel({ online }: { online: boolean | null }) {
       setApprovals(await api<Approval[]>(`/v1/governance/approvals${q}`));
     } catch { /* noop */ }
   }, [online, statusFilter]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   const decide = async (id: string, decision: "approved" | "rejected") => {
@@ -99,7 +99,7 @@ function CompliancePanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setPosture(await api<CompliancePosture>("/v1/governance/compliance")); } catch { /* noop */ }
   }, [online]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   return (
@@ -136,7 +136,7 @@ function GrantsPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setGrants((await api<{ grants: ToolGrant[] }>("/v1/zerotrust/grants")).grants); } catch { /* noop */ }
   }, [online]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   const create = async () => {
@@ -186,7 +186,7 @@ function McpPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setServers((await api<{ servers: McpServerRegistration[] }>("/v1/zerotrust/mcp-servers")).servers); } catch { /* noop */ }
   }, [online]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   const register = async () => {
@@ -259,7 +259,7 @@ function TokensPanel({ online }: { online: boolean | null }) {
     if (!online || !KEY) return;
     try { setTokens((await api<{ tokens: CapabilityToken[] }>("/v1/zerotrust/tokens")).tokens); } catch { /* noop */ }
   }, [online]);
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount+poll pattern; setState happens after an await inside refresh(), not synchronously in the effect body, but the rule's static analysis can't see through the async boundary.
+
   useEffect(() => { void refresh(); const id = setInterval(() => void refresh(), 5000); return () => clearInterval(id); }, [refresh]);
 
   const issue = async () => {
@@ -273,7 +273,7 @@ function TokensPanel({ online }: { online: boolean | null }) {
     } catch { /* noop */ } finally { setBusy(false); }
   };
 
-  // eslint-disable-next-line react-hooks/purity -- Date.now() comparison for display-only expiry status; acceptable staleness between renders, not used for derived state.
+
   const isExpired = (t: CapabilityToken) => new Date(t.expiresAt).getTime() < Date.now();
 
   return (

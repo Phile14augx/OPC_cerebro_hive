@@ -1,4 +1,4 @@
-import { Type } from '@sinclair/typebox';
+import { Type, TSchema } from '@sinclair/typebox';
 
 export const PaginationQuery = Type.Object({
   page: Type.Optional(Type.Number({ default: 1, minimum: 1 })),
@@ -7,7 +7,7 @@ export const PaginationQuery = Type.Object({
   search: Type.Optional(Type.String()),
 });
 
-export const PaginatedResponse = (ItemType: any) =>
+export const PaginatedResponse = <T extends TSchema>(ItemType: T) =>
   Type.Object({
     data: Type.Array(ItemType),
     meta: Type.Object({

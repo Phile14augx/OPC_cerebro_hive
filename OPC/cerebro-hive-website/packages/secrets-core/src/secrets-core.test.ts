@@ -1,0 +1,44 @@
+import { describe, expect, it } from 'vitest';
+import { ExecutionProxy, InMemoryVaultEngine, MockKeyProvider } from './index';
+
+describe('secrets-core in-memory contracts', () => {
+  it('retrieves explicit secret versions, defaults to the latest, and deletes all material', async () => {
+    const vault = new InMemoryVaultEngine();
+    await vault.storeSecret('vault://service/key', 'first', 1);
+    await vault.storeSecret('vault://service/key', 'third', 3);
+    await vault.storeSecret('vault://service/key', 'second', 2);
+
+    expect(await vault.retrieveSecret('vault://service/key', 1)).toBe('first');
+    expect(await vault.retrieveSecret('vault://service/key')).toBe('third');
+
+    await vault.deleteSecret('vault://service/key');
+    expect(await vault.retrieveSecret('vault://service/key')).toBeUndefined();
+  });
+
+  it('verifies signatures for the active key and rejects a different payload length', async () => {
+    const keys = new MockKeyProvider('key-contract');
+    const signature = await keys.sign('approved payload');
+
+    expect(keys.keyId()).toBe('key-contract');
+    expect(await keys.verify('approved payload', signature)).toBe(true);
+    expect(await keys.verify('short', signature)).toBe(false);
+  });
+
+  it('forwards vault authorization only to its transport', async () => {
+    const vault = new InMemoryVaultEngine();
+    await vault.storeSecret('vault://service/token', 'secret-value', 1);
+    let receivedHeaders: Record<string, string> | undefined;
+    const proxy = new ExecutionProxy(vault, async (_config, headers) => {
+      receivedHeaders = headers;
+      return { status: 204 };
+    });
+
+    const response = await proxy.execute({
+      id: 'credential-1', leaseId: 'lease-1', type: 'ApiKey', scopes: [],
+      vaultReference: 'vault://service/token', expiresAt: new Date(Date.now() + 60_000),
+    }, { targetUrl: 'https://service.example', method: 'GET', headers: { Accept: 'application/json', Authorization: 'caller-value' } });
+
+    expect(receivedHeaders).toEqual({ Accept: 'application/json', Authorization: 'Bearer secret-value' });
+    expect(response).toEqual({ status: 204 });
+  });
+});

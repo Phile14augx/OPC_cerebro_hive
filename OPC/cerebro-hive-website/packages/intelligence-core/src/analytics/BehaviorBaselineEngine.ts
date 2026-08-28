@@ -16,8 +16,8 @@ export class BehaviorBaselineEngine {
     const capabilities = new Set<string>();
 
     for (const event of timeline.events) {
-      if (event.metadata.location) locations.add(event.metadata.location);
-      if (event.metadata.capability) capabilities.add(event.metadata.capability);
+      if (typeof event.metadata.location === 'string') locations.add(event.metadata.location);
+      if (typeof event.metadata.capability === 'string') capabilities.add(event.metadata.capability);
       activeHours.add(event.timestamp.getHours());
     }
 
@@ -31,7 +31,7 @@ export class BehaviorBaselineEngine {
   /**
    * Evaluates if a new event deviates from the established baseline.
    */
-  evaluateAnomaly(baseline: BehaviorBaseline, event: any): string[] {
+  evaluateAnomaly(baseline: BehaviorBaseline, event: { metadata: { location?: string; capability?: string }; timestamp: string | number | Date }): string[] {
     const anomalies: string[] = [];
 
     if (event.metadata.location && !baseline.commonLocations.has(event.metadata.location)) {

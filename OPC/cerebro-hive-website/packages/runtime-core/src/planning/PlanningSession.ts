@@ -1,14 +1,8 @@
 import { Goal } from './Goal';
-import { ExecutionPlan } from './ExecutionPlan';
-import { PlanScore } from './PlanScore';
 import { EvaluationPolicy, PolicyDecisionRecord } from './EvaluationPolicy';
 
-export interface ScoredPlan {
-  plan: ExecutionPlan;
-  score: PlanScore;
-  ruleResults: import('../governance/GovernanceRule').RuleResult[];
-  sourcePlanner: string;
-}
+import { ScoredPlan } from './types';
+export type { ScoredPlan };
 
 export interface PlanningSession {
   id: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useSyncExternalStore, ReactNode } from "react";
 import { useTheme } from "next-themes";
 import { motionRegistry, MotionComponent } from "../registry";
 import { Variants } from "framer-motion";
@@ -15,25 +15,45 @@ interface MotionContextValue {
 
 const MotionContext = createContext<MotionContextValue | undefined>(undefined);
 
+type ThemeVariants = {
+  dark: Variants;
+  light: Variants;
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isThemeVariants(value: unknown): value is ThemeVariants {
+  return isRecord(value) && isRecord(value.dark) && isRecord(value.light);
+}
+
+function subscribeToReducedMotion(onStoreChange: () => void) {
+  const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mediaQuery.addEventListener("change", onStoreChange);
+  return () => mediaQuery.removeEventListener("change", onStoreChange);
+}
+
+function getPrefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function subscribeToHydration() {
+  return () => undefined;
+}
+
 export function MotionProvider({ children }: { children: ReactNode }) {
   const { resolvedTheme } = useTheme();
-  const [level, setLevel] = useState<MotionLevel>("immersive");
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setLevel("reduced");
-    }
-  }, []);
+  const [requestedLevel, setLevel] = useState<MotionLevel>("immersive");
+  const mounted = useSyncExternalStore(subscribeToHydration, () => true, () => false);
+  const prefersReducedMotion = useSyncExternalStore(subscribeToReducedMotion, getPrefersReducedMotion, () => false);
+  const level = prefersReducedMotion ? "reduced" : requestedLevel;
 
   const getVariant = (component: MotionComponent, intent: string): Variants => {
-    const theme = (mounted ? resolvedTheme : "dark") as "dark" | "light";
+    const theme = mounted && (resolvedTheme === "dark" || resolvedTheme === "light") ? resolvedTheme : "dark";
+    const themeVariants: unknown = Reflect.get(motionRegistry[component], intent);
     
-    // @ts-ignore
-    const themeVariants = motionRegistry[component]?.[intent];
-    
-    if (!themeVariants) {
+    if (!isThemeVariants(themeVariants)) {
       console.warn(`[CerebroMotion] Missing variant for ${component}.${intent}`);
       return {};
     }
@@ -43,10 +63,11 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     if (level === "reduced") {
       const reducedVariant: Variants = {};
       for (const key in variant) {
-        if (typeof variant[key] === 'object' && !Array.isArray(variant[key])) {
-            const state = variant[key] as any;
+        const source = variant[key];
+        if (isRecord(source)) {
+            const opacity = source.opacity;
             reducedVariant[key] = {
-                opacity: state.opacity !== undefined ? state.opacity : 1,
+                opacity: typeof opacity === "number" || typeof opacity === "string" ? opacity : 1,
                 transition: { duration: 0 } // instant
             };
         }

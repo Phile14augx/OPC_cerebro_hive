@@ -19,6 +19,7 @@ export class Kernel {
       pluginId,
       version,
       getService: <T>(id: string): T | undefined => {
+        void id;
         // Return a service from the registry if needed
         return undefined; // placeholder
       },

@@ -1,6 +1,7 @@
-import { Execution } from './Execution';
+import { Execution, ExecutionTransitionRecord } from './Execution';
 import { ExecutionId } from './ExecutionId';
 import { ITransactionContext } from '../transactions/UnitOfWork';
+import { ExecutionTransitionRecordSnapshot } from './ExecutionSnapshot';
 
 /**
  * Phase 9a's persistence *contract* for the canonical `Execution` aggregate.
@@ -57,7 +58,10 @@ export interface ExecutionRepository {
    * Note: `load` already rehydrates the aggregate's current state (and potentially its transition history).
    * This is explicitly for loading the raw transition log.
    */
-  loadTransitions(id: ExecutionId, tx?: ITransactionContext): Promise<readonly any[]>;
+  loadTransitions(
+    id: ExecutionId,
+    tx?: ITransactionContext
+  ): Promise<readonly (ExecutionTransitionRecord | ExecutionTransitionRecordSnapshot)[]>;
 
   /** 
    * Loads every Execution that declares the given Execution as its strict parent.

@@ -1,6 +1,4 @@
-import { EntityType, ResolvedEntity, globalEntityResolver } from "./entity-resolution.js";
-import { seededRandom } from "../simulator/simulator.js";
-import { newId } from "../../kernel/ids/id.js";
+import { globalEntityResolver, type EntityType } from "./entity-resolution.js";
 
 // ---------------------------------------------------------------------------------------------
 // Temporal Knowledge Graph
@@ -17,7 +15,7 @@ export interface KnowledgeEntity {
   valid_to: string | null;
   deprecated: boolean;
   confidence: number; // 0-100
-  metadata: Record<string, any>;
+  metadata: KnowledgeEntityMetadata;
   embedding: number[];
   
   // Provenance
@@ -31,6 +29,24 @@ export interface KnowledgeEntity {
   checksum: string;
 }
 
+export type KnowledgeMetadataValue =
+  | string
+  | number
+  | boolean
+  | null
+  | KnowledgeMetadataValue[]
+  | { [key: string]: KnowledgeMetadataValue };
+
+export interface KnowledgeEntityMetadata {
+  source?: string;
+  extractionMethod?: string;
+  extractorVersion?: string;
+  createdBy?: string;
+  verificationStatus?: "Unverified" | "Verified" | "Rejected";
+  license?: string;
+  [key: string]: KnowledgeMetadataValue | undefined;
+}
+
 // ---------------------------------------------------------------------------------------------
 // Ontology Validator
 // ---------------------------------------------------------------------------------------------
@@ -39,7 +55,7 @@ type OntologyRule = { source: EntityType; target: EntityType; relationship: Rela
 
 const ONTOLOGY_RULES: OntologyRule[] = [
   { source: "Paper", target: "Model", relationship: "implements" },
-  { source: "Paper", target: "Architecture", relationship: "proposes" } as any, // using 'proposes' or sticking to existing edges
+  { source: "Paper", target: "Architecture", relationship: "proposes" },
   { source: "Model", target: "Architecture", relationship: "implements" },
   { source: "Model", target: "Model", relationship: "extends" },
   { source: "Model", target: "Model", relationship: "outperforms" },
@@ -47,8 +63,7 @@ const ONTOLOGY_RULES: OntologyRule[] = [
   { source: "Model", target: "Framework", relationship: "depends_on" },
   { source: "Framework", target: "Language", relationship: "depends_on" },
   { source: "Hardware", target: "Hardware", relationship: "outperforms" },
-  { source: "Product", target: "Model", relationship: "uses" } as any,
-  { source: "Enterprise Product", target: "Model", relationship: "uses" } as any,
+  { source: "Enterprise Product", target: "Model", relationship: "uses" },
   { source: "Model", target: "Dataset", relationship: "trained_on" },
   { source: "Company", target: "Model", relationship: "commercialized_as" },
   // fallback wildcard for simplicity, in a real system we'd list all
@@ -73,7 +88,7 @@ export const globalOntologyValidator = new OntologyValidator();
 
 export type RelationshipType = 
   | "uses" | "extends" | "implements" | "improves" | "outperforms" 
-  | "derived_from" | "competes_with" | "replaces" | "references" 
+  | "derived_from" | "competes_with" | "replaces" | "references" | "proposes"
   | "combines" | "integrates" | "benchmarked_on" | "deployed_on" 
   | "optimized_for" | "commercialized_as" | "depends_on" | "licensed_under" 
   | "supersedes" | "coexists_with" | "trained_on";
@@ -160,7 +175,7 @@ export class KnowledgeGraphService {
     this.embeddings = new MockEmbeddingProvider(this);
   }
 
-  upsertEntity(rawName: string, type: EntityType, metadata: Record<string, any> = {}): KnowledgeEntity {
+  upsertEntity(rawName: string, type: EntityType, metadata: KnowledgeEntityMetadata = {}): KnowledgeEntity {
     const resolved = globalEntityResolver.resolve(rawName, type);
     const now = new Date().toISOString();
     

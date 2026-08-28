@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import type React from "react";
 
 export type WidgetType = "code" | "sql" | "prompt" | "markdown" | "ai_interview";

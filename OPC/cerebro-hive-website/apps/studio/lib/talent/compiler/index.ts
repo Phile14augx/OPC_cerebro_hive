@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { AssessmentSchema, Resource } from "../types";
 import { createHash } from "crypto";
 
@@ -48,7 +48,7 @@ export class AssessmentCompiler {
     const resolvedSchema = await this.resolveResources(draftSchema);
 
     console.log("[Compiler] 3. Optimizing Execution Graph...");
-    this.optimize(resolvedSchema);
+    this.optimize();
 
     console.log("[Compiler] 4. Freezing Version...");
     const frozenSchema = this.freeze(resolvedSchema);
@@ -60,18 +60,26 @@ export class AssessmentCompiler {
   private validate(schema: AssessmentSchema) {
     if (!schema.title) throw new Error("Assessment missing title");
     if (!schema.sections || schema.sections.length === 0) throw new Error("Assessment must have at least one section");
+    
+    if (schema.resources) {
+      for (const res of Object.values(schema.resources)) {
+        if (!res || typeof res !== 'object') {
+          throw new Error('Assessment schema is invalid');
+        }
+      }
+    }
     // Further widget-specific validation would occur here by calling IWidgetSDK.validateConfig()
   }
 
   private async resolveResources(schema: AssessmentSchema): Promise<AssessmentSchema> {
     const resolvedResources: Record<string, Resource> = {};
-    for (const [id, _] of Object.entries(schema.resources)) {
+    for (const id of Object.keys(schema.resources || {})) {
       resolvedResources[id] = await this.resourceResolver.resolve(id);
     }
     return { ...schema, resources: resolvedResources };
   }
 
-  private optimize(schema: AssessmentSchema) {
+  private optimize() {
     // Reorder/pre-compute data if needed
   }
 
@@ -80,7 +88,24 @@ export class AssessmentCompiler {
     const frozen = JSON.parse(JSON.stringify(schema));
     // In a real DB, we would insert a new row to increment the version integer
     frozen.version = (frozen.version || 0) + 1;
-    return Object.freeze(frozen);
+    
+    function deepFreeze<T>(obj: T): T {
+      Object.freeze(obj);
+      if (obj === undefined || obj === null) {
+        return obj;
+      }
+      Object.getOwnPropertyNames(obj).forEach(function (prop) {
+        const val = Reflect.get(obj as object, prop);
+        if (val !== null &&
+            (typeof val === "object" || typeof val === "function") &&
+            !Object.isFrozen(val)) {
+          deepFreeze(val);
+        }
+      });
+      return obj;
+    }
+    
+    return deepFreeze(frozen);
   }
 
   private packageAndSign(schema: AssessmentSchema, author: string): CompiledAssessmentPackage {

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { CandidateSession, ExecutionResult } from "./execution";
 import { EvaluationRubric } from "../types";
 import { GlobalEventBus } from "./events";
@@ -52,8 +52,7 @@ export class EvaluationEngine {
 export class AIReviewEngine {
   async performQualitativeReview(
     session: CandidateSession, 
-    rubric: EvaluationRubric, 
-    deterministicResult: DeterministicScore
+    rubric: EvaluationRubric
   ): Promise<QualitativeScore> {
     
     GlobalEventBus.publish("AI_REVIEW_REQUESTED", session.candidateId, session.assessmentId, { rubricId: rubric.id });
@@ -95,7 +94,7 @@ export class GradingPipeline {
     const deterministic = this.deterministicEngine.evaluateDeterministic(session, artifacts);
     
     // 2. Soft Rules / Expert Review
-    const qualitative = await this.aiReviewEngine.performQualitativeReview(session, rubric, deterministic);
+    const qualitative = await this.aiReviewEngine.performQualitativeReview(session, rubric);
 
     // 3. Final Aggregation (e.g. 60% weight to deterministic, 40% to qualitative)
     const finalScore = (deterministic.scorePercentage * 0.6) + 

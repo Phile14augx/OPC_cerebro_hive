@@ -17,7 +17,7 @@ export const realestate: Industry = {
     description: "Transform your operations with intelligent, automated systems.",
     primaryCta: "Book Strategy Session",
     secondaryCta: "Download Architecture",
-    dynamicBackgroundType: "realestate" as any
+    dynamicBackgroundType: "realestate"
   },
   overview: {
     maturityScore: 50,

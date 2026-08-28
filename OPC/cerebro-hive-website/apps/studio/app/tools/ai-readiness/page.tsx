@@ -189,8 +189,7 @@ const QUESTIONS: Question[] = [
     ]
   }
 ];
-
-function generateReadinessReport(
+export function generateReadinessReport(
   leadInfo: { name: string; email: string; company: string },
   overallScore: number,
   maturityDetails: { tier: string; desc: string },

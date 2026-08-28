@@ -1,8 +1,6 @@
 'use client';
 
 import { useFindings } from './hooks/useReviews';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FindingDetailDTO } from '@cerebro/api-client';
 import { AlertTriangle, Info, FileSearch } from 'lucide-react';
@@ -66,6 +64,7 @@ function FindingCard({ finding, isSelected, onClick }: { finding: FindingDetailD
 
   return (
     <div 
+      data-testid="finding-row"
       onClick={onClick}
       className={cn(
         "p-4 rounded-lg border cursor-pointer transition-all duration-200 group",
@@ -91,10 +90,10 @@ function FindingCard({ finding, isSelected, onClick }: { finding: FindingDetailD
             <span className="text-[10px] font-mono px-1.5 py-0.5 rounded uppercase border border-gray-700 text-gray-400 bg-gray-800">
               Confidence: {finding.confidence}
             </span>
-            {finding.evidenceRefs.length > 0 && (
+            {(finding.evidenceRefs?.length ?? 0) > 0 && (
               <span className="flex items-center gap-1 text-xs text-blue-400 ml-auto">
                 <FileSearch className="h-3 w-3" />
-                {finding.evidenceRefs.length} Evidence
+                {finding.evidenceRefs?.length ?? 0} Evidence
               </span>
             )}
           </div>

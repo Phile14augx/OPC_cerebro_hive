@@ -4,10 +4,28 @@ import React, { useState, useEffect } from 'react';
 import { TrackedButton } from '@/components/cerebro/TrackedButton';
 import { analytics } from '@/lib/analytics/AnalyticsAdapter';
 
+interface CopilotCandidate {
+  candidateId: string;
+  candidateName?: string;
+  matchScore: number;
+  matchType?: string;
+  overallFitScore?: number;
+  explainability: {
+    matchedSkills: {
+      skillId: string;
+      candidateScore: number;
+      evidenceReasoning: string;
+    }[];
+    missingSkills: {
+      skillId: string;
+    }[];
+  };
+}
+
 export default function CopilotDashboard() {
-  const [candidates, setCandidates] = useState([]);
+  const [candidates, setCandidates] = useState<CopilotCandidate[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCandidate, setSelectedCandidate] = useState<any>(null);
+  const [selectedCandidate, setSelectedCandidate] = useState<CopilotCandidate | null>(null);
 
   useEffect(() => {
     async function fetchInsights() {
@@ -58,7 +76,7 @@ export default function CopilotDashboard() {
                 </span>
                 Ranked Matches
               </h2>
-              {candidates.map((c: any, index: number) => (
+              {candidates.map((c: CopilotCandidate, index: number) => (
                 <div
                   key={c.candidateId}
                   onClick={() => {
@@ -76,7 +94,7 @@ export default function CopilotDashboard() {
                       <div className="text-sm text-gray-500 mt-1">{c.matchType} Match</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-light text-emerald-400">{Math.round(c.overallFitScore)}%</div>
+                      <div className="text-2xl font-light text-emerald-400">{Math.round(c.overallFitScore ?? 0)}%</div>
                     </div>
                   </div>
                 </div>
@@ -94,7 +112,7 @@ export default function CopilotDashboard() {
                 
                 {/* Executive Summary */}
                 <div className="bg-gradient-to-br from-[#1a1a24] to-[#111] p-6 rounded-xl border border-blue-900/30 shadow-lg">
-                  <h3 className="text-xl font-medium text-white mb-2">Copilot Recommendation: <span className="text-emerald-400 font-bold">{selectedCandidate.overallFitScore >= 90 ? 'Strong Hire' : 'Hire'}</span></h3>
+                  <h3 className="text-xl font-medium text-white mb-2">Copilot Recommendation: <span className="text-emerald-400 font-bold">{(selectedCandidate.overallFitScore ?? 0) >= 90 ? 'Strong Hire' : 'Hire'}</span></h3>
                   <p className="text-gray-300 leading-relaxed text-sm">
                     {selectedCandidate.candidateName || `Candidate ${selectedCandidate.candidateId.substring(0, 6)}`} demonstrates exceptional capability overlap with the target profile. 
                     The strongest indicators come from <strong className="text-gray-100">Execution Artifacts</strong>, showing deterministic proof of System Design and Algorithmic abilities.
@@ -104,7 +122,7 @@ export default function CopilotDashboard() {
                 {/* Evidence Chain */}
                 <h3 className="text-lg font-semibold text-gray-200 pt-4">Explainability Chain</h3>
                 <div className="space-y-4">
-                  {selectedCandidate.explainability?.matchedSkills?.map((skill: any, idx: number) => (
+                  {selectedCandidate.explainability?.matchedSkills?.map((skill, idx: number) => (
                     <div key={idx} className="bg-[#151515] p-5 rounded-xl border border-[#222] flex flex-col gap-3">
                       
                       {/* Skill Header */}
@@ -142,7 +160,7 @@ export default function CopilotDashboard() {
                     <div className="bg-red-900/10 p-5 rounded-xl border border-red-900/30">
                       <h4 className="text-sm uppercase font-bold text-red-400 tracking-wider mb-2">Identified Gaps</h4>
                       <div className="flex flex-wrap gap-2">
-                        {selectedCandidate.explainability.missingSkills.map((gap: any, i: number) => (
+                        {selectedCandidate.explainability.missingSkills.map((gap, i: number) => (
                           <span key={i} className="bg-red-900/20 text-red-300 text-xs px-2 py-1 rounded border border-red-900/50">
                             {gap.skillId}
                           </span>

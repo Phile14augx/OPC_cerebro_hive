@@ -1,4 +1,3 @@
-// @ts-nocheck
 export type AssessmentEventType = 
   | "ASSESSMENT_STARTED"
   | "WIDGET_EXECUTED"
@@ -15,7 +14,7 @@ export interface TelemetryEvent {
   candidateId: string;
   assessmentId: string;
   activityId?: string;
-  payload: any;
+  payload: unknown;
 }
 
 export class EventBus {
@@ -28,7 +27,7 @@ export class EventBus {
     this.listeners.get(type)!.push(callback);
   }
 
-  publish(type: AssessmentEventType, candidateId: string, assessmentId: string, payload: any, activityId?: string) {
+  publish(type: AssessmentEventType, candidateId: string, assessmentId: string, payload: unknown, activityId?: string) {
     const event: TelemetryEvent = {
       id: `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       timestamp: new Date().toISOString(),

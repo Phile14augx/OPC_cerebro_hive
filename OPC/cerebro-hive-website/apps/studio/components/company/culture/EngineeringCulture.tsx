@@ -6,9 +6,37 @@ import { engineeringFramework } from "@/lib/content/company/engineering";
 import { SectionMetadata } from "@/components/cerebro/SectionMetadata";
 import { MetricChip } from "@/components/cerebro/MetricChip";
 import { NeuralOrb } from "@/components/cerebro/NeuralOrb";
+import type { OrbColor } from "@/components/cerebro/NeuralOrb/types";
 import { motionPresets } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { CheckCircle2 } from "lucide-react";
+
+type MetricStatus = "success" | "warning" | "error" | "neutral";
+
+const toOrbColor = (color: string): OrbColor => {
+  switch (color) {
+    case "cyan":
+    case "green":
+    case "purple":
+    case "amber":
+    case "white":
+      return color;
+    default:
+      return "white";
+  }
+};
+
+const toMetricStatus = (status: string): MetricStatus => {
+  switch (status) {
+    case "success":
+    case "warning":
+    case "error":
+    case "neutral":
+      return status;
+    default:
+      return "neutral";
+  }
+};
 
 export const EngineeringCulture = () => {
   // Default to the first framework phase
@@ -81,7 +109,7 @@ export const EngineeringCulture = () => {
                       <div className="z-10 bg-[#040d1a] rounded-full shrink-0">
                         <NeuralOrb 
                           size="sm" 
-                          color={phase.color as any} 
+                          color={toOrbColor(phase.color)}
                           state={isActive ? "active" : "idle"}
                         />
                       </div>
@@ -168,7 +196,7 @@ export const EngineeringCulture = () => {
                       <MetricChip 
                         label={metric.label} 
                         initialValue={metric.value} 
-                        status={metric.status as any} 
+                        status={toMetricStatus(metric.status)}
                         simulateUpdates={true} 
                       />
                     </motion.div>

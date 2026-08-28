@@ -1,5 +1,3 @@
-import { LucideIcon } from "lucide-react";
-
 export type ProductType = "software" | "framework";
 
 export interface CompetitorComparison {
@@ -14,8 +12,8 @@ export interface DeploymentOption {
 }
 
 export interface ArchitectureData {
-  nodes: any[];
-  edges: any[];
+  nodes: Record<string, unknown>[];
+  edges: Record<string, unknown>[];
 }
 
 export interface BaseProduct {

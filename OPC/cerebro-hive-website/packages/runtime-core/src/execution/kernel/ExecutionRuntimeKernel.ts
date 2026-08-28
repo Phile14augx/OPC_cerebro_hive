@@ -16,7 +16,7 @@ export class ExecutionRuntimeKernel {
   /**
    * The single entry point for initiating any state transition in the Execution platform.
    */
-  async dispatchCommand(command: ExecutionCommand): Promise<any> {
+  async dispatchCommand(command: ExecutionCommand): Promise<unknown> {
     // In a fully generalized command bus, this might route to different handlers.
     // For now, it delegates to the ExecutionCommandHandler.
     return this.commandHandler.handle(command);

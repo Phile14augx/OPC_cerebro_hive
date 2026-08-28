@@ -51,7 +51,6 @@ async function fetchPlatformHealth(): Promise<PlatformHealth> {
   ]);
 
   const totalExec = execStats.reduce((s, r) => s + r._count.status, 0);
-  const succeeded = execStats.find(r => r.status === 'COMPLETED')?._count.status ?? 0;
   const failed    = execStats.find(r => r.status === 'FAILED')?._count.status ?? 0;
   const errorRate = totalExec > 0 ? failed / totalExec : 0;
   const execPerMin = totalExec / (24 * 60);
@@ -113,9 +112,9 @@ async function fetchAgents(): Promise<AgentSummary[]> {
     const total = execs.length;
     const done  = execs.filter(e => e.status === 'COMPLETED').length;
     const running = execs.filter(e => e.status === 'RUNNING').length;
-    const latencies = execs
-      .filter(e => e.completedAt && e.startedAt)
-      .map(e => e.completedAt!.getTime() - e.startedAt.getTime());
+    const latencies = execs.flatMap(e =>
+      e.completedAt ? [e.completedAt.getTime() - e.startedAt.getTime()] : [],
+    );
     const avgLatencyMs = latencies.length > 0
       ? latencies.reduce((s, v) => s + v, 0) / latencies.length
       : 0;
@@ -218,7 +217,6 @@ async function fetchKPIs(): Promise<KPI[]> {
 
   return Array.from(seen.values()).slice(0, 12).map(m => {
     const value = Number(m.value);
-    const target = Number((m as Record<string, unknown>).target ?? value * 1.1);
     const prev   = Number((m as Record<string, unknown>).previousValue ?? value * 0.97);
     const delta  = value - prev;
     const unit   = m.unit ?? '';

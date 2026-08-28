@@ -3,41 +3,72 @@ import { useFrame } from '@react-three/fiber';
 import { useTheme } from 'next-themes';
 import * as THREE from 'three';
 
+const pseudoRandom = (seed: number) => {
+  const value = Math.sin(seed * 12.9898) * 43758.5453;
+  return value - Math.floor(value);
+};
+
+interface NetworkState {
+  count: number;
+  maxConnections: number;
+  positions: Float32Array;
+  velocities: Float32Array;
+  linePositions: Float32Array;
+  lineOpacities: Float32Array;
+}
+
+const createNetworkState = (count: number): NetworkState => {
+  const positions = new Float32Array(count * 3);
+  const velocities = new Float32Array(count * 3);
+  const maxConnections = count * 3;
+
+  for (let i = 0; i < count; i++) {
+    const radius = Math.pow(pseudoRandom(i * 6 + 1), 2) * 15;
+    const theta = pseudoRandom(i * 6 + 2) * Math.PI * 2;
+    const phi = Math.acos(2 * pseudoRandom(i * 6 + 3) - 1);
+
+    positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+    positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+    positions[i * 3 + 2] = radius * Math.cos(phi);
+    velocities[i * 3] = (pseudoRandom(i * 6 + 4) - 0.5) * 0.02;
+    velocities[i * 3 + 1] = (pseudoRandom(i * 6 + 5) - 0.5) * 0.02;
+    velocities[i * 3 + 2] = (pseudoRandom(i * 6 + 6) - 0.5) * 0.02;
+  }
+
+  return {
+    count,
+    maxConnections,
+    positions,
+    velocities,
+    linePositions: new Float32Array(maxConnections * 6),
+    lineOpacities: new Float32Array(maxConnections * 2),
+  };
+};
+
 export function NeuralNetwork({ count = 400 }) {
   const { theme } = useTheme();
   const nodesRef = useRef<THREE.InstancedMesh>(null);
   const linesRef = useRef<THREE.LineSegments>(null);
 
-  // Generate nodes with higher density near center
-  const { positions, velocities } = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const vel = new Float32Array(count * 3);
-    
-    for (let i = 0; i < count; i++) {
-      const radius = Math.pow(Math.random(), 2) * 15; // Power of 2 clusters them near center
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      
-      pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = radius * Math.cos(phi);
-
-      vel[i * 3] = (Math.random() - 0.5) * 0.02;
-      vel[i * 3 + 1] = (Math.random() - 0.5) * 0.02;
-      vel[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
-    }
-    return { positions: pos, velocities: vel };
-  }, [count]);
-
-  const maxConnections = count * 3;
-  const linePositions = useMemo(() => new Float32Array(maxConnections * 6), [maxConnections]);
-  const lineOpacities = useMemo(() => new Float32Array(maxConnections * 2), [maxConnections]);
+  const simulationRef = useRef<NetworkState | null>(null);
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
   // Update loop
   useFrame(() => {
     if (!nodesRef.current || !linesRef.current) return;
+    const geometry = linesRef.current.geometry;
+    let simulation = simulationRef.current;
+
+    if (!simulation || simulation.count !== count) {
+      simulation = createNetworkState(count);
+      simulationRef.current = simulation;
+      geometry.setAttribute('position', new THREE.BufferAttribute(simulation.linePositions, 3));
+      geometry.setAttribute('opacity', new THREE.BufferAttribute(simulation.lineOpacities, 1));
+      geometry.setDrawRange(0, 0);
+    }
+
+    const { positions, velocities, linePositions, lineOpacities, maxConnections } = simulation;
     
     let connectionIndex = 0;
     
@@ -98,7 +129,6 @@ export function NeuralNetwork({ count = 400 }) {
       lineOpacities[i * 2 + 1] = 0;
     }
 
-    const geometry = linesRef.current.geometry as THREE.BufferGeometry;
     geometry.attributes.position.needsUpdate = true;
     geometry.attributes.opacity.needsUpdate = true;
     geometry.setDrawRange(0, connectionIndex * 2);
@@ -124,16 +154,7 @@ export function NeuralNetwork({ count = 400 }) {
 
       {/* Connections */}
       <lineSegments ref={linesRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[linePositions, 3]}
-          />
-          <bufferAttribute
-            attach="attributes-opacity"
-            args={[lineOpacities, 1]}
-          />
-        </bufferGeometry>
+        <bufferGeometry />
         <shaderMaterial
           transparent
           depthWrite={false}

@@ -146,20 +146,26 @@ export default function ClientDashboardPage() {
 
   // Fetch data and auth on mount
   useEffect(() => {
-    // Check auth
-    const session = localStorage.getItem("cerebro_user_session");
-    if (session) {
-      try {
-        const parsed = JSON.parse(session);
-        if (parsed && parsed.email && parsed.company) {
-          setUserSession(parsed);
-          setIsAuthenticated(true);
+    const init = async () => {
+      let sessionData = null;
+      let authenticated = false;
+      const session = localStorage.getItem("cerebro_user_session");
+      if (session) {
+        try {
+          const parsed = JSON.parse(session);
+          if (parsed && parsed.email && parsed.company) {
+            sessionData = parsed;
+            authenticated = true;
+          }
+        } catch (e) {
+          console.error("Failed to parse auth session:", e);
         }
-      } catch (e) {
-        console.error("Failed to parse auth session:", e);
       }
-    }
-    setAuthLoading(false);
+      setUserSession(sessionData);
+      setIsAuthenticated(authenticated);
+      setAuthLoading(false);
+    };
+    setTimeout(() => { void init(); }, 0);
 
     async function loadDashboardData() {
       try {

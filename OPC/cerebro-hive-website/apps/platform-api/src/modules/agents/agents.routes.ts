@@ -1,6 +1,6 @@
-// @ts-nocheck
+
 import { FastifyInstance } from 'fastify';
-import { prisma } from '@cerebro/db';
+import { prisma, Prisma } from '@cerebro/db';
 import { PaginationQuery } from '../common/pagination';
 import { AgentRepository } from '@cerebro/db';
 import { requirePermission } from '../../middleware/AuthMiddleware';
@@ -17,21 +17,21 @@ export default async function agentRoutes(fastify: FastifyInstance, opts: Agents
     '/',
     { schema: { querystring: PaginationQuery } },
     async (request, reply) => {
-      const workspaceId = request.cerebroContext.workspaceId;
-      const { page = 1, limit = 20, sort, search } = request.query as any;
+      const workspaceId = request.cerebroContext.workspaceId as string;
+      const { page = 1, limit = 20, sort, search } = request.query as { page?: number | string; limit?: number | string; sort?: string; search?: string };
 
       const skip = (Number(page) - 1) * Number(limit);
       const take = Number(limit);
 
-      const where: any = { workspaceId };
+      const where: Prisma.AgentWhereInput = { workspaceId };
       if (search) {
         where.name = { contains: search, mode: 'insensitive' };
       }
 
-      let orderBy: any = { createdAt: 'desc' };
+      let orderBy: Prisma.AgentOrderByWithRelationInput = { createdAt: 'desc' };
       if (sort) {
-        if (sort.startsWith('-')) orderBy = { [sort.substring(1)]: 'desc' };
-        else orderBy = { [sort]: 'asc' };
+        if (sort.startsWith('-')) orderBy = { [sort.substring(1)]: 'desc' } as Prisma.AgentOrderByWithRelationInput;
+        else orderBy = { [sort]: 'asc' } as Prisma.AgentOrderByWithRelationInput;
       }
 
       const [total, data] = await Promise.all([
@@ -57,7 +57,7 @@ export default async function agentRoutes(fastify: FastifyInstance, opts: Agents
   fastify.get(
     '/:id',
     async (request, reply) => {
-      const workspaceId = request.cerebroContext.workspaceId;
+      const workspaceId = request.cerebroContext.workspaceId as string;
       const { id } = request.params as { id: string };
 
       const agent = await prisma.agent.findUnique({
@@ -85,7 +85,7 @@ export default async function agentRoutes(fastify: FastifyInstance, opts: Agents
     { preHandler: requirePermission('agents:create') },
     async (request, reply) => {
       const cerebroContext = request.cerebroContext;
-      const body = request.body as any;
+      const body = request.body as { name?: string; modelId?: string; instructions?: string; description?: string; avatarUrl?: string };
 
       if (!body.name || !body.modelId || !body.instructions) {
         return reply.code(400).send({
@@ -100,11 +100,11 @@ export default async function agentRoutes(fastify: FastifyInstance, opts: Agents
 
       const { agent, initialVersion } = await agentRepository.createAgent(
         {
-          name: body.name,
+          name: body.name as string,
           description: body.description,
           avatarUrl: body.avatarUrl,
-          modelId: body.modelId,
-          instructions: body.instructions,
+          modelId: body.modelId as string,
+          instructions: body.instructions as string,
         },
         { context: cerebroContext }
       );

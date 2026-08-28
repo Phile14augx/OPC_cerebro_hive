@@ -7,7 +7,7 @@ export interface BaseEvent {
 // UI Category
 export interface UIEvent extends BaseEvent {
   type: 'THEME_CHANGED' | 'DENSITY_CHANGED';
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
 }
 
 // Widget Category
@@ -19,9 +19,9 @@ export interface WidgetEvent extends BaseEvent {
 
 // Telemetry Category
 export interface TelemetryEvent extends BaseEvent {
-  type: 'METRICS_UPDATED' | 'ALERT_TRIGGERED' | 'SYSTEM_DEGRADED';
+  type: 'METRICS_UPDATED' | 'ALERT_TRIGGERED' | 'SYSTEM_DEGRADED' | (string & {});
   severity: 'info' | 'warning' | 'critical';
-  details: Record<string, any>;
+  details: unknown;
 }
 
 // Copilot Category
@@ -31,7 +31,7 @@ export interface CopilotEvent extends BaseEvent {
 }
 
 // The master typed map
-export interface PlatformEventMap {
+export type PlatformEventMap = {
   'ui:event': UIEvent;
   'widget:event': WidgetEvent;
   'telemetry:event': TelemetryEvent;
