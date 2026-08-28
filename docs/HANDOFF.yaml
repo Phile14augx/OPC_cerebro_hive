@@ -1,7 +1,7 @@
 product: P46
 name: "Nexarch MLOps Control Plane"
 branch: "product/p46-mlops-control-plane"
-candidate_sha: "cb1b3fee699f6088f2dff9ea64a00a2541d19912"
+candidate_sha: "5e8ca2e427635f4abbc8064aca37cee3ace706ab"
 status: L3_COMPLETE
 maturity:
   before: L1
@@ -26,3 +26,4 @@ known_risks:
   - "MLflow API compatibility might require extensive testing for edge cases."
   - "High write throughput during distributed training could bottleneck PostgreSQL."
 next: [ chief-architecture-agent ]
+
