@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
-    "lint": "eslint src --ext .ts"
+    "test:l4": "vitest run test/l4/evaluation-layer-harness.spec.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit --incremental false",
+    "lint": "eslint src test --ext .ts",
+    "build": "tsc -p tsconfig.build.json",
+    "verify:l4": "npm run typecheck && npm run lint && npm run build && npm test"
   },
   "keywords": [],
   "type": "commonjs",
