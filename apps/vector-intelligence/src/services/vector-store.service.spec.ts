@@ -60,4 +60,30 @@ describe('VectorStoreService', () => {
     expect(all.length).toBe(1);
     expect(all[0].id).toBe('v2');
   });
+
+  it('rejects non-finite vectors', async () => {
+    await expect(service.upsert({ namespace: 'tenant/docs', vectors: [{ id: 'v1', values: [1, Number.NaN] }] })).rejects.toThrow();
+  });
+
+  it.each([
+    ['invalid namespace', { namespace: '../tenant', vectors: [{ id: 'v1', values: [1, 0] }] }],
+    ['invalid vector id', { namespace: 'tenant/docs', vectors: [{ id: 'bad/id', values: [1, 0] }] }],
+  ])('rejects malformed upserts: %s', async (_label, dto) => {
+    await expect(service.upsert(dto as VectorUpsertDto)).rejects.toThrow();
+  });
+
+  it('rejects a query whose dimensions differ from persisted vectors', async () => {
+    await service.upsert({ namespace: 'tenant/docs', vectors: [{ id: 'v1', values: [1, 0, 0] }] });
+    await expect(service.query('tenant/docs', [1, 0], 10)).rejects.toThrow(/dimension/i);
+  });
+
+  it.each([0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY, 1001])('rejects unsafe topK value %s', async (topK) => {
+    await expect(service.query('tenant/docs', [1, 0], topK)).rejects.toThrow(/topK/i);
+  });
+
+  it('orders equal scores deterministically by vector id', async () => {
+    await service.upsert({ namespace: 'tenant/ties', vectors: [{ id: 'z-last', values: [1, 0] }, { id: 'a-first', values: [1, 0] }] });
+    const results = await service.query('tenant/ties', [1, 0], 2);
+    expect(results.map((result) => result.id)).toEqual(['a-first', 'z-last']);
+  });
 });

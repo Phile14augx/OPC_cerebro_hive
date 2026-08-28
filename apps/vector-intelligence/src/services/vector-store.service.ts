@@ -1,5 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { VectorUpsertDto, VectorUpsertItemDto } from '../dto/vector-upsert.dto';
+import { InputValidationError, validateId, validateLimit, validateNamespace, validateVector } from '../validation';
+import { InMemoryVectorRepository } from '../adapters/in-memory-vector.repository';
+import { VECTOR_REPOSITORY, VectorRepository } from '../ports/vector-repository.port';
 
 export interface IVectorStoreService {
   upsert(dto: VectorUpsertDto): Promise<{ upserted_count: number }>;
@@ -10,20 +13,33 @@ export interface IVectorStoreService {
 
 @Injectable()
 export class VectorStoreService implements IVectorStoreService {
-  private store = new Map<string, Map<string, VectorUpsertItemDto>>();
+  private readonly repository: VectorRepository;
 
-  private getNamespaceStore(namespace: string): Map<string, VectorUpsertItemDto> {
-    if (!this.store.has(namespace)) {
-      this.store.set(namespace, new Map());
-    }
-    return this.store.get(namespace)!;
+  constructor(@Optional() @Inject(VECTOR_REPOSITORY) repository?: VectorRepository) {
+    this.repository = repository ?? new InMemoryVectorRepository();
   }
 
   async upsert(dto: VectorUpsertDto): Promise<{ upserted_count: number }> {
-    const nsStore = this.getNamespaceStore(dto.namespace);
-    for (const vector of dto.vectors) {
-      nsStore.set(vector.id, vector);
+    validateNamespace(dto.namespace);
+    if (!Array.isArray(dto.vectors) || dto.vectors.length === 0) {
+      throw new InputValidationError('vectors must be a non-empty array');
     }
+    const dimension = dto.vectors[0]?.values.length;
+    for (const vector of dto.vectors) {
+      validateId(vector.id);
+      validateVector(vector.values);
+      if (vector.values.length !== dimension) {
+        throw new InputValidationError('all vectors must have the same dimension');
+      }
+    }
+    const persisted = await this.repository.readNamespace(dto.namespace);
+    const existing = persisted[0];
+    if (existing && existing.values.length !== dimension) {
+      throw new InputValidationError('vector dimension does not match the namespace dimension');
+    }
+    const next = new Map(persisted.map((vector) => [vector.id, vector]));
+    dto.vectors.forEach((vector) => next.set(vector.id, structuredClone(vector)));
+    await this.repository.replaceNamespace(dto.namespace, Array.from(next.values()));
     return { upserted_count: dto.vectors.length };
   }
 
@@ -41,10 +57,16 @@ export class VectorStoreService implements IVectorStoreService {
   }
 
   async query(namespace: string, vector: number[], topK: number, filter?: any): Promise<any[]> {
-    const nsStore = this.getNamespaceStore(namespace);
+    validateNamespace(namespace);
+    validateVector(vector, 'query vector');
+    validateLimit(topK, 'topK');
+    const persisted = await this.repository.readNamespace(namespace);
     const results: any[] = [];
     
-    for (const item of nsStore.values()) {
+    for (const item of persisted) {
+      if (item.values.length !== vector.length) {
+        throw new InputValidationError('query vector dimension does not match persisted vectors');
+      }
       if (filter) {
         let match = true;
         for (const key of Object.keys(filter)) {
@@ -64,23 +86,24 @@ export class VectorStoreService implements IVectorStoreService {
       });
     }
 
-    results.sort((a, b) => b.score - a.score);
+    results.sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
     return results.slice(0, topK);
   }
 
   async delete(namespace: string, ids: string[]): Promise<{ deleted_count: number }> {
-    const nsStore = this.getNamespaceStore(namespace);
+    validateNamespace(namespace);
+    if (!Array.isArray(ids) || ids.length === 0) throw new InputValidationError('ids must be a non-empty array');
+    ids.forEach((id) => validateId(id));
+    const persisted = await this.repository.readNamespace(namespace);
+    const idsToDelete = new Set(ids);
     let deleted_count = 0;
-    for (const id of ids) {
-      if (nsStore.delete(id)) {
-        deleted_count++;
-      }
-    }
+    persisted.forEach((item) => { if (idsToDelete.has(item.id)) deleted_count++; });
+    await this.repository.replaceNamespace(namespace, persisted.filter((item) => !idsToDelete.has(item.id)));
     return { deleted_count };
   }
 
   async getAll(namespace: string): Promise<VectorUpsertItemDto[]> {
-    const nsStore = this.getNamespaceStore(namespace);
-    return Array.from(nsStore.values());
+    validateNamespace(namespace);
+    return this.repository.readNamespace(namespace);
   }
 }

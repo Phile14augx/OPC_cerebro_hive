@@ -68,6 +68,6 @@ service = new HybridRetrievalService(vectorStoreService);
       query_text: '',
       top_k: 10
     });
-    expect(res.results).toBeDefined();
+    expect(res.results).toHaveLength(0);
   });
 });

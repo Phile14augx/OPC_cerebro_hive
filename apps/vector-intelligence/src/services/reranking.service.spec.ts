@@ -56,4 +56,34 @@ describe('RerankingService', () => {
       { id: 'verbose', relevance_score: 1 },
     ]);
   });
+
+  it.each([0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY, 1001])('rejects unsafe top_n value %s', async (topN) => {
+    await expect(service.rerankCandidates({ query_text: 'query', candidates: [{ id: 'candidate', text: 'query' }], top_n: topN })).rejects.toThrow(/top_n/i);
+  });
+
+  it('breaks equal-score ties deterministically by candidate id', async () => {
+    const response = await service.rerankCandidates({ query_text: 'shared', candidates: [{ id: 'z-last', text: 'shared term' }, { id: 'a-first', text: 'shared term' }], top_n: 2 });
+    expect(response.results.map((result) => result.id)).toEqual(['a-first', 'z-last']);
+  });
+
+  it('improves nDCG@3 on a hand-labelled semantic benchmark', async () => {
+    const judgments: Record<string, number> = { semantic: 3, lexical: 1, unrelated: 0 };
+    const dcg = (ids: string[]) => ids.reduce((sum, id, index) => sum + (2 ** judgments[id] - 1) / Math.log2(index + 2), 0);
+    const ideal = dcg(['semantic', 'lexical', 'unrelated']);
+    const baseline = dcg(['lexical', 'unrelated', 'semantic']) / ideal;
+    const response = await service.rerankCandidates({
+      query_text: 'automobile repair',
+      query_vector: [1, 0],
+      candidates: [
+        { id: 'lexical', text: 'automobile sales', vector: [0.5, 0.5] },
+        { id: 'unrelated', text: 'garden tools', vector: [0, 1] },
+        { id: 'semantic', text: 'vehicle maintenance', vector: [0.99, 0.01] },
+      ],
+      top_n: 3,
+    });
+    const reranked = dcg(response.results.map((result) => result.id)) / ideal;
+
+    expect(reranked).toBeGreaterThan(baseline);
+    expect(reranked).toBeGreaterThanOrEqual(0.95);
+  });
 });
