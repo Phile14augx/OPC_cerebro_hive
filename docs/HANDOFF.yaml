@@ -1,7 +1,7 @@
 product: P46
 name: "Nexarch MLOps Control Plane"
 branch: "product/p46-mlops-control-plane"
-candidate_sha: "5e8ca2e427635f4abbc8064aca37cee3ace706ab"
+candidate_sha: "af69ff5488e637416388b55acd892abbbf0242e3"
 status: L3_COMPLETE
 maturity:
   before: L1
