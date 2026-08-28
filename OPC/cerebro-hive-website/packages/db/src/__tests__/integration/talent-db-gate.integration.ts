@@ -42,6 +42,9 @@ async function rejectsWithPattern(fn: () => Promise<unknown>, pattern: RegExp): 
 async function main() {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL! });
   const adapter = new PrismaPg(pool);
+  if (typeof PrismaClient !== 'function') {
+    throw new Error('Generated PrismaClient is unavailable; run the DB generate contract before this gate');
+  }
   const prisma = new PrismaClient({ adapter });
   const ts = Date.now();
 
@@ -138,10 +141,15 @@ async function main() {
     check('6B: JSON payload round-trips (mod array)', JSON.stringify(roundTripped.mod) === JSON.stringify(event.payload.mod));
     check('6B: JSON payload round-trips (numeric fields)', roundTripped.col === event.payload.col && roundTripped.row === event.payload.row);
 
+    const createTelemetryBatch = prisma.sessionTelemetryBatch?.create?.bind(prisma.sessionTelemetryBatch);
+    if (typeof createTelemetryBatch !== 'function') {
+      throw new Error('Generated PrismaClient is missing the sessionTelemetryBatch.create delegate');
+    }
+
     check(
       '6B: duplicate (sessionId,sequence) rejects with unique violation',
       await rejectsWithPattern(
-        () => prisma.sessionTelemetryBatch.create({ data: { sessionId: session2.id, sequence: 1, events: [] } }),
+        () => createTelemetryBatch({ data: { sessionId: session2.id, sequence: 1, events: [] } }),
         /unique|duplicate/i,
       ),
     );

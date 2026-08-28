@@ -79,10 +79,25 @@ async function main() {
   }
 
   // 1. Tenant & User
-  const tenant = ;
+  const tenant = await prisma.tenant.upsert({
+    where: { slug: 'acme-corp' },
+    update: {},
+    create: {
+      name: 'Acme Corporation',
+      slug: 'acme-corp',
+      billingPlan: 'enterprise'
+    }
+  });
   if (!tenant) throw new Error('No tenant');
 
-  const user = ;
+  const user = await prisma.user.upsert({
+    where: { email: 'admin@acme.corp' },
+    update: {},
+    create: {
+      email: 'admin@acme.corp',
+      name: 'System Admin'
+    }
+  });
   if (!user) throw new Error('No user');
 
   // Ensure user is in tenant
@@ -93,14 +108,29 @@ async function main() {
   });
 
   // 2. Workspace
-  const workspace = ;
+  const workspace = await prisma.workspace.upsert({
+    where: { slug: 'default-workspace' },
+    update: {},
+    create: {
+      name: 'Default Workspace',
+      slug: 'default-workspace',
+      tenantId: tenant.id
+    }
+  });
   if (!workspace) throw new Error('No workspace');
 
   console.log(`Tenant: ${tenant.id}`);
   console.log(`Workspace: ${workspace.id}`);
 
   // 3. Project
-  const project = ;
+  const project = await prisma.project.create({
+    data: {
+      workspaceId: workspace.id,
+      name: 'Customer Support Portal',
+      description: 'Main AI Customer Support App',
+      forgeStatus: 'completed'
+    }
+  });
   if (!project) throw new Error('No project');
 
   // 4. Agents (with explicit IDs if possible, or let it generate)
