@@ -1,7 +1,7 @@
 product: P04
 name: "Nexarch Knowledge Graph"
 branch: "product/p04-knowledge-graph"
-candidate_sha: "671338475fa2910a949955bef568e6855544230e"
+candidate_sha: "9d6b17e7aacdc7c305ef941366e53d1822c93247"
 status: L2_COMPLETE
 maturity:
   before: L1
@@ -23,3 +23,4 @@ shared_changes_requested:
 known_risks:
   - "Apache AGE performance at scale with extremely dense super-nodes."
 next: [ chief-architecture-agent ]
+
