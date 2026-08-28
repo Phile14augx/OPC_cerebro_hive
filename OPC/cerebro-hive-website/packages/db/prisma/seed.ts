@@ -9,14 +9,16 @@ import {
 } from '../src/auth/talent-permissions';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-if (typeof PrismaClient !== 'function') {
-  throw new Error('Generated PrismaClient is unavailable; run the DB generate contract before seeding');
-}
-const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log('Seeding Database...');
+  const adapter = new PrismaPg(pool);
+  if (typeof PrismaClient !== 'function') {
+    throw new Error('Generated PrismaClient is unavailable; run the DB generate contract before seeding');
+  }
+  const prisma = new PrismaClient({ adapter });
+
+  try {
+    console.log('Seeding Database...');
 
   const canonicalRoles: ReadonlyArray<{
     key: TalentRoleKey;
@@ -258,14 +260,14 @@ async function main() {
     }
   });
 
-  console.log('Seeding Completed successfully!');
+    console.log('Seeding Completed successfully!');
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
 main()
   .catch(e => {
     console.error(e);
     process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
   });
