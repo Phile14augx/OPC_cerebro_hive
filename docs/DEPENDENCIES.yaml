@@ -6,6 +6,12 @@ consumes:
   - product: P01
     interface: DataFabricBatchAPI
     version: "^1.0"
+  - product: P04
+    interface: KnowledgeGraphQueryAPI
+    version: "921b53a3bc1b34f5640191509d7e9e3e7f101938"
+  - product: P04
+    interface: OntologyManagementAPI
+    version: "921b53a3bc1b34f5640191509d7e9e3e7f101938"
 provides:
   - name: FeatureServingAPI
     version: "1.0.0"

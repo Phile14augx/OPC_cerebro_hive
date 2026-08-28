@@ -21,6 +21,14 @@
 - `p01.schema.updated`
   - Payload: `{ datasetId: string, changes: object }`
 
+## P04 Nexarch Knowledge Graph
+- `POST /api/v1/graph/query`
+  - Request: `{ query: string, parameters: object }`
+  - Response: `{ results: array }`
+- `POST /api/v1/ontology/validate`
+  - Request: `{ entity: object, type: string }`
+  - Response: `{ isValid: boolean, violations: array }`
+
 ## P41 AI Governance
 - `POST /api/v1/governance/policies/evaluate`
   - Request: `{ policyId: string, resource: object, context: object }`
