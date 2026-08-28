@@ -9,3 +9,4 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, 'tests/**'],
   },
 });
+
