@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Policy {
+  id          String   @id @default(uuid())
+  name        String
+  regoContent String
+  version     Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  status      String   // active, inactive
+}
+
+model ModelCard {
+  id           String   @id @default(uuid())
+  modelId      String   @unique
+  name         String
+  capabilities Json
+  limitations  Json
+  status       String   // draft, approved, deprecated
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ApprovalWorkflow {
+  id           String   @id @default(uuid())
+  resourceId   String
+  workflowType String   // human, automated, escalation
+  status       String   // pending, approved, rejected
+  justification String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ProvenanceRecord {
+  id            String   @id @default(cuid())
+  sourceProduct String   // e.g. "P44"
+  eventType     String
+  subjectId     String
+  payload       Json
+  lawfulBasis   String?
+  epsilon       Float?
+  delta         Float?
+  timestamp     DateTime @default(now())
+  policyRef     String?
+  verdict       String?
+}

@@ -1,0 +1,14 @@
+product: P41
+consumes: []
+provides:
+  - name: AIGovernanceAPI
+    version: "1.0.0"
+  - name: AIGovernanceSDK
+    version: "1.0.0"
+npm_packages:
+  - "@nexarch/opa-client"
+  - "@nexarch/provenance-crypto"
+infra:
+  - "Immutable Blob Storage"
+  - "PostgreSQL Database"
+  - "NATS JetStream"
