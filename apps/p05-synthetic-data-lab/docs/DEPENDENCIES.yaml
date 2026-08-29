@@ -1,0 +1,18 @@
+product: P05
+consumes:
+  - name: FederatedQueryAPI
+    version: "1.0.0"
+  - name: FeatureServingAPI
+    version: "1.0.0"
+provides:
+  - name: SyntheticGenerationAPI
+    version: "1.0.0"
+  - name: SyntheticDataEvaluationAPI
+    version: "1.0.0"
+npm_packages:
+  - "@nexarch/pipeline-sdk"
+  - "@nexarch/data-connectors"
+infra:
+  - "PostgreSQL (Metadata)"
+  - "Object Storage (Synthetic Data Sets)"
+  - "Kubernetes Job Runner (Generation Tasks)"

@@ -12,7 +12,7 @@ Wave 0 engineering IDs (not products): `KRN-SCOPE-001` W0.1 · `KRN-CI-001` W0.2
 
 ---
 
-## A. Products (50)
+## A. Products (51)
 
 ### A1. AI Productivity Suite
 
@@ -55,6 +55,7 @@ All ten have `docs/specifications/products/*_spec.md`. Studio Company OS added o
 | PROD-023 | HiveSemantic | MVP | L2 | N | P | N | N | N | N | N | `packages/ontology-sdk` | graph integration |
 | PROD-024 | HiveVector | GA | L2 | N | P | P | N | P | N | N | pgvector in stack; no product verification | retrieval E2E |
 | PROD-025 | HiveObservatory | Beta | L2 | P | P | N | N | P | N | N | telemetry/observability packages; nexarch UI on JSON | real telemetry backend |
+| PROD-051 | P05 Synthetic Data Lab | MVP | L2 | N | P | N | N | N | P | N | `apps/p05-synthetic-data-lab` | L3 test contracts |
 
 ### A4. Infrastructure Platform
 
@@ -105,7 +106,7 @@ All ten have `docs/specifications/products/*_spec.md`. Studio Company OS added o
 | L5 | Verified | 0 | — |
 | L4 | Integrated | 3 | PROD-001, 005, 026 |
 | L3 | Functional | 12 | 002, 003, 022, 027, 028, 035, 036, 037, 040, 041, 042, 050 |
-| L2 | Scaffolded | 21 | 004, 006–008, 014, 019, 021, 023–025, 029–032, 034, 038, 039, 044, 045, 048, 049 |
+| L2 | Scaffolded | 22 | 004, 006–008, 014, 019, 021, 023–025, 029–032, 034, 038, 039, 044, 045, 048, 049, 051 |
 | L1 | Specified | 14 | 009–013, 015–018, 020, 033, 043, 046, 047 |
 
 ### Catalogue collisions (not extra products)

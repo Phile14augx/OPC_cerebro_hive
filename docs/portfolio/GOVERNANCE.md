@@ -247,7 +247,7 @@ Phase 0–1 are done enough to execute. Phase 2 is the next mergeable work. Prod
 Track only ledger promotions with evidence:
 
 ```text
-50 PRODUCTS     ████░░░░░░░░░░░░░░░░  3/50 at L4+   0/50 L7
+51 PRODUCTS     ████░░░░░░░░░░░░░░░░  3/51 at L4+   0/51 L7
 50 SERVICES     ░░░░░░░░░░░░░░░░░░░░  0/50 delivery-ready
 PLATFORM KERNEL ██████░░░░░░░░░░░░░░  14/27 at L3+  0/27 L6
 PERSONAL OS     ███░░░░░░░░░░░░░░░░░  4/12 primitives ≥ L2
