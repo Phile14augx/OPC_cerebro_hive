@@ -1,0 +1,25 @@
+product: P48
+consumes:
+  - product: P47
+    interface: ObservabilityTraceAPI
+    version: "^1.0"
+  - product: P46
+    interface: ModelRegistryAPI
+    version: "^1.0"
+  - product: P45
+    interface: ModelInferenceAPI
+    version: "^2.0"
+provides:
+  - name: EvaluationAPI
+    version: "1.0.0"
+  - name: EvaluationContractProvider
+    version: "1.0.0"
+npm_packages:
+  - "ragas-js"
+  - "@nexarch/evaluation-sdk"
+infra:
+  - "PostgreSQL"
+  - "TimescaleDB"
+  - "NATS JetStream"
+  - "Redis"
+  - "S3 Bucket: nexarch-eval-datasets"
