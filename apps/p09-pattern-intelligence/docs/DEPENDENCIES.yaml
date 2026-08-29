@@ -1,0 +1,17 @@
+# Dependencies: Pattern Intelligence (P09)
+internal:
+  - id: P01
+    name: Data Fabric
+    purpose: Source of historical and streaming data
+    criticality: HIGH
+  - id: P41
+    name: AI Governance
+    purpose: Policy enforcement for pattern detection
+    criticality: MEDIUM
+external:
+  - id: Kafka
+    purpose: Event streaming backbone
+  - id: PostgreSQL
+    purpose: Pattern metadata storage
+  - id: Redis
+    purpose: Caching and real-time state
