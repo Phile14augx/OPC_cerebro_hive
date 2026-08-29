@@ -7,7 +7,8 @@ export default defineConfig({
   test: { 
     globals: true,
     environment: "node",
-    exclude: [...configDefaults.exclude, 'dist/**', 'OPC/**', 'node_modules/**']
+    exclude: [...configDefaults.exclude, 'dist/**', 'OPC/**', 'node_modules/**'],
+    include: ["src/**/*.spec.ts", "test/**/*.spec.ts"],
   },
 });
 
