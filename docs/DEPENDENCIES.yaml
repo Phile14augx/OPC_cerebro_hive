@@ -1,0 +1,15 @@
+product: P01
+consumes: []
+provides:
+  - name: FederatedQueryAPI
+    version: "1.0.0"
+  - name: IngestionManagementAPI
+    version: "1.0.0"
+npm_packages:
+  - "@nexarch/data-connectors"
+  - "@nexarch/pipeline-sdk"
+infra:
+  - "Trino Cluster"
+  - "Apache Spark Cluster"
+  - "Kafka Event Bus"
+  - "Object Storage (Iceberg)"

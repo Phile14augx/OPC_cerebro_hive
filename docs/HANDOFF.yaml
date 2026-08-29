@@ -1,0 +1,25 @@
+product: P01
+name: "Nexarch Data Fabric"
+branch: "product/p01-data-fabric"
+candidate_sha: "b898a2c1ac0644c161ccf8365fffb523cfb1c756"
+status: L3_COMPLETE
+maturity:
+  before: L2
+  after: L3
+verification:
+  architecture_review: PENDING
+  kernel_review: PENDING
+  security_review: PENDING
+  qa_certification: PASS
+dependencies:
+  consumed: []
+  provides:
+    - FederatedQueryAPI
+    - IngestionManagementAPI
+shared_changes_requested:
+  - none
+known_risks:
+  - "High dependency on stable Trino coordinator for query federation."
+  - "Performance of heterogeneous queries across distant data sources."
+next: [ chief-architecture-agent ]
+
