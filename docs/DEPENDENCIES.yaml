@@ -1,0 +1,28 @@
+product: P02
+consumes:
+  - product: P01
+    interface: DataFabricStreamAPI
+    version: "^1.0"
+  - product: P01
+    interface: DataFabricBatchAPI
+    version: "^1.0"
+  - product: P04
+    interface: KnowledgeGraphQueryAPI
+    version: "921b53a3bc1b34f5640191509d7e9e3e7f101938"
+  - product: P04
+    interface: OntologyManagementAPI
+    version: "921b53a3bc1b34f5640191509d7e9e3e7f101938"
+provides:
+  - name: FeatureServingAPI
+    version: "1.0.0"
+  - name: FeatureRegistryAPI
+    version: "1.0.0"
+  - name: OfflineDatasetAPI
+    version: "1.0.0"
+npm_packages:
+  - "@nexarch/feature-sdk"
+  - "@nexarch/drift-monitor"
+infra:
+  - "Redis/Cassandra cluster for Online Store"
+  - "PostgreSQL instance for Feature Registry"
+  - "Spark/Ray compute cluster for Transformation Engine"
