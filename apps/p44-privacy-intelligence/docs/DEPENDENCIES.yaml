@@ -1,0 +1,16 @@
+product: P44
+consumes:
+  - product: P01
+    interface: DataIngestionAPI
+    version: "^1.0"
+provides:
+  - name: PrivacyIntelligenceAPI
+    version: "1.0.0"
+npm_packages: []
+infra:
+  - type: postgresql
+    name: privacy-db
+  - type: redis
+    name: privacy-cache
+  - type: nats
+    name: privacy-events
