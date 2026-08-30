@@ -1,0 +1,5 @@
+packages:
+  - "apps/p10-active-learning"
+allowBuilds:
+  '@nestjs/core': true
+  esbuild: true
