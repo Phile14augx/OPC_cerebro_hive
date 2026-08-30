@@ -137,18 +137,26 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     ctx: TenantContext,
     id: string,
     data: Partial<Omit<LearningCampaign, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>>,
+    expectedState?: Partial<LearningCampaign>,
   ): Promise<LearningCampaign | null> {
     if (this.useInMemory) {
       const c = getStore().campaigns.get(id);
       if (!c || c.tenantId !== ctx.tenantId) return null;
+      if (expectedState) {
+        for (const [k, v] of Object.entries(expectedState)) {
+          if ((c as any)[k] !== v) return null;
+        }
+      }
       const updated: LearningCampaign = { ...c, ...data, updatedAt: new Date() };
       getStore().campaigns.set(id, updated);
       return updated;
     }
-    return this.prisma.learningCampaign.updateMany({
-      where: { id, tenantId: ctx.tenantId },
+    const result = await this.prisma.learningCampaign.updateMany({
+      where: { id, tenantId: ctx.tenantId, ...expectedState },
       data: { ...data, updatedAt: new Date() },
-    }) as Promise<LearningCampaign | null>;
+    });
+    if (result.count === 0) return null;
+    return this.findCampaignById(ctx, id);
   }
 
   // ── Annotation Task CRUD ──────────────────────────────────────────────────
@@ -218,18 +226,26 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     ctx: TenantContext,
     id: string,
     data: Partial<Omit<AnnotationTask, 'id' | 'tenantId' | 'createdAt' | 'updatedAt'>>,
+    expectedState?: Partial<AnnotationTask>,
   ): Promise<AnnotationTask | null> {
     if (this.useInMemory) {
       const t = getStore().tasks.get(id);
       if (!t || t.tenantId !== ctx.tenantId) return null;
+      if (expectedState) {
+        for (const [k, v] of Object.entries(expectedState)) {
+          if ((t as any)[k] !== v) return null;
+        }
+      }
       const updated: AnnotationTask = { ...t, ...data, updatedAt: new Date() };
       getStore().tasks.set(id, updated);
       return updated;
     }
-    return this.prisma.annotationTask.update({
-      where: { id },
+    const result = await this.prisma.annotationTask.updateMany({
+      where: { id, tenantId: ctx.tenantId, ...expectedState },
       data: { ...data, updatedAt: new Date() },
-    }) as Promise<AnnotationTask | null>;
+    });
+    if (result.count === 0) return null;
+    return this.findTaskById(ctx, id);
   }
 }
 

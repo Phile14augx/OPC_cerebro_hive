@@ -7,7 +7,7 @@
  *
  * All operations are tenant-scoped via mandatory TenantContext.
  */
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { PrismaService, LearningCampaign, CampaignStatus } from './prisma.service';
 import { TenantContext } from './tenant-context';
 
@@ -87,9 +87,14 @@ export class CampaignService {
       );
     }
 
-    const updated = await this.prisma.updateCampaign(ctx, id, { status: targetStatus });
+    const updated = await this.prisma.updateCampaign(
+      ctx,
+      id,
+      { status: targetStatus },
+      { status: campaign.status },
+    );
     if (!updated) {
-      throw new NotFoundException(`Campaign ${id} not found during update`);
+      throw new ConflictException(`Campaign ${id} was modified concurrently during transition`);
     }
     return { campaign: updated, previousStatus: campaign.status };
   }

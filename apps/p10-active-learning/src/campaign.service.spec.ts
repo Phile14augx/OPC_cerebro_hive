@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CampaignService } from './campaign.service';
 import { PrismaService } from './prisma.service';
 import { TenantContext } from './tenant-context';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
 
 describe('CampaignService', () => {
   let service: CampaignService;
@@ -72,6 +72,16 @@ describe('CampaignService', () => {
       (prisma.findCampaignById as jest.Mock).mockResolvedValue(mockCampaign);
 
       await expect(service.activateCampaign(ctx, 'c1')).rejects.toThrow(BadRequestException);
+    });
+
+    it('throws ConflictException if campaign was modified concurrently', async () => {
+      const ctx = new TenantContext('t1');
+      const mockCampaign = { id: 'c1', name: 'Test', status: 'draft', tenantId: 't1' };
+      
+      (prisma.findCampaignById as jest.Mock).mockResolvedValue(mockCampaign);
+      (prisma.updateCampaign as jest.Mock).mockResolvedValue(null);
+
+      await expect(service.activateCampaign(ctx, 'c1')).rejects.toThrow(ConflictException);
     });
   });
 });

@@ -9,7 +9,7 @@
  *
  * All operations are tenant-scoped via mandatory TenantContext.
  */
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { PrismaService, AnnotationTask, TaskStatus } from './prisma.service';
 import { TenantContext } from './tenant-context';
 
@@ -78,12 +78,15 @@ export class AnnotationTaskService {
       pending[0],
     );
 
-    const assigned = await this.prisma.updateTask(ctx, topTask.id, {
-      assignedTo: annotatorId.trim(),
-    });
+    const assigned = await this.prisma.updateTask(
+      ctx,
+      topTask.id,
+      { assignedTo: annotatorId.trim() },
+      { assignedTo: null, status: 'pending' },
+    );
 
     if (!assigned) {
-      throw new NotFoundException(`Task ${topTask.id} could not be assigned`);
+      throw new ConflictException(`Task ${topTask.id} was modified concurrently and could not be assigned`);
     }
 
     return { task: assigned, strategy: 'uncertainty-sampling' };
@@ -106,10 +109,19 @@ export class AnnotationTaskService {
       );
     }
 
-    const updated = await this.prisma.updateTask(ctx, taskId, {
-      status: 'annotated',
-      dataPayload: { ...task.dataPayload, annotation },
-    });
+    const updated = await this.prisma.updateTask(
+      ctx,
+      taskId,
+      {
+        status: 'annotated',
+        dataPayload: { ...task.dataPayload, annotation },
+      },
+      { status: 'pending' },
+    );
+
+    if (!updated) {
+      throw new ConflictException(`Task ${taskId} was modified concurrently`);
+    }
 
     return updated!;
   }
@@ -127,7 +139,17 @@ export class AnnotationTaskService {
       );
     }
 
-    const updated = await this.prisma.updateTask(ctx, taskId, { status: 'skipped' });
+    const updated = await this.prisma.updateTask(
+      ctx,
+      taskId,
+      { status: 'skipped' },
+      { status: 'pending' },
+    );
+
+    if (!updated) {
+      throw new ConflictException(`Task ${taskId} was modified concurrently`);
+    }
+    
     return updated!;
   }
 
