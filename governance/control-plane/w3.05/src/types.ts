@@ -18,6 +18,29 @@ export type DataClass = 'VERSIONED_CONTROL_SOURCE' | 'DETERMINISTIC_EVIDENCE' | 
 export interface Finding { code: ReasonCode; severity: Severity; message: string; evidenceRefs: string[]; }
 export interface ValidationResult<T> { valid: boolean; value?: T; findings: Finding[]; }
 export interface AuthoritySnapshot { epoch: number; controlSha256: string; controlPath: string; }
-export interface RunManifest { schema_version: string; control_plane_version: string; validator_version: string; run_id: string; source_commit: string; }
+export interface RunManifest {
+  schema_version: string;
+  control_plane_version: string;
+  validator_version: string;
+  source_commit: string;
+  run_id: string;
+  execution_id: string;
+  actor_id: string;
+  access_mode: string;
+  live_control_path: string;
+  live_control_sha256: string;
+  live_epoch: number;
+  parser_version: string;
+  repository_id: string;
+  object_ids: string[];
+  tree_ids: string[];
+  refs: string[];
+  registry_digests: string[];
+  gate_results: string[];
+  reason_codes: string[];
+  planned_mutations: unknown[];
+  publication_target: string;
+  redaction_result: string;
+}
 export interface EpochProposal { proposed_epoch: number; supersedes_epoch: number; previous_control_sha256: string; }
 export interface PublicationReceipt { previous_epoch: number; proposed_epoch: number; published_epoch: number; previous_receipt_digest: string; receipt_digest: string; }
