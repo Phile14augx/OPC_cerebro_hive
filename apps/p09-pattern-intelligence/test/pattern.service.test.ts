@@ -1,4 +1,4 @@
-import assert from 'node:assert';
+import * as assert from 'node:assert';
 import { describe, it, beforeEach } from 'node:test';
 import { PatternService } from '../src/pattern.service';
 import { TenantContext } from '../src/types';
@@ -58,15 +58,22 @@ describe('Pattern Intelligence', () => {
     await ingestionEngine.ingest(tenantContext, 'src-anomaly', normalData);
     
     // Anomaly data (spike)
-    const anomalyData = [ { value: 100, timestamp: Date.now() } ];
+    const anomalyData = [ 
+      { value: 100, timestamp: Date.now() },
+      { value: 150, timestamp: Date.now() + 1000 }
+    ];
     await ingestionEngine.ingest(tenantContext, 'src-anomaly', anomalyData);
 
+    // Another batch in the same anomaly window
+    const anomalyData2 = [ { value: 120, timestamp: Date.now() + 2000 } ];
+    await ingestionEngine.ingest(tenantContext, 'src-anomaly', anomalyData2);
+
     const patterns = patternRepository.getPatterns(tenantContext);
-    assert.ok(patterns.length > 0, 'Should have discovered patterns/anomalies');
+    assert.strictEqual(patterns.length, 1, 'Should have discovered exactly one pattern per anomaly window');
     assert.strictEqual(patterns[0].type, 'anomaly');
 
     const alerts = alertingSystem.getAlerts(tenantContext);
-    assert.ok(alerts.length > 0, 'Should have triggered an alert for the anomaly');
+    assert.strictEqual(alerts.length, 1, 'Should have triggered exactly one alert per anomaly window');
     assert.strictEqual(alerts[0].sourceId, 'src-anomaly');
   });
 
