@@ -1,0 +1,79 @@
+name: PUBLICATION
+states:
+  - DISCOVERED
+  - SNAPSHOTTED
+  - VALIDATED
+  - INDEPENDENTLY_VERIFIED
+  - CAS_READY
+  - PUBLISHING
+  - REVALIDATED
+  - PUBLISHED
+  - CAS_CONFLICT
+  - BLOCKED
+  - FAILED
+transitions:
+  - from: DISCOVERED
+    to: SNAPSHOTTED
+    trigger: Capture Live Authority
+    reasonCode:
+      - PATH_IDENTITY_INVALID
+      - CONTROL_PARSE_INVALID
+  - from: SNAPSHOTTED
+    to: VALIDATED
+    trigger: Run Validator & Proposer
+    reasonCode:
+      - CONTROL_SCHEMA_INVALID
+      - EPOCH_NOT_MONOTONIC
+      - EPOCH_SUPERSESSION_MISMATCH
+      - EPOCH_ROLLBACK_ATTEMPT
+  - from: VALIDATED
+    to: INDEPENDENTLY_VERIFIED
+    trigger: Independent Verification
+    reasonCode:
+      - BUILDER_VERIFIER_COLLISION
+      - CONTROL_CHANGED
+      - DIRTY_UNRECONCILED
+  - from: INDEPENDENTLY_VERIFIED
+    to: CAS_READY
+    trigger: Acquire Publication Lease
+    reasonCode:
+      - LEASE_MISSING
+      - CAS_CONFLICT
+      - FENCING_TOKEN_STALE
+  - from: CAS_READY
+    to: PUBLISHING
+    trigger: Stage Proposal & Prime CAS
+    reasonCode:
+      - CONTROL_SCHEMA_INVALID
+      - NONDETERMINISTIC_OUTPUT
+  - from: PUBLISHING
+    to: REVALIDATED
+    trigger: Execute Atomic Replace
+    reasonCode:
+      - CAS_CONFLICT
+      - CONTROL_CHANGED
+  - from: REVALIDATED
+    to: PUBLISHED
+    trigger: Commit Chained Receipt
+    reasonCode:
+      - CAS_CONFLICT
+  - from: "*"
+    to: CAS_CONFLICT
+    trigger: Pre-replace Authority Drift
+    reasonCode:
+      - CAS_CONFLICT
+      - CONTROL_CHANGED
+      - EPOCH_SUPERSESSION_MISMATCH
+  - from: "*"
+    to: BLOCKED
+    trigger: Policy / Gate Invalidation
+    reasonCode:
+      - DIRTY_UNRECONCILED
+      - GIT_LOCK_ACTIVE
+      - REMOTE_ATTESTATION_STALE
+  - from: PUBLISHING|REVALIDATED
+    to: FAILED
+    trigger: Atomic Replace / Verification Error
+    reasonCode:
+      - CAS_CONFLICT
+      - CONTROL_CHANGED
