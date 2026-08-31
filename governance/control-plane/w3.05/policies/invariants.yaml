@@ -1,0 +1,144 @@
+﻿version: 1
+control_plane_version: W3.05
+description: Invariant catalog for the W3.05 Control Plane Invariant Engine.
+
+invariants:
+  - id: INV-001
+    description: One writable worktree has exactly one active write owner.
+    severity: CRITICAL
+    reason_code: MULTIPLE_WRITERS
+
+  - id: INV-002
+    description: Builder and verifier identities must differ; they cannot be the same agent.
+    severity: CRITICAL
+    reason_code: BUILDER_VERIFIER_COLLISION
+
+  - id: INV-003
+    description: A builder cannot mutate outside its exact filesystem contract scope.
+    severity: CRITICAL
+    reason_code: PATH_SCOPE_ESCAPE
+
+  - id: INV-004
+    description: A product builder cannot mutate recovery resources.
+    severity: CRITICAL
+    reason_code: SCOPE_OVERLAP
+
+  - id: INV-005
+    description: A recovery builder cannot implement product features.
+    severity: CRITICAL
+    reason_code: SCOPE_OVERLAP
+
+  - id: INV-006
+    description: Shared infrastructure requires an explicit owner and an active lease.
+    severity: HIGH
+    reason_code: SHARED_INFRA_UNOWNED
+
+  - id: INV-007
+    description: Dirty state must be completely reconciled before write authorization is granted.
+    severity: CRITICAL
+    reason_code: DIRTY_UNRECONCILED
+
+  - id: INV-008
+    description: Unexpected HEAD or tree movement invalidates the execution lease.
+    severity: CRITICAL
+    reason_code: HEAD_CHANGED
+
+  - id: INV-009
+    description: Unexpected filesystem fingerprint movement invalidates the execution lease.
+    severity: CRITICAL
+    reason_code: EXTERNAL_MUTATION_DETECTED
+
+  - id: INV-010
+    description: Active or unverifiable Git locks block Git mutation.
+    severity: CRITICAL
+    reason_code: GIT_LOCK_ACTIVE
+
+  - id: INV-011
+    description: Exact-SHA remote CI attestation is required when specified by the recovery contract.
+    severity: CRITICAL
+    reason_code: REMOTE_ATTESTATION_STALE
+
+  - id: INV-012
+    description: Historical epoch bytes are immutable and must not be modified.
+    severity: CRITICAL
+    reason_code: HISTORICAL_EPOCH_MUTATION
+
+  - id: INV-013
+    description: Proposed authority grants no live authority before validation and publication.
+    severity: HIGH
+    reason_code: CONTROL_SCHEMA_INVALID
+
+  - id: INV-014
+    description: Epoch publication is atomic and never incrementally edits the live file.
+    severity: CRITICAL
+    reason_code: CAS_CONFLICT
+
+  - id: INV-015
+    description: Epoch publication uses compare-and-swap against exact epoch and byte hash.
+    severity: CRITICAL
+    reason_code: CAS_CONFLICT
+
+  - id: INV-016
+    description: Live YAML with duplicate keys, unsafe tags, unresolved interpolation, or invalid schema is fatal.
+    severity: CRITICAL
+    reason_code: CONTROL_PARSE_INVALID
+
+  - id: INV-017
+    description: Pending or expired handoff grants no new write ownership.
+    severity: HIGH
+    reason_code: HANDOFF_PENDING
+
+  - id: INV-018
+    description: Remote attestation must bind the full object ID to the canonical repository and approved reachability policy.
+    severity: HIGH
+    reason_code: REMOTE_REPOSITORY_MISMATCH
+
+  - id: INV-019
+    description: A stale lease holder cannot resume with an expired fencing token.
+    severity: CRITICAL
+    reason_code: FENCING_TOKEN_STALE
+
+  - id: INV-020
+    description: A validation/proposal run uses evidence from one coherent run manifest and authority snapshot.
+    severity: HIGH
+    reason_code: CONTROL_CHANGED
+
+  - id: INV-021
+    description: Aborted validation or publication leaves original live/worktree state unchanged.
+    severity: HIGH
+    reason_code: EXTERNAL_MUTATION_DETECTED
+
+  - id: INV-022
+    description: Deterministic proposal content excludes volatile diagnostics and produces a stable digest.
+    severity: HIGH
+    reason_code: NONDETERMINISTIC_OUTPUT
+
+  - id: INV-023
+    description: Secrets and classified content are redacted before evidence persistence or publication.
+    severity: CRITICAL
+    reason_code: SECRET_REDACTION_FAILED
+
+  - id: INV-024
+    description: Resume and retry must revalidate authority, SHA, locks, leases, handoffs, dirty state, and remote evidence.
+    severity: HIGH
+    reason_code: CONTROL_CHANGED
+
+  - id: INV-025
+    description: No publication occurs from partial, mixed-version, expired, or stale evidence.
+    severity: CRITICAL
+    reason_code: REMOTE_ATTESTATION_STALE
+
+  - id: INV-026
+    description: A proposal epoch equals the live epoch plus exactly one unless a future explicit migration protocol authorizes a different transition.
+    severity: CRITICAL
+    reason_code: EPOCH_NOT_MONOTONIC
+
+  - id: INV-027
+    description: supersedes_epoch equals the exact live epoch and previous_control_sha256 equals the exact live byte hash.
+    severity: CRITICAL
+    reason_code: EPOCH_SUPERSESSION_MISMATCH
+
+  - id: INV-028
+    description: Duplicate, lower, skipped, or previously published epoch numbers are rejected as rollback or monotonicity violations.
+    severity: CRITICAL
+    reason_code: EPOCH_ROLLBACK_ATTEMPT
