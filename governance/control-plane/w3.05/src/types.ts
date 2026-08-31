@@ -43,7 +43,21 @@ export interface RunManifest {
   publication_target: string;
   redaction_result: string;
 }
-export interface EpochProposal { proposed_epoch: number; supersedes_epoch: number; previous_control_sha256: string; }
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export interface EpochProposal {
+  schema_version: string;
+  control_plane_version: string;
+  proposed_epoch: number;
+  supersedes_epoch: number;
+  previous_control_sha256: string;
+  candidate_control_sha256: string;
+  type: string;
+  builder_id: string;
+  verifier_ids: string[];
+  evidence?: any;
+  findings?: Finding[];
+  proposal_sha256?: string;
+}
 export interface PublicationReceipt {
   schema_version: string;
   control_plane_version: string;
@@ -62,3 +76,4 @@ export interface PublicationReceipt {
   previous_receipt_digest: string;
   receipt_digest: string;
 }
+

@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as crypto from 'node:crypto';
@@ -14,7 +14,7 @@ describe('Disabled CAS Publisher', () => {
     
     await expect(publisher.publish({
       targetControlPath: livePath,
-      canonicalProposalBytes: '...',
+      candidateControlBytes: '...', candidateControlSha256: '9424c535492d0752102e3b2eaf1375d8cb9a71f76632115dc5f2129fb66a3d13',
       expectedPreviousSha256: 'abc...',
     })).rejects.toThrow(PublicationDeniedError);
 
@@ -39,7 +39,7 @@ describe('Disabled CAS Publisher', () => {
     const publisher = new Publisher({ writeAdapter: adapter });
     
     await expect(publisher.publish(
-      { targetControlPath: 'test.yaml', canonicalProposalBytes: 'a', expectedPreviousSha256: 'a' },
+      { targetControlPath: 'test.yaml', candidateControlBytes: 'a', candidateControlSha256: 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', proposalSha256: '0000000000000000000000000000000000000000000000000000000000000000', expectedPreviousSha256: 'a' },
       undefined
     )).rejects.toThrowError(/Missing or invalid/);
     
@@ -53,7 +53,7 @@ describe('Disabled CAS Publisher', () => {
     const publisher = new Publisher({ writeAdapter: adapter });
     
     await expect(publisher.publish(
-      { targetControlPath: 'test.yaml', canonicalProposalBytes: 'a', expectedPreviousSha256: 'a' },
+      { targetControlPath: 'test.yaml', candidateControlBytes: 'a', candidateControlSha256: 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', proposalSha256: '0000000000000000000000000000000000000000000000000000000000000000', expectedPreviousSha256: 'a' },
       { isValid: true }
     )).rejects.toThrowError('Intentional failure');
   });
@@ -70,7 +70,7 @@ describe('Disabled CAS Publisher', () => {
     const publisher = new Publisher({ writeAdapter: adapter });
     
     const result = await publisher.publish(
-      { targetControlPath: targetFile, canonicalProposalBytes: 'epoch41', expectedPreviousSha256: initialSha },
+      { targetControlPath: targetFile, candidateControlBytes: 'epoch41', candidateControlSha256: '524ed0e1512e197b1d2b0c1f1169e45ede7bf159d740d218a9dc8c02b96a5926', expectedPreviousSha256: initialSha },
       { isValid: true }
     );
     
@@ -80,3 +80,6 @@ describe('Disabled CAS Publisher', () => {
     fs.rmSync(sandboxDir, { recursive: true, force: true });
   });
 });
+
+
+

@@ -1,4 +1,4 @@
-﻿import { ReasonCode, Severity } from '../types.js';
+import { ReasonCode, Severity } from '../types.js';
 
 export class PublicationDeniedError extends Error {
   public readonly code: ReasonCode;
@@ -57,7 +57,9 @@ export class DisabledWriteAdapter implements LiveControlWriteAdapter {
 
 export interface PublicationRequest {
   readonly targetControlPath: string;
-  readonly canonicalProposalBytes: string | Buffer;
+  readonly candidateControlBytes: string | Buffer;
+  readonly candidateControlSha256: string;
+  readonly proposalSha256: string;
   readonly expectedPreviousSha256: string;
 }
 
@@ -114,9 +116,17 @@ export class Publisher {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     governorToken: GovernorAuthorizationToken
   ): Promise<PublicationResult> {
+    const crypto = await import('node:crypto');
+    const hash = crypto.createHash('sha256');
+    hash.update(request.candidateControlBytes);
+    const computed = hash.digest('hex');
+    if (computed !== request.candidateControlSha256) {
+      throw new PublicationDeniedError('CAS_CONFLICT: Candidate control hash mismatch');
+    }
+
     const receipt = await this.writeAdapter.atomicReplace(
       request.targetControlPath,
-      request.canonicalProposalBytes,
+      request.candidateControlBytes,
       request.expectedPreviousSha256
     );
     return { receipt };

@@ -1,18 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { sha256Canonical } from '../../src/canonical/json.js';
 import { verifyProposal, ProposalVerificationError } from '../../src/proposal/verifier.js';
 
 describe('Task 12: Negative Proposal Verifier', () => {
-    const validProposal = {
-        proposed_epoch: 41,
-        supersedes_epoch: 40,
-        previous_control_sha256: 'hash40',
-        builder_id: 'builder-01',
-        canonical_digest: 'digest123'
-    };
+        const preimage = { schema_version: '1.0', control_plane_version: '1.0', type: 'NON_AUTHORITATIVE_PROPOSAL', proposed_epoch: 41, supersedes_epoch: 40, previous_control_sha256: '0000000000000000000000000000000000000000000000000000000000000000', candidate_control_sha256: '0000000000000000000000000000000000000000000000000000000000000000', builder_id: 'builder-01', verifier_ids: ['verifier-01'] };
+    const validProposal = { ...preimage, proposal_sha256: sha256Canonical(preimage) };
     
     const baseCapture = {
         live_epoch: 40,
-        live_control_sha256: 'hash40'
+        live_control_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
     };
 
     it('Fixture 1: Same Identity', () => {
@@ -88,7 +84,7 @@ describe('Task 12: Negative Proposal Verifier', () => {
     it('Fixture 6: Branch / HEAD Movement', () => {
         expect(() => {
             verifyProposal({
-                proposal: { ...validProposal, branch_head: 'head1' },
+                proposal: { ...validProposal, branch_head: 'head1', proposal_sha256: sha256Canonical({ ...preimage, branch_head: 'head1' }) },
                 verifier_id: 'verifier-01',
                 verifier_lease: { active: true, type: 'PRODUCT_VERIFIER' },
                 fresh_capture: { ...baseCapture, branch_head: 'head2' },
@@ -100,7 +96,7 @@ describe('Task 12: Negative Proposal Verifier', () => {
     it('Fixture 7: Dirty Fingerprint Mismatch', () => {
         expect(() => {
             verifyProposal({
-                proposal: { ...validProposal, dirty_fingerprint: 'fp1' },
+                proposal: { ...validProposal, dirty_fingerprint: 'fp1', proposal_sha256: sha256Canonical({ ...preimage, dirty_fingerprint: 'fp1' }) },
                 verifier_id: 'verifier-01',
                 verifier_lease: { active: true, type: 'PRODUCT_VERIFIER' },
                 fresh_capture: { ...baseCapture, worktrees: [{ dirty_fingerprint: 'fp2' }] },
@@ -176,9 +172,16 @@ describe('Task 12: Negative Proposal Verifier', () => {
                 verifier_id: 'verifier-01',
                 verifier_lease: { active: true, type: 'PRODUCT_VERIFIER' },
                 fresh_capture: baseCapture,
-                independent_evaluation: { adapter_type: 'FRESH', canonical_digest: 'digest123', fencing_token_stale: true }
+                independent_evaluation: { adapter_type: 'FRESH', fencing_token_stale: true }
             });
         }).toThrowError(new ProposalVerificationError('FENCING_TOKEN_STALE'));
     });
 
 });
+
+
+
+
+
+
+

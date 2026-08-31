@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { sha256Canonical } from '../canonical/json.js';
+import { SchemaRegistry } from '../schemas/registry.js';
 
 export class ProposalVerificationError extends Error {
     constructor(public code: string, message?: string) {
@@ -17,6 +19,21 @@ export interface VerificationInput {
 
 export function verifyProposal(input: VerificationInput): any {
     const { proposal, verifier_id, verifier_lease, fresh_capture, independent_evaluation } = input;
+
+    // Validate schema
+    const registry = new SchemaRegistry();
+    const validation = registry.validate('proposal', proposal);
+    if (!validation.valid) {
+        throw new ProposalVerificationError('CONTROL_SCHEMA_INVALID');
+    }
+
+    // Independent recompute
+    const preimage = { ...proposal };
+    delete preimage.proposal_sha256;
+    const expectedDigest = sha256Canonical(preimage);
+    if (proposal.proposal_sha256 !== expectedDigest) {
+        throw new ProposalVerificationError('NONDETERMINISTIC_OUTPUT');
+    }
 
     // 1. Identity Separation
     if (!verifier_id || verifier_id === '' || verifier_id === 'unknown') {
@@ -95,8 +112,10 @@ export function verifyProposal(input: VerificationInput): any {
     }
 
     return {
-        verdict: 'EPOCH_41_PROPOSAL_VALID',
+        verdict: 'EPOCH_' + proposal.proposed_epoch + '_PROPOSAL_VALID',
         proposed_epoch: proposal.proposed_epoch,
         verifier_id: verifier_id
     };
 }
+
+

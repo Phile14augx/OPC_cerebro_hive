@@ -1,4 +1,4 @@
-﻿import { Publisher, PublicationRequest, GovernorAuthorizationToken } from '../publication/publisher.js';
+import { Publisher, PublicationRequest, GovernorAuthorizationToken } from '../publication/publisher.js';
 
 export async function runPublishCli() {
   const publisher = new Publisher();
@@ -6,7 +6,7 @@ export async function runPublishCli() {
   // It's disabled by default.
   const req: PublicationRequest = {
     targetControlPath: 'unknown',
-    canonicalProposalBytes: '',
+    candidateControlBytes: '', candidateControlSha256: '', proposalSha256: '',
     expectedPreviousSha256: ''
   };
   const token: GovernorAuthorizationToken = { isValid: false };
@@ -19,3 +19,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.exit(1);
   });
 }
+
+

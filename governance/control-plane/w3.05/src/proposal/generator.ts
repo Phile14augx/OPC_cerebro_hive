@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
+import { sha256Canonical } from '../canonical/json.js';
+import { SchemaRegistry } from '../schemas/registry.js';
 
 export class ProposalGenerationError extends Error {
     constructor(public code: string, message?: string) {
@@ -122,6 +123,19 @@ export function generateProposal(input: ProposalInput): any {
         });
     }
 
-    return result;
+    const registry = new SchemaRegistry();
+    // Validate preimage
+    const preimage = { ...result };
+    delete preimage.proposal_sha256;
+    const digest = sha256Canonical(preimage);
+    
+    const finalProposal = { ...preimage, proposal_sha256: digest };
+    const validation = registry.validate('proposal', finalProposal);
+    if (!validation.valid) {
+        throw new ProposalGenerationError('CONTROL_SCHEMA_INVALID');
+    }
+
+    return finalProposal;
 }
+
 

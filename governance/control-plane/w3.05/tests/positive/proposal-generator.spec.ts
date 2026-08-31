@@ -13,7 +13,7 @@ describe('Task 11: Positive Proposal Generator', () => {
                 supersedes_epoch: 40,
                 previous_control_sha256: '4040404040404040404040404040404040404040404040404040404040404040',
                 product_contract_ids: ['product-p11', 'product-p10'],
-                verifier_ids: ['verifier-01']
+                verifier_ids: ['verifier-01'], builder_id: 'builder-01', type: 'NON_AUTHORITATIVE_PROPOSAL', candidate_control_sha256: '4040404040404040404040404040404040404040404040404040404040404040'
             },
             lanes: [
                 {
@@ -41,3 +41,4 @@ describe('Task 11: Positive Proposal Generator', () => {
         expect(result.product_contract_ids).toEqual(['product-p10', 'product-p11']);
     });
 });
+

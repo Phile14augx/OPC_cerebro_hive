@@ -1,4 +1,5 @@
-﻿import { describe, it, expect, vi } from 'vitest';
+import crypto from 'node:crypto';
+import { describe, it, expect, vi } from 'vitest';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as crypto from 'node:crypto';
@@ -23,7 +24,7 @@ describe('Publication Crash Consistency', () => {
     const publisher = new Publisher({ writeAdapter: adapter });
     
     await expect(publisher.publish(
-      { targetControlPath: targetFile, canonicalProposalBytes: 'epoch41', expectedPreviousSha256: initialSha },
+      { targetControlPath: targetFile, candidateControlBytes: 'epoch41', candidateControlSha256: '524ed0e1512e197b1d2b0c1f1169e45ede7bf159d740d218a9dc8c02b96a5926', expectedPreviousSha256: initialSha },
       { isValid: true }
     )).rejects.toThrowError('Crash before write');
 
@@ -51,7 +52,7 @@ describe('Publication Crash Consistency', () => {
     const publisher = new Publisher({ writeAdapter: adapter });
     
     await expect(publisher.publish(
-      { targetControlPath: targetFile, canonicalProposalBytes: 'epoch41', expectedPreviousSha256: initialSha },
+      { targetControlPath: targetFile, candidateControlBytes: 'epoch41', candidateControlSha256: '524ed0e1512e197b1d2b0c1f1169e45ede7bf159d740d218a9dc8c02b96a5926', expectedPreviousSha256: initialSha },
       { isValid: true }
     )).rejects.toThrowError('Crash before fsync');
 
@@ -78,7 +79,7 @@ describe('Publication Crash Consistency', () => {
     const publisher = new Publisher({ writeAdapter: adapter });
     
     await expect(publisher.publish(
-      { targetControlPath: targetFile, canonicalProposalBytes: 'epoch41', expectedPreviousSha256: initialSha },
+      { targetControlPath: targetFile, candidateControlBytes: 'epoch41', candidateControlSha256: '524ed0e1512e197b1d2b0c1f1169e45ede7bf159d740d218a9dc8c02b96a5926', expectedPreviousSha256: initialSha },
       { isValid: true }
     )).rejects.toThrowError('Crash before rename');
 
@@ -110,7 +111,7 @@ describe('Publication Crash Consistency', () => {
     const publisher = new CrashingPublisher({ writeAdapter: adapter });
     
     await expect(publisher.publish(
-      { targetControlPath: targetFile, canonicalProposalBytes: 'epoch41', expectedPreviousSha256: initialSha },
+      { targetControlPath: targetFile, candidateControlBytes: 'epoch41', candidateControlSha256: '524ed0e1512e197b1d2b0c1f1169e45ede7bf159d740d218a9dc8c02b96a5926', expectedPreviousSha256: initialSha },
       { isValid: true }
     )).rejects.toThrowError('Crash before receipt return');
 
@@ -126,3 +127,8 @@ describe('Publication Crash Consistency', () => {
     expect(true).toBe(true);
   });
 });
+
+
+
+
+

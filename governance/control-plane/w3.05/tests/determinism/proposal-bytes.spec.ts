@@ -7,20 +7,7 @@ function createValidProposalInputs(overrides?: any) {
     return {
         live_epoch: 40,
         live_control_sha256: '4040404040404040404040404040404040404040404040404040404040404040',
-        proposal: {
-            schema_version: '1.0.0',
-            control_plane_version: 'W3.05',
-            proposed_epoch: 41,
-            supersedes_epoch: 40,
-            previous_control_sha256: '4040404040404040404040404040404040404040404040404040404040404040',
-            proposal_sha256: 'placeholder',
-            run_manifest_digest: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-            authority_snapshot_digest: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-            product_contract_ids: overrides?.productIds || ['product-p10', 'product-p11'],
-            recovery_contract_ids: overrides?.recoveryIds || ['recovery-f16'],
-            verifier_ids: overrides?.verifierIds || ['agent-verifier-01'],
-            status: 'NON_AUTHORITATIVE_PROPOSAL'
-        },
+        proposal: { schema_version: '1.0', control_plane_version: '1.0', type: 'NON_AUTHORITATIVE_PROPOSAL', builder_id: 'agent-builder-01', candidate_control_sha256: '4040404040404040404040404040404040404040404040404040404040404040', proposed_epoch: 41, supersedes_epoch: 40, previous_control_sha256: '4040404040404040404040404040404040404040404040404040404040404040', verifier_ids: overrides?.verifierIds || ['agent-verifier-01'], product_contract_ids: overrides?.productIds || ['product-p10', 'product-p11'], recovery_contract_ids: overrides?.recoveryIds || ['recovery-f16'] },
         diagnostics: overrides?.diagnostics || { captured_at: "2026-08-31T12:40:20.123Z", process_id: 4812, execution_ms: 42 },
         findings: overrides?.findings || []
     };
@@ -119,4 +106,5 @@ describe('Task 11: Proposal Generator Determinism Matrix', () => {
         expect(sha256Canonical(propA)).toBe(sha256Canonical(propB));
     });
 });
+
 
