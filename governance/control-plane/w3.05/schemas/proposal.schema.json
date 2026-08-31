@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "proposal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "control_plane_version",
+    "proposed_epoch",
+    "supersedes_epoch",
+    "previous_control_sha256",
+    "type",
+    "builder_id",
+    "verifier_ids",
+    "candidate_control_sha256",
+    "proposal_sha256"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "minLength": 1 },
+    "control_plane_version": { "type": "string", "minLength": 1 },
+    "proposed_epoch": { "type": "integer", "minimum": 1 },
+    "supersedes_epoch": { "type": "integer", "minimum": 0 },
+    "previous_control_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "candidate_control_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "type": { "type": "string", "enum": ["AUTHORITATIVE_PROPOSAL", "NON_AUTHORITATIVE_PROPOSAL"] },
+    "builder_id": { "type": "string", "minLength": 1 },
+    "verifier_ids": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "evidence": { "type": "object", "additionalProperties": true },
+    "findings": { "type": "array" },
+    "proposal_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "branch_head": { "type": "string" },
+    "dirty_fingerprint": { "type": "string" },
+    "scopes": { "type": "array", "items": { "type": "string" } },
+    "shared_infra": { "type": "object", "additionalProperties": true },
+    "product_contract_ids": { "type": "array", "items": { "type": "string" } },
+    "recovery_contract_ids": { "type": "array", "items": { "type": "string" } },
+    "status": { "type": "string" },
+    "run_manifest_digest": { "type": "string" },
+    "authority_snapshot_digest": { "type": "string" }
+  }
+}

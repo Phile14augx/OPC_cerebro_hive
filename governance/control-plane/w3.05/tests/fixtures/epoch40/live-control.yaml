@@ -1,0 +1,8 @@
+authority: NON_AUTHORITATIVE_TEST_FIXTURE
+epoch: 40
+supersedes_epoch: 39
+state:
+  handoffs: pending
+  external_dirt: active
+  lock: unresolved
+  attestation_gap: true

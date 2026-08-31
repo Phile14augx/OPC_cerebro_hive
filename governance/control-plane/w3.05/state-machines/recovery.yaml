@@ -1,0 +1,128 @@
+name: RECOVERY
+states:
+  - DISCOVERED
+  - FORENSICS_COMPLETE
+  - CONTRACT_PENDING
+  - READY_FOR_RECOVERY
+  - RUNNING
+  - MACHINE_VERIFIED_LOCAL
+  - REMOTE_ATTESTATION_PENDING
+  - MACHINE_VERIFIED_REMOTE
+  - HUMAN_GATE
+  - RELEASE_READY
+  - FROZEN
+  - BLOCKED_SCOPE
+  - BLOCKED_CONTROL
+  - BLOCKED_EXTERNAL_MUTATION
+  - BLOCKED_REMOTE_ATTESTATION
+  - BLOCKED_VERIFICATION
+transitions:
+  - from: DISCOVERED
+    to: FORENSICS_COMPLETE
+    trigger: Run Forensics
+    reasonCode:
+      - PATH_IDENTITY_INVALID
+      - GIT_LOCK_ACTIVE
+      - CONTROL_CHANGED
+  - from: FORENSICS_COMPLETE
+    to: CONTRACT_PENDING
+    trigger: Register Tranche
+    reasonCode:
+      - GIT_LOCK_ACTIVE
+      - DIRTY_UNRECONCILED
+  - from: CONTRACT_PENDING
+    to: READY_FOR_RECOVERY
+    trigger: Bind Recovery Contract
+    reasonCode:
+      - SCOPE_OVERLAP
+      - BUILDER_VERIFIER_COLLISION
+      - LEASE_MISSING
+      - LEASE_EXPIRED
+  - from: READY_FOR_RECOVERY
+    to: RUNNING
+    trigger: Begin Recovery
+    reasonCode:
+      - FENCING_TOKEN_STALE
+      - HEAD_CHANGED
+      - CONTROL_CHANGED
+  - from: RUNNING
+    to: MACHINE_VERIFIED_LOCAL
+    trigger: Complete Local Tests
+    reasonCode:
+      - MACHINE_GREEN_FALSE
+  - from: MACHINE_VERIFIED_LOCAL
+    to: REMOTE_ATTESTATION_PENDING
+    trigger: Dispatch Remote Attestation
+    reasonCode:
+      - REMOTE_COMMIT_ABSENT
+      - REMOTE_REF_UNAPPROVED
+  - from: REMOTE_ATTESTATION_PENDING
+    to: MACHINE_VERIFIED_REMOTE
+    trigger: Read Remote CI Attestation
+    reasonCode:
+      - REMOTE_ATTESTATION_STALE
+      - REQUIRED_CHECK_POLICY_MISSING
+      - REQUIRED_CHECK_MISSING
+      - MACHINE_GREEN_FALSE
+      - REMOTE_REPOSITORY_MISMATCH
+  - from: MACHINE_VERIFIED_REMOTE
+    to: HUMAN_GATE
+    trigger: Stage for Human Review
+    reasonCode:
+      - BUILDER_VERIFIER_COLLISION
+      - MACHINE_GREEN_FALSE
+  - from: HUMAN_GATE
+    to: RELEASE_READY
+    trigger: Human Sign-off
+    reasonCode:
+      - CONTROL_CHANGED
+      - EXTERNAL_MUTATION_DETECTED
+  - from: "*"
+    to: FROZEN
+    trigger: Freeze Order / Baseline
+    reasonCode:
+      - HISTORICAL_EPOCH_MUTATION
+  - from: "*"
+    to: BLOCKED_SCOPE
+    trigger: Scope Overlap
+    reasonCode:
+      - SCOPE_OVERLAP
+      - PATH_SCOPE_ESCAPE
+  - from: "*"
+    to: BLOCKED_CONTROL
+    trigger: Authority Mismatch
+    reasonCode:
+      - CONTROL_CHANGED
+      - EPOCH_SUPERSESSION_MISMATCH
+  - from: "*"
+    to: BLOCKED_EXTERNAL_MUTATION
+    trigger: Unexpected Mutation
+    reasonCode:
+      - DIRTY_UNRECONCILED
+      - EXTERNAL_MUTATION_DETECTED
+  - from: MACHINE_VERIFIED_LOCAL|REMOTE_ATTESTATION_PENDING
+    to: BLOCKED_REMOTE_ATTESTATION
+    trigger: Remote CI Failure / Policy Gap
+    reasonCode:
+      - REMOTE_ATTESTATION_STALE
+      - REQUIRED_CHECK_POLICY_MISSING
+      - REQUIRED_CHECK_MISSING
+      - MACHINE_GREEN_FALSE
+      - REMOTE_REPOSITORY_MISMATCH
+  - from: RUNNING|MACHINE_VERIFIED_LOCAL
+    to: BLOCKED_VERIFICATION
+    trigger: Local Test Failure
+    reasonCode:
+      - MACHINE_GREEN_FALSE
+  - from: BLOCKED_*
+    to: DISCOVERED
+    trigger: Revalidation Run
+    reasonCode:
+      - CONTROL_CHANGED
+      - DIRTY_UNRECONCILED
+  - from: BLOCKED_*
+    to: FORENSICS_COMPLETE
+    trigger: Revalidation Run
+    reasonCode:
+      - CONTROL_CHANGED
+      - DIRTY_UNRECONCILED

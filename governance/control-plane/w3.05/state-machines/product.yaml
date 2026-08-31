@@ -1,0 +1,135 @@
+name: PRODUCT
+states:
+  - DISCOVERED
+  - FORENSICS_COMPLETE
+  - CONTRACT_PENDING
+  - CONTRACT_BOUND
+  - READY_FOR_IMPLEMENTATION
+  - RUNNING
+  - VERIFYING
+  - INTEGRATION_READY
+  - RELEASED
+  - BLOCKED_CONTROL
+  - BLOCKED_SCOPE
+  - BLOCKED_EXTERNAL_MUTATION
+  - BLOCKED_DEPENDENCY
+  - BLOCKED_SHARED_INFRA
+  - BLOCKED_GIT_LOCK
+  - BLOCKED_VERIFICATION
+  - BLOCKED_INTEGRATION
+transitions:
+  - from: DISCOVERED
+    to: FORENSICS_COMPLETE
+    trigger: Run Initial Forensics
+    reasonCode:
+      - PATH_IDENTITY_INVALID
+      - GIT_LOCK_ACTIVE
+      - CONTROL_CHANGED
+  - from: FORENSICS_COMPLETE
+    to: CONTRACT_PENDING
+    trigger: Register Product Intent
+    reasonCode:
+      - GIT_LOCK_ACTIVE
+      - DIRTY_UNRECONCILED
+  - from: CONTRACT_PENDING
+    to: CONTRACT_BOUND
+    trigger: Bind Product Contract
+    reasonCode:
+      - SCOPE_MISSING
+      - SCOPE_OVERLAP
+      - BUILDER_VERIFIER_COLLISION
+      - DEPENDENCY_UNBOUND
+      - DIRTY_UNRECONCILED
+  - from: CONTRACT_BOUND
+    to: READY_FOR_IMPLEMENTATION
+    trigger: Acquire Builder Lease
+    reasonCode:
+      - LEASE_MISSING
+      - LEASE_EXPIRED
+      - FENCING_TOKEN_STALE
+      - HEAD_CHANGED
+      - HANDOFF_PENDING
+  - from: READY_FOR_IMPLEMENTATION
+    to: RUNNING
+    trigger: Begin Implementation
+    reasonCode:
+      - FENCING_TOKEN_STALE
+      - CONTROL_CHANGED
+      - PATH_SCOPE_ESCAPE
+  - from: RUNNING
+    to: VERIFYING
+    trigger: Signal Work Done & Hand to Verifier
+    reasonCode:
+      - BUILDER_VERIFIER_COLLISION
+      - LEASE_MISSING
+      - DIRTY_UNRECONCILED
+  - from: VERIFYING
+    to: INTEGRATION_READY
+    trigger: Issue Verifier Verdict
+    reasonCode:
+      - MACHINE_GREEN_FALSE
+      - REQUIRED_CHECK_MISSING
+  - from: INTEGRATION_READY
+    to: RELEASED
+    trigger: Portfolio Integration
+    reasonCode:
+      - SCOPE_OVERLAP
+      - CONTROL_CHANGED
+  - from: "*"
+    to: BLOCKED_CONTROL
+    trigger: Live Epoch Drift / Invalidation
+    reasonCode:
+      - CONTROL_CHANGED
+      - CONTROL_PARSE_INVALID
+      - CONTROL_SCHEMA_INVALID
+  - from: "*"
+    to: BLOCKED_SCOPE
+    trigger: Scope Escape / Overlap
+    reasonCode:
+      - PATH_SCOPE_ESCAPE
+      - SCOPE_OVERLAP
+      - SCOPE_MISSING
+  - from: "*"
+    to: BLOCKED_EXTERNAL_MUTATION
+    trigger: Dirty State / Drift
+    reasonCode:
+      - DIRTY_UNRECONCILED
+      - EXTERNAL_MUTATION_DETECTED
+  - from: CONTRACT_PENDING|CONTRACT_BOUND
+    to: BLOCKED_DEPENDENCY
+    trigger: Missing / Unbound Pin
+    reasonCode:
+      - DEPENDENCY_UNBOUND
+  - from: CONTRACT_BOUND|READY_FOR_IMPLEMENTATION|RUNNING
+    to: BLOCKED_SHARED_INFRA
+    trigger: Unowned Shared Resource
+    reasonCode:
+      - SHARED_INFRA_UNOWNED
+  - from: "*"
+    to: BLOCKED_GIT_LOCK
+    trigger: Lock File Detected
+    reasonCode:
+      - GIT_LOCK_ACTIVE
+      - GIT_LOCK_UNVERIFIABLE
+  - from: VERIFYING
+    to: BLOCKED_VERIFICATION
+    trigger: Test / Check Failure
+    reasonCode:
+      - MACHINE_GREEN_FALSE
+  - from: INTEGRATION_READY
+    to: BLOCKED_INTEGRATION
+    trigger: Integration Gate Rejection
+    reasonCode:
+      - EXTERNAL_MUTATION_DETECTED
+  - from: BLOCKED_*
+    to: DISCOVERED
+    trigger: Revalidation Run
+    reasonCode:
+      - DIRTY_UNRECONCILED
+      - GIT_LOCK_ACTIVE
+  - from: BLOCKED_*
+    to: FORENSICS_COMPLETE
+    trigger: Revalidation Run
+    reasonCode:
+      - DIRTY_UNRECONCILED
+      - GIT_LOCK_ACTIVE
