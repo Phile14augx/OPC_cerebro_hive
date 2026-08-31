@@ -8,7 +8,8 @@ export const REASON_CODES = [
   'FENCING_TOKEN_STALE', 'REMOTE_COMMIT_ABSENT', 'REMOTE_REPOSITORY_MISMATCH',
   'REMOTE_REF_UNAPPROVED', 'REMOTE_ATTESTATION_STALE', 'REQUIRED_CHECK_POLICY_MISSING',
   'REQUIRED_CHECK_MISSING', 'MACHINE_GREEN_FALSE', 'PATH_IDENTITY_INVALID', 'PATH_SCOPE_ESCAPE',
-  'SECRET_REDACTION_FAILED', 'NONDETERMINISTIC_OUTPUT', 'INVALID_TTL', 'CLOCK_ROLLBACK'
+  'SECRET_REDACTION_FAILED', 'NONDETERMINISTIC_OUTPUT', 'INVALID_TTL', 'CLOCK_ROLLBACK',
+  'RECEIPT_PREDECESSOR_MISMATCH'
 ] as const;
 
 export type ReasonCode = typeof REASON_CODES[number];
@@ -43,4 +44,21 @@ export interface RunManifest {
   redaction_result: string;
 }
 export interface EpochProposal { proposed_epoch: number; supersedes_epoch: number; previous_control_sha256: string; }
-export interface PublicationReceipt { previous_epoch: number; proposed_epoch: number; published_epoch: number; previous_receipt_digest: string; receipt_digest: string; }
+export interface PublicationReceipt {
+  schema_version: string;
+  control_plane_version: string;
+  previous_epoch: number;
+  previous_live_sha256: string;
+  proposed_epoch: number;
+  proposal_sha256: string;
+  published_epoch: number;
+  resulting_live_sha256: string;
+  publisher_id: string;
+  publication_fencing_token: number;
+  validation_manifest_digest: string;
+  independent_verifier_verdict_digest: string;
+  publication_result: string;
+  post_publication_verification_result: string;
+  previous_receipt_digest: string;
+  receipt_digest: string;
+}
