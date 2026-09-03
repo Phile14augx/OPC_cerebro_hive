@@ -26,7 +26,7 @@
     "@sentry/node": "^8.0.0",
     "bullmq": "^6.0.8",
     "dotenv": "^16.4.5",
-    "fastify": ">=5.3.3",
+    "fastify": ">=5.12.1",
     "fastify-type-provider-zod": "^4.0.0",
     "pino": "^9.0.0",
     "prom-client": "^15.0.0",
@@ -37,6 +37,6 @@
     "pino-pretty": "^11.0.0",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0",
-    "vitest": ">=3.2.4"
+    "vitest": ">=3.2.6"
   }
 }

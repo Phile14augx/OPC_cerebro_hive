@@ -19,6 +19,6 @@
     "@types/react-dom": ">=18.2.0",
     "typescript": "^5.0.0",
     "eslint": "^8.0.0",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.6"
   }
 }
