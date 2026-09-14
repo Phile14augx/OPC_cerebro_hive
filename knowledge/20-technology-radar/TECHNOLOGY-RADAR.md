@@ -1,7 +1,7 @@
 # Cerebro Nexarch Technology Radar v1.0
 
-**Date:** 2026-08-14  
-**Status:** ACTIVE — 10 KN objects extracted, Phase 2 Pass A complete, batch 3 additions  
+**Date:** 2026-09-14
+**Status:** ACTIVE — weekly frontier review linked; implementation remains governor-gated
 **Owner:** Chief AI Research Architect
 
 ---
@@ -18,6 +18,19 @@
 ---
 
 ## Current Radar (Bootstrapped from Repository Forensics)
+
+### 2026-09-14 weekly deep-review overlay
+
+The durable normalized entries, scores, provenance, blockers, and reassessment triggers are maintained in [`../frontier/radar/technology-radar.json`](../frontier/radar/technology-radar.json). The decision packet is [`../frontier/reports/weekly/2026-09-14.md`](../frontier/reports/weekly/2026-09-14.md).
+
+| Ring | Material additions | Governance |
+|---|---|---|
+| **ADOPT** | Agent harness supply-chain and pre-task authority controls | Architecture recommendation only; no implementation authorized |
+| **TRIAL** | AgentDrift, Mr.LHDR, NeoMME, Muse Glimmer | Experiment candidates; none started |
+| **ASSESS** | OpenAI Agents API | Adapter candidate only after canonical runtime and residency gates |
+| **HOLD** | AgentAudit, State-Path Tool Menu, VoiceMem, FreeToken | Missing reproducibility, governance, security, or operational evidence |
+
+MCP remains TRIAL and A2A remains ASSESS. A2A v1.0 strengthens its evidence, but its existing dependency on MCP integration has not changed.
 
 ### ADOPT — Technologies already present in the Cerebro Nexarch codebase
 
@@ -92,6 +105,10 @@
 
 | Date | Technology | Change | Reason |
 |------|-----------|--------|--------|
+| 2026-09-14 | Frontier weekly overlay | NEW | Ten normalized technologies assessed; four experiment candidates recorded; zero experiments or implementations started. |
+| 2026-09-14 | Agent harness trust controls | NEW → ADOPT recommendation | Empirical harness study plus Flowise and Gemini CLI vulnerabilities establish a platform-wide execution-envelope requirement. |
+| 2026-09-14 | AgentDrift / Mr.LHDR / NeoMME / Muse Glimmer | NEW → TRIAL | Evidence meets experiment-candidate threshold; all remain blocked or unstarted under Wave 0 governance. |
+| 2026-09-14 | OpenAI Agents API | NEW → ASSESS | Managed runtime is an adapter option, not a replacement for the canonical Agent Runtime. |
 | 2026-08-14 | All above | INITIALIZED | Repository forensics baseline |
 | 2026-08-14 | MCP (Model Context Protocol) | ASSESS → TRIAL | KN-INFRA-000001: Evidence upgraded to A (official Anthropic open spec 2025-11-25 + production deployment in Claude Desktop). IMP-0002 created. |
 | 2026-08-14 | DeepSeek-R1 | NEW → TRIAL | KN-FOUNDM-000001: Evidence A (peer-reviewed Nature Vol 645 2025; arXiv 2501.12948). MIT open weights. Priority integration via API + router-service routing rule. |

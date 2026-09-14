@@ -1,0 +1,717 @@
+{
+  "schemaVersion": "1.0.0",
+  "run": {
+    "id": "frontier-weekly-2026-09-14T03:30:01Z",
+    "trigger": "WEEKLY_DEEP_REVIEW",
+    "runMode": "RESEARCH_ONLY",
+    "researchCutoff": "2026-09-14T03:30:01.151Z",
+    "comparisonBaseline": "2026-08-14",
+    "repositoryCommit": "f5db3c622988edf91d69f5617fe603e93e5f2e1d",
+    "implementationAuthorized": false
+  },
+  "scoringModel": {
+    "benefitWeights": {
+      "StrategicFit": 0.2,
+      "TechnicalMaturity": 0.1,
+      "EvidenceStrength": 0.15,
+      "EnterpriseDemand": 0.1,
+      "Differentiation": 0.1,
+      "PlatformReuse": 0.15,
+      "RevenuePotential": 0.05,
+      "CustomerROI": 0.15
+    },
+    "burdenWeights": {
+      "ImplementationCost": 0.2,
+      "IntegrationComplexity": 0.2,
+      "SecurityRisk": 0.25,
+      "VendorLockIn": 0.1,
+      "LicenseRisk": 0.1,
+      "OperationalRisk": 0.15
+    },
+    "formula": "round(10 * (0.75 * Benefit + 0.25 * (10 - Burden)))",
+    "experimentEligibilityThreshold": 73
+  },
+  "technologies": [
+    {
+      "id": "TECH-AGENT-HARNESS-TRUST-001",
+      "name": "Agent harness supply-chain and pre-task authority controls",
+      "aliases": ["harness security", "pre-task authority", "agent configuration supply chain"],
+      "category": ["SECURITY", "AGENTS", "DEVELOPER_PLATFORM", "MCP"],
+      "trend": "STRATEGIC",
+      "firstObserved": "2026-09-07T00:00:00Z",
+      "lastObserved": "2026-09-14T03:30:01.151Z",
+      "maturity": "L5",
+      "evidence": {
+        "research": "Scanning the Harness measured confirmed security defects in 16.0% of 3,171 public agent configurations.",
+        "implementation": "Apache-2.0 harness-eval scanner and reproducible study artifacts are available.",
+        "security": "ZDI-26-634 demonstrates unauthenticated Flowise CSV-agent prompt injection to RCE; CVE-2026-12537 demonstrates pre-sandbox Gemini CLI host execution.",
+        "limitations": "Public-repository sample is discovery-biased; scanner recall is unmeasured; Nexarch-local confirmation is required."
+      },
+      "scores": {
+        "StrategicFit": 10,
+        "TechnicalMaturity": 7,
+        "EvidenceStrength": 9,
+        "EnterpriseDemand": 9,
+        "Differentiation": 7,
+        "PlatformReuse": 10,
+        "RevenuePotential": 6,
+        "CustomerROI": 9,
+        "ImplementationCost": 3,
+        "IntegrationComplexity": 4,
+        "SecurityRisk": 3,
+        "VendorLockIn": 2,
+        "LicenseRisk": 1,
+        "OperationalRisk": 4,
+        "NEXARCH_OPPORTUNITY_SCORE": 83
+      },
+      "nexarchMapping": {
+        "target": "PLATFORM_KERNEL",
+        "capabilities": ["KRN-003", "KRN-004", "KRN-007", "KRN-008", "KRN-018", "KRN-019", "KRN-021", "KRN-CI-001"],
+        "products": ["PROD-030", "PROD-037", "PROD-042", "PROD-050"],
+        "services": ["SG-01", "SG-02", "SG-06", "AO-06"],
+        "ports": ["IdentityPort", "PolicyPort", "ToolPort", "EvaluationPort", "TelemetryPort"]
+      },
+      "buildDisposition": "ADAPT",
+      "finalState": "ADOPT_NOW",
+      "governorStatus": "RECOMMENDED_NOT_AUTHORIZED",
+      "blockedBy": ["RESEARCH_ONLY trigger", "Wave 0 WIP limits", "KRN-PERSIST-001 sequencing"],
+      "reassessmentTrigger": "Governor assigns a ledger-scoped security slice or a relevant dependency/advisory is detected.",
+      "provenance": [
+        {
+          "uri": "https://arxiv.org/abs/2609.07360",
+          "publicationTimestamp": "2026-09-07T11:27:24Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": "d0f7168b29da08b0e73b20f99379dc1d179355e64c1201a2704373d962cec079",
+          "verificationState": "PRIMARY_SOURCE_INSPECTED"
+        },
+        {
+          "uri": "https://www.zerodayinitiative.com/advisories/ZDI-26-634/",
+          "publicationTimestamp": "2026-09-09T00:00:00Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": null,
+          "hashStatus": "FETCHED_VIA_READ_ONLY_WEB_TOOL",
+          "verificationState": "PRIMARY_SOURCE_INSPECTED"
+        }
+      ]
+    },
+    {
+      "id": "TECH-AGENT-INJECTION-TRAJECTORY-001",
+      "name": "Step-labeled agent injection trajectory detection",
+      "aliases": ["AgentDrift", "trajectory hijack localization"],
+      "category": ["SECURITY", "EVALUATION", "AGENTOPS"],
+      "trend": "NEW",
+      "firstObserved": "2026-09-07T03:10:23Z",
+      "lastObserved": "2026-09-14T03:30:01.151Z",
+      "maturity": "L5_DATASET",
+      "evidence": {
+        "research": "12,536 synthetic trajectories and 71,024 labeled steps; a surface baseline recovered 55.4% of attacks and only 23.1% of delayed executions.",
+        "implementation": "Complete task-disjoint and stratified splits are released under CC BY 4.0.",
+        "limitations": "Single generator, synthetic short trajectories, domain-identity leakage, and no production-transfer evidence."
+      },
+      "scores": {
+        "StrategicFit": 9,
+        "TechnicalMaturity": 7,
+        "EvidenceStrength": 8,
+        "EnterpriseDemand": 8,
+        "Differentiation": 8,
+        "PlatformReuse": 9,
+        "RevenuePotential": 5,
+        "CustomerROI": 8,
+        "ImplementationCost": 4,
+        "IntegrationComplexity": 4,
+        "SecurityRisk": 4,
+        "VendorLockIn": 1,
+        "LicenseRisk": 2,
+        "OperationalRisk": 4,
+        "NEXARCH_OPPORTUNITY_SCORE": 77
+      },
+      "nexarchMapping": {
+        "target": "PLATFORM_KERNEL",
+        "capabilities": ["KRN-006", "KRN-018", "KRN-019", "KRN-021"],
+        "products": ["PROD-037", "PROD-042", "PROD-050"],
+        "services": ["SG-02", "AO-06"],
+        "ports": ["EvaluationPort", "TelemetryPort"]
+      },
+      "buildDisposition": "EXPERIMENT",
+      "finalState": "EXPERIMENT",
+      "governorStatus": "ELIGIBLE_NOT_STARTED",
+      "blockedBy": ["KRN-AGENT-001 canonical trace contract", "KRN-019 evaluation integration", "current Wave 0 WIP"],
+      "reassessmentTrigger": "Canonical trace schema is fixed and an evaluation WIP slot is available.",
+      "provenance": [
+        {
+          "uri": "https://arxiv.org/abs/2609.06972",
+          "publicationTimestamp": "2026-09-07T03:10:23Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": "8418450722d297bdc1b33d81eeeddbc5cc954ded81f836a5d6a4d44f7559e01d",
+          "verificationState": "PRIMARY_SOURCE_AND_RELEASE_INSPECTED"
+        }
+      ]
+    },
+    {
+      "id": "TECH-LONG-HORIZON-EVAL-001",
+      "name": "Dependency-aware multimodal long-horizon agent evaluation",
+      "aliases": ["Mr.LHDR", "DACS", "deep research evaluation"],
+      "category": ["EVALUATION", "AGENTS", "MULTIMODAL", "REASONING"],
+      "trend": "NEW",
+      "firstObserved": "2026-09-10T09:47:44Z",
+      "lastObserved": "2026-09-14T03:30:01.151Z",
+      "maturity": "L3",
+      "evidence": {
+        "research": "102 questions average 12.1 necessary conclusions and dependency depth 10.4; the strongest reported system reached 43.1% overall and 34.3% strict accuracy.",
+        "implementation": "Apache-2.0 evaluator and CC BY 4.0 dataset are public.",
+        "limitations": "Small live-web set, link drift and contamination risk, incomplete recorded outputs, and limited agent-framework coverage."
+      },
+      "scores": {
+        "StrategicFit": 9,
+        "TechnicalMaturity": 6,
+        "EvidenceStrength": 7,
+        "EnterpriseDemand": 8,
+        "Differentiation": 8,
+        "PlatformReuse": 9,
+        "RevenuePotential": 4,
+        "CustomerROI": 7,
+        "ImplementationCost": 3,
+        "IntegrationComplexity": 4,
+        "SecurityRisk": 4,
+        "VendorLockIn": 1,
+        "LicenseRisk": 2,
+        "OperationalRisk": 4,
+        "NEXARCH_OPPORTUNITY_SCORE": 74
+      },
+      "nexarchMapping": {
+        "target": "PLATFORM_KERNEL",
+        "capabilities": ["KRN-006", "KRN-019", "KRN-021"],
+        "products": ["PROD-002", "PROD-037", "PROD-042"],
+        "services": ["AO-06", "EI-03"],
+        "ports": ["AgentPort", "EvaluationPort", "TelemetryPort"]
+      },
+      "buildDisposition": "EXPERIMENT",
+      "finalState": "EXPERIMENT",
+      "governorStatus": "ELIGIBLE_NOT_STARTED",
+      "blockedBy": ["KRN-AGENT-001 canonical runtime", "KRN-019 verified evaluation contract", "frozen/cached source fixture design"],
+      "reassessmentTrigger": "Evaluation framework receives an authorized benchmark-integration slot.",
+      "provenance": [
+        {
+          "uri": "https://arxiv.org/abs/2609.11318",
+          "publicationTimestamp": "2026-09-10T09:47:44Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": "d86a23bc44f3005e2ca695c6035aee6816fbcb1700800ff8f6e4b80c522aa714",
+          "verificationState": "PRIMARY_SOURCE_AND_RELEASE_INSPECTED"
+        }
+      ]
+    },
+    {
+      "id": "TECH-TRACE-TRUST-EVAL-001",
+      "name": "Full-lifecycle trace trust evaluation",
+      "aliases": ["AgentAudit", "composite agent trust score"],
+      "category": ["EVALUATION", "AGENTOPS", "SECURITY", "OBSERVABILITY"],
+      "trend": "WATCH",
+      "firstObserved": "2026-09-09T08:29:16Z",
+      "lastObserved": "2026-09-14T03:30:01.151Z",
+      "maturity": "L3",
+      "evidence": {
+        "research": "Evaluates recorded traces over ten stage-specific trust dimensions with failure attribution.",
+        "implementation": "MIT backend, frontend, environments, and tests are public.",
+        "limitations": "Only 45 runs, one trial per task, one judge model including self-judging, no raw result traces, and failing CI."
+      },
+      "scores": {
+        "StrategicFit": 8,
+        "TechnicalMaturity": 5,
+        "EvidenceStrength": 5,
+        "EnterpriseDemand": 8,
+        "Differentiation": 7,
+        "PlatformReuse": 8,
+        "RevenuePotential": 5,
+        "CustomerROI": 7,
+        "ImplementationCost": 4,
+        "IntegrationComplexity": 5,
+        "SecurityRisk": 5,
+        "VendorLockIn": 1,
+        "LicenseRisk": 1,
+        "OperationalRisk": 6,
+        "NEXARCH_OPPORTUNITY_SCORE": 66
+      },
+      "nexarchMapping": {
+        "target": "SHARED_LIBRARY",
+        "capabilities": ["KRN-018", "KRN-019", "KRN-021"],
+        "products": ["PROD-042", "PROD-050"],
+        "services": ["AO-06", "SG-01"],
+        "ports": ["EvaluationPort", "TelemetryPort"]
+      },
+      "buildDisposition": "WATCH",
+      "finalState": "WATCH",
+      "missingEvidence": ["green CI", "published raw traces", "multi-judge calibration", "repeated trials"],
+      "nextReviewDate": "2026-10-12",
+      "reassessmentTrigger": "CI passes and reproducible result traces are published.",
+      "provenance": [
+        {
+          "uri": "https://arxiv.org/abs/2609.09875",
+          "publicationTimestamp": "2026-09-09T08:29:16Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": "f8181b93eaae98b1b56a448bbbfa487a21667cdd1412859eacab43cf0b0cacc4",
+          "verificationState": "PRIMARY_SOURCE_AND_REPOSITORY_INSPECTED"
+        }
+      ]
+    },
+    {
+      "id": "TECH-STATE-PATH-TOOL-MENU-001",
+      "name": "State-path tool menus",
+      "aliases": ["execution-prior tool retrieval", "ordered tool menus"],
+      "category": ["AGENTS", "TOOL_USE", "PLANNING", "RETRIEVAL"],
+      "trend": "WATCH",
+      "firstObserved": "2026-09-08T19:46:08Z",
+      "lastObserved": "2026-09-14T03:30:01.151Z",
+      "maturity": "L1",
+      "evidence": {
+        "research": "Reported ToolBench online success increased from 0.737 to 0.898 with 32 ordered tools.",
+        "implementation": "Advertised MIT repository contains only a license and gitignore.",
+        "limitations": "No reproducible implementation; fixed menus cannot adapt to observations and require informative schemas and trajectory history."
+      },
+      "scores": {
+        "StrategicFit": 9,
+        "TechnicalMaturity": 2,
+        "EvidenceStrength": 4,
+        "EnterpriseDemand": 7,
+        "Differentiation": 8,
+        "PlatformReuse": 9,
+        "RevenuePotential": 4,
+        "CustomerROI": 8,
+        "ImplementationCost": 7,
+        "IntegrationComplexity": 7,
+        "SecurityRisk": 5,
+        "VendorLockIn": 1,
+        "LicenseRisk": 1,
+        "OperationalRisk": 7,
+        "NEXARCH_OPPORTUNITY_SCORE": 63
+      },
+      "nexarchMapping": {
+        "target": "PLATFORM_KERNEL",
+        "capabilities": ["KRN-006", "KRN-007", "KRN-010", "KRN-019"],
+        "products": ["PROD-037", "PROD-039"],
+        "services": ["EI-03", "AO-10"],
+        "ports": ["AgentPort", "ToolPort", "EvaluationPort"]
+      },
+      "buildDisposition": "WATCH",
+      "finalState": "WATCH",
+      "missingEvidence": ["released implementation", "reproducible benchmark fixtures", "online replanning comparison"],
+      "nextReviewDate": "2026-10-12",
+      "reassessmentTrigger": "Repository publishes substantive code and reproducible results.",
+      "provenance": [
+        {
+          "uri": "https://arxiv.org/abs/2609.09395",
+          "publicationTimestamp": "2026-09-08T19:46:08Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": "98914f37794786d83dae4c514fb918f50163e5eef37d58536bae6220e00187bc",
+          "verificationState": "PRIMARY_SOURCE_AND_REPOSITORY_INSPECTED"
+        }
+      ]
+    },
+    {
+      "id": "TECH-NEOMME-001",
+      "name": "Single-tower multimodal-native document encoders",
+      "aliases": ["NeoMME", "visual document retrieval encoder"],
+      "category": ["MULTIMODAL", "EMBEDDINGS", "RETRIEVAL", "GRAPH_RAG"],
+      "trend": "ACCELERATING",
+      "firstObserved": "2026-08-31T00:00:00Z",
+      "lastObserved": "2026-09-14T03:30:01.151Z",
+      "maturity": "L3",
+      "evidence": {
+        "research": "NeoMME-260M reports ViDoRe v3 nDCG@10 0.523, 51 pages/s on L40S, and 255x late-interaction storage compression retaining over 95% quality.",
+        "implementation": "260M and 800M Apache-2.0 checkpoints and Transformers support are available.",
+        "limitations": "Self-reported results, unreleased processed training corpus, limited safety/poisoning evaluation, and no major architecture/data ablations."
+      },
+      "scores": {
+        "StrategicFit": 9,
+        "TechnicalMaturity": 6,
+        "EvidenceStrength": 8,
+        "EnterpriseDemand": 8,
+        "Differentiation": 8,
+        "PlatformReuse": 9,
+        "RevenuePotential": 7,
+        "CustomerROI": 9,
+        "ImplementationCost": 5,
+        "IntegrationComplexity": 6,
+        "SecurityRisk": 6,
+        "VendorLockIn": 2,
+        "LicenseRisk": 1,
+        "OperationalRisk": 6,
+        "NEXARCH_OPPORTUNITY_SCORE": 75
+      },
+      "nexarchMapping": {
+        "target": "PLATFORM_KERNEL",
+        "capabilities": ["KRN-015", "KRN-016", "KRN-KG-006"],
+        "products": ["PROD-004", "PROD-022", "PROD-024"],
+        "services": ["EI-01", "EI-02", "EI-08"],
+        "ports": ["KnowledgePort", "ModelPort", "PersistencePort", "EvaluationPort"]
+      },
+      "buildDisposition": "EXPERIMENT",
+      "finalState": "EXPERIMENT",
+      "governorStatus": "ELIGIBLE_BLOCKED_NOT_STARTED",
+      "blockedBy": ["KRN-015 freeze", "KRN-016 retrieval E2E", "KRN-KG-010 policy-aware projection for graph use"],
+      "reassessmentTrigger": "Wave 1 opens and KRN-016 has a verified baseline.",
+      "provenance": [
+        {
+          "uri": "https://huggingface.co/blog/Hcompany/neomme",
+          "publicationTimestamp": "2026-09-03T00:00:00Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": "8ef10c7ebc3754c5ee32f68857958ae1ed5646bfe40d64dcda99696a23434cda",
+          "verificationState": "PRIMARY_SOURCE_MODEL_AND_REPORT_INSPECTED"
+        }
+      ]
+    },
+    {
+      "id": "TECH-LOCAL-MULTIMODAL-AGENT-MODEL-001",
+      "name": "Local multimodal agentic models",
+      "aliases": ["Muse Glimmer 30B", "local tool-use VLM"],
+      "category": ["FOUNDATION_MODELS", "AGENTS", "MULTIMODAL", "EDGE_AI"],
+      "trend": "ACCELERATING",
+      "firstObserved": "2026-08-10T00:00:00Z",
+      "lastObserved": "2026-09-14T03:30:01.151Z",
+      "maturity": "L3",
+      "evidence": {
+        "research": "Meta reports MCP-Atlas 75.5, SWE-Bench Pro 51.2, 24 GB quantized deployment, and 3.1x DFlash speedup on RTX 5090.",
+        "implementation": "Apache-2.0 BF16, quantized, GGUF, ExecuTorch, and speculative-decoding artifacts are available; the model card reports 482,552 monthly downloads.",
+        "limitations": "Vendor-only benchmarks, no training code/data, 28.4% AgentDojo attack success, and material privacy violations reported by the model card."
+      },
+      "scores": {
+        "StrategicFit": 9,
+        "TechnicalMaturity": 7,
+        "EvidenceStrength": 8,
+        "EnterpriseDemand": 8,
+        "Differentiation": 8,
+        "PlatformReuse": 8,
+        "RevenuePotential": 6,
+        "CustomerROI": 8,
+        "ImplementationCost": 5,
+        "IntegrationComplexity": 4,
+        "SecurityRisk": 7,
+        "VendorLockIn": 1,
+        "LicenseRisk": 1,
+        "OperationalRisk": 6,
+        "NEXARCH_OPPORTUNITY_SCORE": 73
+      },
+      "nexarchMapping": {
+        "target": "MODEL_REGISTRY",
+        "capabilities": ["KRN-009", "KRN-010", "KRN-019", "KRN-021"],
+        "products": ["PROD-002", "PROD-035", "PROD-036", "PROD-037"],
+        "services": ["AO-06", "AO-09", "AO-10"],
+        "ports": ["ModelPort", "EvaluationPort", "TelemetryPort"]
+      },
+      "buildDisposition": "EXPERIMENT",
+      "finalState": "EXPERIMENT",
+      "governorStatus": "ELIGIBLE_NOT_STARTED",
+      "blockedBy": ["model registry evaluation slot", "agentic security harness", "24 GB minimum target hardware"],
+      "reassessmentTrigger": "Governor authorizes a synthetic-data model qualification run.",
+      "provenance": [
+        {
+          "uri": "https://huggingface.co/meta-models/Muse-Glimmer-30B",
+          "publicationTimestamp": "2026-08-10T00:00:00Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": "a4a4be80ce7045e89720ea04ade864ce96ae6c506dad5b264e94a4d62d589b44",
+          "verificationState": "PRIMARY_SOURCE_MODEL_CARD_INSPECTED"
+        }
+      ]
+    },
+    {
+      "id": "TECH-STREAMING-DUAL-BRAIN-MEMORY-001",
+      "name": "Streaming factual and affective dual-brain memory",
+      "aliases": ["VoiceMem", "streaming voice memory"],
+      "category": ["MEMORY", "AUDIO", "PERSONALIZATION", "PRIVACY"],
+      "trend": "WATCH",
+      "firstObserved": "2026-08-26T00:00:00Z",
+      "lastObserved": "2026-09-14T03:30:01.151Z",
+      "maturity": "L3_INCOMPLETE_RELEASE",
+      "evidence": {
+        "research": "Authors report LoCoMo Top-5 91.20 versus Mem0 61.68 and 134 ms retrieval.",
+        "implementation": "Apache-2.0 v0.0.1 code, adapter, and local processing bundle are available.",
+        "limitations": "Retrieval hardware is undisclosed; ChatMem-400K data are not actually published; affective/persona graphs create high privacy and governance risk."
+      },
+      "scores": {
+        "StrategicFit": 7,
+        "TechnicalMaturity": 5,
+        "EvidenceStrength": 5,
+        "EnterpriseDemand": 6,
+        "Differentiation": 8,
+        "PlatformReuse": 7,
+        "RevenuePotential": 5,
+        "CustomerROI": 6,
+        "ImplementationCost": 6,
+        "IntegrationComplexity": 7,
+        "SecurityRisk": 9,
+        "VendorLockIn": 4,
+        "LicenseRisk": 5,
+        "OperationalRisk": 7,
+        "NEXARCH_OPPORTUNITY_SCORE": 55
+      },
+      "nexarchMapping": {
+        "target": "PLATFORM_KERNEL",
+        "capabilities": ["KRN-014", "KRN-018", "KRN-019"],
+        "products": ["PROD-002", "PROD-041"],
+        "services": ["EI-03", "SG-09"],
+        "ports": ["MemoryPort", "PolicyPort", "PersistencePort", "EvaluationPort"]
+      },
+      "buildDisposition": "WATCH",
+      "finalState": "WATCH",
+      "missingEvidence": ["released training/evaluation dataset", "deletion and isolation model", "portable latency reproduction", "memory-poisoning evaluation"],
+      "nextReviewDate": "2026-12-14",
+      "reassessmentTrigger": "Dataset and governance controls are released and independently reproduced.",
+      "provenance": [
+        {
+          "uri": "https://huggingface.co/papers/2608.26005",
+          "publicationTimestamp": "2026-08-26T00:00:00Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": "6f2f04907e3ebe390ebff51c4e4cf8d0acab5c4c9df76590e4677e9ceb4c035a",
+          "verificationState": "PRIMARY_SOURCE_AND_RELEASE_INSPECTED"
+        }
+      ]
+    },
+    {
+      "id": "TECH-EDGE-MOE-SERVING-001",
+      "name": "Bandwidth-adaptive edge-native MoE serving",
+      "aliases": ["FreeToken", "elastic expert residency"],
+      "category": ["INFERENCE", "EDGE_AI", "SERVING", "FINOPS"],
+      "trend": "ACCELERATING",
+      "firstObserved": "2026-08-17T00:00:00Z",
+      "lastObserved": "2026-09-14T03:30:01.151Z",
+      "maturity": "L3",
+      "evidence": {
+        "research": "Authors report 1.5x–2.3x throughput gains and serving models up to 753B on one workstation GPU.",
+        "implementation": "Apache-2.0 v0.1.2 code supports more than 20 claimed MoE architectures and has 12,725 GitHub stars.",
+        "limitations": "NVIDIA/CUDA-only, very high host-RAM requirements, author-only benchmarks, early concurrency/cache issues, and no documented API authentication."
+      },
+      "scores": {
+        "StrategicFit": 7,
+        "TechnicalMaturity": 5,
+        "EvidenceStrength": 7,
+        "EnterpriseDemand": 7,
+        "Differentiation": 9,
+        "PlatformReuse": 7,
+        "RevenuePotential": 5,
+        "CustomerROI": 8,
+        "ImplementationCost": 7,
+        "IntegrationComplexity": 8,
+        "SecurityRisk": 6,
+        "VendorLockIn": 8,
+        "LicenseRisk": 2,
+        "OperationalRisk": 8,
+        "NEXARCH_OPPORTUNITY_SCORE": 61
+      },
+      "nexarchMapping": {
+        "target": "PLATFORM_KERNEL",
+        "capabilities": ["KRN-009", "KRN-010", "KRN-021", "KRN-022"],
+        "products": ["PROD-032", "PROD-035", "PROD-036"],
+        "services": ["AO-09", "AO-10"],
+        "ports": ["ModelPort", "TelemetryPort"]
+      },
+      "buildDisposition": "WATCH",
+      "finalState": "WATCH",
+      "missingEvidence": ["independent throughput reproduction", "authenticated serving boundary", "concurrency stability", "hardware TCO baseline"],
+      "nextReviewDate": "2026-10-12",
+      "reassessmentTrigger": "Independent benchmarks and a stable authenticated release are available.",
+      "provenance": [
+        {
+          "uri": "https://huggingface.co/papers/2608.16157",
+          "publicationTimestamp": "2026-08-17T00:00:00Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": "e80a8595516b1e8ae3d2d0252ac3c357caf6042f846cc766944a82cfebbb1669",
+          "verificationState": "PRIMARY_SOURCE_AND_RELEASE_INSPECTED"
+        }
+      ]
+    },
+    {
+      "id": "TECH-MANAGED-AGENT-HARNESS-API-001",
+      "name": "Managed durable agent harness APIs",
+      "aliases": ["OpenAI Agents API", "hosted agent runtime"],
+      "category": ["AGENTS", "SERVING", "WORKFLOW", "VENDOR_PLATFORM"],
+      "trend": "NEW",
+      "firstObserved": "2026-09-10T00:00:00Z",
+      "lastObserved": "2026-09-14T03:30:01.151Z",
+      "maturity": "L4_VENDOR",
+      "evidence": {
+        "research": "OpenAI launched a public-beta managed Codex harness with durable sessions, environments, tools, recovery, and streaming.",
+        "implementation": "Managed API is available; underlying Codex harness is Apache-2.0.",
+        "limitations": "No comparative reliability benchmark; US-only residency, no Zero Data Retention, public-beta churn, and strong runtime/provider lock-in."
+      },
+      "scores": {
+        "StrategicFit": 9,
+        "TechnicalMaturity": 8,
+        "EvidenceStrength": 7,
+        "EnterpriseDemand": 9,
+        "Differentiation": 7,
+        "PlatformReuse": 8,
+        "RevenuePotential": 7,
+        "CustomerROI": 7,
+        "ImplementationCost": 6,
+        "IntegrationComplexity": 7,
+        "SecurityRisk": 8,
+        "VendorLockIn": 9,
+        "LicenseRisk": 6,
+        "OperationalRisk": 7,
+        "NEXARCH_OPPORTUNITY_SCORE": 66
+      },
+      "nexarchMapping": {
+        "target": "ADAPTER",
+        "capabilities": ["KRN-006", "KRN-008", "KRN-009", "KRN-011", "KRN-019", "KRN-021"],
+        "products": ["PROD-002", "PROD-035", "PROD-037"],
+        "services": ["EI-03", "EI-05"],
+        "ports": ["AgentPort", "ToolPort", "WorkflowPort", "ModelPort", "TelemetryPort"]
+      },
+      "buildDisposition": "INTEGRATE",
+      "finalState": "INTEGRATE_LATER",
+      "blockedBy": ["KRN-AGENT-001 canonical runtime selection", "data-residency policy", "vendor adapter contract", "public-beta stability"],
+      "reassessmentTrigger": "Canonical runtime and adapter conformance tests exist, and residency/ZDR requirements are met.",
+      "provenance": [
+        {
+          "uri": "https://openai.com/index/introducing-the-agents-api/",
+          "publicationTimestamp": "2026-09-10T00:00:00Z",
+          "retrievedTimestamp": "2026-09-14T03:30:01.151Z",
+          "sha256": null,
+          "hashStatus": "UNAVAILABLE_HTTP_403",
+          "verificationState": "PRIMARY_ANNOUNCEMENT_AND_DEVELOPER_DOCS_INSPECTED"
+        }
+      ]
+    }
+  ],
+  "modelRegistryCandidates": [
+    {
+      "provider": "OpenAI",
+      "model": "GPT-6 Astra",
+      "firstObserved": "2026-09-03",
+      "modalities": ["text", "image", "computer-use"],
+      "evaluationStatus": "UNQUALIFIED",
+      "securityTier": "RESTRICTED_PENDING_REVIEW",
+      "finalState": "WATCH",
+      "reason": "Critical cyber capability and improved prompt-injection claims require a dedicated safety, cost, residency, and task-success evaluation; complete public pricing evidence was not captured."
+    },
+    {
+      "provider": "Anthropic",
+      "model": "Claude Fable 5.1",
+      "firstObserved": "2026-09-01",
+      "modalities": ["text", "image", "tool-use"],
+      "context": "not captured in this run",
+      "cost": {
+        "inputUsdPerMillion": 10,
+        "cacheReadUsdPerMillion": 0.25,
+        "outputUsdPerMillion": 50
+      },
+      "evaluationStatus": "CANDIDATE",
+      "securityTier": "STANDARD_ENTERPRISE_REVIEW",
+      "finalState": "EXPERIMENT",
+      "reason": "Vendor reports improved agentic and coding performance and lower cache cost; approval-bypass limitations remain."
+    },
+    {
+      "provider": "Google",
+      "model": "Gemini 3.8 Flash",
+      "firstObserved": "2026-09-02",
+      "modalities": ["text", "image", "tool-use"],
+      "cost": {
+        "introductoryInputUsdPerMillion": 0.75,
+        "introductoryOutputUsdPerMillion": 3.75,
+        "introductoryPricingEnds": "2026-12-31"
+      },
+      "evaluationStatus": "CANDIDATE",
+      "securityTier": "STANDARD_ENTERPRISE_REVIEW",
+      "finalState": "EXPERIMENT",
+      "reason": "Low-cost long-horizon agent claims are strategically relevant to KRN-010 but are vendor-reported and may use more tokens at higher effort."
+    },
+    {
+      "provider": "Meta",
+      "model": "Muse Glimmer 30B",
+      "firstObserved": "2026-08-10",
+      "modalities": ["text", "image", "tool-use"],
+      "contextTokens": 131072,
+      "deploymentMode": ["local", "GGUF", "ExecuTorch"],
+      "license": "Apache-2.0",
+      "evaluationStatus": "CANDIDATE",
+      "securityTier": "RESTRICTED_TOOL_USE_UNTIL_EVALUATED",
+      "finalState": "EXPERIMENT",
+      "reason": "Commercially usable local model with 24 GB quantization, but the model card reports material prompt-injection and privacy failure rates."
+    }
+  ],
+  "portfolio": {
+    "implementationCandidates": [
+      {
+        "rank": 1,
+        "technologyId": "TECH-AGENT-HARNESS-TRUST-001",
+        "target": "KRN-CI-001/KRN-008/KRN-019",
+        "action": "ADAPT",
+        "value": "HIGH",
+        "effort": "LOW_MEDIUM",
+        "risk": "LOW",
+        "decision": "ADOPT_NOW_RECOMMENDATION_ONLY"
+      },
+      {
+        "rank": 2,
+        "technologyId": "TECH-AGENT-INJECTION-TRAJECTORY-001",
+        "target": "KRN-019",
+        "action": "EXPERIMENT",
+        "value": "HIGH",
+        "effort": "MEDIUM",
+        "risk": "LOW",
+        "decision": "ELIGIBLE_BLOCKED"
+      },
+      {
+        "rank": 3,
+        "technologyId": "TECH-NEOMME-001",
+        "target": "KRN-016/KRN-KG-006",
+        "action": "EXPERIMENT",
+        "value": "HIGH",
+        "effort": "MEDIUM",
+        "risk": "MEDIUM",
+        "decision": "ELIGIBLE_BLOCKED"
+      },
+      {
+        "rank": 4,
+        "technologyId": "TECH-LONG-HORIZON-EVAL-001",
+        "target": "KRN-019",
+        "action": "EXPERIMENT",
+        "value": "HIGH",
+        "effort": "LOW_MEDIUM",
+        "risk": "MEDIUM",
+        "decision": "ELIGIBLE_BLOCKED"
+      },
+      {
+        "rank": 5,
+        "technologyId": "TECH-LOCAL-MULTIMODAL-AGENT-MODEL-001",
+        "target": "KRN-009/KRN-010/KRN-019",
+        "action": "EXPERIMENT",
+        "value": "MEDIUM_HIGH",
+        "effort": "MEDIUM",
+        "risk": "HIGH",
+        "decision": "ELIGIBLE_NOT_STARTED"
+      }
+    ],
+    "radarChanges": {
+      "ADOPT": ["TECH-AGENT-HARNESS-TRUST-001"],
+      "TRIAL": [
+        "TECH-AGENT-INJECTION-TRAJECTORY-001",
+        "TECH-LONG-HORIZON-EVAL-001",
+        "TECH-NEOMME-001",
+        "TECH-LOCAL-MULTIMODAL-AGENT-MODEL-001"
+      ],
+      "ASSESS": ["TECH-MANAGED-AGENT-HARNESS-API-001"],
+      "HOLD": [
+        "TECH-TRACE-TRUST-EVAL-001",
+        "TECH-STATE-PATH-TOOL-MENU-001",
+        "TECH-STREAMING-DUAL-BRAIN-MEMORY-001",
+        "TECH-EDGE-MOE-SERVING-001"
+      ]
+    }
+  },
+  "runOutcome": {
+    "newTechnologies": 10,
+    "newModels": 4,
+    "newRepositories": 7,
+    "newPapers": 7,
+    "newDatasets": 2,
+    "newBenchmarks": 4,
+    "experimentsProposed": 4,
+    "experimentsStarted": 0,
+    "implementationsProposed": 1,
+    "implementationsStarted": 0,
+    "maturityPromotions": 0,
+    "verifiedCapabilityThroughputDelta": 0,
+    "startedToVerifiedDelta": "0:0",
+    "implementationActionOccurred": false
+  }
+}
