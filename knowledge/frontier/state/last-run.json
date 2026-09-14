@@ -1,0 +1,147 @@
+{
+  "RUN_ID": "frontier-weekly-2026-09-14T03:30:01Z",
+  "RUN_TIMESTAMP": "2026-09-14T03:30:01.151Z",
+  "TRIGGER": "WEEKLY_DEEP_REVIEW",
+  "RUN_MODE": "RESEARCH_ONLY",
+  "RESEARCH_CUTOFF": "2026-09-14T03:30:01.151Z",
+  "SOURCES_SCANNED": {
+    "arXiv": true,
+    "HuggingFace": true,
+    "GitHub": true,
+    "majorLabs": ["OpenAI", "Anthropic", "Google", "Meta"],
+    "securityAdvisories": ["ZDI", "CVE/GHSA references"],
+    "repositoryLedger": "f5db3c622988edf91d69f5617fe603e93e5f2e1d"
+  },
+  "NEW_ITEMS_FOUND": 21,
+  "EXISTING_ITEMS_UPDATED": 2,
+  "DUPLICATES_REMOVED": 11,
+  "NEW_TECHNOLOGIES": 10,
+  "HIGH_SIGNAL_TECHNOLOGIES": [
+    "TECH-AGENT-HARNESS-TRUST-001",
+    "TECH-AGENT-INJECTION-TRAJECTORY-001",
+    "TECH-NEOMME-001",
+    "TECH-LONG-HORIZON-EVAL-001",
+    "TECH-LOCAL-MULTIMODAL-AGENT-MODEL-001"
+  ],
+  "WATCHLIST_CHANGES": {
+    "added": [
+      "TECH-TRACE-TRUST-EVAL-001",
+      "TECH-STATE-PATH-TOOL-MENU-001",
+      "TECH-STREAMING-DUAL-BRAIN-MEMORY-001",
+      "TECH-EDGE-MOE-SERVING-001"
+    ],
+    "unchanged": ["MCP", "A2A"]
+  },
+  "RADAR_CHANGES": {
+    "ADOPT": 1,
+    "TRIAL": 4,
+    "ASSESS": 1,
+    "HOLD": 4
+  },
+  "NEW_MODELS": 4,
+  "NEW_REPOSITORIES": 7,
+  "NEW_PAPERS": 7,
+  "NEW_DATASETS": 2,
+  "NEW_BENCHMARKS": 4,
+  "NEXARCH_CAPABILITIES_AFFECTED": [
+    "KRN-003",
+    "KRN-004",
+    "KRN-006",
+    "KRN-007",
+    "KRN-008",
+    "KRN-009",
+    "KRN-010",
+    "KRN-014",
+    "KRN-015",
+    "KRN-016",
+    "KRN-018",
+    "KRN-019",
+    "KRN-021",
+    "KRN-022",
+    "KRN-CI-001"
+  ],
+  "PRODUCTS_AFFECTED": [
+    "PROD-002",
+    "PROD-004",
+    "PROD-022",
+    "PROD-024",
+    "PROD-030",
+    "PROD-032",
+    "PROD-035",
+    "PROD-036",
+    "PROD-037",
+    "PROD-041",
+    "PROD-042",
+    "PROD-050"
+  ],
+  "SERVICES_AFFECTED": [
+    "EI-01",
+    "EI-02",
+    "EI-03",
+    "EI-05",
+    "EI-08",
+    "AO-06",
+    "AO-09",
+    "AO-10",
+    "SG-01",
+    "SG-02",
+    "SG-06",
+    "SG-09"
+  ],
+  "EXPERIMENTS_PROPOSED": 4,
+  "EXPERIMENTS_STARTED": 0,
+  "EXPERIMENTS_COMPLETED": 0,
+  "IMPLEMENTATION_PROPOSED": 1,
+  "IMPLEMENTATION_STARTED": 0,
+  "BLOCKED_ITEMS": 6,
+  "BLOCKERS": [
+    "RESEARCH_ONLY trigger",
+    "Wave 0 WIP limits",
+    "KRN-PERSIST-001 before KRN-AGENT-001",
+    "KRN-015 frozen until Wave 1 after W0.3",
+    "KRN-019 lacks verified canonical trace integration"
+  ],
+  "SECURITY_FLAGS": [
+    "Nested auto-dispatch workflow installs unpinned Gemini and Claude CLIs with failure suppression.",
+    "Agent tool sandbox and pre-task authority controls are not yet verified.",
+    "Muse Glimmer model card reports material injection and privacy failure rates.",
+    "VoiceMem affective/persona memory lacks deletion, isolation, and poisoning controls."
+  ],
+  "LICENSE_FLAGS": [
+    "VoiceMem ChatMem-400K data are unavailable and have no usable dataset license.",
+    "OpenAI Agents API is a closed managed service despite an Apache-2.0 underlying harness."
+  ],
+  "DECISIONS": {
+    "ADOPT_NOW": 1,
+    "EXPERIMENT": 4,
+    "INTEGRATE_LATER": 1,
+    "WATCH": 4,
+    "REJECT": 0
+  },
+  "REJECTED_ITEMS": [],
+  "LEDGER_CHANGES": 0,
+  "VERIFIED_CAPABILITY_THROUGHPUT_CHANGE": 0,
+  "STARTED_TO_VERIFIED_CHANGE": "0:0",
+  "NEXT_REVIEW_ITEMS": [
+    {
+      "technologyId": "TECH-AGENT-HARNESS-TRUST-001",
+      "trigger": "ledger authorization or relevant security alert"
+    },
+    {
+      "technologyId": "TECH-STATE-PATH-TOOL-MENU-001",
+      "trigger": "substantive reproducible code release"
+    },
+    {
+      "technologyId": "TECH-TRACE-TRUST-EVAL-001",
+      "trigger": "green CI and released result traces"
+    },
+    {
+      "technologyId": "TECH-EDGE-MOE-SERVING-001",
+      "trigger": "independent benchmark and authenticated stable release"
+    },
+    {
+      "technologyId": "TECH-STREAMING-DUAL-BRAIN-MEMORY-001",
+      "trigger": "licensed dataset and governance controls"
+    }
+  ]
+}

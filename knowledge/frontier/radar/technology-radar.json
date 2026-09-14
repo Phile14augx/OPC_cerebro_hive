@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-09-14T03:30:01.151Z",
+  "researchCutoff": "2026-09-14T03:30:01.151Z",
+  "entries": [
+    {
+      "technologyId": "TECH-AGENT-HARNESS-TRUST-001",
+      "name": "Agent harness supply-chain and pre-task authority controls",
+      "radarRing": "ADOPT",
+      "lifecycleState": "ASSESSED",
+      "finalState": "ADOPT_NOW",
+      "governorStatus": "RECOMMENDED_NOT_AUTHORIZED",
+      "score": 83,
+      "firstSeen": "2026-09-07T00:00:00Z",
+      "lastSeen": "2026-09-14T03:30:01.151Z",
+      "lastAnalyzed": "2026-09-14T03:30:01.151Z",
+      "lastChanged": "2026-09-14T03:30:01.151Z",
+      "why": "Multiple independent sources demonstrate that prompt filtering does not control pre-task execution, mutable harness dependencies, or inherited tool authority.",
+      "blockedBy": ["RESEARCH_ONLY trigger", "Wave 0 WIP", "ledger authorization"]
+    },
+    {
+      "technologyId": "TECH-AGENT-INJECTION-TRAJECTORY-001",
+      "name": "Step-labeled agent injection trajectory detection",
+      "radarRing": "TRIAL",
+      "lifecycleState": "EXPERIMENT_CANDIDATE",
+      "finalState": "EXPERIMENT",
+      "score": 77,
+      "firstSeen": "2026-09-07T03:10:23Z",
+      "lastSeen": "2026-09-14T03:30:01.151Z",
+      "lastAnalyzed": "2026-09-14T03:30:01.151Z",
+      "lastChanged": "2026-09-14T03:30:01.151Z",
+      "why": "Released step-level labels can test delayed and partial hijacking, but synthetic/domain leakage prevents direct production conclusions.",
+      "blockedBy": ["KRN-AGENT-001", "KRN-019", "evaluation WIP"]
+    },
+    {
+      "technologyId": "TECH-NEOMME-001",
+      "name": "Single-tower multimodal-native document encoders",
+      "radarRing": "TRIAL",
+      "lifecycleState": "EXPERIMENT_CANDIDATE",
+      "finalState": "EXPERIMENT",
+      "score": 75,
+      "firstSeen": "2026-08-31T00:00:00Z",
+      "lastSeen": "2026-09-14T03:30:01.151Z",
+      "lastAnalyzed": "2026-09-14T03:30:01.151Z",
+      "lastChanged": "2026-09-14T03:30:01.151Z",
+      "why": "Apache-2.0 artifacts and reported retrieval/storage gains justify a baseline comparison, not integration.",
+      "blockedBy": ["KRN-015 freeze", "KRN-016", "KRN-KG-010"]
+    },
+    {
+      "technologyId": "TECH-LONG-HORIZON-EVAL-001",
+      "name": "Dependency-aware multimodal long-horizon agent evaluation",
+      "radarRing": "TRIAL",
+      "lifecycleState": "EXPERIMENT_CANDIDATE",
+      "finalState": "EXPERIMENT",
+      "score": 74,
+      "firstSeen": "2026-09-10T09:47:44Z",
+      "lastSeen": "2026-09-14T03:30:01.151Z",
+      "lastAnalyzed": "2026-09-14T03:30:01.151Z",
+      "lastChanged": "2026-09-14T03:30:01.151Z",
+      "why": "Dependency-aware scoring exposes failure hidden by final answers; live-web drift requires frozen provenance fixtures.",
+      "blockedBy": ["KRN-AGENT-001", "KRN-019"]
+    },
+    {
+      "technologyId": "TECH-LOCAL-MULTIMODAL-AGENT-MODEL-001",
+      "name": "Local multimodal agentic models",
+      "radarRing": "TRIAL",
+      "lifecycleState": "EXPERIMENT_CANDIDATE",
+      "finalState": "EXPERIMENT",
+      "score": 73,
+      "firstSeen": "2026-08-10T00:00:00Z",
+      "lastSeen": "2026-09-14T03:30:01.151Z",
+      "lastAnalyzed": "2026-09-14T03:30:01.151Z",
+      "lastChanged": "2026-09-14T03:30:01.151Z",
+      "why": "Muse Glimmer provides a commercially usable local candidate, but its own security results require strict external controls.",
+      "blockedBy": ["model qualification slot", "agent security evaluation"]
+    },
+    {
+      "technologyId": "TECH-TRACE-TRUST-EVAL-001",
+      "name": "Full-lifecycle trace trust evaluation",
+      "radarRing": "HOLD",
+      "lifecycleState": "WATCH",
+      "finalState": "WATCH",
+      "score": 66,
+      "firstSeen": "2026-09-09T08:29:16Z",
+      "lastSeen": "2026-09-14T03:30:01.151Z",
+      "lastAnalyzed": "2026-09-14T03:30:01.151Z",
+      "lastChanged": "2026-09-14T03:30:01.151Z",
+      "why": "Useful diagnostic composition, but current evidence is too small, judge-dependent, and non-reproducible.",
+      "nextReviewDate": "2026-10-12"
+    },
+    {
+      "technologyId": "TECH-MANAGED-AGENT-HARNESS-API-001",
+      "name": "Managed durable agent harness APIs",
+      "radarRing": "ASSESS",
+      "lifecycleState": "WATCH",
+      "finalState": "INTEGRATE_LATER",
+      "score": 66,
+      "firstSeen": "2026-09-10T00:00:00Z",
+      "lastSeen": "2026-09-14T03:30:01.151Z",
+      "lastAnalyzed": "2026-09-14T03:30:01.151Z",
+      "lastChanged": "2026-09-14T03:30:01.151Z",
+      "why": "OpenAI's managed harness may be useful behind an adapter, but residency, retention, beta stability, and runtime lock-in block adoption.",
+      "blockedBy": ["KRN-AGENT-001", "residency/ZDR requirements", "adapter conformance tests"]
+    },
+    {
+      "technologyId": "TECH-EDGE-MOE-SERVING-001",
+      "name": "Bandwidth-adaptive edge-native MoE serving",
+      "radarRing": "HOLD",
+      "lifecycleState": "WATCH",
+      "finalState": "WATCH",
+      "score": 61,
+      "firstSeen": "2026-08-17T00:00:00Z",
+      "lastSeen": "2026-09-14T03:30:01.151Z",
+      "lastAnalyzed": "2026-09-14T03:30:01.151Z",
+      "lastChanged": "2026-09-14T03:30:01.151Z",
+      "why": "High reported performance is offset by CUDA lock-in, RAM/TCO, authentication, and early stability gaps.",
+      "nextReviewDate": "2026-10-12"
+    },
+    {
+      "technologyId": "TECH-STATE-PATH-TOOL-MENU-001",
+      "name": "State-path tool menus",
+      "radarRing": "HOLD",
+      "lifecycleState": "WATCH",
+      "finalState": "WATCH",
+      "score": 63,
+      "firstSeen": "2026-09-08T19:46:08Z",
+      "lastSeen": "2026-09-14T03:30:01.151Z",
+      "lastAnalyzed": "2026-09-14T03:30:01.151Z",
+      "lastChanged": "2026-09-14T03:30:01.151Z",
+      "why": "Promising reported gain, but no usable implementation or reproducible benchmark release exists.",
+      "nextReviewDate": "2026-10-12"
+    },
+    {
+      "technologyId": "TECH-STREAMING-DUAL-BRAIN-MEMORY-001",
+      "name": "Streaming factual and affective dual-brain memory",
+      "radarRing": "HOLD",
+      "lifecycleState": "WATCH",
+      "finalState": "WATCH",
+      "score": 55,
+      "firstSeen": "2026-08-26T00:00:00Z",
+      "lastSeen": "2026-09-14T03:30:01.151Z",
+      "lastAnalyzed": "2026-09-14T03:30:01.151Z",
+      "lastChanged": "2026-09-14T03:30:01.151Z",
+      "why": "Affective memory has potential, but missing data, non-portable latency, privacy, deletion, isolation, and poisoning controls dominate.",
+      "nextReviewDate": "2026-12-14"
+    }
+  ],
+  "unchanged": [
+    {
+      "name": "MCP",
+      "radarRing": "TRIAL",
+      "reason": "No material dependency or implementation-state change."
+    },
+    {
+      "name": "A2A",
+      "radarRing": "ASSESS",
+      "reason": "v1.0 and ecosystem evidence strengthened, but the existing dependency on MCP integration remains unsatisfied."
+    }
+  ]
+}
