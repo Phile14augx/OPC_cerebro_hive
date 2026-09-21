@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "runId": "frontier-weekly-2026-09-21T03:30:01Z",
+  "runTimestamp": "2026-09-21T03:30:01.014Z",
+  "trigger": "WEEKLY_DEEP_REVIEW",
+  "runMode": "RESEARCH_ONLY",
+  "researchCutoff": "2026-09-21T03:30:01.014Z",
+  "repositoryCommit": "f5db3c622988edf91d69f5617fe603e93e5f2e1d",
+  "report": "knowledge/frontier/reports/weekly/2026-09-21.md",
+  "machineReport": "knowledge/frontier/reports/weekly/2026-09-21.json",
+  "radar": "knowledge/frontier/radar/technology-radar.json",
+  "sourcesScanned": ["arXiv", "Hugging Face", "GitHub", "major labs and vendors", "MLCommons", "NIST"],
+  "newItemsFound": 10,
+  "existingItemsUpdated": 3,
+  "duplicatesRemoved": 0,
+  "newTechnologies": 7,
+  "highSignalTechnologies": [
+    "TECH-AGENT-HARNESS-TRUST-001",
+    "TECH-HOLISTIC-AI-EVALUATION-001",
+    "TECH-LONG-HORIZON-EVAL-001",
+    "TECH-VULNERABILITY-LOCALIZATION-EVAL-001",
+    "TECH-AUDITABLE-HARNESS-OPTIMIZATION-001"
+  ],
+  "watchlistChanges": [
+    "Added SGLang agent-serving optimization",
+    "Added procedural memory evolution",
+    "Added geometric multi-hop RAG",
+    "Added joint planner/tool/verifier RL",
+    "Updated local multimodal agent model evidence with Occamy-1.0"
+  ],
+  "radarChanges": [
+    "TECH-AGENT-HARNESS-TRUST-001 ADOPT evidence strengthened",
+    "TECH-LONG-HORIZON-EVAL-001 ASSESS to TRIAL recommendation",
+    "TECH-LOCAL-MULTIMODAL-AGENT-MODEL-001 remains ASSESS"
+  ],
+  "newModels": 1,
+  "newRepositories": 3,
+  "newPapers": 6,
+  "newDatasets": 2,
+  "newBenchmarks": 3,
+  "nexarchCapabilitiesAffected": [
+    "KRN-003",
+    "KRN-004",
+    "KRN-006",
+    "KRN-007",
+    "KRN-008",
+    "KRN-009",
+    "KRN-010",
+    "KRN-014",
+    "KRN-015",
+    "KRN-016",
+    "KRN-018",
+    "KRN-019",
+    "KRN-020",
+    "KRN-021",
+    "KRN-022"
+  ],
+  "productsAffected": ["HiveShield", "HiveAgents", "HiveEvaluation", "HiveForge", "HiveModels", "HiveKnowledge"],
+  "servicesAffected": ["AO-01", "AO-06", "AO-09", "AO-10", "SG-01", "SG-02", "SG-06", "SG-08"],
+  "experimentsProposed": 4,
+  "experimentsStarted": 0,
+  "experimentsCompleted": 0,
+  "implementationProposed": 2,
+  "implementationStarted": 0,
+  "blockedItems": [
+    "Agent execution envelope",
+    "ARIA evaluation profile",
+    "MLPerf-derived workloads",
+    "Vulnerability localization experiment",
+    "SoL-Pi mechanism experiment"
+  ],
+  "blockers": ["W0.3", "W0.4", "W0.5", "canonical ownership", "WIP authorization"],
+  "securityFlags": [
+    "Monitor-only coding-agent controls bypassed in author study",
+    "Agent web-fetch SSRF and denial-of-service classes",
+    "Telemetry content leakage",
+    "Procedural-memory privacy and poisoning",
+    "Graph poisoning untested",
+    "Joint verifier reward hacking untested"
+  ],
+  "licenseFlags": [
+    "Red-Teaming Auto Mode repository has no detected license",
+    "G3RAG artifact license unverified",
+    "APort dataset access is gated and model outputs retain provider terms",
+    "Vulnerability benchmark snapshots retain upstream licenses"
+  ],
+  "decisions": {
+    "ADOPT_NOW": ["TECH-AGENT-HARNESS-TRUST-001", "TECH-HOLISTIC-AI-EVALUATION-001"],
+    "EXPERIMENT": ["TECH-VULNERABILITY-LOCALIZATION-EVAL-001", "TECH-AUDITABLE-HARNESS-OPTIMIZATION-001"],
+    "INTEGRATE_LATER": ["TECH-LONG-HORIZON-EVAL-001"],
+    "WATCH": [
+      "TECH-AGENT-SERVING-OPTIMIZATION-001",
+      "TECH-LOCAL-MULTIMODAL-AGENT-MODEL-001",
+      "TECH-PROCEDURAL-MEMORY-EVOLUTION-001",
+      "TECH-GEOMETRIC-MULTIHOP-RAG-001",
+      "TECH-JOINT-AGENT-RL-001"
+    ],
+    "REJECT": []
+  },
+  "ledgerChanges": 0,
+  "verifiedCapabilityThroughputChange": 0,
+  "startedToVerifiedChange": "0:0",
+  "implementationActionOccurred": false,
+  "lastSeen": {
+    "hf:aporthq/vault-benchmark-v1": "2026-09-21T03:30:01.014Z",
+    "arxiv:2609.19587": "2026-09-21T03:30:01.014Z",
+    "nist:ir-8587": "2026-09-21T03:30:01.014Z",
+    "github:pydantic/pydantic-ai@v2.44.0": "2026-09-21T03:30:01.014Z",
+    "nist:ai-200-3": "2026-09-21T03:30:01.014Z",
+    "mlcommons:mlperf-inference-v6.1": "2026-09-21T03:30:01.014Z",
+    "arxiv:2609.15939": "2026-09-21T03:30:01.014Z",
+    "arxiv:2609.20519": "2026-09-21T03:30:01.014Z",
+    "github:sgl-project/sglang@v0.5.20": "2026-09-21T03:30:01.014Z",
+    "hf:Accio-Lab/occamy-1.0": "2026-09-21T03:30:01.014Z",
+    "arxiv:2609.22086": "2026-09-21T03:30:01.014Z",
+    "arxiv:2609.19622": "2026-09-21T03:30:01.014Z",
+    "arxiv:2609.20089": "2026-09-21T03:30:01.014Z"
+  },
+  "nextReviewItems": [
+    "Ledger authorization or security alert for the execution envelope",
+    "Canonical KRN-019 owner and W0.5 completion",
+    "Independent Occamy benchmarks",
+    "Designer-RSI code/data and privacy controls",
+    "G3RAG artifact license and independent replication",
+    "UnifiedPlayers implementation and reward-hacking analysis"
+  ]
+}
