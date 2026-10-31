@@ -14,7 +14,7 @@
     "@aws-sdk/util-dynamodb": "^3.996.7",
     "@cerebro/api-client": "workspace:^",
     "@opentelemetry/api": "^1.8.0",
-    "zod": "^3.23.0"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.0",

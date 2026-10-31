@@ -11,7 +11,7 @@
     "@cerebro/policy-core": "workspace:*",
     "@cerebro/secrets-core": "workspace:*",
     "@cerebro/governance-core": "workspace:*",
-    "zod": "^3.22.4"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
